@@ -1,0 +1,6 @@
+
+#ifdef USE_DETAILS_CONFIG
+    #include <gpu/cstddef>
+#else
+    #include_next <cstddef>
+#endif

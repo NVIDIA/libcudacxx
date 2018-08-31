@@ -1,0 +1,13 @@
+#ifndef _CUDA_CSTDINT_INCLUDED
+#define _CUDA_CSTDINT_INCLUDED
+
+#include "details/__pre"
+
+#ifdef _LIBCPP_CSTDINT
+#undef _LIBCPP_CSTDINT
+#endif
+#include "../libcxx/include/cstdint"
+
+#include "details/__post"
+
+#endif //_CUDA_CSTDINT_INCLUDED

@@ -1,0 +1,6 @@
+
+#ifdef USE_DETAILS_CONFIG
+    #include <gpu/cstdint>
+#else
+    #include_next <cstdint>
+#endif

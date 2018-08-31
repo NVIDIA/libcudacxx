@@ -1,0 +1,6 @@
+
+#ifdef USE_DETAILS_CONFIG
+    // nothing
+#else
+    #include_next <__config>
+#endif

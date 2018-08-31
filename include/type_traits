@@ -1,0 +1,6 @@
+
+#ifdef USE_DETAILS_CONFIG
+    #include <gpu/type_traits>
+#else
+    #include_next <type_traits>
+#endif

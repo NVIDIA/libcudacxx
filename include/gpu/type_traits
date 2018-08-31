@@ -1,0 +1,13 @@
+#ifndef _CUDA_TYPE_TRAITS_INCLUDED
+#define _CUDA_TYPE_TRAITS_INCLUDED
+
+#include "details/__pre"
+
+#ifdef _LIBCPP_TYPE_TRAITS
+#undef _LIBCPP_TYPE_TRAITS
+#endif
+#include "../libcxx/include/type_traits"
+
+#include "details/__post"
+
+#endif //_CUDA_TYPE_TRAITS_INCLUDED

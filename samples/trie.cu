@@ -1,13 +1,21 @@
-// preview on GitHub, release in CUDA 10.1
-#include <cuda/cstdint>
-#include <cuda/cstddef>
-#include <cuda/cassert>
+#include <cassert>
 
-// preview on GitHub, experimental in CUDA 10.1
-#include <cuda/atomic>
+
+
+#include <gpu/cstdint>
+#include <gpu/cstddef>
+#include <gpu/atomic>
 
 // preview on GitHub, monthly release at head
-#include <cuda/mutex>
+//#include <gpu/mutex>
+
+namespace cuda { namespace std {
+    struct mutex { 
+        __host__ __device__ bool try_lock() { return true; } 
+        __host__ __device__ void lock() { } 
+        __host__ __device__ void unlock() { } 
+    };
+}}
 
 // stay tuned for <algorithm>
 template<class T> static constexpr T min(T a, T b) { return a < b ? a : b; }

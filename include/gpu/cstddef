@@ -1,0 +1,13 @@
+#ifndef _CUDA_CSTDDEF_INCLUDED
+#define _CUDA_CSTDDEF_INCLUDED
+
+#include "details/__pre"
+
+#ifdef _LIBCPP_CSTDDEF
+#undef _LIBCPP_CSTDDEF
+#endif
+#include "../libcxx/include/cstddef"
+
+#include "details/__post"
+
+#endif //_CUDA_CSTDDEF_INCLUDED

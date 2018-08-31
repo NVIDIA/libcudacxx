@@ -1,0 +1,550 @@
+#ifndef __cuda_atomic_included
+#define __cuda_atomic_included
+
+//#include_next <atomic>
+
+#include "cstdint"
+#include "cstddef"
+#include "type_traits"
+
+#if 1 //def __CUDA_ARCH__
+
+#ifdef ATOMIC_BOOL_LOCK_FREE
+static_assert(ATOMIC_BOOL_LOCK_FREE == 2, "");
+static_assert(ATOMIC_BOOL_LOCK_FREE == 2, "");
+static_assert(ATOMIC_CHAR_LOCK_FREE == 2, "");
+static_assert(ATOMIC_CHAR16_T_LOCK_FREE == 2, "");
+static_assert(ATOMIC_CHAR32_T_LOCK_FREE == 2, "");
+static_assert(ATOMIC_WCHAR_T_LOCK_FREE == 2, "");
+static_assert(ATOMIC_SHORT_LOCK_FREE == 2, "");
+static_assert(ATOMIC_INT_LOCK_FREE == 2, "");
+static_assert(ATOMIC_LONG_LOCK_FREE == 2, "");
+static_assert(ATOMIC_LLONG_LOCK_FREE == 2, "");
+static_assert(ATOMIC_POINTER_LOCK_FREE == 2, "");
+#endif
+
+#undef ATOMIC_BOOL_LOCK_FREE
+#undef ATOMIC_BOOL_LOCK_FREE
+#undef ATOMIC_CHAR_LOCK_FREE
+#undef ATOMIC_CHAR16_T_LOCK_FREE
+#undef ATOMIC_CHAR32_T_LOCK_FREE
+#undef ATOMIC_WCHAR_T_LOCK_FREE
+#undef ATOMIC_SHORT_LOCK_FREE
+#undef ATOMIC_INT_LOCK_FREE
+#undef ATOMIC_LONG_LOCK_FREE
+#undef ATOMIC_LLONG_LOCK_FREE
+#undef ATOMIC_POINTER_LOCK_FREE
+#undef ATOMIC_FLAG_INIT
+#undef ATOMIC_VAR_INIT
+
+#define atomic_thread_fence atomic_thread_fence_nv_
+#define atomic_signal_fence atomic_signal_fence_nv_
+
+#include "details/__config"
+#define CUDA_STD_DETAILS
+#include "details/__pre"
+#ifdef _LIBCPP_ATOMIC
+#undef _LIBCPP_ATOMIC
+#endif
+#include "../libcxx/include/atomic"
+#include "details/__post"
+#undef CUDA_STD_DETAILS
+
+#undef atomic_thread_fence
+#undef atomic_signal_fence
+
+#else
+
+#ifndef CUDA_DEVICE_ONLY
+
+namespace cuda { namespace std { namespace details { inline namespace v1 {
+
+typedef ::std::memory_order memory_order;
+
+static constexpr memory_order memory_order_relaxed = ::std::memory_order_relaxed;
+static constexpr memory_order memory_order_release = ::std::memory_order_release;
+static constexpr memory_order memory_order_acq_rel = ::std::memory_order_acq_rel;
+static constexpr memory_order memory_order_acquire = ::std::memory_order_acquire;
+static constexpr memory_order memory_order_consume = ::std::memory_order_consume;
+static constexpr memory_order memory_order_seq_cst = ::std::memory_order_seq_cst;
+
+template<class T>
+using atomic = ::std::atomic<T>;
+
+void atomic_thread_fence_nv_(memory_order order) {
+    ::std::atomic_thread_fence(order);
+}
+void atomic_signal_fence_nv_(memory_order order) {
+    ::std::atomic_signal_fence(order);
+}
+
+} } } }
+
+#endif //CUDA_DEVICE_ONLY
+
+#endif //__CUDA_ARCH__
+
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable:4522)
+#endif
+
+namespace cuda { namespace std { inline namespace v1 {
+
+typedef details::memory_order memory_order;
+
+static constexpr memory_order memory_order_relaxed = details::memory_order_relaxed;
+static constexpr memory_order memory_order_release = details::memory_order_release;
+static constexpr memory_order memory_order_acq_rel = details::memory_order_acq_rel;
+static constexpr memory_order memory_order_acquire = details::memory_order_acquire;
+static constexpr memory_order memory_order_consume = details::memory_order_consume;
+static constexpr memory_order memory_order_seq_cst = details::memory_order_seq_cst;
+
+template <class T> T kill_dependency(T t) noexcept { return t; }
+
+template <typename T>
+struct atomic {
+    static_assert(std::is_trivially_copyable<T>::value, "The atomic<T> template requires trivially-copyable T");
+
+    using value_type = T;
+    using difference_type = typename std::conditional<std::is_pointer<T>::value, ptrdiff_t, T>::type;
+
+#if defined(__cpp_lib_atomic_is_always_lock_free)
+    static constexpr bool is_always_lock_free = details::is_always_lock_free<T>::value;
+#endif
+
+    __host__ __device__ bool is_lock_free() const noexcept { return _base.is_lock_free(); }
+
+    __host__ __device__ void store(T desired, memory_order order = memory_order_seq_cst) noexcept {
+        _base.store(desired, order);
+    }
+    __host__ __device__ T load(memory_order order = memory_order_seq_cst) const noexcept {
+        return _base.load(order);
+    }
+    __host__ __device__ operator T() const noexcept {
+        return _base.load();
+    }
+    __host__ __device__ T exchange(T desired, memory_order order = memory_order_seq_cst) noexcept {
+        return _base.exchange(desired, order);
+    }
+    __host__ __device__ bool compare_exchange_weak(T& expected, T desired, memory_order success, memory_order failure) noexcept {
+        return _base.compare_exchange_weak(expected, desired, success, failure);
+    }
+    __host__ __device__ bool compare_exchange_strong(T& expected, T desired, memory_order success, memory_order failure) noexcept {
+        return _base.compare_exchange_strong(expected, desired, success, failure);
+    }
+    __host__ __device__ bool compare_exchange_weak(T& expected, T desired, memory_order order = memory_order_seq_cst) noexcept {
+        return _base.compare_exchange_weak(expected, desired, order, order);
+    }
+    __host__ __device__ bool compare_exchange_strong(T& expected, T desired, memory_order order = memory_order_seq_cst) noexcept {
+        return _base.compare_exchange_strong(expected, desired, order, order);
+    }
+
+    details::atomic<T> _base;
+
+    atomic() noexcept = default;
+    __host__ __device__ constexpr atomic(T desired) noexcept : _base(desired) { }
+    __host__ __device__ atomic(atomic const&) = delete;
+    __host__ __device__ atomic& operator=(atomic const&) = delete;
+    __host__ __device__ T operator=(T desired) noexcept {
+        _base.store(desired);
+        return desired;
+    }
+
+    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value || std::is_pointer<Q>::value, int>::type = 0>
+    __host__ __device__ T fetch_add(difference_type addend, memory_order order = memory_order_seq_cst) noexcept {
+        return _base.fetch_add(addend, order);
+    }
+    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value || std::is_pointer<Q>::value, int>::type = 0>
+    __host__ __device__ T fetch_sub(difference_type addend, memory_order order = memory_order_seq_cst) noexcept {
+        return _base.fetch_sub(addend, order);
+    }
+    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value, int>::type = 0>
+    __host__ __device__ T fetch_and(T andend, memory_order order = memory_order_seq_cst) noexcept {
+        return _base.fetch_and(andend, order);
+    }
+    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value, int>::type = 0>
+    __host__ __device__ T fetch_or(T orend, memory_order order = memory_order_seq_cst) noexcept {
+        return _base.fetch_or(orend, order);
+    }
+    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value, int>::type = 0>
+    __host__ __device__ T fetch_xor(T xorend, memory_order order = memory_order_seq_cst) noexcept {
+        return _base.fetch_xor(xorend, order);
+    }
+    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value || std::is_pointer<Q>::value, int>::type = 0>
+    __host__ __device__ T operator++(int) noexcept {
+        return ++_base;
+    }
+    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value || std::is_pointer<Q>::value, int>::type = 0>
+    __host__ __device__ T operator--(int) noexcept {
+        return --_base;
+    }
+    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value || std::is_pointer<Q>::value, int>::type = 0>
+    __host__ __device__ T operator++() noexcept {
+        return _base++;
+    }
+    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value || std::is_pointer<Q>::value, int>::type = 0>
+    __host__ __device__ T operator--() noexcept {
+        return --_base;
+    }
+    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value || std::is_pointer<Q>::value, int>::type = 0>
+    __host__ __device__ T operator+=(difference_type addend) noexcept {
+        return _base += addend;
+    }
+    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value || std::is_pointer<Q>::value, int>::type = 0>
+    __host__ __device__ T operator-=(difference_type addend) noexcept {
+        return _base -= addend;
+    }
+    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value, int>::type = 0>
+    __host__ __device__ T operator&=(T andend) noexcept {
+        return _base &= andend;
+    }
+    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value, int>::type = 0>
+    __host__ __device__ T operator|=(T orend) noexcept {
+        return _base |= orend;
+    }
+    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value, int>::type = 0>
+    __host__ __device__ T operator^=(T xorend) noexcept {
+        return _base ^= xorend;
+    }
+
+    __host__ __device__ bool is_lock_free() const volatile noexcept { return _base.is_lock_free(); }
+
+    __host__ __device__ void store(T desired, memory_order order = memory_order_seq_cst) volatile noexcept {
+        _base.store(desired, order);
+    }
+    __host__ __device__ T load(memory_order order = memory_order_seq_cst) const volatile noexcept {
+        return _base.load(order);
+    }
+    __host__ __device__ operator T() const volatile noexcept {
+        return _base.load();
+    }
+    __host__ __device__ T exchange(T desired, memory_order order = memory_order_seq_cst) volatile noexcept {
+        return _base.exchange(desired, order);
+    }
+    __host__ __device__ bool compare_exchange_weak(T& expected, T desired, memory_order success, memory_order failure) volatile noexcept {
+        return _base.compare_exchange_weak(expected, desired, success, failure);
+    }
+    __host__ __device__ bool compare_exchange_strong(T& expected, T desired, memory_order success, memory_order failure) volatile noexcept {
+        return _base.compare_exchange_strong(expected, desired, success, failure);
+    }
+    __host__ __device__ bool compare_exchange_weak(T& expected, T desired, memory_order order = memory_order_seq_cst) volatile noexcept {
+        return _base.compare_exchange_weak(expected, desired, order, order);
+    }
+    __host__ __device__ bool compare_exchange_strong(T& expected, T desired, memory_order order = memory_order_seq_cst) volatile noexcept {
+        return _base.compare_exchange_strong(expected, desired, order, order);
+    }
+
+    __host__ __device__ atomic& operator=(atomic const&) volatile = delete;
+    __host__ __device__ T operator=(T desired) volatile noexcept {
+        _base.store(desired);
+        return desired;
+    }
+
+    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value || std::is_pointer<Q>::value, int>::type = 0>
+    __host__ __device__ T fetch_add(difference_type addend, memory_order order = memory_order_seq_cst) volatile noexcept {
+        return _base.fetch_add(addend, order);
+    }
+    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value || std::is_pointer<Q>::value, int>::type = 0>
+    __host__ __device__ T fetch_sub(difference_type addend, memory_order order = memory_order_seq_cst) volatile noexcept {
+        return _base.fetch_sub(addend, order);
+    }
+    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value, int>::type = 0>
+    __host__ __device__ T fetch_and(T andend, memory_order order = memory_order_seq_cst) volatile noexcept {
+        return _base.fetch_and(andend, order);
+    }
+    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value, int>::type = 0>
+    __host__ __device__ T fetch_or(T orend, memory_order order = memory_order_seq_cst) volatile noexcept {
+        return _base.fetch_or(orend, order);
+    }
+    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value, int>::type = 0>
+    __host__ __device__ T fetch_xor(T xorend, memory_order order = memory_order_seq_cst) volatile noexcept {
+        return _base.fetch_xor(xorend, order);
+    }
+    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value || std::is_pointer<Q>::value, int>::type = 0>
+    __host__ __device__ T operator++(int) volatile noexcept {
+        return ++_base;
+    }
+    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value || std::is_pointer<Q>::value, int>::type = 0>
+    __host__ __device__ T operator--(int) volatile noexcept {
+        return --_base;
+    }
+    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value || std::is_pointer<Q>::value, int>::type = 0>
+    __host__ __device__ T operator++() volatile noexcept {
+        return _base++;
+    }
+    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value || std::is_pointer<Q>::value, int>::type = 0>
+    __host__ __device__ T operator--() volatile noexcept {
+        return _base--;
+    }
+    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value || std::is_pointer<Q>::value, int>::type = 0>
+    __host__ __device__ T operator+=(difference_type addend) volatile noexcept {
+        return _base += addend;
+    }
+    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value || std::is_pointer<Q>::value, int>::type = 0>
+    __host__ __device__ T operator-=(difference_type addend) volatile noexcept {
+        return _base -= addend;
+    }
+    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value, int>::type = 0>
+    __host__ __device__ T operator&=(T andend) volatile noexcept {
+        return _base &= andend;
+    }
+    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value, int>::type = 0>
+    __host__ __device__ T operator|=(T orend) volatile noexcept {
+        return _base |= orend;
+    }
+    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value, int>::type = 0>
+    __host__ __device__ T operator^=(T xorend) volatile noexcept {
+        return _base ^= xorend;
+    }
+};
+
+// 32.7, non-member functions
+template<class T> __host__ __device__ bool atomic_is_lock_free(const atomic<T>* a) noexcept {
+    return a->is_lock_free();
+}
+template<class T> __host__ __device__ void atomic_init(atomic<T>* a, typename atomic<T>::value_type desired) noexcept {
+    new (a) atomic<T>(desired);
+}
+template<class T> __host__ __device__ void atomic_store(atomic<T>* a, typename atomic<T>::value_type desired) noexcept {
+    a->store(desired);
+}
+template<class T> __host__ __device__ void atomic_store_explicit(atomic<T>* a, typename atomic<T>::value_type desired, memory_order order) noexcept {
+    a->store(desired, order);
+}
+template<class T> __host__ __device__ T atomic_load(const atomic<T>* a) noexcept {
+    return a->load();
+}
+template<class T> __host__ __device__ T atomic_load_explicit(const atomic<T>* a, memory_order order) noexcept {
+    return a->load(order);
+}
+template<class T> __host__ __device__ T atomic_exchange(atomic<T>* a, typename atomic<T>::value_type desired) noexcept {
+    return a->exchange(desired);
+}
+template<class T> __host__ __device__ T atomic_exchange_explicit(atomic<T>* a, typename atomic<T>::value_type desired, memory_order order) noexcept {
+    return a->exchange(desired, order);
+}
+template<class T> __host__ __device__ bool atomic_compare_exchange_weak(atomic<T>* a, typename atomic<T>::value_type* expected, typename atomic<T>::value_type desired) noexcept {
+    return a->compare_exchange_weak(expected, desired);
+}
+template<class T> __host__ __device__ bool atomic_compare_exchange_strong(atomic<T>* a, typename atomic<T>::value_type* expected, typename atomic<T>::value_type desired) noexcept {
+    return a->compare_exchange_strong(expected, desired);
+}
+template<class T> __host__ __device__ bool atomic_compare_exchange_weak_explicit(atomic<T>* a, typename atomic<T>::value_type* expected, typename atomic<T>::value_type desired, memory_order success, memory_order failure) noexcept {
+    return a->compare_exchange_weak(expected, desired, success, failure);
+}
+template<class T> __host__ __device__ bool atomic_compare_exchange_strong_explicit(atomic<T>* a, typename atomic<T>::value_type* expected, typename atomic<T>::value_type desired, memory_order success, memory_order failure) noexcept {
+    return a->compare_exchange_strong(expected, desired, success, failure);
+}
+template <class T> __host__ __device__ T atomic_fetch_add(atomic<T>* a, typename atomic<T>::difference_type addend) noexcept {
+    return a->fetch_add(addend);
+}
+template <class T> __host__ __device__ T atomic_fetch_add_explicit(atomic<T>* a, typename atomic<T>::difference_type addend, memory_order order) noexcept {
+    return a->fetch_add(addend, order);
+}
+template <class T> __host__ __device__ T atomic_fetch_sub(atomic<T>* a, typename atomic<T>::difference_type addend) noexcept {
+    return a->fetch_sub(addend);
+}
+template <class T> __host__ __device__ T atomic_fetch_sub_explicit(atomic<T>* a, typename atomic<T>::difference_type addend, memory_order order) noexcept {
+    return a->fetch_sub(addend, order);
+}
+template <class T> __host__ __device__ T atomic_fetch_and(atomic<T>* a, typename atomic<T>::value_type andend) noexcept {
+    return a->fetch_and(andend);
+}
+template <class T> __host__ __device__ T atomic_fetch_and_explicit(atomic<T>* a, typename atomic<T>::value_type andend, memory_order order) noexcept {
+    return a->fetch_and(andend, order);
+}
+template <class T> __host__ __device__ T atomic_fetch_or(atomic<T>* a, typename atomic<T>::value_type orend) noexcept {
+    return a->fetch_or(orend);
+}
+template <class T> __host__ __device__ T atomic_fetch_or_explicit(atomic<T>* a, typename atomic<T>::value_type orend, memory_order order) noexcept {
+    return a->fetch_or(orend, order);
+}
+template <class T> __host__ __device__ T atomic_fetch_xor(atomic<T>* a, typename atomic<T>::value_type xorend) noexcept {
+    return a->fetch_xor(xorend);
+}
+template <class T> __host__ __device__ T atomic_fetch_xor_explicit(atomic<T>* a, typename atomic<T>::value_type xorend, memory_order order) noexcept {
+    return a->fetch_xor(xorend, order);
+}
+
+template<class T> __host__ __device__ bool atomic_is_lock_free(const volatile atomic<T>* a) noexcept {
+    return a->is_lock_free();
+}
+template<class T> __host__ __device__ void atomic_init(volatile atomic<T>* a, typename atomic<T>::value_type desired) noexcept {
+    new (a) volatile atomic<T>(desired);
+}
+template<class T> __host__ __device__ void atomic_store(volatile atomic<T>* a, typename atomic<T>::value_type desired) noexcept {
+    a->store(desired);
+}
+template<class T> __host__ __device__ void atomic_store_explicit(volatile atomic<T>* a, typename atomic<T>::value_type desired, memory_order order) noexcept {
+    a->store(desired, order);
+}
+template<class T> __host__ __device__ T atomic_load(const volatile atomic<T>* a) noexcept {
+    return a->load();
+}
+template<class T> __host__ __device__ T atomic_load_explicit(const volatile atomic<T>* a, memory_order order) noexcept {
+    return a->load(order);
+}
+template<class T> __host__ __device__ T atomic_exchange(volatile atomic<T>* a, typename atomic<T>::value_type desired) noexcept {
+    return a->exchange(desired);
+}
+template<class T> __host__ __device__ T atomic_exchange_explicit(volatile atomic<T>* a, typename atomic<T>::value_type desired, memory_order order) noexcept {
+    return a->exchange(desired, order);
+}
+template<class T> __host__ __device__ bool atomic_compare_exchange_weak(volatile atomic<T>* a, typename atomic<T>::value_type* expected, typename atomic<T>::value_type desired) noexcept {
+    return a->compare_exchange_weak(expected, desired);
+}
+template<class T> __host__ __device__ bool atomic_compare_exchange_strong(volatile atomic<T>* a, typename atomic<T>::value_type* expected, typename atomic<T>::value_type desired) noexcept {
+    return a->compare_exchange_strong(expected, desired);
+}
+template<class T> __host__ __device__ bool atomic_compare_exchange_weak_explicit(volatile atomic<T>* a, typename atomic<T>::value_type* expected, typename atomic<T>::value_type desired, memory_order success, memory_order failure) noexcept {
+    return a->compare_exchange_weak(expected, desired, success, failure);
+}
+template<class T> __host__ __device__ bool atomic_compare_exchange_strong_explicit(volatile atomic<T>* a, typename atomic<T>::value_type* expected, typename atomic<T>::value_type desired, memory_order success, memory_order failure) noexcept {
+    return a->compare_exchange_strong(expected, desired, success, failure);
+}
+template <class T> __host__ __device__ T atomic_fetch_add(volatile atomic<T>* a, typename atomic<T>::difference_type addend) noexcept {
+    return a->fetch_add(addend);
+}
+template <class T> __host__ __device__ T atomic_fetch_add_explicit(volatile atomic<T>* a, typename atomic<T>::difference_type addend, memory_order order) noexcept {
+    return a->fetch_add(addend, order);
+}
+template <class T> __host__ __device__ T atomic_fetch_sub(volatile atomic<T>* a, typename atomic<T>::difference_type addend) noexcept {
+    return a->fetch_sub(addend);
+}
+template <class T> __host__ __device__ T atomic_fetch_sub_explicit(volatile atomic<T>* a, typename atomic<T>::difference_type addend, memory_order order) noexcept {
+    return a->fetch_sub(addend, order);
+}
+template <class T> __host__ __device__ T atomic_fetch_and(volatile atomic<T>* a, typename atomic<T>::value_type andend) noexcept {
+    return a->fetch_and(andend);
+}
+template <class T> __host__ __device__ T atomic_fetch_and_explicit(volatile atomic<T>* a, typename atomic<T>::value_type andend, memory_order order) noexcept {
+    return a->fetch_and(andend, order);
+}
+template <class T> __host__ __device__ T atomic_fetch_or(volatile atomic<T>* a, typename atomic<T>::value_type orend) noexcept {
+    return a->fetch_or(orend);
+}
+template <class T> __host__ __device__ T atomic_fetch_or_explicit(volatile atomic<T>* a, typename atomic<T>::value_type orend, memory_order order) noexcept {
+    return a->fetch_or(orend, order);
+}
+template <class T> __host__ __device__ T atomic_fetch_xor(volatile atomic<T>* a, typename atomic<T>::value_type xorend) noexcept {
+    return a->fetch_xor(xorend);
+}
+template <class T> __host__ __device__ T atomic_fetch_xor_explicit(volatile atomic<T>* a, typename atomic<T>::value_type xorend, memory_order order) noexcept {
+    return a->fetch_xor(xorend, order);
+}
+
+typedef atomic<bool>               atomic_bool;
+typedef atomic<char>               atomic_char;
+typedef atomic<signed char>        atomic_schar;
+typedef atomic<unsigned char>      atomic_uchar;
+typedef atomic<short>              atomic_short;
+typedef atomic<unsigned short>     atomic_ushort;
+typedef atomic<int>                atomic_int;
+typedef atomic<unsigned int>       atomic_uint;
+typedef atomic<long>               atomic_long;
+typedef atomic<unsigned long>      atomic_ulong;
+typedef atomic<long long>          atomic_llong;
+typedef atomic<unsigned long long> atomic_ullong;
+typedef atomic<char16_t>           atomic_char16_t;
+typedef atomic<char32_t>           atomic_char32_t;
+typedef atomic<wchar_t>            atomic_wchar_t;
+
+typedef atomic<int_least8_t>   atomic_int_least8_t;
+typedef atomic<uint_least8_t>  atomic_uint_least8_t;
+typedef atomic<int_least16_t>  atomic_int_least16_t;
+typedef atomic<uint_least16_t> atomic_uint_least16_t;
+typedef atomic<int_least32_t>  atomic_int_least32_t;
+typedef atomic<uint_least32_t> atomic_uint_least32_t;
+typedef atomic<int_least64_t>  atomic_int_least64_t;
+typedef atomic<uint_least64_t> atomic_uint_least64_t;
+
+typedef atomic<int_fast8_t>   atomic_int_fast8_t;
+typedef atomic<uint_fast8_t>  atomic_uint_fast8_t;
+typedef atomic<int_fast16_t>  atomic_int_fast16_t;
+typedef atomic<uint_fast16_t> atomic_uint_fast16_t;
+typedef atomic<int_fast32_t>  atomic_int_fast32_t;
+typedef atomic<uint_fast32_t> atomic_uint_fast32_t;
+typedef atomic<int_fast64_t>  atomic_int_fast64_t;
+typedef atomic<uint_fast64_t> atomic_uint_fast64_t;
+
+typedef atomic< int8_t>  atomic_int8_t;
+typedef atomic<uint8_t>  atomic_uint8_t;
+typedef atomic< int16_t> atomic_int16_t;
+typedef atomic<uint16_t> atomic_uint16_t;
+typedef atomic< int32_t> atomic_int32_t;
+typedef atomic<uint32_t> atomic_uint32_t;
+typedef atomic< int64_t> atomic_int64_t;
+typedef atomic<uint64_t> atomic_uint64_t;
+
+typedef atomic<intptr_t>  atomic_intptr_t;
+typedef atomic<uintptr_t> atomic_uintptr_t;
+typedef atomic<size_t>    atomic_size_t;
+typedef atomic<ptrdiff_t> atomic_ptrdiff_t;
+typedef atomic<intmax_t>  atomic_intmax_t;
+typedef atomic<uintmax_t> atomic_uintmax_t;
+
+struct atomic_flag {
+    __host__ __device__ bool test_and_set(memory_order order = memory_order_seq_cst) noexcept {
+        return _base.exchange(1, order) == 0;
+    }
+    __host__ __device__ void clear(memory_order order = memory_order_seq_cst) noexcept {
+        return _base.store(0, order);
+    }
+#ifdef _MSC_VER
+    atomic<int> _base;
+#else
+    atomic<char> _base;
+#endif
+
+    atomic_flag() noexcept = default;
+    atomic_flag(const atomic_flag&) = delete;
+    atomic_flag& operator=(const atomic_flag&) = delete;
+
+    __host__ __device__ bool test_and_set(memory_order order = memory_order_seq_cst) volatile noexcept {
+        return _base.exchange(1, order) == 0;
+    }
+    __host__ __device__ void clear(memory_order order = memory_order_seq_cst) volatile noexcept {
+        return _base.store(0, order);
+    }
+    atomic_flag& operator=(const atomic_flag&) volatile = delete;
+};
+__host__ __device__ inline bool atomic_flag_test_and_set(atomic_flag* f) noexcept {
+    return f->test_and_set();
+}
+__host__ __device__ inline bool atomic_flag_test_and_set_explicit(atomic_flag* f, memory_order order) noexcept {
+    return f->test_and_set(order);
+}
+__host__ __device__ inline void atomic_flag_clear(atomic_flag* f) noexcept {
+    f->clear();
+}
+__host__ __device__ inline void atomic_flag_clear_explicit(atomic_flag* f, memory_order order) noexcept {
+    f->clear(order);
+}
+__host__ __device__ inline bool atomic_flag_test_and_set(volatile atomic_flag* f) noexcept {
+    return f->test_and_set();
+}
+__host__ __device__ inline bool atomic_flag_test_and_set_explicit(volatile atomic_flag* f, memory_order order) noexcept {
+    return f->test_and_set(order);
+}
+__host__ __device__ inline void atomic_flag_clear(volatile atomic_flag* f) noexcept {
+    f->clear();
+}
+__host__ __device__ inline void atomic_flag_clear_explicit(volatile atomic_flag* f, memory_order order) noexcept {
+    f->clear(order);
+}
+
+__host__ __device__ void atomic_thread_fence_nv(memory_order order) {
+    details::atomic_thread_fence_nv_(order);
+}
+__host__ __device__ void atomic_signal_fence_nv(memory_order order){
+    details::atomic_signal_fence_nv_(order);
+}
+
+} } }
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+
+#endif
