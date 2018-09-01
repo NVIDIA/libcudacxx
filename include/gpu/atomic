@@ -3,7 +3,10 @@
 
 #include <atomic>
 
+#include "cstddef"
+#include "cstdint"
 #include "type_traits"
+
 #include "details/__pre"
 
 #ifdef __CUDA_ARCH__
@@ -45,10 +48,12 @@ static_assert(ATOMIC_POINTER_LOCK_FREE == 2, "");
 #undef _LIBCPP_ATOMIC
 
 #define CUDA_STD_DETAILS
+#include "details/__pre"
 #include "../libcxx/include/atomic"
+#include "details/__post"
+#undef CUDA_STD_DETAILS
 
 #pragma pop_macro("_LIBCPP_ATOMIC")
-#undef CUDA_STD_DETAILS
 
 #undef atomic_thread_fence
 #undef atomic_signal_fence
