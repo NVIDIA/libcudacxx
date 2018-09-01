@@ -1,3 +1,31 @@
+/*
+
+Copyright (c) 2018, NVIDIA Corporation
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice,
+this list of conditions and the following disclaimer in the documentation
+and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+OF THE POSSIBILITY OF SUCH DAMAGE.
+
+*/
+
 #ifndef __CUDACC__
 #define __host__
 #define __device__
@@ -35,7 +63,7 @@
 // preview on GitHub, monthly release at head
 //#include <gpu/mutex>
 
-namespace cuda { namespace std {
+namespace gpu { namespace std {
     struct mutex { 
         __host__ __device__ bool try_lock() { return true; } 
         __host__ __device__ void lock() { } 
@@ -48,14 +76,14 @@ template<class T> static constexpr T min(T a, T b) { return a < b ? a : b; }
 
 struct node {
     struct ref {
-        cuda::std::atomic<node*> ptr = ATOMIC_VAR_INIT(nullptr);
-        cuda::std::mutex         lock;
+        gpu::std::atomic<node*> ptr = ATOMIC_VAR_INIT(nullptr);
+        gpu::std::mutex         lock;
     };
     ref                    next[26];
-    cuda::std::atomic<int> count = ATOMIC_VAR_INIT(0);
+    gpu::std::atomic<int> count = ATOMIC_VAR_INIT(0);
 };
 struct trie {
-    cuda::std::atomic<node*> bump = ATOMIC_VAR_INIT(nullptr);
+    gpu::std::atomic<node*> bump = ATOMIC_VAR_INIT(nullptr);
     node                     root;
     __host__ __device__ trie(node* ptr) : bump(ptr) { }
 };
@@ -82,7 +110,7 @@ __host__ __device__ void process(const char* begin, const char* end, trie* t, un
         auto const index = off >= size ? -1 : index_of(c);
         if(index == -1) {
             if(n != proot) {
-                n->count.fetch_add(1, cuda::std::memory_order_relaxed);
+                n->count.fetch_add(1, gpu::std::memory_order_relaxed);
                 n = proot;
             }
             //end of last word?
@@ -92,19 +120,19 @@ __host__ __device__ void process(const char* begin, const char* end, trie* t, un
                 continue;
         }
         auto& ptr = n->next[index].ptr;
-        auto next = ptr.load(cuda::std::memory_order_acquire);
+        auto next = ptr.load(gpu::std::memory_order_acquire);
         if(next == nullptr) {
             auto& lock = n->next[index].lock;
             if(!lock.try_lock()) {
                 do {
-                    next = ptr.load(cuda::std::memory_order_acquire);
+                    next = ptr.load(gpu::std::memory_order_acquire);
                 } while(next == nullptr);
             }
             else {
-                next = ptr.load(cuda::std::memory_order_acquire);
+                next = ptr.load(gpu::std::memory_order_acquire);
                 if(next == nullptr) {
-                    next = t->bump.fetch_add(1, cuda::std::memory_order_relaxed);
-                    ptr.store(next, cuda::std::memory_order_relaxed);
+                    next = t->bump.fetch_add(1, gpu::std::memory_order_relaxed);
+                    ptr.store(next, gpu::std::memory_order_relaxed);
                     lock.unlock();
 	        }
 	        else lock.unlock();
