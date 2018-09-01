@@ -34,6 +34,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     #pragma pop_macro("_LIBCPP_CONFIG")
 #endif
 
+#pragma push_macro("_LIBCPP_HAS_GCC_ATOMIC_IMP")
 #pragma push_macro("_LIBCPP_HAS_NO_INT128")
 #pragma push_macro("_LIBCPP_BEGIN_NAMESPACE_STD")
 #pragma push_macro("_LIBCPP_END_NAMESPACE_STD")
@@ -42,6 +43,8 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 #pragma push_macro("_LIBCPP_NO_RTTI")
 #pragma push_macro("_LIBCPP_NO_EXCEPTIONS")
 #pragma push_macro("USE_DETAILS_CONFIG")
+
+#define _LIBCPP_HAS_GCC_ATOMIC_IMP
 
 #undef _LIBCPP_HAS_NO_INT128
 #define _LIBCPP_HAS_NO_INT128
@@ -66,14 +69,15 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 #endif
 
 #undef _LIBCPP_INLINE_VISIBILITY
+#define _LIBCPP_INLINE_VISIBILITY __host__ __device__
 #ifdef __CUDACC__
-    #define _LIBCPP_INLINE_VISIBILITY __host__ __device__
     #if defined(__clang__)
         #include <cuda_fp16.h>
         #define __fp16 __half
     #endif
 #else
-    #define _LIBCPP_INLINE_VISIBILITY
+    #define __host__
+    #define __device__
 #endif
 
 #undef _VSTD
