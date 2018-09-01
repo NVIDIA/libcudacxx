@@ -13,6 +13,8 @@
 #define _LIBCPP_HAS_IS_BASE_OF
 #endif
 
+#pragma push_macro("_LIBCPP_PUSH_MACROS")
+#pragma push_macro("_LIBCPP_POP_MACROS")
 #pragma push_macro("_LIBCPP_NO_RTTI")
 #pragma push_macro("_LIBCPP_NO_EXCEPTIONS")
 #pragma push_macro("_LIBCPP_STD_VER")
@@ -35,6 +37,8 @@
 #pragma push_macro("_LIBCPP_NO_CFI")
 #pragma push_macro("_VSTD")
 #pragma push_macro("_ALIGNAS")
+#undef _LIBCPP_PUSH_MACROS
+#undef _LIBCPP_POP_MACROS
 #undef _LIBCPP_NO_RTTI
 #undef _LIBCPP_NO_EXCEPTIONS
 #undef _LIBCPP_STD_VER
@@ -78,6 +82,8 @@
     template< class T, class U > using is_same = std::is_same<T,U>;
 */
 
+#define _LIBCPP_PUSH_MACROS
+#define _LIBCPP_POP_MACROS
 #define _LIBCPP_NO_RTTI
 #define _LIBCPP_NO_EXCEPTIONS
 #define _LIBCPP_STD_VER 11
