@@ -77,7 +77,10 @@ static_assert(ATOMIC_POINTER_LOCK_FREE == 2, "");
 
 #define GPU_STD_DETAILS
 #include "details/__pre"
+#pragma push_macro("_LIBCPP_CXX03_LANG")
+#define _LIBCPP_CXX03_LANG
 #include "../libcxx/include/atomic"
+#pragma pop_macro("_LIBCPP_CXX03_LANG")
 #include "details/__post"
 #undef GPU_STD_DETAILS
 

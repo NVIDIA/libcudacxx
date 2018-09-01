@@ -164,7 +164,7 @@ struct managed_allocator {
   typedef T value_type;
   managed_allocator() = default;
   template <class U> constexpr managed_allocator(const managed_allocator<U>&) noexcept {}
-  [[nodiscard]] T* allocate(std::size_t n) {
+  T* allocate(std::size_t n) {
     assert(n <= std::size_t(-1) / sizeof(T));
     void* out = nullptr;
     auto const ret = cudaMallocManaged(&out, n*sizeof(T));
