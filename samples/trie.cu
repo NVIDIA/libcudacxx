@@ -26,58 +26,21 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef __CUDACC__
-#define __host__
-#define __device__
-#define __managed__
-#endif
-
-#include <type_traits>
-#include <atomic>
-
-//#include <cstddef>
-
-#include <gpu/atomic>
-#include <gpu/cfloat>
-#include <gpu/ciso646>
-#include <gpu/climits>
-//#include <gpu/cstdalign>  DOESN'T EXIST
-#include <gpu/cstdarg>
-#include <gpu/cstdbool>
-#include <gpu/cstddef>
-#include <gpu/cstdint>
-#include <gpu/cstdlib>
-//#include <gpu/exception>  STD
-//#include <gpu/initializer_list> ALREADY DEFINED
-#include <gpu/limits>
-//#include <gpu/new>  STD
-#include <gpu/type_traits>
-//#include <gpu/typeinfo>  STD
-
-#include <gpu/cstdint>
-#include <gpu/cstddef>
-#include <gpu/atomic>
-
 #include <cassert>
 
-// preview on GitHub, monthly release at head
-//#include <gpu/mutex>
+#include <gpu/cstdint>
+#include <gpu/cstddef>
+#include <gpu/atomic>
 
-namespace gpu { namespace std {
-    struct mutex { 
-        __host__ __device__ bool try_lock() { return true; } 
-        __host__ __device__ void lock() { } 
-        __host__ __device__ void unlock() { } 
-    };
-}}
+#include "mutex.hpp"
 
 // stay tuned for <algorithm>
 template<class T> static constexpr T min(T a, T b) { return a < b ? a : b; }
 
 struct node {
     struct ref {
-        gpu::std::atomic<node*> ptr = ATOMIC_VAR_INIT(nullptr);
-        gpu::std::mutex         lock;
+        gpu::std::atomic<node*>  ptr = ATOMIC_VAR_INIT(nullptr);
+        gpu::experimental::mutex lock;
     };
     ref                    next[26];
     gpu::std::atomic<int> count = ATOMIC_VAR_INIT(0);
@@ -220,16 +183,10 @@ int main() {
     string* input = make_<string>();
     vector* nodes = make_<vector>(1<<20);
 
-    char const* files[10] = { "divine_comedy.txt",
-                              "frankenstein.txt",
-                              "iliad.txt",  
-                              "moby_dick.txt",  
-                              "odyssey.txt",  
-                              "oz.txt",  
-                              "quixote.txt",  
-                              "time_machine.txt",
-                              "war_and_peace.txt",
-                              "quixote.txt" };
+    char const* files[] = {
+        "2600-0.txt", "2701-0.txt", "35-0.txt", "84-0.txt", "8800.txt",
+      	"pg1727.txt", "pg55.txt", "pg6130.txt", "pg996.txt", "1342-0.txt"
+    };
 
     std::size_t total = 0, cur = 0;
     for(auto* ptr : files) {
