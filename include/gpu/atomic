@@ -1,5 +1,5 @@
-#ifndef __cuda_atomic_included
-#define __cuda_atomic_included
+#ifndef _GPU_ATOMIC
+#define _GPU_ATOMIC
 
 //#include_next <atomic>
 
@@ -547,4 +547,4 @@ __host__ __device__ void atomic_signal_fence_nv(memory_order order){
 #pragma warning(pop)
 #endif
 
-#endif
+#endif //_GPU_ATOMIC

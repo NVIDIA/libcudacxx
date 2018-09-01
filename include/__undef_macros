@@ -1,0 +1,5 @@
+#ifdef USE_DETAILS_CONFIG
+    #include "../libcxx/include/__undef_macros"
+#else
+    #include_next <__undef_macros>
+#endif

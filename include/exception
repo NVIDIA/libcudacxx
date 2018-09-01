@@ -1,0 +1,6 @@
+
+#ifdef USE_DETAILS_CONFIG
+    #include <gpu/exception>
+#else
+    #include_next <exception>
+#endif

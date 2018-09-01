@@ -1,0 +1,13 @@
+#ifndef _GPU_TYPEINFO
+#define _GPU_TYPEINFO
+
+#include "details/__pre"
+
+#ifdef _LIBCPP_TYPEINFO
+#undef _LIBCPP_TYPEINFO
+#endif
+#include "../libcxx/include/typeinfo"
+
+#include "details/__post"
+
+#endif //_GPU_TYPEINFO

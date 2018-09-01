@@ -1,5 +1,5 @@
-#ifndef _CUDA_CSTDINT_INCLUDED
-#define _CUDA_CSTDINT_INCLUDED
+#ifndef _GPU_CSTDINT
+#define _GPU_CSTDINT
 
 #include "details/__pre"
 
@@ -10,4 +10,4 @@
 
 #include "details/__post"
 
-#endif //_CUDA_CSTDINT_INCLUDED
+#endif //_GPU_CSTDINT

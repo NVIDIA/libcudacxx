@@ -1,0 +1,13 @@
+#ifndef _GPU_CFLOAT
+#define _GPU_CFLOAT
+
+#include "details/__pre"
+
+#ifdef _LIBCPP_CFLOAT
+#undef _LIBCPP_CFLOAT
+#endif
+#include "../libcxx/include/cfloat"
+
+#include "details/__post"
+
+#endif //_GPU_CFLOAT

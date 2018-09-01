@@ -1,0 +1,13 @@
+#ifndef _GPU_NEW
+#define _GPU_NEW
+
+#include "details/__pre"
+
+#ifdef _LIBCPP_NEW
+#undef _LIBCPP_NEW
+#endif
+#include "../libcxx/include/new"
+
+#include "details/__post"
+
+#endif //_GPU_NEW

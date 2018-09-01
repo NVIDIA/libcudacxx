@@ -7,6 +7,8 @@
 #pragma pop_macro("_LIBCPP_HAS_IS_BASE_OF")
 #endif
 
+#pragma pop_macro("_LIBCPP_NO_RTTI")
+#pragma pop_macro("_LIBCPP_NO_EXCEPTIONS")
 #pragma pop_macro("_LIBCPP_STD_VER")
 #pragma pop_macro("__FLT16_MANT_DIG__")
 #pragma pop_macro("_LIBCPP_HAS_NO_NULLPTR")

@@ -5,46 +5,10 @@
 //  be  disclosed,  reproduced,  copied,  or used  in any manner  not
 //  permitted  under license from NVIDIA, Corp.
 
-#ifndef __CUDA_CONFIG_HPP__
-#define __CUDA_CONFIG_HPP__
+#ifndef _GPU_DETAILS_CONFIG
+#define _GPU_DETAILS_CONFIG
 
 #include <type_traits>
-
-namespace cuda {
-namespace experimental {
-template<class T>
-__host__ __device__ int is_shared(T* ptr) {
-#ifndef __CUDA_ARCH__
-    return 0;
-#else
-    int res;
-    asm("{"
-        ".reg .pred p;\n\t"
-        "isspacep.shared p, %1;\n\t"
-        "selp.b32 %0, 1, 0, p;\n\t"
-        "}" :
-        "=r"(res): "l"(ptr));
-    return res;
-#endif
-}
-
-template<class T>
-__host__ __device__ int is_global(T* ptr) {
-#ifndef __CUDA_ARCH__
-    return 0;
-#else
-    int res;
-    asm("{"
-        ".reg .pred p;\n\t"
-        "isspacep.global p, %1;\n\t"
-        "selp.b32 %0, 1, 0, p;\n\t"
-        "}" :
-        "=r"(res): "l"(ptr));
-    return res;
-#endif
-}
-} //experimental
-} //cuda
 
 #ifdef __CUDA_ARCH__
 
@@ -689,4 +653,4 @@ template<class type> void __device__ __atomic_clear_nv(volatile void *ptr, int m
 
 #endif //__CUDA_ARCH__
 
-#endif //__CUDA_CONFIG_HPP__
+#endif //_GPU_DETAILS_CONFIG

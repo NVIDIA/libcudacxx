@@ -1,0 +1,13 @@
+#ifndef _GPU_CSTDARG
+#define _GPU_CSTDARG
+
+#include "details/__pre"
+
+#ifdef _LIBCPP_CSTDARG
+#undef _LIBCPP_CSTDARG
+#endif
+#include "../libcxx/include/cstdarg"
+
+#include "details/__post"
+
+#endif //_GPU_CSTDARG

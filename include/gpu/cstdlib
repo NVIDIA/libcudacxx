@@ -1,0 +1,13 @@
+#ifndef _GPU_CSTDLIB
+#define _GPU_CSTDLIB
+
+#include "details/__pre"
+
+#ifdef _LIBCPP_CSTDLIB
+#undef _LIBCPP_CSTDLIB
+#endif
+#include "../libcxx/include/cstdlib"
+
+#include "details/__post"
+
+#endif //_GPU_CSTDLIB

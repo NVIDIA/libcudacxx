@@ -1,5 +1,5 @@
-#ifndef _CUDA_TYPE_TRAITS_INCLUDED
-#define _CUDA_TYPE_TRAITS_INCLUDED
+#ifndef _GPU_TYPE_TRAITS
+#define _GPU_TYPE_TRAITS
 
 #include "details/__pre"
 
@@ -10,4 +10,4 @@
 
 #include "details/__post"
 
-#endif //_CUDA_TYPE_TRAITS_INCLUDED
+#endif //_GPU_TYPE_TRAITS

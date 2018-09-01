@@ -1,10 +1,33 @@
-#include <cassert>
+#ifndef __CUDACC__
+#define __host__
+#define __device__
+#define __managed__
+#endif
 
+#include <cstddef>
 
+#include <gpu/atomic>
+#include <gpu/cfloat>
+#include <gpu/ciso646>
+#include <gpu/climits>
+//#include <gpu/cstdalign>  DOESN'T EXIST
+#include <gpu/cstdarg>
+#include <gpu/cstdbool>
+#include <gpu/cstddef>
+#include <gpu/cstdint>
+#include <gpu/cstdlib>
+//#include <gpu/exception>  STD
+//#include <gpu/initializer_list> ALREADY DEFINED
+#include <gpu/limits>
+//#include <gpu/new>  STD
+#include <gpu/type_traits>
+//#include <gpu/typeinfo>  STD
 
 #include <gpu/cstdint>
 #include <gpu/cstddef>
 #include <gpu/atomic>
+
+#include <cassert>
 
 // preview on GitHub, monthly release at head
 //#include <gpu/mutex>
@@ -88,7 +111,10 @@ __host__ __device__ void process(const char* begin, const char* end, trie* t, un
     }
 }
 
-__global__ __launch_bounds__(1024, 2) void call_process(const char* begin, const char* end, trie* t) {
+#ifdef __CUDACC__
+__global__ __launch_bounds__(1024, 2) 
+#endif
+void call_process(const char* begin, const char* end, trie* t) {
     auto const index = blockDim.x * blockIdx.x + threadIdx.x;
     auto const range = gridDim.x * blockDim.x;
     process(begin, end, t, index, range);

@@ -1,0 +1,13 @@
+#ifndef _GPU_CSTDBOOL
+#define _GPU_CSTDBOOL
+
+#include "details/__pre"
+
+#ifdef _LIBCPP_CSTDBOOL
+#undef _LIBCPP_CSTDBOOL
+#endif
+#include "../libcxx/include/cstdbool"
+
+#include "details/__post"
+
+#endif //_GPU_CSTDBOOL

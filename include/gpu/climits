@@ -1,0 +1,13 @@
+#ifndef _GPU_CLIMITS
+#define _GPU_CLIMITS
+
+#include "details/__pre"
+
+#ifdef _LIBCPP_CLIMITS
+#undef _LIBCPP_CLIMITS
+#endif
+#include "../libcxx/include/climits"
+
+#include "details/__post"
+
+#endif //_GPU_CLIMITS

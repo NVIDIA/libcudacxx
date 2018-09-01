@@ -1,5 +1,5 @@
-#ifndef _CUDA_CSTDDEF_INCLUDED
-#define _CUDA_CSTDDEF_INCLUDED
+#ifndef _GPU_CSTDDEF
+#define _GPU_CSTDDEF
 
 #include "details/__pre"
 
@@ -10,4 +10,4 @@
 
 #include "details/__post"
 
-#endif //_CUDA_CSTDDEF_INCLUDED
+#endif //_GPU_CSTDDEF

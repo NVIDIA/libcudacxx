@@ -1,0 +1,5 @@
+#ifdef USE_DETAILS_CONFIG
+    #include "../libcxx/include/__nullptr"
+#else
+    #include_next <__nullptr>
+#endif

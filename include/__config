@@ -1,4 +1,3 @@
-
 #ifdef USE_DETAILS_CONFIG
     // nothing
 #else
