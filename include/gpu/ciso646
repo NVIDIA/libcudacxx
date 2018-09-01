@@ -2,12 +2,12 @@
 #define _GPU_CISO646
 
 #include "details/__pre"
-
-#ifdef _LIBCPP_CISO646
+#pragma push_macro("_LIBCPP_CISO646")
 #undef _LIBCPP_CISO646
-#endif
+
 #include "../libcxx/include/ciso646"
 
+#pragma pop_macro("_LIBCPP_CISO646")
 #include "details/__post"
 
 #endif //_GPU_CISO646

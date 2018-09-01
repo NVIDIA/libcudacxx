@@ -2,12 +2,12 @@
 #define _GPU_CSTDBOOL
 
 #include "details/__pre"
-
-#ifdef _LIBCPP_CSTDBOOL
+#pragma push_macro("_LIBCPP_CSTDBOOL")
 #undef _LIBCPP_CSTDBOOL
-#endif
+
 #include "../libcxx/include/cstdbool"
 
+#pragma pop_macro("_LIBCPP_CSTDBOOL")
 #include "details/__post"
 
 #endif //_GPU_CSTDBOOL

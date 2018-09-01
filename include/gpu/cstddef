@@ -2,12 +2,12 @@
 #define _GPU_CSTDDEF
 
 #include "details/__pre"
-
-#ifdef _LIBCPP_CSTDDEF
+#pragma push_macro("_LIBCPP_CSTDDEF")
 #undef _LIBCPP_CSTDDEF
-#endif
+
 #include "../libcxx/include/cstddef"
 
+#pragma pop_macro("_LIBCPP_CSTDDEF")
 #include "details/__post"
 
 #endif //_GPU_CSTDDEF

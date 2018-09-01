@@ -2,12 +2,12 @@
 #define _GPU_CSTDINT
 
 #include "details/__pre"
-
-#ifdef _LIBCPP_CSTDINT
+#pragma push_macro("_LIBCPP_CSTDINT")
 #undef _LIBCPP_CSTDINT
-#endif
+
 #include "../libcxx/include/cstdint"
 
+#pragma pop_macro("_LIBCPP_CSTDINT")
 #include "details/__post"
 
 #endif //_GPU_CSTDINT

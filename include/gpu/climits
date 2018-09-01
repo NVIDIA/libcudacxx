@@ -2,12 +2,12 @@
 #define _GPU_CLIMITS
 
 #include "details/__pre"
-
-#ifdef _LIBCPP_CLIMITS
+#pragma push_macro("_LIBCPP_CLIMITS")
 #undef _LIBCPP_CLIMITS
-#endif
+
 #include "../libcxx/include/climits"
 
+#pragma pop_macro("_LIBCPP_CLIMITS")
 #include "details/__post"
 
 #endif //_GPU_CLIMITS

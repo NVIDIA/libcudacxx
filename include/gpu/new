@@ -2,12 +2,12 @@
 #define _GPU_NEW
 
 #include "details/__pre"
-
-#ifdef _LIBCPP_NEW
+#pragma push_macro("_LIBCPP_NEW")
 #undef _LIBCPP_NEW
-#endif
+
 #include "../libcxx/include/new"
 
+#pragma pop_macro("_LIBCPP_NEW")
 #include "details/__post"
 
 #endif //_GPU_NEW

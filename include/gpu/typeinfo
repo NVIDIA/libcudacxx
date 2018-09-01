@@ -2,12 +2,12 @@
 #define _GPU_TYPEINFO
 
 #include "details/__pre"
-
-#ifdef _LIBCPP_TYPEINFO
+#pragma push_macro("_LIBCPP_TYPEINFO")
 #undef _LIBCPP_TYPEINFO
-#endif
+
 #include "../libcxx/include/typeinfo"
 
+#pragma pop_macro("_LIBCPP_TYPEINFO")
 #include "details/__post"
 
 #endif //_GPU_TYPEINFO

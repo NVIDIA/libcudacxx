@@ -2,12 +2,12 @@
 #define _GPU_CFLOAT
 
 #include "details/__pre"
-
-#ifdef _LIBCPP_CFLOAT
+#pragma push_macro("_LIBCPP_CFLOAT")
 #undef _LIBCPP_CFLOAT
-#endif
+
 #include "../libcxx/include/cfloat"
 
+#pragma pop_macro("_LIBCPP_CFLOAT")
 #include "details/__post"
 
 #endif //_GPU_CFLOAT

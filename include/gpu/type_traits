@@ -2,12 +2,12 @@
 #define _GPU_TYPE_TRAITS
 
 #include "details/__pre"
-
-#ifdef _LIBCPP_TYPE_TRAITS
+#pragma push_macro("_LIBCPP_TYPE_TRAITS")
 #undef _LIBCPP_TYPE_TRAITS
-#endif
+
 #include "../libcxx/include/type_traits"
 
+#pragma pop_macro("_LIBCPP_TYPE_TRAITS")
 #include "details/__post"
 
 #endif //_GPU_TYPE_TRAITS

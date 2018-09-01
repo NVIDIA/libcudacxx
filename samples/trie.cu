@@ -4,7 +4,10 @@
 #define __managed__
 #endif
 
-#include <cstddef>
+#include <type_traits>
+#include <atomic>
+
+//#include <cstddef>
 
 #include <gpu/atomic>
 #include <gpu/cfloat>

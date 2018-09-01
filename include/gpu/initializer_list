@@ -2,12 +2,12 @@
 #define _GPU_INITIALIZER_LIST
 
 #include "details/__pre"
-
-#ifdef _LIBCPP_INITIALIZER_LIST
+#pragma push_macro("_LIBCPP_INITIALIZER_LIST")
 #undef _LIBCPP_INITIALIZER_LIST
-#endif
+
 #include "../libcxx/include/initializer_list"
 
+#pragma pop_macro("_LIBCPP_INITIALIZER_LIST")
 #include "details/__post"
 
 #endif //_GPU_INITIALIZER_LIST

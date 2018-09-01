@@ -1,112 +1,18 @@
-#ifndef __has_feature
-#define __has_feature(__x) 0
+#ifndef __CONFIG_ONCE
+#define __CONFIG_ONCE
+#pragma push_macro("_LIBCPP_CONFIG")
+#undef _LIBCPP_CONFIG
+#include "../libcxx/include/__config"
+#pragma pop_macro("_LIBCPP_CONFIG")
 #endif
 
-#if defined(__clang__) && defined(__CUDACC__)
-#include <cuda_fp16.h>
-#define __fp16 __half
-#endif
-
-#ifdef _MSC_VER
-#pragma push_macro("_LIBCPP_HAS_IS_BASE_OF")
-#undef _LIBCPP_HAS_IS_BASE_OF
-#define _LIBCPP_HAS_IS_BASE_OF
-#endif
-
-#pragma push_macro("_LIBCPP_PUSH_MACROS")
-#pragma push_macro("_LIBCPP_POP_MACROS")
-#pragma push_macro("_LIBCPP_NO_RTTI")
-#pragma push_macro("_LIBCPP_NO_EXCEPTIONS")
-#pragma push_macro("_LIBCPP_STD_VER")
-#pragma push_macro("__FLT16_MANT_DIG__")
-#pragma push_macro("_LIBCPP_HAS_NO_NULLPTR")
 #pragma push_macro("_LIBCPP_HAS_NO_INT128")
-#pragma push_macro("_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER")
-#pragma push_macro("_LIBCPP_HAS_C_ATOMIC_IMP")
-#pragma push_macro("_LIBCPP_HAS_GCC_ATOMIC_IMP")
 #pragma push_macro("_LIBCPP_BEGIN_NAMESPACE_STD")
 #pragma push_macro("_LIBCPP_END_NAMESPACE_STD")
 #pragma push_macro("_LIBCPP_INLINE_VISIBILITY")
-#pragma push_macro("_LIBCPP_TEMPLATE_VIS")
-#pragma push_macro("_LIBCPP_CONSTEXPR")
-#pragma push_macro("_LIBCPP_CONSTEXPR_AFTER_CXX14")
-#pragma push_macro("_NOEXCEPT")
-#pragma push_macro("_NOEXCEPT_")
-#pragma push_macro("_LIBCPP_DIAGNOSE_WARNING")
-#pragma push_macro("_LIBCPP_DEFAULT")
-#pragma push_macro("_LIBCPP_NO_CFI")
 #pragma push_macro("_VSTD")
-#pragma push_macro("_ALIGNAS")
-#undef _LIBCPP_PUSH_MACROS
-#undef _LIBCPP_POP_MACROS
-#undef _LIBCPP_NO_RTTI
-#undef _LIBCPP_NO_EXCEPTIONS
-#undef _LIBCPP_STD_VER
-#undef __FLT16_MANT_DIG__
-#undef _LIBCPP_HAS_NO_NULLPTR
-#undef _LIBCPP_HAS_NO_INT128
-#undef _LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER
-#undef _LIBCPP_HAS_C_ATOMIC_IMP
-#undef _LIBCPP_HAS_GCC_ATOMIC_IMP
-#undef _LIBCPP_BEGIN_NAMESPACE_STD
-#undef _LIBCPP_END_NAMESPACE_STD
-#undef _LIBCPP_INLINE_VISIBILITY
-#undef _LIBCPP_TEMPLATE_VIS
-#undef _LIBCPP_CONSTEXPR
-#undef _LIBCPP_CONSTEXPR_AFTER_CXX14
-#undef _NOEXCEPT
-#undef _NOEXCEPT_
-#undef _LIBCPP_DIAGNOSE_WARNING
-#undef _LIBCPP_DEFAULT
-#undef _LIBCPP_NO_CFI
-#undef _VSTD
-#undef _ALIGNAS
-
-#define _LIBCPP_HAS_NO_NULLPTR
-#define _LIBCPP_HAS_NO_INT128
-#define _LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER
-#define _LIBCPP_HAS_GCC_ATOMIC_IMP
-
-#ifdef CUDA_STD_DETAILS
-#define _LIBCPP_BEGIN_NAMESPACE_STD \
-    namespace cuda { namespace std { namespace details { inline namespace v1 {
-#else
-#define _LIBCPP_BEGIN_NAMESPACE_STD \
-    namespace cuda { namespace std { inline namespace v1 {
-#endif
-        
-/*
-         \
-    template< bool B, class T = void > using enable_if = std::enable_if<B,T>; \
-    template< class T > using is_integral = std::is_integral<T>; \
-    template< class T, class U > using is_same = std::is_same<T,U>;
-*/
-
-#define _LIBCPP_PUSH_MACROS
-#define _LIBCPP_POP_MACROS
-#define _LIBCPP_NO_RTTI
-#define _LIBCPP_NO_EXCEPTIONS
-#define _LIBCPP_STD_VER 11
-#define _VSTD cuda::std::v1
-
-#ifdef CUDA_STD_DETAILS
-#define _LIBCPP_END_NAMESPACE_STD } } } }
-#else
-#define _LIBCPP_END_NAMESPACE_STD } } }
-#endif
-
-#define _LIBCPP_INLINE_VISIBILITY __host__ __device__
-#define _LIBCPP_TEMPLATE_VIS
-#define _LIBCPP_CONSTEXPR constexpr
-#define _LIBCPP_CONSTEXPR_AFTER_CXX14
-#define _NOEXCEPT noexcept
-#define _NOEXCEPT_(x) noexcept
-#define _LIBCPP_DIAGNOSE_WARNING(...)
-#define _LIBCPP_DEFAULT = default;
-#define _LIBCPP_NO_CFI
-#define _ALIGNAS(x) alignas(x)
-
-#define _LIBCPP_HABI __host__ __device__
-#define _LIBCPP_HAS_PRECONFIGURED
+#pragma push_macro("_LIBCPP_NO_RTTI")
+#pragma push_macro("_LIBCPP_NO_EXCEPTIONS")
+#pragma push_macro("USE_DETAILS_CONFIG")
 
 #define USE_DETAILS_CONFIG

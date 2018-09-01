@@ -2,12 +2,12 @@
 #define _GPU_CSTDALIGN
 
 #include "details/__pre"
-
-#ifdef _LIBCPP_CSTDALIGN
+#pragma push_macro("_LIBCPP_CSTDALIGN")
 #undef _LIBCPP_CSTDALIGN
-#endif
+
 #include "../libcxx/include/cstdalign"
 
+#pragma pop_macro("_LIBCPP_CSTDALIGN")
 #include "details/__post"
 
 #endif //_GPU_CSTDALIGN

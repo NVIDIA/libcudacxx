@@ -2,18 +2,12 @@
 #define _GPU_EXCEPTION
 
 #include "details/__pre"
-
-#ifdef _LIBCPP_EXCEPTION
+#pragma push_macro("_LIBCPP_EXCEPTION")
 #undef _LIBCPP_EXCEPTION
-#endif
+
 #include "../libcxx/include/exception"
 
-namespace cuda {
-    namespace std {
-        using exception = ::std::exception;
-    }
-}
-
+#pragma pop_macro("_LIBCPP_EXCEPTION")
 #include "details/__post"
 
 #endif //_GPU_EXCEPTION

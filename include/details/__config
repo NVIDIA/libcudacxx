@@ -8,8 +8,6 @@
 #ifndef _GPU_DETAILS_CONFIG
 #define _GPU_DETAILS_CONFIG
 
-#include <type_traits>
-
 #ifdef __CUDA_ARCH__
 
 #ifndef __force_scope
