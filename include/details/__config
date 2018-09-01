@@ -214,7 +214,7 @@ inline __device__ int __stronger_order_nv_(int a, int b) {
 */
 
 #define DO__atomic_load_nv_(bytes, bits) \
-template<class type, typename std::enable_if<sizeof(type)==bytes, int>::type = 0> \
+template<class type, typename cuda::std::enable_if<sizeof(type)==bytes, int>::type = 0> \
 void __device__ __atomic_load_nv_ (const type *ptr, type *ret, int memorder) { \
     int##bits##_t tmp = 0; \
     switch (memorder) { \
@@ -239,7 +239,7 @@ type __device__ __atomic_load_n_nv_(const type *ptr, int memorder) {
 }
 
 #define DO__atomic_store_nv_(bytes, bits) \
-template<class type, typename std::enable_if<sizeof(type)==bytes, int>::type = 0> \
+template<class type, typename cuda::std::enable_if<sizeof(type)==bytes, int>::type = 0> \
 void __device__ __atomic_store_nv_ (type *ptr, type *val, int memorder) { \
     int##bits##_t tmp = 0; \
     memcpy(&tmp, val, bytes); \
@@ -261,7 +261,7 @@ void __device__ __atomic_store_n_nv_(type *ptr, type val, int memorder) {
 }
 
 #define DO__atomic_compare_exchange_nv_(bytes, bits) \
-template<class type, typename std::enable_if<sizeof(type)==bytes, int>::type = 0> \
+template<class type, typename cuda::std::enable_if<sizeof(type)==bytes, int>::type = 0> \
 bool __device__ __atomic_compare_exchange_nv_ (type *ptr, type *expected, const type *desired, bool, int success_memorder, int failure_memorder) { \
     int##bits##_t tmp = 0, old = 0, old_tmp; \
     memcpy(&tmp, desired, bytes); \
@@ -283,10 +283,10 @@ bool __device__ __atomic_compare_exchange_nv_ (type *ptr, type *expected, const 
 DO__atomic_compare_exchange_nv_(4, 32)
 DO__atomic_compare_exchange_nv_(8, 64)
 
-template<class type, typename std::enable_if<sizeof(type) <= 2, int>::type = 0> \
+template<class type, typename cuda::std::enable_if<sizeof(type) <= 2, int>::type = 0> \
 bool __device__ __atomic_compare_exchange_nv_(type *ptr, type *expected, const type *desired, bool, int success_memorder, int failure_memorder) {
 
-    using R = typename std::conditional<std::is_volatile<type>::value, volatile uint32_t, uint32_t>::type;
+    using R = typename cuda::std::conditional<cuda::std::is_volatile<type>::value, volatile uint32_t, uint32_t>::type;
     auto const aligned = (R*)((intptr_t)ptr & ~(sizeof(uint32_t) - 1));
     auto const offset = uint32_t((intptr_t)ptr & (sizeof(uint32_t) - 1)) * 8;
     auto const mask = ((1 << sizeof(type)*8) - 1) << offset;
@@ -310,7 +310,7 @@ bool __device__ __atomic_compare_exchange_n_nv_(type *ptr, type *expected, type 
 }
 
 #define DO__atomic_exchange_nv_(bytes, bits) \
-template<class type, typename std::enable_if<sizeof(type)==bytes, int>::type = 0> \
+template<class type, typename cuda::std::enable_if<sizeof(type)==bytes, int>::type = 0> \
 void __device__ __atomic_exchange_nv_ (type *ptr, type *val, type *ret, int memorder) { \
     int##bits##_t tmp = 0; \
     memcpy(&tmp, val, bytes); \
@@ -328,7 +328,7 @@ void __device__ __atomic_exchange_nv_ (type *ptr, type *val, type *ret, int memo
 DO__atomic_exchange_nv_(4,32)
 DO__atomic_exchange_nv_(8,64)
 
-template<class type, typename std::enable_if<sizeof(type)<=2, int>::type = 0>
+template<class type, typename cuda::std::enable_if<sizeof(type)<=2, int>::type = 0>
 void __device__ __atomic_exchange_nv_ (type *ptr, type *val, type *ret, int memorder) {
 
     type expected = __atomic_load_n_nv_(ptr, __ATOMIC_RELAXED);
@@ -345,7 +345,7 @@ type __device__ __atomic_exchange_n_nv_(type *ptr, type val, int memorder) {
 }
 
 #define DO__atomic_fetch_add_nv_(bytes, bits) \
-template<class type, class delta, typename std::enable_if<sizeof(type)==bytes, int>::type = 0> \
+template<class type, class delta, typename cuda::std::enable_if<sizeof(type)==bytes, int>::type = 0> \
 type __device__ __atomic_fetch_add_nv_ (type *ptr, delta val, int memorder) { \
     type ret; \
     switch (memorder) { \
@@ -362,7 +362,7 @@ type __device__ __atomic_fetch_add_nv_ (type *ptr, delta val, int memorder) { \
 DO__atomic_fetch_add_nv_(4, 32)
 DO__atomic_fetch_add_nv_(8, 64)
 
-template<class type, class delta, typename std::enable_if<sizeof(type)<=2, int>::type = 0>
+template<class type, class delta, typename cuda::std::enable_if<sizeof(type)<=2, int>::type = 0>
 type __device__ __atomic_fetch_add_nv_ (type *ptr, delta val, int memorder) {
 
     type expected = __atomic_load_n_nv_(ptr, __ATOMIC_RELAXED);
@@ -373,7 +373,7 @@ type __device__ __atomic_fetch_add_nv_ (type *ptr, delta val, int memorder) {
 }
 
 #define DO__atomic_fetch_sub_nv_(bytes, bits) \
-template<class type, class delta, typename std::enable_if<sizeof(type)==bytes, int>::type = 0> \
+template<class type, class delta, typename cuda::std::enable_if<sizeof(type)==bytes, int>::type = 0> \
 type __device__ __atomic_fetch_sub_nv_ (type *ptr, delta val, int memorder) { \
     type ret; \
     switch (memorder) { \
@@ -390,7 +390,7 @@ type __device__ __atomic_fetch_sub_nv_ (type *ptr, delta val, int memorder) { \
 DO__atomic_fetch_sub_nv_(4,32)
 DO__atomic_fetch_sub_nv_(8,64)
 
-template<class type, class delta, typename std::enable_if<sizeof(type)<=2, int>::type = 0>
+template<class type, class delta, typename cuda::std::enable_if<sizeof(type)<=2, int>::type = 0>
 type __device__ __atomic_fetch_sub_nv_ (type *ptr, delta val, int memorder) {
 
     type expected = __atomic_load_n_nv_(ptr, __ATOMIC_RELAXED);
@@ -401,7 +401,7 @@ type __device__ __atomic_fetch_sub_nv_ (type *ptr, delta val, int memorder) {
 }
 
 #define DO__atomic_fetch_and_nv_(bytes, bits) \
-template<class type, typename std::enable_if<sizeof(type)==bytes, int>::type = 0> \
+template<class type, typename cuda::std::enable_if<sizeof(type)==bytes, int>::type = 0> \
 type __device__ __atomic_fetch_and_nv_ (type *ptr, type val, int memorder) { \
     type ret; \
     switch (memorder) { \
@@ -418,7 +418,7 @@ type __device__ __atomic_fetch_and_nv_ (type *ptr, type val, int memorder) { \
 DO__atomic_fetch_and_nv_(4,32)
 DO__atomic_fetch_and_nv_(8,64)
 
-template<class type, class delta, typename std::enable_if<sizeof(type)<=2, int>::type = 0>
+template<class type, class delta, typename cuda::std::enable_if<sizeof(type)<=2, int>::type = 0>
 type __device__ __atomic_fetch_and_nv_ (type *ptr, delta val, int memorder) {
 
     type expected = __atomic_load_n_nv_(ptr, __ATOMIC_RELAXED);
@@ -429,7 +429,7 @@ type __device__ __atomic_fetch_and_nv_ (type *ptr, delta val, int memorder) {
 }
 
 #define DO__atomic_fetch_xor_nv_(bytes, bits) \
-template<class type, typename std::enable_if<sizeof(type)==bytes, int>::type = 0> \
+template<class type, typename cuda::std::enable_if<sizeof(type)==bytes, int>::type = 0> \
 type __device__ __atomic_fetch_xor_nv_ (type *ptr, type val, int memorder) { \
     type ret; \
     switch (memorder) { \
@@ -446,7 +446,7 @@ type __device__ __atomic_fetch_xor_nv_ (type *ptr, type val, int memorder) { \
 DO__atomic_fetch_xor_nv_(4,32)
 DO__atomic_fetch_xor_nv_(8,64)
 
-template<class type, class delta, typename std::enable_if<sizeof(type)<=2, int>::type = 0>
+template<class type, class delta, typename cuda::std::enable_if<sizeof(type)<=2, int>::type = 0>
 type __device__ __atomic_fetch_xor_nv_ (type *ptr, delta val, int memorder) {
 
     type expected = __atomic_load_n_nv_(ptr, __ATOMIC_RELAXED);
@@ -457,7 +457,7 @@ type __device__ __atomic_fetch_xor_nv_ (type *ptr, delta val, int memorder) {
 }
 
 #define DO__atomic_fetch_or_nv_(bytes, bits) \
-template<class type, typename std::enable_if<sizeof(type)==bytes, int>::type = 0> \
+template<class type, typename cuda::std::enable_if<sizeof(type)==bytes, int>::type = 0> \
 type __device__ __atomic_fetch_or_nv_ (type *ptr, type val, int memorder) { \
     type ret; \
     switch (memorder) { \
@@ -474,7 +474,7 @@ type __device__ __atomic_fetch_or_nv_ (type *ptr, type val, int memorder) { \
 DO__atomic_fetch_or_nv_(4,32)
 DO__atomic_fetch_or_nv_(8,64)
 
-template<class type, class delta, typename std::enable_if<sizeof(type)<=2, int>::type = 0>
+template<class type, class delta, typename cuda::std::enable_if<sizeof(type)<=2, int>::type = 0>
 type __device__ __atomic_fetch_or_nv_ (type *ptr, delta val, int memorder) {
 
     type expected = __atomic_load_n_nv_(ptr, __ATOMIC_RELAXED);

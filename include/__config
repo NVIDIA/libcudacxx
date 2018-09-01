@@ -4,9 +4,9 @@
     #define _LIBCPP_HAS_NO_INT128
 
     #undef _LIBCPP_NO_RTTI
-    #undef _LIBCPP_NO_EXCEPTIONS
-
     #define _LIBCPP_NO_RTTI
+
+    #undef _LIBCPP_NO_EXCEPTIONS
     #define _LIBCPP_NO_EXCEPTIONS
 
     #undef _LIBCPP_BEGIN_NAMESPACE_STD
