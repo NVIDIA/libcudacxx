@@ -122,6 +122,16 @@ void call_process(const char* begin, const char* end, trie* t) {
 #include <chrono>
 #include <thread>
 
+#define gpuErrchk(ans) { gpuAssert((ans), __FILE__, __LINE__); }
+inline void gpuAssert(cudaError_t code, const char *file, int line, bool abort=true)
+{
+   if (code != cudaSuccess) 
+   {
+      fprintf(stderr,"GPUassert: %s %s %d\n", cudaGetErrorString(code), file, line);
+      if (abort) exit(code);
+   }
+}
+
 template <class T>
 struct managed_allocator {
   typedef T value_type;
@@ -130,13 +140,12 @@ struct managed_allocator {
   T* allocate(std::size_t n) {
     assert(n <= std::size_t(-1) / sizeof(T));
     void* out = nullptr;
-    auto const ret = cudaMallocManaged(&out, n*sizeof(T));
-    assert(ret == cudaSuccess);
+    gpuErrchk(cudaMallocManaged(&out, n*sizeof(T)));
     if(auto p = static_cast<T*>(out)) return p;
     return nullptr;
   }
   void deallocate(T* p, std::size_t) noexcept { 
-      cudaFree(p); 
+      gpuErrchk(cudaFree(p)); 
   }
 };
 template<class T, class... Args>
@@ -150,7 +159,7 @@ using vector = std::vector<node, managed_allocator<node>>;
 
 void do_trie(string* input, vector* nodes, bool use_gpu, int blocks, int threads) {
     
-    cudaMemset(nodes->data(), 0, nodes->size() * sizeof(node));
+    gpuErrchk(cudaMemset(nodes->data(), 0, nodes->size() * sizeof(node)));
 
     trie* const t = make_<trie>(nodes->data());
 
@@ -158,8 +167,8 @@ void do_trie(string* input, vector* nodes, bool use_gpu, int blocks, int threads
     std::atomic_signal_fence(std::memory_order_seq_cst);
     if(use_gpu) {
         call_process<<<blocks,threads>>>(input->data(), input->data() + input->size(), t);
-        auto const ret = cudaDeviceSynchronize();
-	assert(ret == cudaSuccess);
+        gpuErrchk(cudaGetLastError());
+        gpuErrchk(cudaDeviceSynchronize());
     }
     else {
         assert(blocks == 1);
@@ -209,9 +218,9 @@ int main() {
     do_trie(input, nodes, false, 1, std::thread::hardware_concurrency());
     do_trie(input, nodes, false, 1, std::thread::hardware_concurrency());
 
-    if(cudaSetDevice(0) != cudaSuccess) return 1;
+    gpuErrchk(cudaSetDevice(0));
     cudaDeviceProp deviceProp;
-    if(cudaGetDeviceProperties(&deviceProp, 0) != cudaSuccess) return 2;
+    gpuErrchk(cudaGetDeviceProperties(&deviceProp, 0));
 
     do_trie(input, nodes, true, deviceProp.multiProcessorCount * deviceProp.maxThreadsPerMultiProcessor >> 10, 1<<10);
     do_trie(input, nodes, true, deviceProp.multiProcessorCount * deviceProp.maxThreadsPerMultiProcessor >> 10, 1<<10);

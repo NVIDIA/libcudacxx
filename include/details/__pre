@@ -75,6 +75,10 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
         #include <cuda_fp16.h>
         #define __fp16 __half
     #endif
+    #if defined(__FLT16_MANT_DIG__)
+        #include <cuda_fp16.h>
+        #define _Float16 __half
+    #endif
 #else
     #define __host__
     #define __device__
