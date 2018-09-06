@@ -29,13 +29,21 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef _GPU_NEW
 #define _GPU_NEW
 
-#include "details/__pre"
-#pragma push_macro("_LIBCPP_NEW")
-#undef _LIBCPP_NEW
+#include <new>
 
-#include "../libcxx/include/new"
+namespace gpu { namespace std { inline namespace v1 {
 
-#pragma pop_macro("_LIBCPP_NEW")
-#include "details/__post"
+    using bad_alloc = ::std::bad_alloc;
+    using bad_array_new_length = ::std::bad_array_new_length;
+    using nothrow_t = ::std::nothrow_t;
+    static constexpr decltype(::std::nothrow)& nothrow = ::std::nothrow;
+
+    using new_handler = ::std::new_handler;
+    inline new_handler set_new_handler(new_handler new_p) noexcept {
+        return ::std::set_new_handler(new_p); }
+    inline new_handler get_new_handler() noexcept {
+        return ::std::get_new_handler(); }
+
+} } }
 
 #endif //_GPU_NEW

@@ -29,13 +29,14 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef _GPU_TYPEINFO
 #define _GPU_TYPEINFO
 
-#include "details/__pre"
-#pragma push_macro("_LIBCPP_TYPEINFO")
-#undef _LIBCPP_TYPEINFO
+#include <typeinfo>
 
-#include "../libcxx/include/typeinfo"
+namespace gpu { namespace std { inline namespace v1 {
 
-#pragma pop_macro("_LIBCPP_TYPEINFO")
-#include "details/__post"
+  using type_info = ::std::type_info;
+  using bad_cast = ::std::bad_cast;
+  using bad_typeid = ::std::bad_typeid;
+
+} } }
 
 #endif //_GPU_TYPEINFO

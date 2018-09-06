@@ -29,13 +29,46 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef _GPU_EXCEPTION
 #define _GPU_EXCEPTION
 
-#include "details/__pre"
-#pragma push_macro("_LIBCPP_EXCEPTION")
-#undef _LIBCPP_EXCEPTION
+#include <exception>
 
-#include "../libcxx/include/exception"
+namespace gpu { namespace std { inline namespace v1 {
 
-#pragma pop_macro("_LIBCPP_EXCEPTION")
-#include "details/__post"
+    using exception = ::std::exception;
+    using bad_exception = ::std::bad_exception;
+    using nested_exception = ::std::nested_exception;
+
+    using unexpected_handler = ::std::unexpected_handler;
+    inline unexpected_handler get_unexpected() noexcept { 
+        return ::std::get_unexpected(); }
+    inline unexpected_handler set_unexpected(unexpected_handler f) noexcept  { 
+        return ::std::set_unexpected(f); }
+    [[noreturn]] inline void unexpected() {
+        ::std::unexpected(); }
+ 
+    using terminate_handler = ::std::terminate_handler;
+    inline terminate_handler get_terminate() noexcept { 
+        return ::std::get_terminate(); }
+    inline terminate_handler set_terminate(terminate_handler f) noexcept { 
+        return ::std::set_terminate(f); }
+    [[noreturn]] inline void terminate() noexcept { 
+        ::std::terminate(); }
+ 
+    inline bool uncaught_exception() noexcept { 
+        return ::std::uncaught_exception(); }
+ 
+    using exception_ptr = ::std::exception_ptr;
+    inline exception_ptr current_exception() noexcept { 
+        return ::std::current_exception(); }
+    [[noreturn]] inline void rethrow_exception(exception_ptr p) { 
+        ::std::rethrow_exception(p); }
+    template<class E> inline exception_ptr make_exception_ptr(E e) noexcept { 
+        return ::std::make_exception_ptr(e); }
+ 
+    template <class T> [[noreturn]] inline void throw_with_nested(T&& t) { 
+        ::std::throw_with_nested(t); }
+    template <class E> inline void rethrow_if_nested(const E& e) { 
+        ::std::rethrow_if_nested(e); }
+
+} } }
 
 #endif //_GPU_EXCEPTION
