@@ -33,10 +33,14 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     #define __CONFIG_ONCE
     #pragma push_macro("_LIBCPP_CONFIG")
     #undef _LIBCPP_CONFIG
+    #ifdef _NOEXCEPT
+    #undef _NOEXCEPT
+    #endif
     #include "../libcxx/include/__config"
     #pragma pop_macro("_LIBCPP_CONFIG")
 #endif
 
+#pragma push_macro("_LIBCPP_CONSTEXPR")
 #pragma push_macro("_LIBCPP_HAS_GCC_ATOMIC_IMP")
 #pragma push_macro("_LIBCPP_HAS_NO_INT128")
 #pragma push_macro("_LIBCPP_BEGIN_NAMESPACE_STD")
@@ -47,6 +51,8 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 #pragma push_macro("_LIBCPP_NO_EXCEPTIONS")
 #pragma push_macro("USE_DETAILS_CONFIG")
 
+#undef _LIBCPP_CONSTEXPR
+#define _LIBCPP_CONSTEXPR constexpr
 #define _LIBCPP_HAS_GCC_ATOMIC_IMP
 
 #undef _LIBCPP_HAS_NO_INT128
