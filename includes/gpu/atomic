@@ -30,6 +30,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 #define _GPU_ATOMIC
 
 #include <atomic>
+#include <type_traits>
 
 #include "cstddef"
 #include "cstdint"

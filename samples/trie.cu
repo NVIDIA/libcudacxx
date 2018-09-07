@@ -26,8 +26,8 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#include <gpu/cstdint>
 #include <gpu/cstddef>
+#include <gpu/cstdint>
 #include <gpu/atomic>
 
 #include "mutex.hpp"
