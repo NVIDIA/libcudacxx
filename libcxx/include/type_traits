@@ -4834,8 +4834,12 @@ _LIBCPP_END_NAMESPACE_STD
 
 #if _LIBCPP_STD_VER > 14
 // std::byte
+#ifdef _LIBCPP_BEGIN_NAMESPACE_STD_NOVERSION
+_LIBCPP_BEGIN_NAMESPACE_STD_NOVERSION
+#else
 namespace std  // purposefully not versioned
 {
+#endif //_LIBCPP_BEGIN_NAMESPACE_STD_NOVERSION
 template <class _Integer>
   constexpr typename enable_if<is_integral_v<_Integer>, byte>::type &
   operator<<=(byte& __lhs, _Integer __shift) noexcept
@@ -4860,7 +4864,11 @@ template <class _Integer>
   constexpr typename enable_if<is_integral_v<_Integer>, _Integer>::type
   to_integer(byte __b) noexcept { return static_cast<_Integer>(__b); }
 
+#ifdef _LIBCPP_END_NAMESPACE_STD_NOVERSION
+_LIBCPP_END_NAMESPACE_STD_NOVERSION
+#else
 }
+#endif //_LIBCPP_END_NAMESPACE_STD_NOVERSION
 #endif
 
 #endif  // _LIBCPP_TYPE_TRAITS

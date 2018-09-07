@@ -64,8 +64,12 @@ typedef long double max_align_t;
 _LIBCPP_END_NAMESPACE_STD
 
 #if _LIBCPP_STD_VER > 14
+#ifdef _LIBCPP_BEGIN_NAMESPACE_STD_NOVERSION
+_LIBCPP_BEGIN_NAMESPACE_STD_NOVERSION
+#else
 namespace std  // purposefully not versioned
 {
+#endif //_LIBCPP_BEGIN_NAMESPACE_STD_NOVERSION
 enum class byte : unsigned char {};
 
 constexpr byte  operator| (byte  __lhs, byte __rhs) noexcept
@@ -109,7 +113,11 @@ constexpr byte  operator~ (byte __b) noexcept
     ));
 }
 
+#ifdef _LIBCPP_END_NAMESPACE_STD_NOVERSION
+_LIBCPP_END_NAMESPACE_STD_NOVERSION
+#else
 }
+#endif //_LIBCPP_END_NAMESPACE_STD_NOVERSION
 
 #include <type_traits>  // rest of byte
 #endif
