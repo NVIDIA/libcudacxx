@@ -41,7 +41,11 @@ Types:
 #endif
 
 // Don't include our own <stddef.h>; we don't want to declare ::nullptr_t.
-#include_next <stddef.h>
+#ifdef _MSC_VER
+    #include <../ucrt/stddef.h>
+#else
+    #include_next <stddef.h>
+#endif
 #include <__nullptr>
 
 _LIBCPP_BEGIN_NAMESPACE_STD
