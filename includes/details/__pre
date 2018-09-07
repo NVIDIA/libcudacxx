@@ -40,6 +40,8 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     #pragma pop_macro("_LIBCPP_CONFIG")
 #endif
 
+#pragma push_macro("_LIBCPP_BEGIN_NAMESPACE_STD_NOVERSION")
+#pragma push_macro("_LIBCPP_END_NAMESPACE_STD_NOVERSION")
 #pragma push_macro("_LIBCPP_CONSTEXPR")
 #pragma push_macro("_LIBCPP_HAS_GCC_ATOMIC_IMP")
 #pragma push_macro("_LIBCPP_HAS_NO_INT128")
@@ -51,6 +53,8 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 #pragma push_macro("_LIBCPP_NO_EXCEPTIONS")
 #pragma push_macro("USE_DETAILS_CONFIG")
 
+#undef _LIBCPP_BEGIN_NAMESPACE_STD_NOVERSION
+#undef _LIBCPP_END_NAMESPACE_STD_NOVERSION
 #undef _LIBCPP_CONSTEXPR
 #define _LIBCPP_CONSTEXPR constexpr
 #define _LIBCPP_HAS_GCC_ATOMIC_IMP
@@ -76,6 +80,9 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
         namespace gpu { namespace std { inline namespace v1 {
     #define _LIBCPP_END_NAMESPACE_STD } } }
 #endif
+
+#define _LIBCPP_BEGIN_NAMESPACE_STD_NOVERSION namespace gpu { namespace std {
+#define _LIBCPP_END_NAMESPACE_STD_NOVERSION { {
 
 #undef _LIBCPP_INLINE_VISIBILITY
 #define _LIBCPP_INLINE_VISIBILITY __host__ __device__

@@ -32,6 +32,8 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #pragma pop_macro("USE_DETAILS_CONFIG")
 
+#pragma pop_macro("_LIBCPP_BEGIN_NAMESPACE_STD_NOVERSION")
+#pragma pop_macro("_LIBCPP_END_NAMESPACE_STD_NOVERSION")
 #pragma pop_macro("_LIBCPP_CONSTEXPR")
 #pragma pop_macro("_LIBCPP_NO_AUTO_LINK")
 #pragma pop_macro("_LIBCPP_HAS_GCC_ATOMIC_IMP")

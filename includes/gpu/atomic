@@ -35,7 +35,10 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "cstdint"
 #include "type_traits"
 
-#include "details/__pre"
+#ifndef __CUDACC__
+    #define __host__
+    #define __device__
+#endif
 
 #ifdef __CUDA_ARCH__
 
@@ -136,333 +139,333 @@ template <class T> T kill_dependency(T t) noexcept { return t; }
 
 template <typename T>
 struct atomic {
-    static_assert(std::is_trivially_copyable<T>::value, "The atomic<T> template requires trivially-copyable T");
+    static_assert(is_trivially_copyable<T>::value, "The atomic<T> template requires trivially-copyable T");
 
     using value_type = T;
-    using difference_type = typename std::conditional<std::is_pointer<T>::value, ptrdiff_t, T>::type;
+    using difference_type = typename conditional<is_pointer<T>::value, ptrdiff_t, T>::type;
 
 #if defined(__cpp_lib_atomic_is_always_lock_free)
     static constexpr bool is_always_lock_free = details::is_always_lock_free<T>::value;
 #endif
 
-    _LIBCPP_INLINE_VISIBILITY bool is_lock_free() const noexcept { return _base.is_lock_free(); }
+    __host__ __device__ bool is_lock_free() const noexcept { return _base.is_lock_free(); }
 
-    _LIBCPP_INLINE_VISIBILITY void store(T desired, memory_order order = memory_order_seq_cst) noexcept {
+    __host__ __device__ void store(T desired, memory_order order = memory_order_seq_cst) noexcept {
         _base.store(desired, order);
     }
-    _LIBCPP_INLINE_VISIBILITY T load(memory_order order = memory_order_seq_cst) const noexcept {
+    __host__ __device__ T load(memory_order order = memory_order_seq_cst) const noexcept {
         return _base.load(order);
     }
-    _LIBCPP_INLINE_VISIBILITY operator T() const noexcept {
+    __host__ __device__ operator T() const noexcept {
         return _base.load();
     }
-    _LIBCPP_INLINE_VISIBILITY T exchange(T desired, memory_order order = memory_order_seq_cst) noexcept {
+    __host__ __device__ T exchange(T desired, memory_order order = memory_order_seq_cst) noexcept {
         return _base.exchange(desired, order);
     }
-    _LIBCPP_INLINE_VISIBILITY bool compare_exchange_weak(T& expected, T desired, memory_order success, memory_order failure) noexcept {
+    __host__ __device__ bool compare_exchange_weak(T& expected, T desired, memory_order success, memory_order failure) noexcept {
         return _base.compare_exchange_weak(expected, desired, success, failure);
     }
-    _LIBCPP_INLINE_VISIBILITY bool compare_exchange_strong(T& expected, T desired, memory_order success, memory_order failure) noexcept {
+    __host__ __device__ bool compare_exchange_strong(T& expected, T desired, memory_order success, memory_order failure) noexcept {
         return _base.compare_exchange_strong(expected, desired, success, failure);
     }
-    _LIBCPP_INLINE_VISIBILITY bool compare_exchange_weak(T& expected, T desired, memory_order order = memory_order_seq_cst) noexcept {
+    __host__ __device__ bool compare_exchange_weak(T& expected, T desired, memory_order order = memory_order_seq_cst) noexcept {
         return _base.compare_exchange_weak(expected, desired, order, order);
     }
-    _LIBCPP_INLINE_VISIBILITY bool compare_exchange_strong(T& expected, T desired, memory_order order = memory_order_seq_cst) noexcept {
+    __host__ __device__ bool compare_exchange_strong(T& expected, T desired, memory_order order = memory_order_seq_cst) noexcept {
         return _base.compare_exchange_strong(expected, desired, order, order);
     }
 
     details::atomic<T> _base;
 
     atomic() noexcept = default;
-    _LIBCPP_INLINE_VISIBILITY constexpr atomic(T desired) noexcept : _base(desired) { }
-    _LIBCPP_INLINE_VISIBILITY atomic(atomic const&) = delete;
-    _LIBCPP_INLINE_VISIBILITY atomic& operator=(atomic const&) = delete;
-    _LIBCPP_INLINE_VISIBILITY T operator=(T desired) noexcept {
+    __host__ __device__ constexpr atomic(T desired) noexcept : _base(desired) { }
+    __host__ __device__ atomic(atomic const&) = delete;
+    __host__ __device__ atomic& operator=(atomic const&) = delete;
+    __host__ __device__ T operator=(T desired) noexcept {
         _base.store(desired);
         return desired;
     }
 
-    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value || std::is_pointer<Q>::value, int>::type = 0>
-    _LIBCPP_INLINE_VISIBILITY T fetch_add(difference_type addend, memory_order order = memory_order_seq_cst) noexcept {
+    template < typename Q = T, typename enable_if<is_integral<Q>::value || is_pointer<Q>::value, int>::type = 0>
+    __host__ __device__ T fetch_add(difference_type addend, memory_order order = memory_order_seq_cst) noexcept {
         return _base.fetch_add(addend, order);
     }
-    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value || std::is_pointer<Q>::value, int>::type = 0>
-    _LIBCPP_INLINE_VISIBILITY T fetch_sub(difference_type addend, memory_order order = memory_order_seq_cst) noexcept {
+    template < typename Q = T, typename enable_if<is_integral<Q>::value || is_pointer<Q>::value, int>::type = 0>
+    __host__ __device__ T fetch_sub(difference_type addend, memory_order order = memory_order_seq_cst) noexcept {
         return _base.fetch_sub(addend, order);
     }
-    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value, int>::type = 0>
-    _LIBCPP_INLINE_VISIBILITY T fetch_and(T andend, memory_order order = memory_order_seq_cst) noexcept {
+    template < typename Q = T, typename enable_if<is_integral<Q>::value, int>::type = 0>
+    __host__ __device__ T fetch_and(T andend, memory_order order = memory_order_seq_cst) noexcept {
         return _base.fetch_and(andend, order);
     }
-    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value, int>::type = 0>
-    _LIBCPP_INLINE_VISIBILITY T fetch_or(T orend, memory_order order = memory_order_seq_cst) noexcept {
+    template < typename Q = T, typename enable_if<is_integral<Q>::value, int>::type = 0>
+    __host__ __device__ T fetch_or(T orend, memory_order order = memory_order_seq_cst) noexcept {
         return _base.fetch_or(orend, order);
     }
-    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value, int>::type = 0>
-    _LIBCPP_INLINE_VISIBILITY T fetch_xor(T xorend, memory_order order = memory_order_seq_cst) noexcept {
+    template < typename Q = T, typename enable_if<is_integral<Q>::value, int>::type = 0>
+    __host__ __device__ T fetch_xor(T xorend, memory_order order = memory_order_seq_cst) noexcept {
         return _base.fetch_xor(xorend, order);
     }
-    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value || std::is_pointer<Q>::value, int>::type = 0>
-    _LIBCPP_INLINE_VISIBILITY T operator++(int) noexcept {
+    template < typename Q = T, typename enable_if<is_integral<Q>::value || is_pointer<Q>::value, int>::type = 0>
+    __host__ __device__ T operator++(int) noexcept {
         return ++_base;
     }
-    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value || std::is_pointer<Q>::value, int>::type = 0>
-    _LIBCPP_INLINE_VISIBILITY T operator--(int) noexcept {
+    template < typename Q = T, typename enable_if<is_integral<Q>::value || is_pointer<Q>::value, int>::type = 0>
+    __host__ __device__ T operator--(int) noexcept {
         return --_base;
     }
-    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value || std::is_pointer<Q>::value, int>::type = 0>
-    _LIBCPP_INLINE_VISIBILITY T operator++() noexcept {
+    template < typename Q = T, typename enable_if<is_integral<Q>::value || is_pointer<Q>::value, int>::type = 0>
+    __host__ __device__ T operator++() noexcept {
         return _base++;
     }
-    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value || std::is_pointer<Q>::value, int>::type = 0>
-    _LIBCPP_INLINE_VISIBILITY T operator--() noexcept {
+    template < typename Q = T, typename enable_if<is_integral<Q>::value || is_pointer<Q>::value, int>::type = 0>
+    __host__ __device__ T operator--() noexcept {
         return --_base;
     }
-    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value || std::is_pointer<Q>::value, int>::type = 0>
-    _LIBCPP_INLINE_VISIBILITY T operator+=(difference_type addend) noexcept {
+    template < typename Q = T, typename enable_if<is_integral<Q>::value || is_pointer<Q>::value, int>::type = 0>
+    __host__ __device__ T operator+=(difference_type addend) noexcept {
         return _base += addend;
     }
-    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value || std::is_pointer<Q>::value, int>::type = 0>
-    _LIBCPP_INLINE_VISIBILITY T operator-=(difference_type addend) noexcept {
+    template < typename Q = T, typename enable_if<is_integral<Q>::value || is_pointer<Q>::value, int>::type = 0>
+    __host__ __device__ T operator-=(difference_type addend) noexcept {
         return _base -= addend;
     }
-    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value, int>::type = 0>
-    _LIBCPP_INLINE_VISIBILITY T operator&=(T andend) noexcept {
+    template < typename Q = T, typename enable_if<is_integral<Q>::value, int>::type = 0>
+    __host__ __device__ T operator&=(T andend) noexcept {
         return _base &= andend;
     }
-    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value, int>::type = 0>
-    _LIBCPP_INLINE_VISIBILITY T operator|=(T orend) noexcept {
+    template < typename Q = T, typename enable_if<is_integral<Q>::value, int>::type = 0>
+    __host__ __device__ T operator|=(T orend) noexcept {
         return _base |= orend;
     }
-    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value, int>::type = 0>
-    _LIBCPP_INLINE_VISIBILITY T operator^=(T xorend) noexcept {
+    template < typename Q = T, typename enable_if<is_integral<Q>::value, int>::type = 0>
+    __host__ __device__ T operator^=(T xorend) noexcept {
         return _base ^= xorend;
     }
 
-    _LIBCPP_INLINE_VISIBILITY bool is_lock_free() const volatile noexcept { return _base.is_lock_free(); }
+    __host__ __device__ bool is_lock_free() const volatile noexcept { return _base.is_lock_free(); }
 
-    _LIBCPP_INLINE_VISIBILITY void store(T desired, memory_order order = memory_order_seq_cst) volatile noexcept {
+    __host__ __device__ void store(T desired, memory_order order = memory_order_seq_cst) volatile noexcept {
         _base.store(desired, order);
     }
-    _LIBCPP_INLINE_VISIBILITY T load(memory_order order = memory_order_seq_cst) const volatile noexcept {
+    __host__ __device__ T load(memory_order order = memory_order_seq_cst) const volatile noexcept {
         return _base.load(order);
     }
-    _LIBCPP_INLINE_VISIBILITY operator T() const volatile noexcept {
+    __host__ __device__ operator T() const volatile noexcept {
         return _base.load();
     }
-    _LIBCPP_INLINE_VISIBILITY T exchange(T desired, memory_order order = memory_order_seq_cst) volatile noexcept {
+    __host__ __device__ T exchange(T desired, memory_order order = memory_order_seq_cst) volatile noexcept {
         return _base.exchange(desired, order);
     }
-    _LIBCPP_INLINE_VISIBILITY bool compare_exchange_weak(T& expected, T desired, memory_order success, memory_order failure) volatile noexcept {
+    __host__ __device__ bool compare_exchange_weak(T& expected, T desired, memory_order success, memory_order failure) volatile noexcept {
         return _base.compare_exchange_weak(expected, desired, success, failure);
     }
-    _LIBCPP_INLINE_VISIBILITY bool compare_exchange_strong(T& expected, T desired, memory_order success, memory_order failure) volatile noexcept {
+    __host__ __device__ bool compare_exchange_strong(T& expected, T desired, memory_order success, memory_order failure) volatile noexcept {
         return _base.compare_exchange_strong(expected, desired, success, failure);
     }
-    _LIBCPP_INLINE_VISIBILITY bool compare_exchange_weak(T& expected, T desired, memory_order order = memory_order_seq_cst) volatile noexcept {
+    __host__ __device__ bool compare_exchange_weak(T& expected, T desired, memory_order order = memory_order_seq_cst) volatile noexcept {
         return _base.compare_exchange_weak(expected, desired, order, order);
     }
-    _LIBCPP_INLINE_VISIBILITY bool compare_exchange_strong(T& expected, T desired, memory_order order = memory_order_seq_cst) volatile noexcept {
+    __host__ __device__ bool compare_exchange_strong(T& expected, T desired, memory_order order = memory_order_seq_cst) volatile noexcept {
         return _base.compare_exchange_strong(expected, desired, order, order);
     }
 
-    _LIBCPP_INLINE_VISIBILITY atomic& operator=(atomic const&) volatile = delete;
-    _LIBCPP_INLINE_VISIBILITY T operator=(T desired) volatile noexcept {
+    __host__ __device__ atomic& operator=(atomic const&) volatile = delete;
+    __host__ __device__ T operator=(T desired) volatile noexcept {
         _base.store(desired);
         return desired;
     }
 
-    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value || std::is_pointer<Q>::value, int>::type = 0>
-    _LIBCPP_INLINE_VISIBILITY T fetch_add(difference_type addend, memory_order order = memory_order_seq_cst) volatile noexcept {
+    template < typename Q = T, typename enable_if<is_integral<Q>::value || is_pointer<Q>::value, int>::type = 0>
+    __host__ __device__ T fetch_add(difference_type addend, memory_order order = memory_order_seq_cst) volatile noexcept {
         return _base.fetch_add(addend, order);
     }
-    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value || std::is_pointer<Q>::value, int>::type = 0>
-    _LIBCPP_INLINE_VISIBILITY T fetch_sub(difference_type addend, memory_order order = memory_order_seq_cst) volatile noexcept {
+    template < typename Q = T, typename enable_if<is_integral<Q>::value || is_pointer<Q>::value, int>::type = 0>
+    __host__ __device__ T fetch_sub(difference_type addend, memory_order order = memory_order_seq_cst) volatile noexcept {
         return _base.fetch_sub(addend, order);
     }
-    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value, int>::type = 0>
-    _LIBCPP_INLINE_VISIBILITY T fetch_and(T andend, memory_order order = memory_order_seq_cst) volatile noexcept {
+    template < typename Q = T, typename enable_if<is_integral<Q>::value, int>::type = 0>
+    __host__ __device__ T fetch_and(T andend, memory_order order = memory_order_seq_cst) volatile noexcept {
         return _base.fetch_and(andend, order);
     }
-    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value, int>::type = 0>
-    _LIBCPP_INLINE_VISIBILITY T fetch_or(T orend, memory_order order = memory_order_seq_cst) volatile noexcept {
+    template < typename Q = T, typename enable_if<is_integral<Q>::value, int>::type = 0>
+    __host__ __device__ T fetch_or(T orend, memory_order order = memory_order_seq_cst) volatile noexcept {
         return _base.fetch_or(orend, order);
     }
-    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value, int>::type = 0>
-    _LIBCPP_INLINE_VISIBILITY T fetch_xor(T xorend, memory_order order = memory_order_seq_cst) volatile noexcept {
+    template < typename Q = T, typename enable_if<is_integral<Q>::value, int>::type = 0>
+    __host__ __device__ T fetch_xor(T xorend, memory_order order = memory_order_seq_cst) volatile noexcept {
         return _base.fetch_xor(xorend, order);
     }
-    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value || std::is_pointer<Q>::value, int>::type = 0>
-    _LIBCPP_INLINE_VISIBILITY T operator++(int) volatile noexcept {
+    template < typename Q = T, typename enable_if<is_integral<Q>::value || is_pointer<Q>::value, int>::type = 0>
+    __host__ __device__ T operator++(int) volatile noexcept {
         return ++_base;
     }
-    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value || std::is_pointer<Q>::value, int>::type = 0>
-    _LIBCPP_INLINE_VISIBILITY T operator--(int) volatile noexcept {
+    template < typename Q = T, typename enable_if<is_integral<Q>::value || is_pointer<Q>::value, int>::type = 0>
+    __host__ __device__ T operator--(int) volatile noexcept {
         return --_base;
     }
-    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value || std::is_pointer<Q>::value, int>::type = 0>
-    _LIBCPP_INLINE_VISIBILITY T operator++() volatile noexcept {
+    template < typename Q = T, typename enable_if<is_integral<Q>::value || is_pointer<Q>::value, int>::type = 0>
+    __host__ __device__ T operator++() volatile noexcept {
         return _base++;
     }
-    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value || std::is_pointer<Q>::value, int>::type = 0>
-    _LIBCPP_INLINE_VISIBILITY T operator--() volatile noexcept {
+    template < typename Q = T, typename enable_if<is_integral<Q>::value || is_pointer<Q>::value, int>::type = 0>
+    __host__ __device__ T operator--() volatile noexcept {
         return _base--;
     }
-    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value || std::is_pointer<Q>::value, int>::type = 0>
-    _LIBCPP_INLINE_VISIBILITY T operator+=(difference_type addend) volatile noexcept {
+    template < typename Q = T, typename enable_if<is_integral<Q>::value || is_pointer<Q>::value, int>::type = 0>
+    __host__ __device__ T operator+=(difference_type addend) volatile noexcept {
         return _base += addend;
     }
-    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value || std::is_pointer<Q>::value, int>::type = 0>
-    _LIBCPP_INLINE_VISIBILITY T operator-=(difference_type addend) volatile noexcept {
+    template < typename Q = T, typename enable_if<is_integral<Q>::value || is_pointer<Q>::value, int>::type = 0>
+    __host__ __device__ T operator-=(difference_type addend) volatile noexcept {
         return _base -= addend;
     }
-    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value, int>::type = 0>
-    _LIBCPP_INLINE_VISIBILITY T operator&=(T andend) volatile noexcept {
+    template < typename Q = T, typename enable_if<is_integral<Q>::value, int>::type = 0>
+    __host__ __device__ T operator&=(T andend) volatile noexcept {
         return _base &= andend;
     }
-    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value, int>::type = 0>
-    _LIBCPP_INLINE_VISIBILITY T operator|=(T orend) volatile noexcept {
+    template < typename Q = T, typename enable_if<is_integral<Q>::value, int>::type = 0>
+    __host__ __device__ T operator|=(T orend) volatile noexcept {
         return _base |= orend;
     }
-    template < typename Q = T, typename std::enable_if<std::is_integral<Q>::value, int>::type = 0>
-    _LIBCPP_INLINE_VISIBILITY T operator^=(T xorend) volatile noexcept {
+    template < typename Q = T, typename enable_if<is_integral<Q>::value, int>::type = 0>
+    __host__ __device__ T operator^=(T xorend) volatile noexcept {
         return _base ^= xorend;
     }
 };
 
 // 32.7, non-member functions
-template<class T> _LIBCPP_INLINE_VISIBILITY bool atomic_is_lock_free(const atomic<T>* a) noexcept {
+template<class T> __host__ __device__ bool atomic_is_lock_free(const atomic<T>* a) noexcept {
     return a->is_lock_free();
 }
-template<class T> _LIBCPP_INLINE_VISIBILITY void atomic_init(atomic<T>* a, typename atomic<T>::value_type desired) noexcept {
+template<class T> __host__ __device__ void atomic_init(atomic<T>* a, typename atomic<T>::value_type desired) noexcept {
     new (a) atomic<T>(desired);
 }
-template<class T> _LIBCPP_INLINE_VISIBILITY void atomic_store(atomic<T>* a, typename atomic<T>::value_type desired) noexcept {
+template<class T> __host__ __device__ void atomic_store(atomic<T>* a, typename atomic<T>::value_type desired) noexcept {
     a->store(desired);
 }
-template<class T> _LIBCPP_INLINE_VISIBILITY void atomic_store_explicit(atomic<T>* a, typename atomic<T>::value_type desired, memory_order order) noexcept {
+template<class T> __host__ __device__ void atomic_store_explicit(atomic<T>* a, typename atomic<T>::value_type desired, memory_order order) noexcept {
     a->store(desired, order);
 }
-template<class T> _LIBCPP_INLINE_VISIBILITY T atomic_load(const atomic<T>* a) noexcept {
+template<class T> __host__ __device__ T atomic_load(const atomic<T>* a) noexcept {
     return a->load();
 }
-template<class T> _LIBCPP_INLINE_VISIBILITY T atomic_load_explicit(const atomic<T>* a, memory_order order) noexcept {
+template<class T> __host__ __device__ T atomic_load_explicit(const atomic<T>* a, memory_order order) noexcept {
     return a->load(order);
 }
-template<class T> _LIBCPP_INLINE_VISIBILITY T atomic_exchange(atomic<T>* a, typename atomic<T>::value_type desired) noexcept {
+template<class T> __host__ __device__ T atomic_exchange(atomic<T>* a, typename atomic<T>::value_type desired) noexcept {
     return a->exchange(desired);
 }
-template<class T> _LIBCPP_INLINE_VISIBILITY T atomic_exchange_explicit(atomic<T>* a, typename atomic<T>::value_type desired, memory_order order) noexcept {
+template<class T> __host__ __device__ T atomic_exchange_explicit(atomic<T>* a, typename atomic<T>::value_type desired, memory_order order) noexcept {
     return a->exchange(desired, order);
 }
-template<class T> _LIBCPP_INLINE_VISIBILITY bool atomic_compare_exchange_weak(atomic<T>* a, typename atomic<T>::value_type* expected, typename atomic<T>::value_type desired) noexcept {
+template<class T> __host__ __device__ bool atomic_compare_exchange_weak(atomic<T>* a, typename atomic<T>::value_type* expected, typename atomic<T>::value_type desired) noexcept {
     return a->compare_exchange_weak(expected, desired);
 }
-template<class T> _LIBCPP_INLINE_VISIBILITY bool atomic_compare_exchange_strong(atomic<T>* a, typename atomic<T>::value_type* expected, typename atomic<T>::value_type desired) noexcept {
+template<class T> __host__ __device__ bool atomic_compare_exchange_strong(atomic<T>* a, typename atomic<T>::value_type* expected, typename atomic<T>::value_type desired) noexcept {
     return a->compare_exchange_strong(expected, desired);
 }
-template<class T> _LIBCPP_INLINE_VISIBILITY bool atomic_compare_exchange_weak_explicit(atomic<T>* a, typename atomic<T>::value_type* expected, typename atomic<T>::value_type desired, memory_order success, memory_order failure) noexcept {
+template<class T> __host__ __device__ bool atomic_compare_exchange_weak_explicit(atomic<T>* a, typename atomic<T>::value_type* expected, typename atomic<T>::value_type desired, memory_order success, memory_order failure) noexcept {
     return a->compare_exchange_weak(expected, desired, success, failure);
 }
-template<class T> _LIBCPP_INLINE_VISIBILITY bool atomic_compare_exchange_strong_explicit(atomic<T>* a, typename atomic<T>::value_type* expected, typename atomic<T>::value_type desired, memory_order success, memory_order failure) noexcept {
+template<class T> __host__ __device__ bool atomic_compare_exchange_strong_explicit(atomic<T>* a, typename atomic<T>::value_type* expected, typename atomic<T>::value_type desired, memory_order success, memory_order failure) noexcept {
     return a->compare_exchange_strong(expected, desired, success, failure);
 }
-template <class T> _LIBCPP_INLINE_VISIBILITY T atomic_fetch_add(atomic<T>* a, typename atomic<T>::difference_type addend) noexcept {
+template <class T> __host__ __device__ T atomic_fetch_add(atomic<T>* a, typename atomic<T>::difference_type addend) noexcept {
     return a->fetch_add(addend);
 }
-template <class T> _LIBCPP_INLINE_VISIBILITY T atomic_fetch_add_explicit(atomic<T>* a, typename atomic<T>::difference_type addend, memory_order order) noexcept {
+template <class T> __host__ __device__ T atomic_fetch_add_explicit(atomic<T>* a, typename atomic<T>::difference_type addend, memory_order order) noexcept {
     return a->fetch_add(addend, order);
 }
-template <class T> _LIBCPP_INLINE_VISIBILITY T atomic_fetch_sub(atomic<T>* a, typename atomic<T>::difference_type addend) noexcept {
+template <class T> __host__ __device__ T atomic_fetch_sub(atomic<T>* a, typename atomic<T>::difference_type addend) noexcept {
     return a->fetch_sub(addend);
 }
-template <class T> _LIBCPP_INLINE_VISIBILITY T atomic_fetch_sub_explicit(atomic<T>* a, typename atomic<T>::difference_type addend, memory_order order) noexcept {
+template <class T> __host__ __device__ T atomic_fetch_sub_explicit(atomic<T>* a, typename atomic<T>::difference_type addend, memory_order order) noexcept {
     return a->fetch_sub(addend, order);
 }
-template <class T> _LIBCPP_INLINE_VISIBILITY T atomic_fetch_and(atomic<T>* a, typename atomic<T>::value_type andend) noexcept {
+template <class T> __host__ __device__ T atomic_fetch_and(atomic<T>* a, typename atomic<T>::value_type andend) noexcept {
     return a->fetch_and(andend);
 }
-template <class T> _LIBCPP_INLINE_VISIBILITY T atomic_fetch_and_explicit(atomic<T>* a, typename atomic<T>::value_type andend, memory_order order) noexcept {
+template <class T> __host__ __device__ T atomic_fetch_and_explicit(atomic<T>* a, typename atomic<T>::value_type andend, memory_order order) noexcept {
     return a->fetch_and(andend, order);
 }
-template <class T> _LIBCPP_INLINE_VISIBILITY T atomic_fetch_or(atomic<T>* a, typename atomic<T>::value_type orend) noexcept {
+template <class T> __host__ __device__ T atomic_fetch_or(atomic<T>* a, typename atomic<T>::value_type orend) noexcept {
     return a->fetch_or(orend);
 }
-template <class T> _LIBCPP_INLINE_VISIBILITY T atomic_fetch_or_explicit(atomic<T>* a, typename atomic<T>::value_type orend, memory_order order) noexcept {
+template <class T> __host__ __device__ T atomic_fetch_or_explicit(atomic<T>* a, typename atomic<T>::value_type orend, memory_order order) noexcept {
     return a->fetch_or(orend, order);
 }
-template <class T> _LIBCPP_INLINE_VISIBILITY T atomic_fetch_xor(atomic<T>* a, typename atomic<T>::value_type xorend) noexcept {
+template <class T> __host__ __device__ T atomic_fetch_xor(atomic<T>* a, typename atomic<T>::value_type xorend) noexcept {
     return a->fetch_xor(xorend);
 }
-template <class T> _LIBCPP_INLINE_VISIBILITY T atomic_fetch_xor_explicit(atomic<T>* a, typename atomic<T>::value_type xorend, memory_order order) noexcept {
+template <class T> __host__ __device__ T atomic_fetch_xor_explicit(atomic<T>* a, typename atomic<T>::value_type xorend, memory_order order) noexcept {
     return a->fetch_xor(xorend, order);
 }
 
-template<class T> _LIBCPP_INLINE_VISIBILITY bool atomic_is_lock_free(const volatile atomic<T>* a) noexcept {
+template<class T> __host__ __device__ bool atomic_is_lock_free(const volatile atomic<T>* a) noexcept {
     return a->is_lock_free();
 }
-template<class T> _LIBCPP_INLINE_VISIBILITY void atomic_init(volatile atomic<T>* a, typename atomic<T>::value_type desired) noexcept {
+template<class T> __host__ __device__ void atomic_init(volatile atomic<T>* a, typename atomic<T>::value_type desired) noexcept {
     new (a) volatile atomic<T>(desired);
 }
-template<class T> _LIBCPP_INLINE_VISIBILITY void atomic_store(volatile atomic<T>* a, typename atomic<T>::value_type desired) noexcept {
+template<class T> __host__ __device__ void atomic_store(volatile atomic<T>* a, typename atomic<T>::value_type desired) noexcept {
     a->store(desired);
 }
-template<class T> _LIBCPP_INLINE_VISIBILITY void atomic_store_explicit(volatile atomic<T>* a, typename atomic<T>::value_type desired, memory_order order) noexcept {
+template<class T> __host__ __device__ void atomic_store_explicit(volatile atomic<T>* a, typename atomic<T>::value_type desired, memory_order order) noexcept {
     a->store(desired, order);
 }
-template<class T> _LIBCPP_INLINE_VISIBILITY T atomic_load(const volatile atomic<T>* a) noexcept {
+template<class T> __host__ __device__ T atomic_load(const volatile atomic<T>* a) noexcept {
     return a->load();
 }
-template<class T> _LIBCPP_INLINE_VISIBILITY T atomic_load_explicit(const volatile atomic<T>* a, memory_order order) noexcept {
+template<class T> __host__ __device__ T atomic_load_explicit(const volatile atomic<T>* a, memory_order order) noexcept {
     return a->load(order);
 }
-template<class T> _LIBCPP_INLINE_VISIBILITY T atomic_exchange(volatile atomic<T>* a, typename atomic<T>::value_type desired) noexcept {
+template<class T> __host__ __device__ T atomic_exchange(volatile atomic<T>* a, typename atomic<T>::value_type desired) noexcept {
     return a->exchange(desired);
 }
-template<class T> _LIBCPP_INLINE_VISIBILITY T atomic_exchange_explicit(volatile atomic<T>* a, typename atomic<T>::value_type desired, memory_order order) noexcept {
+template<class T> __host__ __device__ T atomic_exchange_explicit(volatile atomic<T>* a, typename atomic<T>::value_type desired, memory_order order) noexcept {
     return a->exchange(desired, order);
 }
-template<class T> _LIBCPP_INLINE_VISIBILITY bool atomic_compare_exchange_weak(volatile atomic<T>* a, typename atomic<T>::value_type* expected, typename atomic<T>::value_type desired) noexcept {
+template<class T> __host__ __device__ bool atomic_compare_exchange_weak(volatile atomic<T>* a, typename atomic<T>::value_type* expected, typename atomic<T>::value_type desired) noexcept {
     return a->compare_exchange_weak(expected, desired);
 }
-template<class T> _LIBCPP_INLINE_VISIBILITY bool atomic_compare_exchange_strong(volatile atomic<T>* a, typename atomic<T>::value_type* expected, typename atomic<T>::value_type desired) noexcept {
+template<class T> __host__ __device__ bool atomic_compare_exchange_strong(volatile atomic<T>* a, typename atomic<T>::value_type* expected, typename atomic<T>::value_type desired) noexcept {
     return a->compare_exchange_strong(expected, desired);
 }
-template<class T> _LIBCPP_INLINE_VISIBILITY bool atomic_compare_exchange_weak_explicit(volatile atomic<T>* a, typename atomic<T>::value_type* expected, typename atomic<T>::value_type desired, memory_order success, memory_order failure) noexcept {
+template<class T> __host__ __device__ bool atomic_compare_exchange_weak_explicit(volatile atomic<T>* a, typename atomic<T>::value_type* expected, typename atomic<T>::value_type desired, memory_order success, memory_order failure) noexcept {
     return a->compare_exchange_weak(expected, desired, success, failure);
 }
-template<class T> _LIBCPP_INLINE_VISIBILITY bool atomic_compare_exchange_strong_explicit(volatile atomic<T>* a, typename atomic<T>::value_type* expected, typename atomic<T>::value_type desired, memory_order success, memory_order failure) noexcept {
+template<class T> __host__ __device__ bool atomic_compare_exchange_strong_explicit(volatile atomic<T>* a, typename atomic<T>::value_type* expected, typename atomic<T>::value_type desired, memory_order success, memory_order failure) noexcept {
     return a->compare_exchange_strong(expected, desired, success, failure);
 }
-template <class T> _LIBCPP_INLINE_VISIBILITY T atomic_fetch_add(volatile atomic<T>* a, typename atomic<T>::difference_type addend) noexcept {
+template <class T> __host__ __device__ T atomic_fetch_add(volatile atomic<T>* a, typename atomic<T>::difference_type addend) noexcept {
     return a->fetch_add(addend);
 }
-template <class T> _LIBCPP_INLINE_VISIBILITY T atomic_fetch_add_explicit(volatile atomic<T>* a, typename atomic<T>::difference_type addend, memory_order order) noexcept {
+template <class T> __host__ __device__ T atomic_fetch_add_explicit(volatile atomic<T>* a, typename atomic<T>::difference_type addend, memory_order order) noexcept {
     return a->fetch_add(addend, order);
 }
-template <class T> _LIBCPP_INLINE_VISIBILITY T atomic_fetch_sub(volatile atomic<T>* a, typename atomic<T>::difference_type addend) noexcept {
+template <class T> __host__ __device__ T atomic_fetch_sub(volatile atomic<T>* a, typename atomic<T>::difference_type addend) noexcept {
     return a->fetch_sub(addend);
 }
-template <class T> _LIBCPP_INLINE_VISIBILITY T atomic_fetch_sub_explicit(volatile atomic<T>* a, typename atomic<T>::difference_type addend, memory_order order) noexcept {
+template <class T> __host__ __device__ T atomic_fetch_sub_explicit(volatile atomic<T>* a, typename atomic<T>::difference_type addend, memory_order order) noexcept {
     return a->fetch_sub(addend, order);
 }
-template <class T> _LIBCPP_INLINE_VISIBILITY T atomic_fetch_and(volatile atomic<T>* a, typename atomic<T>::value_type andend) noexcept {
+template <class T> __host__ __device__ T atomic_fetch_and(volatile atomic<T>* a, typename atomic<T>::value_type andend) noexcept {
     return a->fetch_and(andend);
 }
-template <class T> _LIBCPP_INLINE_VISIBILITY T atomic_fetch_and_explicit(volatile atomic<T>* a, typename atomic<T>::value_type andend, memory_order order) noexcept {
+template <class T> __host__ __device__ T atomic_fetch_and_explicit(volatile atomic<T>* a, typename atomic<T>::value_type andend, memory_order order) noexcept {
     return a->fetch_and(andend, order);
 }
-template <class T> _LIBCPP_INLINE_VISIBILITY T atomic_fetch_or(volatile atomic<T>* a, typename atomic<T>::value_type orend) noexcept {
+template <class T> __host__ __device__ T atomic_fetch_or(volatile atomic<T>* a, typename atomic<T>::value_type orend) noexcept {
     return a->fetch_or(orend);
 }
-template <class T> _LIBCPP_INLINE_VISIBILITY T atomic_fetch_or_explicit(volatile atomic<T>* a, typename atomic<T>::value_type orend, memory_order order) noexcept {
+template <class T> __host__ __device__ T atomic_fetch_or_explicit(volatile atomic<T>* a, typename atomic<T>::value_type orend, memory_order order) noexcept {
     return a->fetch_or(orend, order);
 }
-template <class T> _LIBCPP_INLINE_VISIBILITY T atomic_fetch_xor(volatile atomic<T>* a, typename atomic<T>::value_type xorend) noexcept {
+template <class T> __host__ __device__ T atomic_fetch_xor(volatile atomic<T>* a, typename atomic<T>::value_type xorend) noexcept {
     return a->fetch_xor(xorend);
 }
-template <class T> _LIBCPP_INLINE_VISIBILITY T atomic_fetch_xor_explicit(volatile atomic<T>* a, typename atomic<T>::value_type xorend, memory_order order) noexcept {
+template <class T> __host__ __device__ T atomic_fetch_xor_explicit(volatile atomic<T>* a, typename atomic<T>::value_type xorend, memory_order order) noexcept {
     return a->fetch_xor(xorend, order);
 }
 
@@ -517,10 +520,10 @@ typedef atomic<intmax_t>  atomic_intmax_t;
 typedef atomic<uintmax_t> atomic_uintmax_t;
 
 struct atomic_flag {
-    _LIBCPP_INLINE_VISIBILITY bool test_and_set(memory_order order = memory_order_seq_cst) noexcept {
+    __host__ __device__ bool test_and_set(memory_order order = memory_order_seq_cst) noexcept {
         return _base.exchange(1, order) == 0;
     }
-    _LIBCPP_INLINE_VISIBILITY void clear(memory_order order = memory_order_seq_cst) noexcept {
+    __host__ __device__ void clear(memory_order order = memory_order_seq_cst) noexcept {
         return _base.store(0, order);
     }
 #ifdef _MSC_VER
@@ -533,49 +536,47 @@ struct atomic_flag {
     atomic_flag(const atomic_flag&) = delete;
     atomic_flag& operator=(const atomic_flag&) = delete;
 
-    _LIBCPP_INLINE_VISIBILITY bool test_and_set(memory_order order = memory_order_seq_cst) volatile noexcept {
+    __host__ __device__ bool test_and_set(memory_order order = memory_order_seq_cst) volatile noexcept {
         return _base.exchange(1, order) == 0;
     }
-    _LIBCPP_INLINE_VISIBILITY void clear(memory_order order = memory_order_seq_cst) volatile noexcept {
+    __host__ __device__ void clear(memory_order order = memory_order_seq_cst) volatile noexcept {
         return _base.store(0, order);
     }
     atomic_flag& operator=(const atomic_flag&) volatile = delete;
 };
-_LIBCPP_INLINE_VISIBILITY inline bool atomic_flag_test_and_set(atomic_flag* f) noexcept {
+__host__ __device__ inline bool atomic_flag_test_and_set(atomic_flag* f) noexcept {
     return f->test_and_set();
 }
-_LIBCPP_INLINE_VISIBILITY inline bool atomic_flag_test_and_set_explicit(atomic_flag* f, memory_order order) noexcept {
+__host__ __device__ inline bool atomic_flag_test_and_set_explicit(atomic_flag* f, memory_order order) noexcept {
     return f->test_and_set(order);
 }
-_LIBCPP_INLINE_VISIBILITY inline void atomic_flag_clear(atomic_flag* f) noexcept {
+__host__ __device__ inline void atomic_flag_clear(atomic_flag* f) noexcept {
     f->clear();
 }
-_LIBCPP_INLINE_VISIBILITY inline void atomic_flag_clear_explicit(atomic_flag* f, memory_order order) noexcept {
+__host__ __device__ inline void atomic_flag_clear_explicit(atomic_flag* f, memory_order order) noexcept {
     f->clear(order);
 }
-_LIBCPP_INLINE_VISIBILITY inline bool atomic_flag_test_and_set(volatile atomic_flag* f) noexcept {
+__host__ __device__ inline bool atomic_flag_test_and_set(volatile atomic_flag* f) noexcept {
     return f->test_and_set();
 }
-_LIBCPP_INLINE_VISIBILITY inline bool atomic_flag_test_and_set_explicit(volatile atomic_flag* f, memory_order order) noexcept {
+__host__ __device__ inline bool atomic_flag_test_and_set_explicit(volatile atomic_flag* f, memory_order order) noexcept {
     return f->test_and_set(order);
 }
-_LIBCPP_INLINE_VISIBILITY inline void atomic_flag_clear(volatile atomic_flag* f) noexcept {
+__host__ __device__ inline void atomic_flag_clear(volatile atomic_flag* f) noexcept {
     f->clear();
 }
-_LIBCPP_INLINE_VISIBILITY inline void atomic_flag_clear_explicit(volatile atomic_flag* f, memory_order order) noexcept {
+__host__ __device__ inline void atomic_flag_clear_explicit(volatile atomic_flag* f, memory_order order) noexcept {
     f->clear(order);
 }
 
-_LIBCPP_INLINE_VISIBILITY void atomic_thread_fence_gpu(memory_order order) {
+__host__ __device__ void atomic_thread_fence_gpu(memory_order order) {
     details::atomic_thread_fence_gpu_(order);
 }
-_LIBCPP_INLINE_VISIBILITY void atomic_signal_fence_gpu(memory_order order){
+__host__ __device__ void atomic_signal_fence_gpu(memory_order order){
     details::atomic_signal_fence_gpu_(order);
 }
 
 } } }
-
-#include "details/__post"
 
 #ifdef _MSC_VER
 #pragma warning(pop)
