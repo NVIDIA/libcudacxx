@@ -22,12 +22,16 @@ THE SOFTWARE.
 
 */
 
-#ifdef USE_DETAILS_CONFIG
-    #include <simt/cstdint>
-#else
-    #ifdef _MSC_VER
-        #include <../include/cstdint>
-    #else
-        #include_next <cstdint>
-    #endif
-#endif
+#ifndef _SIMT_CSTDBOOL
+#define _SIMT_CSTDBOOL
+
+#include "details/__pre"
+#pragma push_macro("_LIBCPP_CSTDBOOL")
+#undef _LIBCPP_CSTDBOOL
+
+#include "../libcxx/include/cstdbool"
+
+#pragma pop_macro("_LIBCPP_CSTDBOOL")
+#include "details/__post"
+
+#endif //_SIMT_CSTDBOOL

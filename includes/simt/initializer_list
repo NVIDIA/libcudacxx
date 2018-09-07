@@ -22,12 +22,21 @@ THE SOFTWARE.
 
 */
 
-#ifdef USE_DETAILS_CONFIG
-    #include <simt/cstdint>
-#else
-    #ifdef _MSC_VER
-        #include <../include/cstdint>
-    #else
-        #include_next <cstdint>
-    #endif
-#endif
+#ifndef _SIMT_INITIALIZER_LIST
+#define _SIMT_INITIALIZER_LIST
+
+#include <initializer_list>
+
+namespace simt { namespace std { inline namespace v1 {
+
+    template<class E>
+    using initializer_list = ::std::initializer_list<E>;
+
+    template<class E> __host__ __device__ inline constexpr const E* begin(initializer_list<E> il) noexcept {
+        return ::std::begin(il); }
+    template<class E> __host__ __device__ inline constexpr const E* end(initializer_list<E> il) noexcept {
+        return ::std::end(il); }
+
+} } }
+
+#endif //_SIMT_INITIALIZER_LIST

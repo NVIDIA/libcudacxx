@@ -1,34 +1,30 @@
 /*
 
 Copyright (c) 2018, NVIDIA Corporation
-All rights reserved.
 
-Redistribution and use in source and binary forms, with or without modification,
-are permitted provided that the following conditions are met:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-1. Redistributions of source code must retain the above copyright notice, this
-list of conditions and the following disclaimer.
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
 
-2. Redistributions in binary form must reproduce the above copyright notice,
-this list of conditions and the following disclaimer in the documentation
-and/or other materials provided with the distribution.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
-BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
-OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
-OF THE POSSIBILITY OF SUCH DAMAGE.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 
 */
 
-#include <gpu/cstddef>
-#include <gpu/cstdint>
-#include <gpu/atomic>
+#include <simt/cstddef>
+#include <simt/cstdint>
+#include <simt/atomic>
 
 #include "mutex.hpp"
 
@@ -37,14 +33,14 @@ template<class T> static constexpr T min(T a, T b) { return a < b ? a : b; }
 
 struct node {
     struct ref {
-        gpu::std::atomic<node*>  ptr = ATOMIC_VAR_INIT(nullptr);
-        gpu::experimental::mutex lock;
+        simt::std::atomic<node*>  ptr = ATOMIC_VAR_INIT(nullptr);
+        simt::experimental::mutex lock;
     };
     ref                    next[26];
-    gpu::std::atomic<int> count = ATOMIC_VAR_INIT(0);
+    simt::std::atomic<int> count = ATOMIC_VAR_INIT(0);
 };
 struct trie {
-    gpu::std::atomic<node*> bump = ATOMIC_VAR_INIT(nullptr);
+    simt::std::atomic<node*> bump = ATOMIC_VAR_INIT(nullptr);
     node                     root;
     __host__ __device__ trie(node* ptr) : bump(ptr) { }
 };
@@ -71,7 +67,7 @@ __host__ __device__ void process(const char* begin, const char* end, trie* t, un
         auto const index = off >= size ? -1 : index_of(c);
         if(index == -1) {
             if(n != proot) {
-                n->count.fetch_add(1, gpu::std::memory_order_relaxed);
+                n->count.fetch_add(1, simt::std::memory_order_relaxed);
                 n = proot;
             }
             //end of last word?
@@ -81,19 +77,19 @@ __host__ __device__ void process(const char* begin, const char* end, trie* t, un
                 continue;
         }
         auto& ptr = n->next[index].ptr;
-        auto next = ptr.load(gpu::std::memory_order_acquire);
+        auto next = ptr.load(simt::std::memory_order_acquire);
         if(next == nullptr) {
             auto& lock = n->next[index].lock;
             if(!lock.try_lock()) {
                 do {
-                    next = ptr.load(gpu::std::memory_order_acquire);
+                    next = ptr.load(simt::std::memory_order_acquire);
                 } while(next == nullptr);
             }
             else {
-                next = ptr.load(gpu::std::memory_order_acquire);
+                next = ptr.load(simt::std::memory_order_acquire);
                 if(next == nullptr) {
-                    next = t->bump.fetch_add(1, gpu::std::memory_order_relaxed);
-                    ptr.store(next, gpu::std::memory_order_relaxed);
+                    next = t->bump.fetch_add(1, simt::std::memory_order_relaxed);
+                    ptr.store(next, simt::std::memory_order_relaxed);
                     lock.unlock();
 	        }
 	        else lock.unlock();
@@ -122,14 +118,12 @@ void call_process(const char* begin, const char* end, trie* t) {
 #include <atomic>
 #include <cassert>
 
-#define gpuErrchk(ans) { gpuAssert((ans), __FILE__, __LINE__); }
-inline void gpuAssert(cudaError_t code, const char *file, int line, bool abort=true)
+#define check(ans) { assert_((ans), __FILE__, __LINE__); }
+inline void assert_(cudaError_t code, const char *file, int line)
 {
-   if (code != cudaSuccess) 
-   {
-      fprintf(stderr,"GPUassert: %s %s %d\n", cudaGetErrorString(code), file, line);
-      if (abort) exit(code);
-   }
+   if (code == cudaSuccess) return;
+    std::cerr << "check failed: " << cudaGetErrorString(code) << " : " << file << '@' << line << std::endl;
+    abort();
 }
 
 template <class T>
@@ -140,12 +134,12 @@ struct managed_allocator {
   T* allocate(std::size_t n) {
     assert(n <= std::size_t(-1) / sizeof(T));
     void* out = nullptr;
-    gpuErrchk(cudaMallocManaged(&out, n*sizeof(T)));
+    check(cudaMallocManaged(&out, n*sizeof(T)));
     if(auto p = static_cast<T*>(out)) return p;
     return nullptr;
   }
   void deallocate(T* p, std::size_t) noexcept { 
-      gpuErrchk(cudaFree(p)); 
+      check(cudaFree(p)); 
   }
 };
 template<class T, class... Args>
@@ -157,18 +151,18 @@ T* make_(Args &&... args) {
 using string = std::basic_string<char, std::char_traits<char>, managed_allocator<char>>;
 using vector = std::vector<node, managed_allocator<node>>;
 
-void do_trie(string* input, vector* nodes, bool use_gpu, int blocks, int threads) {
+void do_trie(string* input, vector* nodes, bool use_simt, int blocks, int threads) {
     
-    gpuErrchk(cudaMemset(nodes->data(), 0, nodes->size() * sizeof(node)));
+    check(cudaMemset(nodes->data(), 0, nodes->size() * sizeof(node)));
 
     trie* const t = make_<trie>(nodes->data());
 
     auto const begin = std::chrono::steady_clock::now();
     std::atomic_signal_fence(std::memory_order_seq_cst);
-    if(use_gpu) {
+    if(use_simt) {
         call_process<<<blocks,threads>>>(input->data(), input->data() + input->size(), t);
-        gpuErrchk(cudaGetLastError());
-        gpuErrchk(cudaDeviceSynchronize());
+        check(cudaGetLastError());
+        check(cudaDeviceSynchronize());
     }
     else {
         assert(blocks == 1);
@@ -184,7 +178,7 @@ void do_trie(string* input, vector* nodes, bool use_gpu, int blocks, int threads
     auto const end = std::chrono::steady_clock::now();
     auto const time = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
     auto const count = t->bump - nodes->data();
-    std::cout << "Assembled " << count << " nodes on " << blocks << "x" << threads << " " << (use_gpu ? "gpu" : "cpu") << " threads in " << time << "ms." << std::endl;
+    std::cout << "Assembled " << count << " nodes on " << blocks << "x" << threads << " " << (use_simt ? "simt" : "cpu") << " threads in " << time << "ms." << std::endl;
 }
 
 int main() {
@@ -218,9 +212,9 @@ int main() {
     do_trie(input, nodes, false, 1, std::thread::hardware_concurrency());
     do_trie(input, nodes, false, 1, std::thread::hardware_concurrency());
 
-    gpuErrchk(cudaSetDevice(0));
+    check(cudaSetDevice(0));
     cudaDeviceProp deviceProp;
-    gpuErrchk(cudaGetDeviceProperties(&deviceProp, 0));
+    check(cudaGetDeviceProperties(&deviceProp, 0));
 
     do_trie(input, nodes, true, deviceProp.multiProcessorCount * deviceProp.maxThreadsPerMultiProcessor >> 10, 1<<10);
     do_trie(input, nodes, true, deviceProp.multiProcessorCount * deviceProp.maxThreadsPerMultiProcessor >> 10, 1<<10);

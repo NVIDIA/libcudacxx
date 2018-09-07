@@ -22,12 +22,24 @@ THE SOFTWARE.
 
 */
 
-#ifdef USE_DETAILS_CONFIG
-    #include <simt/cstdint>
-#else
-    #ifdef _MSC_VER
-        #include <../include/cstdint>
-    #else
-        #include_next <cstdint>
-    #endif
-#endif
+#ifndef _SIMT_NEW
+#define _SIMT_NEW
+
+#include <new>
+
+namespace simt { namespace std { inline namespace v1 {
+
+    using bad_alloc = ::std::bad_alloc;
+    using bad_array_new_length = ::std::bad_array_new_length;
+    using nothrow_t = ::std::nothrow_t;
+    static constexpr decltype(::std::nothrow)& nothrow = ::std::nothrow;
+
+    using new_handler = ::std::new_handler;
+    inline new_handler set_new_handler(new_handler new_p) noexcept {
+        return ::std::set_new_handler(new_p); }
+    inline new_handler get_new_handler() noexcept {
+        return ::std::get_new_handler(); }
+
+} } }
+
+#endif //_SIMT_NEW

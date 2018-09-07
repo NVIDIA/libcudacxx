@@ -22,12 +22,17 @@ THE SOFTWARE.
 
 */
 
-#ifdef USE_DETAILS_CONFIG
-    #include <simt/cstdint>
-#else
-    #ifdef _MSC_VER
-        #include <../include/cstdint>
-    #else
-        #include_next <cstdint>
-    #endif
-#endif
+#ifndef _SIMT_TYPEINFO
+#define _SIMT_TYPEINFO
+
+#include <typeinfo>
+
+namespace simt { namespace std { inline namespace v1 {
+
+  using type_info = ::std::type_info;
+  using bad_cast = ::std::bad_cast;
+  using bad_typeid = ::std::bad_typeid;
+
+} } }
+
+#endif //_SIMT_TYPEINFO

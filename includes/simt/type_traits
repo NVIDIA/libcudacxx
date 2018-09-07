@@ -22,12 +22,16 @@ THE SOFTWARE.
 
 */
 
-#ifdef USE_DETAILS_CONFIG
-    #include <simt/cstdint>
-#else
-    #ifdef _MSC_VER
-        #include <../include/cstdint>
-    #else
-        #include_next <cstdint>
-    #endif
-#endif
+#ifndef _SIMT_TYPE_TRAITS
+#define _SIMT_TYPE_TRAITS
+
+#include "details/__pre"
+#pragma push_macro("_LIBCPP_TYPE_TRAITS")
+#undef _LIBCPP_TYPE_TRAITS
+
+#include "../libcxx/include/type_traits"
+
+#pragma pop_macro("_LIBCPP_TYPE_TRAITS")
+#include "details/__post"
+
+#endif //_SIMT_TYPE_TRAITS

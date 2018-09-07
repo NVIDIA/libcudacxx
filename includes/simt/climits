@@ -22,12 +22,16 @@ THE SOFTWARE.
 
 */
 
-#ifdef USE_DETAILS_CONFIG
-    #include <simt/cstdint>
-#else
-    #ifdef _MSC_VER
-        #include <../include/cstdint>
-    #else
-        #include_next <cstdint>
-    #endif
-#endif
+#ifndef _SIMT_CLIMITS
+#define _SIMT_CLIMITS
+
+#include "details/__pre"
+#pragma push_macro("_LIBCPP_CLIMITS")
+#undef _LIBCPP_CLIMITS
+
+#include "../libcxx/include/climits"
+
+#pragma pop_macro("_LIBCPP_CLIMITS")
+#include "details/__post"
+
+#endif //_SIMT_CLIMITS

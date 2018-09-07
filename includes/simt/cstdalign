@@ -22,12 +22,16 @@ THE SOFTWARE.
 
 */
 
-#ifdef USE_DETAILS_CONFIG
-    #include <simt/cstdint>
-#else
-    #ifdef _MSC_VER
-        #include <../include/cstdint>
-    #else
-        #include_next <cstdint>
-    #endif
-#endif
+#ifndef _SIMT_CSTDALIGN
+#define _SIMT_CSTDALIGN
+
+#include "details/__pre"
+#pragma push_macro("_LIBCPP_CSTDALIGN")
+#undef _LIBCPP_CSTDALIGN
+
+#include "../libcxx/include/cstdalign"
+
+#pragma pop_macro("_LIBCPP_CSTDALIGN")
+#include "details/__post"
+
+#endif //_SIMT_CSTDALIGN

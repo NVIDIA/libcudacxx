@@ -1,33 +1,29 @@
 /*
 
 Copyright (c) 2018, NVIDIA Corporation
-All rights reserved.
 
-Redistribution and use in source and binary forms, with or without modification,
-are permitted provided that the following conditions are met:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-1. Redistributions of source code must retain the above copyright notice, this
-list of conditions and the following disclaimer.
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
 
-2. Redistributions in binary form must reproduce the above copyright notice,
-this list of conditions and the following disclaimer in the documentation
-and/or other materials provided with the distribution.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
-BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
-OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
-OF THE POSSIBILITY OF SUCH DAMAGE.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 
 */
 
-#ifndef _GPU_ATOMIC
-#define _GPU_ATOMIC
+#ifndef _SIMT_ATOMIC
+#define _SIMT_ATOMIC
 
 #include <atomic>
 #include <type_traits>
@@ -71,22 +67,22 @@ static_assert(ATOMIC_POINTER_LOCK_FREE == 2, "");
 #undef ATOMIC_FLAG_INIT
 #undef ATOMIC_VAR_INIT
 
-#define atomic_thread_fence atomic_thread_fence_gpu_
-#define atomic_signal_fence atomic_signal_fence_gpu_
+#define atomic_thread_fence atomic_thread_fence_simt_
+#define atomic_signal_fence atomic_signal_fence_simt_
 
 #include "details/__config"
 
 #pragma push_macro("_LIBCPP_ATOMIC")
 #undef _LIBCPP_ATOMIC
 
-#define GPU_STD_DETAILS
+#define SIMT_STD_DETAILS
 #include "details/__pre"
 #pragma push_macro("_LIBCPP_CXX03_LANG")
 #define _LIBCPP_CXX03_LANG
 #include "../libcxx/include/atomic"
 #pragma pop_macro("_LIBCPP_CXX03_LANG")
 #include "details/__post"
-#undef GPU_STD_DETAILS
+#undef SIMT_STD_DETAILS
 
 #pragma pop_macro("_LIBCPP_ATOMIC")
 
@@ -95,7 +91,7 @@ static_assert(ATOMIC_POINTER_LOCK_FREE == 2, "");
 
 #else
 
-namespace gpu { namespace std { namespace details { inline namespace v1 {
+namespace simt { namespace std { namespace details { inline namespace v1 {
 
 typedef ::std::memory_order memory_order;
 
@@ -109,10 +105,10 @@ static constexpr memory_order memory_order_seq_cst = ::std::memory_order_seq_cst
 template<class T>
 using atomic = ::std::atomic<T>;
 
-void atomic_thread_fence_gpu_(memory_order order) {
+void atomic_thread_fence_simt_(memory_order order) {
     ::std::atomic_thread_fence(order);
 }
-void atomic_signal_fence_gpu_(memory_order order) {
+void atomic_signal_fence_simt_(memory_order order) {
     ::std::atomic_signal_fence(order);
 }
 
@@ -125,7 +121,7 @@ void atomic_signal_fence_gpu_(memory_order order) {
 #pragma warning(disable:4522)
 #endif
 
-namespace gpu { namespace std { inline namespace v1 {
+namespace simt { namespace std { inline namespace v1 {
 
 typedef details::memory_order memory_order;
 
@@ -570,11 +566,11 @@ __host__ __device__ inline void atomic_flag_clear_explicit(volatile atomic_flag*
     f->clear(order);
 }
 
-__host__ __device__ void atomic_thread_fence_gpu(memory_order order) {
-    details::atomic_thread_fence_gpu_(order);
+__host__ __device__ void atomic_thread_fence_simt(memory_order order) {
+    details::atomic_thread_fence_simt_(order);
 }
-__host__ __device__ void atomic_signal_fence_gpu(memory_order order){
-    details::atomic_signal_fence_gpu_(order);
+__host__ __device__ void atomic_signal_fence_simt(memory_order order){
+    details::atomic_signal_fence_simt_(order);
 }
 
 } } }
@@ -583,4 +579,4 @@ __host__ __device__ void atomic_signal_fence_gpu(memory_order order){
 #pragma warning(pop)
 #endif
 
-#endif //_GPU_ATOMIC
+#endif //_SIMT_ATOMIC

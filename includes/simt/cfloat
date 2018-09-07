@@ -22,12 +22,16 @@ THE SOFTWARE.
 
 */
 
-#ifdef USE_DETAILS_CONFIG
-    #include <simt/cstdint>
-#else
-    #ifdef _MSC_VER
-        #include <../include/cstdint>
-    #else
-        #include_next <cstdint>
-    #endif
-#endif
+#ifndef _SIMT_CFLOAT
+#define _SIMT_CFLOAT
+
+#include "details/__pre"
+#pragma push_macro("_LIBCPP_CFLOAT")
+#undef _LIBCPP_CFLOAT
+
+#include "../libcxx/include/cfloat"
+
+#pragma pop_macro("_LIBCPP_CFLOAT")
+#include "details/__post"
+
+#endif //_SIMT_CFLOAT
