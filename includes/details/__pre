@@ -55,6 +55,7 @@ THE SOFTWARE.
 #pragma push_macro("_LIBCPP_NO_EXCEPTIONS")
 #pragma push_macro("USE_DETAILS_CONFIG")
 
+#undef _LIBCPP_CONSTEXPR
 #define _LIBCPP_CONSTEXPR constexpr
 #define _LIBCPP_HAS_GCC_ATOMIC_IMP
 
