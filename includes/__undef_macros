@@ -26,6 +26,12 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef USE_DETAILS_CONFIG
-    #include_next <__config>
+#ifdef USE_DETAILS_CONFIG
+    #include "../libcxx/include/__undef_macros"
+#else
+    #ifdef _MSC_VER
+        #include <../include/__undef_macros>
+    #else
+        #include_next <__undef_macros>
+    #endif
 #endif

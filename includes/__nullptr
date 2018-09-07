@@ -27,7 +27,13 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 #ifdef USE_DETAILS_CONFIG
-    #include <gpu/cstdint>
+    namespace gpu { namespace std { inline namespace v1 {
+        typedef decltype(nullptr) nullptr_t;
+    } } }
 #else
-    #include_next <cstdint>
+    #ifdef _MSC_VER
+        #include <../include/__nullptr>
+    #else
+        #include_next <__nullptr>
+    #endif
 #endif

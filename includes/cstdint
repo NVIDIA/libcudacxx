@@ -27,7 +27,11 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 #ifdef USE_DETAILS_CONFIG
-    #include "../libcxx/include/__undef_macros"
+    #include <gpu/cstdint>
 #else
-    #include_next <__undef_macros>
+    #ifdef _MSC_VER
+        #include <../include/cstdint>
+    #else
+        #include_next <cstdint>
+    #endif
 #endif

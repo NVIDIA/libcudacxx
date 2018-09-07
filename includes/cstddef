@@ -27,7 +27,11 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 #ifdef USE_DETAILS_CONFIG
-    #include "../libcxx/include/__nullptr"
+    #include <gpu/cstddef>
 #else
-    #include_next <__nullptr>
+    #ifdef _MSC_VER
+        #include <../include/cstddef>
+    #else
+        #include_next <cstddef>
+    #endif
 #endif

@@ -26,6 +26,9 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
+#pragma push_macro("_LIBCPP_NO_AUTO_LINK")
+#define _LIBCPP_NO_AUTO_LINK
+
 #ifndef __CONFIG_ONCE
     #define __CONFIG_ONCE
     #pragma push_macro("_LIBCPP_CONFIG")

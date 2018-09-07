@@ -27,7 +27,11 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 #ifdef USE_DETAILS_CONFIG
-    #include <gpu/exception>
+    #include <gpu/type_traits>
 #else
-    #include_next <exception>
+    #ifdef _MSC_VER
+        #include <../include/type_traits>
+    #else
+        #include_next <type_traits>
+    #endif
 #endif

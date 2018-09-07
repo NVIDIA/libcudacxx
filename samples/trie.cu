@@ -25,6 +25,14 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISE
 OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <utility>
+#include <vector>
+#include <chrono>
+#include <thread>
+#include <atomic>
 
 #include <cassert>
 
@@ -113,7 +121,7 @@ void call_process(const char* begin, const char* end, trie* t) {
     auto const range = gridDim.x * blockDim.x;
     process(begin, end, t, index, range);
 }
-
+/*
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -121,7 +129,7 @@ void call_process(const char* begin, const char* end, trie* t) {
 #include <vector>
 #include <chrono>
 #include <thread>
-
+*/
 #define gpuErrchk(ans) { gpuAssert((ans), __FILE__, __LINE__); }
 inline void gpuAssert(cudaError_t code, const char *file, int line, bool abort=true)
 {

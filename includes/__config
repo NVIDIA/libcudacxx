@@ -26,8 +26,10 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifdef USE_DETAILS_CONFIG
-    #include <gpu/cstddef>
-#else
-    #include_next <cstddef>
+#ifndef USE_DETAILS_CONFIG
+    #ifdef _MSC_VER
+        #include <../include/__config>
+    #else
+        #include_next <__config>
+    #endif
 #endif
