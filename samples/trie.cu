@@ -26,17 +26,14 @@ THE SOFTWARE.
 #include <simt/cstdint>
 #include <simt/atomic>
 
-#include "mutex.hpp"
-
 // stay tuned for <algorithm>
 template<class T> static constexpr T min(T a, T b) { return a < b ? a : b; }
 
 struct node {
     struct ref {
         simt::std::atomic<node*>  ptr = ATOMIC_VAR_INIT(nullptr);
-        simt::experimental::mutex lock;
-    };
-    ref                    next[26];
+        simt::std::atomic_flag    once = ATOMIC_FLAG_INIT;
+    } next[26];
     simt::std::atomic<int> count = ATOMIC_VAR_INIT(0);
 };
 struct trie {
@@ -79,8 +76,8 @@ __host__ __device__ void process(const char* begin, const char* end, trie* t, un
         auto& ptr = n->next[index].ptr;
         auto next = ptr.load(simt::std::memory_order_acquire);
         if(next == nullptr) {
-            auto& lock = n->next[index].lock;
-            if(!lock.try_lock()) {
+            auto& once = n->next[index].once;
+            if(once.test_and_set()) {
                 do {
                     next = ptr.load(simt::std::memory_order_acquire);
                 } while(next == nullptr);
@@ -90,9 +87,7 @@ __host__ __device__ void process(const char* begin, const char* end, trie* t, un
                 if(next == nullptr) {
                     next = t->bump.fetch_add(1, simt::std::memory_order_relaxed);
                     ptr.store(next, simt::std::memory_order_relaxed);
-                    lock.unlock();
-	        }
-	        else lock.unlock();
+                }
             }
         }
         n = next;

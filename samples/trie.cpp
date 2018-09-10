@@ -25,7 +25,6 @@ THE SOFTWARE.
 #include <cstddef>
 #include <cstdint>
 #include <atomic>
-#include <mutex>
 
 // stay tuned for <algorithm>
 template<class T> static constexpr T min(T a, T b) { return a < b ? a : b; }
@@ -33,9 +32,8 @@ template<class T> static constexpr T min(T a, T b) { return a < b ? a : b; }
 struct node {
     struct ref {
         std::atomic<node*>  ptr = ATOMIC_VAR_INIT(nullptr);
-        std::mutex lock;
-    };
-    ref                    next[26];
+        std::atomic_flag    once = ATOMIC_FLAG_INIT;
+    } next[26];
     std::atomic<int> count = ATOMIC_VAR_INIT(0);
 };
 struct trie {
@@ -78,8 +76,8 @@ void process(const char* begin, const char* end, trie* t, unsigned const index, 
         auto& ptr = n->next[index].ptr;
         auto next = ptr.load(std::memory_order_acquire);
         if(next == nullptr) {
-            auto& lock = n->next[index].lock;
-            if(!lock.try_lock()) {
+            auto& once = n->next[index].once;
+            if(once.test_and_set()) {
                 do {
                     next = ptr.load(std::memory_order_acquire);
                 } while(next == nullptr);
@@ -89,9 +87,7 @@ void process(const char* begin, const char* end, trie* t, unsigned const index, 
                 if(next == nullptr) {
                     next = t->bump.fetch_add(1, std::memory_order_relaxed);
                     ptr.store(next, std::memory_order_relaxed);
-                    lock.unlock();
-	        }
-	        else lock.unlock();
+	            }
             }
         }
         n = next;
@@ -163,4 +159,3 @@ int main() {
 
     return 0;
 }
-

@@ -530,6 +530,7 @@ struct atomic_flag {
 #endif
 
     atomic_flag() noexcept = default;
+    __host__ __device__ atomic_flag(bool set) noexcept : _base(set ? 1 : 0) { };
     atomic_flag(const atomic_flag&) = delete;
     atomic_flag& operator=(const atomic_flag&) = delete;
 
