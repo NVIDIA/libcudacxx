@@ -1,6 +1,8 @@
-# `freestanding`, a Standard C++ library for heterogeneous GPU programs
+# A _freestanding_ Standard C++ library for GPU programs.
 
-Obviously, `freestanding` is intended to conform to the eponymous subset of C++.
+Implements the eponymous subset of C++ with some exceptions.
+
+## How to use this library
 
 ## Clone this repo
 
@@ -10,7 +12,7 @@ git clone --recurse-submodules https://github.com/ogiroux/freestanding
 
 ## Run the sample
 
-On Linux, for example. You will need `curl`, and obviously CUDA with a Volta or Turing GPU.
+On Linux, for example.
 
 ```
 cd samples
@@ -19,29 +21,35 @@ cd samples
 ./trie
 ```
 
-## Make a change to this repo
+(_Note: you will need `curl`, and obviously CUDA with a Volta, Xavier or Turing GPU._)
 
-Make your change.
+## What is supported
 
-```
-git commit -am "your message here"
-git push origin master
-```
+Nothing. This repository holds a useful demo. That's all.
 
-## Make a change to the `libcxx` submodule
+You may, however, enjoy creating your own demo application.
 
-```
-cd libcxx
-git checkout master
-```
+## What happens to work
 
-Make your change.
+Assuming you compile with `-I<path-to-includes/>`:
+1. Each header named `<simt/X>` conforms to the specification for the header `<X>` from ISO C++, except that each occurrence of `std::` is prefixed with `simt::`.
+2. Except for limitations specified below, each facility thus introduced in `simt::` works in both `__host__` and `__device__` functions, under `-std=c++11` and `-std=c++14`, on Windows, Mac and Linux with CUDA 9 or 10 on Volta, Xavier and Turing. (_Though, obviously, not all combinations are possible._)
 
-```
-git commit -am "your message here"
-git push origin master
-cd ..
-git submodule update --remote --merge
-git commit -am "your updated submodule message here"
-git push origin master
-```
+| Header | Limitation in function | Requires | 
+| ----------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `<simt/atomic>`           | Except `simt::std::atomic<T>`, where `is_lock_free()` returns `false`, in `__device__` functions, temporarily. | `<simt/cstddef>`, `<simt/cstdint>`, `<simt/type_traits>`           |
+| `<simt/cfloat>`           |                                                              | `<float.h>`                                                    |
+| `<simt/ciso646>`          |                                                              | `<iso646.h>`                                                   |
+| `<simt/climits>`          |                                                              | `<limits.h>`                                                   |
+| `<simt/cstdalign>`        | Except Mac OS X.                                                    | `<stdalign.h>`                                                 |
+| `<simt/cstdarg>`          | Except `__device__` functions.                                            | `<stdarg.h>`                                                   |
+| `<simt/cstdbool>`         |                                                              |                                                              |
+| `<simt/cstddef>`          |                                                              | `<stddef.h>`                                                   |
+| `<simt/cstdint>`          |                                                              | `<stdint.h>`                                                   |
+| `<simt/cstdlib>`          | Except `__device__` functions.                                            | `<stdlib.h>`                                                   |
+| `<simt/exception>`        | Except `__device__` functions.                                            | `<simt/cstddef>`, `<simt/cstdint>`, `<simt/type_traits>`           |
+| `<simt/initializer_list>` |                                                              | `<simt/cstddef>`                                               |
+| `<simt/limits>`           |                                                              | `<simt/type_traits>`                                           |
+| `<simt/new>`              | Except `__device__` functions.                                            | `<simt/exception>`, `<simt/type_traits>`, `<simt/cstddef>`, `<simt/cstdlib>` |
+| `<simt/type_traits>`      |                                                              | `<simt/cstddef>`                                               |
+| `<simt/typeinfo>`         | Except `__device__` functions.                                            | `<simt/exception>`, `<simt/cstddef>`, `<simt/cstdint>`, `<simt/cstdlib>` |
