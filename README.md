@@ -35,6 +35,12 @@ Assuming you compile with `-I<path-to-includes/>`:
 1. Each header named `<simt/X>` conforms to the specification for the header `<X>` from ISO C++, except that each occurrence of `std::` is prefixed with `simt::`.
 2. Except for limitations specified below, each facility thus introduced in `simt::` works in both `__host__` and `__device__` functions, under `-std=c++11` and `-std=c++14`, on Windows, Mac and Linux with CUDA 9 or 10 on Volta, Xavier and Turing. (_Though, obviously, not all combinations are possible._)
 
+## What does not work
+
+In general, for the language support library (`<simt/initializer_list>`, `<simt/new>`, `<simt/typeinfo>`, `<simt/exception>`) the header `<simt/X>` only introduces aliases to the declarations of `<X>` under the `simt::` namespace. Use in `__device__` functions is limited to intrinsic support for the facility by the compiler used.
+  
+In specific, see the table below.
+
 | Header | Limitation in function | Requires | 
 | ----------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | `<simt/atomic>`           | Except `simt::std::atomic<T>`, where `is_lock_free()` returns `false`, in `__device__` functions, temporarily. | `<simt/cstddef>`, `<simt/cstdint>`, `<simt/type_traits>`           |
