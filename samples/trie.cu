@@ -32,7 +32,7 @@ template<class T> static constexpr T min(T a, T b) { return a < b ? a : b; }
 struct node {
     struct ref {
         simt::std::atomic<node*>  ptr = ATOMIC_VAR_INIT(nullptr);
-        simt::std::atomic_flag    once = ATOMIC_FLAG_INIT;
+        simt::std::atomic<int>    once = ATOMIC_VAR_INIT(0);
     } next[26];
     simt::std::atomic<int> count = ATOMIC_VAR_INIT(0);
 };
@@ -77,7 +77,7 @@ __host__ __device__ void process(const char* begin, const char* end, trie* t, un
         auto next = ptr.load(simt::std::memory_order_acquire);
         if(next == nullptr) {
             auto& once = n->next[index].once;
-            if(once.test_and_set()) {
+            if(once.exchange(1, simt::std::memory_order_relaxed)) {
                 do {
                     next = ptr.load(simt::std::memory_order_acquire);
                 } while(next == nullptr);
