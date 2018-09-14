@@ -33,38 +33,23 @@ struct trie {
     } next[26];
     int count = 0;
 };
-
+int index_of(char c) {
+    if(c >= 'a' && c <= 'z') return c - 'a';
+    if(c >= 'A' && c <= 'Z') return c - 'A';
+    return -1;
+};
 void make_trie(/* trie to insert word counts into */ trie& root,
                /* bump allocator to get new nodes*/ trie*& bump,
                /* input */ const char* begin, const char* end) {
 
-    auto const size = end - begin;
-    auto const stride = size;
-
-    auto off = 0;
-    auto const last = size;
-
-    auto const index_of = [](char c) -> int {
-        if(c >= 'a' && c <= 'z') return c - 'a';
-        if(c >= 'A' && c <= 'Z') return c - 'A';
-        return -1;
-    };
-
-    trie *n = &root;
-    for(char c = begin[off]; ; ++off, c = begin[off]) {
-        auto const index = off >= size ? -1 : index_of(c);
-        if(index == -1) {
-            if(n != &root) {
-                n->count++;
-                n = &root;
-            }
-            //end of last word?
-            if(off >= size || off > last)
-                break;
-            else
-                continue;
+    auto n = &root;
+    for(auto pc = begin; pc != end; ++pc) {
+        auto const index = index_of(*pc);
+        if(index == -1 && n != &root) {
+            n->count++;
+            n = &root;
         }
-        if( n->next[index].ptr == nullptr)
+        if( n->next[index].ptr == nullptr )
             n->next[index].ptr = bump++;
         n = n->next[index].ptr;
     }

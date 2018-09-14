@@ -15,3 +15,11 @@ samples/log.txt
 samples/trie.exp
 samples/trie.lib
 samples/trie.txt
+samples/out.txt
+samples/temp.txt
+samples/trie.cu.txt
+samples/trie_mt.exe
+samples/trie.obj
+samples/trie_mt.obj
+samples/trie_st.exe
+samples/trie_st.obj

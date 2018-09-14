@@ -36,7 +36,11 @@ struct trie {
     } next[26];
     std::atomic<int> count = ATOMIC_VAR_INIT(0);
 };
-
+int index_of(char c) {
+    if(c >= 'a' && c <= 'z') return c - 'a';
+    if(c >= 'A' && c <= 'Z') return c - 'A';
+    return -1;
+};
 void make_trie(/* trie to insert word counts into */ trie& root,
                /* bump allocator to get new nodes*/ std::atomic<trie*>& bump,
                /* input */ const char* begin, const char* end,
@@ -48,12 +52,6 @@ void make_trie(/* trie to insert word counts into */ trie& root,
 
     auto off = min(size, stride * index);
     auto const last = min(size, off + stride);
-
-    auto const index_of = [](char c) -> int {
-        if(c >= 'a' && c <= 'z') return c - 'a';
-        if(c >= 'A' && c <= 'Z') return c - 'A';
-        return -1;
-    };
 
     for(char c = begin[off]; off < size && off != last && c != 0 && index_of(c) != -1; ++off, c = begin[off]);
     for(char c = begin[off]; off < size && off != last && c != 0 && index_of(c) == -1; ++off, c = begin[off]);
