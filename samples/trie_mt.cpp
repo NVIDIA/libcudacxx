@@ -26,26 +26,25 @@ THE SOFTWARE.
 #include <cstdint>
 #include <atomic>
 
-// stay tuned for <algorithm>
 template<class T> static constexpr T min(T a, T b) { return a < b ? a : b; }
 
-struct node {
+struct trie {
     struct ref {
-        std::atomic<node*>  ptr = ATOMIC_VAR_INIT(nullptr);
-        std::atomic_flag    once = ATOMIC_FLAG_INIT;
+        std::atomic<trie*> ptr = ATOMIC_VAR_INIT(nullptr);
+        // the flag will protect against multiple pointer updates
+        std::atomic<int> flag = ATOMIC_VAR_INIT(0);
     } next[26];
     std::atomic<int> count = ATOMIC_VAR_INIT(0);
 };
-struct trie {
-    std::atomic<node*> bump = ATOMIC_VAR_INIT(nullptr);
-    node                     root;
-    trie(node* ptr) : bump(ptr) { }
-};
 
-void process(const char* begin, const char* end, trie* t, unsigned const index, unsigned const range) {
+void make_trie(/* trie to insert word counts into */ trie& root,
+               /* bump allocator to get new nodes*/ std::atomic<trie*>& bump,
+               /* input */ const char* begin, const char* end,
+               /* thread this invocation is for */ unsigned index, 
+               /* how many threads there are */ unsigned domain) {
 
     auto const size = end - begin;
-    auto const stride = (size / range + 1);
+    auto const stride = (size / domain + 1);
 
     auto off = min(size, stride * index);
     auto const last = min(size, off + stride);
@@ -59,13 +58,13 @@ void process(const char* begin, const char* end, trie* t, unsigned const index, 
     for(char c = begin[off]; off < size && off != last && c != 0 && index_of(c) != -1; ++off, c = begin[off]);
     for(char c = begin[off]; off < size && off != last && c != 0 && index_of(c) == -1; ++off, c = begin[off]);
 
-    node *const proot = &t->root, *n = proot;
+    trie *n = &root;
     for(char c = begin[off]; ; ++off, c = begin[off]) {
         auto const index = off >= size ? -1 : index_of(c);
         if(index == -1) {
-            if(n != proot) {
+            if(n != &root) {
                 n->count.fetch_add(1, std::memory_order_relaxed);
-                n = proot;
+                n = &root;
             }
             //end of last word?
             if(off >= size || off > last)
@@ -73,58 +72,49 @@ void process(const char* begin, const char* end, trie* t, unsigned const index, 
             else
                 continue;
         }
-        auto& ptr = n->next[index].ptr;
-        auto next = ptr.load(std::memory_order_acquire);
-        if(next == nullptr) {
-            auto& once = n->next[index].once;
-            if(once.test_and_set()) {
-                do {
-                    next = ptr.load(std::memory_order_acquire);
-                } while(next == nullptr);
-            }
+        if(n->next[index].ptr.load(std::memory_order_acquire) == nullptr) {
+            if(n->next[index].flag.exchange(1, std::memory_order_relaxed) == 1)
+                while(n->next[index].ptr.load(std::memory_order_acquire) == nullptr);
             else {
-                next = ptr.load(std::memory_order_acquire);
-                if(next == nullptr) {
-                    next = t->bump.fetch_add(1, std::memory_order_relaxed);
-                    ptr.store(next, std::memory_order_relaxed);
-	            }
-            }
-        }
-        n = next;
+                auto next = bump.fetch_add(1, std::memory_order_relaxed);
+                n->next[index].ptr.store(next, std::memory_order_release);
+            } 
+        } 
+        n = n->next[index].ptr.load(std::memory_order_relaxed);
     }
 }
 
 #include <iostream>
+#include <cassert>
 #include <fstream>
-#include <string>
 #include <utility>
-#include <vector>
 #include <chrono>
 #include <thread>
-#include <atomic>
-#include <cassert>
+#include <memory>
+#include <vector>
+#include <string>
 
 void do_trie(std::string const& input, int threads) {
     
-    std::vector<node> nodes(1<<20);
-    trie t(nodes.data());
+    std::vector<trie> nodes(1<<17);
+ 
+    auto t = nodes.data();
+    std::atomic<trie*> b(nodes.data()+1);
 
     auto const begin = std::chrono::steady_clock::now();
     std::atomic_signal_fence(std::memory_order_seq_cst);
-
     std::vector<std::thread> tv(threads);
     for(auto count = threads; count; --count)
         tv[count - 1] = std::thread([&, count]() {
-            process(input.data(), input.data() + input.size(), &t, count - 1, threads);
+            make_trie(*t, b, input.data(), input.data() + input.size(), count - 1, threads);
         });
     for(auto& t : tv)
         t.join();
-
     std::atomic_signal_fence(std::memory_order_seq_cst);
     auto const end = std::chrono::steady_clock::now();
     auto const time = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
-    auto const count = t.bump - nodes.data();
-    std::cout << "Assembled " << count << " nodes on " << threads << " threads in " << time << "ms." << std::endl;
+    auto const count = b.load() - nodes.data();
+    std::cout << "Assembled " << count << " nodes on " << threads << " cpu threads in " << time << "ms." << std::endl;
 }
 
 int main() {
@@ -136,20 +126,14 @@ int main() {
       	"pg1727.txt", "pg55.txt", "pg6130.txt", "pg996.txt", "1342-0.txt"
     };
 
-    std::size_t total = 0, cur = 0;
     for(auto* ptr : files) {
-        std::ifstream in(ptr);
-        in.seekg(0, std::ios_base::end);
-        total += in.tellg();
-    }
-    input.resize(total);
-    for(auto* ptr : files) {
+        auto const cur = input.size();
         std::ifstream in(ptr);
         in.seekg(0, std::ios_base::end);
         auto const pos = in.tellg();
+        input.resize(cur + pos);
         in.seekg(0, std::ios_base::beg);
         in.read((char*)input.data() + cur, pos);
-        cur += pos;
     }
 
     do_trie(input, 1);

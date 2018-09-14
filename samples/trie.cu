@@ -26,26 +26,26 @@ THE SOFTWARE.
 #include <simt/cstdint>
 #include <simt/atomic>
 
-// stay tuned for <algorithm>
 template<class T> static constexpr T min(T a, T b) { return a < b ? a : b; }
 
-struct node {
+struct trie {
     struct ref {
-        simt::std::atomic<node*>  ptr = ATOMIC_VAR_INIT(nullptr);
-        simt::std::atomic<int>    once = ATOMIC_VAR_INIT(0);
+        simt::std::atomic<trie*> ptr = ATOMIC_VAR_INIT(nullptr);
+        // the flag will protect against multiple pointer updates
+        simt::std::atomic<int> flag = ATOMIC_VAR_INIT(0);
     } next[26];
     simt::std::atomic<int> count = ATOMIC_VAR_INIT(0);
 };
-struct trie {
-    simt::std::atomic<node*> bump = ATOMIC_VAR_INIT(nullptr);
-    node                     root;
-    __host__ __device__ trie(node* ptr) : bump(ptr) { }
-};
 
-__host__ __device__ void process(const char* begin, const char* end, trie* t, unsigned const index, unsigned const range) {
+__host__ __device__
+void make_trie(/* trie to insert word counts into */ trie& root,
+               /* bump allocator to get new nodes*/ simt::std::atomic<trie*>& bump,
+               /* input */ const char* begin, const char* end,
+               /* thread this invocation is for */ unsigned index, 
+               /* how many threads there are */ unsigned domain) {
 
     auto const size = end - begin;
-    auto const stride = (size / range + 1);
+    auto const stride = (size / domain + 1);
 
     auto off = min(size, stride * index);
     auto const last = min(size, off + stride);
@@ -59,13 +59,13 @@ __host__ __device__ void process(const char* begin, const char* end, trie* t, un
     for(char c = begin[off]; off < size && off != last && c != 0 && index_of(c) != -1; ++off, c = begin[off]);
     for(char c = begin[off]; off < size && off != last && c != 0 && index_of(c) == -1; ++off, c = begin[off]);
 
-    node *const proot = &t->root, *n = proot;
+    trie *n = &root;
     for(char c = begin[off]; ; ++off, c = begin[off]) {
         auto const index = off >= size ? -1 : index_of(c);
         if(index == -1) {
-            if(n != proot) {
+            if(n != &root) {
                 n->count.fetch_add(1, simt::std::memory_order_relaxed);
-                n = proot;
+                n = &root;
             }
             //end of last word?
             if(off >= size || off > last)
@@ -73,49 +73,41 @@ __host__ __device__ void process(const char* begin, const char* end, trie* t, un
             else
                 continue;
         }
-        auto& ptr = n->next[index].ptr;
-        auto next = ptr.load(simt::std::memory_order_acquire);
-        if(next == nullptr) {
-            auto& once = n->next[index].once;
-            if(once.exchange(1, simt::std::memory_order_relaxed)) {
-                do {
-                    next = ptr.load(simt::std::memory_order_acquire);
-                } while(next == nullptr);
-            }
+        if(n->next[index].ptr.load(simt::std::memory_order_acquire) == nullptr) {
+            if(n->next[index].flag.exchange(1, simt::std::memory_order_relaxed) == 1)
+                while(n->next[index].ptr.load(simt::std::memory_order_acquire) == nullptr);
             else {
-                next = ptr.load(simt::std::memory_order_acquire);
-                if(next == nullptr) {
-                    next = t->bump.fetch_add(1, simt::std::memory_order_relaxed);
-                    ptr.store(next, simt::std::memory_order_relaxed);
-                }
-            }
-        }
-        n = next;
+                auto next = bump.fetch_add(1, simt::std::memory_order_relaxed);
+                n->next[index].ptr.store(next, simt::std::memory_order_release);
+            } 
+        } 
+        n = n->next[index].ptr.load(simt::std::memory_order_relaxed);
     }
 }
 
-#ifdef __CUDACC__
-__global__ __launch_bounds__(1024, 2) 
-#endif
-void call_process(const char* begin, const char* end, trie* t) {
+__global__ // __launch_bounds__(1024, 1) 
+void call_make_trie(trie* t, simt::std::atomic<trie*>* bump, const char* begin, const char* end) {
+    
     auto const index = blockDim.x * blockIdx.x + threadIdx.x;
-    auto const range = gridDim.x * blockDim.x;
-    process(begin, end, t, index, range);
+    auto const domain = gridDim.x * blockDim.x;
+    make_trie(*t, *bump, begin, end, index, domain);
+    
 }
 
+__global__ void do_nothing() { }
+
 #include <iostream>
+#include <cassert>
 #include <fstream>
-#include <string>
 #include <utility>
-#include <vector>
 #include <chrono>
 #include <thread>
-#include <atomic>
-#include <cassert>
+#include <memory>
+#include <vector>
+#include <string>
 
 #define check(ans) { assert_((ans), __FILE__, __LINE__); }
-inline void assert_(cudaError_t code, const char *file, int line)
-{
+inline void assert_(cudaError_t code, const char *file, int line) {
    if (code == cudaSuccess) return;
     std::cerr << "check failed: " << cudaGetErrorString(code) << " : " << file << '@' << line << std::endl;
     abort();
@@ -127,11 +119,9 @@ struct managed_allocator {
   managed_allocator() = default;
   template <class U> constexpr managed_allocator(const managed_allocator<U>&) noexcept {}
   T* allocate(std::size_t n) {
-    assert(n <= std::size_t(-1) / sizeof(T));
     void* out = nullptr;
     check(cudaMallocManaged(&out, n*sizeof(T)));
-    if(auto p = static_cast<T*>(out)) return p;
-    return nullptr;
+    return static_cast<T*>(out);
   }
   void deallocate(T* p, std::size_t) noexcept { 
       check(cudaFree(p)); 
@@ -143,20 +133,19 @@ T* make_(Args &&... args) {
     return new (ma.allocate(1)) T(std::forward<Args>(args)...);
 }
 
-using string = std::basic_string<char, std::char_traits<char>, managed_allocator<char>>;
-using vector = std::vector<node, managed_allocator<node>>;
-
-void do_trie(string* input, vector* nodes, bool use_simt, int blocks, int threads) {
+template<class String>
+void do_trie(String const& input, bool use_simt, int blocks, int threads) {
     
-    check(cudaMemset(nodes->data(), 0, nodes->size() * sizeof(node)));
-
-    trie* const t = make_<trie>(nodes->data());
+    std::vector<trie, managed_allocator<trie>> nodes(1<<17);
+    if(use_simt) check(cudaMemset(nodes.data(), 0, nodes.size()*sizeof(trie)));
+ 
+    auto t = nodes.data();
+    auto b = make_<simt::std::atomic<trie*>>(nodes.data()+1);
 
     auto const begin = std::chrono::steady_clock::now();
     std::atomic_signal_fence(std::memory_order_seq_cst);
     if(use_simt) {
-        call_process<<<blocks,threads>>>(input->data(), input->data() + input->size(), t);
-        check(cudaGetLastError());
+        call_make_trie<<<blocks,threads>>>(t, b, input.data(), input.data() + input.size());
         check(cudaDeviceSynchronize());
     }
     else {
@@ -164,7 +153,7 @@ void do_trie(string* input, vector* nodes, bool use_simt, int blocks, int thread
         std::vector<std::thread> tv(threads);
         for(auto count = threads; count; --count)
             tv[count - 1] = std::thread([&, count]() {
-                process(input->data(), input->data() + input->size(), t, count - 1, threads);
+                make_trie(*t, *b, input.data(), input.data() + input.size(), count - 1, threads);
             });
         for(auto& t : tv)
             t.join();
@@ -172,48 +161,40 @@ void do_trie(string* input, vector* nodes, bool use_simt, int blocks, int thread
     std::atomic_signal_fence(std::memory_order_seq_cst);
     auto const end = std::chrono::steady_clock::now();
     auto const time = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
-    auto const count = t->bump - nodes->data();
+    auto const count = b->load() - nodes.data();
     std::cout << "Assembled " << count << " nodes on " << blocks << "x" << threads << " " << (use_simt ? "simt" : "cpu") << " threads in " << time << "ms." << std::endl;
 }
 
 int main() {
 
-    string* input = make_<string>();
-    vector* nodes = make_<vector>(1<<20);
+    std::basic_string<char, std::char_traits<char>, managed_allocator<char>>  input;
 
     char const* files[] = {
         "2600-0.txt", "2701-0.txt", "35-0.txt", "84-0.txt", "8800.txt",
       	"pg1727.txt", "pg55.txt", "pg6130.txt", "pg996.txt", "1342-0.txt"
     };
 
-    std::size_t total = 0, cur = 0;
     for(auto* ptr : files) {
-        std::ifstream in(ptr);
-        in.seekg(0, std::ios_base::end);
-        total += in.tellg();
-    }
-    input->resize(total);
-    for(auto* ptr : files) {
+        auto const cur = input.size();
         std::ifstream in(ptr);
         in.seekg(0, std::ios_base::end);
         auto const pos = in.tellg();
+        input.resize(cur + pos);
         in.seekg(0, std::ios_base::beg);
-        in.read((char*)input->data() + cur, pos);
-        cur += pos;
+        in.read((char*)input.data() + cur, pos);
     }
 
-    do_trie(input, nodes, false, 1, 1);
-    do_trie(input, nodes, false, 1, 1);
-    do_trie(input, nodes, false, 1, std::thread::hardware_concurrency());
-    do_trie(input, nodes, false, 1, std::thread::hardware_concurrency());
+    do_trie(input, false, 1, 1);
+    do_trie(input, false, 1, 1);
+    do_trie(input, false, 1, std::thread::hardware_concurrency());
+    do_trie(input, false, 1, std::thread::hardware_concurrency());
 
-    check(cudaSetDevice(0));
+    assert(cudaSuccess == cudaSetDevice(0));
     cudaDeviceProp deviceProp;
-    check(cudaGetDeviceProperties(&deviceProp, 0));
+    assert(cudaSuccess == cudaGetDeviceProperties(&deviceProp, 0));
 
-    do_trie(input, nodes, true, deviceProp.multiProcessorCount * deviceProp.maxThreadsPerMultiProcessor >> 10, 1<<10);
-    do_trie(input, nodes, true, deviceProp.multiProcessorCount * deviceProp.maxThreadsPerMultiProcessor >> 10, 1<<10);
+    do_trie(input, true, deviceProp.multiProcessorCount * deviceProp.maxThreadsPerMultiProcessor >> 10, 1<<10);
+    do_trie(input, true, deviceProp.multiProcessorCount * deviceProp.maxThreadsPerMultiProcessor >> 10, 1<<10);
 
     return 0;
 }
-

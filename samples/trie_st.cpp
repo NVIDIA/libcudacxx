@@ -1,0 +1,124 @@
+/*
+
+Copyright (c) 2018, NVIDIA Corporation
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+*/
+
+#include <cstddef>
+#include <cstdint>
+
+template<class T> static constexpr T min(T a, T b) { return a < b ? a : b; }
+
+struct trie {
+    struct ref {
+        trie* ptr = nullptr;
+    } next[26];
+    int count = 0;
+};
+
+void make_trie(/* trie to insert word counts into */ trie& root,
+               /* bump allocator to get new nodes*/ trie*& bump,
+               /* input */ const char* begin, const char* end) {
+
+    auto const size = end - begin;
+    auto const stride = size;
+
+    auto off = 0;
+    auto const last = size;
+
+    auto const index_of = [](char c) -> int {
+        if(c >= 'a' && c <= 'z') return c - 'a';
+        if(c >= 'A' && c <= 'Z') return c - 'A';
+        return -1;
+    };
+
+    trie *n = &root;
+    for(char c = begin[off]; ; ++off, c = begin[off]) {
+        auto const index = off >= size ? -1 : index_of(c);
+        if(index == -1) {
+            if(n != &root) {
+                n->count++;
+                n = &root;
+            }
+            //end of last word?
+            if(off >= size || off > last)
+                break;
+            else
+                continue;
+        }
+        if( n->next[index].ptr == nullptr)
+            n->next[index].ptr = bump++;
+        n = n->next[index].ptr;
+    }
+}
+
+#include <iostream>
+#include <cassert>
+#include <fstream>
+#include <utility>
+#include <chrono>
+#include <thread>
+#include <memory>
+#include <vector>
+#include <string>
+#include <atomic>
+
+void do_trie(std::string const& input) {
+    
+    std::vector<trie> nodes(1<<17);
+ 
+    auto t = nodes.data();
+    trie* b(nodes.data()+1);
+
+    auto const begin = std::chrono::steady_clock::now();
+    std::atomic_signal_fence(std::memory_order_seq_cst);
+    make_trie(*t, b, input.data(), input.data() + input.size());
+    std::atomic_signal_fence(std::memory_order_seq_cst);
+    auto const end = std::chrono::steady_clock::now();
+    auto const time = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+    auto const count = b - nodes.data();
+    std::cout << "Assembled " << count << " nodes on 1 cpu thread in " << time << "ms." << std::endl;
+}
+
+int main() {
+
+    std::string input;
+
+    char const* files[] = {
+        "2600-0.txt", "2701-0.txt", "35-0.txt", "84-0.txt", "8800.txt",
+      	"pg1727.txt", "pg55.txt", "pg6130.txt", "pg996.txt", "1342-0.txt"
+    };
+
+    for(auto* ptr : files) {
+        auto const cur = input.size();
+        std::ifstream in(ptr);
+        in.seekg(0, std::ios_base::end);
+        auto const pos = in.tellg();
+        input.resize(cur + pos);
+        in.seekg(0, std::ios_base::beg);
+        in.read((char*)input.data() + cur, pos);
+    }
+
+    do_trie(input);
+    do_trie(input);
+
+    return 0;
+}

@@ -11,3 +11,7 @@ samples/8800.txt
 samples/pg1727.txt
 samples/pg55.txt
 samples/pg6130.txt
+samples/log.txt
+samples/trie.exp
+samples/trie.lib
+samples/trie.txt
