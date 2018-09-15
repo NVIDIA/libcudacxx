@@ -45,9 +45,12 @@ void make_trie(/* trie to insert word counts into */ trie& root,
     auto n = &root;
     for(auto pc = begin; pc != end; ++pc) {
         auto const index = index_of(*pc);
-        if(index == -1 && n != &root) {
-            n->count++;
-            n = &root;
+        if(index == -1) {
+            if(n != &root) {
+                n->count++;
+                n = &root;
+            }
+            continue;
         }
         if( n->next[index].ptr == nullptr )
             n->next[index].ptr = bump++;
