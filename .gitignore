@@ -24,3 +24,5 @@ samples/trie_mt.obj
 samples/trie_st.exe
 samples/trie_st.obj
 samples/trial
+samples/trie_st
+samples/trie_mt
