@@ -518,7 +518,7 @@ typedef atomic<uintmax_t> atomic_uintmax_t;
 
 struct atomic_flag {
     __host__ __device__ bool test_and_set(memory_order order = memory_order_seq_cst) noexcept {
-        return _base.exchange(1, order) == 0;
+        return _base.exchange(1, order) == 1;
     }
     __host__ __device__ void clear(memory_order order = memory_order_seq_cst) noexcept {
         return _base.store(0, order);

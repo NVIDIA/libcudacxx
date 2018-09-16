@@ -32,7 +32,7 @@ struct trie {
     struct ref {
         simt::std::atomic<trie*> ptr = ATOMIC_VAR_INIT(nullptr);
         // the flag will protect against multiple pointer updates
-        simt::std::atomic<int> flag = ATOMIC_VAR_INIT(0);
+        simt::std::atomic_flag flag = ATOMIC_FLAG_INIT;
     } next[26];
     simt::std::atomic<int> count = ATOMIC_VAR_INIT(0);
 };
@@ -73,7 +73,7 @@ void make_trie(/* trie to insert word counts into */ trie& root,
                 continue;
         }
         if(n->next[index].ptr.load(simt::std::memory_order_acquire) == nullptr) {
-            if(n->next[index].flag.exchange(1, simt::std::memory_order_relaxed) == 1)
+            if(n->next[index].flag.test_and_set(simt::std::memory_order_relaxed))
                 while(n->next[index].ptr.load(simt::std::memory_order_acquire) == nullptr);
             else {
                 auto next = bump.fetch_add(1, simt::std::memory_order_relaxed);
