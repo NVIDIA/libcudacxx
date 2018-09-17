@@ -114,7 +114,16 @@ inline void assert_(cudaError_t code, const char *file, int line) {
 
 template <class T>
 struct managed_allocator {
+  typedef simt::std::size_t size_type;
+  typedef simt::std::ptrdiff_t difference_type;
+
   typedef T value_type;
+  typedef T* pointer;// (deprecated in C++17)(removed in C++20)	T*
+  typedef const T* const_pointer;// (deprecated in C++17)(removed in C++20)	const T*
+  typedef T& reference;// (deprecated in C++17)(removed in C++20)	T&
+  typedef const T& const_reference;// (deprecated in C++17)(removed in C++20)	const T&
+
+  template< class U > struct rebind { typedef managed_allocator<U> other; };
   managed_allocator() = default;
   template <class U> constexpr managed_allocator(const managed_allocator<U>&) noexcept {}
   T* allocate(std::size_t n) {
