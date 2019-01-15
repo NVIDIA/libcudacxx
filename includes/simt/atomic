@@ -205,15 +205,15 @@ struct atomic {
     }
     template < typename Q = T, typename enable_if<is_integral<Q>::value || is_pointer<Q>::value, int>::type = 0>
     __host__ __device__ T operator++(int) noexcept {
-        return ++_base;
+        return _base++;
     }
     template < typename Q = T, typename enable_if<is_integral<Q>::value || is_pointer<Q>::value, int>::type = 0>
     __host__ __device__ T operator--(int) noexcept {
-        return --_base;
+        return _base--;
     }
     template < typename Q = T, typename enable_if<is_integral<Q>::value || is_pointer<Q>::value, int>::type = 0>
     __host__ __device__ T operator++() noexcept {
-        return _base++;
+        return ++_base;
     }
     template < typename Q = T, typename enable_if<is_integral<Q>::value || is_pointer<Q>::value, int>::type = 0>
     __host__ __device__ T operator--() noexcept {
@@ -295,19 +295,19 @@ struct atomic {
     }
     template < typename Q = T, typename enable_if<is_integral<Q>::value || is_pointer<Q>::value, int>::type = 0>
     __host__ __device__ T operator++(int) volatile noexcept {
-        return ++_base;
-    }
-    template < typename Q = T, typename enable_if<is_integral<Q>::value || is_pointer<Q>::value, int>::type = 0>
-    __host__ __device__ T operator--(int) volatile noexcept {
-        return --_base;
-    }
-    template < typename Q = T, typename enable_if<is_integral<Q>::value || is_pointer<Q>::value, int>::type = 0>
-    __host__ __device__ T operator++() volatile noexcept {
         return _base++;
     }
     template < typename Q = T, typename enable_if<is_integral<Q>::value || is_pointer<Q>::value, int>::type = 0>
-    __host__ __device__ T operator--() volatile noexcept {
+    __host__ __device__ T operator--(int) volatile noexcept {
         return _base--;
+    }
+    template < typename Q = T, typename enable_if<is_integral<Q>::value || is_pointer<Q>::value, int>::type = 0>
+    __host__ __device__ T operator++() volatile noexcept {
+        return ++_base;
+    }
+    template < typename Q = T, typename enable_if<is_integral<Q>::value || is_pointer<Q>::value, int>::type = 0>
+    __host__ __device__ T operator--() volatile noexcept {
+        return --_base;
     }
     template < typename Q = T, typename enable_if<is_integral<Q>::value || is_pointer<Q>::value, int>::type = 0>
     __host__ __device__ T operator+=(difference_type addend) volatile noexcept {
