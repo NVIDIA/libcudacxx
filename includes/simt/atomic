@@ -37,7 +37,7 @@ THE SOFTWARE.
     #define __device__
 #endif
 
-#ifdef __CUDA_ARCH__
+#if defined(__CUDA_ARCH__) || !defined(_MSC_VER)
 
 #ifdef ATOMIC_BOOL_LOCK_FREE
 static_assert(ATOMIC_BOOL_LOCK_FREE == 2, "");

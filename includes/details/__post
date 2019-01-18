@@ -40,3 +40,6 @@ THE SOFTWARE.
 #pragma pop_macro("_VSTD")
 #pragma pop_macro("_LIBCPP_NO_RTTI")
 #pragma pop_macro("_LIBCPP_NO_EXCEPTIONS")
+
+#undef LIBCXX_FREESTANDING
+

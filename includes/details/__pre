@@ -104,3 +104,6 @@ THE SOFTWARE.
 #define _VSTD simt::std::v1
 
 #define USE_DETAILS_CONFIG
+
+#define LIBCXX_FREESTANDING
+
