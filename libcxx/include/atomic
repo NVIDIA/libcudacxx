@@ -1003,7 +1003,7 @@ namespace __cxx_detail {
     template<> struct __is_always_lock_free<nullptr_t> { enum { __value = 2 == ATOMIC_POINTER_LOCK_FREE }; };
 #endif
 }
-#define LIBCXX_FREESTANDING
+
 #ifdef LIBCXX_FREESTANDING
 
 template<typename _Tp>
