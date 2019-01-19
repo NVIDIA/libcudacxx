@@ -43,7 +43,7 @@ In specific, see the table below.
 
 | Header | Limitation in function | Requires | 
 | ----------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `<simt/atomic>`           | Except `simt::std::atomic<T>`, where `is_lock_free()` returns `false`, in `__device__` functions, temporarily. | `<simt/cstddef>`, `<simt/cstdint>`, `<simt/type_traits>`           |
+| `<simt/atomic>`           | Except fence functions also add the suffix `_simt`. | `<simt/cstddef>`, `<simt/cstdint>`, `<simt/type_traits>`           |
 | `<simt/cfloat>`           |                                                              | `<float.h>`                                                    |
 | `<simt/ciso646>`          |                                                              | `<iso646.h>`                                                   |
 | `<simt/climits>`          |                                                              | `<limits.h>`                                                   |
