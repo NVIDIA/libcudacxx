@@ -9,6 +9,7 @@
 
 // UNSUPPORTED: c++98, c++03, c++11
 
+// XFAIL: with_system_cxx_lib=macosx10.14
 // XFAIL: with_system_cxx_lib=macosx10.13
 // XFAIL: with_system_cxx_lib=macosx10.12
 // XFAIL: with_system_cxx_lib=macosx10.11
@@ -81,8 +82,7 @@ struct test_signed : to_chars_test_base<T>
     }
 };
 
-int
-main()
+int main()
 {
     run<test_basics>(integrals);
     run<test_signed>(all_signed);

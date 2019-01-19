@@ -404,6 +404,7 @@ namespace std
 */
 #include <__config>
 #include <cstddef>
+#include <version>
 
 #if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
@@ -708,6 +709,9 @@ template <>          struct __libcpp_is_integral<char>               : public tr
 template <>          struct __libcpp_is_integral<signed char>        : public true_type {};
 template <>          struct __libcpp_is_integral<unsigned char>      : public true_type {};
 template <>          struct __libcpp_is_integral<wchar_t>            : public true_type {};
+#ifndef _LIBCPP_NO_HAS_CHAR8_T
+template <>          struct __libcpp_is_integral<char8_t>            : public true_type {};
+#endif
 #ifndef _LIBCPP_HAS_NO_UNICODE_CHARS
 template <>          struct __libcpp_is_integral<char16_t>           : public true_type {};
 template <>          struct __libcpp_is_integral<char32_t>           : public true_type {};
@@ -737,12 +741,6 @@ _LIBCPP_INLINE_VAR _LIBCPP_CONSTEXPR bool is_integral_v
 // is_floating_point
 
 template <class _Tp> struct __libcpp_is_floating_point              : public false_type {};
-#ifdef __clang__
-template <>          struct __libcpp_is_floating_point<__fp16>      : public true_type {};
-#endif
-#ifdef __FLT16_MANT_DIG__
-template <>          struct __libcpp_is_floating_point<_Float16>    : public true_type {};
-#endif
 template <>          struct __libcpp_is_floating_point<float>       : public true_type {};
 template <>          struct __libcpp_is_floating_point<double>      : public true_type {};
 template <>          struct __libcpp_is_floating_point<long double> : public true_type {};
@@ -1654,7 +1652,7 @@ _LIBCPP_INLINE_VAR _LIBCPP_CONSTEXPR bool has_unique_object_representations_v
 // alignment_of
 
 template <class _Tp> struct _LIBCPP_TEMPLATE_VIS alignment_of
-    : public integral_constant<size_t, __alignof__(_Tp)> {};
+    : public integral_constant<size_t, _LIBCPP_ALIGNOF(_Tp)> {};
 
 #if _LIBCPP_STD_VER > 14 && !defined(_LIBCPP_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
@@ -1684,7 +1682,7 @@ struct __nat
 template <class _Tp>
 struct __align_type
 {
-    static const size_t value = alignment_of<_Tp>::value;
+    static const size_t value = _LIBCPP_PREFERRED_ALIGNOF(_Tp);
     typedef _Tp type;
 };
 
@@ -1817,8 +1815,8 @@ struct __static_max<_I0, _I1, _In...>
 template <size_t _Len, class _Type0, class ..._Types>
 struct aligned_union
 {
-    static const size_t alignment_value = __static_max<__alignof__(_Type0),
-                                                       __alignof__(_Types)...>::value;
+    static const size_t alignment_value = __static_max<_LIBCPP_PREFERRED_ALIGNOF(_Type0),
+                                                       _LIBCPP_PREFERRED_ALIGNOF(_Types)...>::value;
     static const size_t __len = __static_max<_Len, sizeof(_Type0),
                                              sizeof(_Types)...>::value;
     typedef typename aligned_storage<__len, alignment_value>::type type;
@@ -4758,7 +4756,6 @@ struct __has_operator_addressof
 
 #if _LIBCPP_STD_VER > 14
 
-#define __cpp_lib_void_t 201411
 template <class...> using void_t = void;
 
 # ifndef _LIBCPP_HAS_NO_VARIADICS

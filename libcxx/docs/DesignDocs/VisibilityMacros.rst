@@ -22,11 +22,11 @@ Visibility Macros
   Mark a symbol as being exported by the libc++ library. This attribute must
   be applied to the declaration of all functions exported by the libc++ dylib.
 
-**_LIBCPP_EXTERN_VIS**
+**_LIBCPP_EXPORTED_FROM_ABI**
   Mark a symbol as being exported by the libc++ library. This attribute may
-  only be applied to objects defined in the libc++ library. On Windows this
-  macro applies `dllimport`/`dllexport` to the symbol. On all other platforms
-  this macro has no effect.
+  only be applied to objects defined in the libc++ runtime library. On Windows,
+  this macro applies `dllimport`/`dllexport` to the symbol, and on other
+  platforms it gives the symbol default visibility.
 
 **_LIBCPP_OVERRIDABLE_FUNC_VIS**
   Mark a symbol as being exported by the libc++ library, but allow it to be
@@ -82,9 +82,9 @@ Visibility Macros
 **_LIBCPP_HIDE_FROM_ABI_PER_TU_BY_DEFAULT**
   This macro controls the default value for `_LIBCPP_HIDE_FROM_ABI_PER_TU`.
   When the macro is defined, per TU ABI insulation is enabled by default, and
-  `_LIBCPP_HIDE_FROM_ABI_PER_TU` is defined to 1 unless overriden by users.
+  `_LIBCPP_HIDE_FROM_ABI_PER_TU` is defined to 1 unless overridden by users.
   Otherwise, per TU ABI insulation is disabled by default, and
-  `_LIBCPP_HIDE_FROM_ABI_PER_TU` is defined to 0 unless overriden by users.
+  `_LIBCPP_HIDE_FROM_ABI_PER_TU` is defined to 0 unless overridden by users.
 
   This macro is intended for vendors to control whether they want to ship
   libc++ with per TU ABI insulation enabled by default. Users can always
@@ -92,7 +92,7 @@ Visibility Macros
   appropriately.
 
   By default, this macro is not defined, which means that per TU ABI insulation
-  is not provided unless explicitly overriden by users.
+  is not provided unless explicitly overridden by users.
 
 **_LIBCPP_TYPE_VIS**
   Mark a type's typeinfo, vtable and members as having default visibility.
