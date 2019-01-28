@@ -47,7 +47,7 @@ In specific, see the table below.
 | `<simt/cfloat>`           |                                                              | `<float.h>`                                                    |
 | `<simt/ciso646>`          |                                                              | `<iso646.h>`                                                   |
 | `<simt/climits>`          |                                                              | `<limits.h>`                                                   |
-| `<simt/cstdalign>`        |                                                     | `<stdalign.h>`                                                 |
+| `<simt/cstdalign>`        | Unsupported.                                                | Unsupported.                                                 |
 | `<simt/cstdarg>`          | Except `__device__` functions.                                            | `<stdarg.h>`                                                   |
 | `<simt/cstdbool>`         |                                                              |                                                              |
 | `<simt/cstddef>`          |                                                              | `<stddef.h>`                                                   |
