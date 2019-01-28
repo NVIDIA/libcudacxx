@@ -25,13 +25,13 @@ THE SOFTWARE.
 #ifndef _SIMT_CSTDLIB
 #define _SIMT_CSTDLIB
 
-#include "details/__pre"
-#pragma push_macro("_LIBCPP_CSTDLIB")
-#undef _LIBCPP_CSTDLIB
+#ifndef __CUDACC_RTC__
+    #include <cstdlib>
+#endif //__CUDACC_RTC__
+
+#include <stdlib.h>
+#include "details/__config"
 
 #include "../libcxx/include/cstdlib"
-
-#pragma pop_macro("_LIBCPP_CSTDLIB")
-#include "details/__post"
 
 #endif //_SIMT_CSTDLIB

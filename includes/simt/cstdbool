@@ -25,13 +25,12 @@ THE SOFTWARE.
 #ifndef _SIMT_CSTDBOOL
 #define _SIMT_CSTDBOOL
 
-#include "details/__pre"
-#pragma push_macro("_LIBCPP_CSTDBOOL")
-#undef _LIBCPP_CSTDBOOL
+#ifndef __CUDACC_RTC__
+    #include <cstdbool>
+#endif //__CUDACC_RTC__
+
+#include "details/__config"
 
 #include "../libcxx/include/cstdbool"
-
-#pragma pop_macro("_LIBCPP_CSTDBOOL")
-#include "details/__post"
 
 #endif //_SIMT_CSTDBOOL

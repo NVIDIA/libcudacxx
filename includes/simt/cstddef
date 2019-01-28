@@ -25,13 +25,23 @@ THE SOFTWARE.
 #ifndef _SIMT_CSTDDEF
 #define _SIMT_CSTDDEF
 
-#include "details/__pre"
-#pragma push_macro("_LIBCPP_CSTDDEF")
-#undef _LIBCPP_CSTDDEF
+#ifndef __CUDACC_RTC__
+    #include <cstddef>
+#endif //__CUDACC_RTC__
+
+#include <stddef.h>
+#include "version"
+
+namespace simt { namespace std { inline namespace v1 {
+    typedef decltype(nullptr) nullptr_t;
+} } }
+
+#include "details/__config"
 
 #include "../libcxx/include/cstddef"
 
-#pragma pop_macro("_LIBCPP_CSTDDEF")
-#include "details/__post"
+#if _LIBCPP_STD_VER > 14
+    #include "type_traits"
+#endif
 
 #endif //_SIMT_CSTDDEF

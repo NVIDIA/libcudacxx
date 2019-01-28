@@ -25,13 +25,13 @@ THE SOFTWARE.
 #ifndef _SIMT_CSTDARG
 #define _SIMT_CSTDARG
 
-#include "details/__pre"
-#pragma push_macro("_LIBCPP_CSTDARG")
-#undef _LIBCPP_CSTDARG
+#ifndef __CUDACC_RTC__
+    #include <cstdarg>
+#endif //__CUDACC_RTC__
+
+#include <stdarg.h>
+#include "details/__config"
 
 #include "../libcxx/include/cstdarg"
-
-#pragma pop_macro("_LIBCPP_CSTDARG")
-#include "details/__post"
 
 #endif //_SIMT_CSTDARG

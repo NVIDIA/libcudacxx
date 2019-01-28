@@ -25,13 +25,13 @@ THE SOFTWARE.
 #ifndef _SIMT_CFLOAT
 #define _SIMT_CFLOAT
 
-#include "details/__pre"
-#pragma push_macro("_LIBCPP_CFLOAT")
-#undef _LIBCPP_CFLOAT
+#ifndef __CUDACC_RTC__
+    #include <cfloat>
+#endif //__CUDACC_RTC__
+
+#include <float.h>
+#include "details/__config"
 
 #include "../libcxx/include/cfloat"
-
-#pragma pop_macro("_LIBCPP_CFLOAT")
-#include "details/__post"
 
 #endif //_SIMT_CFLOAT

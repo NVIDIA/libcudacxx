@@ -25,13 +25,14 @@ THE SOFTWARE.
 #ifndef _SIMT_CSTDINT
 #define _SIMT_CSTDINT
 
-#include "details/__pre"
-#pragma push_macro("_LIBCPP_CSTDINT")
-#undef _LIBCPP_CSTDINT
+#ifndef __CUDACC_RTC__
+    #include <cstdint>
+#endif //__CUDACC_RTC__
+
+#include <stdint.h>
+#include "version"
+#include "details/__config"
 
 #include "../libcxx/include/cstdint"
-
-#pragma pop_macro("_LIBCPP_CSTDINT")
-#include "details/__post"
 
 #endif //_SIMT_CSTDINT

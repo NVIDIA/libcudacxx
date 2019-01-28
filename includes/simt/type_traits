@@ -25,13 +25,14 @@ THE SOFTWARE.
 #ifndef _SIMT_TYPE_TRAITS
 #define _SIMT_TYPE_TRAITS
 
-#include "details/__pre"
-#pragma push_macro("_LIBCPP_TYPE_TRAITS")
-#undef _LIBCPP_TYPE_TRAITS
+#ifndef __CUDACC_RTC__
+    #include <type_traits>
+#endif //__CUDACC_RTC__
+
+#include "cstddef"
+#include "version"
+#include "details/__config"
 
 #include "../libcxx/include/type_traits"
-
-#pragma pop_macro("_LIBCPP_TYPE_TRAITS")
-#include "details/__post"
 
 #endif //_SIMT_TYPE_TRAITS

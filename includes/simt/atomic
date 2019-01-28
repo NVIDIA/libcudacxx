@@ -25,101 +25,107 @@ THE SOFTWARE.
 #ifndef _SIMT_ATOMIC
 #define _SIMT_ATOMIC
 
-#include <atomic>
-#include <type_traits>
+#ifndef __CUDACC_RTC__
+    #include <atomic>
+#endif //__CUDACC_RTC__
 
 #include "cstddef"
 #include "cstdint"
 #include "type_traits"
-
-#ifndef __CUDACC__
-    #define __host__
-    #define __device__
-#endif
-
-#if defined(__CUDA_ARCH__) || !defined(_MSC_VER)
-
-#ifdef ATOMIC_BOOL_LOCK_FREE
-static_assert(ATOMIC_BOOL_LOCK_FREE == 2, "");
-static_assert(ATOMIC_BOOL_LOCK_FREE == 2, "");
-static_assert(ATOMIC_CHAR_LOCK_FREE == 2, "");
-static_assert(ATOMIC_CHAR16_T_LOCK_FREE == 2, "");
-static_assert(ATOMIC_CHAR32_T_LOCK_FREE == 2, "");
-static_assert(ATOMIC_WCHAR_T_LOCK_FREE == 2, "");
-static_assert(ATOMIC_SHORT_LOCK_FREE == 2, "");
-static_assert(ATOMIC_INT_LOCK_FREE == 2, "");
-static_assert(ATOMIC_LONG_LOCK_FREE == 2, "");
-static_assert(ATOMIC_LLONG_LOCK_FREE == 2, "");
-static_assert(ATOMIC_POINTER_LOCK_FREE == 2, "");
-#endif
-
-#undef ATOMIC_BOOL_LOCK_FREE
-#undef ATOMIC_BOOL_LOCK_FREE
-#undef ATOMIC_CHAR_LOCK_FREE
-#undef ATOMIC_CHAR16_T_LOCK_FREE
-#undef ATOMIC_CHAR32_T_LOCK_FREE
-#undef ATOMIC_WCHAR_T_LOCK_FREE
-#undef ATOMIC_SHORT_LOCK_FREE
-#undef ATOMIC_INT_LOCK_FREE
-#undef ATOMIC_LONG_LOCK_FREE
-#undef ATOMIC_LLONG_LOCK_FREE
-#undef ATOMIC_POINTER_LOCK_FREE
-#undef ATOMIC_FLAG_INIT
-#undef ATOMIC_VAR_INIT
-
-#define atomic_thread_fence atomic_thread_fence_simt_
-#define atomic_signal_fence atomic_signal_fence_simt_
-
+#include "version"
 #include "details/__config"
 
-#pragma push_macro("_LIBCPP_ATOMIC")
-#undef _LIBCPP_ATOMIC
+#if !defined(__CUDA_ARCH__) && defined(_MSC_VER)
 
-#define SIMT_STD_DETAILS
-#include "details/__pre"
-#pragma push_macro("_LIBCPP_CXX03_LANG")
-#define _LIBCPP_CXX03_LANG
-#include "../libcxx/include/atomic"
-#pragma pop_macro("_LIBCPP_CXX03_LANG")
-#include "details/__post"
-#undef SIMT_STD_DETAILS
+    // Windows, CPU side
 
-#pragma pop_macro("_LIBCPP_ATOMIC")
+    namespace simt { namespace std { namespace details { inline namespace v1 {
 
-#undef atomic_thread_fence
-#undef atomic_signal_fence
+    typedef ::std::memory_order memory_order;
 
-#else
+    static constexpr memory_order memory_order_relaxed = ::std::memory_order_relaxed;
+    static constexpr memory_order memory_order_release = ::std::memory_order_release;
+    static constexpr memory_order memory_order_acq_rel = ::std::memory_order_acq_rel;
+    static constexpr memory_order memory_order_acquire = ::std::memory_order_acquire;
+    static constexpr memory_order memory_order_consume = ::std::memory_order_consume;
+    static constexpr memory_order memory_order_seq_cst = ::std::memory_order_seq_cst;
 
-namespace simt { namespace std { namespace details { inline namespace v1 {
+    template<class T>
+    using atomic = ::std::atomic<T>;
 
-typedef ::std::memory_order memory_order;
+    void atomic_thread_fence_simt_(memory_order order) {
+        ::std::atomic_thread_fence(order);
+    }
+    void atomic_signal_fence_simt_(memory_order order) {
+        ::std::atomic_signal_fence(order);
+    }
 
-static constexpr memory_order memory_order_relaxed = ::std::memory_order_relaxed;
-static constexpr memory_order memory_order_release = ::std::memory_order_release;
-static constexpr memory_order memory_order_acq_rel = ::std::memory_order_acq_rel;
-static constexpr memory_order memory_order_acquire = ::std::memory_order_acquire;
-static constexpr memory_order memory_order_consume = ::std::memory_order_consume;
-static constexpr memory_order memory_order_seq_cst = ::std::memory_order_seq_cst;
+    } } } }
 
-template<class T>
-using atomic = ::std::atomic<T>;
+#else //!defined(__CUDA_ARCH__) && defined(_MSC_VER) 
 
-void atomic_thread_fence_simt_(memory_order order) {
-    ::std::atomic_thread_fence(order);
-}
-void atomic_signal_fence_simt_(memory_order order) {
-    ::std::atomic_signal_fence(order);
-}
+    // Everything else
 
-} } } }
+    #ifdef ATOMIC_BOOL_LOCK_FREE
+        static_assert(ATOMIC_BOOL_LOCK_FREE == 2, "");
+        static_assert(ATOMIC_BOOL_LOCK_FREE == 2, "");
+        static_assert(ATOMIC_CHAR_LOCK_FREE == 2, "");
+        static_assert(ATOMIC_CHAR16_T_LOCK_FREE == 2, "");
+        static_assert(ATOMIC_CHAR32_T_LOCK_FREE == 2, "");
+        static_assert(ATOMIC_WCHAR_T_LOCK_FREE == 2, "");
+        static_assert(ATOMIC_SHORT_LOCK_FREE == 2, "");
+        static_assert(ATOMIC_INT_LOCK_FREE == 2, "");
+        static_assert(ATOMIC_LONG_LOCK_FREE == 2, "");
+        static_assert(ATOMIC_LLONG_LOCK_FREE == 2, "");
+        static_assert(ATOMIC_POINTER_LOCK_FREE == 2, "");
+    #endif //ATOMIC_BOOL_LOCK_FREE
 
-#endif //__CUDA_ARCH__
+    #undef ATOMIC_BOOL_LOCK_FREE
+    #undef ATOMIC_BOOL_LOCK_FREE
+    #undef ATOMIC_CHAR_LOCK_FREE
+    #undef ATOMIC_CHAR16_T_LOCK_FREE
+    #undef ATOMIC_CHAR32_T_LOCK_FREE
+    #undef ATOMIC_WCHAR_T_LOCK_FREE
+    #undef ATOMIC_SHORT_LOCK_FREE
+    #undef ATOMIC_INT_LOCK_FREE
+    #undef ATOMIC_LONG_LOCK_FREE
+    #undef ATOMIC_LLONG_LOCK_FREE
+    #undef ATOMIC_POINTER_LOCK_FREE
+    #undef ATOMIC_FLAG_INIT
+    #undef ATOMIC_VAR_INIT
+
+    #include "details/__atomic"
+
+    #undef _LIBCPP_BEGIN_NAMESPACE_STD
+    #define _LIBCPP_BEGIN_NAMESPACE_STD \
+        namespace simt { namespace std { namespace details { inline namespace v1 {
+    #undef _LIBCPP_END_NAMESPACE_STD
+    #define _LIBCPP_END_NAMESPACE_STD } } } }
+
+    #define _LIBCPP_HAS_GCC_ATOMIC_IMP
+    #define _LIBCPP_CXX03_LANG
+    #define atomic_thread_fence atomic_thread_fence_simt_
+    #define atomic_signal_fence atomic_signal_fence_simt_
+
+    #include "../libcxx/include/atomic"
+
+    #undef _LIBCPP_HAS_GCC_ATOMIC_IMP
+    #undef _LIBCPP_CXX03_LANG
+    #undef atomic_thread_fence
+    #undef atomic_signal_fence
+
+    #undef _LIBCPP_BEGIN_NAMESPACE_STD
+    #define _LIBCPP_BEGIN_NAMESPACE_STD \
+        namespace simt { namespace std { inline namespace v1 {
+    #undef _LIBCPP_END_NAMESPACE_STD
+    #define _LIBCPP_END_NAMESPACE_STD } } }
+
+#endif //!defined(__CUDA_ARCH__) && defined(_MSC_VER)
 
 #ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable:4522)
-#endif
+    #pragma warning(push)
+    #pragma warning(disable:4522)
+#endif //_MSC_VER
 
 namespace simt { namespace std { inline namespace v1 {
 
@@ -527,7 +533,7 @@ struct atomic_flag {
     atomic<int> _base;
 #else
     atomic<char> _base;
-#endif
+#endif //_MSC_VER
 
     atomic_flag() noexcept = default;
     __host__ __device__ atomic_flag(bool set) noexcept : _base(set ? 1 : 0) { };
@@ -577,7 +583,7 @@ __host__ __device__ void atomic_signal_fence_simt(memory_order order){
 } } }
 
 #ifdef _MSC_VER
-#pragma warning(pop)
-#endif
+    #pragma warning(pop)
+#endif //_MSC_VER
 
 #endif //_SIMT_ATOMIC

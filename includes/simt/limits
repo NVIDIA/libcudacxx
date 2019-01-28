@@ -25,13 +25,14 @@ THE SOFTWARE.
 #ifndef _SIMT_LIMITS
 #define _SIMT_LIMITS
 
-#include "details/__pre"
-#pragma push_macro("_LIBCPP_LIMITS")
-#undef _LIBCPP_LIMITS
+#ifndef __CUDACC_RTC__
+    #include <limits>
+#endif //__CUDACC_RTC__
+
+#include "type_traits"
+#include "version"
+#include "details/__config"
 
 #include "../libcxx/include/limits"
-
-#pragma pop_macro("_LIBCPP_LIMITS")
-#include "details/__post"
 
 #endif //_SIMT_LIMITS

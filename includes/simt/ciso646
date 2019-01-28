@@ -25,13 +25,12 @@ THE SOFTWARE.
 #ifndef _SIMT_CISO646
 #define _SIMT_CISO646
 
-#include "details/__pre"
-#pragma push_macro("_LIBCPP_CISO646")
-#undef _LIBCPP_CISO646
+#ifndef __CUDACC_RTC__
+    #include <ciso646>
+#endif //__CUDACC_RTC__
+
+#include "details/__config"
 
 #include "../libcxx/include/ciso646"
-
-#pragma pop_macro("_LIBCPP_CISO646")
-#include "details/__post"
 
 #endif //_SIMT_CISO646
