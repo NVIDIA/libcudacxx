@@ -70,8 +70,10 @@ Macros:
     LDBL_TRUE_MIN       // C11
 */
 
+#ifndef __simt__
 #include <__config>
 #include <float.h>
+#endif //__simt__
 
 #if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header

@@ -102,8 +102,10 @@ template<> class numeric_limits<cv long double>;
 }  // std
 
 */
+#ifndef __simt__
 #include <__config>
 #include <type_traits>
+#endif //__simt__
 
 #if defined(_LIBCPP_COMPILER_MSVC)
 #include "support/win32/limits_msvc_win32.h"
@@ -118,8 +120,10 @@ template<> class numeric_limits<cv long double>;
 #endif
 
 _LIBCPP_PUSH_MACROS
-#include <__undef_macros>
+#include "__undef_macros"
+#ifndef __simt__
 #include <version>
+#endif //__simt__
 
 
 _LIBCPP_BEGIN_NAMESPACE_STD

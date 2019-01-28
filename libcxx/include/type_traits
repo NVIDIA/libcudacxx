@@ -402,9 +402,11 @@ namespace std
 }
 
 */
+#ifndef __simt__
 #include <__config>
 #include <cstddef>
 #include <version>
+#endif //__simt__
 
 #if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header

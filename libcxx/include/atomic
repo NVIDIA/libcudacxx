@@ -540,11 +540,13 @@ void atomic_signal_fence(memory_order m) noexcept;
 
 */
 
+#ifndef __simt__
 #include <__config>
 #include <cstddef>
 #include <cstdint>
 #include <type_traits>
 #include <version>
+#endif //__simt__
 
 #if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
@@ -1001,7 +1003,7 @@ namespace __cxx_detail {
 #endif
 }
 
-#ifdef LIBCXX_FREESTANDING
+#ifdef _LIBCPP_FREESTANDING
 
 template<typename _Tp>
 struct __cxx_locked_atomic_type {
@@ -1290,7 +1292,7 @@ using __atomic_type = typename conditional<__cxx_detail::__is_always_lock_free<_
 #else
 template <class _Tp>
 using __atomic_type = _Atomic(_Tp);
-#endif //LIBCXX_FREESTANDING
+#endif //_LIBCPP_FREESTANDING
 
 // general atomic<T>
 
