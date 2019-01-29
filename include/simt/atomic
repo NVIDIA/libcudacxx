@@ -120,6 +120,26 @@ THE SOFTWARE.
     #undef _LIBCPP_END_NAMESPACE_STD
     #define _LIBCPP_END_NAMESPACE_STD } } }
 
+    #undef __atomic_load_n
+    #undef __atomic_load
+    #undef __atomic_store_n
+    #undef __atomic_store
+    #undef __atomic_exchange_n
+    #undef __atomic_exchange
+    #undef __atomic_compare_exchange_n
+    #undef __atomic_compare_exchange
+    #undef __atomic_fetch_add
+    #undef __atomic_fetch_sub
+    #undef __atomic_fetch_and
+    #undef __atomic_fetch_xor
+    #undef __atomic_fetch_or
+    #undef __atomic_test_and_set
+    #undef __atomic_clear
+    #undef __atomic_always_lock_free
+    #undef __atomic_is_lock_free
+    #undef __atomic_thread_fence
+    #undef __atomic_signal_fence
+
 #endif //!defined(__CUDA_ARCH__) && defined(_MSC_VER)
 
 #ifdef _MSC_VER
@@ -127,7 +147,13 @@ THE SOFTWARE.
     #pragma warning(disable:4522)
 #endif //_MSC_VER
 
-namespace simt { namespace std { inline namespace v1 {
+namespace simt { 
+
+typedef __atomic_scope_system system;
+typedef __atomic_scope_device device;
+typedef __atomic_scope_block block;
+
+namespace std { inline namespace v1 {
 
 typedef details::memory_order memory_order;
 
@@ -140,7 +166,7 @@ static constexpr memory_order memory_order_seq_cst = details::memory_order_seq_c
 
 template <class T> T kill_dependency(T t) noexcept { return t; }
 
-template <typename T>
+template <typename T, typename S = system>
 struct atomic {
     static_assert(is_trivially_copyable<T>::value, "The atomic<T> template requires trivially-copyable T");
 
@@ -178,7 +204,11 @@ struct atomic {
         return _base.compare_exchange_strong(expected, desired, order, order);
     }
 
+#if !defined(__CUDA_ARCH__) && defined(_MSC_VER)
     details::atomic<T> _base;
+#else
+    details::atomic<T, S> _base;
+#endif
 
     atomic() noexcept = default;
     __host__ __device__ constexpr atomic(T desired) noexcept : _base(desired) { }
@@ -573,8 +603,9 @@ __host__ __device__ inline void atomic_flag_clear_explicit(volatile atomic_flag*
     f->clear(order);
 }
 
-__host__ __device__ void atomic_thread_fence_simt(memory_order order) {
-    details::atomic_thread_fence_simt_(order);
+template<class S = system>
+__host__ __device__ void atomic_thread_fence_simt(memory_order order, S scope = S()) {
+    details::atomic_thread_fence_simt_(order, scope);
 }
 __host__ __device__ void atomic_signal_fence_simt(memory_order order){
     details::atomic_signal_fence_simt_(order);
