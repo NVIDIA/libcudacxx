@@ -33,6 +33,13 @@ THE SOFTWARE.
 #include "cstdint"
 #include "type_traits"
 #include "version"
+
+struct __atomic_scope_system { };
+struct __atomic_scope_device { };
+struct __atomic_scope_block { };
+
+using __atomic_scope_default = __atomic_scope_system;
+
 #include "details/__config"
 
 #if !defined(__CUDA_ARCH__) && defined(_MSC_VER)

@@ -25,12 +25,6 @@ THE SOFTWARE.
 #ifndef _SIMT_DETAILS_CONFIG
 #define _SIMT_DETAILS_CONFIG
 
-struct __atomic_scope_system { };
-struct __atomic_scope_device { };
-struct __atomic_scope_block { };
-
-using __atomic_scope_default = __atomic_scope_system;
-
 #ifdef __CUDA_ARCH__
 
 #define __simt_fence_signal_() asm volatile("":::"memory")

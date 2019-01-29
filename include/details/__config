@@ -46,6 +46,10 @@ THE SOFTWARE.
 #define _LIBCPP_HAS_NO_INT128
 #define _LIBCPP_FREESTANDING
 
+#ifdef _MSC_VER
+#undef __cpp_lib_transparent_operators
+#endif
+
 #include "../libcxx/include/__config"
 
 // force this outcome
