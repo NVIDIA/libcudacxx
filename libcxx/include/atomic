@@ -602,6 +602,7 @@ struct __gcc_atomic_t {
 #else
     __gcc_atomic_t() _NOEXCEPT : __a_value() {}
 #endif // _LIBCPP_CXX03_LANG
+  _LIBCPP_INLINE_VISIBILITY
   _LIBCPP_CONSTEXPR explicit __gcc_atomic_t(_Tp value) _NOEXCEPT
     : __a_value(value) {}
   _Tp __a_value;
@@ -621,7 +622,7 @@ struct __can_assign {
       sizeof(__test_atomic_assignable<_Tp, _Td>(1)) == sizeof(char);
 };
 
-static inline _LIBCPP_CONSTEXPR int __to_gcc_order(memory_order __order) {
+static inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR int __to_gcc_order(memory_order __order) {
   // Avoid switch statement to make this a constexpr.
   return __order == memory_order_relaxed ? __ATOMIC_RELAXED:
          (__order == memory_order_acquire ? __ATOMIC_ACQUIRE:
@@ -631,7 +632,7 @@ static inline _LIBCPP_CONSTEXPR int __to_gcc_order(memory_order __order) {
               __ATOMIC_CONSUME))));
 }
 
-static inline _LIBCPP_CONSTEXPR int __to_gcc_failure_order(memory_order __order) {
+static inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR int __to_gcc_failure_order(memory_order __order) {
   // Avoid switch statement to make this a constexpr.
   return __order == memory_order_relaxed ? __ATOMIC_RELAXED:
          (__order == memory_order_acquire ? __ATOMIC_ACQUIRE:
@@ -1038,6 +1039,7 @@ struct __cxx_locked_atomic_type {
   _LIBCPP_INLINE_VISIBILITY
     __cxx_locked_atomic_type() _NOEXCEPT 
     : __a_value(), __a_lock(0) {}
+  _LIBCPP_INLINE_VISIBILITY
   _LIBCPP_CONSTEXPR explicit __cxx_locked_atomic_type(_Tp value) _NOEXCEPT
     : __a_value(value), __a_lock(0) {}
 
