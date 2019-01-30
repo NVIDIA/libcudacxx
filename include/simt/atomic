@@ -104,8 +104,8 @@ static inline void atomic_signal_fence_simt(memory_order __m) {
 #undef ATOMIC_VAR_INIT
 
 #define _LIBCPP_CXX03_LANG
-#define atomic_thread_fence atomic_thread_fence_simt_
-#define atomic_signal_fence atomic_signal_fence_simt_
+#define atomic_thread_fence atomic_thread_fence_simt
+#define atomic_signal_fence atomic_signal_fence_simt
 
 #ifdef __CUDA_ARCH__
     #undef _LIBCPP_HAS_GCC_ATOMIC_IMP
