@@ -46,6 +46,12 @@ THE SOFTWARE.
 
 #include "details/__config"
 
+namespace simt { namespace details { inline namespace v1 {
+    struct __memory_scope_block;
+    struct __memory_scope_device;
+    struct __memory_scope_system;
+} } }
+
 #if !defined(__CUDA_ARCH__) && defined(_MSC_VER)
 
     // Windows, CPU side
@@ -61,16 +67,18 @@ static constexpr memory_order memory_order_acquire = ::std::memory_order_acquire
 static constexpr memory_order memory_order_consume = ::std::memory_order_consume;
 static constexpr memory_order memory_order_seq_cst = ::std::memory_order_seq_cst;
 
-template<class _Tp, class _Sco>
-using atomic = ::std::atomic<_Tp, _Sco>;
+template<class _Tp>
+using atomic = ::std::atomic<_Tp>;
 
-template<class _S = system>
+using atomic_flag = ::std::atomic_flag;
+
+template<class _S = int>
 static inline void atomic_thread_fence_simt(memory_order __m, _S = _S()) {
-    std::atomic_thread_fence(__m);
+    ::std::atomic_thread_fence(__m);
 }
 
 static inline void atomic_signal_fence_simt(memory_order __m) {
-    std::atomic_signal_fence(__m);
+    ::std::atomic_signal_fence(__m);
 }
 
 } } }
@@ -133,7 +141,7 @@ static constexpr memory_order memory_order_consume = std::memory_order_consume;
 static constexpr memory_order memory_order_seq_cst = std::memory_order_seq_cst;
 
 #if !defined(__CUDA_ARCH__) && defined(_MSC_VER)
-    #define __h_atomic_base(_T,_S) std::atomic<_T>
+    #define __h_atomic_base(_T,_S) ::std::atomic<_T>
 #else
     #define __h_atomic_base(_T,_S) std::__atomic_base<_T, _S>
 #endif
@@ -223,7 +231,7 @@ inline __host__ __device__ void atomic_thread_fence_simt(memory_order __m, _S __
 #ifdef __CUDA_ARCH__
     details::v1::__atomic_thread_fence_simt(__m, __s);
 #else
-    std::atomic_thread_fence_simt_(__m);
+    std::atomic_thread_fence_simt(__m);
 #endif
 }
 
@@ -231,7 +239,7 @@ inline __host__ __device__ void atomic_signal_fence_simt(memory_order __m) {
 #ifdef __CUDA_ARCH__
     details::v1::__atomic_signal_fence_simt(__m);
 #else
-    std::atomic_signal_fence_simt_(__m);
+    std::atomic_signal_fence_simt(__m);
 #endif
 }
 
