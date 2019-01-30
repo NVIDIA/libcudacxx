@@ -894,11 +894,15 @@ void __cxx_atomic_store(_Ap __a,  _Tp __val, memory_order __order) {
   __c11_atomic_store(__a, __val, __order);
 }
 
-template <typename _Ap, typename _Tp = typename remove_const<typename remove_pointer<_Ap>::type>::type>
+template <typename _Ap>
 static _LIBCPP_INLINE_VISIBILITY inline 
 auto __cxx_atomic_load(_Ap __a, memory_order __order) 
-    -> decltype(__c11_atomic_load((_Ap)0, memory_order_relaxed)) {
-  return __c11_atomic_load(const_cast<_Tp*>(__a), __order);
+#ifndef _MSC_VER
+    -> decltype(__c11_atomic_load((_Ap)0, memory_order_relaxed)) 
+#endif
+{
+  using noconst_Ap = typename remove_const<typename remove_pointer<_Ap>::type>::type;
+  return __c11_atomic_load(const_cast<noconst_Ap*>(__a), __order);
 }
 
 template <typename _Ap, typename _Tp>
@@ -926,14 +930,20 @@ bool __cxx_atomic_compare_exchange_weak(_Ap __a, _Tp* __expected, _Tp __value,
 template <typename _Ap, typename _Td>
 static _LIBCPP_INLINE_VISIBILITY inline 
 auto __cxx_atomic_fetch_add(_Ap __a, _Td __delta, memory_order __order) 
-    -> decltype(__c11_atomic_load((_Ap)0, memory_order_relaxed)) {
+#ifndef _MSC_VER
+    -> decltype(__c11_atomic_load((_Ap)0, memory_order_relaxed)) 
+#endif
+{
   return __c11_atomic_fetch_add(__a, __delta, __order);
 }
 
 template <typename _Ap, typename _Td>
 static _LIBCPP_INLINE_VISIBILITY inline 
 auto __cxx_atomic_fetch_sub(_Ap __a, _Td __delta, memory_order __order) 
-    -> decltype(__c11_atomic_load((_Ap)0, memory_order_relaxed)) {
+#ifndef _MSC_VER
+    -> decltype(__c11_atomic_load((_Ap)0, memory_order_relaxed)) 
+#endif
+{
   return __c11_atomic_fetch_sub(__a, __delta, __order);
 }
 
