@@ -588,7 +588,7 @@ typedef enum memory_order
 
 #if defined(_LIBCPP_HAS_GCC_ATOMIC_IMP)
 namespace __gcc_atomic {
-template <typename _Tp, typename _Sco>
+template <typename _Tp>
 struct __gcc_atomic_t {
 
 #if _GNUC_VER >= 501
@@ -646,20 +646,20 @@ static inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR int __to_gcc_failure_o
 
 #define __cxx_atomic_is_lock_free(x) __atomic_is_lock_free(x, 0)
 
-template <typename _Tp, typename _Sco>
+template <typename _Tp>
 static _LIBCPP_INLINE_VISIBILITY inline
 typename enable_if<
-    __gcc_atomic::__can_assign<volatile __gcc_atomic::__gcc_atomic_t<_Tp, _Sco>*, _Tp>::value>::type
-__cxx_atomic_init(volatile __gcc_atomic::__gcc_atomic_t<_Tp, _Sco>* __a,  _Tp __val) {
+    __gcc_atomic::__can_assign<volatile __gcc_atomic::__gcc_atomic_t<_Tp>*, _Tp>::value>::type
+__cxx_atomic_init(volatile __gcc_atomic::__gcc_atomic_t<_Tp>* __a,  _Tp __val) {
   __a->__a_value = __val;
 }
 
-template <typename _Tp, typename _Sco>
+template <typename _Tp>
 static _LIBCPP_INLINE_VISIBILITY inline
 typename enable_if<
-    !__gcc_atomic::__can_assign<volatile __gcc_atomic::__gcc_atomic_t<_Tp, _Sco>*, _Tp>::value &&
-     __gcc_atomic::__can_assign<         __gcc_atomic::__gcc_atomic_t<_Tp, _Sco>*, _Tp>::value>::type
-__cxx_atomic_init(volatile __gcc_atomic::__gcc_atomic_t<_Tp, _Sco>* __a,  _Tp __val) {
+    !__gcc_atomic::__can_assign<volatile __gcc_atomic::__gcc_atomic_t<_Tp>*, _Tp>::value &&
+     __gcc_atomic::__can_assign<         __gcc_atomic::__gcc_atomic_t<_Tp>*, _Tp>::value>::type
+__cxx_atomic_init(volatile __gcc_atomic::__gcc_atomic_t<_Tp>* __a,  _Tp __val) {
   // [atomics.types.generic]p1 guarantees _Tp is trivially copyable. Because
   // the default operator= in an object is not volatile, a byte-by-byte copy
   // is required.
@@ -671,117 +671,110 @@ __cxx_atomic_init(volatile __gcc_atomic::__gcc_atomic_t<_Tp, _Sco>* __a,  _Tp __
   }
 }
 
-template <typename _Tp, typename _Sco>
-static _LIBCPP_INLINE_VISIBILITY inline void __cxx_atomic_init(__gcc_atomic::__gcc_atomic_t<_Tp, _Sco>* __a,  _Tp __val) {
+template <typename _Tp>
+static _LIBCPP_INLINE_VISIBILITY inline void __cxx_atomic_init(__gcc_atomic::__gcc_atomic_t<_Tp>* __a,  _Tp __val) {
   __a->__a_value = __val;
 }
 
-#ifdef __CUDA_ARCH__
-    #define _EXTRACT_SCOPE(S) ,S()
-#else
-    #define _EXTRACT_SCOPE(S)
-#endif
-
-template<class _Sco = __atomic_scope_default>
-static _LIBCPP_INLINE_VISIBILITY inline void __cxx_atomic_thread_fence(memory_order __order, _Sco _scope = _Sco()) {
-  __atomic_thread_fence(__gcc_atomic::__to_gcc_order(__order) _EXTRACT_SCOPE(_Sco));
+static _LIBCPP_INLINE_VISIBILITY inline void __cxx_atomic_thread_fence(memory_order __order) {
+  __atomic_thread_fence(__gcc_atomic::__to_gcc_order(__order));
 }
 
 static _LIBCPP_INLINE_VISIBILITY inline void __cxx_atomic_signal_fence(memory_order __order) {
   __atomic_signal_fence(__gcc_atomic::__to_gcc_order(__order));
 }
 
-template <typename _Tp, typename _Sco>
-static _LIBCPP_INLINE_VISIBILITY inline void __cxx_atomic_store(volatile __gcc_atomic::__gcc_atomic_t<_Tp, _Sco>* __a,  _Tp __val,
+template <typename _Tp>
+static _LIBCPP_INLINE_VISIBILITY inline void __cxx_atomic_store(volatile __gcc_atomic::__gcc_atomic_t<_Tp>* __a,  _Tp __val,
                                       memory_order __order) {
   __atomic_store(&__a->__a_value, &__val,
                  __gcc_atomic::__to_gcc_order(__order) 
-                 _EXTRACT_SCOPE(_Sco));
+                );
 }
-template <typename _Tp, typename _Sco>
-static _LIBCPP_INLINE_VISIBILITY inline void __cxx_atomic_store(__gcc_atomic::__gcc_atomic_t<_Tp, _Sco>* __a,  _Tp __val,
+template <typename _Tp>
+static _LIBCPP_INLINE_VISIBILITY inline void __cxx_atomic_store(__gcc_atomic::__gcc_atomic_t<_Tp>* __a,  _Tp __val,
                                       memory_order __order) {
   __atomic_store(&__a->__a_value, &__val,
                  __gcc_atomic::__to_gcc_order(__order) 
-                 _EXTRACT_SCOPE(_Sco));
+                );
 }
 
-template <typename _Tp, typename _Sco>
-static _LIBCPP_INLINE_VISIBILITY inline _Tp __cxx_atomic_load(const volatile __gcc_atomic::__gcc_atomic_t<_Tp, _Sco>* __a,
+template <typename _Tp>
+static _LIBCPP_INLINE_VISIBILITY inline _Tp __cxx_atomic_load(const volatile __gcc_atomic::__gcc_atomic_t<_Tp>* __a,
                                     memory_order __order) {
   _Tp __ret;
   __atomic_load(&__a->__a_value, &__ret,
                 __gcc_atomic::__to_gcc_order(__order) 
-                _EXTRACT_SCOPE(_Sco));
+               );
   return __ret;
 }
-template <typename _Tp, typename _Sco>
-static _LIBCPP_INLINE_VISIBILITY inline _Tp __cxx_atomic_load(const __gcc_atomic::__gcc_atomic_t<_Tp, _Sco>* __a, memory_order __order) {
+template <typename _Tp>
+static _LIBCPP_INLINE_VISIBILITY inline _Tp __cxx_atomic_load(const __gcc_atomic::__gcc_atomic_t<_Tp>* __a, memory_order __order) {
   _Tp __ret;
   __atomic_load(&__a->__a_value, &__ret,
                 __gcc_atomic::__to_gcc_order(__order) 
-                _EXTRACT_SCOPE(_Sco));
+               );
   return __ret;
 }
 
-template <typename _Tp, typename _Sco>
-static _LIBCPP_INLINE_VISIBILITY inline _Tp __cxx_atomic_exchange(volatile __gcc_atomic::__gcc_atomic_t<_Tp, _Sco>* __a,
+template <typename _Tp>
+static _LIBCPP_INLINE_VISIBILITY inline _Tp __cxx_atomic_exchange(volatile __gcc_atomic::__gcc_atomic_t<_Tp>* __a,
                                         _Tp __value, memory_order __order) {
   _Tp __ret;
   __atomic_exchange(&__a->__a_value, &__value, &__ret,
                     __gcc_atomic::__to_gcc_order(__order) 
-                    _EXTRACT_SCOPE(_Sco));
+                   );
   return __ret;
 }
-template <typename _Tp, typename _Sco>
-static _LIBCPP_INLINE_VISIBILITY inline _Tp __cxx_atomic_exchange(__gcc_atomic::__gcc_atomic_t<_Tp, _Sco>* __a, _Tp __value,
+template <typename _Tp>
+static _LIBCPP_INLINE_VISIBILITY inline _Tp __cxx_atomic_exchange(__gcc_atomic::__gcc_atomic_t<_Tp>* __a, _Tp __value,
                                         memory_order __order) {
   _Tp __ret;
   __atomic_exchange(&__a->__a_value, &__value, &__ret,
                     __gcc_atomic::__to_gcc_order(__order) 
-                    _EXTRACT_SCOPE(_Sco));
+                   );
   return __ret;
 }
 
-template <typename _Tp, typename _Sco>
+template <typename _Tp>
 static _LIBCPP_INLINE_VISIBILITY inline bool __cxx_atomic_compare_exchange_strong(
-    volatile __gcc_atomic::__gcc_atomic_t<_Tp, _Sco>* __a, _Tp* __expected, _Tp __value,
+    volatile __gcc_atomic::__gcc_atomic_t<_Tp>* __a, _Tp* __expected, _Tp __value,
     memory_order __success, memory_order __failure) {
   return __atomic_compare_exchange(&__a->__a_value, __expected, &__value,
                                    false,
                                    __gcc_atomic::__to_gcc_order(__success),
                                    __gcc_atomic::__to_gcc_failure_order(__failure) 
-                                   _EXTRACT_SCOPE(_Sco));
+                                  );
 }
-template <typename _Tp, typename _Sco>
+template <typename _Tp>
 static _LIBCPP_INLINE_VISIBILITY inline bool __cxx_atomic_compare_exchange_strong(
-    __gcc_atomic::__gcc_atomic_t<_Tp, _Sco>* __a, _Tp* __expected, _Tp __value, memory_order __success,
+    __gcc_atomic::__gcc_atomic_t<_Tp>* __a, _Tp* __expected, _Tp __value, memory_order __success,
     memory_order __failure) {
   return __atomic_compare_exchange(&__a->__a_value, __expected, &__value,
                                    false,
                                    __gcc_atomic::__to_gcc_order(__success),
                                    __gcc_atomic::__to_gcc_failure_order(__failure) 
-                                   _EXTRACT_SCOPE(_Sco));
+                                  );
 }
-template <typename _Tp, typename _Sco>
+template <typename _Tp>
 static _LIBCPP_INLINE_VISIBILITY inline bool __cxx_atomic_compare_exchange_weak(
-    volatile __gcc_atomic::__gcc_atomic_t<_Tp, _Sco>* __a, _Tp* __expected, _Tp __value,
+    volatile __gcc_atomic::__gcc_atomic_t<_Tp>* __a, _Tp* __expected, _Tp __value,
     memory_order __success, memory_order __failure) {
   return __atomic_compare_exchange(&__a->__a_value, __expected, &__value,
                                    true,
                                    __gcc_atomic::__to_gcc_order(__success),
                                    __gcc_atomic::__to_gcc_failure_order(__failure) 
-                                   _EXTRACT_SCOPE(_Sco));
+                                  );
 }
-template <typename _Tp, typename _Sco>
+template <typename _Tp>
 static _LIBCPP_INLINE_VISIBILITY inline bool __cxx_atomic_compare_exchange_weak(
-    __gcc_atomic::__gcc_atomic_t<_Tp, _Sco>* __a, _Tp* __expected, _Tp __value, memory_order __success,
+    __gcc_atomic::__gcc_atomic_t<_Tp>* __a, _Tp* __expected, _Tp __value, memory_order __success,
     memory_order __failure) {
   return __atomic_compare_exchange(&__a->__a_value, __expected, &__value,
                                    true,
                                    __gcc_atomic::__to_gcc_order(__success),
                                    __gcc_atomic::__to_gcc_failure_order(__failure)
-                                   _EXTRACT_SCOPE(_Sco));
+                                  );
 }
 
 template <typename _Tp>
@@ -797,83 +790,83 @@ struct __skip_amt<_Tp[]> { };
 template <typename _Tp, int n>
 struct __skip_amt<_Tp[n]> { };
 
-template <typename _Tp, typename _Sco, typename _Td>
-static _LIBCPP_INLINE_VISIBILITY inline _Tp __cxx_atomic_fetch_add(volatile __gcc_atomic::__gcc_atomic_t<_Tp, _Sco>* __a,
+template <typename _Tp, typename _Td>
+static _LIBCPP_INLINE_VISIBILITY inline _Tp __cxx_atomic_fetch_add(volatile __gcc_atomic::__gcc_atomic_t<_Tp>* __a,
                            _Td __delta, memory_order __order) {
   return __atomic_fetch_add(&__a->__a_value, __delta * __skip_amt<_Tp>::value,
                             __gcc_atomic::__to_gcc_order(__order)
-                            _EXTRACT_SCOPE(_Sco));
+                           );
 }
-template <typename _Tp, typename _Sco, typename _Td>
-static _LIBCPP_INLINE_VISIBILITY inline _Tp __cxx_atomic_fetch_add(__gcc_atomic::__gcc_atomic_t<_Tp, _Sco>* __a, _Td __delta,
+template <typename _Tp, typename _Td>
+static _LIBCPP_INLINE_VISIBILITY inline _Tp __cxx_atomic_fetch_add(__gcc_atomic::__gcc_atomic_t<_Tp>* __a, _Td __delta,
                            memory_order __order) {
   return __atomic_fetch_add(&__a->__a_value, __delta * __skip_amt<_Tp>::value,
                             __gcc_atomic::__to_gcc_order(__order)
-                            _EXTRACT_SCOPE(_Sco));
+                           );
 }
 
-template <typename _Tp, typename _Sco, typename _Td>
-static _LIBCPP_INLINE_VISIBILITY inline _Tp __cxx_atomic_fetch_sub(volatile __gcc_atomic::__gcc_atomic_t<_Tp, _Sco>* __a,
+template <typename _Tp, typename _Td>
+static _LIBCPP_INLINE_VISIBILITY inline _Tp __cxx_atomic_fetch_sub(volatile __gcc_atomic::__gcc_atomic_t<_Tp>* __a,
                            _Td __delta, memory_order __order) {
   return __atomic_fetch_sub(&__a->__a_value, __delta * __skip_amt<_Tp>::value,
                             __gcc_atomic::__to_gcc_order(__order)
-                            _EXTRACT_SCOPE(_Sco));
+                           );
 }
-template <typename _Tp, typename _Sco, typename _Td>
-static _LIBCPP_INLINE_VISIBILITY inline _Tp __cxx_atomic_fetch_sub(__gcc_atomic::__gcc_atomic_t<_Tp, _Sco>* __a, _Td __delta,
+template <typename _Tp, typename _Td>
+static _LIBCPP_INLINE_VISIBILITY inline _Tp __cxx_atomic_fetch_sub(__gcc_atomic::__gcc_atomic_t<_Tp>* __a, _Td __delta,
                            memory_order __order) {
   return __atomic_fetch_sub(&__a->__a_value, __delta * __skip_amt<_Tp>::value,
                             __gcc_atomic::__to_gcc_order(__order)
-                            _EXTRACT_SCOPE(_Sco));
+                           );
 }
 
-template <typename _Tp, typename _Sco>
-static _LIBCPP_INLINE_VISIBILITY inline _Tp __cxx_atomic_fetch_and(volatile __gcc_atomic::__gcc_atomic_t<_Tp, _Sco>* __a,
+template <typename _Tp>
+static _LIBCPP_INLINE_VISIBILITY inline _Tp __cxx_atomic_fetch_and(volatile __gcc_atomic::__gcc_atomic_t<_Tp>* __a,
                            _Tp __pattern, memory_order __order) {
   return __atomic_fetch_and(&__a->__a_value, __pattern,
                             __gcc_atomic::__to_gcc_order(__order)
-                            _EXTRACT_SCOPE(_Sco));
+                           );
 }
-template <typename _Tp, typename _Sco>
-static _LIBCPP_INLINE_VISIBILITY inline _Tp __cxx_atomic_fetch_and(__gcc_atomic::__gcc_atomic_t<_Tp, _Sco>* __a,
+template <typename _Tp>
+static _LIBCPP_INLINE_VISIBILITY inline _Tp __cxx_atomic_fetch_and(__gcc_atomic::__gcc_atomic_t<_Tp>* __a,
                            _Tp __pattern, memory_order __order) {
   return __atomic_fetch_and(&__a->__a_value, __pattern,
                             __gcc_atomic::__to_gcc_order(__order)
-                            _EXTRACT_SCOPE(_Sco));
+                           );
 }
 
-template <typename _Tp, typename _Sco>
-static _LIBCPP_INLINE_VISIBILITY inline _Tp __cxx_atomic_fetch_or(volatile __gcc_atomic::__gcc_atomic_t<_Tp, _Sco>* __a,
+template <typename _Tp>
+static _LIBCPP_INLINE_VISIBILITY inline _Tp __cxx_atomic_fetch_or(volatile __gcc_atomic::__gcc_atomic_t<_Tp>* __a,
                           _Tp __pattern, memory_order __order) {
   return __atomic_fetch_or(&__a->__a_value, __pattern,
                            __gcc_atomic::__to_gcc_order(__order)
-                           _EXTRACT_SCOPE(_Sco));
+                          );
 }
-template <typename _Tp, typename _Sco>
-static _LIBCPP_INLINE_VISIBILITY inline _Tp __cxx_atomic_fetch_or(__gcc_atomic::__gcc_atomic_t<_Tp, _Sco>* __a, _Tp __pattern,
+template <typename _Tp>
+static _LIBCPP_INLINE_VISIBILITY inline _Tp __cxx_atomic_fetch_or(__gcc_atomic::__gcc_atomic_t<_Tp>* __a, _Tp __pattern,
                           memory_order __order) {
   return __atomic_fetch_or(&__a->__a_value, __pattern,
                            __gcc_atomic::__to_gcc_order(__order)
-                           _EXTRACT_SCOPE(_Sco));
+                          );
 }
 
-template <typename _Tp, typename _Sco>
-static _LIBCPP_INLINE_VISIBILITY inline _Tp __cxx_atomic_fetch_xor(volatile __gcc_atomic::__gcc_atomic_t<_Tp, _Sco>* __a,
+template <typename _Tp>
+static _LIBCPP_INLINE_VISIBILITY inline _Tp __cxx_atomic_fetch_xor(volatile __gcc_atomic::__gcc_atomic_t<_Tp>* __a,
                            _Tp __pattern, memory_order __order) {
   return __atomic_fetch_xor(&__a->__a_value, __pattern,
                             __gcc_atomic::__to_gcc_order(__order)
-                            _EXTRACT_SCOPE(_Sco));
+                           );
 }
-template <typename _Tp, typename _Sco>
-static _LIBCPP_INLINE_VISIBILITY inline _Tp __cxx_atomic_fetch_xor(__gcc_atomic::__gcc_atomic_t<_Tp, _Sco>* __a, _Tp __pattern,
+template <typename _Tp>
+static _LIBCPP_INLINE_VISIBILITY inline _Tp __cxx_atomic_fetch_xor(__gcc_atomic::__gcc_atomic_t<_Tp>* __a, _Tp __pattern,
                            memory_order __order) {
   return __atomic_fetch_xor(&__a->__a_value, __pattern,
                             __gcc_atomic::__to_gcc_order(__order)
-                            _EXTRACT_SCOPE(_Sco));
+                           );
 }
 
 template <class _Tp, class _Sco>
-using __cxx_atomic_type = __gcc_atomic::__gcc_atomic_t<_Tp, _Sco>;
+using __cxx_atomic_type = __gcc_atomic::__gcc_atomic_t<_Tp>;
 
 #else //_LIBCPP_HAS_GCC_ATOMIC_IMP
 
@@ -963,7 +956,11 @@ _Tp __cxx_atomic_fetch_xor(_Ap __a, _Tp __pattern, memory_order __order) {
 }
 
 template <class _Tp, class _Sco>
+#ifdef _Atomic_s
+using __cxx_atomic_type = _Atomic_s(_Tp, _Sco);
+#else
 using __cxx_atomic_type = _Atomic(_Tp);
+#endif
 
 #endif // _LIBCPP_HAS_GCC_ATOMIC_IMP
 
@@ -1323,7 +1320,7 @@ using __atomic_type = __cxx_atomic_type<_Tp, _Sco>;
 
 // general atomic<T>
 
-template <class _Tp, class _Sco, bool = is_integral<_Tp>::value && !is_same<_Tp, bool>::value>
+template <class _Tp, class _Sco = __memory_scope_default, bool = is_integral<_Tp>::value && !is_same<_Tp, bool>::value>
 struct __atomic_base  // false
 {
     mutable __atomic_type<_Tp, _Sco> __a_;
@@ -1514,11 +1511,11 @@ struct __atomic_base<_Tp, _Sco, true> : public __atomic_base<_Tp, _Sco, false>
 
 // atomic<T>
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 struct atomic
-    : public __atomic_base<_Tp, _Sco>
+    : public __atomic_base<_Tp>
 {
-    typedef __atomic_base<_Tp, _Sco> __base;
+    typedef __atomic_base<_Tp> __base;
     _LIBCPP_INLINE_VISIBILITY
 #ifndef _LIBCPP_CXX03_LANG
     atomic() _NOEXCEPT = default;
@@ -1538,11 +1535,11 @@ struct atomic
 
 // atomic<T*>
 
-template <class _Tp, class _Sco>
-struct atomic<_Tp*, _Sco>
-    : public __atomic_base<_Tp*, _Sco>
+template <class _Tp>
+struct atomic<_Tp*>
+    : public __atomic_base<_Tp*>
 {
-    typedef __atomic_base<_Tp*, _Sco> __base;
+    typedef __atomic_base<_Tp*> __base;
     _LIBCPP_INLINE_VISIBILITY
 #ifndef _LIBCPP_CXX03_LANG
     atomic() _NOEXCEPT = default;
@@ -1602,73 +1599,73 @@ struct atomic<_Tp*, _Sco>
 
 // atomic_is_lock_free
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 bool
-atomic_is_lock_free(const volatile atomic<_Tp, _Sco>* __o) _NOEXCEPT
+atomic_is_lock_free(const volatile atomic<_Tp>* __o) _NOEXCEPT
 {
     return __o->is_lock_free();
 }
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 bool
-atomic_is_lock_free(const atomic<_Tp, _Sco>* __o) _NOEXCEPT
+atomic_is_lock_free(const atomic<_Tp>* __o) _NOEXCEPT
 {
     return __o->is_lock_free();
 }
 
 // atomic_init
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 void
-atomic_init(volatile atomic<_Tp, _Sco>* __o, _Tp __d) _NOEXCEPT
+atomic_init(volatile atomic<_Tp>* __o, _Tp __d) _NOEXCEPT
 {
     __cxx_atomic_init(&__o->__a_, __d);
 }
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 void
-atomic_init(atomic<_Tp, _Sco>* __o, _Tp __d) _NOEXCEPT
+atomic_init(atomic<_Tp>* __o, _Tp __d) _NOEXCEPT
 {
     __cxx_atomic_init(&__o->__a_, __d);
 }
 
 // atomic_store
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 void
-atomic_store(volatile atomic<_Tp, _Sco>* __o, _Tp __d) _NOEXCEPT
+atomic_store(volatile atomic<_Tp>* __o, _Tp __d) _NOEXCEPT
 {
     __o->store(__d);
 }
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 void
-atomic_store(atomic<_Tp, _Sco>* __o, _Tp __d) _NOEXCEPT
+atomic_store(atomic<_Tp>* __o, _Tp __d) _NOEXCEPT
 {
     __o->store(__d);
 }
 
 // atomic_store_explicit
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 void
-atomic_store_explicit(volatile atomic<_Tp, _Sco>* __o, _Tp __d, memory_order __m) _NOEXCEPT
+atomic_store_explicit(volatile atomic<_Tp>* __o, _Tp __d, memory_order __m) _NOEXCEPT
   _LIBCPP_CHECK_STORE_MEMORY_ORDER(__m)
 {
     __o->store(__d, __m);
 }
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 void
-atomic_store_explicit(atomic<_Tp, _Sco>* __o, _Tp __d, memory_order __m) _NOEXCEPT
+atomic_store_explicit(atomic<_Tp>* __o, _Tp __d, memory_order __m) _NOEXCEPT
   _LIBCPP_CHECK_STORE_MEMORY_ORDER(__m)
 {
     __o->store(__d, __m);
@@ -1676,37 +1673,37 @@ atomic_store_explicit(atomic<_Tp, _Sco>* __o, _Tp __d, memory_order __m) _NOEXCE
 
 // atomic_load
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 _Tp
-atomic_load(const volatile atomic<_Tp, _Sco>* __o) _NOEXCEPT
+atomic_load(const volatile atomic<_Tp>* __o) _NOEXCEPT
 {
     return __o->load();
 }
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 _Tp
-atomic_load(const atomic<_Tp, _Sco>* __o) _NOEXCEPT
+atomic_load(const atomic<_Tp>* __o) _NOEXCEPT
 {
     return __o->load();
 }
 
 // atomic_load_explicit
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 _Tp
-atomic_load_explicit(const volatile atomic<_Tp, _Sco>* __o, memory_order __m) _NOEXCEPT
+atomic_load_explicit(const volatile atomic<_Tp>* __o, memory_order __m) _NOEXCEPT
   _LIBCPP_CHECK_LOAD_MEMORY_ORDER(__m)
 {
     return __o->load(__m);
 }
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 _Tp
-atomic_load_explicit(const atomic<_Tp, _Sco>* __o, memory_order __m) _NOEXCEPT
+atomic_load_explicit(const atomic<_Tp>* __o, memory_order __m) _NOEXCEPT
   _LIBCPP_CHECK_LOAD_MEMORY_ORDER(__m)
 {
     return __o->load(__m);
@@ -1714,82 +1711,82 @@ atomic_load_explicit(const atomic<_Tp, _Sco>* __o, memory_order __m) _NOEXCEPT
 
 // atomic_exchange
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 _Tp
-atomic_exchange(volatile atomic<_Tp, _Sco>* __o, _Tp __d) _NOEXCEPT
+atomic_exchange(volatile atomic<_Tp>* __o, _Tp __d) _NOEXCEPT
 {
     return __o->exchange(__d);
 }
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 _Tp
-atomic_exchange(atomic<_Tp, _Sco>* __o, _Tp __d) _NOEXCEPT
+atomic_exchange(atomic<_Tp>* __o, _Tp __d) _NOEXCEPT
 {
     return __o->exchange(__d);
 }
 
 // atomic_exchange_explicit
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 _Tp
-atomic_exchange_explicit(volatile atomic<_Tp, _Sco>* __o, _Tp __d, memory_order __m) _NOEXCEPT
+atomic_exchange_explicit(volatile atomic<_Tp>* __o, _Tp __d, memory_order __m) _NOEXCEPT
 {
     return __o->exchange(__d, __m);
 }
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 _Tp
-atomic_exchange_explicit(atomic<_Tp, _Sco>* __o, _Tp __d, memory_order __m) _NOEXCEPT
+atomic_exchange_explicit(atomic<_Tp>* __o, _Tp __d, memory_order __m) _NOEXCEPT
 {
     return __o->exchange(__d, __m);
 }
 
 // atomic_compare_exchange_weak
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 bool
-atomic_compare_exchange_weak(volatile atomic<_Tp, _Sco>* __o, _Tp* __e, _Tp __d) _NOEXCEPT
+atomic_compare_exchange_weak(volatile atomic<_Tp>* __o, _Tp* __e, _Tp __d) _NOEXCEPT
 {
     return __o->compare_exchange_weak(*__e, __d);
 }
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 bool
-atomic_compare_exchange_weak(atomic<_Tp, _Sco>* __o, _Tp* __e, _Tp __d) _NOEXCEPT
+atomic_compare_exchange_weak(atomic<_Tp>* __o, _Tp* __e, _Tp __d) _NOEXCEPT
 {
     return __o->compare_exchange_weak(*__e, __d);
 }
 
 // atomic_compare_exchange_strong
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 bool
-atomic_compare_exchange_strong(volatile atomic<_Tp, _Sco>* __o, _Tp* __e, _Tp __d) _NOEXCEPT
+atomic_compare_exchange_strong(volatile atomic<_Tp>* __o, _Tp* __e, _Tp __d) _NOEXCEPT
 {
     return __o->compare_exchange_strong(*__e, __d);
 }
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 bool
-atomic_compare_exchange_strong(atomic<_Tp, _Sco>* __o, _Tp* __e, _Tp __d) _NOEXCEPT
+atomic_compare_exchange_strong(atomic<_Tp>* __o, _Tp* __e, _Tp __d) _NOEXCEPT
 {
     return __o->compare_exchange_strong(*__e, __d);
 }
 
 // atomic_compare_exchange_weak_explicit
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 bool
-atomic_compare_exchange_weak_explicit(volatile atomic<_Tp, _Sco>* __o, _Tp* __e,
+atomic_compare_exchange_weak_explicit(volatile atomic<_Tp>* __o, _Tp* __e,
                                       _Tp __d,
                                       memory_order __s, memory_order __f) _NOEXCEPT
   _LIBCPP_CHECK_EXCHANGE_MEMORY_ORDER(__s, __f)
@@ -1797,10 +1794,10 @@ atomic_compare_exchange_weak_explicit(volatile atomic<_Tp, _Sco>* __o, _Tp* __e,
     return __o->compare_exchange_weak(*__e, __d, __s, __f);
 }
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 bool
-atomic_compare_exchange_weak_explicit(atomic<_Tp, _Sco>* __o, _Tp* __e, _Tp __d,
+atomic_compare_exchange_weak_explicit(atomic<_Tp>* __o, _Tp* __e, _Tp __d,
                                       memory_order __s, memory_order __f) _NOEXCEPT
   _LIBCPP_CHECK_EXCHANGE_MEMORY_ORDER(__s, __f)
 {
@@ -1809,10 +1806,10 @@ atomic_compare_exchange_weak_explicit(atomic<_Tp, _Sco>* __o, _Tp* __e, _Tp __d,
 
 // atomic_compare_exchange_strong_explicit
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 bool
-atomic_compare_exchange_strong_explicit(volatile atomic<_Tp, _Sco>* __o,
+atomic_compare_exchange_strong_explicit(volatile atomic<_Tp>* __o,
                                         _Tp* __e, _Tp __d,
                                         memory_order __s, memory_order __f) _NOEXCEPT
   _LIBCPP_CHECK_EXCHANGE_MEMORY_ORDER(__s, __f)
@@ -1820,10 +1817,10 @@ atomic_compare_exchange_strong_explicit(volatile atomic<_Tp, _Sco>* __o,
     return __o->compare_exchange_strong(*__e, __d, __s, __f);
 }
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 bool
-atomic_compare_exchange_strong_explicit(atomic<_Tp, _Sco>* __o, _Tp* __e,
+atomic_compare_exchange_strong_explicit(atomic<_Tp>* __o, _Tp* __e,
                                         _Tp __d,
                                         memory_order __s, memory_order __f) _NOEXCEPT
   _LIBCPP_CHECK_EXCHANGE_MEMORY_ORDER(__s, __f)
@@ -1833,348 +1830,354 @@ atomic_compare_exchange_strong_explicit(atomic<_Tp, _Sco>* __o, _Tp* __e,
 
 // atomic_fetch_add
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 typename enable_if
 <
     is_integral<_Tp>::value && !is_same<_Tp, bool>::value,
     _Tp
 >::type
-atomic_fetch_add(volatile atomic<_Tp, _Sco>* __o, _Tp __op) _NOEXCEPT
+atomic_fetch_add(volatile atomic<_Tp>* __o, _Tp __op) _NOEXCEPT
 {
     return __o->fetch_add(__op);
 }
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 typename enable_if
 <
     is_integral<_Tp>::value && !is_same<_Tp, bool>::value,
     _Tp
 >::type
-atomic_fetch_add(atomic<_Tp, _Sco>* __o, _Tp __op) _NOEXCEPT
+atomic_fetch_add(atomic<_Tp>* __o, _Tp __op) _NOEXCEPT
 {
     return __o->fetch_add(__op);
 }
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 _Tp*
-atomic_fetch_add(volatile atomic<_Tp*, _Sco>* __o, ptrdiff_t __op) _NOEXCEPT
+atomic_fetch_add(volatile atomic<_Tp*>* __o, ptrdiff_t __op) _NOEXCEPT
 {
     return __o->fetch_add(__op);
 }
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 _Tp*
-atomic_fetch_add(atomic<_Tp*, _Sco>* __o, ptrdiff_t __op) _NOEXCEPT
+atomic_fetch_add(atomic<_Tp*>* __o, ptrdiff_t __op) _NOEXCEPT
 {
     return __o->fetch_add(__op);
 }
 
 // atomic_fetch_add_explicit
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 typename enable_if
 <
     is_integral<_Tp>::value && !is_same<_Tp, bool>::value,
     _Tp
 >::type
-atomic_fetch_add_explicit(volatile atomic<_Tp, _Sco>* __o, _Tp __op, memory_order __m) _NOEXCEPT
+atomic_fetch_add_explicit(volatile atomic<_Tp>* __o, _Tp __op, memory_order __m) _NOEXCEPT
 {
     return __o->fetch_add(__op, __m);
 }
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 typename enable_if
 <
     is_integral<_Tp>::value && !is_same<_Tp, bool>::value,
     _Tp
 >::type
-atomic_fetch_add_explicit(atomic<_Tp, _Sco>* __o, _Tp __op, memory_order __m) _NOEXCEPT
+atomic_fetch_add_explicit(atomic<_Tp>* __o, _Tp __op, memory_order __m) _NOEXCEPT
 {
     return __o->fetch_add(__op, __m);
 }
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 _Tp*
-atomic_fetch_add_explicit(volatile atomic<_Tp*, _Sco>* __o, ptrdiff_t __op,
+atomic_fetch_add_explicit(volatile atomic<_Tp*>* __o, ptrdiff_t __op,
                           memory_order __m) _NOEXCEPT
 {
     return __o->fetch_add(__op, __m);
 }
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 _Tp*
-atomic_fetch_add_explicit(atomic<_Tp*, _Sco>* __o, ptrdiff_t __op, memory_order __m) _NOEXCEPT
+atomic_fetch_add_explicit(atomic<_Tp*>* __o, ptrdiff_t __op, memory_order __m) _NOEXCEPT
 {
     return __o->fetch_add(__op, __m);
 }
 
 // atomic_fetch_sub
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 typename enable_if
 <
     is_integral<_Tp>::value && !is_same<_Tp, bool>::value,
     _Tp
 >::type
-atomic_fetch_sub(volatile atomic<_Tp, _Sco>* __o, _Tp __op) _NOEXCEPT
+atomic_fetch_sub(volatile atomic<_Tp>* __o, _Tp __op) _NOEXCEPT
 {
     return __o->fetch_sub(__op);
 }
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 typename enable_if
 <
     is_integral<_Tp>::value && !is_same<_Tp, bool>::value,
     _Tp
 >::type
-atomic_fetch_sub(atomic<_Tp, _Sco>* __o, _Tp __op) _NOEXCEPT
+atomic_fetch_sub(atomic<_Tp>* __o, _Tp __op) _NOEXCEPT
 {
     return __o->fetch_sub(__op);
 }
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 _Tp*
-atomic_fetch_sub(volatile atomic<_Tp*, _Sco>* __o, ptrdiff_t __op) _NOEXCEPT
+atomic_fetch_sub(volatile atomic<_Tp*>* __o, ptrdiff_t __op) _NOEXCEPT
 {
     return __o->fetch_sub(__op);
 }
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 _Tp*
-atomic_fetch_sub(atomic<_Tp*, _Sco>* __o, ptrdiff_t __op) _NOEXCEPT
+atomic_fetch_sub(atomic<_Tp*>* __o, ptrdiff_t __op) _NOEXCEPT
 {
     return __o->fetch_sub(__op);
 }
 
 // atomic_fetch_sub_explicit
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 typename enable_if
 <
     is_integral<_Tp>::value && !is_same<_Tp, bool>::value,
     _Tp
 >::type
-atomic_fetch_sub_explicit(volatile atomic<_Tp, _Sco>* __o, _Tp __op, memory_order __m) _NOEXCEPT
+atomic_fetch_sub_explicit(volatile atomic<_Tp>* __o, _Tp __op, memory_order __m) _NOEXCEPT
 {
     return __o->fetch_sub(__op, __m);
 }
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 typename enable_if
 <
     is_integral<_Tp>::value && !is_same<_Tp, bool>::value,
     _Tp
 >::type
-atomic_fetch_sub_explicit(atomic<_Tp, _Sco>* __o, _Tp __op, memory_order __m) _NOEXCEPT
+atomic_fetch_sub_explicit(atomic<_Tp>* __o, _Tp __op, memory_order __m) _NOEXCEPT
 {
     return __o->fetch_sub(__op, __m);
 }
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 _Tp*
-atomic_fetch_sub_explicit(volatile atomic<_Tp*, _Sco>* __o, ptrdiff_t __op,
+atomic_fetch_sub_explicit(volatile atomic<_Tp*>* __o, ptrdiff_t __op,
                           memory_order __m) _NOEXCEPT
 {
     return __o->fetch_sub(__op, __m);
 }
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 _Tp*
-atomic_fetch_sub_explicit(atomic<_Tp*, _Sco>* __o, ptrdiff_t __op, memory_order __m) _NOEXCEPT
+atomic_fetch_sub_explicit(atomic<_Tp*>* __o, ptrdiff_t __op, memory_order __m) _NOEXCEPT
 {
     return __o->fetch_sub(__op, __m);
 }
 
 // atomic_fetch_and
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 typename enable_if
 <
     is_integral<_Tp>::value && !is_same<_Tp, bool>::value,
     _Tp
 >::type
-atomic_fetch_and(volatile atomic<_Tp, _Sco>* __o, _Tp __op) _NOEXCEPT
+atomic_fetch_and(volatile atomic<_Tp>* __o, _Tp __op) _NOEXCEPT
 {
     return __o->fetch_and(__op);
 }
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 typename enable_if
 <
     is_integral<_Tp>::value && !is_same<_Tp, bool>::value,
     _Tp
 >::type
-atomic_fetch_and(atomic<_Tp, _Sco>* __o, _Tp __op) _NOEXCEPT
+atomic_fetch_and(atomic<_Tp>* __o, _Tp __op) _NOEXCEPT
 {
     return __o->fetch_and(__op);
 }
 
 // atomic_fetch_and_explicit
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 typename enable_if
 <
     is_integral<_Tp>::value && !is_same<_Tp, bool>::value,
     _Tp
 >::type
-atomic_fetch_and_explicit(volatile atomic<_Tp, _Sco>* __o, _Tp __op, memory_order __m) _NOEXCEPT
+atomic_fetch_and_explicit(volatile atomic<_Tp>* __o, _Tp __op, memory_order __m) _NOEXCEPT
 {
     return __o->fetch_and(__op, __m);
 }
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 typename enable_if
 <
     is_integral<_Tp>::value && !is_same<_Tp, bool>::value,
     _Tp
 >::type
-atomic_fetch_and_explicit(atomic<_Tp, _Sco>* __o, _Tp __op, memory_order __m) _NOEXCEPT
+atomic_fetch_and_explicit(atomic<_Tp>* __o, _Tp __op, memory_order __m) _NOEXCEPT
 {
     return __o->fetch_and(__op, __m);
 }
 
 // atomic_fetch_or
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 typename enable_if
 <
     is_integral<_Tp>::value && !is_same<_Tp, bool>::value,
     _Tp
 >::type
-atomic_fetch_or(volatile atomic<_Tp, _Sco>* __o, _Tp __op) _NOEXCEPT
+atomic_fetch_or(volatile atomic<_Tp>* __o, _Tp __op) _NOEXCEPT
 {
     return __o->fetch_or(__op);
 }
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 typename enable_if
 <
     is_integral<_Tp>::value && !is_same<_Tp, bool>::value,
     _Tp
 >::type
-atomic_fetch_or(atomic<_Tp, _Sco>* __o, _Tp __op) _NOEXCEPT
+atomic_fetch_or(atomic<_Tp>* __o, _Tp __op) _NOEXCEPT
 {
     return __o->fetch_or(__op);
 }
 
 // atomic_fetch_or_explicit
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 typename enable_if
 <
     is_integral<_Tp>::value && !is_same<_Tp, bool>::value,
     _Tp
 >::type
-atomic_fetch_or_explicit(volatile atomic<_Tp, _Sco>* __o, _Tp __op, memory_order __m) _NOEXCEPT
+atomic_fetch_or_explicit(volatile atomic<_Tp>* __o, _Tp __op, memory_order __m) _NOEXCEPT
 {
     return __o->fetch_or(__op, __m);
 }
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 typename enable_if
 <
     is_integral<_Tp>::value && !is_same<_Tp, bool>::value,
     _Tp
 >::type
-atomic_fetch_or_explicit(atomic<_Tp, _Sco>* __o, _Tp __op, memory_order __m) _NOEXCEPT
+atomic_fetch_or_explicit(atomic<_Tp>* __o, _Tp __op, memory_order __m) _NOEXCEPT
 {
     return __o->fetch_or(__op, __m);
 }
 
 // atomic_fetch_xor
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 typename enable_if
 <
     is_integral<_Tp>::value && !is_same<_Tp, bool>::value,
     _Tp
 >::type
-atomic_fetch_xor(volatile atomic<_Tp, _Sco>* __o, _Tp __op) _NOEXCEPT
+atomic_fetch_xor(volatile atomic<_Tp>* __o, _Tp __op) _NOEXCEPT
 {
     return __o->fetch_xor(__op);
 }
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 typename enable_if
 <
     is_integral<_Tp>::value && !is_same<_Tp, bool>::value,
     _Tp
 >::type
-atomic_fetch_xor(atomic<_Tp, _Sco>* __o, _Tp __op) _NOEXCEPT
+atomic_fetch_xor(atomic<_Tp>* __o, _Tp __op) _NOEXCEPT
 {
     return __o->fetch_xor(__op);
 }
 
 // atomic_fetch_xor_explicit
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 typename enable_if
 <
     is_integral<_Tp>::value && !is_same<_Tp, bool>::value,
     _Tp
 >::type
-atomic_fetch_xor_explicit(volatile atomic<_Tp, _Sco>* __o, _Tp __op, memory_order __m) _NOEXCEPT
+atomic_fetch_xor_explicit(volatile atomic<_Tp>* __o, _Tp __op, memory_order __m) _NOEXCEPT
 {
     return __o->fetch_xor(__op, __m);
 }
 
-template <class _Tp, class _Sco>
+template <class _Tp>
 inline _LIBCPP_INLINE_VISIBILITY
 typename enable_if
 <
     is_integral<_Tp>::value && !is_same<_Tp, bool>::value,
     _Tp
 >::type
-atomic_fetch_xor_explicit(atomic<_Tp, _Sco>* __o, _Tp __op, memory_order __m) _NOEXCEPT
+atomic_fetch_xor_explicit(atomic<_Tp>* __o, _Tp __op, memory_order __m) _NOEXCEPT
 {
     return __o->fetch_xor(__op, __m);
 }
 
 // flag type and operations
 
+#ifdef __CUDACC__
+#define _LIBCPP_FLAG_TYPE int
+#else
+#define _LIBCPP_FLAG_TYPE bool
+#endif
+
 typedef struct atomic_flag
 {
-    __atomic_type<bool, __atomic_scope_default> __a_;
+    __atomic_type<_LIBCPP_FLAG_TYPE, __memory_scope_default> __a_;
 
     _LIBCPP_INLINE_VISIBILITY
     bool test_and_set(memory_order __m = memory_order_seq_cst) volatile _NOEXCEPT
-        {return __cxx_atomic_exchange(&__a_, true, __m);}
+        {return __cxx_atomic_exchange(&__a_, (_LIBCPP_FLAG_TYPE)true, __m);}
     _LIBCPP_INLINE_VISIBILITY
     bool test_and_set(memory_order __m = memory_order_seq_cst) _NOEXCEPT
-        {return __cxx_atomic_exchange(&__a_, true, __m);}
+        {return __cxx_atomic_exchange(&__a_, (_LIBCPP_FLAG_TYPE)true, __m);}
     _LIBCPP_INLINE_VISIBILITY
     void clear(memory_order __m = memory_order_seq_cst) volatile _NOEXCEPT
-        {__cxx_atomic_store(&__a_, false, __m);}
+        {__cxx_atomic_store(&__a_, (_LIBCPP_FLAG_TYPE)false, __m);}
     _LIBCPP_INLINE_VISIBILITY
     void clear(memory_order __m = memory_order_seq_cst) _NOEXCEPT
-        {__cxx_atomic_store(&__a_, false, __m);}
+        {__cxx_atomic_store(&__a_, (_LIBCPP_FLAG_TYPE)false, __m);}
 
     _LIBCPP_INLINE_VISIBILITY
 #ifndef _LIBCPP_CXX03_LANG
@@ -2256,16 +2259,11 @@ atomic_flag_clear_explicit(atomic_flag* __o, memory_order __m) _NOEXCEPT
 
 // fences
 
-template<class _Sco>
 inline _LIBCPP_INLINE_VISIBILITY
 void
-atomic_thread_fence(memory_order __m, _Sco _scope) _NOEXCEPT
+atomic_thread_fence(memory_order __m) _NOEXCEPT
 {
-    __cxx_atomic_thread_fence(__m
-#ifdef __CUDA_ARCH__
-    , _scope
-#endif
-    );
+    __cxx_atomic_thread_fence(__m);
 }
 
 inline _LIBCPP_INLINE_VISIBILITY
@@ -2277,55 +2275,55 @@ atomic_signal_fence(memory_order __m) _NOEXCEPT
 
 // Atomics for standard typedef types
 
-typedef atomic<bool, __atomic_scope_default>               atomic_bool;
-typedef atomic<char, __atomic_scope_default>               atomic_char;
-typedef atomic<signed char, __atomic_scope_default>        atomic_schar;
-typedef atomic<unsigned char, __atomic_scope_default>      atomic_uchar;
-typedef atomic<short, __atomic_scope_default>              atomic_short;
-typedef atomic<unsigned short, __atomic_scope_default>     atomic_ushort;
-typedef atomic<int, __atomic_scope_default>                atomic_int;
-typedef atomic<unsigned int, __atomic_scope_default>       atomic_uint;
-typedef atomic<long, __atomic_scope_default>               atomic_long;
-typedef atomic<unsigned long, __atomic_scope_default>      atomic_ulong;
-typedef atomic<long long, __atomic_scope_default>          atomic_llong;
-typedef atomic<unsigned long long, __atomic_scope_default> atomic_ullong;
-typedef atomic<char16_t, __atomic_scope_default>           atomic_char16_t;
-typedef atomic<char32_t, __atomic_scope_default>           atomic_char32_t;
-typedef atomic<wchar_t, __atomic_scope_default>            atomic_wchar_t;
+typedef atomic<bool>               atomic_bool;
+typedef atomic<char>               atomic_char;
+typedef atomic<signed char>        atomic_schar;
+typedef atomic<unsigned char>      atomic_uchar;
+typedef atomic<short>              atomic_short;
+typedef atomic<unsigned short>     atomic_ushort;
+typedef atomic<int>                atomic_int;
+typedef atomic<unsigned int>       atomic_uint;
+typedef atomic<long>               atomic_long;
+typedef atomic<unsigned long>      atomic_ulong;
+typedef atomic<long long>          atomic_llong;
+typedef atomic<unsigned long long> atomic_ullong;
+typedef atomic<char16_t>           atomic_char16_t;
+typedef atomic<char32_t>           atomic_char32_t;
+typedef atomic<wchar_t>            atomic_wchar_t;
 
-typedef atomic<int_least8_t, __atomic_scope_default>   atomic_int_least8_t;
-typedef atomic<uint_least8_t, __atomic_scope_default>  atomic_uint_least8_t;
-typedef atomic<int_least16_t, __atomic_scope_default>  atomic_int_least16_t;
-typedef atomic<uint_least16_t, __atomic_scope_default> atomic_uint_least16_t;
-typedef atomic<int_least32_t, __atomic_scope_default>  atomic_int_least32_t;
-typedef atomic<uint_least32_t, __atomic_scope_default> atomic_uint_least32_t;
-typedef atomic<int_least64_t, __atomic_scope_default>  atomic_int_least64_t;
-typedef atomic<uint_least64_t, __atomic_scope_default> atomic_uint_least64_t;
+typedef atomic<int_least8_t>   atomic_int_least8_t;
+typedef atomic<uint_least8_t>  atomic_uint_least8_t;
+typedef atomic<int_least16_t>  atomic_int_least16_t;
+typedef atomic<uint_least16_t> atomic_uint_least16_t;
+typedef atomic<int_least32_t>  atomic_int_least32_t;
+typedef atomic<uint_least32_t> atomic_uint_least32_t;
+typedef atomic<int_least64_t>  atomic_int_least64_t;
+typedef atomic<uint_least64_t> atomic_uint_least64_t;
 
-typedef atomic<int_fast8_t, __atomic_scope_default>   atomic_int_fast8_t;
-typedef atomic<uint_fast8_t, __atomic_scope_default>  atomic_uint_fast8_t;
-typedef atomic<int_fast16_t, __atomic_scope_default>  atomic_int_fast16_t;
-typedef atomic<uint_fast16_t, __atomic_scope_default> atomic_uint_fast16_t;
-typedef atomic<int_fast32_t, __atomic_scope_default>  atomic_int_fast32_t;
-typedef atomic<uint_fast32_t, __atomic_scope_default> atomic_uint_fast32_t;
-typedef atomic<int_fast64_t, __atomic_scope_default>  atomic_int_fast64_t;
-typedef atomic<uint_fast64_t, __atomic_scope_default> atomic_uint_fast64_t;
+typedef atomic<int_fast8_t>   atomic_int_fast8_t;
+typedef atomic<uint_fast8_t>  atomic_uint_fast8_t;
+typedef atomic<int_fast16_t>  atomic_int_fast16_t;
+typedef atomic<uint_fast16_t> atomic_uint_fast16_t;
+typedef atomic<int_fast32_t>  atomic_int_fast32_t;
+typedef atomic<uint_fast32_t> atomic_uint_fast32_t;
+typedef atomic<int_fast64_t>  atomic_int_fast64_t;
+typedef atomic<uint_fast64_t> atomic_uint_fast64_t;
 
-typedef atomic< int8_t, __atomic_scope_default>  atomic_int8_t;
-typedef atomic<uint8_t, __atomic_scope_default>  atomic_uint8_t;
-typedef atomic< int16_t, __atomic_scope_default> atomic_int16_t;
-typedef atomic<uint16_t, __atomic_scope_default> atomic_uint16_t;
-typedef atomic< int32_t, __atomic_scope_default> atomic_int32_t;
-typedef atomic<uint32_t, __atomic_scope_default> atomic_uint32_t;
-typedef atomic< int64_t, __atomic_scope_default> atomic_int64_t;
-typedef atomic<uint64_t, __atomic_scope_default> atomic_uint64_t;
+typedef atomic< int8_t>  atomic_int8_t;
+typedef atomic<uint8_t>  atomic_uint8_t;
+typedef atomic< int16_t> atomic_int16_t;
+typedef atomic<uint16_t> atomic_uint16_t;
+typedef atomic< int32_t> atomic_int32_t;
+typedef atomic<uint32_t> atomic_uint32_t;
+typedef atomic< int64_t> atomic_int64_t;
+typedef atomic<uint64_t> atomic_uint64_t;
 
-typedef atomic<intptr_t, __atomic_scope_default>  atomic_intptr_t;
-typedef atomic<uintptr_t, __atomic_scope_default> atomic_uintptr_t;
-typedef atomic<size_t, __atomic_scope_default>    atomic_size_t;
-typedef atomic<ptrdiff_t, __atomic_scope_default> atomic_ptrdiff_t;
-typedef atomic<intmax_t, __atomic_scope_default>  atomic_intmax_t;
-typedef atomic<uintmax_t, __atomic_scope_default> atomic_uintmax_t;
+typedef atomic<intptr_t>  atomic_intptr_t;
+typedef atomic<uintptr_t> atomic_uintptr_t;
+typedef atomic<size_t>    atomic_size_t;
+typedef atomic<ptrdiff_t> atomic_ptrdiff_t;
+typedef atomic<intmax_t>  atomic_intmax_t;
+typedef atomic<uintmax_t> atomic_uintmax_t;
 
 #define ATOMIC_FLAG_INIT {false}
 #define ATOMIC_VAR_INIT(__v) {__v}
