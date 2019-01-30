@@ -46,12 +46,6 @@ THE SOFTWARE.
 
 #include "details/__config"
 
-namespace simt { namespace details { inline namespace v1 {
-    struct __memory_scope_block;
-    struct __memory_scope_device;
-    struct __memory_scope_system;
-} } }
-
 #if !defined(__CUDA_ARCH__) && defined(_MSC_VER)
 
     // Windows, CPU side
