@@ -39,16 +39,16 @@ THE SOFTWARE.
     #define __device__
 #endif
 
+#ifdef _MSC_VER
+    #undef __cpp_lib_transparent_operators
+#endif
+
 // request these outcomes
 #define _LIBCPP_NO_AUTO_LINK
 #define _LIBCPP_NO_EXCEPTIONS
 #define _LIBCPP_NO_RTTI
 #define _LIBCPP_HAS_NO_INT128
 #define _LIBCPP_FREESTANDING
-
-#ifdef _MSC_VER
-#undef __cpp_lib_transparent_operators
-#endif
 
 #include "../libcxx/include/__config"
 
@@ -65,6 +65,6 @@ THE SOFTWARE.
 #undef _VSTD
 #define _VSTD simt::std::v1
 #define _LIBCPP_BEGIN_NAMESPACE_STD_NOVERSION namespace simt { namespace std {
-#define _LIBCPP_END_NAMESPACE_STD_NOVERSION { {
+#define _LIBCPP_END_NAMESPACE_STD_NOVERSION } }
 
 #endif //__simt__
