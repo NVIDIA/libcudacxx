@@ -138,4 +138,8 @@ inline void __device__ __atomic_clear_simt(type *ptr, int memorder, scope s) {
 }
 */
 
+static inline __device__ void __atomic_signal_fence_simt(int) {
+    asm volatile("":::"memory");
+}
+
 } } }

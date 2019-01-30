@@ -25,12 +25,6 @@ THE SOFTWARE.
 #ifndef __simt__
 #define __simt__
 
-namespace simt { namespace details { inline namespace v1 {
-    struct __memory_scope_block;
-    struct __memory_scope_device;
-    struct __memory_scope_system;
-} } }
-
 #ifdef __CUDACC__
     #if defined(__clang__)
         #include <cuda_fp16.h>

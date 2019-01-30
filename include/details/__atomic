@@ -48,14 +48,14 @@ THE SOFTWARE.
 
 namespace simt { namespace details { inline namespace v1 {
 
-enum __memory_order {
-    __memory_order_relaxed = __ATOMIC_RELAXED,
-    __memory_order_consume = __ATOMIC_CONSUME,
-    __memory_order_acquire = __ATOMIC_ACQUIRE,
-    __memory_order_release = __ATOMIC_RELEASE,
-    __memory_order_acq_rel = __ATOMIC_ACQ_REL,
-    __memory_order_seq_cst = __ATOMIC_SEQ_CST
-};
+typedef ::std::memory_order memory_order;
+
+static constexpr memory_order memory_order_relaxed = ::std::memory_order_relaxed;
+static constexpr memory_order memory_order_release = ::std::memory_order_release;
+static constexpr memory_order memory_order_acq_rel = ::std::memory_order_acq_rel;
+static constexpr memory_order memory_order_acquire = ::std::memory_order_acquire;
+static constexpr memory_order memory_order_consume = ::std::memory_order_consume;
+static constexpr memory_order memory_order_seq_cst = ::std::memory_order_seq_cst;
 
 inline __device__ int __stronger_order_simt(int a, int b) {
     int const max = a > b ? a : b;
@@ -69,9 +69,20 @@ inline __device__ int __stronger_order_simt(int a, int b) {
     return xform[a < b ? a : b];
 }
 
-static inline __device__ void __atomic_signal_fence_simt(int) {
-    asm volatile("":::"memory");
-}
+struct __memory_scope_block;
+struct __memory_scope_device;
+struct __memory_scope_system;
+
+#define __memory_scope_default ::simt::details::__memory_scope_system
+
+} } }
+
+#if defined(__CUDA_ARCH__)
+
+#include "__atomic_generated"
+#include "__atomic_derived"
+
+namespace simt { namespace details { inline namespace v1 {
 
 template <typename _Tp, typename _Sco>
 struct __c11_atomic_wrapper {
@@ -103,11 +114,6 @@ template <typename _Tp, typename _Sco> static __host__ __device__ inline constex
 
 } } }
 
-#include "__atomic_generated"
-#include "__atomic_derived"
-
-#define __memory_scope_default ::simt::details::__memory_scope_system
-
 #define _Atomic_s(_Tp, _Sco) ::simt::details::__c11_atomic_wrapper<_Tp, _Sco>
 #define _Atomic(_Tp) _Atomic_s(_Tp, __memory_scope_default)
 
@@ -138,3 +144,45 @@ template <typename _Tp, typename _Sco> static __host__ __device__ inline constex
     ::simt::details::__atomic_fetch_or_simt(::simt::details::__get_value(__a), __pattern, __order, ::simt::details::__get_scope(__a))
 #define __c11_atomic_fetch_xor(__a, __pattern, __order) \
     ::simt::details::__atomic_fetch_xor_simt(::simt::details::__get_value(__a), __pattern, __order, ::simt::details::__get_scope(__a))
+
+#elif defined(_MSC_VER)
+
+#define _Atomic_s(_Tp, _Sco) ::std::atomic<_Tp>
+#define _Atomic(_Tp) _Atomic_s(_Tp, __memory_scope_default)
+
+static inline void __std_atomic_thread_fence(std::memory_order __order) {
+    std::atomic_thread_fence(__order);
+}
+static inline void __std_atomic_signal_fence(std::memory_order __order) {
+    std::atomic_signal_fence(__order);
+}
+
+#define __c11_atomic_is_lock_free(x) \
+    (x <= 8)
+#define __c11_atomic_init(__a, __val)
+#define __c11_atomic_thread_fence(__order) \
+    __std_atomic_thread_fence((::std::memory_order)__order)
+#define __c11_atomic_signal_fence(__order) \
+    __std_atomic_signal_fence((::std::memory_order)__order)
+#define __c11_atomic_store(__a, __val, __order) \
+    ::std::atomic_store_explicit(__a, __val, (::std::memory_order)__order)
+#define __c11_atomic_load(__a, __order) \
+    ::std::atomic_load_explicit(__a, (::std::memory_order)__order)
+#define __c11_atomic_exchange(__a, __value, __order) \
+    ::std::atomic_exchange_explicit(__a, __value, (::std::memory_order)__order)
+#define __c11_atomic_compare_exchange_strong(__a, __expected, __value, __success, __failure) \
+    ::std::atomic_compare_exchange_strong_explicit(__a, __expected, __value, (::std::memory_order)__success, (::std::memory_order)__failure)
+#define __c11_atomic_compare_exchange_weak(__a, __expected, __value, __success, __failure) \
+    ::std::atomic_compare_exchange_weak_explicit(__a, __expected, __value, (::std::memory_order)__success, (::std::memory_order)__failure)
+#define __c11_atomic_fetch_add(__a, __delta, __order) \
+    ::std::atomic_fetch_add_explicit(__a, __delta, (::std::memory_order)__order)
+#define __c11_atomic_fetch_sub(__a, __delta, __order) \
+    ::std::atomic_fetch_sub_explicit(__a, __delta, (::std::memory_order)__order)
+#define __c11_atomic_fetch_and(__a, __pattern, __order) \
+    ::std::atomic_fetch_and_explicit(__a, __pattern, (::std::memory_order)__order)
+#define __c11_atomic_fetch_or(__a, __pattern, __order) \
+    ::std::atomic_fetch_or_explicit(__a, __pattern, (::std::memory_order)__order)
+#define __c11_atomic_fetch_xor(__a, __pattern, __order) \
+    ::std::atomic_fetch_xor_explicit(__a, __pattern, (::std::memory_order)__order)
+
+#endif
