@@ -73,7 +73,7 @@ struct __memory_scope_block;
 struct __memory_scope_device;
 struct __memory_scope_system;
 
-#define __memory_scope_default ::simt::details::__memory_scope_system
+#define _LIBCPP_ATOMIC_SCOPE_DEFAULT ::simt::details::__memory_scope_system
 
 } } }
 
@@ -93,7 +93,7 @@ struct __c11_atomic_wrapper {
 };
 
 #define _Atomic_s(_Tp, _Sco) ::simt::details::__c11_atomic_wrapper<_Tp, _Sco>
-#define _Atomic(_Tp) _Atomic_s(_Tp, __memory_scope_default)
+#define _Atomic(_Tp) _Atomic_s(_Tp, ::simt::details::__memory_scope_system)
 
 template<class _Tp, class _Sco> 
 __device__ inline void __c11_atomic_init(__c11_atomic_wrapper<_Tp, _Sco> volatile*, _Tp) { }
@@ -135,7 +135,7 @@ __device__ inline _Tp* __c11_atomic_fetch_add(__c11_atomic_wrapper<_Tp*, _Sco> v
 
 __device__ inline bool __c11_atomic_is_lock_free(size_t x) { return x <= 8; }
 __device__ inline void __c11_atomic_thread_fence(int __order) {
-    ::simt::details::__atomic_thread_fence_simt((::simt::details::memory_order)__order, __memory_scope_default()); }
+    ::simt::details::__atomic_thread_fence_simt((::simt::details::memory_order)__order, ::simt::details::__memory_scope_system()); }
 __device__ inline void __c11_atomic_signal_fence(int __order) {
     ::simt::details::__atomic_signal_fence_simt((::simt::details::memory_order)__order); }
 
