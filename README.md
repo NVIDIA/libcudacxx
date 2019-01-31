@@ -31,7 +31,7 @@ You may, however, enjoy creating your own demo application.
 
 ## What happens to work
 
-Assuming you compile with `-I<path-to-includes/>`:
+Assuming you compile with `-I<path-to-include/>`:
 1. Each header named `<simt/X>` conforms to the specification for the header `<X>` from ISO C++, except that each occurrence of `std::` is prefixed with `simt::`.
 2. Except for limitations specified below, each facility thus introduced in `simt::` works in both `__host__` and `__device__` functions, under `-std=c++11` and `-std=c++14`, on Windows and Linux with CUDA 9 or 10 on Volta, Xavier and Turing. (_Though, obviously, not all combinations are possible._)
 
