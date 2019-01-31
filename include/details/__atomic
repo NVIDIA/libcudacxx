@@ -48,14 +48,14 @@ THE SOFTWARE.
 
 namespace simt { namespace details { inline namespace v1 {
 
-typedef ::std::memory_order memory_order;
-
-static constexpr memory_order memory_order_relaxed = ::std::memory_order_relaxed;
-static constexpr memory_order memory_order_release = ::std::memory_order_release;
-static constexpr memory_order memory_order_acq_rel = ::std::memory_order_acq_rel;
-static constexpr memory_order memory_order_acquire = ::std::memory_order_acquire;
-static constexpr memory_order memory_order_consume = ::std::memory_order_consume;
-static constexpr memory_order memory_order_seq_cst = ::std::memory_order_seq_cst;
+enum memory_order {
+    memory_order_relaxed = __ATOMIC_RELAXED,
+    memory_order_release = __ATOMIC_CONSUME,
+    memory_order_acq_rel = __ATOMIC_ACQUIRE,
+    memory_order_acquire = __ATOMIC_RELEASE,
+    memory_order_consume = __ATOMIC_ACQ_REL,
+    memory_order_seq_cst = __ATOMIC_SEQ_CST
+};
 
 inline __device__ int __stronger_order_simt(int a, int b) {
     int const max = a > b ? a : b;
