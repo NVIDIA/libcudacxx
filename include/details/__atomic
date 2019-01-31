@@ -92,58 +92,52 @@ struct __c11_atomic_wrapper {
   _Tp __a_value;
 };
 
-template <typename _Tp, typename _Sco> static __host__ __device__ inline constexpr 
-_Sco __get_scope(__c11_atomic_wrapper<_Tp, _Sco> const*) { return _Sco(); }
-template <typename _Tp, typename _Sco> static __host__ __device__ inline constexpr 
-_Sco __get_scope(__c11_atomic_wrapper<_Tp, _Sco> *) { return _Sco(); }
-template <typename _Tp, typename _Sco> static __host__ __device__ inline constexpr 
-_Sco __get_scope(__c11_atomic_wrapper<_Tp, _Sco> volatile const*) { return _Sco(); }
-template <typename _Tp, typename _Sco> static __host__ __device__ inline constexpr 
-_Sco __get_scope(__c11_atomic_wrapper<_Tp, _Sco> volatile *) { return _Sco(); }
-
-template <typename _Tp, typename _Sco> static __host__ __device__ inline constexpr 
-_Tp const* __get_value(__c11_atomic_wrapper<_Tp, _Sco> const* ptr) { return &ptr->__a_value; }
-template <typename _Tp, typename _Sco> static __host__ __device__ inline constexpr 
-_Tp* __get_value(__c11_atomic_wrapper<_Tp, _Sco> * ptr) { return &ptr->__a_value; }
-template <typename _Tp, typename _Sco> static __host__ __device__ inline constexpr 
-/*volatile*/ _Tp const* __get_value(__c11_atomic_wrapper<_Tp, _Sco> volatile const* ptr) { 
-    return const_cast<_Tp const*>(&ptr->__a_value); }
-template <typename _Tp, typename _Sco> static __host__ __device__ inline constexpr 
-/*volatile*/ _Tp * __get_value(__c11_atomic_wrapper<_Tp, _Sco> volatile * ptr) { 
-    return const_cast<_Tp*>(&ptr->__a_value); }
-
-} } }
-
 #define _Atomic_s(_Tp, _Sco) ::simt::details::__c11_atomic_wrapper<_Tp, _Sco>
 #define _Atomic(_Tp) _Atomic_s(_Tp, __memory_scope_default)
 
-#define __c11_atomic_is_lock_free(x) \
-    (x <= 8)
-#define __c11_atomic_init(__a, __val)
-#define __c11_atomic_thread_fence(__order) \
-    ::simt::details::__atomic_thread_fence_simt(__order, __memory_scope_default())
-#define __c11_atomic_signal_fence(__order) \
-    ::simt::details::__atomic_signal_fence_simt(__order)
-#define __c11_atomic_store(__a, __val, __order) \
-    ::simt::details::__atomic_store_n_simt(::simt::details::__get_value(__a), __val, __order, ::simt::details::__get_scope(__a))
-#define __c11_atomic_load(__a, __order) \
-    ::simt::details::__atomic_load_n_simt(::simt::details::__get_value(__a), __order, ::simt::details::__get_scope(__a))
-#define __c11_atomic_exchange(__a, __value, __order) \
-    ::simt::details::__atomic_exchange_n_simt(::simt::details::__get_value(__a), __value, __order, ::simt::details::__get_scope(__a))
-#define __c11_atomic_compare_exchange_strong(__a, __expected, __value, __success, __failure) \
-    ::simt::details::__atomic_compare_exchange_n_simt(::simt::details::__get_value(__a), __expected, __value, false, __success, __failure, ::simt::details::__get_scope(__a))
-#define __c11_atomic_compare_exchange_weak(__a, __expected, __value, __success, __failure) \
-    ::simt::details::__atomic_compare_exchange_n_simt(::simt::details::__get_value(__a), __expected, __value, true, __success, __failure, ::simt::details::__get_scope(__a))
-#define __c11_atomic_fetch_add(__a, __delta, __order) \
-    ::simt::details::__atomic_fetch_add_simt(::simt::details::__get_value(__a), __delta, __order, ::simt::details::__get_scope(__a))
-#define __c11_atomic_fetch_sub(__a, __delta, __order) \
-    ::simt::details::__atomic_fetch_sub_simt(::simt::details::__get_value(__a), __delta, __order, ::simt::details::__get_scope(__a))
-#define __c11_atomic_fetch_and(__a, __pattern, __order) \
-    ::simt::details::__atomic_fetch_and_simt(::simt::details::__get_value(__a), __pattern, __order, ::simt::details::__get_scope(__a))
-#define __c11_atomic_fetch_or(__a, __pattern, __order) \
-    ::simt::details::__atomic_fetch_or_simt(::simt::details::__get_value(__a), __pattern, __order, ::simt::details::__get_scope(__a))
-#define __c11_atomic_fetch_xor(__a, __pattern, __order) \
-    ::simt::details::__atomic_fetch_xor_simt(::simt::details::__get_value(__a), __pattern, __order, ::simt::details::__get_scope(__a))
+template<class _Tp, class _Sco> 
+__device__ inline void __c11_atomic_init(__c11_atomic_wrapper<_Tp, _Sco> volatile*, _Tp) { }
+template<class _Tp, class _Sco> 
+__device__ inline void __c11_atomic_store(__c11_atomic_wrapper<_Tp, _Sco> volatile* __a, _Tp __val, int __order) {
+    __atomic_store_n_simt(&__a->__a_value, __val, (::simt::details::memory_order)__order, _Sco()); }
+template<class _Tp, class _Sco> 
+__device__ inline _Tp __c11_atomic_load(__c11_atomic_wrapper<_Tp, _Sco> volatile* __a, int __order) {
+    return __atomic_load_n_simt(&__a->__a_value, (::simt::details::memory_order)__order, _Sco()); }
+template<class _Tp, class _Sco> 
+__device__ inline _Tp __c11_atomic_exchange(__c11_atomic_wrapper<_Tp, _Sco> volatile* __a, _Tp __value, int __order) {
+    return __atomic_exchange_n_simt(&__a->__a_value, __value, (::simt::details::memory_order)__order, _Sco()); }
+template<class _Tp, class _Sco> 
+__device__ inline bool __c11_atomic_compare_exchange_strong(__c11_atomic_wrapper<_Tp, _Sco> volatile* __a, _Tp __expected, _Tp __value, int __success, int __failure) {
+    return __atomic_compare_exchange_n_simt(&__a->__a_value, __expected, __value, false, (::simt::details::memory_order)__success, (::simt::details::memory_order)__failure, _Sco()); }
+template<class _Tp, class _Sco> 
+__device__ inline bool __c11_atomic_compare_exchange_weak(__c11_atomic_wrapper<_Tp, _Sco> volatile* __a, _Tp __expected, _Tp __value, int __success, int __failure) {
+    return __atomic_compare_exchange_n_simt(&__a->__a_value, __expected, __value, true, (::simt::details::memory_order)__success, (::simt::details::memory_order)__failure, _Sco()); }
+template<class _Tp, class _Sco> 
+__device__ inline _Tp __c11_atomic_fetch_add(__c11_atomic_wrapper<_Tp, _Sco> volatile* __a, _Tp __delta, int __order) {
+    return __atomic_fetch_add_simt(&__a->__a_value, __delta, (::simt::details::memory_order)__order, _Sco()); }
+template<class _Tp, class _Sco> 
+__device__ inline _Tp __c11_atomic_fetch_sub(__c11_atomic_wrapper<_Tp, _Sco> volatile* __a, _Tp __delta, int __order) {
+    return __atomic_fetch_sub_simt(&__a->__a_value, __delta, (::simt::details::memory_order)__order, _Sco()); }
+template<class _Tp, class _Sco> 
+__device__ inline _Tp __c11_atomic_fetch_and(__c11_atomic_wrapper<_Tp, _Sco> volatile* __a, _Tp __pattern, int __order) {
+    return __atomic_fetch_and_simt(&__a->__a_value, __pattern, (::simt::details::memory_order)__order, _Sco()); }
+template<class _Tp, class _Sco> 
+__device__ inline _Tp __c11_atomic_fetch_or(__c11_atomic_wrapper<_Tp, _Sco> volatile* __a, _Tp __pattern, int __order) {
+    return __atomic_fetch_or_simt(&__a->__a_value, __pattern, (::simt::details::memory_order)__order, _Sco()); }
+template<class _Tp, class _Sco> 
+__device__ inline _Tp __c11_atomic_fetch_xor(__c11_atomic_wrapper<_Tp, _Sco> volatile* __a, _Tp __pattern, int __order) {
+    return __atomic_fetch_xor_simt(&__a->__a_value, __pattern, (::simt::details::memory_order)__order, _Sco()); }
+template<class _Tp, class _Sco> 
+__device__ inline _Tp* __c11_atomic_fetch_add(__c11_atomic_wrapper<_Tp*, _Sco> volatile* __a, ptrdiff_t __delta, int __order) {
+    return __atomic_fetch_add_simt(&__a->__a_value, __delta, (::simt::details::memory_order)__order, _Sco()); }
+
+} } }
+
+__device__ inline bool __c11_atomic_is_lock_free(size_t x) { return x <= 8; }
+__device__ inline void __c11_atomic_thread_fence(int __order) {
+    ::simt::details::__atomic_thread_fence_simt((::simt::details::memory_order)__order, __memory_scope_default()); }
+__device__ inline void __c11_atomic_signal_fence(int __order) {
+    ::simt::details::__atomic_signal_fence_simt((::simt::details::memory_order)__order); }
 
 #elif defined(_MSC_VER)
 

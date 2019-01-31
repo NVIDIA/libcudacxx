@@ -53,6 +53,7 @@ THE SOFTWARE.
 #include "../libcxx/include/__config"
 
 // force this outcome
+#define _LIBCPP_ATOMIC_FLAG_TYPE int
 #undef _LIBCPP_INLINE_VISIBILITY
 #define _LIBCPP_INLINE_VISIBILITY __host__ __device__
 

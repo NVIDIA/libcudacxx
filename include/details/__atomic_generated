@@ -40,7 +40,7 @@ static inline __device__ void __atomic_thread_fence_simt(int memorder, __memory_
 template<class _A, class _B> static inline __device__ void __simt_load_relaxed_8_block(_A _ptr, _B& _dst) {asm volatile("ld.relaxed.cta.b8 %0,[%1];" : "=r"(_dst) : "l"(_ptr) : "memory"); }
 template<class _A, class _B> static inline __device__ void __simt_load_acquire_8_block(_A _ptr, _B& _dst) {asm volatile("ld.acquire.cta.b8 %0,[%1];" : "=r"(_dst) : "l"(_ptr) : "memory"); }
 template<class type, typename std::enable_if<sizeof(type)==1, int>::type = 0>
-__device__ void __atomic_load_simt(const type *ptr, type *ret, int memorder, __memory_scope_block) {
+__device__ void __atomic_load_simt(const volatile type *ptr, type *ret, int memorder, __memory_scope_block) {
     uint32_t tmp = 0;
     switch (memorder) {
     case memory_order_seq_cst: __simt_fence_sc_block_();
@@ -54,7 +54,7 @@ __device__ void __atomic_load_simt(const type *ptr, type *ret, int memorder, __m
 template<class _A, class _B> static inline __device__ void __simt_load_relaxed_16_block(_A _ptr, _B& _dst) {asm volatile("ld.relaxed.cta.b16 %0,[%1];" : "=h"(_dst) : "l"(_ptr) : "memory"); }
 template<class _A, class _B> static inline __device__ void __simt_load_acquire_16_block(_A _ptr, _B& _dst) {asm volatile("ld.acquire.cta.b16 %0,[%1];" : "=h"(_dst) : "l"(_ptr) : "memory"); }
 template<class type, typename std::enable_if<sizeof(type)==2, int>::type = 0>
-__device__ void __atomic_load_simt(const type *ptr, type *ret, int memorder, __memory_scope_block) {
+__device__ void __atomic_load_simt(const volatile type *ptr, type *ret, int memorder, __memory_scope_block) {
     uint16_t tmp = 0;
     switch (memorder) {
     case memory_order_seq_cst: __simt_fence_sc_block_();
@@ -68,7 +68,7 @@ __device__ void __atomic_load_simt(const type *ptr, type *ret, int memorder, __m
 template<class _A, class _B> static inline __device__ void __simt_load_relaxed_32_block(_A _ptr, _B& _dst) {asm volatile("ld.relaxed.cta.b32 %0,[%1];" : "=r"(_dst) : "l"(_ptr) : "memory"); }
 template<class _A, class _B> static inline __device__ void __simt_load_acquire_32_block(_A _ptr, _B& _dst) {asm volatile("ld.acquire.cta.b32 %0,[%1];" : "=r"(_dst) : "l"(_ptr) : "memory"); }
 template<class type, typename std::enable_if<sizeof(type)==4, int>::type = 0>
-__device__ void __atomic_load_simt(const type *ptr, type *ret, int memorder, __memory_scope_block) {
+__device__ void __atomic_load_simt(const volatile type *ptr, type *ret, int memorder, __memory_scope_block) {
     uint32_t tmp = 0;
     switch (memorder) {
     case memory_order_seq_cst: __simt_fence_sc_block_();
@@ -82,7 +82,7 @@ __device__ void __atomic_load_simt(const type *ptr, type *ret, int memorder, __m
 template<class _A, class _B> static inline __device__ void __simt_load_relaxed_64_block(_A _ptr, _B& _dst) {asm volatile("ld.relaxed.cta.b64 %0,[%1];" : "=l"(_dst) : "l"(_ptr) : "memory"); }
 template<class _A, class _B> static inline __device__ void __simt_load_acquire_64_block(_A _ptr, _B& _dst) {asm volatile("ld.acquire.cta.b64 %0,[%1];" : "=l"(_dst) : "l"(_ptr) : "memory"); }
 template<class type, typename std::enable_if<sizeof(type)==8, int>::type = 0>
-__device__ void __atomic_load_simt(const type *ptr, type *ret, int memorder, __memory_scope_block) {
+__device__ void __atomic_load_simt(const volatile type *ptr, type *ret, int memorder, __memory_scope_block) {
     uint64_t tmp = 0;
     switch (memorder) {
     case memory_order_seq_cst: __simt_fence_sc_block_();
@@ -96,7 +96,7 @@ __device__ void __atomic_load_simt(const type *ptr, type *ret, int memorder, __m
 template<class _A, class _B> static inline __device__ void __simt_store_relaxed_8_block(_A _ptr, _B _src) { asm volatile("st.relaxed.cta.b8 [%0], %1;" :: "l"(_ptr),"r"(_src) : "memory"); }
 template<class _A, class _B> static inline __device__ void __simt_store_release_8_block(_A _ptr, _B _src) { asm volatile("st.release.cta.b8 [%0], %1;" :: "l"(_ptr),"r"(_src) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==1, int>::type = 0>
-__device__ void __atomic_store_simt(type *ptr, type *val, int memorder, __memory_scope_block) {
+__device__ void __atomic_store_simt(volatile type *ptr, type *val, int memorder, __memory_scope_block) {
     uint32_t tmp = 0;
     memcpy(&tmp, val, 1);
     switch (memorder) {
@@ -109,7 +109,7 @@ __device__ void __atomic_store_simt(type *ptr, type *val, int memorder, __memory
 template<class _A, class _B> static inline __device__ void __simt_store_relaxed_16_block(_A _ptr, _B _src) { asm volatile("st.relaxed.cta.b16 [%0], %1;" :: "l"(_ptr),"h"(_src) : "memory"); }
 template<class _A, class _B> static inline __device__ void __simt_store_release_16_block(_A _ptr, _B _src) { asm volatile("st.release.cta.b16 [%0], %1;" :: "l"(_ptr),"h"(_src) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==2, int>::type = 0>
-__device__ void __atomic_store_simt(type *ptr, type *val, int memorder, __memory_scope_block) {
+__device__ void __atomic_store_simt(volatile type *ptr, type *val, int memorder, __memory_scope_block) {
     uint16_t tmp = 0;
     memcpy(&tmp, val, 2);
     switch (memorder) {
@@ -122,7 +122,7 @@ __device__ void __atomic_store_simt(type *ptr, type *val, int memorder, __memory
 template<class _A, class _B> static inline __device__ void __simt_store_relaxed_32_block(_A _ptr, _B _src) { asm volatile("st.relaxed.cta.b32 [%0], %1;" :: "l"(_ptr),"r"(_src) : "memory"); }
 template<class _A, class _B> static inline __device__ void __simt_store_release_32_block(_A _ptr, _B _src) { asm volatile("st.release.cta.b32 [%0], %1;" :: "l"(_ptr),"r"(_src) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==4, int>::type = 0>
-__device__ void __atomic_store_simt(type *ptr, type *val, int memorder, __memory_scope_block) {
+__device__ void __atomic_store_simt(volatile type *ptr, type *val, int memorder, __memory_scope_block) {
     uint32_t tmp = 0;
     memcpy(&tmp, val, 4);
     switch (memorder) {
@@ -135,7 +135,7 @@ __device__ void __atomic_store_simt(type *ptr, type *val, int memorder, __memory
 template<class _A, class _B> static inline __device__ void __simt_store_relaxed_64_block(_A _ptr, _B _src) { asm volatile("st.relaxed.cta.b64 [%0], %1;" :: "l"(_ptr),"l"(_src) : "memory"); }
 template<class _A, class _B> static inline __device__ void __simt_store_release_64_block(_A _ptr, _B _src) { asm volatile("st.release.cta.b64 [%0], %1;" :: "l"(_ptr),"l"(_src) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==8, int>::type = 0>
-__device__ void __atomic_store_simt(type *ptr, type *val, int memorder, __memory_scope_block) {
+__device__ void __atomic_store_simt(volatile type *ptr, type *val, int memorder, __memory_scope_block) {
     uint64_t tmp = 0;
     memcpy(&tmp, val, 8);
     switch (memorder) {
@@ -150,7 +150,7 @@ template<class _A, class _B, class _C, class _D> static inline __device__ void _
 template<class _A, class _B, class _C, class _D> static inline __device__ void __simt_cas_release_32_block(_A _ptr, _B& _dst, _C _cmp, _D _op) { asm volatile("atom.cas.release.cta.b32 %0,[%1],%2,%3;" : "=r"(_dst) : "l"(_ptr),"r"(_cmp),"r"(_op) : "memory"); }
 template<class _A, class _B, class _C, class _D> static inline __device__ void __simt_cas_acq_rel_32_block(_A _ptr, _B& _dst, _C _cmp, _D _op) { asm volatile("atom.cas.acq_rel.cta.b32 %0,[%1],%2,%3;" : "=r"(_dst) : "l"(_ptr),"r"(_cmp),"r"(_op) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==4, int>::type = 0>
-__device__ bool __atomic_compare_exchange_simt(type *ptr, type *expected, const type *desired, bool, int success_memorder, int failure_memorder, __memory_scope_block) {
+__device__ bool __atomic_compare_exchange_simt(volatile type *ptr, type *expected, const type *desired, bool, int success_memorder, int failure_memorder, __memory_scope_block) {
     uint32_t tmp = 0, old = 0, old_tmp;
     memcpy(&tmp, desired, 4);
     memcpy(&old, expected, 4);
@@ -173,7 +173,7 @@ template<class _A, class _B, class _C> static inline __device__ void __simt_exch
 template<class _A, class _B, class _C> static inline __device__ void __simt_exch_release_32_block(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.exch.release.cta.b32 %0,[%1],%2;" : "=r"(_dst) : "l"(_ptr),"r"(_op) : "memory"); }
 template<class _A, class _B, class _C> static inline __device__ void __simt_exch_acq_rel_32_block(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.exch.acq_rel.cta.b32 %0,[%1],%2;" : "=r"(_dst) : "l"(_ptr),"r"(_op) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==4, int>::type = 0>
-__device__ void __atomic_exchange_simt(type *ptr, type *val, type *ret, int memorder, __memory_scope_block) {
+__device__ void __atomic_exchange_simt(volatile type *ptr, type *val, type *ret, int memorder, __memory_scope_block) {
     uint32_t tmp = 0;
     memcpy(&tmp, val, 4);
     switch (memorder) {
@@ -192,7 +192,7 @@ template<class _A, class _B, class _C> static inline __device__ void __simt_add_
 template<class _A, class _B, class _C> static inline __device__ void __simt_add_release_32_block(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.add.release.cta.u32 %0,[%1],%2;" : "=r"(_dst) : "l"(_ptr),"r"(_op) : "memory"); }
 template<class _A, class _B, class _C> static inline __device__ void __simt_add_acq_rel_32_block(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.add.acq_rel.cta.u32 %0,[%1],%2;" : "=r"(_dst) : "l"(_ptr),"r"(_op) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==4, int>::type = 0>
-__device__ type __atomic_fetch_add_simt(type *ptr, type val, int memorder, __memory_scope_block) {
+__device__ type __atomic_fetch_add_simt(volatile type *ptr, type val, int memorder, __memory_scope_block) {
     type ret;
     uint32_t tmp = 0;
     memcpy(&tmp, &val, 4);
@@ -213,7 +213,7 @@ template<class _A, class _B, class _C> static inline __device__ void __simt_and_
 template<class _A, class _B, class _C> static inline __device__ void __simt_and_release_32_block(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.and.release.cta.b32 %0,[%1],%2;" : "=r"(_dst) : "l"(_ptr),"r"(_op) : "memory"); }
 template<class _A, class _B, class _C> static inline __device__ void __simt_and_acq_rel_32_block(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.and.acq_rel.cta.b32 %0,[%1],%2;" : "=r"(_dst) : "l"(_ptr),"r"(_op) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==4, int>::type = 0>
-__device__ type __atomic_fetch_and_simt(type *ptr, type val, int memorder, __memory_scope_block) {
+__device__ type __atomic_fetch_and_simt(volatile type *ptr, type val, int memorder, __memory_scope_block) {
     type ret;
     uint32_t tmp = 0;
     memcpy(&tmp, &val, 4);
@@ -234,7 +234,7 @@ template<class _A, class _B, class _C> static inline __device__ void __simt_or_a
 template<class _A, class _B, class _C> static inline __device__ void __simt_or_release_32_block(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.or.release.cta.b32 %0,[%1],%2;" : "=r"(_dst) : "l"(_ptr),"r"(_op) : "memory"); }
 template<class _A, class _B, class _C> static inline __device__ void __simt_or_acq_rel_32_block(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.or.acq_rel.cta.b32 %0,[%1],%2;" : "=r"(_dst) : "l"(_ptr),"r"(_op) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==4, int>::type = 0>
-__device__ type __atomic_fetch_or_simt(type *ptr, type val, int memorder, __memory_scope_block) {
+__device__ type __atomic_fetch_or_simt(volatile type *ptr, type val, int memorder, __memory_scope_block) {
     type ret;
     uint32_t tmp = 0;
     memcpy(&tmp, &val, 4);
@@ -251,7 +251,7 @@ __device__ type __atomic_fetch_or_simt(type *ptr, type val, int memorder, __memo
     return ret;
 }
 template<class type, typename simt::std::enable_if<sizeof(type)==4, int>::type = 0>
-__device__ type __atomic_fetch_sub_simt(type *ptr, type val, int memorder, __memory_scope_block) {
+__device__ type __atomic_fetch_sub_simt(volatile type *ptr, type val, int memorder, __memory_scope_block) {
     type ret;
     uint32_t tmp = 0;
     memcpy(&tmp, &val, 4);
@@ -273,7 +273,7 @@ template<class _A, class _B, class _C> static inline __device__ void __simt_xor_
 template<class _A, class _B, class _C> static inline __device__ void __simt_xor_release_32_block(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.xor.release.cta.b32 %0,[%1],%2;" : "=r"(_dst) : "l"(_ptr),"r"(_op) : "memory"); }
 template<class _A, class _B, class _C> static inline __device__ void __simt_xor_acq_rel_32_block(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.xor.acq_rel.cta.b32 %0,[%1],%2;" : "=r"(_dst) : "l"(_ptr),"r"(_op) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==4, int>::type = 0>
-__device__ type __atomic_fetch_xor_simt(type *ptr, type val, int memorder, __memory_scope_block) {
+__device__ type __atomic_fetch_xor_simt(volatile type *ptr, type val, int memorder, __memory_scope_block) {
     type ret;
     uint32_t tmp = 0;
     memcpy(&tmp, &val, 4);
@@ -294,7 +294,7 @@ template<class _A, class _B, class _C, class _D> static inline __device__ void _
 template<class _A, class _B, class _C, class _D> static inline __device__ void __simt_cas_release_64_block(_A _ptr, _B& _dst, _C _cmp, _D _op) { asm volatile("atom.cas.release.cta.b64 %0,[%1],%2,%3;" : "=l"(_dst) : "l"(_ptr),"l"(_cmp),"l"(_op) : "memory"); }
 template<class _A, class _B, class _C, class _D> static inline __device__ void __simt_cas_acq_rel_64_block(_A _ptr, _B& _dst, _C _cmp, _D _op) { asm volatile("atom.cas.acq_rel.cta.b64 %0,[%1],%2,%3;" : "=l"(_dst) : "l"(_ptr),"l"(_cmp),"l"(_op) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==8, int>::type = 0>
-__device__ bool __atomic_compare_exchange_simt(type *ptr, type *expected, const type *desired, bool, int success_memorder, int failure_memorder, __memory_scope_block) {
+__device__ bool __atomic_compare_exchange_simt(volatile type *ptr, type *expected, const type *desired, bool, int success_memorder, int failure_memorder, __memory_scope_block) {
     uint64_t tmp = 0, old = 0, old_tmp;
     memcpy(&tmp, desired, 8);
     memcpy(&old, expected, 8);
@@ -317,7 +317,7 @@ template<class _A, class _B, class _C> static inline __device__ void __simt_exch
 template<class _A, class _B, class _C> static inline __device__ void __simt_exch_release_64_block(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.exch.release.cta.b64 %0,[%1],%2;" : "=l"(_dst) : "l"(_ptr),"l"(_op) : "memory"); }
 template<class _A, class _B, class _C> static inline __device__ void __simt_exch_acq_rel_64_block(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.exch.acq_rel.cta.b64 %0,[%1],%2;" : "=l"(_dst) : "l"(_ptr),"l"(_op) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==8, int>::type = 0>
-__device__ void __atomic_exchange_simt(type *ptr, type *val, type *ret, int memorder, __memory_scope_block) {
+__device__ void __atomic_exchange_simt(volatile type *ptr, type *val, type *ret, int memorder, __memory_scope_block) {
     uint64_t tmp = 0;
     memcpy(&tmp, val, 8);
     switch (memorder) {
@@ -336,7 +336,7 @@ template<class _A, class _B, class _C> static inline __device__ void __simt_add_
 template<class _A, class _B, class _C> static inline __device__ void __simt_add_release_64_block(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.add.release.cta.u64 %0,[%1],%2;" : "=l"(_dst) : "l"(_ptr),"l"(_op) : "memory"); }
 template<class _A, class _B, class _C> static inline __device__ void __simt_add_acq_rel_64_block(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.add.acq_rel.cta.u64 %0,[%1],%2;" : "=l"(_dst) : "l"(_ptr),"l"(_op) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==8, int>::type = 0>
-__device__ type __atomic_fetch_add_simt(type *ptr, type val, int memorder, __memory_scope_block) {
+__device__ type __atomic_fetch_add_simt(volatile type *ptr, type val, int memorder, __memory_scope_block) {
     type ret;
     uint64_t tmp = 0;
     memcpy(&tmp, &val, 8);
@@ -357,7 +357,7 @@ template<class _A, class _B, class _C> static inline __device__ void __simt_and_
 template<class _A, class _B, class _C> static inline __device__ void __simt_and_release_64_block(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.and.release.cta.b64 %0,[%1],%2;" : "=l"(_dst) : "l"(_ptr),"l"(_op) : "memory"); }
 template<class _A, class _B, class _C> static inline __device__ void __simt_and_acq_rel_64_block(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.and.acq_rel.cta.b64 %0,[%1],%2;" : "=l"(_dst) : "l"(_ptr),"l"(_op) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==8, int>::type = 0>
-__device__ type __atomic_fetch_and_simt(type *ptr, type val, int memorder, __memory_scope_block) {
+__device__ type __atomic_fetch_and_simt(volatile type *ptr, type val, int memorder, __memory_scope_block) {
     type ret;
     uint64_t tmp = 0;
     memcpy(&tmp, &val, 8);
@@ -378,7 +378,7 @@ template<class _A, class _B, class _C> static inline __device__ void __simt_or_a
 template<class _A, class _B, class _C> static inline __device__ void __simt_or_release_64_block(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.or.release.cta.b64 %0,[%1],%2;" : "=l"(_dst) : "l"(_ptr),"l"(_op) : "memory"); }
 template<class _A, class _B, class _C> static inline __device__ void __simt_or_acq_rel_64_block(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.or.acq_rel.cta.b64 %0,[%1],%2;" : "=l"(_dst) : "l"(_ptr),"l"(_op) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==8, int>::type = 0>
-__device__ type __atomic_fetch_or_simt(type *ptr, type val, int memorder, __memory_scope_block) {
+__device__ type __atomic_fetch_or_simt(volatile type *ptr, type val, int memorder, __memory_scope_block) {
     type ret;
     uint64_t tmp = 0;
     memcpy(&tmp, &val, 8);
@@ -395,7 +395,7 @@ __device__ type __atomic_fetch_or_simt(type *ptr, type val, int memorder, __memo
     return ret;
 }
 template<class type, typename simt::std::enable_if<sizeof(type)==8, int>::type = 0>
-__device__ type __atomic_fetch_sub_simt(type *ptr, type val, int memorder, __memory_scope_block) {
+__device__ type __atomic_fetch_sub_simt(volatile type *ptr, type val, int memorder, __memory_scope_block) {
     type ret;
     uint64_t tmp = 0;
     memcpy(&tmp, &val, 8);
@@ -417,7 +417,7 @@ template<class _A, class _B, class _C> static inline __device__ void __simt_xor_
 template<class _A, class _B, class _C> static inline __device__ void __simt_xor_release_64_block(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.xor.release.cta.b64 %0,[%1],%2;" : "=l"(_dst) : "l"(_ptr),"l"(_op) : "memory"); }
 template<class _A, class _B, class _C> static inline __device__ void __simt_xor_acq_rel_64_block(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.xor.acq_rel.cta.b64 %0,[%1],%2;" : "=l"(_dst) : "l"(_ptr),"l"(_op) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==8, int>::type = 0>
-__device__ type __atomic_fetch_xor_simt(type *ptr, type val, int memorder, __memory_scope_block) {
+__device__ type __atomic_fetch_xor_simt(volatile type *ptr, type val, int memorder, __memory_scope_block) {
     type ret;
     uint64_t tmp = 0;
     memcpy(&tmp, &val, 8);
@@ -434,7 +434,7 @@ __device__ type __atomic_fetch_xor_simt(type *ptr, type val, int memorder, __mem
     return ret;
 }
 template<class type>
-__device__ type* __atomic_fetch_add_simt(type **ptr, ptrdiff_t val, int memorder, __memory_scope_block) {
+__device__ type* __atomic_fetch_add_simt(type * volatile*ptr, ptrdiff_t val, int memorder, __memory_scope_block) {
     type* ret;
     uint64_t tmp = 0;
     memcpy(&tmp, &val, 8);
@@ -452,7 +452,7 @@ __device__ type* __atomic_fetch_add_simt(type **ptr, ptrdiff_t val, int memorder
     return ret;
 }
 template<class type>
-__device__ type* __atomic_fetch_sub_simt(type **ptr, ptrdiff_t val, int memorder, __memory_scope_block) {
+__device__ type* __atomic_fetch_sub_simt(type * volatile*ptr, ptrdiff_t val, int memorder, __memory_scope_block) {
     type* ret;
     uint64_t tmp = 0;
     memcpy(&tmp, &val, 8);
@@ -487,7 +487,7 @@ static inline __device__ void __atomic_thread_fence_simt(int memorder, __memory_
 template<class _A, class _B> static inline __device__ void __simt_load_relaxed_8_device(_A _ptr, _B& _dst) {asm volatile("ld.relaxed.gpu.b8 %0,[%1];" : "=r"(_dst) : "l"(_ptr) : "memory"); }
 template<class _A, class _B> static inline __device__ void __simt_load_acquire_8_device(_A _ptr, _B& _dst) {asm volatile("ld.acquire.gpu.b8 %0,[%1];" : "=r"(_dst) : "l"(_ptr) : "memory"); }
 template<class type, typename std::enable_if<sizeof(type)==1, int>::type = 0>
-__device__ void __atomic_load_simt(const type *ptr, type *ret, int memorder, __memory_scope_device) {
+__device__ void __atomic_load_simt(const volatile type *ptr, type *ret, int memorder, __memory_scope_device) {
     uint32_t tmp = 0;
     switch (memorder) {
     case memory_order_seq_cst: __simt_fence_sc_device_();
@@ -501,7 +501,7 @@ __device__ void __atomic_load_simt(const type *ptr, type *ret, int memorder, __m
 template<class _A, class _B> static inline __device__ void __simt_load_relaxed_16_device(_A _ptr, _B& _dst) {asm volatile("ld.relaxed.gpu.b16 %0,[%1];" : "=h"(_dst) : "l"(_ptr) : "memory"); }
 template<class _A, class _B> static inline __device__ void __simt_load_acquire_16_device(_A _ptr, _B& _dst) {asm volatile("ld.acquire.gpu.b16 %0,[%1];" : "=h"(_dst) : "l"(_ptr) : "memory"); }
 template<class type, typename std::enable_if<sizeof(type)==2, int>::type = 0>
-__device__ void __atomic_load_simt(const type *ptr, type *ret, int memorder, __memory_scope_device) {
+__device__ void __atomic_load_simt(const volatile type *ptr, type *ret, int memorder, __memory_scope_device) {
     uint16_t tmp = 0;
     switch (memorder) {
     case memory_order_seq_cst: __simt_fence_sc_device_();
@@ -515,7 +515,7 @@ __device__ void __atomic_load_simt(const type *ptr, type *ret, int memorder, __m
 template<class _A, class _B> static inline __device__ void __simt_load_relaxed_32_device(_A _ptr, _B& _dst) {asm volatile("ld.relaxed.gpu.b32 %0,[%1];" : "=r"(_dst) : "l"(_ptr) : "memory"); }
 template<class _A, class _B> static inline __device__ void __simt_load_acquire_32_device(_A _ptr, _B& _dst) {asm volatile("ld.acquire.gpu.b32 %0,[%1];" : "=r"(_dst) : "l"(_ptr) : "memory"); }
 template<class type, typename std::enable_if<sizeof(type)==4, int>::type = 0>
-__device__ void __atomic_load_simt(const type *ptr, type *ret, int memorder, __memory_scope_device) {
+__device__ void __atomic_load_simt(const volatile type *ptr, type *ret, int memorder, __memory_scope_device) {
     uint32_t tmp = 0;
     switch (memorder) {
     case memory_order_seq_cst: __simt_fence_sc_device_();
@@ -529,7 +529,7 @@ __device__ void __atomic_load_simt(const type *ptr, type *ret, int memorder, __m
 template<class _A, class _B> static inline __device__ void __simt_load_relaxed_64_device(_A _ptr, _B& _dst) {asm volatile("ld.relaxed.gpu.b64 %0,[%1];" : "=l"(_dst) : "l"(_ptr) : "memory"); }
 template<class _A, class _B> static inline __device__ void __simt_load_acquire_64_device(_A _ptr, _B& _dst) {asm volatile("ld.acquire.gpu.b64 %0,[%1];" : "=l"(_dst) : "l"(_ptr) : "memory"); }
 template<class type, typename std::enable_if<sizeof(type)==8, int>::type = 0>
-__device__ void __atomic_load_simt(const type *ptr, type *ret, int memorder, __memory_scope_device) {
+__device__ void __atomic_load_simt(const volatile type *ptr, type *ret, int memorder, __memory_scope_device) {
     uint64_t tmp = 0;
     switch (memorder) {
     case memory_order_seq_cst: __simt_fence_sc_device_();
@@ -543,7 +543,7 @@ __device__ void __atomic_load_simt(const type *ptr, type *ret, int memorder, __m
 template<class _A, class _B> static inline __device__ void __simt_store_relaxed_8_device(_A _ptr, _B _src) { asm volatile("st.relaxed.gpu.b8 [%0], %1;" :: "l"(_ptr),"r"(_src) : "memory"); }
 template<class _A, class _B> static inline __device__ void __simt_store_release_8_device(_A _ptr, _B _src) { asm volatile("st.release.gpu.b8 [%0], %1;" :: "l"(_ptr),"r"(_src) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==1, int>::type = 0>
-__device__ void __atomic_store_simt(type *ptr, type *val, int memorder, __memory_scope_device) {
+__device__ void __atomic_store_simt(volatile type *ptr, type *val, int memorder, __memory_scope_device) {
     uint32_t tmp = 0;
     memcpy(&tmp, val, 1);
     switch (memorder) {
@@ -556,7 +556,7 @@ __device__ void __atomic_store_simt(type *ptr, type *val, int memorder, __memory
 template<class _A, class _B> static inline __device__ void __simt_store_relaxed_16_device(_A _ptr, _B _src) { asm volatile("st.relaxed.gpu.b16 [%0], %1;" :: "l"(_ptr),"h"(_src) : "memory"); }
 template<class _A, class _B> static inline __device__ void __simt_store_release_16_device(_A _ptr, _B _src) { asm volatile("st.release.gpu.b16 [%0], %1;" :: "l"(_ptr),"h"(_src) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==2, int>::type = 0>
-__device__ void __atomic_store_simt(type *ptr, type *val, int memorder, __memory_scope_device) {
+__device__ void __atomic_store_simt(volatile type *ptr, type *val, int memorder, __memory_scope_device) {
     uint16_t tmp = 0;
     memcpy(&tmp, val, 2);
     switch (memorder) {
@@ -569,7 +569,7 @@ __device__ void __atomic_store_simt(type *ptr, type *val, int memorder, __memory
 template<class _A, class _B> static inline __device__ void __simt_store_relaxed_32_device(_A _ptr, _B _src) { asm volatile("st.relaxed.gpu.b32 [%0], %1;" :: "l"(_ptr),"r"(_src) : "memory"); }
 template<class _A, class _B> static inline __device__ void __simt_store_release_32_device(_A _ptr, _B _src) { asm volatile("st.release.gpu.b32 [%0], %1;" :: "l"(_ptr),"r"(_src) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==4, int>::type = 0>
-__device__ void __atomic_store_simt(type *ptr, type *val, int memorder, __memory_scope_device) {
+__device__ void __atomic_store_simt(volatile type *ptr, type *val, int memorder, __memory_scope_device) {
     uint32_t tmp = 0;
     memcpy(&tmp, val, 4);
     switch (memorder) {
@@ -582,7 +582,7 @@ __device__ void __atomic_store_simt(type *ptr, type *val, int memorder, __memory
 template<class _A, class _B> static inline __device__ void __simt_store_relaxed_64_device(_A _ptr, _B _src) { asm volatile("st.relaxed.gpu.b64 [%0], %1;" :: "l"(_ptr),"l"(_src) : "memory"); }
 template<class _A, class _B> static inline __device__ void __simt_store_release_64_device(_A _ptr, _B _src) { asm volatile("st.release.gpu.b64 [%0], %1;" :: "l"(_ptr),"l"(_src) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==8, int>::type = 0>
-__device__ void __atomic_store_simt(type *ptr, type *val, int memorder, __memory_scope_device) {
+__device__ void __atomic_store_simt(volatile type *ptr, type *val, int memorder, __memory_scope_device) {
     uint64_t tmp = 0;
     memcpy(&tmp, val, 8);
     switch (memorder) {
@@ -597,7 +597,7 @@ template<class _A, class _B, class _C, class _D> static inline __device__ void _
 template<class _A, class _B, class _C, class _D> static inline __device__ void __simt_cas_release_32_device(_A _ptr, _B& _dst, _C _cmp, _D _op) { asm volatile("atom.cas.release.gpu.b32 %0,[%1],%2,%3;" : "=r"(_dst) : "l"(_ptr),"r"(_cmp),"r"(_op) : "memory"); }
 template<class _A, class _B, class _C, class _D> static inline __device__ void __simt_cas_acq_rel_32_device(_A _ptr, _B& _dst, _C _cmp, _D _op) { asm volatile("atom.cas.acq_rel.gpu.b32 %0,[%1],%2,%3;" : "=r"(_dst) : "l"(_ptr),"r"(_cmp),"r"(_op) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==4, int>::type = 0>
-__device__ bool __atomic_compare_exchange_simt(type *ptr, type *expected, const type *desired, bool, int success_memorder, int failure_memorder, __memory_scope_device) {
+__device__ bool __atomic_compare_exchange_simt(volatile type *ptr, type *expected, const type *desired, bool, int success_memorder, int failure_memorder, __memory_scope_device) {
     uint32_t tmp = 0, old = 0, old_tmp;
     memcpy(&tmp, desired, 4);
     memcpy(&old, expected, 4);
@@ -620,7 +620,7 @@ template<class _A, class _B, class _C> static inline __device__ void __simt_exch
 template<class _A, class _B, class _C> static inline __device__ void __simt_exch_release_32_device(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.exch.release.gpu.b32 %0,[%1],%2;" : "=r"(_dst) : "l"(_ptr),"r"(_op) : "memory"); }
 template<class _A, class _B, class _C> static inline __device__ void __simt_exch_acq_rel_32_device(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.exch.acq_rel.gpu.b32 %0,[%1],%2;" : "=r"(_dst) : "l"(_ptr),"r"(_op) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==4, int>::type = 0>
-__device__ void __atomic_exchange_simt(type *ptr, type *val, type *ret, int memorder, __memory_scope_device) {
+__device__ void __atomic_exchange_simt(volatile type *ptr, type *val, type *ret, int memorder, __memory_scope_device) {
     uint32_t tmp = 0;
     memcpy(&tmp, val, 4);
     switch (memorder) {
@@ -639,7 +639,7 @@ template<class _A, class _B, class _C> static inline __device__ void __simt_add_
 template<class _A, class _B, class _C> static inline __device__ void __simt_add_release_32_device(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.add.release.gpu.u32 %0,[%1],%2;" : "=r"(_dst) : "l"(_ptr),"r"(_op) : "memory"); }
 template<class _A, class _B, class _C> static inline __device__ void __simt_add_acq_rel_32_device(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.add.acq_rel.gpu.u32 %0,[%1],%2;" : "=r"(_dst) : "l"(_ptr),"r"(_op) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==4, int>::type = 0>
-__device__ type __atomic_fetch_add_simt(type *ptr, type val, int memorder, __memory_scope_device) {
+__device__ type __atomic_fetch_add_simt(volatile type *ptr, type val, int memorder, __memory_scope_device) {
     type ret;
     uint32_t tmp = 0;
     memcpy(&tmp, &val, 4);
@@ -660,7 +660,7 @@ template<class _A, class _B, class _C> static inline __device__ void __simt_and_
 template<class _A, class _B, class _C> static inline __device__ void __simt_and_release_32_device(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.and.release.gpu.b32 %0,[%1],%2;" : "=r"(_dst) : "l"(_ptr),"r"(_op) : "memory"); }
 template<class _A, class _B, class _C> static inline __device__ void __simt_and_acq_rel_32_device(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.and.acq_rel.gpu.b32 %0,[%1],%2;" : "=r"(_dst) : "l"(_ptr),"r"(_op) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==4, int>::type = 0>
-__device__ type __atomic_fetch_and_simt(type *ptr, type val, int memorder, __memory_scope_device) {
+__device__ type __atomic_fetch_and_simt(volatile type *ptr, type val, int memorder, __memory_scope_device) {
     type ret;
     uint32_t tmp = 0;
     memcpy(&tmp, &val, 4);
@@ -681,7 +681,7 @@ template<class _A, class _B, class _C> static inline __device__ void __simt_or_a
 template<class _A, class _B, class _C> static inline __device__ void __simt_or_release_32_device(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.or.release.gpu.b32 %0,[%1],%2;" : "=r"(_dst) : "l"(_ptr),"r"(_op) : "memory"); }
 template<class _A, class _B, class _C> static inline __device__ void __simt_or_acq_rel_32_device(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.or.acq_rel.gpu.b32 %0,[%1],%2;" : "=r"(_dst) : "l"(_ptr),"r"(_op) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==4, int>::type = 0>
-__device__ type __atomic_fetch_or_simt(type *ptr, type val, int memorder, __memory_scope_device) {
+__device__ type __atomic_fetch_or_simt(volatile type *ptr, type val, int memorder, __memory_scope_device) {
     type ret;
     uint32_t tmp = 0;
     memcpy(&tmp, &val, 4);
@@ -698,7 +698,7 @@ __device__ type __atomic_fetch_or_simt(type *ptr, type val, int memorder, __memo
     return ret;
 }
 template<class type, typename simt::std::enable_if<sizeof(type)==4, int>::type = 0>
-__device__ type __atomic_fetch_sub_simt(type *ptr, type val, int memorder, __memory_scope_device) {
+__device__ type __atomic_fetch_sub_simt(volatile type *ptr, type val, int memorder, __memory_scope_device) {
     type ret;
     uint32_t tmp = 0;
     memcpy(&tmp, &val, 4);
@@ -720,7 +720,7 @@ template<class _A, class _B, class _C> static inline __device__ void __simt_xor_
 template<class _A, class _B, class _C> static inline __device__ void __simt_xor_release_32_device(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.xor.release.gpu.b32 %0,[%1],%2;" : "=r"(_dst) : "l"(_ptr),"r"(_op) : "memory"); }
 template<class _A, class _B, class _C> static inline __device__ void __simt_xor_acq_rel_32_device(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.xor.acq_rel.gpu.b32 %0,[%1],%2;" : "=r"(_dst) : "l"(_ptr),"r"(_op) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==4, int>::type = 0>
-__device__ type __atomic_fetch_xor_simt(type *ptr, type val, int memorder, __memory_scope_device) {
+__device__ type __atomic_fetch_xor_simt(volatile type *ptr, type val, int memorder, __memory_scope_device) {
     type ret;
     uint32_t tmp = 0;
     memcpy(&tmp, &val, 4);
@@ -741,7 +741,7 @@ template<class _A, class _B, class _C, class _D> static inline __device__ void _
 template<class _A, class _B, class _C, class _D> static inline __device__ void __simt_cas_release_64_device(_A _ptr, _B& _dst, _C _cmp, _D _op) { asm volatile("atom.cas.release.gpu.b64 %0,[%1],%2,%3;" : "=l"(_dst) : "l"(_ptr),"l"(_cmp),"l"(_op) : "memory"); }
 template<class _A, class _B, class _C, class _D> static inline __device__ void __simt_cas_acq_rel_64_device(_A _ptr, _B& _dst, _C _cmp, _D _op) { asm volatile("atom.cas.acq_rel.gpu.b64 %0,[%1],%2,%3;" : "=l"(_dst) : "l"(_ptr),"l"(_cmp),"l"(_op) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==8, int>::type = 0>
-__device__ bool __atomic_compare_exchange_simt(type *ptr, type *expected, const type *desired, bool, int success_memorder, int failure_memorder, __memory_scope_device) {
+__device__ bool __atomic_compare_exchange_simt(volatile type *ptr, type *expected, const type *desired, bool, int success_memorder, int failure_memorder, __memory_scope_device) {
     uint64_t tmp = 0, old = 0, old_tmp;
     memcpy(&tmp, desired, 8);
     memcpy(&old, expected, 8);
@@ -764,7 +764,7 @@ template<class _A, class _B, class _C> static inline __device__ void __simt_exch
 template<class _A, class _B, class _C> static inline __device__ void __simt_exch_release_64_device(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.exch.release.gpu.b64 %0,[%1],%2;" : "=l"(_dst) : "l"(_ptr),"l"(_op) : "memory"); }
 template<class _A, class _B, class _C> static inline __device__ void __simt_exch_acq_rel_64_device(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.exch.acq_rel.gpu.b64 %0,[%1],%2;" : "=l"(_dst) : "l"(_ptr),"l"(_op) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==8, int>::type = 0>
-__device__ void __atomic_exchange_simt(type *ptr, type *val, type *ret, int memorder, __memory_scope_device) {
+__device__ void __atomic_exchange_simt(volatile type *ptr, type *val, type *ret, int memorder, __memory_scope_device) {
     uint64_t tmp = 0;
     memcpy(&tmp, val, 8);
     switch (memorder) {
@@ -783,7 +783,7 @@ template<class _A, class _B, class _C> static inline __device__ void __simt_add_
 template<class _A, class _B, class _C> static inline __device__ void __simt_add_release_64_device(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.add.release.gpu.u64 %0,[%1],%2;" : "=l"(_dst) : "l"(_ptr),"l"(_op) : "memory"); }
 template<class _A, class _B, class _C> static inline __device__ void __simt_add_acq_rel_64_device(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.add.acq_rel.gpu.u64 %0,[%1],%2;" : "=l"(_dst) : "l"(_ptr),"l"(_op) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==8, int>::type = 0>
-__device__ type __atomic_fetch_add_simt(type *ptr, type val, int memorder, __memory_scope_device) {
+__device__ type __atomic_fetch_add_simt(volatile type *ptr, type val, int memorder, __memory_scope_device) {
     type ret;
     uint64_t tmp = 0;
     memcpy(&tmp, &val, 8);
@@ -804,7 +804,7 @@ template<class _A, class _B, class _C> static inline __device__ void __simt_and_
 template<class _A, class _B, class _C> static inline __device__ void __simt_and_release_64_device(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.and.release.gpu.b64 %0,[%1],%2;" : "=l"(_dst) : "l"(_ptr),"l"(_op) : "memory"); }
 template<class _A, class _B, class _C> static inline __device__ void __simt_and_acq_rel_64_device(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.and.acq_rel.gpu.b64 %0,[%1],%2;" : "=l"(_dst) : "l"(_ptr),"l"(_op) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==8, int>::type = 0>
-__device__ type __atomic_fetch_and_simt(type *ptr, type val, int memorder, __memory_scope_device) {
+__device__ type __atomic_fetch_and_simt(volatile type *ptr, type val, int memorder, __memory_scope_device) {
     type ret;
     uint64_t tmp = 0;
     memcpy(&tmp, &val, 8);
@@ -825,7 +825,7 @@ template<class _A, class _B, class _C> static inline __device__ void __simt_or_a
 template<class _A, class _B, class _C> static inline __device__ void __simt_or_release_64_device(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.or.release.gpu.b64 %0,[%1],%2;" : "=l"(_dst) : "l"(_ptr),"l"(_op) : "memory"); }
 template<class _A, class _B, class _C> static inline __device__ void __simt_or_acq_rel_64_device(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.or.acq_rel.gpu.b64 %0,[%1],%2;" : "=l"(_dst) : "l"(_ptr),"l"(_op) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==8, int>::type = 0>
-__device__ type __atomic_fetch_or_simt(type *ptr, type val, int memorder, __memory_scope_device) {
+__device__ type __atomic_fetch_or_simt(volatile type *ptr, type val, int memorder, __memory_scope_device) {
     type ret;
     uint64_t tmp = 0;
     memcpy(&tmp, &val, 8);
@@ -842,7 +842,7 @@ __device__ type __atomic_fetch_or_simt(type *ptr, type val, int memorder, __memo
     return ret;
 }
 template<class type, typename simt::std::enable_if<sizeof(type)==8, int>::type = 0>
-__device__ type __atomic_fetch_sub_simt(type *ptr, type val, int memorder, __memory_scope_device) {
+__device__ type __atomic_fetch_sub_simt(volatile type *ptr, type val, int memorder, __memory_scope_device) {
     type ret;
     uint64_t tmp = 0;
     memcpy(&tmp, &val, 8);
@@ -864,7 +864,7 @@ template<class _A, class _B, class _C> static inline __device__ void __simt_xor_
 template<class _A, class _B, class _C> static inline __device__ void __simt_xor_release_64_device(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.xor.release.gpu.b64 %0,[%1],%2;" : "=l"(_dst) : "l"(_ptr),"l"(_op) : "memory"); }
 template<class _A, class _B, class _C> static inline __device__ void __simt_xor_acq_rel_64_device(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.xor.acq_rel.gpu.b64 %0,[%1],%2;" : "=l"(_dst) : "l"(_ptr),"l"(_op) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==8, int>::type = 0>
-__device__ type __atomic_fetch_xor_simt(type *ptr, type val, int memorder, __memory_scope_device) {
+__device__ type __atomic_fetch_xor_simt(volatile type *ptr, type val, int memorder, __memory_scope_device) {
     type ret;
     uint64_t tmp = 0;
     memcpy(&tmp, &val, 8);
@@ -881,7 +881,7 @@ __device__ type __atomic_fetch_xor_simt(type *ptr, type val, int memorder, __mem
     return ret;
 }
 template<class type>
-__device__ type* __atomic_fetch_add_simt(type **ptr, ptrdiff_t val, int memorder, __memory_scope_device) {
+__device__ type* __atomic_fetch_add_simt(type * volatile*ptr, ptrdiff_t val, int memorder, __memory_scope_device) {
     type* ret;
     uint64_t tmp = 0;
     memcpy(&tmp, &val, 8);
@@ -899,7 +899,7 @@ __device__ type* __atomic_fetch_add_simt(type **ptr, ptrdiff_t val, int memorder
     return ret;
 }
 template<class type>
-__device__ type* __atomic_fetch_sub_simt(type **ptr, ptrdiff_t val, int memorder, __memory_scope_device) {
+__device__ type* __atomic_fetch_sub_simt(type * volatile*ptr, ptrdiff_t val, int memorder, __memory_scope_device) {
     type* ret;
     uint64_t tmp = 0;
     memcpy(&tmp, &val, 8);
@@ -934,7 +934,7 @@ static inline __device__ void __atomic_thread_fence_simt(int memorder, __memory_
 template<class _A, class _B> static inline __device__ void __simt_load_relaxed_8_system(_A _ptr, _B& _dst) {asm volatile("ld.relaxed.sys.b8 %0,[%1];" : "=r"(_dst) : "l"(_ptr) : "memory"); }
 template<class _A, class _B> static inline __device__ void __simt_load_acquire_8_system(_A _ptr, _B& _dst) {asm volatile("ld.acquire.sys.b8 %0,[%1];" : "=r"(_dst) : "l"(_ptr) : "memory"); }
 template<class type, typename std::enable_if<sizeof(type)==1, int>::type = 0>
-__device__ void __atomic_load_simt(const type *ptr, type *ret, int memorder, __memory_scope_system) {
+__device__ void __atomic_load_simt(const volatile type *ptr, type *ret, int memorder, __memory_scope_system) {
     uint32_t tmp = 0;
     switch (memorder) {
     case memory_order_seq_cst: __simt_fence_sc_system_();
@@ -948,7 +948,7 @@ __device__ void __atomic_load_simt(const type *ptr, type *ret, int memorder, __m
 template<class _A, class _B> static inline __device__ void __simt_load_relaxed_16_system(_A _ptr, _B& _dst) {asm volatile("ld.relaxed.sys.b16 %0,[%1];" : "=h"(_dst) : "l"(_ptr) : "memory"); }
 template<class _A, class _B> static inline __device__ void __simt_load_acquire_16_system(_A _ptr, _B& _dst) {asm volatile("ld.acquire.sys.b16 %0,[%1];" : "=h"(_dst) : "l"(_ptr) : "memory"); }
 template<class type, typename std::enable_if<sizeof(type)==2, int>::type = 0>
-__device__ void __atomic_load_simt(const type *ptr, type *ret, int memorder, __memory_scope_system) {
+__device__ void __atomic_load_simt(const volatile type *ptr, type *ret, int memorder, __memory_scope_system) {
     uint16_t tmp = 0;
     switch (memorder) {
     case memory_order_seq_cst: __simt_fence_sc_system_();
@@ -962,7 +962,7 @@ __device__ void __atomic_load_simt(const type *ptr, type *ret, int memorder, __m
 template<class _A, class _B> static inline __device__ void __simt_load_relaxed_32_system(_A _ptr, _B& _dst) {asm volatile("ld.relaxed.sys.b32 %0,[%1];" : "=r"(_dst) : "l"(_ptr) : "memory"); }
 template<class _A, class _B> static inline __device__ void __simt_load_acquire_32_system(_A _ptr, _B& _dst) {asm volatile("ld.acquire.sys.b32 %0,[%1];" : "=r"(_dst) : "l"(_ptr) : "memory"); }
 template<class type, typename std::enable_if<sizeof(type)==4, int>::type = 0>
-__device__ void __atomic_load_simt(const type *ptr, type *ret, int memorder, __memory_scope_system) {
+__device__ void __atomic_load_simt(const volatile type *ptr, type *ret, int memorder, __memory_scope_system) {
     uint32_t tmp = 0;
     switch (memorder) {
     case memory_order_seq_cst: __simt_fence_sc_system_();
@@ -976,7 +976,7 @@ __device__ void __atomic_load_simt(const type *ptr, type *ret, int memorder, __m
 template<class _A, class _B> static inline __device__ void __simt_load_relaxed_64_system(_A _ptr, _B& _dst) {asm volatile("ld.relaxed.sys.b64 %0,[%1];" : "=l"(_dst) : "l"(_ptr) : "memory"); }
 template<class _A, class _B> static inline __device__ void __simt_load_acquire_64_system(_A _ptr, _B& _dst) {asm volatile("ld.acquire.sys.b64 %0,[%1];" : "=l"(_dst) : "l"(_ptr) : "memory"); }
 template<class type, typename std::enable_if<sizeof(type)==8, int>::type = 0>
-__device__ void __atomic_load_simt(const type *ptr, type *ret, int memorder, __memory_scope_system) {
+__device__ void __atomic_load_simt(const volatile type *ptr, type *ret, int memorder, __memory_scope_system) {
     uint64_t tmp = 0;
     switch (memorder) {
     case memory_order_seq_cst: __simt_fence_sc_system_();
@@ -990,7 +990,7 @@ __device__ void __atomic_load_simt(const type *ptr, type *ret, int memorder, __m
 template<class _A, class _B> static inline __device__ void __simt_store_relaxed_8_system(_A _ptr, _B _src) { asm volatile("st.relaxed.sys.b8 [%0], %1;" :: "l"(_ptr),"r"(_src) : "memory"); }
 template<class _A, class _B> static inline __device__ void __simt_store_release_8_system(_A _ptr, _B _src) { asm volatile("st.release.sys.b8 [%0], %1;" :: "l"(_ptr),"r"(_src) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==1, int>::type = 0>
-__device__ void __atomic_store_simt(type *ptr, type *val, int memorder, __memory_scope_system) {
+__device__ void __atomic_store_simt(volatile type *ptr, type *val, int memorder, __memory_scope_system) {
     uint32_t tmp = 0;
     memcpy(&tmp, val, 1);
     switch (memorder) {
@@ -1003,7 +1003,7 @@ __device__ void __atomic_store_simt(type *ptr, type *val, int memorder, __memory
 template<class _A, class _B> static inline __device__ void __simt_store_relaxed_16_system(_A _ptr, _B _src) { asm volatile("st.relaxed.sys.b16 [%0], %1;" :: "l"(_ptr),"h"(_src) : "memory"); }
 template<class _A, class _B> static inline __device__ void __simt_store_release_16_system(_A _ptr, _B _src) { asm volatile("st.release.sys.b16 [%0], %1;" :: "l"(_ptr),"h"(_src) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==2, int>::type = 0>
-__device__ void __atomic_store_simt(type *ptr, type *val, int memorder, __memory_scope_system) {
+__device__ void __atomic_store_simt(volatile type *ptr, type *val, int memorder, __memory_scope_system) {
     uint16_t tmp = 0;
     memcpy(&tmp, val, 2);
     switch (memorder) {
@@ -1016,7 +1016,7 @@ __device__ void __atomic_store_simt(type *ptr, type *val, int memorder, __memory
 template<class _A, class _B> static inline __device__ void __simt_store_relaxed_32_system(_A _ptr, _B _src) { asm volatile("st.relaxed.sys.b32 [%0], %1;" :: "l"(_ptr),"r"(_src) : "memory"); }
 template<class _A, class _B> static inline __device__ void __simt_store_release_32_system(_A _ptr, _B _src) { asm volatile("st.release.sys.b32 [%0], %1;" :: "l"(_ptr),"r"(_src) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==4, int>::type = 0>
-__device__ void __atomic_store_simt(type *ptr, type *val, int memorder, __memory_scope_system) {
+__device__ void __atomic_store_simt(volatile type *ptr, type *val, int memorder, __memory_scope_system) {
     uint32_t tmp = 0;
     memcpy(&tmp, val, 4);
     switch (memorder) {
@@ -1029,7 +1029,7 @@ __device__ void __atomic_store_simt(type *ptr, type *val, int memorder, __memory
 template<class _A, class _B> static inline __device__ void __simt_store_relaxed_64_system(_A _ptr, _B _src) { asm volatile("st.relaxed.sys.b64 [%0], %1;" :: "l"(_ptr),"l"(_src) : "memory"); }
 template<class _A, class _B> static inline __device__ void __simt_store_release_64_system(_A _ptr, _B _src) { asm volatile("st.release.sys.b64 [%0], %1;" :: "l"(_ptr),"l"(_src) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==8, int>::type = 0>
-__device__ void __atomic_store_simt(type *ptr, type *val, int memorder, __memory_scope_system) {
+__device__ void __atomic_store_simt(volatile type *ptr, type *val, int memorder, __memory_scope_system) {
     uint64_t tmp = 0;
     memcpy(&tmp, val, 8);
     switch (memorder) {
@@ -1044,7 +1044,7 @@ template<class _A, class _B, class _C, class _D> static inline __device__ void _
 template<class _A, class _B, class _C, class _D> static inline __device__ void __simt_cas_release_32_system(_A _ptr, _B& _dst, _C _cmp, _D _op) { asm volatile("atom.cas.release.sys.b32 %0,[%1],%2,%3;" : "=r"(_dst) : "l"(_ptr),"r"(_cmp),"r"(_op) : "memory"); }
 template<class _A, class _B, class _C, class _D> static inline __device__ void __simt_cas_acq_rel_32_system(_A _ptr, _B& _dst, _C _cmp, _D _op) { asm volatile("atom.cas.acq_rel.sys.b32 %0,[%1],%2,%3;" : "=r"(_dst) : "l"(_ptr),"r"(_cmp),"r"(_op) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==4, int>::type = 0>
-__device__ bool __atomic_compare_exchange_simt(type *ptr, type *expected, const type *desired, bool, int success_memorder, int failure_memorder, __memory_scope_system) {
+__device__ bool __atomic_compare_exchange_simt(volatile type *ptr, type *expected, const type *desired, bool, int success_memorder, int failure_memorder, __memory_scope_system) {
     uint32_t tmp = 0, old = 0, old_tmp;
     memcpy(&tmp, desired, 4);
     memcpy(&old, expected, 4);
@@ -1067,7 +1067,7 @@ template<class _A, class _B, class _C> static inline __device__ void __simt_exch
 template<class _A, class _B, class _C> static inline __device__ void __simt_exch_release_32_system(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.exch.release.sys.b32 %0,[%1],%2;" : "=r"(_dst) : "l"(_ptr),"r"(_op) : "memory"); }
 template<class _A, class _B, class _C> static inline __device__ void __simt_exch_acq_rel_32_system(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.exch.acq_rel.sys.b32 %0,[%1],%2;" : "=r"(_dst) : "l"(_ptr),"r"(_op) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==4, int>::type = 0>
-__device__ void __atomic_exchange_simt(type *ptr, type *val, type *ret, int memorder, __memory_scope_system) {
+__device__ void __atomic_exchange_simt(volatile type *ptr, type *val, type *ret, int memorder, __memory_scope_system) {
     uint32_t tmp = 0;
     memcpy(&tmp, val, 4);
     switch (memorder) {
@@ -1086,7 +1086,7 @@ template<class _A, class _B, class _C> static inline __device__ void __simt_add_
 template<class _A, class _B, class _C> static inline __device__ void __simt_add_release_32_system(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.add.release.sys.u32 %0,[%1],%2;" : "=r"(_dst) : "l"(_ptr),"r"(_op) : "memory"); }
 template<class _A, class _B, class _C> static inline __device__ void __simt_add_acq_rel_32_system(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.add.acq_rel.sys.u32 %0,[%1],%2;" : "=r"(_dst) : "l"(_ptr),"r"(_op) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==4, int>::type = 0>
-__device__ type __atomic_fetch_add_simt(type *ptr, type val, int memorder, __memory_scope_system) {
+__device__ type __atomic_fetch_add_simt(volatile type *ptr, type val, int memorder, __memory_scope_system) {
     type ret;
     uint32_t tmp = 0;
     memcpy(&tmp, &val, 4);
@@ -1107,7 +1107,7 @@ template<class _A, class _B, class _C> static inline __device__ void __simt_and_
 template<class _A, class _B, class _C> static inline __device__ void __simt_and_release_32_system(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.and.release.sys.b32 %0,[%1],%2;" : "=r"(_dst) : "l"(_ptr),"r"(_op) : "memory"); }
 template<class _A, class _B, class _C> static inline __device__ void __simt_and_acq_rel_32_system(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.and.acq_rel.sys.b32 %0,[%1],%2;" : "=r"(_dst) : "l"(_ptr),"r"(_op) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==4, int>::type = 0>
-__device__ type __atomic_fetch_and_simt(type *ptr, type val, int memorder, __memory_scope_system) {
+__device__ type __atomic_fetch_and_simt(volatile type *ptr, type val, int memorder, __memory_scope_system) {
     type ret;
     uint32_t tmp = 0;
     memcpy(&tmp, &val, 4);
@@ -1128,7 +1128,7 @@ template<class _A, class _B, class _C> static inline __device__ void __simt_or_a
 template<class _A, class _B, class _C> static inline __device__ void __simt_or_release_32_system(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.or.release.sys.b32 %0,[%1],%2;" : "=r"(_dst) : "l"(_ptr),"r"(_op) : "memory"); }
 template<class _A, class _B, class _C> static inline __device__ void __simt_or_acq_rel_32_system(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.or.acq_rel.sys.b32 %0,[%1],%2;" : "=r"(_dst) : "l"(_ptr),"r"(_op) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==4, int>::type = 0>
-__device__ type __atomic_fetch_or_simt(type *ptr, type val, int memorder, __memory_scope_system) {
+__device__ type __atomic_fetch_or_simt(volatile type *ptr, type val, int memorder, __memory_scope_system) {
     type ret;
     uint32_t tmp = 0;
     memcpy(&tmp, &val, 4);
@@ -1145,7 +1145,7 @@ __device__ type __atomic_fetch_or_simt(type *ptr, type val, int memorder, __memo
     return ret;
 }
 template<class type, typename simt::std::enable_if<sizeof(type)==4, int>::type = 0>
-__device__ type __atomic_fetch_sub_simt(type *ptr, type val, int memorder, __memory_scope_system) {
+__device__ type __atomic_fetch_sub_simt(volatile type *ptr, type val, int memorder, __memory_scope_system) {
     type ret;
     uint32_t tmp = 0;
     memcpy(&tmp, &val, 4);
@@ -1167,7 +1167,7 @@ template<class _A, class _B, class _C> static inline __device__ void __simt_xor_
 template<class _A, class _B, class _C> static inline __device__ void __simt_xor_release_32_system(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.xor.release.sys.b32 %0,[%1],%2;" : "=r"(_dst) : "l"(_ptr),"r"(_op) : "memory"); }
 template<class _A, class _B, class _C> static inline __device__ void __simt_xor_acq_rel_32_system(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.xor.acq_rel.sys.b32 %0,[%1],%2;" : "=r"(_dst) : "l"(_ptr),"r"(_op) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==4, int>::type = 0>
-__device__ type __atomic_fetch_xor_simt(type *ptr, type val, int memorder, __memory_scope_system) {
+__device__ type __atomic_fetch_xor_simt(volatile type *ptr, type val, int memorder, __memory_scope_system) {
     type ret;
     uint32_t tmp = 0;
     memcpy(&tmp, &val, 4);
@@ -1188,7 +1188,7 @@ template<class _A, class _B, class _C, class _D> static inline __device__ void _
 template<class _A, class _B, class _C, class _D> static inline __device__ void __simt_cas_release_64_system(_A _ptr, _B& _dst, _C _cmp, _D _op) { asm volatile("atom.cas.release.sys.b64 %0,[%1],%2,%3;" : "=l"(_dst) : "l"(_ptr),"l"(_cmp),"l"(_op) : "memory"); }
 template<class _A, class _B, class _C, class _D> static inline __device__ void __simt_cas_acq_rel_64_system(_A _ptr, _B& _dst, _C _cmp, _D _op) { asm volatile("atom.cas.acq_rel.sys.b64 %0,[%1],%2,%3;" : "=l"(_dst) : "l"(_ptr),"l"(_cmp),"l"(_op) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==8, int>::type = 0>
-__device__ bool __atomic_compare_exchange_simt(type *ptr, type *expected, const type *desired, bool, int success_memorder, int failure_memorder, __memory_scope_system) {
+__device__ bool __atomic_compare_exchange_simt(volatile type *ptr, type *expected, const type *desired, bool, int success_memorder, int failure_memorder, __memory_scope_system) {
     uint64_t tmp = 0, old = 0, old_tmp;
     memcpy(&tmp, desired, 8);
     memcpy(&old, expected, 8);
@@ -1211,7 +1211,7 @@ template<class _A, class _B, class _C> static inline __device__ void __simt_exch
 template<class _A, class _B, class _C> static inline __device__ void __simt_exch_release_64_system(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.exch.release.sys.b64 %0,[%1],%2;" : "=l"(_dst) : "l"(_ptr),"l"(_op) : "memory"); }
 template<class _A, class _B, class _C> static inline __device__ void __simt_exch_acq_rel_64_system(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.exch.acq_rel.sys.b64 %0,[%1],%2;" : "=l"(_dst) : "l"(_ptr),"l"(_op) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==8, int>::type = 0>
-__device__ void __atomic_exchange_simt(type *ptr, type *val, type *ret, int memorder, __memory_scope_system) {
+__device__ void __atomic_exchange_simt(volatile type *ptr, type *val, type *ret, int memorder, __memory_scope_system) {
     uint64_t tmp = 0;
     memcpy(&tmp, val, 8);
     switch (memorder) {
@@ -1230,7 +1230,7 @@ template<class _A, class _B, class _C> static inline __device__ void __simt_add_
 template<class _A, class _B, class _C> static inline __device__ void __simt_add_release_64_system(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.add.release.sys.u64 %0,[%1],%2;" : "=l"(_dst) : "l"(_ptr),"l"(_op) : "memory"); }
 template<class _A, class _B, class _C> static inline __device__ void __simt_add_acq_rel_64_system(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.add.acq_rel.sys.u64 %0,[%1],%2;" : "=l"(_dst) : "l"(_ptr),"l"(_op) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==8, int>::type = 0>
-__device__ type __atomic_fetch_add_simt(type *ptr, type val, int memorder, __memory_scope_system) {
+__device__ type __atomic_fetch_add_simt(volatile type *ptr, type val, int memorder, __memory_scope_system) {
     type ret;
     uint64_t tmp = 0;
     memcpy(&tmp, &val, 8);
@@ -1251,7 +1251,7 @@ template<class _A, class _B, class _C> static inline __device__ void __simt_and_
 template<class _A, class _B, class _C> static inline __device__ void __simt_and_release_64_system(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.and.release.sys.b64 %0,[%1],%2;" : "=l"(_dst) : "l"(_ptr),"l"(_op) : "memory"); }
 template<class _A, class _B, class _C> static inline __device__ void __simt_and_acq_rel_64_system(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.and.acq_rel.sys.b64 %0,[%1],%2;" : "=l"(_dst) : "l"(_ptr),"l"(_op) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==8, int>::type = 0>
-__device__ type __atomic_fetch_and_simt(type *ptr, type val, int memorder, __memory_scope_system) {
+__device__ type __atomic_fetch_and_simt(volatile type *ptr, type val, int memorder, __memory_scope_system) {
     type ret;
     uint64_t tmp = 0;
     memcpy(&tmp, &val, 8);
@@ -1272,7 +1272,7 @@ template<class _A, class _B, class _C> static inline __device__ void __simt_or_a
 template<class _A, class _B, class _C> static inline __device__ void __simt_or_release_64_system(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.or.release.sys.b64 %0,[%1],%2;" : "=l"(_dst) : "l"(_ptr),"l"(_op) : "memory"); }
 template<class _A, class _B, class _C> static inline __device__ void __simt_or_acq_rel_64_system(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.or.acq_rel.sys.b64 %0,[%1],%2;" : "=l"(_dst) : "l"(_ptr),"l"(_op) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==8, int>::type = 0>
-__device__ type __atomic_fetch_or_simt(type *ptr, type val, int memorder, __memory_scope_system) {
+__device__ type __atomic_fetch_or_simt(volatile type *ptr, type val, int memorder, __memory_scope_system) {
     type ret;
     uint64_t tmp = 0;
     memcpy(&tmp, &val, 8);
@@ -1289,7 +1289,7 @@ __device__ type __atomic_fetch_or_simt(type *ptr, type val, int memorder, __memo
     return ret;
 }
 template<class type, typename simt::std::enable_if<sizeof(type)==8, int>::type = 0>
-__device__ type __atomic_fetch_sub_simt(type *ptr, type val, int memorder, __memory_scope_system) {
+__device__ type __atomic_fetch_sub_simt(volatile type *ptr, type val, int memorder, __memory_scope_system) {
     type ret;
     uint64_t tmp = 0;
     memcpy(&tmp, &val, 8);
@@ -1311,7 +1311,7 @@ template<class _A, class _B, class _C> static inline __device__ void __simt_xor_
 template<class _A, class _B, class _C> static inline __device__ void __simt_xor_release_64_system(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.xor.release.sys.b64 %0,[%1],%2;" : "=l"(_dst) : "l"(_ptr),"l"(_op) : "memory"); }
 template<class _A, class _B, class _C> static inline __device__ void __simt_xor_acq_rel_64_system(_A _ptr, _B& _dst, _C _op) { asm volatile("atom.xor.acq_rel.sys.b64 %0,[%1],%2;" : "=l"(_dst) : "l"(_ptr),"l"(_op) : "memory"); }
 template<class type, typename simt::std::enable_if<sizeof(type)==8, int>::type = 0>
-__device__ type __atomic_fetch_xor_simt(type *ptr, type val, int memorder, __memory_scope_system) {
+__device__ type __atomic_fetch_xor_simt(volatile type *ptr, type val, int memorder, __memory_scope_system) {
     type ret;
     uint64_t tmp = 0;
     memcpy(&tmp, &val, 8);
@@ -1328,7 +1328,7 @@ __device__ type __atomic_fetch_xor_simt(type *ptr, type val, int memorder, __mem
     return ret;
 }
 template<class type>
-__device__ type* __atomic_fetch_add_simt(type **ptr, ptrdiff_t val, int memorder, __memory_scope_system) {
+__device__ type* __atomic_fetch_add_simt(type * volatile*ptr, ptrdiff_t val, int memorder, __memory_scope_system) {
     type* ret;
     uint64_t tmp = 0;
     memcpy(&tmp, &val, 8);
@@ -1346,7 +1346,7 @@ __device__ type* __atomic_fetch_add_simt(type **ptr, ptrdiff_t val, int memorder
     return ret;
 }
 template<class type>
-__device__ type* __atomic_fetch_sub_simt(type **ptr, ptrdiff_t val, int memorder, __memory_scope_system) {
+__device__ type* __atomic_fetch_sub_simt(volatile type **ptr, ptrdiff_t val, int memorder, __memory_scope_system) {
     type* ret;
     uint64_t tmp = 0;
     memcpy(&tmp, &val, 8);
