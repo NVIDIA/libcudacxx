@@ -1044,7 +1044,6 @@ _Tp __c11_atomic_fetch_xor(volatile __cxx_locked_atomic_type<_Tp, _Sco>* __a,
   return __old;
 }
 
-
 template <class _Tp, class _Sco>
 using __atomic_type = typename conditional<__atomic_always_lock_free(sizeof(_Tp), 0), 
                                            _Atomic_s(_Tp, _Sco),
@@ -1059,7 +1058,11 @@ using __atomic_type = _Atomic_s(_Tp, _Sco);
 
 // general atomic<T>
 
-template <class _Tp, class _Sco = __memory_scope_default, bool = is_integral<_Tp>::value && !is_same<_Tp, bool>::value>
+#ifndef _LIBCPP_ATOMIC_SCOPE_DEFAULT
+#define _LIBCPP_ATOMIC_SCOPE_DEFAULT int
+#endif
+
+template <class _Tp, class _Sco = _LIBCPP_ATOMIC_SCOPE_DEFAULT, bool = is_integral<_Tp>::value && !is_same<_Tp, bool>::value>
 struct __atomic_base  // false
 {
     mutable __atomic_type<_Tp, _Sco> __a_;
