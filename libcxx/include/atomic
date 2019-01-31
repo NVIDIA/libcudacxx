@@ -891,6 +891,10 @@ kill_dependency(_Tp __y) _NOEXCEPT
 #define _Atomic_s(_Tp, _Sco) _Atomic(_Tp)
 #endif
 
+#ifndef _LIBCPP_ATOMIC_FLAG_TYPE
+#define _LIBCPP_ATOMIC_FLAG_TYPE bool
+#endif
+
 #if defined(_LIBCPP_FREESTANDING) && defined(__cpp_lib_atomic_is_always_lock_free)
 
 _LIBCPP_END_NAMESPACE_STD
@@ -911,7 +915,7 @@ struct __cxx_locked_atomic_type {
     : __a_value(value), __a_lock(0) {}
 
   _Tp __a_value;
-  mutable _Atomic_s(int, _Sco) __a_lock;
+  mutable _Atomic_s(_LIBCPP_ATOMIC_FLAG_TYPE, _Sco) __a_lock;
 
     template<typename _Function>
     _LIBCPP_INLINE_VISIBILITY inline void reader_section(_Function && __f) const volatile {
