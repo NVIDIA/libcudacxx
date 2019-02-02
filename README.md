@@ -31,11 +31,11 @@ You may, however, enjoy creating your own demo application.
 
 ## What happens to work
 
-Toolchains:
-1. NVCC with GCC or Clang, and libstdc++ host library.
+Toolchains based on CUDA 9.0 and above:
+1. NVCC with GCC or Clang, and the libstdc++ host library.
 2. NVCC with VC++, and the VC++ host library.
-3. Clang, with libstdc++ host library.
-4. NVRTC, with a C host library.
+3. Clang, with the libstdc++ host library.
+4. NVRTC, with access to the C host library.
 
 Assuming you compile with `-I<path-to-include/>`:
 1. Each header named `<simt/X>` conforms to the specification for the header `<X>` from ISO C++, except that each occurrence of `std::` is prefixed with `simt::`.
