@@ -28,12 +28,12 @@ static inline __device__ void __simt_fence_sc_block_() { asm volatile("fence.sc.
 static inline __device__ void __simt_fence_acq_rel_block_() { asm volatile("fence.acq_rel.cta;":::"memory"); }
 static inline __device__ void __atomic_thread_fence_simt(int memorder, __memory_scope_block) {
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_block_(); break;
-    case memory_order_consume:
-    case memory_order_acquire:
-    case memory_order_acq_rel:
-    case memory_order_release: __simt_fence_acq_rel_block_(); break;
-    case memory_order_relaxed: break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_block_(); break;
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE:
+    case __ATOMIC_ACQ_REL:
+    case __ATOMIC_RELEASE: __simt_fence_acq_rel_block_(); break;
+    case __ATOMIC_RELAXED: break;
     default: assert(0);
     }
 }
@@ -43,10 +43,10 @@ template<class type, typename std::enable_if<sizeof(type)==1, int>::type = 0>
 __device__ void __atomic_load_simt(const volatile type *ptr, type *ret, int memorder, __memory_scope_block) {
     uint32_t tmp = 0;
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_block_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_load_acquire_8_block(ptr, tmp); break;
-    case memory_order_relaxed: __simt_load_relaxed_8_block(ptr, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_block_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_load_acquire_8_block(ptr, tmp); break;
+    case __ATOMIC_RELAXED: __simt_load_relaxed_8_block(ptr, tmp); break;
     default: assert(0);
     }
     memcpy(ret, &tmp, 1);
@@ -57,10 +57,10 @@ template<class type, typename std::enable_if<sizeof(type)==2, int>::type = 0>
 __device__ void __atomic_load_simt(const volatile type *ptr, type *ret, int memorder, __memory_scope_block) {
     uint16_t tmp = 0;
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_block_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_load_acquire_16_block(ptr, tmp); break;
-    case memory_order_relaxed: __simt_load_relaxed_16_block(ptr, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_block_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_load_acquire_16_block(ptr, tmp); break;
+    case __ATOMIC_RELAXED: __simt_load_relaxed_16_block(ptr, tmp); break;
     default: assert(0);
     }
     memcpy(ret, &tmp, 2);
@@ -71,10 +71,10 @@ template<class type, typename std::enable_if<sizeof(type)==4, int>::type = 0>
 __device__ void __atomic_load_simt(const volatile type *ptr, type *ret, int memorder, __memory_scope_block) {
     uint32_t tmp = 0;
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_block_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_load_acquire_32_block(ptr, tmp); break;
-    case memory_order_relaxed: __simt_load_relaxed_32_block(ptr, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_block_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_load_acquire_32_block(ptr, tmp); break;
+    case __ATOMIC_RELAXED: __simt_load_relaxed_32_block(ptr, tmp); break;
     default: assert(0);
     }
     memcpy(ret, &tmp, 4);
@@ -85,10 +85,10 @@ template<class type, typename std::enable_if<sizeof(type)==8, int>::type = 0>
 __device__ void __atomic_load_simt(const volatile type *ptr, type *ret, int memorder, __memory_scope_block) {
     uint64_t tmp = 0;
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_block_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_load_acquire_64_block(ptr, tmp); break;
-    case memory_order_relaxed: __simt_load_relaxed_64_block(ptr, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_block_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_load_acquire_64_block(ptr, tmp); break;
+    case __ATOMIC_RELAXED: __simt_load_relaxed_64_block(ptr, tmp); break;
     default: assert(0);
     }
     memcpy(ret, &tmp, 8);
@@ -100,9 +100,9 @@ __device__ void __atomic_store_simt(volatile type *ptr, type *val, int memorder,
     uint32_t tmp = 0;
     memcpy(&tmp, val, 1);
     switch (memorder) {
-    case memory_order_release: __simt_store_release_8_block(ptr, tmp); break;
-    case memory_order_seq_cst: __simt_fence_sc_block_();
-    case memory_order_relaxed: __simt_store_relaxed_8_block(ptr, tmp); break;
+    case __ATOMIC_RELEASE: __simt_store_release_8_block(ptr, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_block_();
+    case __ATOMIC_RELAXED: __simt_store_relaxed_8_block(ptr, tmp); break;
     default: assert(0);
     }
 }
@@ -113,9 +113,9 @@ __device__ void __atomic_store_simt(volatile type *ptr, type *val, int memorder,
     uint16_t tmp = 0;
     memcpy(&tmp, val, 2);
     switch (memorder) {
-    case memory_order_release: __simt_store_release_16_block(ptr, tmp); break;
-    case memory_order_seq_cst: __simt_fence_sc_block_();
-    case memory_order_relaxed: __simt_store_relaxed_16_block(ptr, tmp); break;
+    case __ATOMIC_RELEASE: __simt_store_release_16_block(ptr, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_block_();
+    case __ATOMIC_RELAXED: __simt_store_relaxed_16_block(ptr, tmp); break;
     default: assert(0);
     }
 }
@@ -126,9 +126,9 @@ __device__ void __atomic_store_simt(volatile type *ptr, type *val, int memorder,
     uint32_t tmp = 0;
     memcpy(&tmp, val, 4);
     switch (memorder) {
-    case memory_order_release: __simt_store_release_32_block(ptr, tmp); break;
-    case memory_order_seq_cst: __simt_fence_sc_block_();
-    case memory_order_relaxed: __simt_store_relaxed_32_block(ptr, tmp); break;
+    case __ATOMIC_RELEASE: __simt_store_release_32_block(ptr, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_block_();
+    case __ATOMIC_RELAXED: __simt_store_relaxed_32_block(ptr, tmp); break;
     default: assert(0);
     }
 }
@@ -139,9 +139,9 @@ __device__ void __atomic_store_simt(volatile type *ptr, type *val, int memorder,
     uint64_t tmp = 0;
     memcpy(&tmp, val, 8);
     switch (memorder) {
-    case memory_order_release: __simt_store_release_64_block(ptr, tmp); break;
-    case memory_order_seq_cst: __simt_fence_sc_block_();
-    case memory_order_relaxed: __simt_store_relaxed_64_block(ptr, tmp); break;
+    case __ATOMIC_RELEASE: __simt_store_release_64_block(ptr, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_block_();
+    case __ATOMIC_RELAXED: __simt_store_relaxed_64_block(ptr, tmp); break;
     default: assert(0);
     }
 }
@@ -156,12 +156,12 @@ __device__ bool __atomic_compare_exchange_simt(volatile type *ptr, type *expecte
     memcpy(&old, expected, 4);
     old_tmp = old;
     switch (__stronger_order_simt(success_memorder, failure_memorder)) {
-    case memory_order_seq_cst: __simt_fence_sc_block_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_cas_acquire_32_block(ptr, old, old_tmp, tmp); break;
-    case memory_order_acq_rel: __simt_cas_acq_rel_32_block(ptr, old, old_tmp, tmp); break;
-    case memory_order_release: __simt_cas_release_32_block(ptr, old, old_tmp, tmp); break;
-    case memory_order_relaxed: __simt_cas_relaxed_32_block(ptr, old, old_tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_block_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_cas_acquire_32_block(ptr, old, old_tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_cas_acq_rel_32_block(ptr, old, old_tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_cas_release_32_block(ptr, old, old_tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_cas_relaxed_32_block(ptr, old, old_tmp, tmp); break;
     default: assert(0);
     }
     bool const ret = old == old_tmp;
@@ -177,12 +177,12 @@ __device__ void __atomic_exchange_simt(volatile type *ptr, type *val, type *ret,
     uint32_t tmp = 0;
     memcpy(&tmp, val, 4);
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_block_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_exch_acquire_32_block(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_exch_acq_rel_32_block(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_exch_release_32_block(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_exch_relaxed_32_block(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_block_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_exch_acquire_32_block(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_exch_acq_rel_32_block(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_exch_release_32_block(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_exch_relaxed_32_block(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(ret, &tmp, 4);
@@ -197,12 +197,12 @@ __device__ type __atomic_fetch_add_simt(volatile type *ptr, type val, int memord
     uint32_t tmp = 0;
     memcpy(&tmp, &val, 4);
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_block_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_add_acquire_32_block(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_add_acq_rel_32_block(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_add_release_32_block(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_add_relaxed_32_block(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_block_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_add_acquire_32_block(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_add_acq_rel_32_block(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_add_release_32_block(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_add_relaxed_32_block(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(&ret, &tmp, 4);
@@ -218,12 +218,12 @@ __device__ type __atomic_fetch_and_simt(volatile type *ptr, type val, int memord
     uint32_t tmp = 0;
     memcpy(&tmp, &val, 4);
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_block_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_and_acquire_32_block(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_and_acq_rel_32_block(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_and_release_32_block(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_and_relaxed_32_block(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_block_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_and_acquire_32_block(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_and_acq_rel_32_block(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_and_release_32_block(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_and_relaxed_32_block(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(&ret, &tmp, 4);
@@ -239,12 +239,12 @@ __device__ type __atomic_fetch_or_simt(volatile type *ptr, type val, int memorde
     uint32_t tmp = 0;
     memcpy(&tmp, &val, 4);
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_block_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_or_acquire_32_block(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_or_acq_rel_32_block(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_or_release_32_block(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_or_relaxed_32_block(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_block_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_or_acquire_32_block(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_or_acq_rel_32_block(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_or_release_32_block(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_or_relaxed_32_block(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(&ret, &tmp, 4);
@@ -257,12 +257,12 @@ __device__ type __atomic_fetch_sub_simt(volatile type *ptr, type val, int memord
     memcpy(&tmp, &val, 4);
     tmp = -tmp;
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_block_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_add_acquire_32_block(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_add_acq_rel_32_block(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_add_release_32_block(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_add_relaxed_32_block(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_block_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_add_acquire_32_block(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_add_acq_rel_32_block(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_add_release_32_block(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_add_relaxed_32_block(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(&ret, &tmp, 4);
@@ -278,12 +278,12 @@ __device__ type __atomic_fetch_xor_simt(volatile type *ptr, type val, int memord
     uint32_t tmp = 0;
     memcpy(&tmp, &val, 4);
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_block_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_xor_acquire_32_block(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_xor_acq_rel_32_block(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_xor_release_32_block(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_xor_relaxed_32_block(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_block_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_xor_acquire_32_block(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_xor_acq_rel_32_block(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_xor_release_32_block(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_xor_relaxed_32_block(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(&ret, &tmp, 4);
@@ -300,12 +300,12 @@ __device__ bool __atomic_compare_exchange_simt(volatile type *ptr, type *expecte
     memcpy(&old, expected, 8);
     old_tmp = old;
     switch (__stronger_order_simt(success_memorder, failure_memorder)) {
-    case memory_order_seq_cst: __simt_fence_sc_block_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_cas_acquire_64_block(ptr, old, old_tmp, tmp); break;
-    case memory_order_acq_rel: __simt_cas_acq_rel_64_block(ptr, old, old_tmp, tmp); break;
-    case memory_order_release: __simt_cas_release_64_block(ptr, old, old_tmp, tmp); break;
-    case memory_order_relaxed: __simt_cas_relaxed_64_block(ptr, old, old_tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_block_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_cas_acquire_64_block(ptr, old, old_tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_cas_acq_rel_64_block(ptr, old, old_tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_cas_release_64_block(ptr, old, old_tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_cas_relaxed_64_block(ptr, old, old_tmp, tmp); break;
     default: assert(0);
     }
     bool const ret = old == old_tmp;
@@ -321,12 +321,12 @@ __device__ void __atomic_exchange_simt(volatile type *ptr, type *val, type *ret,
     uint64_t tmp = 0;
     memcpy(&tmp, val, 8);
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_block_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_exch_acquire_64_block(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_exch_acq_rel_64_block(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_exch_release_64_block(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_exch_relaxed_64_block(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_block_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_exch_acquire_64_block(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_exch_acq_rel_64_block(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_exch_release_64_block(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_exch_relaxed_64_block(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(ret, &tmp, 8);
@@ -341,12 +341,12 @@ __device__ type __atomic_fetch_add_simt(volatile type *ptr, type val, int memord
     uint64_t tmp = 0;
     memcpy(&tmp, &val, 8);
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_block_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_add_acquire_64_block(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_add_acq_rel_64_block(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_add_release_64_block(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_add_relaxed_64_block(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_block_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_add_acquire_64_block(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_add_acq_rel_64_block(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_add_release_64_block(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_add_relaxed_64_block(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(&ret, &tmp, 8);
@@ -362,12 +362,12 @@ __device__ type __atomic_fetch_and_simt(volatile type *ptr, type val, int memord
     uint64_t tmp = 0;
     memcpy(&tmp, &val, 8);
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_block_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_and_acquire_64_block(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_and_acq_rel_64_block(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_and_release_64_block(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_and_relaxed_64_block(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_block_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_and_acquire_64_block(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_and_acq_rel_64_block(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_and_release_64_block(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_and_relaxed_64_block(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(&ret, &tmp, 8);
@@ -383,12 +383,12 @@ __device__ type __atomic_fetch_or_simt(volatile type *ptr, type val, int memorde
     uint64_t tmp = 0;
     memcpy(&tmp, &val, 8);
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_block_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_or_acquire_64_block(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_or_acq_rel_64_block(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_or_release_64_block(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_or_relaxed_64_block(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_block_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_or_acquire_64_block(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_or_acq_rel_64_block(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_or_release_64_block(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_or_relaxed_64_block(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(&ret, &tmp, 8);
@@ -401,12 +401,12 @@ __device__ type __atomic_fetch_sub_simt(volatile type *ptr, type val, int memord
     memcpy(&tmp, &val, 8);
     tmp = -tmp;
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_block_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_add_acquire_64_block(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_add_acq_rel_64_block(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_add_release_64_block(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_add_relaxed_64_block(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_block_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_add_acquire_64_block(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_add_acq_rel_64_block(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_add_release_64_block(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_add_relaxed_64_block(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(&ret, &tmp, 8);
@@ -422,49 +422,49 @@ __device__ type __atomic_fetch_xor_simt(volatile type *ptr, type val, int memord
     uint64_t tmp = 0;
     memcpy(&tmp, &val, 8);
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_block_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_xor_acquire_64_block(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_xor_acq_rel_64_block(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_xor_release_64_block(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_xor_relaxed_64_block(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_block_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_xor_acquire_64_block(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_xor_acq_rel_64_block(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_xor_release_64_block(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_xor_relaxed_64_block(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(&ret, &tmp, 8);
     return ret;
 }
 template<class type>
-__device__ type* __atomic_fetch_add_simt(type * volatile*ptr, ptrdiff_t val, int memorder, __memory_scope_block) {
+__device__ type* __atomic_fetch_add_simt(type *volatile *ptr, ptrdiff_t val, int memorder, __memory_scope_block) {
     type* ret;
     uint64_t tmp = 0;
     memcpy(&tmp, &val, 8);
     tmp *= sizeof(type);
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_block_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_add_acquire_64_block(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_add_acq_rel_64_block(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_add_release_64_block(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_add_relaxed_64_block(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_block_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_add_acquire_64_block(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_add_acq_rel_64_block(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_add_release_64_block(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_add_relaxed_64_block(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(&ret, &tmp, 8);
     return ret;
 }
 template<class type>
-__device__ type* __atomic_fetch_sub_simt(type * volatile*ptr, ptrdiff_t val, int memorder, __memory_scope_block) {
+__device__ type* __atomic_fetch_sub_simt(type *volatile *ptr, ptrdiff_t val, int memorder, __memory_scope_block) {
     type* ret;
     uint64_t tmp = 0;
     memcpy(&tmp, &val, 8);
     tmp = -tmp;
     tmp *= sizeof(type);
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_block_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_add_acquire_64_block(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_add_acq_rel_64_block(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_add_release_64_block(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_add_relaxed_64_block(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_block_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_add_acquire_64_block(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_add_acq_rel_64_block(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_add_release_64_block(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_add_relaxed_64_block(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(&ret, &tmp, 8);
@@ -475,12 +475,12 @@ static inline __device__ void __simt_fence_sc_device_() { asm volatile("fence.sc
 static inline __device__ void __simt_fence_acq_rel_device_() { asm volatile("fence.acq_rel.gpu;":::"memory"); }
 static inline __device__ void __atomic_thread_fence_simt(int memorder, __memory_scope_device) {
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_device_(); break;
-    case memory_order_consume:
-    case memory_order_acquire:
-    case memory_order_acq_rel:
-    case memory_order_release: __simt_fence_acq_rel_device_(); break;
-    case memory_order_relaxed: break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_device_(); break;
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE:
+    case __ATOMIC_ACQ_REL:
+    case __ATOMIC_RELEASE: __simt_fence_acq_rel_device_(); break;
+    case __ATOMIC_RELAXED: break;
     default: assert(0);
     }
 }
@@ -490,10 +490,10 @@ template<class type, typename std::enable_if<sizeof(type)==1, int>::type = 0>
 __device__ void __atomic_load_simt(const volatile type *ptr, type *ret, int memorder, __memory_scope_device) {
     uint32_t tmp = 0;
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_device_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_load_acquire_8_device(ptr, tmp); break;
-    case memory_order_relaxed: __simt_load_relaxed_8_device(ptr, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_device_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_load_acquire_8_device(ptr, tmp); break;
+    case __ATOMIC_RELAXED: __simt_load_relaxed_8_device(ptr, tmp); break;
     default: assert(0);
     }
     memcpy(ret, &tmp, 1);
@@ -504,10 +504,10 @@ template<class type, typename std::enable_if<sizeof(type)==2, int>::type = 0>
 __device__ void __atomic_load_simt(const volatile type *ptr, type *ret, int memorder, __memory_scope_device) {
     uint16_t tmp = 0;
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_device_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_load_acquire_16_device(ptr, tmp); break;
-    case memory_order_relaxed: __simt_load_relaxed_16_device(ptr, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_device_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_load_acquire_16_device(ptr, tmp); break;
+    case __ATOMIC_RELAXED: __simt_load_relaxed_16_device(ptr, tmp); break;
     default: assert(0);
     }
     memcpy(ret, &tmp, 2);
@@ -518,10 +518,10 @@ template<class type, typename std::enable_if<sizeof(type)==4, int>::type = 0>
 __device__ void __atomic_load_simt(const volatile type *ptr, type *ret, int memorder, __memory_scope_device) {
     uint32_t tmp = 0;
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_device_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_load_acquire_32_device(ptr, tmp); break;
-    case memory_order_relaxed: __simt_load_relaxed_32_device(ptr, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_device_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_load_acquire_32_device(ptr, tmp); break;
+    case __ATOMIC_RELAXED: __simt_load_relaxed_32_device(ptr, tmp); break;
     default: assert(0);
     }
     memcpy(ret, &tmp, 4);
@@ -532,10 +532,10 @@ template<class type, typename std::enable_if<sizeof(type)==8, int>::type = 0>
 __device__ void __atomic_load_simt(const volatile type *ptr, type *ret, int memorder, __memory_scope_device) {
     uint64_t tmp = 0;
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_device_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_load_acquire_64_device(ptr, tmp); break;
-    case memory_order_relaxed: __simt_load_relaxed_64_device(ptr, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_device_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_load_acquire_64_device(ptr, tmp); break;
+    case __ATOMIC_RELAXED: __simt_load_relaxed_64_device(ptr, tmp); break;
     default: assert(0);
     }
     memcpy(ret, &tmp, 8);
@@ -547,9 +547,9 @@ __device__ void __atomic_store_simt(volatile type *ptr, type *val, int memorder,
     uint32_t tmp = 0;
     memcpy(&tmp, val, 1);
     switch (memorder) {
-    case memory_order_release: __simt_store_release_8_device(ptr, tmp); break;
-    case memory_order_seq_cst: __simt_fence_sc_device_();
-    case memory_order_relaxed: __simt_store_relaxed_8_device(ptr, tmp); break;
+    case __ATOMIC_RELEASE: __simt_store_release_8_device(ptr, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_device_();
+    case __ATOMIC_RELAXED: __simt_store_relaxed_8_device(ptr, tmp); break;
     default: assert(0);
     }
 }
@@ -560,9 +560,9 @@ __device__ void __atomic_store_simt(volatile type *ptr, type *val, int memorder,
     uint16_t tmp = 0;
     memcpy(&tmp, val, 2);
     switch (memorder) {
-    case memory_order_release: __simt_store_release_16_device(ptr, tmp); break;
-    case memory_order_seq_cst: __simt_fence_sc_device_();
-    case memory_order_relaxed: __simt_store_relaxed_16_device(ptr, tmp); break;
+    case __ATOMIC_RELEASE: __simt_store_release_16_device(ptr, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_device_();
+    case __ATOMIC_RELAXED: __simt_store_relaxed_16_device(ptr, tmp); break;
     default: assert(0);
     }
 }
@@ -573,9 +573,9 @@ __device__ void __atomic_store_simt(volatile type *ptr, type *val, int memorder,
     uint32_t tmp = 0;
     memcpy(&tmp, val, 4);
     switch (memorder) {
-    case memory_order_release: __simt_store_release_32_device(ptr, tmp); break;
-    case memory_order_seq_cst: __simt_fence_sc_device_();
-    case memory_order_relaxed: __simt_store_relaxed_32_device(ptr, tmp); break;
+    case __ATOMIC_RELEASE: __simt_store_release_32_device(ptr, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_device_();
+    case __ATOMIC_RELAXED: __simt_store_relaxed_32_device(ptr, tmp); break;
     default: assert(0);
     }
 }
@@ -586,9 +586,9 @@ __device__ void __atomic_store_simt(volatile type *ptr, type *val, int memorder,
     uint64_t tmp = 0;
     memcpy(&tmp, val, 8);
     switch (memorder) {
-    case memory_order_release: __simt_store_release_64_device(ptr, tmp); break;
-    case memory_order_seq_cst: __simt_fence_sc_device_();
-    case memory_order_relaxed: __simt_store_relaxed_64_device(ptr, tmp); break;
+    case __ATOMIC_RELEASE: __simt_store_release_64_device(ptr, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_device_();
+    case __ATOMIC_RELAXED: __simt_store_relaxed_64_device(ptr, tmp); break;
     default: assert(0);
     }
 }
@@ -603,12 +603,12 @@ __device__ bool __atomic_compare_exchange_simt(volatile type *ptr, type *expecte
     memcpy(&old, expected, 4);
     old_tmp = old;
     switch (__stronger_order_simt(success_memorder, failure_memorder)) {
-    case memory_order_seq_cst: __simt_fence_sc_device_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_cas_acquire_32_device(ptr, old, old_tmp, tmp); break;
-    case memory_order_acq_rel: __simt_cas_acq_rel_32_device(ptr, old, old_tmp, tmp); break;
-    case memory_order_release: __simt_cas_release_32_device(ptr, old, old_tmp, tmp); break;
-    case memory_order_relaxed: __simt_cas_relaxed_32_device(ptr, old, old_tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_device_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_cas_acquire_32_device(ptr, old, old_tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_cas_acq_rel_32_device(ptr, old, old_tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_cas_release_32_device(ptr, old, old_tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_cas_relaxed_32_device(ptr, old, old_tmp, tmp); break;
     default: assert(0);
     }
     bool const ret = old == old_tmp;
@@ -624,12 +624,12 @@ __device__ void __atomic_exchange_simt(volatile type *ptr, type *val, type *ret,
     uint32_t tmp = 0;
     memcpy(&tmp, val, 4);
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_device_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_exch_acquire_32_device(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_exch_acq_rel_32_device(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_exch_release_32_device(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_exch_relaxed_32_device(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_device_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_exch_acquire_32_device(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_exch_acq_rel_32_device(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_exch_release_32_device(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_exch_relaxed_32_device(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(ret, &tmp, 4);
@@ -644,12 +644,12 @@ __device__ type __atomic_fetch_add_simt(volatile type *ptr, type val, int memord
     uint32_t tmp = 0;
     memcpy(&tmp, &val, 4);
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_device_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_add_acquire_32_device(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_add_acq_rel_32_device(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_add_release_32_device(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_add_relaxed_32_device(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_device_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_add_acquire_32_device(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_add_acq_rel_32_device(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_add_release_32_device(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_add_relaxed_32_device(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(&ret, &tmp, 4);
@@ -665,12 +665,12 @@ __device__ type __atomic_fetch_and_simt(volatile type *ptr, type val, int memord
     uint32_t tmp = 0;
     memcpy(&tmp, &val, 4);
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_device_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_and_acquire_32_device(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_and_acq_rel_32_device(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_and_release_32_device(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_and_relaxed_32_device(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_device_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_and_acquire_32_device(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_and_acq_rel_32_device(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_and_release_32_device(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_and_relaxed_32_device(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(&ret, &tmp, 4);
@@ -686,12 +686,12 @@ __device__ type __atomic_fetch_or_simt(volatile type *ptr, type val, int memorde
     uint32_t tmp = 0;
     memcpy(&tmp, &val, 4);
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_device_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_or_acquire_32_device(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_or_acq_rel_32_device(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_or_release_32_device(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_or_relaxed_32_device(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_device_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_or_acquire_32_device(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_or_acq_rel_32_device(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_or_release_32_device(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_or_relaxed_32_device(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(&ret, &tmp, 4);
@@ -704,12 +704,12 @@ __device__ type __atomic_fetch_sub_simt(volatile type *ptr, type val, int memord
     memcpy(&tmp, &val, 4);
     tmp = -tmp;
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_device_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_add_acquire_32_device(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_add_acq_rel_32_device(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_add_release_32_device(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_add_relaxed_32_device(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_device_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_add_acquire_32_device(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_add_acq_rel_32_device(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_add_release_32_device(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_add_relaxed_32_device(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(&ret, &tmp, 4);
@@ -725,12 +725,12 @@ __device__ type __atomic_fetch_xor_simt(volatile type *ptr, type val, int memord
     uint32_t tmp = 0;
     memcpy(&tmp, &val, 4);
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_device_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_xor_acquire_32_device(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_xor_acq_rel_32_device(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_xor_release_32_device(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_xor_relaxed_32_device(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_device_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_xor_acquire_32_device(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_xor_acq_rel_32_device(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_xor_release_32_device(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_xor_relaxed_32_device(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(&ret, &tmp, 4);
@@ -747,12 +747,12 @@ __device__ bool __atomic_compare_exchange_simt(volatile type *ptr, type *expecte
     memcpy(&old, expected, 8);
     old_tmp = old;
     switch (__stronger_order_simt(success_memorder, failure_memorder)) {
-    case memory_order_seq_cst: __simt_fence_sc_device_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_cas_acquire_64_device(ptr, old, old_tmp, tmp); break;
-    case memory_order_acq_rel: __simt_cas_acq_rel_64_device(ptr, old, old_tmp, tmp); break;
-    case memory_order_release: __simt_cas_release_64_device(ptr, old, old_tmp, tmp); break;
-    case memory_order_relaxed: __simt_cas_relaxed_64_device(ptr, old, old_tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_device_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_cas_acquire_64_device(ptr, old, old_tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_cas_acq_rel_64_device(ptr, old, old_tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_cas_release_64_device(ptr, old, old_tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_cas_relaxed_64_device(ptr, old, old_tmp, tmp); break;
     default: assert(0);
     }
     bool const ret = old == old_tmp;
@@ -768,12 +768,12 @@ __device__ void __atomic_exchange_simt(volatile type *ptr, type *val, type *ret,
     uint64_t tmp = 0;
     memcpy(&tmp, val, 8);
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_device_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_exch_acquire_64_device(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_exch_acq_rel_64_device(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_exch_release_64_device(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_exch_relaxed_64_device(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_device_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_exch_acquire_64_device(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_exch_acq_rel_64_device(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_exch_release_64_device(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_exch_relaxed_64_device(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(ret, &tmp, 8);
@@ -788,12 +788,12 @@ __device__ type __atomic_fetch_add_simt(volatile type *ptr, type val, int memord
     uint64_t tmp = 0;
     memcpy(&tmp, &val, 8);
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_device_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_add_acquire_64_device(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_add_acq_rel_64_device(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_add_release_64_device(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_add_relaxed_64_device(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_device_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_add_acquire_64_device(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_add_acq_rel_64_device(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_add_release_64_device(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_add_relaxed_64_device(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(&ret, &tmp, 8);
@@ -809,12 +809,12 @@ __device__ type __atomic_fetch_and_simt(volatile type *ptr, type val, int memord
     uint64_t tmp = 0;
     memcpy(&tmp, &val, 8);
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_device_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_and_acquire_64_device(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_and_acq_rel_64_device(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_and_release_64_device(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_and_relaxed_64_device(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_device_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_and_acquire_64_device(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_and_acq_rel_64_device(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_and_release_64_device(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_and_relaxed_64_device(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(&ret, &tmp, 8);
@@ -830,12 +830,12 @@ __device__ type __atomic_fetch_or_simt(volatile type *ptr, type val, int memorde
     uint64_t tmp = 0;
     memcpy(&tmp, &val, 8);
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_device_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_or_acquire_64_device(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_or_acq_rel_64_device(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_or_release_64_device(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_or_relaxed_64_device(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_device_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_or_acquire_64_device(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_or_acq_rel_64_device(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_or_release_64_device(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_or_relaxed_64_device(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(&ret, &tmp, 8);
@@ -848,12 +848,12 @@ __device__ type __atomic_fetch_sub_simt(volatile type *ptr, type val, int memord
     memcpy(&tmp, &val, 8);
     tmp = -tmp;
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_device_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_add_acquire_64_device(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_add_acq_rel_64_device(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_add_release_64_device(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_add_relaxed_64_device(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_device_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_add_acquire_64_device(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_add_acq_rel_64_device(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_add_release_64_device(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_add_relaxed_64_device(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(&ret, &tmp, 8);
@@ -869,49 +869,49 @@ __device__ type __atomic_fetch_xor_simt(volatile type *ptr, type val, int memord
     uint64_t tmp = 0;
     memcpy(&tmp, &val, 8);
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_device_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_xor_acquire_64_device(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_xor_acq_rel_64_device(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_xor_release_64_device(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_xor_relaxed_64_device(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_device_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_xor_acquire_64_device(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_xor_acq_rel_64_device(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_xor_release_64_device(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_xor_relaxed_64_device(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(&ret, &tmp, 8);
     return ret;
 }
 template<class type>
-__device__ type* __atomic_fetch_add_simt(type * volatile*ptr, ptrdiff_t val, int memorder, __memory_scope_device) {
+__device__ type* __atomic_fetch_add_simt(type *volatile *ptr, ptrdiff_t val, int memorder, __memory_scope_device) {
     type* ret;
     uint64_t tmp = 0;
     memcpy(&tmp, &val, 8);
     tmp *= sizeof(type);
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_device_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_add_acquire_64_device(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_add_acq_rel_64_device(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_add_release_64_device(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_add_relaxed_64_device(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_device_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_add_acquire_64_device(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_add_acq_rel_64_device(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_add_release_64_device(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_add_relaxed_64_device(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(&ret, &tmp, 8);
     return ret;
 }
 template<class type>
-__device__ type* __atomic_fetch_sub_simt(type * volatile*ptr, ptrdiff_t val, int memorder, __memory_scope_device) {
+__device__ type* __atomic_fetch_sub_simt(type *volatile *ptr, ptrdiff_t val, int memorder, __memory_scope_device) {
     type* ret;
     uint64_t tmp = 0;
     memcpy(&tmp, &val, 8);
     tmp = -tmp;
     tmp *= sizeof(type);
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_device_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_add_acquire_64_device(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_add_acq_rel_64_device(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_add_release_64_device(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_add_relaxed_64_device(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_device_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_add_acquire_64_device(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_add_acq_rel_64_device(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_add_release_64_device(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_add_relaxed_64_device(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(&ret, &tmp, 8);
@@ -922,12 +922,12 @@ static inline __device__ void __simt_fence_sc_system_() { asm volatile("fence.sc
 static inline __device__ void __simt_fence_acq_rel_system_() { asm volatile("fence.acq_rel.sys;":::"memory"); }
 static inline __device__ void __atomic_thread_fence_simt(int memorder, __memory_scope_system) {
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_system_(); break;
-    case memory_order_consume:
-    case memory_order_acquire:
-    case memory_order_acq_rel:
-    case memory_order_release: __simt_fence_acq_rel_system_(); break;
-    case memory_order_relaxed: break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_system_(); break;
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE:
+    case __ATOMIC_ACQ_REL:
+    case __ATOMIC_RELEASE: __simt_fence_acq_rel_system_(); break;
+    case __ATOMIC_RELAXED: break;
     default: assert(0);
     }
 }
@@ -937,10 +937,10 @@ template<class type, typename std::enable_if<sizeof(type)==1, int>::type = 0>
 __device__ void __atomic_load_simt(const volatile type *ptr, type *ret, int memorder, __memory_scope_system) {
     uint32_t tmp = 0;
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_system_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_load_acquire_8_system(ptr, tmp); break;
-    case memory_order_relaxed: __simt_load_relaxed_8_system(ptr, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_system_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_load_acquire_8_system(ptr, tmp); break;
+    case __ATOMIC_RELAXED: __simt_load_relaxed_8_system(ptr, tmp); break;
     default: assert(0);
     }
     memcpy(ret, &tmp, 1);
@@ -951,10 +951,10 @@ template<class type, typename std::enable_if<sizeof(type)==2, int>::type = 0>
 __device__ void __atomic_load_simt(const volatile type *ptr, type *ret, int memorder, __memory_scope_system) {
     uint16_t tmp = 0;
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_system_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_load_acquire_16_system(ptr, tmp); break;
-    case memory_order_relaxed: __simt_load_relaxed_16_system(ptr, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_system_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_load_acquire_16_system(ptr, tmp); break;
+    case __ATOMIC_RELAXED: __simt_load_relaxed_16_system(ptr, tmp); break;
     default: assert(0);
     }
     memcpy(ret, &tmp, 2);
@@ -965,10 +965,10 @@ template<class type, typename std::enable_if<sizeof(type)==4, int>::type = 0>
 __device__ void __atomic_load_simt(const volatile type *ptr, type *ret, int memorder, __memory_scope_system) {
     uint32_t tmp = 0;
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_system_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_load_acquire_32_system(ptr, tmp); break;
-    case memory_order_relaxed: __simt_load_relaxed_32_system(ptr, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_system_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_load_acquire_32_system(ptr, tmp); break;
+    case __ATOMIC_RELAXED: __simt_load_relaxed_32_system(ptr, tmp); break;
     default: assert(0);
     }
     memcpy(ret, &tmp, 4);
@@ -979,10 +979,10 @@ template<class type, typename std::enable_if<sizeof(type)==8, int>::type = 0>
 __device__ void __atomic_load_simt(const volatile type *ptr, type *ret, int memorder, __memory_scope_system) {
     uint64_t tmp = 0;
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_system_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_load_acquire_64_system(ptr, tmp); break;
-    case memory_order_relaxed: __simt_load_relaxed_64_system(ptr, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_system_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_load_acquire_64_system(ptr, tmp); break;
+    case __ATOMIC_RELAXED: __simt_load_relaxed_64_system(ptr, tmp); break;
     default: assert(0);
     }
     memcpy(ret, &tmp, 8);
@@ -994,9 +994,9 @@ __device__ void __atomic_store_simt(volatile type *ptr, type *val, int memorder,
     uint32_t tmp = 0;
     memcpy(&tmp, val, 1);
     switch (memorder) {
-    case memory_order_release: __simt_store_release_8_system(ptr, tmp); break;
-    case memory_order_seq_cst: __simt_fence_sc_system_();
-    case memory_order_relaxed: __simt_store_relaxed_8_system(ptr, tmp); break;
+    case __ATOMIC_RELEASE: __simt_store_release_8_system(ptr, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_system_();
+    case __ATOMIC_RELAXED: __simt_store_relaxed_8_system(ptr, tmp); break;
     default: assert(0);
     }
 }
@@ -1007,9 +1007,9 @@ __device__ void __atomic_store_simt(volatile type *ptr, type *val, int memorder,
     uint16_t tmp = 0;
     memcpy(&tmp, val, 2);
     switch (memorder) {
-    case memory_order_release: __simt_store_release_16_system(ptr, tmp); break;
-    case memory_order_seq_cst: __simt_fence_sc_system_();
-    case memory_order_relaxed: __simt_store_relaxed_16_system(ptr, tmp); break;
+    case __ATOMIC_RELEASE: __simt_store_release_16_system(ptr, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_system_();
+    case __ATOMIC_RELAXED: __simt_store_relaxed_16_system(ptr, tmp); break;
     default: assert(0);
     }
 }
@@ -1020,9 +1020,9 @@ __device__ void __atomic_store_simt(volatile type *ptr, type *val, int memorder,
     uint32_t tmp = 0;
     memcpy(&tmp, val, 4);
     switch (memorder) {
-    case memory_order_release: __simt_store_release_32_system(ptr, tmp); break;
-    case memory_order_seq_cst: __simt_fence_sc_system_();
-    case memory_order_relaxed: __simt_store_relaxed_32_system(ptr, tmp); break;
+    case __ATOMIC_RELEASE: __simt_store_release_32_system(ptr, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_system_();
+    case __ATOMIC_RELAXED: __simt_store_relaxed_32_system(ptr, tmp); break;
     default: assert(0);
     }
 }
@@ -1033,9 +1033,9 @@ __device__ void __atomic_store_simt(volatile type *ptr, type *val, int memorder,
     uint64_t tmp = 0;
     memcpy(&tmp, val, 8);
     switch (memorder) {
-    case memory_order_release: __simt_store_release_64_system(ptr, tmp); break;
-    case memory_order_seq_cst: __simt_fence_sc_system_();
-    case memory_order_relaxed: __simt_store_relaxed_64_system(ptr, tmp); break;
+    case __ATOMIC_RELEASE: __simt_store_release_64_system(ptr, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_system_();
+    case __ATOMIC_RELAXED: __simt_store_relaxed_64_system(ptr, tmp); break;
     default: assert(0);
     }
 }
@@ -1050,12 +1050,12 @@ __device__ bool __atomic_compare_exchange_simt(volatile type *ptr, type *expecte
     memcpy(&old, expected, 4);
     old_tmp = old;
     switch (__stronger_order_simt(success_memorder, failure_memorder)) {
-    case memory_order_seq_cst: __simt_fence_sc_system_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_cas_acquire_32_system(ptr, old, old_tmp, tmp); break;
-    case memory_order_acq_rel: __simt_cas_acq_rel_32_system(ptr, old, old_tmp, tmp); break;
-    case memory_order_release: __simt_cas_release_32_system(ptr, old, old_tmp, tmp); break;
-    case memory_order_relaxed: __simt_cas_relaxed_32_system(ptr, old, old_tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_system_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_cas_acquire_32_system(ptr, old, old_tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_cas_acq_rel_32_system(ptr, old, old_tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_cas_release_32_system(ptr, old, old_tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_cas_relaxed_32_system(ptr, old, old_tmp, tmp); break;
     default: assert(0);
     }
     bool const ret = old == old_tmp;
@@ -1071,12 +1071,12 @@ __device__ void __atomic_exchange_simt(volatile type *ptr, type *val, type *ret,
     uint32_t tmp = 0;
     memcpy(&tmp, val, 4);
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_system_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_exch_acquire_32_system(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_exch_acq_rel_32_system(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_exch_release_32_system(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_exch_relaxed_32_system(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_system_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_exch_acquire_32_system(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_exch_acq_rel_32_system(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_exch_release_32_system(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_exch_relaxed_32_system(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(ret, &tmp, 4);
@@ -1091,12 +1091,12 @@ __device__ type __atomic_fetch_add_simt(volatile type *ptr, type val, int memord
     uint32_t tmp = 0;
     memcpy(&tmp, &val, 4);
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_system_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_add_acquire_32_system(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_add_acq_rel_32_system(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_add_release_32_system(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_add_relaxed_32_system(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_system_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_add_acquire_32_system(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_add_acq_rel_32_system(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_add_release_32_system(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_add_relaxed_32_system(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(&ret, &tmp, 4);
@@ -1112,12 +1112,12 @@ __device__ type __atomic_fetch_and_simt(volatile type *ptr, type val, int memord
     uint32_t tmp = 0;
     memcpy(&tmp, &val, 4);
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_system_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_and_acquire_32_system(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_and_acq_rel_32_system(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_and_release_32_system(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_and_relaxed_32_system(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_system_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_and_acquire_32_system(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_and_acq_rel_32_system(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_and_release_32_system(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_and_relaxed_32_system(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(&ret, &tmp, 4);
@@ -1133,12 +1133,12 @@ __device__ type __atomic_fetch_or_simt(volatile type *ptr, type val, int memorde
     uint32_t tmp = 0;
     memcpy(&tmp, &val, 4);
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_system_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_or_acquire_32_system(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_or_acq_rel_32_system(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_or_release_32_system(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_or_relaxed_32_system(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_system_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_or_acquire_32_system(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_or_acq_rel_32_system(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_or_release_32_system(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_or_relaxed_32_system(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(&ret, &tmp, 4);
@@ -1151,12 +1151,12 @@ __device__ type __atomic_fetch_sub_simt(volatile type *ptr, type val, int memord
     memcpy(&tmp, &val, 4);
     tmp = -tmp;
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_system_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_add_acquire_32_system(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_add_acq_rel_32_system(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_add_release_32_system(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_add_relaxed_32_system(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_system_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_add_acquire_32_system(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_add_acq_rel_32_system(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_add_release_32_system(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_add_relaxed_32_system(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(&ret, &tmp, 4);
@@ -1172,12 +1172,12 @@ __device__ type __atomic_fetch_xor_simt(volatile type *ptr, type val, int memord
     uint32_t tmp = 0;
     memcpy(&tmp, &val, 4);
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_system_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_xor_acquire_32_system(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_xor_acq_rel_32_system(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_xor_release_32_system(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_xor_relaxed_32_system(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_system_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_xor_acquire_32_system(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_xor_acq_rel_32_system(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_xor_release_32_system(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_xor_relaxed_32_system(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(&ret, &tmp, 4);
@@ -1194,12 +1194,12 @@ __device__ bool __atomic_compare_exchange_simt(volatile type *ptr, type *expecte
     memcpy(&old, expected, 8);
     old_tmp = old;
     switch (__stronger_order_simt(success_memorder, failure_memorder)) {
-    case memory_order_seq_cst: __simt_fence_sc_system_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_cas_acquire_64_system(ptr, old, old_tmp, tmp); break;
-    case memory_order_acq_rel: __simt_cas_acq_rel_64_system(ptr, old, old_tmp, tmp); break;
-    case memory_order_release: __simt_cas_release_64_system(ptr, old, old_tmp, tmp); break;
-    case memory_order_relaxed: __simt_cas_relaxed_64_system(ptr, old, old_tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_system_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_cas_acquire_64_system(ptr, old, old_tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_cas_acq_rel_64_system(ptr, old, old_tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_cas_release_64_system(ptr, old, old_tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_cas_relaxed_64_system(ptr, old, old_tmp, tmp); break;
     default: assert(0);
     }
     bool const ret = old == old_tmp;
@@ -1215,12 +1215,12 @@ __device__ void __atomic_exchange_simt(volatile type *ptr, type *val, type *ret,
     uint64_t tmp = 0;
     memcpy(&tmp, val, 8);
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_system_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_exch_acquire_64_system(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_exch_acq_rel_64_system(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_exch_release_64_system(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_exch_relaxed_64_system(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_system_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_exch_acquire_64_system(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_exch_acq_rel_64_system(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_exch_release_64_system(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_exch_relaxed_64_system(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(ret, &tmp, 8);
@@ -1235,12 +1235,12 @@ __device__ type __atomic_fetch_add_simt(volatile type *ptr, type val, int memord
     uint64_t tmp = 0;
     memcpy(&tmp, &val, 8);
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_system_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_add_acquire_64_system(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_add_acq_rel_64_system(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_add_release_64_system(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_add_relaxed_64_system(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_system_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_add_acquire_64_system(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_add_acq_rel_64_system(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_add_release_64_system(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_add_relaxed_64_system(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(&ret, &tmp, 8);
@@ -1256,12 +1256,12 @@ __device__ type __atomic_fetch_and_simt(volatile type *ptr, type val, int memord
     uint64_t tmp = 0;
     memcpy(&tmp, &val, 8);
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_system_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_and_acquire_64_system(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_and_acq_rel_64_system(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_and_release_64_system(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_and_relaxed_64_system(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_system_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_and_acquire_64_system(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_and_acq_rel_64_system(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_and_release_64_system(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_and_relaxed_64_system(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(&ret, &tmp, 8);
@@ -1277,12 +1277,12 @@ __device__ type __atomic_fetch_or_simt(volatile type *ptr, type val, int memorde
     uint64_t tmp = 0;
     memcpy(&tmp, &val, 8);
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_system_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_or_acquire_64_system(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_or_acq_rel_64_system(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_or_release_64_system(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_or_relaxed_64_system(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_system_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_or_acquire_64_system(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_or_acq_rel_64_system(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_or_release_64_system(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_or_relaxed_64_system(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(&ret, &tmp, 8);
@@ -1295,12 +1295,12 @@ __device__ type __atomic_fetch_sub_simt(volatile type *ptr, type val, int memord
     memcpy(&tmp, &val, 8);
     tmp = -tmp;
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_system_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_add_acquire_64_system(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_add_acq_rel_64_system(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_add_release_64_system(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_add_relaxed_64_system(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_system_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_add_acquire_64_system(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_add_acq_rel_64_system(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_add_release_64_system(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_add_relaxed_64_system(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(&ret, &tmp, 8);
@@ -1316,49 +1316,49 @@ __device__ type __atomic_fetch_xor_simt(volatile type *ptr, type val, int memord
     uint64_t tmp = 0;
     memcpy(&tmp, &val, 8);
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_system_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_xor_acquire_64_system(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_xor_acq_rel_64_system(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_xor_release_64_system(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_xor_relaxed_64_system(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_system_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_xor_acquire_64_system(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_xor_acq_rel_64_system(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_xor_release_64_system(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_xor_relaxed_64_system(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(&ret, &tmp, 8);
     return ret;
 }
 template<class type>
-__device__ type* __atomic_fetch_add_simt(type * volatile*ptr, ptrdiff_t val, int memorder, __memory_scope_system) {
+__device__ type* __atomic_fetch_add_simt(type *volatile *ptr, ptrdiff_t val, int memorder, __memory_scope_system) {
     type* ret;
     uint64_t tmp = 0;
     memcpy(&tmp, &val, 8);
     tmp *= sizeof(type);
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_system_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_add_acquire_64_system(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_add_acq_rel_64_system(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_add_release_64_system(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_add_relaxed_64_system(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_system_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_add_acquire_64_system(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_add_acq_rel_64_system(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_add_release_64_system(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_add_relaxed_64_system(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(&ret, &tmp, 8);
     return ret;
 }
 template<class type>
-__device__ type* __atomic_fetch_sub_simt(volatile type **ptr, ptrdiff_t val, int memorder, __memory_scope_system) {
+__device__ type* __atomic_fetch_sub_simt(type *volatile *ptr, ptrdiff_t val, int memorder, __memory_scope_system) {
     type* ret;
     uint64_t tmp = 0;
     memcpy(&tmp, &val, 8);
     tmp = -tmp;
     tmp *= sizeof(type);
     switch (memorder) {
-    case memory_order_seq_cst: __simt_fence_sc_system_();
-    case memory_order_consume:
-    case memory_order_acquire: __simt_add_acquire_64_system(ptr, tmp, tmp); break;
-    case memory_order_acq_rel: __simt_add_acq_rel_64_system(ptr, tmp, tmp); break;
-    case memory_order_release: __simt_add_release_64_system(ptr, tmp, tmp); break;
-    case memory_order_relaxed: __simt_add_relaxed_64_system(ptr, tmp, tmp); break;
+    case __ATOMIC_SEQ_CST: __simt_fence_sc_system_();
+    case __ATOMIC_CONSUME:
+    case __ATOMIC_ACQUIRE: __simt_add_acquire_64_system(ptr, tmp, tmp); break;
+    case __ATOMIC_ACQ_REL: __simt_add_acq_rel_64_system(ptr, tmp, tmp); break;
+    case __ATOMIC_RELEASE: __simt_add_release_64_system(ptr, tmp, tmp); break;
+    case __ATOMIC_RELAXED: __simt_add_relaxed_64_system(ptr, tmp, tmp); break;
     default: assert(0);
     }
     memcpy(&ret, &tmp, 8);
