@@ -26,7 +26,7 @@ THE SOFTWARE.
 #include <simt/cstdint>
 #include <simt/atomic>
 
-template<class T> static constexpr T min(T a, T b) { return a < b ? a : b; }
+template<class T> static constexpr T minimum(T a, T b) { return a < b ? a : b; }
 
 struct trie {
     struct ref {
@@ -52,8 +52,8 @@ void make_trie(/* trie to insert word counts into */ trie& root,
     auto const size = end - begin;
     auto const stride = (size / domain + 1);
 
-    auto off = min(size, stride * index);
-    auto const last = min(size, off + stride);
+    auto off = minimum(size, stride * index);
+    auto const last = minimum(size, off + stride);
 
     for(char c = begin[off]; off < size && off != last && c != 0 && index_of(c) != -1; ++off, c = begin[off]);
     for(char c = begin[off]; off < size && off != last && c != 0 && index_of(c) == -1; ++off, c = begin[off]);
