@@ -64,10 +64,9 @@ THE SOFTWARE.
 #define atomic_thread_fence atomic_thread_fence_simt
 #define atomic_signal_fence atomic_signal_fence_simt
 
-#if defined(__CUDA_ARCH__) || defined(_MSC_VER)
-    #undef _LIBCPP_HAS_GCC_ATOMIC_IMP
-    #define _LIBCPP_HAS_C_ATOMIC_IMP
-#endif
+#undef _LIBCPP_HAS_GCC_ATOMIC_IMP
+#undef _LIBCPP_HAS_C_ATOMIC_IMP
+#define _LIBCPP_HAS_EXTERNAL_ATOMIC_IMP
 
 #include "../libcxx/include/atomic"
 
