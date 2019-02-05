@@ -135,6 +135,7 @@ template <class... Types>
 
 */
 
+#ifndef __simt__
 #include <__config>
 #include <__tuple>
 #include <cstddef>
@@ -142,6 +143,7 @@ template <class... Types>
 #include <__functional_base>
 #include <utility>
 #include <version>
+#endif //
 
 #if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header

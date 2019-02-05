@@ -412,6 +412,7 @@ template <class E> constexpr const E* data(initializer_list<E> il) noexcept;    
 
 */
 
+#ifndef __simt__
 #include <__config>
 #include <iosfwd> // for forward declarations of vector and string.
 #include <__functional_base>
@@ -422,8 +423,8 @@ template <class E> constexpr const E* data(initializer_list<E> il) noexcept;    
 #ifdef __APPLE__
 #include <Availability.h>
 #endif
-
 #include <__debug>
+#endif //__simt__
 
 #if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header

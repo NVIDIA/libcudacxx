@@ -648,7 +648,7 @@ void* align(size_t alignment, size_t size, void*& ptr, size_t& space);
 }  // std
 
 */
-
+#ifndef __simt__
 #include <__config>
 #include <type_traits>
 #include <typeinfo>
@@ -668,13 +668,14 @@ void* align(size_t alignment, size_t size, void*& ptr, size_t& space);
 #  include <atomic>
 #endif
 #include <version>
+#endif //__simt__
 
 #if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
 _LIBCPP_PUSH_MACROS
-#include <__undef_macros>
+#include "__undef_macros"
 
 
 _LIBCPP_BEGIN_NAMESPACE_STD

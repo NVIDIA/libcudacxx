@@ -57,8 +57,10 @@ size_t strlen(const char* s);
 
 */
 
+#ifndef __simt__
 #include <__config>
 #include <string.h>
+#endif //__simet__
 
 #if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header

@@ -11,12 +11,14 @@
 #ifndef _LIBCPP_FUNCTIONAL_BASE
 #define _LIBCPP_FUNCTIONAL_BASE
 
+#ifndef __simt__
 #include <__config>
 #include <type_traits>
 #include <typeinfo>
 #include <exception>
 #include <new>
 #include <utility>
+#endif //__simt__
 
 #if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
