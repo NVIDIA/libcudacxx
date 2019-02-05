@@ -56,7 +56,7 @@ THE SOFTWARE.
     #define __alignof(x) alignof(x)
 #endif
 
-#include "../libcxx/include/__config"
+#include "../../libcxx/include/__config"
 
 #ifdef __CUDACC_RTC__
 #  undef _ALIGNAS_TYPE

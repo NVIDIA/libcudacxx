@@ -22,17 +22,17 @@ THE SOFTWARE.
 
 */
 
-#ifndef _SIMT_CSTDINT
-#define _SIMT_CSTDINT
+#ifndef _SIMT___FUNCTIONAL_BASE
+#define _SIMT___FUNCTIONAL_BASE
 
-#ifndef __CUDACC_RTC__
-    #include <cstdint>
-#endif //__CUDACC_RTC__
+#include "../simt/type_traits"
+#include "../simt/typeinfo"
+#include "../simt/exception"
+#include "../simt/new"
+#include "../simt/utility"
 
-#include <stdint.h>
-#include "version"
-#include "../details/__config"
+#include "__config"
 
-#include "../../libcxx/include/cstdint"
+#include "../../libcxx/include/__functional_base"
 
-#endif //_SIMT_CSTDINT
+#endif //_SIMT___FUNCTIONAL_BASE

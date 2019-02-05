@@ -22,17 +22,17 @@ THE SOFTWARE.
 
 */
 
-#ifndef _SIMT_CSTDINT
-#define _SIMT_CSTDINT
+#ifndef _SIMT_CMATH
+#define _SIMT_CMATH
 
 #ifndef __CUDACC_RTC__
-    #include <cstdint>
+    #include <cmath>
 #endif //__CUDACC_RTC__
 
-#include <stdint.h>
-#include "version"
-#include "../details/__config"
+#include <math.h>
 
-#include "../../libcxx/include/cstdint"
+#include "__config"
 
-#endif //_SIMT_CSTDINT
+#include "../../libcxx/include/cmath"
+
+#endif //_SIMT_CMATH

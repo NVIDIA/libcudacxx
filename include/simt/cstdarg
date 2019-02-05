@@ -30,8 +30,8 @@ THE SOFTWARE.
 #endif //__CUDACC_RTC__
 
 #include <stdarg.h>
-#include "details/__config"
+#include "../details/__config"
 
-#include "../libcxx/include/cstdarg"
+#include "../../libcxx/include/cstdarg"
 
 #endif //_SIMT_CSTDARG

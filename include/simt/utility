@@ -22,17 +22,24 @@ THE SOFTWARE.
 
 */
 
-#ifndef _SIMT_CSTDINT
-#define _SIMT_CSTDINT
+#ifndef _SIMT_UTILITY
+#define _SIMT_UTILITY
 
 #ifndef __CUDACC_RTC__
-    #include <cstdint>
+    #include <utility>
 #endif //__CUDACC_RTC__
 
-#include <stdint.h>
+#include "../details/__tuple"
+#include "type_traits"
+#include "initializer_list"
+#include "cstddef"
+#include "../details/cstring"
+#include "cstdint"
 #include "version"
+#include "../details/__debug"
+
 #include "../details/__config"
 
-#include "../../libcxx/include/cstdint"
+#include "../../libcxx/include/utility"
 
-#endif //_SIMT_CSTDINT
+#endif //_SIMT_UTILITY

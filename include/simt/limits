@@ -31,8 +31,8 @@ THE SOFTWARE.
 
 #include "type_traits"
 #include "version"
-#include "details/__config"
+#include "../details/__config"
 
-#include "../libcxx/include/limits"
+#include "../../libcxx/include/limits"
 
 #endif //_SIMT_LIMITS

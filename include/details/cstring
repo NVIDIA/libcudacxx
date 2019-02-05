@@ -22,17 +22,17 @@ THE SOFTWARE.
 
 */
 
-#ifndef _SIMT_CSTDINT
-#define _SIMT_CSTDINT
+#ifndef _SIMT_CSTRING
+#define _SIMT_CSTRING
 
 #ifndef __CUDACC_RTC__
-    #include <cstdint>
+    #include <cstring>
 #endif //__CUDACC_RTC__
 
-#include <stdint.h>
-#include "version"
-#include "../details/__config"
+#include <string.h>
 
-#include "../../libcxx/include/cstdint"
+#include "__config"
 
-#endif //_SIMT_CSTDINT
+#include "../../libcxx/include/cstring"
+
+#endif //_SIMT_CSTRING

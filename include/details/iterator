@@ -1,3 +1,4 @@
+
 /*
 
 Copyright (c) 2018, NVIDIA Corporation
@@ -22,17 +23,19 @@ THE SOFTWARE.
 
 */
 
-#ifndef _SIMT_CSTDINT
-#define _SIMT_CSTDINT
+#ifndef _SIMT_ITERATOR
+#define _SIMT_ITERATOR
 
-#ifndef __CUDACC_RTC__
-    #include <cstdint>
-#endif //__CUDACC_RTC__
+#include "iosfwd" // for forward declarations of vector and string.
+#include "__functional_base"
+#include "../simt/type_traits"
+#include "../simt/cstddef"
+#include "../simt/initializer_list"
+#include "../simt/version"
+#include "__debug"
 
-#include <stdint.h>
-#include "version"
-#include "../details/__config"
+#include "__config"
 
-#include "../../libcxx/include/cstdint"
+#include "../../libcxx/include/iterator"
 
-#endif //_SIMT_CSTDINT
+#endif //_SIMT_ITERATOR

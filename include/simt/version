@@ -25,8 +25,8 @@ THE SOFTWARE.
 #ifndef _SIMT_VERSION
 #define _SIMT_VERSION
 
-#include "details/__config"
+#include "../details/__config"
 
-#include "../libcxx/include/version"
+#include "../../libcxx/include/version"
 
 #endif //_SIMT_VERSION

@@ -1,3 +1,4 @@
+
 /*
 
 Copyright (c) 2018, NVIDIA Corporation
@@ -22,17 +23,15 @@ THE SOFTWARE.
 
 */
 
-#ifndef _SIMT_CSTDINT
-#define _SIMT_CSTDINT
+#ifndef _SIMT_STDEXCEPT
+#define _SIMT_STDEXCEPT
 
-#ifndef __CUDACC_RTC__
-    #include <cstdint>
-#endif //__CUDACC_RTC__
+#include "../simt/exception"
+#include "iosfwd"  // for string forward decl
+#include "../simt/cstdlib"
 
-#include <stdint.h>
-#include "version"
-#include "../details/__config"
+#include "__config"
 
-#include "../../libcxx/include/cstdint"
+#include "../../libcxx/include/stdexcept"
 
-#endif //_SIMT_CSTDINT
+#endif //_SIMT_STDEXCEPT

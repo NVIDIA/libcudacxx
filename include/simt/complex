@@ -22,17 +22,21 @@ THE SOFTWARE.
 
 */
 
-#ifndef _SIMT_CSTDINT
-#define _SIMT_CSTDINT
+#ifndef _SIMT_COMPLEX
+#define _SIMT_COMPLEX
 
 #ifndef __CUDACC_RTC__
-    #include <cstdint>
+    #include <complex>
 #endif //__CUDACC_RTC__
 
-#include <stdint.h>
+#include "type_traits"
+#include "../details/stdexcept"
+#include "../details/cmath"
+//#include <sstream> // nope nope nope
 #include "version"
+
 #include "../details/__config"
 
-#include "../../libcxx/include/cstdint"
+#include "../../libcxx/include/complex"
 
-#endif //_SIMT_CSTDINT
+#endif //_SIMT_COMPLEX

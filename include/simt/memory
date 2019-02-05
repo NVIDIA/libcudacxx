@@ -22,17 +22,32 @@ THE SOFTWARE.
 
 */
 
-#ifndef _SIMT_CSTDINT
-#define _SIMT_CSTDINT
+#ifndef _SIMT_MEMORY
+#define _SIMT_MEMORY
 
 #ifndef __CUDACC_RTC__
-    #include <cstdint>
+    #include <memory>
 #endif //__CUDACC_RTC__
 
-#include <stdint.h>
+#include "type_traits"
+#include "typeinfo"
+#include "cstddef"
+#include "cstdint"
+#include "new"
+#include "utility"
+#include "limits"
+#include "../details/iterator"
+#include "../details/__functional_base"
+#include "../details/iosfwd"
+#include "tuple"
+#include "../details/stdexcept"
+#include "../details/cstring"
+#include "../details/cassert"
+#include "atomic"
 #include "version"
+
 #include "../details/__config"
 
-#include "../../libcxx/include/cstdint"
+#include "../../libcxx/include/memory"
 
-#endif //_SIMT_CSTDINT
+#endif //_SIMT_MEMORY

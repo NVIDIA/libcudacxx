@@ -57,8 +57,8 @@ THE SOFTWARE.
 #include "type_traits"
 #include "version"
 
-#include "details/__config"
-#include "details/__atomic"
+#include "../details/__config"
+#include "../details/__atomic"
 
 #define _LIBCPP_CXX03_LANG
 #define atomic_thread_fence atomic_thread_fence_simt
@@ -68,7 +68,7 @@ THE SOFTWARE.
 #undef _LIBCPP_HAS_C_ATOMIC_IMP
 #define _LIBCPP_HAS_EXTERNAL_ATOMIC_IMP
 
-#include "../libcxx/include/atomic"
+#include "../../libcxx/include/atomic"
 
 #undef _LIBCPP_CXX03_LANG
 #undef atomic_thread_fence

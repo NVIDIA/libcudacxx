@@ -31,8 +31,8 @@ THE SOFTWARE.
 
 #include "cstddef"
 #include "version"
-#include "details/__config"
+#include "../details/__config"
 
-#include "../libcxx/include/type_traits"
+#include "../../libcxx/include/type_traits"
 
 #endif //_SIMT_TYPE_TRAITS

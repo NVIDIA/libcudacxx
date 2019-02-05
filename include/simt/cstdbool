@@ -29,8 +29,8 @@ THE SOFTWARE.
     #include <cstdbool>
 #endif //__CUDACC_RTC__
 
-#include "details/__config"
+#include "../details/__config"
 
-#include "../libcxx/include/cstdbool"
+#include "../../libcxx/include/cstdbool"
 
 #endif //_SIMT_CSTDBOOL
