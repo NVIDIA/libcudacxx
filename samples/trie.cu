@@ -47,7 +47,7 @@ template<class T> static constexpr T minimum(T a, T b) { return a < b ? a : b; }
 
 struct trie {
     struct ref {
-        simt::std::atomic<trie*> ptr = ATOMIC_VAR_INIT(nullptr);
+        simt::atomic<trie*, simt::thread_scope_device> ptr = ATOMIC_VAR_INIT(nullptr);
         // the flag will protect against multiple pointer updates
         simt::std::atomic_flag flag = ATOMIC_FLAG_INIT;
     } next[26];
@@ -89,7 +89,7 @@ void make_trie(/* trie to insert word counts into */ trie& root,
             else
                 continue;
         }
-        if(n->next[index].ptr.load(simt::std::memory_order_acquire) == nullptr) {
+        if(n->next[index].ptr.load(simt::memory_order_acquire) == nullptr) {
             if(n->next[index].flag.test_and_set(simt::std::memory_order_relaxed))
                 while(n->next[index].ptr.load(simt::std::memory_order_acquire) == nullptr);
             else {

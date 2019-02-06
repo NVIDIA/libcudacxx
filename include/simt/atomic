@@ -81,9 +81,18 @@ THE SOFTWARE.
 
 namespace simt { inline namespace v1 {
 
+using memory_order = std::memory_order;
+
+constexpr memory_order memory_order_relaxed = std::memory_order_relaxed;
+constexpr memory_order memory_order_consume = std::memory_order_consume;
+constexpr memory_order memory_order_acquire = std::memory_order_acquire;
+constexpr memory_order memory_order_release = std::memory_order_release;
+constexpr memory_order memory_order_acq_rel = std::memory_order_acq_rel;
+constexpr memory_order memory_order_seq_cst = std::memory_order_seq_cst;
+
 // atomic<T>
 
-template <class _Tp, thread_scope _Sco = thread_scope::system>
+template <class _Tp, thread_scope _Sco = thread_scope_system>
 struct atomic
     : public std::__atomic_base<_Tp, _Sco>
 {
@@ -161,16 +170,16 @@ struct atomic<_Tp*, _Sco>
     _Tp* operator-=(ptrdiff_t __op) noexcept          {return fetch_sub(__op) - __op;}
 };
 
-inline __host__ __device__ void atomic_thread_fence_simt(memory_order __m, thread_scope _S = thread_scope::system) {
+inline __host__ __device__ void atomic_thread_fence_simt(memory_order __m, thread_scope _S = thread_scope_system) {
 #ifdef __CUDA_ARCH__
     switch(_S) {
-    case thread_scope::system:
+    case thread_scope_system:
         details::__atomic_thread_fence_simt((int)__m, details::__thread_scope_system_tag());
         break;
-    case thread_scope::device:
+    case thread_scope_device:
         details::__atomic_thread_fence_simt((int)__m, details::__thread_scope_device_tag());
         break;
-    case thread_scope::block:
+    case thread_scope_block:
         details::__atomic_thread_fence_simt((int)__m, details::__thread_scope_block_tag());
         break;
     }

@@ -47,7 +47,7 @@ bool __device__ __atomic_compare_exchange_simt(type volatile *ptr, type *expecte
 template<class type, class scope, typename std::enable_if<sizeof(type)<=2, int>::type = 0>
 void __device__ __atomic_exchange_simt(type volatile *ptr, type *val, type *ret, int memorder, scope s) {
 
-    type expected = __atomic_load_n_simt(ptr, memory_order_relaxed, s);
+    type expected = __atomic_load_n_simt(ptr, __ATOMIC_RELAXED, s);
     while(!__atomic_compare_exchange_simt(ptr, &expected, val, true, memorder, memorder, s))
         ;
     *ret = expected;
@@ -56,7 +56,7 @@ void __device__ __atomic_exchange_simt(type volatile *ptr, type *val, type *ret,
 template<class type, class delta, class scope, typename std::enable_if<sizeof(type)<=2, int>::type = 0>
 type __device__ __atomic_fetch_add_simt(type volatile *ptr, delta val, int memorder, scope s) {
 
-    type expected = __atomic_load_n_simt(ptr, memory_order_relaxed, s);
+    type expected = __atomic_load_n_simt(ptr, __ATOMIC_RELAXED, s);
     type const desired = expected + val;
     while(!__atomic_compare_exchange_simt(ptr, &expected, &desired, true, memorder, memorder, s))
         ;
@@ -66,7 +66,7 @@ type __device__ __atomic_fetch_add_simt(type volatile *ptr, delta val, int memor
 template<class type, class delta, class scope, typename std::enable_if<sizeof(type)<=2, int>::type = 0>
 type __device__ __atomic_fetch_sub_simt(type volatile *ptr, delta val, int memorder, scope s) {
 
-    type expected = __atomic_load_n_simt(ptr, memory_order_relaxed, s);
+    type expected = __atomic_load_n_simt(ptr, __ATOMIC_RELAXED, s);
     type const desired = expected - val;
     while(!__atomic_compare_exchange_simt(ptr, &expected, &desired, true, memorder, memorder, s))
         ;
@@ -76,7 +76,7 @@ type __device__ __atomic_fetch_sub_simt(type volatile *ptr, delta val, int memor
 template<class type, class delta, class scope, typename std::enable_if<sizeof(type)<=2, int>::type = 0>
 type __device__ __atomic_fetch_and_simt(type volatile *ptr, delta val, int memorder, scope s) {
 
-    type expected = __atomic_load_n_simt(ptr, memory_order_relaxed, s);
+    type expected = __atomic_load_n_simt(ptr, __ATOMIC_RELAXED, s);
     type const desired = expected & val;
     while(!__atomic_compare_exchange_simt(ptr, &expected, &desired, true, memorder, memorder, s))
         ;
@@ -86,7 +86,7 @@ type __device__ __atomic_fetch_and_simt(type volatile *ptr, delta val, int memor
 template<class type, class delta, class scope, typename std::enable_if<sizeof(type)<=2, int>::type = 0>
 type __device__ __atomic_fetch_xor_simt(type volatile *ptr, delta val, int memorder, scope s) {
 
-    type expected = __atomic_load_n_simt(ptr, memory_order_relaxed, s);
+    type expected = __atomic_load_n_simt(ptr, __ATOMIC_RELAXED, s);
     type const desired = expected ^ val;
     while(!__atomic_compare_exchange_simt(ptr, &expected, &desired, true, memorder, memorder, s))
         ;
@@ -96,7 +96,7 @@ type __device__ __atomic_fetch_xor_simt(type volatile *ptr, delta val, int memor
 template<class type, class delta, class scope, typename std::enable_if<sizeof(type)<=2, int>::type = 0>
 type __device__ __atomic_fetch_or_simt(type volatile *ptr, delta val, int memorder, scope s) {
 
-    type expected = __atomic_load_n_simt(ptr, memory_order_relaxed, s);
+    type expected = __atomic_load_n_simt(ptr, __ATOMIC_RELAXED, s);
     type const desired = expected | val;
     while(!__atomic_compare_exchange_simt(ptr, &expected, &desired, true, memorder, memorder, s))
         ;

@@ -27,6 +27,8 @@ THE SOFTWARE.
 #include <string>
 #include <map>
 
+using namespace std::string_literals;
+
 int main() {
 
     std::map<std::string, std::string> scopes{ {"system", "sys"}, 
@@ -84,21 +86,24 @@ THE SOFTWARE.
 
 */)XXX" << "\n\n";
 
-    auto scopenametag = [&](auto s) {
-        return "__thread_scope_" + s + "_tag";
+    auto scopenametag = [&](auto scope) {
+        return "__thread_scope_" + scope + "_tag";
+    };
+    auto fencename = [&](auto sem, auto scope) {
+        return "__simt_fence_" + sem + "_" + scope;
     };
 
     out << "namespace simt { namespace details { inline namespace v1 {\n";
     for(auto& s : scopes) {
         for(auto& sem : fence_semantics)
-            out << "static inline __device__ void __simt_fence_" << sem << "_" << s.first << "_() { asm volatile(\"fence." << sem << "." << s.second << ";\":::\"memory\"); }\n";
+            out << "static inline __device__ void " << fencename(sem, s.first) << "() { asm volatile(\"fence." << sem << "." << s.second << ";\":::\"memory\"); }\n";
         out << "static inline __device__ void __atomic_thread_fence_simt(int memorder, " << scopenametag(s.first) << ") {\n";
         out << "    switch (memorder) {\n";
-        out << "    case __ATOMIC_SEQ_CST: __simt_fence_sc_" << s.first << "_(); break;\n";
+        out << "    case __ATOMIC_SEQ_CST: " << fencename("sc"s, s.first) << "(); break;\n";
         out << "    case __ATOMIC_CONSUME:\n";
         out << "    case __ATOMIC_ACQUIRE:\n";
         out << "    case __ATOMIC_ACQ_REL:\n";
-        out << "    case __ATOMIC_RELEASE: __simt_fence_acq_rel_" << s.first << "_(); break;\n";
+        out << "    case __ATOMIC_RELEASE: " << fencename("acq_rel"s, s.first) << "(); break;\n";
         out << "    case __ATOMIC_RELAXED: break;\n";
         out << "    default: assert(0);\n";
         out << "    }\n";
@@ -116,7 +121,7 @@ THE SOFTWARE.
                 out << "__device__ void __atomic_load_simt(const " << cv << "type *ptr, type *ret, int memorder, " << scopenametag(s.first) << ") {\n";
                 out << "    uint" << (registers[sz] == "r" ? 32 : sz) << "_t tmp = 0;\n";
                 out << "    switch (memorder) {\n";
-                out << "    case __ATOMIC_SEQ_CST: __simt_fence_sc_" << s.first << "_();\n";
+                out << "    case __ATOMIC_SEQ_CST: " << fencename("sc"s, s.first) << "();\n";
                 out << "    case __ATOMIC_CONSUME:\n";
                 out << "    case __ATOMIC_ACQUIRE: __simt_load_acquire_" << sz << "_" << s.first << "(ptr, tmp); break;\n";
                 out << "    case __ATOMIC_RELAXED: __simt_load_relaxed_" << sz << "_" << s.first << "(ptr, tmp); break;\n";
@@ -141,7 +146,7 @@ THE SOFTWARE.
                 out << "    memcpy(&tmp, val, " << sz/8 << ");\n";
                 out << "    switch (memorder) {\n";
                 out << "    case __ATOMIC_RELEASE: __simt_store_release_" << sz << "_" << s.first << "(ptr, tmp); break;\n";
-                out << "    case __ATOMIC_SEQ_CST: __simt_fence_sc_" << s.first << "_();\n";
+                out << "    case __ATOMIC_SEQ_CST: " << fencename("sc"s, s.first) << "();\n";
                 out << "    case __ATOMIC_RELAXED: __simt_store_relaxed_" << sz << "_" << s.first << "(ptr, tmp); break;\n";
                 out << "    default: assert(0);\n";
                 out << "    }\n";
@@ -186,7 +191,7 @@ THE SOFTWARE.
                         out << "    memcpy(&old, expected, " << sz/8 << ");\n";
                         out << "    old_tmp = old;\n";
                         out << "    switch (__stronger_order_simt(success_memorder, failure_memorder)) {\n";
-                        out << "    case __ATOMIC_SEQ_CST: __simt_fence_sc_" << s.first << "_();\n";
+                        out << "    case __ATOMIC_SEQ_CST: " << fencename("sc"s, s.first) << "();\n";
                         out << "    case __ATOMIC_CONSUME:\n";
                         out << "    case __ATOMIC_ACQUIRE: __simt_cas_acquire_" << sz << "_" << s.first << "(ptr, old, old_tmp, tmp); break;\n";
                         out << "    case __ATOMIC_ACQ_REL: __simt_cas_acq_rel_" << sz << "_" << s.first << "(ptr, old, old_tmp, tmp); break;\n";
@@ -215,7 +220,7 @@ THE SOFTWARE.
                         if(rmw.first == "fetch_sub")
                             out << "    tmp = -tmp;\n";
                         out << "    switch (memorder) {\n";
-                        out << "    case __ATOMIC_SEQ_CST: __simt_fence_sc_" << s.first << "_();\n";
+                        out << "    case __ATOMIC_SEQ_CST: " << fencename("sc"s, s.first) << "();\n";
                         out << "    case __ATOMIC_CONSUME:\n";
                         out << "    case __ATOMIC_ACQUIRE: __simt_" << rmw.second << "_acquire_" << sz << "_" << s.first << "(ptr, tmp, tmp); break;\n";
                         out << "    case __ATOMIC_ACQ_REL: __simt_" << rmw.second << "_acq_rel_" << sz << "_" << s.first << "(ptr, tmp, tmp); break;\n";
@@ -246,7 +251,7 @@ THE SOFTWARE.
                     out << "    tmp = -tmp;\n";
                 out << "    tmp *= sizeof(type);\n";
                 out << "    switch (memorder) {\n";
-                out << "    case __ATOMIC_SEQ_CST: __simt_fence_sc_" << s.first << "_();\n";
+                out << "    case __ATOMIC_SEQ_CST: " << fencename("sc"s, s.first) << "();\n";
                 out << "    case __ATOMIC_CONSUME:\n";
                 out << "    case __ATOMIC_ACQUIRE: __simt_add_acquire_64_" << s.first << "(ptr, tmp, tmp); break;\n";
                 out << "    case __ATOMIC_ACQ_REL: __simt_add_acq_rel_64_" << s.first << "(ptr, tmp, tmp); break;\n";
