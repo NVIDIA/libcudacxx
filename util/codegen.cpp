@@ -84,12 +84,15 @@ THE SOFTWARE.
 
 */)XXX" << "\n\n";
 
+    auto scopenametag = [&](auto s) {
+        return "__thread_scope_" + s + "_tag";
+    };
+
     out << "namespace simt { namespace details { inline namespace v1 {\n";
     for(auto& s : scopes) {
-        out << "struct __memory_scope_" << s.first << " { };\n";
         for(auto& sem : fence_semantics)
             out << "static inline __device__ void __simt_fence_" << sem << "_" << s.first << "_() { asm volatile(\"fence." << sem << "." << s.second << ";\":::\"memory\"); }\n";
-        out << "static inline __device__ void __atomic_thread_fence_simt(int memorder, __memory_scope_" << s.first << ") {\n";
+        out << "static inline __device__ void __atomic_thread_fence_simt(int memorder, " << scopenametag(s.first) << ") {\n";
         out << "    switch (memorder) {\n";
         out << "    case __ATOMIC_SEQ_CST: __simt_fence_sc_" << s.first << "_(); break;\n";
         out << "    case __ATOMIC_CONSUME:\n";
@@ -110,7 +113,7 @@ THE SOFTWARE.
             }
             for(auto& cv: cv_qualifier) {
                 out << "template<class type, typename std::enable_if<sizeof(type)==" << sz/8 << ", int>::type = 0>\n";
-                out << "__device__ void __atomic_load_simt(const " << cv << "type *ptr, type *ret, int memorder, __memory_scope_" << s.first << ") {\n";
+                out << "__device__ void __atomic_load_simt(const " << cv << "type *ptr, type *ret, int memorder, " << scopenametag(s.first) << ") {\n";
                 out << "    uint" << (registers[sz] == "r" ? 32 : sz) << "_t tmp = 0;\n";
                 out << "    switch (memorder) {\n";
                 out << "    case __ATOMIC_SEQ_CST: __simt_fence_sc_" << s.first << "_();\n";
@@ -133,7 +136,7 @@ THE SOFTWARE.
             }
             for(auto& cv: cv_qualifier) {
                 out << "template<class type, typename simt::std::enable_if<sizeof(type)==" << sz/8 << ", int>::type = 0>\n";
-                out << "__device__ void __atomic_store_simt(" << cv << "type *ptr, type *val, int memorder, __memory_scope_" << s.first << ") {\n";
+                out << "__device__ void __atomic_store_simt(" << cv << "type *ptr, type *val, int memorder, " << scopenametag(s.first) << ") {\n";
                 out << "    uint" << (registers[sz] == "r" ? 32 : sz) << "_t tmp = 0;\n";
                 out << "    memcpy(&tmp, val, " << sz/8 << ");\n";
                 out << "    switch (memorder) {\n";
@@ -177,7 +180,7 @@ THE SOFTWARE.
                 for(auto& cv: cv_qualifier) {
                     if(rmw.first == "compare_exchange") {
                         out << "template<class type, typename simt::std::enable_if<sizeof(type)==" << sz/8 << ", int>::type = 0>\n";
-                        out << "__device__ bool __atomic_compare_exchange_simt(" << cv << "type *ptr, type *expected, const type *desired, bool, int success_memorder, int failure_memorder, __memory_scope_" << s.first << ") {\n";
+                        out << "__device__ bool __atomic_compare_exchange_simt(" << cv << "type *ptr, type *expected, const type *desired, bool, int success_memorder, int failure_memorder, " << scopenametag(s.first) << ") {\n";
                         out << "    uint" << sz << "_t tmp = 0, old = 0, old_tmp;\n";
                         out << "    memcpy(&tmp, desired, " << sz/8 << ");\n";
                         out << "    memcpy(&old, expected, " << sz/8 << ");\n";
@@ -199,12 +202,12 @@ THE SOFTWARE.
                     else {
                         out << "template<class type, typename simt::std::enable_if<sizeof(type)==" << sz/8 << ", int>::type = 0>\n";
                         if(rmw.first == "exchange") {
-                            out << "__device__ void __atomic_exchange_simt(" << cv << "type *ptr, type *val, type *ret, int memorder, __memory_scope_" << s.first << ") {\n";
+                            out << "__device__ void __atomic_exchange_simt(" << cv << "type *ptr, type *val, type *ret, int memorder, " << scopenametag(s.first) << ") {\n";
                             out << "    uint" << sz << "_t tmp = 0;\n";
                             out << "    memcpy(&tmp, val, " << sz/8 << ");\n";
                         }
                         else {
-                            out << "__device__ type __atomic_" << rmw.first << "_simt(" << cv << "type *ptr, type val, int memorder, __memory_scope_" << s.first << ") {\n";
+                            out << "__device__ type __atomic_" << rmw.first << "_simt(" << cv << "type *ptr, type val, int memorder, " << scopenametag(s.first) << ") {\n";
                             out << "    type ret;\n";
                             out << "    uint" << sz << "_t tmp = 0;\n";
                             out << "    memcpy(&tmp, &val, " << sz/8 << ");\n";
@@ -235,7 +238,7 @@ THE SOFTWARE.
             std::vector<std::string> addsub{ "add", "sub" };
             for(auto& op : addsub) {
                 out << "template<class type>\n";
-                out << "__device__ type* __atomic_fetch_" << op << "_simt(type *" << cv << "*ptr, ptrdiff_t val, int memorder, __memory_scope_" << s.first << ") {\n";
+                out << "__device__ type* __atomic_fetch_" << op << "_simt(type *" << cv << "*ptr, ptrdiff_t val, int memorder, " << scopenametag(s.first) << ") {\n";
                 out << "    type* ret;\n";
                 out << "    uint64_t tmp = 0;\n";
                 out << "    memcpy(&tmp, &val, 8);\n";

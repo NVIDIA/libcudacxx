@@ -46,43 +46,88 @@ THE SOFTWARE.
 #define __ATOMIC_SEQ_CST 5
 #endif //__ATOMIC_RELAXED
 
-namespace simt { namespace details { inline namespace v1 {
+#ifndef __ATOMIC_BLOCK
+#define __ATOMIC_BLOCK 6
+#define __ATOMIC_DEVICE 7
+#define __ATOMIC_SYSTEM 8
+#endif //__ATOMIC_BLOCK
 
-enum memory_order {
-    memory_order_relaxed = __ATOMIC_RELAXED,
-    memory_order_release = __ATOMIC_CONSUME,
-    memory_order_acq_rel = __ATOMIC_ACQUIRE,
-    memory_order_acquire = __ATOMIC_RELEASE,
-    memory_order_consume = __ATOMIC_ACQ_REL,
-    memory_order_seq_cst = __ATOMIC_SEQ_CST
-};
 
-inline __device__ int __stronger_order_simt(int a, int b) {
-    int const max = a > b ? a : b;
-    if(max != __ATOMIC_RELEASE)
-        return max;
-    static int const xform[] = { 
-        __ATOMIC_RELEASE, 
-        __ATOMIC_ACQ_REL, 
-        __ATOMIC_ACQ_REL, 
-        __ATOMIC_RELEASE };
-    return xform[a < b ? a : b];
+namespace simt {
+    
+inline namespace v1 {
+
+    enum class memory_order : int {
+        relaxed = __ATOMIC_RELAXED,
+        release = __ATOMIC_CONSUME,
+        acq_rel = __ATOMIC_ACQUIRE,
+        acquire = __ATOMIC_RELEASE,
+        consume = __ATOMIC_ACQ_REL,
+        seq_cst = __ATOMIC_SEQ_CST
+    };
+
+    constexpr memory_order memory_order_relaxed = memory_order::relaxed;
+    constexpr memory_order memory_order_consume = memory_order::consume;
+    constexpr memory_order memory_order_acquire = memory_order::acquire;
+    constexpr memory_order memory_order_release = memory_order::release;
+    constexpr memory_order memory_order_acq_rel = memory_order::acq_rel;
+    constexpr memory_order memory_order_seq_cst = memory_order::seq_cst;
 }
 
-struct __memory_scope_block;
-struct __memory_scope_device;
-struct __memory_scope_system;
+namespace details { inline namespace v1 {
 
-#define _LIBCPP_ATOMIC_SCOPE_DEFAULT ::simt::details::__memory_scope_system
+    inline __device__ int __stronger_order_simt(int a, int b) {
+        int const max = a > b ? a : b;
+        if(max != __ATOMIC_RELEASE)
+            return max;
+        static int const xform[] = { 
+            __ATOMIC_RELEASE, 
+            __ATOMIC_ACQ_REL, 
+            __ATOMIC_ACQ_REL, 
+            __ATOMIC_RELEASE };
+        return xform[a < b ? a : b];
+    }
+} }
 
-} } }
+inline namespace v1 {
+
+    enum class thread_scope : int {
+        block = __ATOMIC_BLOCK, 
+        device = __ATOMIC_DEVICE, 
+        system = __ATOMIC_SYSTEM
+    };
+
+    constexpr thread_scope thread_scope_block = thread_scope::block;
+    constexpr thread_scope thread_scope_device = thread_scope::device;
+    constexpr thread_scope thread_scope_system = thread_scope::system;
+
+    #define _LIBCPP_ATOMIC_SCOPE_TYPE ::simt::thread_scope
+    #define _LIBCPP_ATOMIC_SCOPE_DEFAULT ::simt::thread_scope::system
+}
+
+namespace details {inline namespace v1 {
+
+    struct __thread_scope_block_tag { };
+    struct __thread_scope_device_tag { };
+    struct __thread_scope_system_tag { };
+
+    template<thread_scope _S>  struct __scope_enum_to_tag { };
+    template<> struct __scope_enum_to_tag<thread_scope_block> {
+        using type = __thread_scope_block_tag; };
+    template<> struct __scope_enum_to_tag<thread_scope_device> {
+        using type = __thread_scope_device_tag; };
+    template<> struct __scope_enum_to_tag<thread_scope_system> {
+        using type = __thread_scope_system_tag; };
+} }
+
+}
 
 #include "__atomic_generated"
 #include "__atomic_derived"
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
-template <typename _Tp, typename _Sco>
+template <typename _Tp, thread_scope _Sco>
 struct __cxx_atomic_base_impl {
 
   __host__ __device__ __cxx_atomic_base_impl() : __a_value() {
@@ -96,7 +141,7 @@ struct __cxx_atomic_base_impl {
 #endif
 };
 
-template<class _Tp, class _Sco> 
+template<class _Tp, thread_scope _Sco> 
 __host__ __device__ inline void __cxx_atomic_init(__cxx_atomic_base_impl<_Tp, _Sco> volatile* __a, _Tp __val) { 
 #ifdef __CUDA_ARCH__
     __a->__a_value = __val;
@@ -104,90 +149,90 @@ __host__ __device__ inline void __cxx_atomic_init(__cxx_atomic_base_impl<_Tp, _S
     ::std::atomic_init(&__a->__a_value, __val);
 #endif
 }
-template<class _Tp, class _Sco> 
+template<class _Tp, thread_scope _Sco> 
 __host__ __device__ inline void __cxx_atomic_store(__cxx_atomic_base_impl<_Tp, _Sco> volatile* __a, _Tp __val, int __order) {
 #ifdef __CUDA_ARCH__
-    details::__atomic_store_n_simt(&__a->__a_value, __val, __order, _Sco()); 
+    details::__atomic_store_n_simt(&__a->__a_value, __val, __order, typename details::__scope_enum_to_tag<_Sco>::type()); 
 #else
     ::std::atomic_store_explicit(&__a->__a_value, __val, (::std::memory_order)__order);
 #endif
 }
-template<class _Tp, class _Sco> 
+template<class _Tp, thread_scope _Sco> 
 __host__ __device__ inline _Tp __cxx_atomic_load(__cxx_atomic_base_impl<_Tp, _Sco> volatile* __a, int __order) {
 #ifdef __CUDA_ARCH__
-    return details::__atomic_load_n_simt(&__a->__a_value, __order, _Sco()); 
+    return details::__atomic_load_n_simt(&__a->__a_value, __order, typename details::__scope_enum_to_tag<_Sco>::type()); 
 #else
     return ::std::atomic_load_explicit(&__a->__a_value, (::std::memory_order)__order);
 #endif
 }
-template<class _Tp, class _Sco> 
+template<class _Tp, thread_scope _Sco> 
 __host__ __device__ inline _Tp __cxx_atomic_exchange(__cxx_atomic_base_impl<_Tp, _Sco> volatile* __a, _Tp __value, int __order) {
 #ifdef __CUDA_ARCH__
-    return details::__atomic_exchange_n_simt(&__a->__a_value, __value, __order, _Sco()); 
+    return details::__atomic_exchange_n_simt(&__a->__a_value, __value, __order, typename details::__scope_enum_to_tag<_Sco>::type()); 
 #else
     return ::std::atomic_exchange_explicit(&__a->__a_value, __value, (::std::memory_order)__order); 
 #endif
 }
-template<class _Tp, class _Sco> 
+template<class _Tp, thread_scope _Sco> 
 __host__ __device__ inline bool __cxx_atomic_compare_exchange_strong(__cxx_atomic_base_impl<_Tp, _Sco> volatile* __a, _Tp __expected, _Tp __value, int __success, int __failure) {
 #ifdef __CUDA_ARCH__
-    return details::__atomic_compare_exchange_n_simt(&__a->__a_value, __expected, __value, false, __success, __failure, _Sco()); 
+    return details::__atomic_compare_exchange_n_simt(&__a->__a_value, __expected, __value, false, __success, __failure, typename details::__scope_enum_to_tag<_Sco>::type()); 
 #else
     return ::std::atomic_compare_exchange_strong_explicit(&__a->__a_value, __expected, __value, (::std::memory_order)__success, (::std::memory_order)__failure); 
 #endif
 }
-template<class _Tp, class _Sco> 
+template<class _Tp, thread_scope _Sco> 
 __host__ __device__ inline bool __cxx_atomic_compare_exchange_weak(__cxx_atomic_base_impl<_Tp, _Sco> volatile* __a, _Tp __expected, _Tp __value, int __success, int __failure) {
 #ifdef __CUDA_ARCH__
-    return details::__atomic_compare_exchange_n_simt(&__a->__a_value, __expected, __value, true, __success, __failure, _Sco()); 
+    return details::__atomic_compare_exchange_n_simt(&__a->__a_value, __expected, __value, true, __success, __failure, typename details::__scope_enum_to_tag<_Sco>::type()); 
 #else
     return ::std::atomic_compare_exchange_weak_explicit(&__a->__a_value, __expected, __value, (::std::memory_order)__success, (::std::memory_order)__failure); 
 #endif
 }
-template<class _Tp, class _Sco> 
+template<class _Tp, thread_scope _Sco> 
 __host__ __device__ inline _Tp __cxx_atomic_fetch_add(__cxx_atomic_base_impl<_Tp, _Sco> volatile* __a, _Tp __delta, int __order) {
 #ifdef __CUDA_ARCH__
-    return details::__atomic_fetch_add_simt(&__a->__a_value, __delta, __order, _Sco()); 
+    return details::__atomic_fetch_add_simt(&__a->__a_value, __delta, __order, typename details::__scope_enum_to_tag<_Sco>::type()); 
 #else
     return ::std::atomic_fetch_add_explicit(&__a->__a_value, __delta, (::std::memory_order)__order); 
 #endif
 }
-template<class _Tp, class _Sco> 
+template<class _Tp, thread_scope _Sco> 
 __host__ __device__ inline _Tp* __cxx_atomic_fetch_add(__cxx_atomic_base_impl<_Tp*, _Sco> volatile* __a, ptrdiff_t __delta, int __order) {
 #ifdef __CUDA_ARCH__
-    return details::__atomic_fetch_add_simt(&__a->__a_value, __delta, __order, _Sco()); 
+    return details::__atomic_fetch_add_simt(&__a->__a_value, __delta, __order, typename details::__scope_enum_to_tag<_Sco>::type()); 
 #else
     return ::std::atomic_fetch_add_explicit(&__a->__a_value, __delta, (::std::memory_order)__order); 
 #endif
 }
-template<class _Tp, class _Sco> 
+template<class _Tp, thread_scope _Sco> 
 __host__ __device__ inline _Tp __cxx_atomic_fetch_sub(__cxx_atomic_base_impl<_Tp, _Sco> volatile* __a, _Tp __delta, int __order) {
 #ifdef __CUDA_ARCH__
-    return details::__atomic_fetch_sub_simt(&__a->__a_value, __delta, __order, _Sco()); 
+    return details::__atomic_fetch_sub_simt(&__a->__a_value, __delta, __order, typename details::__scope_enum_to_tag<_Sco>::type()); 
 #else
     return ::std::atomic_fetch_sub_explicit(&__a->__a_value, __delta, (::std::memory_order)__order); 
 #endif
 }
-template<class _Tp, class _Sco> 
+template<class _Tp, thread_scope _Sco> 
 __host__ __device__ inline _Tp __cxx_atomic_fetch_and(__cxx_atomic_base_impl<_Tp, _Sco> volatile* __a, _Tp __pattern, int __order) {
 #ifdef __CUDA_ARCH__
-    return details::__atomic_fetch_and_simt(&__a->__a_value, __pattern, __order, _Sco()); 
+    return details::__atomic_fetch_and_simt(&__a->__a_value, __pattern, __order, typename details::__scope_enum_to_tag<_Sco>::type()); 
 #else
     return ::std::atomic_fetch_and_explicit(&__a->__a_value, __pattern, (::std::memory_order)__order); 
 #endif
 }
-template<class _Tp, class _Sco> 
+template<class _Tp, thread_scope _Sco> 
 __host__ __device__ inline _Tp __cxx_atomic_fetch_or(__cxx_atomic_base_impl<_Tp, _Sco> volatile* __a, _Tp __pattern, int __order) {
 #ifdef __CUDA_ARCH__
-    return details::__atomic_fetch_or_simt(&__a->__a_value, __pattern, __order, _Sco()); 
+    return details::__atomic_fetch_or_simt(&__a->__a_value, __pattern, __order, typename details::__scope_enum_to_tag<_Sco>::type()); 
 #else
     return ::std::atomic_fetch_or_explicit(&__a->__a_value, __pattern, (::std::memory_order)__order); 
 #endif
 }
-template<class _Tp, class _Sco> 
+template<class _Tp, thread_scope _Sco> 
 __host__ __device__ inline _Tp __cxx_atomic_fetch_xor(__cxx_atomic_base_impl<_Tp, _Sco> volatile* __a, _Tp __pattern, int __order) {
 #ifdef __CUDA_ARCH__
-    return details::__atomic_fetch_xor_simt(&__a->__a_value, __pattern, __order, _Sco()); 
+    return details::__atomic_fetch_xor_simt(&__a->__a_value, __pattern, __order, typename details::__scope_enum_to_tag<_Sco>::type()); 
 #else
     return ::std::atomic_fetch_xor_explicit(&__a->__a_value, __pattern, (::std::memory_order)__order); 
 #endif
@@ -197,7 +242,7 @@ __host__ __device__ inline bool __cxx_atomic_is_lock_free(size_t x) {
 }
 __host__ __device__ inline void __cxx_atomic_thread_fence(int __order) {
 #ifdef __CUDA_ARCH__
-    details::__atomic_thread_fence_simt(__order, details::__memory_scope_system()); 
+    details::__atomic_thread_fence_simt(__order, details::__thread_scope_system_tag()); 
 #else
     ::std::atomic_thread_fence((::std::memory_order)__order);
 #endif

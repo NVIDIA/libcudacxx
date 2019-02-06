@@ -81,22 +81,9 @@ THE SOFTWARE.
 
 namespace simt { inline namespace v1 {
 
-using system = details::__memory_scope_system;
-using device = details::__memory_scope_device;
-using block = details::__memory_scope_block;
-
-typedef std::memory_order memory_order;
-
-static constexpr memory_order memory_order_relaxed = std::memory_order_relaxed;
-static constexpr memory_order memory_order_release = std::memory_order_release;
-static constexpr memory_order memory_order_acq_rel = std::memory_order_acq_rel;
-static constexpr memory_order memory_order_acquire = std::memory_order_acquire;
-static constexpr memory_order memory_order_consume = std::memory_order_consume;
-static constexpr memory_order memory_order_seq_cst = std::memory_order_seq_cst;
-
 // atomic<T>
 
-template <class _Tp, class _Sco = system>
+template <class _Tp, thread_scope _Sco = thread_scope::system>
 struct atomic
     : public std::__atomic_base<_Tp, _Sco>
 {
@@ -116,7 +103,7 @@ struct atomic
 
 // atomic<T*>
 
-template <class _Tp, class _Sco>
+template <class _Tp, thread_scope _Sco>
 struct atomic<_Tp*, _Sco>
     : public std::__atomic_base<_Tp*, _Sco>
 {
@@ -174,20 +161,29 @@ struct atomic<_Tp*, _Sco>
     _Tp* operator-=(ptrdiff_t __op) noexcept          {return fetch_sub(__op) - __op;}
 };
 
-template<class _S = system>
-inline __host__ __device__ void atomic_thread_fence_simt(memory_order __m, _S __s = _S()) {
+inline __host__ __device__ void atomic_thread_fence_simt(memory_order __m, thread_scope _S = thread_scope::system) {
 #ifdef __CUDA_ARCH__
-    details::v1::__atomic_thread_fence_simt(__m, __s);
+    switch(_S) {
+    case thread_scope::system:
+        details::__atomic_thread_fence_simt((int)__m, details::__thread_scope_system_tag());
+        break;
+    case thread_scope::device:
+        details::__atomic_thread_fence_simt((int)__m, details::__thread_scope_device_tag());
+        break;
+    case thread_scope::block:
+        details::__atomic_thread_fence_simt((int)__m, details::__thread_scope_block_tag());
+        break;
+    }
 #else
-    std::atomic_thread_fence_simt(__m);
+    ::std::atomic_thread_fence((::std::memory_order)__m);
 #endif
 }
 
 inline __host__ __device__ void atomic_signal_fence_simt(memory_order __m) {
 #ifdef __CUDA_ARCH__
-    details::v1::__atomic_signal_fence_simt(__m);
+    details::v1::__atomic_signal_fence_simt((int)__m);
 #else
-    std::atomic_signal_fence_simt(__m);
+    ::std::atomic_signal_fence((::std::memory_order)__m);
 #endif
 }
 
