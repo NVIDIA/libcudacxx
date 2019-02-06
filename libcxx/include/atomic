@@ -585,12 +585,6 @@ _LIBCPP_BEGIN_NAMESPACE_STD
 #ifndef _LIBCPP_ATOMIC_FLAG_TYPE
 #define _LIBCPP_ATOMIC_FLAG_TYPE bool
 #endif
-#ifndef _LIBCPP_ATOMIC_SCOPE_TYPE
-#define _LIBCPP_ATOMIC_SCOPE_TYPE int
-#endif
-#ifndef _LIBCPP_ATOMIC_SCOPE_DEFAULT
-#define _LIBCPP_ATOMIC_SCOPE_DEFAULT 0
-#endif
 
 typedef enum memory_order
 {
@@ -600,7 +594,7 @@ typedef enum memory_order
 
 #if defined(_LIBCPP_HAS_GCC_ATOMIC_IMP)
 
-template <typename _Tp, _LIBCPP_ATOMIC_SCOPE_TYPE>
+template <typename _Tp>
 struct __cxx_atomic_type {
 
 #if _GNUC_VER >= 501
@@ -619,7 +613,7 @@ struct __cxx_atomic_type {
   _Tp __a_value;
 };
 
-template<typename _Tp, _LIBCPP_ATOMIC_SCOPE_TYPE>
+template<typename _Tp, int>
 using __cxx_atomic_base_impl = __cxx_atomic_type<_Tp>;
 
 template <typename _Tp> _Tp __create();
@@ -889,7 +883,7 @@ struct __cxx_atomic_type {
   _Atomic(_Tp) __a_value;
 };
 
-template<typename _Tp, _LIBCPP_ATOMIC_SCOPE_TYPE>
+template<typename _Tp, int>
 using __cxx_atomic_base_impl = __cxx_atomic_type<_Tp>;
 
 #define __cxx_atomic_is_lock_free(__s) __c11_atomic_is_lock_free(__s)
@@ -1095,7 +1089,7 @@ kill_dependency(_Tp __y) _NOEXCEPT
 
 #if defined(_LIBCPP_FREESTANDING) && defined(__cpp_lib_atomic_is_always_lock_free)
 
-template<typename _Tp, _LIBCPP_ATOMIC_SCOPE_TYPE _Sco>
+template<typename _Tp, int _Sco>
 struct __cxx_atomic_lock_impl {
 
 #if _GNUC_VER >= 501
@@ -1127,19 +1121,19 @@ struct __cxx_atomic_lock_impl {
     }
 };
 
-template <typename _Tp, _LIBCPP_ATOMIC_SCOPE_TYPE _Sco>
+template <typename _Tp, int _Sco>
 static _LIBCPP_INLINE_VISIBILITY inline 
 void __cxx_atomic_init(volatile __cxx_atomic_lock_impl<_Tp, _Sco>* __a,  _Tp __val) {
   __a->__a_value = __val;
 }
 
-template <typename _Tp, _LIBCPP_ATOMIC_SCOPE_TYPE _Sco>
+template <typename _Tp, int _Sco>
 static _LIBCPP_INLINE_VISIBILITY inline 
 void __cxx_atomic_store(volatile __cxx_atomic_lock_impl<_Tp, _Sco>* __a,  _Tp __val, int) {
   __a->writer_section([&](_Tp volatile& __a_value){ __a_value = __val; });
 }
 
-template <typename _Tp, _LIBCPP_ATOMIC_SCOPE_TYPE _Sco>
+template <typename _Tp, int _Sco>
 static _LIBCPP_INLINE_VISIBILITY inline 
 _Tp __cxx_atomic_load(const volatile __cxx_atomic_lock_impl<_Tp, _Sco>* __a, int) {
   _Tp __val;
@@ -1147,7 +1141,7 @@ _Tp __cxx_atomic_load(const volatile __cxx_atomic_lock_impl<_Tp, _Sco>* __a, int
   return __val;
 }
 
-template <typename _Tp, _LIBCPP_ATOMIC_SCOPE_TYPE _Sco>
+template <typename _Tp, int _Sco>
 static _LIBCPP_INLINE_VISIBILITY inline 
 _Tp __cxx_atomic_exchange(volatile __cxx_atomic_lock_impl<_Tp, _Sco>* __a, int) {
   _Tp __value;
@@ -1159,7 +1153,7 @@ _Tp __cxx_atomic_exchange(volatile __cxx_atomic_lock_impl<_Tp, _Sco>* __a, int) 
   return __value;
 }
 
-template <typename _Tp, _LIBCPP_ATOMIC_SCOPE_TYPE _Sco>
+template <typename _Tp, int _Sco>
 static _LIBCPP_INLINE_VISIBILITY inline 
 bool __cxx_atomic_compare_exchange_strong(volatile __cxx_atomic_lock_impl<_Tp, _Sco>* __a, 
                                           _Tp* __expected, _Tp __value, int, int) {
@@ -1173,7 +1167,7 @@ bool __cxx_atomic_compare_exchange_strong(volatile __cxx_atomic_lock_impl<_Tp, _
   return __ret;
 }
 
-template <typename _Tp, _LIBCPP_ATOMIC_SCOPE_TYPE _Sco>
+template <typename _Tp, int _Sco>
 static _LIBCPP_INLINE_VISIBILITY inline 
 bool __cxx_atomic_compare_exchange_weak(volatile __cxx_atomic_lock_impl<_Tp, _Sco>* __a, 
                                         _Tp* __expected, _Tp __value, int, int) {
@@ -1187,7 +1181,7 @@ bool __cxx_atomic_compare_exchange_weak(volatile __cxx_atomic_lock_impl<_Tp, _Sc
   return __ret;
 }
 
-template <typename _Tp, _LIBCPP_ATOMIC_SCOPE_TYPE _Sco, typename _Td>
+template <typename _Tp, int _Sco, typename _Td>
 static _LIBCPP_INLINE_VISIBILITY inline 
 _Tp __cxx_atomic_fetch_add(volatile __cxx_atomic_lock_impl<_Tp, _Sco>* __a,
                            _Td __delta, int) {
@@ -1198,7 +1192,7 @@ _Tp __cxx_atomic_fetch_add(volatile __cxx_atomic_lock_impl<_Tp, _Sco>* __a,
   return __old;
 }
 
-template <typename _Tp, _LIBCPP_ATOMIC_SCOPE_TYPE _Sco, typename _Td>
+template <typename _Tp, int _Sco, typename _Td>
 static _LIBCPP_INLINE_VISIBILITY inline 
 _Tp __cxx_atomic_fetch_sub(volatile __cxx_atomic_lock_impl<_Tp, _Sco>* __a,
                            _Td __delta, int) {
@@ -1209,7 +1203,7 @@ _Tp __cxx_atomic_fetch_sub(volatile __cxx_atomic_lock_impl<_Tp, _Sco>* __a,
   return __old;
 }
 
-template <typename _Tp, _LIBCPP_ATOMIC_SCOPE_TYPE _Sco>
+template <typename _Tp, int _Sco>
 static _LIBCPP_INLINE_VISIBILITY inline 
 _Tp __cxx_atomic_fetch_and(volatile __cxx_atomic_lock_impl<_Tp, _Sco>* __a,
                            _Tp __pattern, int) {
@@ -1220,7 +1214,7 @@ _Tp __cxx_atomic_fetch_and(volatile __cxx_atomic_lock_impl<_Tp, _Sco>* __a,
   return __old;
 }
 
-template <typename _Tp, _LIBCPP_ATOMIC_SCOPE_TYPE _Sco>
+template <typename _Tp, int _Sco>
 static _LIBCPP_INLINE_VISIBILITY inline 
 _Tp __cxx_atomic_fetch_or(volatile __cxx_atomic_lock_impl<_Tp, _Sco>* __a,
                           _Tp __pattern, int) {
@@ -1231,7 +1225,7 @@ _Tp __cxx_atomic_fetch_or(volatile __cxx_atomic_lock_impl<_Tp, _Sco>* __a,
   return __old;
 }
 
-template <typename _Tp, _LIBCPP_ATOMIC_SCOPE_TYPE _Sco>
+template <typename _Tp, int _Sco>
 static _LIBCPP_INLINE_VISIBILITY inline 
 _Tp __cxx_atomic_fetch_xor(volatile __cxx_atomic_lock_impl<_Tp, _Sco>* __a,
                            _Tp __pattern, int) {
@@ -1242,21 +1236,21 @@ _Tp __cxx_atomic_fetch_xor(volatile __cxx_atomic_lock_impl<_Tp, _Sco>* __a,
   return __old;
 }
 
-template <class _Tp, _LIBCPP_ATOMIC_SCOPE_TYPE _Sco>
+template <class _Tp, int _Sco>
 using __cxx_atomic_impl = typename conditional<__atomic_always_lock_free(sizeof(_Tp), 0), 
                                                __cxx_atomic_base_impl<_Tp, _Sco>,
                                                __cxx_atomic_lock_impl<_Tp, _Sco>>::type;
 
 #else
 
-template <class _Tp, _LIBCPP_ATOMIC_SCOPE_TYPE _Sco>
+template <class _Tp, int _Sco>
 using __cxx_atomic_impl = __cxx_atomic_base_impl<_Tp, _Sco>;
 
 #endif //_LIBCPP_FREESTANDING && __cpp_lib_atomic_is_always_lock_free
 
 // general atomic<T>
 
-template <class _Tp, _LIBCPP_ATOMIC_SCOPE_TYPE _Sco = _LIBCPP_ATOMIC_SCOPE_DEFAULT, bool = is_integral<_Tp>::value && !is_same<_Tp, bool>::value>
+template <class _Tp, int _Sco = 0, bool = is_integral<_Tp>::value && !is_same<_Tp, bool>::value>
 struct __atomic_base  // false
 {
     mutable __cxx_atomic_impl<_Tp, _Sco> __a_;
@@ -1356,13 +1350,13 @@ private:
 };
 
 #if defined(__cpp_lib_atomic_is_always_lock_free)
-template <class _Tp, _LIBCPP_ATOMIC_SCOPE_TYPE _Sco, bool __b>
+template <class _Tp, int _Sco, bool __b>
 _LIBCPP_CONSTEXPR bool __atomic_base<_Tp, _Sco, __b>::is_always_lock_free;
 #endif
 
 // atomic<Integral>
 
-template <class _Tp, _LIBCPP_ATOMIC_SCOPE_TYPE _Sco>
+template <class _Tp, int _Sco>
 struct __atomic_base<_Tp, _Sco, true> 
     : public __atomic_base<_Tp, _Sco, false>
 {
@@ -2094,7 +2088,7 @@ atomic_fetch_xor_explicit(atomic<_Tp>* __o, _Tp __op, memory_order __m) _NOEXCEP
 
 typedef struct atomic_flag
 {
-    __cxx_atomic_impl<_LIBCPP_ATOMIC_FLAG_TYPE, _LIBCPP_ATOMIC_SCOPE_DEFAULT> __a_;
+    __cxx_atomic_impl<_LIBCPP_ATOMIC_FLAG_TYPE, 0> __a_;
 
     _LIBCPP_INLINE_VISIBILITY
     bool test_and_set(memory_order __m = memory_order_seq_cst) volatile _NOEXCEPT
