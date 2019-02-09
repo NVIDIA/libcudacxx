@@ -60,7 +60,9 @@ THE SOFTWARE.
 #include "../details/__config"
 #include "../details/__atomic"
 
-#define _LIBCPP_CXX03_LANG
+#undef _LIBCPP_DEFAULT
+#define _LIBCPP_DEFAULT { }
+
 #define atomic_thread_fence atomic_thread_fence_simt
 #define atomic_signal_fence atomic_signal_fence_simt
 
@@ -70,7 +72,8 @@ THE SOFTWARE.
 
 #include "../../libcxx/include/atomic"
 
-#undef _LIBCPP_CXX03_LANG
+#undef _LIBCPP_DEFAULT
+#define _LIBCPP_DEFAULT = default;
 #undef atomic_thread_fence
 #undef atomic_signal_fence
 

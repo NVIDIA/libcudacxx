@@ -66,6 +66,7 @@ THE SOFTWARE.
 #endif
 
 // force this outcome
+#undef _LIBCPP_ATOMIC_FLAG_TYPE
 #define _LIBCPP_ATOMIC_FLAG_TYPE int
 #undef _LIBCPP_INLINE_VISIBILITY
 #define _LIBCPP_INLINE_VISIBILITY __host__ __device__
