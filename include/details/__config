@@ -55,6 +55,7 @@ THE SOFTWARE.
     #define _LIBCPP_HAS_THREAD_API_EXTERNAL
     #define __alignof(x) alignof(x)
 #endif
+#define _LIBCPP_HAS_EXTERNAL_ATOMIC_IMP
 
 #include "../../libcxx/include/__config"
 

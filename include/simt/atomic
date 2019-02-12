@@ -68,8 +68,6 @@ THE SOFTWARE.
 
 #undef _LIBCPP_HAS_GCC_ATOMIC_IMP
 #undef _LIBCPP_HAS_C_ATOMIC_IMP
-#define _LIBCPP_HAS_EXTERNAL_ATOMIC_IMP
-
 #include "../../libcxx/include/atomic"
 
 #undef _LIBCPP_DEFAULT
