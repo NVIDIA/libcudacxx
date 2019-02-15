@@ -110,14 +110,14 @@ THE SOFTWARE.
         out << "}\n";
         for(auto& sz : ld_sizes) {
             for(auto& sem : ld_semantics) {
-                out << "template<class _A, class _B> ";
-                out << "static inline __device__ void __simt_load_" << sem << "_" << sz << "_" << s.first << "(_A _ptr, _B& _dst) {";
+                out << "template<class _CUDA_A, class _CUDA_B> ";
+                out << "static inline __device__ void __simt_load_" << sem << "_" << sz << "_" << s.first << "(_CUDA_A _ptr, _CUDA_B& _dst) {";
                 out << "asm volatile(\"ld." << sem << "." << s.second << ".b" << sz << " %0,[%1];\" : ";
                 out << "\"=" << registers[sz] << "\"(_dst) : \"l\"(_ptr)";
                 out << " : \"memory\"); }\n";
             }
             for(auto& cv: cv_qualifier) {
-                out << "template<class type, typename std::enable_if<sizeof(type)==" << sz/8 << ", int>::type = 0>\n";
+                out << "template<class type, typename _VSTD::enable_if<sizeof(type)==" << sz/8 << ", int>::type = 0>\n";
                 out << "__device__ void __atomic_load_simt(const " << cv << "type *ptr, type *ret, int memorder, " << scopenametag(s.first) << ") {\n";
                 out << "    uint" << (registers[sz] == "r" ? 32 : sz) << "_t tmp = 0;\n";
                 out << "    switch (memorder) {\n";
@@ -133,8 +133,8 @@ THE SOFTWARE.
         }
         for(auto& sz : st_sizes) {
             for(auto& sem : st_semantics) {
-                out << "template<class _A, class _B> ";
-                out << "static inline __device__ void __simt_store_" << sem << "_" << sz << "_" << s.first << "(_A _ptr, _B _src) { ";
+                out << "template<class _CUDA_A, class _CUDA_B> ";
+                out << "static inline __device__ void __simt_store_" << sem << "_" << sz << "_" << s.first << "(_CUDA_A _ptr, _CUDA_B _src) { ";
                 out << "asm volatile(\"st." << sem << "." << s.second << ".b" << sz << " [%0], %1;\" :: ";
                 out << "\"l\"(_ptr),\"" << registers[sz] << "\"(_src)";
                 out << " : \"memory\"); }\n";
@@ -158,14 +158,14 @@ THE SOFTWARE.
                 if(rmw.first != "fetch_sub")
                     for(auto& sem : rmw_semantics) {
                         if(rmw.first == "compare_exchange")
-                            out << "template<class _A, class _B, class _C, class _D> ";
+                            out << "template<class _CUDA_A, class _CUDA_B, class _CUDA_C, class _CUDA_D> ";
                         else
-                            out << "template<class _A, class _B, class _C> ";
+                            out << "template<class _CUDA_A, class _CUDA_B, class _CUDA_C> ";
                         out << "static inline __device__ void __simt_" << rmw.second << "_" << sem << "_" << sz << "_" << s.first << "(";
                         if(rmw.first == "compare_exchange")
-                            out << "_A _ptr, _B& _dst, _C _cmp, _D _op";
+                            out << "_CUDA_A _ptr, _CUDA_B& _dst, _CUDA_C _cmp, _CUDA_D _op";
                         else
-                            out << "_A _ptr, _B& _dst, _C _op";
+                            out << "_CUDA_A _ptr, _CUDA_B& _dst, _CUDA_C _op";
                         out << ") { ";
                         if(rmw.first == "fetch_add" || rmw.first == "fetch_sub")
                             out << "asm volatile(\"atom." << rmw.second << "." << sem << "." << s.second << ".u" << sz << " ";

@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 curl -O -# https://www.gutenberg.org/files/2600/2600-0.txt
 curl -O -# http://www.gutenberg.org/cache/epub/996/pg996.txt
 curl -O -# http://www.gutenberg.org/cache/epub/55/pg55.txt
