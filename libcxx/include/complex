@@ -245,7 +245,7 @@ template<class T, class charT, class traits>
 #include <type_traits>
 #include <stdexcept>
 #include <cmath>
-//#include <sstream>
+#include <sstream>
 #include <version>
 #endif //__simt__
 

@@ -30,10 +30,10 @@ if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
   set(PACKAGE_VERSION 9.0.0svn)
   set(PACKAGE_STRING "${PACKAGE_NAME} ${PACKAGE_VERSION}")
   set(PACKAGE_BUGREPORT "llvm-bugs@lists.llvm.org")
-
-  # Find the LLVM sources and simulate LLVM CMake options.
-  include(HandleOutOfTreeLLVM)
 endif()
+
+# Find the LLVM sources and simulate LLVM CMake options.
+include(HandleOutOfTreeLLVM)
 
 if (LIBCXX_STANDALONE_BUILD)
   include(FindPythonInterp)

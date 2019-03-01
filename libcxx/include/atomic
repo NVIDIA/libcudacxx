@@ -622,7 +622,7 @@ struct __cxx_atomic_base_impl {
 #endif // _LIBCPP_CXX03_LANG
   _LIBCPP_CONSTEXPR explicit __cxx_atomic_base_impl(_Tp value) _NOEXCEPT
     : __a_value(value) {}
-  _Tp __a_value;
+  _ALIGNAS(sizeof(_Tp)) _Tp __a_value;
 };
 
 _LIBCPP_INLINE_VISIBILITY inline _LIBCPP_CONSTEXPR int __to_gcc_order(memory_order __order) {
@@ -1405,7 +1405,7 @@ struct __atomic_base  // false
         {return __cxx_atomic_is_lock_free(sizeof(_Tp));}
     _LIBCPP_INLINE_VISIBILITY
     bool is_lock_free() const _NOEXCEPT
-        {return static_cast<__atomic_base const volatile*>(this)->is_lock_free();}
+        {return __cxx_atomic_is_lock_free(sizeof(_Tp));}
     _LIBCPP_INLINE_VISIBILITY
     void store(_Tp __d, memory_order __m = memory_order_seq_cst) volatile _NOEXCEPT
       _LIBCPP_CHECK_STORE_MEMORY_ORDER(__m)
@@ -1489,7 +1489,7 @@ private:
 
 #if defined(__cpp_lib_atomic_is_always_lock_free)
 template <class _Tp, int _Sco, bool __b>
-_LIBCPP_CONSTEXPR bool __atomic_base<_Tp, __b>::is_always_lock_free;
+_LIBCPP_CONSTEXPR bool __atomic_base<_Tp, _Sco, __b>::is_always_lock_free;
 #endif
 
 // atomic<Integral>
