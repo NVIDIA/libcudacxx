@@ -408,7 +408,9 @@ endif ()
 #===============================================================================
 
 set(LIBCXX_COMPILER    ${CMAKE_CXX_COMPILER})
-set(LIBCXX_SOURCE_DIR  ${CMAKE_CURRENT_SOURCE_DIR})
+if(NOT DEFINED LIBCXX_SOURCE_DIR)
+  set(LIBCXX_SOURCE_DIR  ${CMAKE_CURRENT_SOURCE_DIR})
+endif()
 set(LIBCXX_BINARY_DIR  ${CMAKE_CURRENT_BINARY_DIR})
 set(LIBCXX_BINARY_INCLUDE_DIR "${LIBCXX_BINARY_DIR}/include/c++build")
 
