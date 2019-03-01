@@ -59,3 +59,6 @@ keep.lst
 
 # Editor by-products
 .vscode/
+
+# Random things
+build-*
