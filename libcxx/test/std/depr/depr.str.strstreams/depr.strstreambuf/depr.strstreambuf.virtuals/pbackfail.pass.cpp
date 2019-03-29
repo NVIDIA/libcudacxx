@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -28,7 +27,7 @@ struct test
     virtual int_type pbackfail(int_type c = EOF) {return base::pbackfail(c);}
 };
 
-int main()
+int main(int, char**)
 {
     {
         const char buf[] = "123";
@@ -59,4 +58,6 @@ int main()
         assert(sb.pbackfail(EOF) == EOF);
         assert(sb.str() == std::string("133"));
     }
+
+  return 0;
 }

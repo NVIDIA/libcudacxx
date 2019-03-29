@@ -1,10 +1,9 @@
 // -*- C++ -*-
 //===-------------------------- locale ------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -547,7 +546,7 @@ __num_get<_CharT>::__stage2_float_loop(_CharT __ct, bool& __in_units, char& __ex
         __exp = 'P';
     else if ((__x & 0x5F) == __exp)
     {
-        __exp |= 0x80;
+        __exp |= (char) 0x80;
         if (__in_units)
         {
             __in_units = false;

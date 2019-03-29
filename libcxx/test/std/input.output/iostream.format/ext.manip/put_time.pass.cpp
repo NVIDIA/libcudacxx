@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -51,7 +50,7 @@ protected:
         }
 };
 
-int main()
+int main(int, char**)
 {
     {
         testbuf<char> sb;
@@ -84,4 +83,6 @@ int main()
         os << std::put_time(&t, L"%a %b %d %H:%M:%S %Y");
         assert(sb.str() == L"Sat Dec 31 23:55:59 2061");
     }
+
+  return 0;
 }

@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -27,7 +26,7 @@ struct A
 
 int A::count = 0;
 
-int main()
+int main(int, char**)
 {
     {
         std::weak_ptr<A> wp;
@@ -43,4 +42,6 @@ int main()
         assert(wp.use_count() == 0);
         assert(wp.expired() == (wp.use_count() == 0));
     }
+
+  return 0;
 }

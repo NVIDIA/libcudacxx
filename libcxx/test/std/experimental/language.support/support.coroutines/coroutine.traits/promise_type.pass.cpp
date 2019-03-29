@@ -1,10 +1,9 @@
 // -*- C++ -*-
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -61,7 +60,7 @@ void check_no_type() {
   static_assert(!has_promise_type<Traits>(), "");
 }
 
-int main()
+int main(int, char**)
 {
   {
     check_type<A*, A>();
@@ -74,4 +73,6 @@ int main()
     check_no_type<E>();
     check_no_type<C, int>();
   }
+
+  return 0;
 }

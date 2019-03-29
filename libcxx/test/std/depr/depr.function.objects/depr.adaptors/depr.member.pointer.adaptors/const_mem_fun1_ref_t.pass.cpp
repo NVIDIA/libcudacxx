@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -11,6 +10,8 @@
 // REQUIRES: c++98 || c++03 || c++11 || c++14
 
 // const_mem_fun1_ref_t
+
+#define _LIBCPP_DISABLE_DEPRECATION_WARNINGS
 
 #include <functional>
 #include <type_traits>
@@ -24,11 +25,13 @@ struct A
     double a4(unsigned i) const {return i-1;}
 };
 
-int main()
+int main(int, char**)
 {
     typedef std::const_mem_fun1_ref_t<double, A, unsigned> F;
     static_assert((std::is_base_of<std::binary_function<A, unsigned, double>, F>::value), "");
     const F f(&A::a4);
     const A a = A();
     assert(f(a, 6) == 5);
+
+  return 0;
 }

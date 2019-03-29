@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 //
@@ -37,7 +36,7 @@ is_prime(size_t n)
     return true;
 }
 
-int main()
+int main(int, char**)
 {
     assert(std::__next_prime(0) == 0);
     for (std::size_t n = 1; n <= 100000; ++n)
@@ -48,4 +47,6 @@ int main()
             assert(!is_prime(i));
         assert(is_prime(p));
     }
+
+  return 0;
 }

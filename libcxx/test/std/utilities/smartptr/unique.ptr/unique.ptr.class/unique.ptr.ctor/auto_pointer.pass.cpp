@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -16,6 +15,8 @@
 // unique_ptr
 
 // template <class U> unique_ptr(auto_ptr<U>&&) noexcept
+
+#define _LIBCPP_DISABLE_DEPRECATION_WARNINGS
 
 #include <memory>
 #include <utility>
@@ -62,7 +63,7 @@ void test_sfinae() {
   }
 }
 
-int main() {
+int main(int, char**) {
   {
     B* p = new B;
     std::auto_ptr<B> ap(p);
@@ -94,4 +95,6 @@ int main() {
   }
 #endif
   test_sfinae();
+
+  return 0;
 }

@@ -1,10 +1,9 @@
 // -*- C++ -*-
 //===------------------------ type_traits ---------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -91,6 +90,9 @@ namespace std
     template <class T> struct remove_extent;
     template <class T> struct remove_all_extents;
 
+    template <class T> struct is_bounded_array;                 // C++20
+    template <class T> struct is_unbounded_array;               // C++20
+
     // Member introspection:
     template <class T> struct is_pod;
     template <class T> struct is_trivial;
@@ -141,7 +143,10 @@ namespace std
     // Relationships between types:
     template <class T, class U> struct is_same;
     template <class Base, class Derived> struct is_base_of;
+
     template <class From, class To> struct is_convertible;
+    template <typename From, typename To> struct is_nothrow_convertible;                  // C++20
+    template <typename From, typename To> inline constexpr bool is_nothrow_convertible_v; // C++20
 
     template <class Fn, class... ArgTypes> struct is_invocable;
     template <class R, class Fn, class... ArgTypes> struct is_invocable_r;
@@ -196,6 +201,12 @@ namespace std
       using remove_extent_t      = typename remove_extent<T>::type;  // C++14
     template <class T>
       using remove_all_extents_t = typename remove_all_extents<T>::type;  // C++14
+
+    template <class T>
+      inline constexpr bool is_bounded_array_v
+        = is_bounded_array<T>::value;                                     // C++20
+      inline constexpr bool is_unbounded_array_v
+        = is_unbounded_array<T>::value;                                   // C++20
 
     // pointer modifications:
     template <class T>
@@ -402,11 +413,11 @@ namespace std
 }
 
 */
-#ifndef __simt__
+#ifndef __cuda_std__
 #include <__config>
 #include <cstddef>
 #include <version>
-#endif //__simt__
+#endif //__cuda_std__
 
 #if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
@@ -1338,6 +1349,26 @@ template <class _Tp, size_t _Np> struct _LIBCPP_TEMPLATE_VIS remove_all_extents<
 template <class _Tp> using remove_all_extents_t = typename remove_all_extents<_Tp>::type;
 #endif
 
+#if _LIBCPP_STD_VER > 17
+// is_bounded_array
+
+template <class>                 struct _LIBCPP_TEMPLATE_VIS is_bounded_array           : false_type {};
+template <class _Tp, size_t _Np> struct _LIBCPP_TEMPLATE_VIS is_bounded_array<_Tp[_Np]> : true_type {};
+
+template <class _Tp>
+_LIBCPP_INLINE_VAR _LIBCPP_CONSTEXPR
+bool is_bounded_array_v  = is_bounded_array<_Tp>::value;
+
+// is_unbounded_array
+
+template <class>     struct _LIBCPP_TEMPLATE_VIS is_unbounded_array        : false_type {};
+template <class _Tp> struct _LIBCPP_TEMPLATE_VIS is_unbounded_array<_Tp[]> : true_type {};
+
+template <class _Tp>
+_LIBCPP_INLINE_VAR _LIBCPP_CONSTEXPR
+bool is_unbounded_array_v  = is_unbounded_array<_Tp>::value;
+#endif
+
 // decay
 
 template <class _Up, bool>
@@ -1551,6 +1582,32 @@ template <class _From, class _To>
 _LIBCPP_INLINE_VAR _LIBCPP_CONSTEXPR bool is_convertible_v
     = is_convertible<_From, _To>::value;
 #endif
+
+// is_nothrow_convertible
+
+#if _LIBCPP_STD_VER > 17
+
+template <typename _Tp>
+static void __test_noexcept(_Tp) noexcept;
+
+template<typename _Fm, typename _To>
+static bool_constant<noexcept(__test_noexcept<_To>(declval<_Fm>()))>
+__is_nothrow_convertible_test();
+
+template <typename _Fm, typename _To>
+struct __is_nothrow_convertible_helper: decltype(__is_nothrow_convertible_test<_Fm, _To>())
+{ };
+
+template <typename _Fm, typename _To>
+struct is_nothrow_convertible : __or_<
+    __and_<is_void<_To>, is_void<_Fm>>,
+    __and_<is_convertible<_Fm, _To>, __is_nothrow_convertible_helper<_Fm, _To>>
+>::type { };
+
+template <typename _Fm, typename _To>
+inline constexpr bool is_nothrow_convertible_v = is_nothrow_convertible<_Fm, _To>::value;
+
+#endif // _LIBCPP_STD_VER > 17
 
 // is_empty
 
@@ -4363,28 +4420,31 @@ _LIBCPP_INVOKE_RETURN(_VSTD::forward<_Fp>(__f)(_VSTD::forward<_Args>(__args)...)
 #undef _LIBCPP_INVOKE_RETURN
 
 // __invokable
-
 template <class _Ret, class _Fp, class ..._Args>
 struct __invokable_r
 {
-    // FIXME: Check that _Ret, _Fp, and _Args... are all complete types, cv void,
-    // or incomplete array types as required by the standard.
-    using _Result = decltype(
-        _VSTD::__invoke(_VSTD::declval<_Fp>(), _VSTD::declval<_Args>()...));
+  template <class _XFp, class ..._XArgs>
+  static auto __try_call(int) -> decltype(
+    _VSTD::__invoke(_VSTD::declval<_XFp>(), _VSTD::declval<_XArgs>()...));
+  template <class _XFp, class ..._XArgs>
+  static __nat __try_call(...);
 
-    using type =
-        typename conditional<
-            !is_same<_Result, __nat>::value,
-            typename conditional<
-                is_void<_Ret>::value,
-                true_type,
-                is_convertible<_Result, _Ret>
-            >::type,
-            false_type
-        >::type;
-    static const bool value = type::value;
+  // FIXME: Check that _Ret, _Fp, and _Args... are all complete types, cv void,
+  // or incomplete array types as required by the standard.
+  using _Result = decltype(__try_call<_Fp, _Args...>(0));
+
+  using type =
+  typename conditional<
+      !is_same<_Result, __nat>::value,
+      typename conditional<
+          is_void<_Ret>::value,
+          true_type,
+          is_convertible<_Result, _Ret>
+      >::type,
+      false_type
+  >::type;
+  static const bool value = type::value;
 };
-
 template <class _Fp, class ..._Args>
 using __invokable = __invokable_r<void, _Fp, _Args...>;
 

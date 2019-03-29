@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -26,7 +25,7 @@ test(const S& lhs, const typename S::value_type* rhs, bool x, bool y)
     assert((rhs <= lhs) == y);
 }
 
-int main()
+int main(int, char**)
 {
     {
     typedef std::string_view S;
@@ -47,4 +46,6 @@ int main()
     test(S("abcdefghijklmnopqrst"), "abcdefghij", false, true);
     test(S("abcdefghijklmnopqrst"), "abcdefghijklmnopqrst", true, true);
     }
+
+  return 0;
 }

@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -13,6 +12,8 @@
 // template<Returnable S, ClassType T, CopyConstructible A>
 //   const_mem_fun1_ref_t<S,T,A>
 //   mem_fun_ref(S (T::*f)(A) const);
+
+#define _LIBCPP_DISABLE_DEPRECATION_WARNINGS
 
 #include <functional>
 #include <cassert>
@@ -25,8 +26,10 @@ struct A
     double a4(unsigned i) const {return i-1;}
 };
 
-int main()
+int main(int, char**)
 {
     const A a = A();
     assert(std::mem_fun_ref(&A::a4)(a, 6) == 5);
+
+  return 0;
 }

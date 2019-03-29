@@ -1,10 +1,9 @@
 // -*- C++ -*-
 //===--------------------------- iosfwd -----------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -92,10 +91,10 @@ typedef fpos<char_traits<wchar_t>::state_type> wstreampos;
 
 */
 
-#ifndef __simt__
+#ifndef __cuda_std__
 #include <__config>
 #include <wchar.h>  // for mbstate_t
-#endif //__simt__
+#endif //__cuda_std__
 
 #if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header

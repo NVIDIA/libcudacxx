@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 //
@@ -58,7 +57,7 @@
 #error FE_DFL_ENV not defined
 #endif
 
-int main()
+int main(int, char**)
 {
     std::fenv_t fenv;
     std::fexcept_t fex;
@@ -75,4 +74,6 @@ int main()
     static_assert((std::is_same<decltype(std::feholdexcept(&fenv)), int>::value), "");
     static_assert((std::is_same<decltype(std::fesetenv(&fenv)), int>::value), "");
     static_assert((std::is_same<decltype(std::feupdateenv(&fenv)), int>::value), "");
+
+  return 0;
 }

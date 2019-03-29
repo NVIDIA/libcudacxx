@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -36,7 +35,7 @@ struct test
     }
 };
 
-int main()
+int main(int, char**)
 {
     {
         test<char> t;
@@ -55,4 +54,6 @@ int main()
         test<wchar_t> t;
         assert(t.getloc().name() == LOCALE_en_US_UTF_8);
     }
+
+  return 0;
 }

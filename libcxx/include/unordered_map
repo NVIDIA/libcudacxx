@@ -1,10 +1,9 @@
 // -*- C++ -*-
 //===-------------------------- unordered_map -----------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -1603,10 +1602,8 @@ _Tp&
 unordered_map<_Key, _Tp, _Hash, _Pred, _Alloc>::at(const key_type& __k)
 {
     iterator __i = find(__k);
-#ifndef _LIBCPP_NO_EXCEPTIONS
     if (__i == end())
-        throw out_of_range("unordered_map::at: key not found");
-#endif  // _LIBCPP_NO_EXCEPTIONS
+        __throw_out_of_range("unordered_map::at: key not found");
     return __i->second;
 }
 
@@ -1615,10 +1612,8 @@ const _Tp&
 unordered_map<_Key, _Tp, _Hash, _Pred, _Alloc>::at(const key_type& __k) const
 {
     const_iterator __i = find(__k);
-#ifndef _LIBCPP_NO_EXCEPTIONS
     if (__i == end())
-        throw out_of_range("unordered_map::at: key not found");
-#endif  // _LIBCPP_NO_EXCEPTIONS
+        __throw_out_of_range("unordered_map::at: key not found");
     return __i->second;
 }
 

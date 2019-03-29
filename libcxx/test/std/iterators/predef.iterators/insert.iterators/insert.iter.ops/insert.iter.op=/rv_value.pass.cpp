@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -53,7 +52,7 @@ struct do_nothing
     void operator()(void*) const {}
 };
 
-int main()
+int main(int, char**)
 {
     {
     typedef std::unique_ptr<int, do_nothing> Ptr;
@@ -92,4 +91,6 @@ int main()
     insert3at(c2, c2.begin()+3, Ptr(x+3), Ptr(x+4), Ptr(x+5));
     test(std::move(c1), 3, Ptr(x+3), Ptr(x+4), Ptr(x+5), c2);
     }
+
+  return 0;
 }

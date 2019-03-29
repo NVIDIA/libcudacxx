@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -40,7 +39,7 @@ public:
 template <>
 struct std::tuple_size<Dummy3> {};
 
-int main()
+int main(int, char**)
 {
   // Test that tuple_size<const T> is not incomplete when tuple_size<T>::value
   // is well-formed but not a constant expression.
@@ -60,4 +59,6 @@ int main()
     // expected-error@__tuple:* 1 {{no member named 'value'}}
     (void)std::tuple_size<const Dummy3>::value; // expected-note {{here}}
   }
+
+  return 0;
 }

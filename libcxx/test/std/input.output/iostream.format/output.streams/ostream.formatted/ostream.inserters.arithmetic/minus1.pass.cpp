@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -59,7 +58,7 @@ void test_hex(const char *expected)
     assert(str == expected);
 }
 
-int main()
+int main(int, char**)
 {
 
     test_octal<uint16_t>(                "177777");
@@ -111,4 +110,6 @@ int main()
         test_hex<unsigned long long>("FFFFFFFFFFFFFFFF");
         test_hex<         long long>("FFFFFFFFFFFFFFFF");
     }
+
+  return 0;
 }

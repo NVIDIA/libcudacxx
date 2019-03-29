@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -33,7 +32,7 @@ namespace std
     };
 }
 
-int main()
+int main(int, char**)
 {
     typedef std::unordered_map<Key, int> MapT;
     typedef MapT::iterator Iter;
@@ -43,4 +42,6 @@ int main()
     std::pair<Iter, bool> result = map.insert(std::make_pair(Key(0), 42));
     assert(result.second);
     assert(result.first->second == 42);
+
+  return 0;
 }

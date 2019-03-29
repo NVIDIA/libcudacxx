@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -23,7 +22,7 @@
 #include <codecvt>
 #include <cassert>
 
-int main()
+int main(int, char**)
 {
     {
         typedef std::codecvt_utf8<wchar_t> C;
@@ -241,4 +240,6 @@ int main()
         r = c.length(m, n, n+1, 3);
         assert(r == 1);
     }
+
+  return 0;
 }

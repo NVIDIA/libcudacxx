@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -17,13 +16,15 @@
 //  is defined before including <memory>, then auto_ptr will be restored.
 
 // MODULES_DEFINES: _LIBCPP_ENABLE_CXX17_REMOVED_AUTO_PTR
-
 #define _LIBCPP_ENABLE_CXX17_REMOVED_AUTO_PTR
+#define _LIBCPP_DISABLE_DEPRECATION_WARNINGS
 
 #include <memory>
 #include <type_traits>
 
-int main()
+int main(int, char**)
 {
     std::auto_ptr<int> p;
+
+  return 0;
 }

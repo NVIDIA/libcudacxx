@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -13,6 +12,8 @@
 // REQUIRES: c++98 || c++03 || c++11 || c++14
 
 // template<class Y> shared_ptr& operator=(auto_ptr<Y>&& r);
+
+#define _LIBCPP_DISABLE_DEPRECATION_WARNINGS
 
 #include <memory>
 #include <type_traits>
@@ -41,7 +42,7 @@ struct A
 
 int A::count = 0;
 
-int main()
+int main(int, char**)
 {
     {
         std::auto_ptr<A> pA(new A);
@@ -111,4 +112,6 @@ int main()
     }
     assert(B::count == 0);
     assert(A::count == 0);
+
+  return 0;
 }

@@ -1,10 +1,9 @@
 // -*- C++ -*-
 //===--------------------------- complex ----------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -240,14 +239,14 @@ template<class T, class charT, class traits>
 
 */
 
-#ifndef __simt__
+#ifndef __cuda_std__
 #include <__config>
 #include <type_traits>
 #include <stdexcept>
 #include <cmath>
 #include <sstream>
 #include <version>
-#endif //__simt__
+#endif //__cuda_std__
 
 #if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
@@ -1378,7 +1377,7 @@ tan(const complex<_Tp>& __x)
     return complex<_Tp>(__z.imag(), -__z.real());
 }
 
-#ifndef __simt__
+#ifndef __cuda_std__
 
 template<class _Tp, class _CharT, class _Traits>
 basic_istream<_CharT, _Traits>&
@@ -1454,7 +1453,7 @@ operator<<(basic_ostream<_CharT, _Traits>& __os, const complex<_Tp>& __x)
     return __os << __s.str();
 }
 
-#endif // __simt__
+#endif // __cuda_std__
 
 #if _LIBCPP_STD_VER > 11 
 // Literal suffix for complex number literals [complex.literals]

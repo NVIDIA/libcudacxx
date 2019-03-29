@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -16,7 +15,7 @@
 #include <regex>
 
 
-int main() {
+int main(int, char**) {
     assert(std::regex_match("X", std::regex("[X]")));
     assert(std::regex_match("X", std::regex("[XY]")));
     assert(!std::regex_match("X", std::regex("[^X]")));
@@ -41,4 +40,6 @@ int main() {
     assert(!std::regex_match("_", std::regex("[\\W]")));
     assert(std::regex_match("X", std::regex("[^\\W]")));
     assert(std::regex_match("_", std::regex("[^\\W]")));
+
+  return 0;
 }

@@ -1,10 +1,9 @@
 // -*- C++ -*-
 //===-------------------------- algorithm ---------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -785,7 +784,7 @@ struct __debug_less
     __debug_less(_Compare& __c) : __comp_(__c) {}
 
     template <class _Tp, class _Up>
-    bool operator()(const _Tp& __x, const _Up& __y)
+    bool operator()(_Tp& __x,  _Up& __y)
     {
         bool __r = __comp_(__x, __y);
         if (__r)
@@ -796,18 +795,18 @@ struct __debug_less
     template <class _LHS, class _RHS>
     inline _LIBCPP_INLINE_VISIBILITY
     decltype((void)_VSTD::declval<_Compare&>()(
-        _VSTD::declval<_LHS const&>(), _VSTD::declval<_RHS const&>()))
-    __do_compare_assert(int, _LHS const& __l, _RHS const& __r) {
+        _VSTD::declval<_LHS &>(), _VSTD::declval<_RHS &>()))
+    __do_compare_assert(int, _LHS & __l, _RHS & __r) {
         _LIBCPP_ASSERT(!__comp_(__l, __r),
             "Comparator does not induce a strict weak ordering");
     }
 
     template <class _LHS, class _RHS>
     inline _LIBCPP_INLINE_VISIBILITY
-    void __do_compare_assert(long, _LHS const&, _RHS const&) {}
+    void __do_compare_assert(long, _LHS &, _RHS &) {}
 };
 
-#endif  // _LIBCPP_DEBUG
+#endif // _LIBCPP_DEBUG
 
 // all_of
 
@@ -1607,6 +1606,18 @@ typename enable_if
     _Tp*
 >::type
 __unwrap_iter(__wrap_iter<_Tp*> __i)
+{
+    return __i.base();
+}
+
+template <class _Tp>
+inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_IF_NODEBUG
+typename enable_if
+<
+    is_trivially_copy_assignable<_Tp>::value,
+    const _Tp*
+>::type
+__unwrap_iter(__wrap_iter<const _Tp*> __i)
 {
     return __i.base();
 }
@@ -2990,7 +3001,7 @@ random_shuffle(_RandomAccessIterator __first, _RandomAccessIterator __last)
     {
         _Dp __uid;
         __rs_default __g = __rs_get();
-        for (--__last, --__d; __first < __last; ++__first, --__d)
+        for (--__last, (void) --__d; __first < __last; ++__first, (void) --__d)
         {
             difference_type __i = __uid(__g, _Pp(0, __d));
             if (__i != difference_type(0))
@@ -3012,7 +3023,7 @@ random_shuffle(_RandomAccessIterator __first, _RandomAccessIterator __last,
     difference_type __d = __last - __first;
     if (__d > 1)
     {
-        for (--__last; __first < __last; ++__first, --__d)
+        for (--__last; __first < __last; ++__first, (void) --__d)
         {
             difference_type __i = __rand(__d);
             if (__i != difference_type(0))

@@ -4,21 +4,22 @@ import os
 import tempfile
 
 def get_libcxx_paths():
-  script_path = os.path.dirname(os.path.abspath(__file__))
+  utils_path = os.path.dirname(os.path.abspath(__file__))
   script_name = os.path.basename(__file__)
-  assert os.path.exists(script_path)
-  depth = 5
-  src_root = script_path
-  for _ in xrange(0, 5):
-    src_root = os.path.dirname(src_root)
+  assert os.path.exists(utils_path)
+  src_root = os.path.dirname(utils_path)
   include_path = os.path.join(src_root, 'include')
   assert os.path.exists(include_path)
   docs_path = os.path.join(src_root, 'docs')
   assert os.path.exists(docs_path)
-  return script_path, script_name, src_root, include_path, docs_path
+  macro_test_path = os.path.join(src_root, 'test', 'std', 'language.support',
+                            'support.limits', 'support.limits.general')
+  assert os.path.exists(macro_test_path)
+  assert os.path.exists(os.path.join(macro_test_path, 'version.version.pass.cpp'))
+  return script_name, src_root, include_path, docs_path, macro_test_path
 
 
-script_path, script_name, source_root, include_path, docs_path = get_libcxx_paths()
+script_name, source_root, include_path, docs_path, macro_test_path = get_libcxx_paths()
 
 def has_header(h):
   h_path = os.path.join(include_path, h)
@@ -685,10 +686,9 @@ def produce_version_header():
   template="""// -*- C++ -*-
 //===--------------------------- version ----------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -829,10 +829,9 @@ def produce_tests():
     test_body = \
 """//===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 //
@@ -866,7 +865,7 @@ def produce_tests():
 
 #endif // TEST_STD_VER > 17
 
-int main() {{}}
+int main(int, char**) {{ return 0; }}
 """.format(script_name=script_name,
            header=h,
            test_tags=test_tags,
@@ -876,7 +875,7 @@ int main() {{}}
            cxx17_tests=generate_std_test(test_list, 'c++17').strip(),
            cxx2a_tests=generate_std_test(test_list, 'c++2a').strip())
     test_name = "{header}.version.pass.cpp".format(header=h)
-    out_path = os.path.join(script_path, test_name)
+    out_path = os.path.join(macro_test_path, test_name)
     with open(out_path, 'w') as f:
       f.write(test_body)
 

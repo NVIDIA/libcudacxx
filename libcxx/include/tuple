@@ -1,10 +1,9 @@
 // -*- C++ -*-
 //===--------------------------- tuple ------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is distributed under the University of Illinois Open Source
-// License. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -135,7 +134,7 @@ template <class... Types>
 
 */
 
-#ifndef __simt__
+#ifndef __cuda_std__
 #include <__config>
 #include <__tuple>
 #include <cstddef>
@@ -1123,6 +1122,7 @@ inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
 bool
 operator==(const tuple<_Tp...>& __x, const tuple<_Up...>& __y)
 {
+    static_assert (sizeof...(_Tp) == sizeof...(_Up), "Can't compare tuples of different sizes");
     return __tuple_equal<sizeof...(_Tp)>()(__x, __y);
 }
 
@@ -1166,6 +1166,7 @@ inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
 bool
 operator<(const tuple<_Tp...>& __x, const tuple<_Up...>& __y)
 {
+    static_assert (sizeof...(_Tp) == sizeof...(_Up), "Can't compare tuples of different sizes");
     return __tuple_less<sizeof...(_Tp)>()(__x, __y);
 }
 

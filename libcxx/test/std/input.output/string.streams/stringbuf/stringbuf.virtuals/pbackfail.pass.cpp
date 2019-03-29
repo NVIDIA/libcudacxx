@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -33,7 +32,7 @@ struct testbuf
     void pbump(int n) {base::pbump(n);}
 };
 
-int main()
+int main(int, char**)
 {
     {  // sanity check
     testbuf<char> tb("");
@@ -93,4 +92,6 @@ int main()
         assert(sb.pbackfail(std::char_traits<wchar_t>::eof()) == std::char_traits<wchar_t>::eof());
         assert(sb.str() == L"133");
     }
+
+  return 0;
 }

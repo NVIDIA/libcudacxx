@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 //
@@ -61,7 +60,7 @@ public:
         : std::moneypunct_byname<wchar_t, true>(nm, refs) {}
 };
 
-int main()
+int main(int, char**)
 {
     // Monetary grouping strings may be terminated with 0 or CHAR_MAX, defining
     // how the grouping is repeated.
@@ -150,4 +149,6 @@ int main()
         Fwt f(LOCALE_zh_CN_UTF_8, 1);
         assert(f.grouping() == "\3");
     }
+
+  return 0;
 }

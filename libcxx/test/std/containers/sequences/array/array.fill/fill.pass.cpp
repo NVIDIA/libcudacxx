@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -18,7 +17,7 @@
 // Disable the missing braces warning for this reason.
 #include "disable_missing_braces_warning.h"
 
-int main()
+int main(int, char**)
 {
     {
         typedef double T;
@@ -37,4 +36,6 @@ int main()
         c.fill(5.5);
         assert(c.size() == 0);
     }
+
+  return 0;
 }

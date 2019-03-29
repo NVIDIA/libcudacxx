@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -40,7 +39,7 @@ void test (Delim &&d, Iter first, Iter last, const CharT *expected ) {
     assert(sstream.str() == expected);
     }
 
-int main () {
+int main(int, char**) {
     const char chars[] = "0123456789";
     const int  ints [] = { 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 };
 
@@ -50,4 +49,6 @@ int main () {
     test('x', ints,  ints+10,  "10x11x12x13x14x15x16x17x18x19");
     test("Z", chars, chars+10, "0Z1Z2Z3Z4Z5Z6Z7Z8Z9");
     test("z", ints,  ints+10,  "10z11z12z13z14z15z16z17z18z19");
-    }
+    
+  return 0;
+}

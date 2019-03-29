@@ -121,8 +121,6 @@ This list contains known issues with libc++
 
 * Building libc++ with ``-fno-rtti`` is not supported. However
   linking against it with ``-fno-rtti`` is supported.
-* On OS X v10.8 and older the CMake option ``-DLIBCXX_LIBCPPABI_VERSION=""``
-  must be used during configuration.
 
 
 A full list of currently open libc++ bugs can be `found here`__.
@@ -190,5 +188,4 @@ Quick Links
 * `LLVM Bugzilla <https://bugs.llvm.org/>`_
 * `libcxx-commits Mailing List`_
 * `libcxx-dev Mailing List`_
-* `Browse libc++ -- SVN <http://llvm.org/svn/llvm-project/libcxx/trunk/>`_
-* `Browse libc++ -- ViewVC <http://llvm.org/viewvc/llvm-project/libcxx/trunk/>`_
+* `Browse libc++ Sources <https://github.com/llvm/llvm-project/tree/master/libcxx/>`_

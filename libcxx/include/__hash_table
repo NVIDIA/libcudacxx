@@ -1,10 +1,9 @@
 // -*- C++ -*-
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -1261,7 +1260,7 @@ public:
 
     void swap(__hash_table& __u)
 #if _LIBCPP_STD_VER <= 11
-        _NOEXCEPT_DEBUG_(
+        _NOEXCEPT_(
             __is_nothrow_swappable<hasher>::value && __is_nothrow_swappable<key_equal>::value
             && (!allocator_traits<__pointer_allocator>::propagate_on_container_swap::value
                   || __is_nothrow_swappable<__pointer_allocator>::value)
@@ -1269,7 +1268,7 @@ public:
                   || __is_nothrow_swappable<__node_allocator>::value)
             );
 #else
-     _NOEXCEPT_DEBUG_(__is_nothrow_swappable<hasher>::value && __is_nothrow_swappable<key_equal>::value);
+     _NOEXCEPT_(__is_nothrow_swappable<hasher>::value && __is_nothrow_swappable<key_equal>::value);
 #endif
 
     _LIBCPP_INLINE_VISIBILITY
@@ -2372,6 +2371,7 @@ __hash_table<_Tp, _Hash, _Equal, _Alloc>::__node_handle_merge_multi(
 template <class _Tp, class _Hash, class _Equal, class _Alloc>
 void
 __hash_table<_Tp, _Hash, _Equal, _Alloc>::rehash(size_type __n)
+_LIBCPP_DISABLE_UBSAN_UNSIGNED_INTEGER_CHECK
 {
     if (__n == 1)
         __n = 2;
@@ -2807,7 +2807,7 @@ template <class _Tp, class _Hash, class _Equal, class _Alloc>
 void
 __hash_table<_Tp, _Hash, _Equal, _Alloc>::swap(__hash_table& __u)
 #if _LIBCPP_STD_VER <= 11
-    _NOEXCEPT_DEBUG_(
+    _NOEXCEPT_(
         __is_nothrow_swappable<hasher>::value && __is_nothrow_swappable<key_equal>::value
         && (!allocator_traits<__pointer_allocator>::propagate_on_container_swap::value
               || __is_nothrow_swappable<__pointer_allocator>::value)
@@ -2815,7 +2815,7 @@ __hash_table<_Tp, _Hash, _Equal, _Alloc>::swap(__hash_table& __u)
               || __is_nothrow_swappable<__node_allocator>::value)
             )
 #else
-  _NOEXCEPT_DEBUG_(__is_nothrow_swappable<hasher>::value && __is_nothrow_swappable<key_equal>::value)
+  _NOEXCEPT_(__is_nothrow_swappable<hasher>::value && __is_nothrow_swappable<key_equal>::value)
 #endif
 {
     _LIBCPP_ASSERT(__node_traits::propagate_on_container_swap::value ||

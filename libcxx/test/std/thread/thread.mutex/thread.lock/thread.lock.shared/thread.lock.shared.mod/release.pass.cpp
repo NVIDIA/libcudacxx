@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 //
@@ -32,7 +31,7 @@ int mutex::unlock_count = 0;
 
 mutex m;
 
-int main()
+int main(int, char**)
 {
     std::shared_lock<mutex> lk(m);
     assert(lk.mutex() == &m);
@@ -45,4 +44,6 @@ int main()
     assert(mutex::lock_count == 1);
     assert(mutex::unlock_count == 0);
     static_assert(noexcept(lk.release()), "release must be noexcept");
+
+  return 0;
 }
