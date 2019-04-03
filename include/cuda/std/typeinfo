@@ -27,12 +27,14 @@ THE SOFTWARE.
 
 #include <typeinfo>
 
-namespace cuda { namespace std { inline namespace v1 {
+#include "detail/config"
+
+_LIBCPP_BEGIN_NAMESPACE_STD
 
   using type_info = ::std::type_info;
   using bad_cast = ::std::bad_cast;
   using bad_typeid = ::std::bad_typeid;
 
-} } }
+_LIBCPP_END_NAMESPACE_STD
 
 #endif //_CUDA_TYPEINFO

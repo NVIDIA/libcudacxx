@@ -27,7 +27,9 @@ THE SOFTWARE.
 
 #include <initializer_list>
 
-namespace cuda { namespace std { inline namespace v1 {
+#include "detail/__config"
+
+_LIBCPP_BEGIN_NAMESPACE_STD
 
     template<class E>
     using initializer_list = ::std::initializer_list<E>;
@@ -37,6 +39,6 @@ namespace cuda { namespace std { inline namespace v1 {
     template<class E> __host__ __device__ inline constexpr const E* end(initializer_list<E> il) noexcept {
         return ::std::end(il); }
 
-} } }
+_LIBCPP_END_NAMESPACE_STD
 
 #endif //_CUDA_INITIALIZER_LIST

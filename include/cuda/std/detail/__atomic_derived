@@ -22,7 +22,8 @@ THE SOFTWARE.
 
 */
 
-namespace cuda { namespace detail { inline namespace v1 {
+_LIBCPP_BEGIN_NAMESPACE_CUDA
+namespace detail {
 
 template<class type, class scope, typename std::enable_if<sizeof(type) <= 2, int>::type = 0> \
 bool __device__ __atomic_compare_exchange_cuda(type volatile *ptr, type *expected, const type *desired, bool, int success_memorder, int failure_memorder, scope s) {
@@ -131,4 +132,6 @@ static inline __device__ void __atomic_signal_fence_cuda(int) {
     asm volatile("":::"memory");
 }
 
-} } }
+}
+_LIBCPP_END_NAMESPACE_CUDA
+

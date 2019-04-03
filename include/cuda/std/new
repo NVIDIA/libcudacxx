@@ -27,7 +27,9 @@ THE SOFTWARE.
 
 #include <new>
 
-namespace cuda { namespace std { inline namespace v1 {
+#include "detail/__config"
+
+_LIBCPP_BEGIN_NAMESPACE_STD
 
     using bad_alloc = ::std::bad_alloc;
     using bad_array_new_length = ::std::bad_array_new_length;
@@ -40,6 +42,6 @@ namespace cuda { namespace std { inline namespace v1 {
     inline new_handler get_new_handler() noexcept {
         return ::std::get_new_handler(); }
 
-} } }
+_LIBCPP_END_NAMESPACE_STD
 
 #endif //_CUDA_NEW

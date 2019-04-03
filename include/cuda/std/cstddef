@@ -32,11 +32,13 @@ THE SOFTWARE.
 #include <stddef.h>
 #include "version"
 
-namespace cuda { namespace std { inline namespace v1 {
-    typedef decltype(nullptr) nullptr_t;
-} } }
-
 #include "detail/__config"
+
+_LIBCPP_BEGIN_NAMESPACE_STD
+
+    typedef decltype(nullptr) nullptr_t;
+
+_LIBCPP_END_NAMESPACE_STD
 
 #include "detail/libcxx/cstddef"
 

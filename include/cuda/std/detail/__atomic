@@ -53,9 +53,9 @@ THE SOFTWARE.
 #endif //__ATOMIC_BLOCK
 
 
-namespace cuda {
+_LIBCPP_BEGIN_NAMESPACE_CUDA
 
-namespace detail { inline namespace v1 {
+namespace detail {
 
     inline __device__ int __stronger_order_cuda(int a, int b) {
         int const max = a > b ? a : b;
@@ -68,21 +68,18 @@ namespace detail { inline namespace v1 {
             __ATOMIC_RELEASE };
         return xform[a < b ? a : b];
     }
-} }
-
-inline namespace v1 {
-
-    enum thread_scope {
-        thread_scope_system = __ATOMIC_SYSTEM,
-        thread_scope_device = __ATOMIC_DEVICE,
-        thread_scope_block = __ATOMIC_BLOCK
-    };
-
-    #define _LIBCPP_ATOMIC_SCOPE_TYPE ::cuda::thread_scope
-    #define _LIBCPP_ATOMIC_SCOPE_DEFAULT ::cuda::thread_scope::system
 }
 
-namespace detail {inline namespace v1 {
+enum thread_scope {
+    thread_scope_system = __ATOMIC_SYSTEM,
+    thread_scope_device = __ATOMIC_DEVICE,
+    thread_scope_block = __ATOMIC_BLOCK
+};
+
+#define _LIBCPP_ATOMIC_SCOPE_TYPE ::cuda::thread_scope
+#define _LIBCPP_ATOMIC_SCOPE_DEFAULT ::cuda::thread_scope::system
+
+namespace detail {
 
     struct __thread_scope_block_tag { };
     struct __thread_scope_device_tag { };
@@ -101,9 +98,9 @@ namespace detail {inline namespace v1 {
             typename __scope_enum_to_tag<_Scope>::type {
         return typename __scope_enum_to_tag<_Scope>::type();
     }
-} }
-
 }
+
+_LIBCPP_END_NAMESPACE_CUDA
 
 #include "__atomic_generated"
 #include "__atomic_derived"

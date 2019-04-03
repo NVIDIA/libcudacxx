@@ -22,7 +22,9 @@ THE SOFTWARE.
 
 */
 
-namespace cuda { namespace detail { inline namespace v1 {
+_LIBCPP_BEGIN_NAMESPACE_CUDA
+namespace detail {
+
 static inline __device__ void __cuda_fence_sc_block() { asm volatile("fence.sc.cta;":::"memory"); }
 static inline __device__ void __cuda_fence_acq_rel_block() { asm volatile("fence.acq_rel.cta;":::"memory"); }
 static inline __device__ void __atomic_thread_fence_cuda(int memorder, __thread_scope_block_tag) {
@@ -1361,4 +1363,6 @@ __device__ type* __atomic_fetch_sub_cuda(type *volatile *ptr, ptrdiff_t val, int
     memcpy(&ret, &tmp, 8);
     return ret;
 }
-} } }
+
+}
+_LIBCPP_END_NAMESPACE_CUDA
