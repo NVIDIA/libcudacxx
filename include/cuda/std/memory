@@ -36,18 +36,18 @@ THE SOFTWARE.
 #include "new"
 #include "utility"
 #include "limits"
-#include "../details/iterator"
-#include "../details/__functional_base"
-#include "../details/iosfwd"
+#include "detail/iterator"
+#include "detail/__functional_base"
+#include "detail/iosfwd"
 #include "tuple"
-#include "../details/stdexcept"
-#include "../details/cstring"
-#include "../details/cassert"
+#include "detail/stdexcept"
+#include "detail/cstring"
+#include "detail/cassert"
 #include "atomic"
 #include "version"
 
-#include "../details/__config"
+#include "detail/__config"
 
-#include "../details/libcxx/memory"
+#include "detail/libcxx/memory"
 
 #endif //_CUDA_MEMORY

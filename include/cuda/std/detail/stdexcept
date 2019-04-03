@@ -32,6 +32,6 @@ THE SOFTWARE.
 
 #include "__config"
 
-#include "../details/libcxx/stdexcept"
+#include "detail/libcxx/stdexcept"
 
 #endif //_CUDA_STDEXCEPT

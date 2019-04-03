@@ -33,6 +33,6 @@ THE SOFTWARE.
 
 #include "__config"
 
-#include "../details/libcxx/cstring"
+#include "detail/libcxx/cstring"
 
 #endif //_CUDA_CSTRING

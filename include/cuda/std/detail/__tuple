@@ -22,17 +22,14 @@ THE SOFTWARE.
 
 */
 
-#ifndef _CUDA_CMATH
-#define _CUDA_CMATH
+#ifndef _CUDA___TUPLE
+#define _CUDA___TUPLE
 
-#ifndef __CUDACC_RTC__
-    #include <cmath>
-#endif //__CUDACC_RTC__
-
-#include <math.h>
+#include "../std/cstddef"
+#include "../std/type_traits"
 
 #include "__config"
 
-#include "../details/libcxx/cmath"
+#include "detail/libcxx/__tuple"
 
-#endif //_CUDA_CMATH
+#endif //_CUDA___TUPLE

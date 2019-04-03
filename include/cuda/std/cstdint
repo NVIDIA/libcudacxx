@@ -31,8 +31,8 @@ THE SOFTWARE.
 
 #include <stdint.h>
 #include "version"
-#include "../details/__config"
+#include "detail/__config"
 
-#include "../details/libcxx/cstdint"
+#include "detail/libcxx/cstdint"
 
 #endif //_CUDA_CSTDINT

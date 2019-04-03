@@ -55,7 +55,7 @@ THE SOFTWARE.
 
 namespace cuda {
 
-namespace details { inline namespace v1 {
+namespace detail { inline namespace v1 {
 
     inline __device__ int __stronger_order_cuda(int a, int b) {
         int const max = a > b ? a : b;
@@ -82,7 +82,7 @@ inline namespace v1 {
     #define _LIBCPP_ATOMIC_SCOPE_DEFAULT ::cuda::thread_scope::system
 }
 
-namespace details {inline namespace v1 {
+namespace detail {inline namespace v1 {
 
     struct __thread_scope_block_tag { };
     struct __thread_scope_device_tag { };
@@ -143,7 +143,7 @@ __host__ __device__ inline void __cxx_atomic_init(__cxx_atomic_base_impl<_Tp, _S
 template<class _Tp, int _Sco>
 __host__ __device__ inline void __cxx_atomic_store(__cxx_atomic_base_impl<_Tp, _Sco> volatile* __a, _Tp __val, int __order) {
 #ifdef __CUDA_ARCH__
-    details::__atomic_store_n_cuda(&__a->__a_value, __val, __order, details::__scope_tag<_Sco>());
+    detail::__atomic_store_n_cuda(&__a->__a_value, __val, __order, detail::__scope_tag<_Sco>());
 #else
     ::std::atomic_store_explicit(&__a->__a_value, __val, (::std::memory_order)__order);
 #endif
@@ -151,7 +151,7 @@ __host__ __device__ inline void __cxx_atomic_store(__cxx_atomic_base_impl<_Tp, _
 template<class _Tp, int _Sco>
 __host__ __device__ inline _Tp __cxx_atomic_load(__cxx_atomic_base_impl<_Tp, _Sco> volatile* __a, int __order) {
 #ifdef __CUDA_ARCH__
-    return details::__atomic_load_n_cuda(&__a->__a_value, __order, details::__scope_tag<_Sco>());
+    return detail::__atomic_load_n_cuda(&__a->__a_value, __order, detail::__scope_tag<_Sco>());
 #else
     return ::std::atomic_load_explicit(&__a->__a_value, (::std::memory_order)__order);
 #endif
@@ -159,7 +159,7 @@ __host__ __device__ inline _Tp __cxx_atomic_load(__cxx_atomic_base_impl<_Tp, _Sc
 template<class _Tp, int _Sco>
 __host__ __device__ inline _Tp __cxx_atomic_exchange(__cxx_atomic_base_impl<_Tp, _Sco> volatile* __a, _Tp __value, int __order) {
 #ifdef __CUDA_ARCH__
-    return details::__atomic_exchange_n_cuda(&__a->__a_value, __value, __order, details::__scope_tag<_Sco>());
+    return detail::__atomic_exchange_n_cuda(&__a->__a_value, __value, __order, detail::__scope_tag<_Sco>());
 #else
     return ::std::atomic_exchange_explicit(&__a->__a_value, __value, (::std::memory_order)__order);
 #endif
@@ -167,7 +167,7 @@ __host__ __device__ inline _Tp __cxx_atomic_exchange(__cxx_atomic_base_impl<_Tp,
 template<class _Tp, int _Sco>
 __host__ __device__ inline bool __cxx_atomic_compare_exchange_strong(__cxx_atomic_base_impl<_Tp, _Sco> volatile* __a, _Tp* __expected, _Tp __value, int __success, int __failure) {
 #ifdef __CUDA_ARCH__
-    return details::__atomic_compare_exchange_n_cuda(&__a->__a_value, __expected, __value, false, __success, __failure, details::__scope_tag<_Sco>());
+    return detail::__atomic_compare_exchange_n_cuda(&__a->__a_value, __expected, __value, false, __success, __failure, detail::__scope_tag<_Sco>());
 #else
     return ::std::atomic_compare_exchange_strong_explicit(&__a->__a_value, __expected, __value, (::std::memory_order)__success, (::std::memory_order)__failure);
 #endif
@@ -175,7 +175,7 @@ __host__ __device__ inline bool __cxx_atomic_compare_exchange_strong(__cxx_atomi
 template<class _Tp, int _Sco>
 __host__ __device__ inline bool __cxx_atomic_compare_exchange_weak(__cxx_atomic_base_impl<_Tp, _Sco> volatile* __a, _Tp* __expected, _Tp __value, int __success, int __failure) {
 #ifdef __CUDA_ARCH__
-    return details::__atomic_compare_exchange_n_cuda(&__a->__a_value, __expected, __value, true, __success, __failure, details::__scope_tag<_Sco>());
+    return detail::__atomic_compare_exchange_n_cuda(&__a->__a_value, __expected, __value, true, __success, __failure, detail::__scope_tag<_Sco>());
 #else
     return ::std::atomic_compare_exchange_weak_explicit(&__a->__a_value, __expected, __value, (::std::memory_order)__success, (::std::memory_order)__failure);
 #endif
@@ -183,7 +183,7 @@ __host__ __device__ inline bool __cxx_atomic_compare_exchange_weak(__cxx_atomic_
 template<class _Tp, int _Sco>
 __host__ __device__ inline _Tp __cxx_atomic_fetch_add(__cxx_atomic_base_impl<_Tp, _Sco> volatile* __a, _Tp __delta, int __order) {
 #ifdef __CUDA_ARCH__
-    return details::__atomic_fetch_add_cuda(&__a->__a_value, __delta, __order, details::__scope_tag<_Sco>());
+    return detail::__atomic_fetch_add_cuda(&__a->__a_value, __delta, __order, detail::__scope_tag<_Sco>());
 #else
     return ::std::atomic_fetch_add_explicit(&__a->__a_value, __delta, (::std::memory_order)__order);
 #endif
@@ -191,7 +191,7 @@ __host__ __device__ inline _Tp __cxx_atomic_fetch_add(__cxx_atomic_base_impl<_Tp
 template<class _Tp, int _Sco>
 __host__ __device__ inline _Tp* __cxx_atomic_fetch_add(__cxx_atomic_base_impl<_Tp*, _Sco> volatile* __a, ptrdiff_t __delta, int __order) {
 #ifdef __CUDA_ARCH__
-    return details::__atomic_fetch_add_cuda(&__a->__a_value, __delta, __order, details::__scope_tag<_Sco>());
+    return detail::__atomic_fetch_add_cuda(&__a->__a_value, __delta, __order, detail::__scope_tag<_Sco>());
 #else
     return ::std::atomic_fetch_add_explicit(&__a->__a_value, __delta, (::std::memory_order)__order);
 #endif
@@ -199,7 +199,7 @@ __host__ __device__ inline _Tp* __cxx_atomic_fetch_add(__cxx_atomic_base_impl<_T
 template<class _Tp, int _Sco>
 __host__ __device__ inline _Tp __cxx_atomic_fetch_sub(__cxx_atomic_base_impl<_Tp, _Sco> volatile* __a, _Tp __delta, int __order) {
 #ifdef __CUDA_ARCH__
-    return details::__atomic_fetch_sub_cuda(&__a->__a_value, __delta, __order, details::__scope_tag<_Sco>());
+    return detail::__atomic_fetch_sub_cuda(&__a->__a_value, __delta, __order, detail::__scope_tag<_Sco>());
 #else
     return ::std::atomic_fetch_sub_explicit(&__a->__a_value, __delta, (::std::memory_order)__order);
 #endif
@@ -207,7 +207,7 @@ __host__ __device__ inline _Tp __cxx_atomic_fetch_sub(__cxx_atomic_base_impl<_Tp
 template<class _Tp, int _Sco>
 __host__ __device__ inline _Tp* __cxx_atomic_fetch_sub(__cxx_atomic_base_impl<_Tp*, _Sco> volatile* __a, ptrdiff_t __delta, int __order) {
 #ifdef __CUDA_ARCH__
-    return details::__atomic_fetch_sub_cuda(&__a->__a_value, __delta, __order, details::__scope_tag<_Sco>());
+    return detail::__atomic_fetch_sub_cuda(&__a->__a_value, __delta, __order, detail::__scope_tag<_Sco>());
 #else
     return ::std::atomic_fetch_sub_explicit(&__a->__a_value, __delta, (::std::memory_order)__order);
 #endif
@@ -215,7 +215,7 @@ __host__ __device__ inline _Tp* __cxx_atomic_fetch_sub(__cxx_atomic_base_impl<_T
 template<class _Tp, int _Sco>
 __host__ __device__ inline _Tp __cxx_atomic_fetch_and(__cxx_atomic_base_impl<_Tp, _Sco> volatile* __a, _Tp __pattern, int __order) {
 #ifdef __CUDA_ARCH__
-    return details::__atomic_fetch_and_cuda(&__a->__a_value, __pattern, __order, details::__scope_tag<_Sco>());
+    return detail::__atomic_fetch_and_cuda(&__a->__a_value, __pattern, __order, detail::__scope_tag<_Sco>());
 #else
     return ::std::atomic_fetch_and_explicit(&__a->__a_value, __pattern, (::std::memory_order)__order);
 #endif
@@ -223,7 +223,7 @@ __host__ __device__ inline _Tp __cxx_atomic_fetch_and(__cxx_atomic_base_impl<_Tp
 template<class _Tp, int _Sco>
 __host__ __device__ inline _Tp __cxx_atomic_fetch_or(__cxx_atomic_base_impl<_Tp, _Sco> volatile* __a, _Tp __pattern, int __order) {
 #ifdef __CUDA_ARCH__
-    return details::__atomic_fetch_or_cuda(&__a->__a_value, __pattern, __order, details::__scope_tag<_Sco>());
+    return detail::__atomic_fetch_or_cuda(&__a->__a_value, __pattern, __order, detail::__scope_tag<_Sco>());
 #else
     return ::std::atomic_fetch_or_explicit(&__a->__a_value, __pattern, (::std::memory_order)__order);
 #endif
@@ -231,7 +231,7 @@ __host__ __device__ inline _Tp __cxx_atomic_fetch_or(__cxx_atomic_base_impl<_Tp,
 template<class _Tp, int _Sco>
 __host__ __device__ inline _Tp __cxx_atomic_fetch_xor(__cxx_atomic_base_impl<_Tp, _Sco> volatile* __a, _Tp __pattern, int __order) {
 #ifdef __CUDA_ARCH__
-    return details::__atomic_fetch_xor_cuda(&__a->__a_value, __pattern, __order, details::__scope_tag<_Sco>());
+    return detail::__atomic_fetch_xor_cuda(&__a->__a_value, __pattern, __order, detail::__scope_tag<_Sco>());
 #else
     return ::std::atomic_fetch_xor_explicit(&__a->__a_value, __pattern, (::std::memory_order)__order);
 #endif
@@ -241,14 +241,14 @@ __host__ __device__ inline bool __cxx_atomic_is_lock_free(size_t x) {
 }
 __host__ __device__ inline void __cxx_atomic_thread_fence(int __order) {
 #ifdef __CUDA_ARCH__
-    details::__atomic_thread_fence_cuda(__order, details::__thread_scope_system_tag());
+    detail::__atomic_thread_fence_cuda(__order, detail::__thread_scope_system_tag());
 #else
     ::std::atomic_thread_fence((::std::memory_order)__order);
 #endif
 }
 __host__ __device__ inline void __cxx_atomic_signal_fence(int __order) {
 #ifdef __CUDA_ARCH__
-    details::__atomic_signal_fence_cuda(__order);
+    detail::__atomic_signal_fence_cuda(__order);
 #else
     ::std::atomic_signal_fence((::std::memory_order)__order);
 #endif

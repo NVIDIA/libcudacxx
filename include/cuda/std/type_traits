@@ -31,8 +31,8 @@ THE SOFTWARE.
 
 #include "cstddef"
 #include "version"
-#include "../details/__config"
+#include "detail/__config"
 
-#include "../details/libcxx/type_traits"
+#include "detail/libcxx/type_traits"
 
 #endif //_CUDA_TYPE_TRAITS

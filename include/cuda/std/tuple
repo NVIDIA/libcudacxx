@@ -29,15 +29,15 @@ THE SOFTWARE.
     #include <tuple>
 #endif //__CUDACC_RTC__
 
-#include "../details/__tuple"
+#include "detail/__tuple"
 #include "cstddef"
 #include "type_traits"
-#include "../details/__functional_base"
+#include "detail/__functional_base"
 #include "utility"
 #include "version"
 
-#include "../details/__config"
+#include "detail/__config"
 
-#include "../details/libcxx/tuple"
+#include "detail/libcxx/tuple"
 
 #endif //_CUDA_TUPLE

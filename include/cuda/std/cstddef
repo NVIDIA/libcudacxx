@@ -36,9 +36,9 @@ namespace cuda { namespace std { inline namespace v1 {
     typedef decltype(nullptr) nullptr_t;
 } } }
 
-#include "../details/__config"
+#include "detail/__config"
 
-#include "../details/libcxx/cstddef"
+#include "detail/libcxx/cstddef"
 
 #if _LIBCPP_STD_VER > 14
     #include "type_traits"

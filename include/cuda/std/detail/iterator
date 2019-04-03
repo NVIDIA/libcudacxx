@@ -1,3 +1,4 @@
+
 /*
 
 Copyright (c) 2018, NVIDIA Corporation
@@ -22,14 +23,19 @@ THE SOFTWARE.
 
 */
 
-#ifndef _CUDA___TUPLE
-#define _CUDA___TUPLE
+#ifndef _CUDA_ITERATOR
+#define _CUDA_ITERATOR
 
-#include "../std/cstddef"
-#include "../std/type_traits"
+#include "iosfwd" // for forward declarations of vector and string.
+#include "__functional_base"
+#include "../cuda/type_traits"
+#include "../cuda/cstddef"
+#include "../cuda/initializer_list"
+#include "../cuda/version"
+#include "__debug"
 
 #include "__config"
 
-#include "../details/libcxx/__tuple"
+#include "detail/libcxx/iterator"
 
-#endif //_CUDA___TUPLE
+#endif //_CUDA_ITERATOR

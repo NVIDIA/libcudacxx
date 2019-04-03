@@ -29,17 +29,17 @@ THE SOFTWARE.
     #include <utility>
 #endif //__CUDACC_RTC__
 
-#include "../details/__tuple"
+#include "detail/__tuple"
 #include "type_traits"
 #include "initializer_list"
 #include "cstddef"
-#include "../details/cstring"
+#include "detail/cstring"
 #include "cstdint"
 #include "version"
-#include "../details/__debug"
+#include "detail/__debug"
 
-#include "../details/__config"
+#include "detail/__config"
 
-#include "../details/libcxx/utility"
+#include "detail/libcxx/utility"
 
 #endif //_CUDA_UTILITY

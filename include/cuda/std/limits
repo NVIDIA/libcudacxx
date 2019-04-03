@@ -31,8 +31,8 @@ THE SOFTWARE.
 
 #include "type_traits"
 #include "version"
-#include "../details/__config"
+#include "detail/__config"
 
-#include "../details/libcxx/limits"
+#include "detail/libcxx/limits"
 
 #endif //_CUDA_LIMITS

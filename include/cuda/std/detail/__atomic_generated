@@ -22,7 +22,7 @@ THE SOFTWARE.
 
 */
 
-namespace cuda { namespace details { inline namespace v1 {
+namespace cuda { namespace detail { inline namespace v1 {
 static inline __device__ void __cuda_fence_sc_block() { asm volatile("fence.sc.cta;":::"memory"); }
 static inline __device__ void __cuda_fence_acq_rel_block() { asm volatile("fence.acq_rel.cta;":::"memory"); }
 static inline __device__ void __atomic_thread_fence_cuda(int memorder, __thread_scope_block_tag) {

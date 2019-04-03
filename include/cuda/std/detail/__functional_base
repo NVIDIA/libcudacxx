@@ -1,4 +1,3 @@
-
 /*
 
 Copyright (c) 2018, NVIDIA Corporation
@@ -23,13 +22,17 @@ THE SOFTWARE.
 
 */
 
-#ifndef _CUDA_IOSFWD
-#define _CUDA_IOSFWD
+#ifndef _CUDA___FUNCTIONAL_BASE
+#define _CUDA___FUNCTIONAL_BASE
 
-#include <wchar.h>  // for mbstate_t
+#include "../cuda/type_traits"
+#include "../cuda/typeinfo"
+#include "../cuda/exception"
+#include "../cuda/new"
+#include "../cuda/utility"
 
 #include "__config"
 
-#include "../details/libcxx/iosfwd"
+#include "detail/libcxx/__functional_base"
 
-#endif //_CUDA_IOSFWD
+#endif //_CUDA___FUNCTIONAL_BASE

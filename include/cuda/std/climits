@@ -30,8 +30,8 @@ THE SOFTWARE.
 #endif //__CUDACC_RTC__
 
 #include <limits.h>
-#include "../details/__config"
+#include "detail/__config"
 
-#include "../details/libcxx/climits"
+#include "detail/libcxx/climits"
 
 #endif //_CUDA_CLIMITS

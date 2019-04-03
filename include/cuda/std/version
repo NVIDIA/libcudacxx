@@ -25,8 +25,8 @@ THE SOFTWARE.
 #ifndef _CUDA_VERSION
 #define _CUDA_VERSION
 
-#include "../details/__config"
+#include "detail/__config"
 
-#include "../details/libcxx/version"
+#include "detail/libcxx/version"
 
 #endif //_CUDA_VERSION

@@ -31,8 +31,8 @@ THE SOFTWARE.
 
 #include <assert.h>
 
-#include "../details/__config"
+#include "detail/__config"
 
-#include "../details/libcxx/cassert"
+#include "detail/libcxx/cassert"
 
 #endif //_CUDA_CASSERT

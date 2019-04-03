@@ -29,8 +29,8 @@ THE SOFTWARE.
     #include <ciso646>
 #endif //__CUDACC_RTC__
 
-#include "../details/__config"
+#include "detail/__config"
 
-#include "../details/libcxx/ciso646"
+#include "detail/libcxx/ciso646"
 
 #endif //_CUDA_CISO646

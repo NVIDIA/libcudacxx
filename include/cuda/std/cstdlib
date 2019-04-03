@@ -30,8 +30,8 @@ THE SOFTWARE.
 #endif //__CUDACC_RTC__
 
 #include <stdlib.h>
-#include "../details/__config"
+#include "detail/__config"
 
-#include "../details/libcxx/cstdlib"
+#include "detail/libcxx/cstdlib"
 
 #endif //_CUDA_CSTDLIB

@@ -30,13 +30,13 @@ THE SOFTWARE.
 #endif //__CUDACC_RTC__
 
 #include "type_traits"
-#include "../details/stdexcept"
-#include "../details/cmath"
+#include "detail/stdexcept"
+#include "detail/cmath"
 //#include <sstream> // nope nope nope
 #include "version"
 
-#include "../details/__config"
+#include "detail/__config"
 
-#include "../details/libcxx/complex"
+#include "detail/libcxx/complex"
 
 #endif //_CUDA_COMPLEX

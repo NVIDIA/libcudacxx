@@ -30,8 +30,8 @@ THE SOFTWARE.
 #endif //__CUDACC_RTC__
 
 #include <float.h>
-#include "../details/__config"
+#include "detail/__config"
 
-#include "../details/libcxx/cfloat"
+#include "detail/libcxx/cfloat"
 
 #endif //_CUDA_CFLOAT

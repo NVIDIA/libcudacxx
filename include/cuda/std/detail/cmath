@@ -22,11 +22,17 @@ THE SOFTWARE.
 
 */
 
-#ifndef _CUDA___DEBUG
-#define _CUDA___DEBUG
+#ifndef _CUDA_CMATH
+#define _CUDA_CMATH
+
+#ifndef __CUDACC_RTC__
+    #include <cmath>
+#endif //__CUDACC_RTC__
+
+#include <math.h>
 
 #include "__config"
 
-#include "../details/libcxx/__debug"
+#include "detail/libcxx/cmath"
 
-#endif //_CUDA___DEBUG
+#endif //_CUDA_CMATH

@@ -57,8 +57,8 @@ THE SOFTWARE.
 #include "type_traits"
 #include "version"
 
-#include "../details/__config"
-#include "../details/__atomic"
+#include "detail/__config"
+#include "detail/__atomic"
 
 #undef _LIBCPP_CXX03_LANG
 #undef _LIBCPP_DEFAULT
@@ -67,7 +67,7 @@ THE SOFTWARE.
 
 #undef _LIBCPP_HAS_GCC_ATOMIC_IMP
 #undef _LIBCPP_HAS_C_ATOMIC_IMP
-#include "../details/libcxx/atomic"
+#include "detail/libcxx/atomic"
 
 #undef _LIBCPP_CXX03_LANG
 #undef _LIBCPP_DEFAULT
@@ -173,13 +173,13 @@ inline __host__ __device__ void atomic_thread_fence(memory_order __m, thread_sco
 #ifdef __CUDA_ARCH__
     switch(_Scope) {
     case thread_scope_system:
-        details::__atomic_thread_fence_cuda((int)__m, details::__thread_scope_system_tag());
+        detail::__atomic_thread_fence_cuda((int)__m, detail::__thread_scope_system_tag());
         break;
     case thread_scope_device:
-        details::__atomic_thread_fence_cuda((int)__m, details::__thread_scope_device_tag());
+        detail::__atomic_thread_fence_cuda((int)__m, detail::__thread_scope_device_tag());
         break;
     case thread_scope_block:
-        details::__atomic_thread_fence_cuda((int)__m, details::__thread_scope_block_tag());
+        detail::__atomic_thread_fence_cuda((int)__m, detail::__thread_scope_block_tag());
         break;
     }
 #else
@@ -189,7 +189,7 @@ inline __host__ __device__ void atomic_thread_fence(memory_order __m, thread_sco
 
 inline __host__ __device__ void atomic_signal_fence(memory_order __m) {
 #ifdef __CUDA_ARCH__
-    details::v1::__atomic_signal_fence_cuda((int)__m);
+    detail::v1::__atomic_signal_fence_cuda((int)__m);
 #else
     ::std::atomic_signal_fence((::std::memory_order)__m);
 #endif
