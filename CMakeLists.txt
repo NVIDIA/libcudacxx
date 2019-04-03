@@ -8,7 +8,7 @@ set(PACKAGE_STRING "${PACKAGE_NAME} ${PACKAGE_VERSION}")
 # TODO: this has to be reconfigurable with other options
 # this has to land in cache, but has to be forced, and controlled by other variables
 set(LIBCXX_TEST_COMPILER_FLAGS
-    "-include ${CMAKE_SOURCE_DIR}/test/force_include.h -I${CMAKE_SOURCE_DIR}/include -gencode arch=compute_70,code=compute_70"
+    "-include ${CMAKE_SOURCE_DIR}/test/force_include.h -I${CMAKE_SOURCE_DIR}/include -gencode arch=compute_70,code=sm_70"
     CACHE STRING "Additional forced flags for libcxx testing.")
 set(LIBCXX_ENABLE_EXPERIMENTAL_LIBRARY OFF CACHE BOOL "")
 set(LIBCXX_ENABLE_EXCEPTIONS OFF CACHE BOOL "")
