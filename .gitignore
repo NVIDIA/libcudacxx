@@ -28,3 +28,4 @@ samples/trie_st
 samples/trie_mt
 *.pyc
 build*
+.p4config
