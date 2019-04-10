@@ -717,7 +717,7 @@ class Configuration(object):
           self.cxx.compile_flags += ['-D_LIBCPP_ABI_UNSTABLE']
 
     def configure_filesystem_compile_flags(self):
-        if self.config.enable_filesystem == 'False':
+        if not self.get_lit_bool('enable_filesystem', default=True):
             return
 
         static_env = os.path.join(self.libcxx_src_root, 'test', 'std',
