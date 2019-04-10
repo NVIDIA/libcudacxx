@@ -26,23 +26,6 @@ THE SOFTWARE.
 #include <simt/cstdint>
 #include <simt/atomic>
 
-#include <simt/exception>
-#include <simt/typeinfo>
-#include <simt/initializer_list>
-#include <simt/cstdlib>
-#include <simt/climits>
-#include <simt/limits>
-#include <simt/cfloat>
-#include <simt/ciso646>
-#include <simt/cstdarg>
-#include <simt/new>
-#include <simt/version>
-/*
-#include <simt/utility>
-#include <simt/tuple>
-#include <simt/complex>
-#include <simt/memory>
-*/
 template<class T> static constexpr T minimum(T a, T b) { return a < b ? a : b; }
 
 struct trie {
