@@ -51,7 +51,7 @@ struct trie {
         // the flag will protect against multiple pointer updates
         simt::std::atomic_flag flag = ATOMIC_FLAG_INIT;
     } next[26];
-    simt::std::atomic<int> count = ATOMIC_VAR_INIT(0);
+    simt::std::atomic<short> count = ATOMIC_VAR_INIT(0);
 };
 __host__ __device__
 int index_of(char c) {

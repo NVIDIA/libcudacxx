@@ -37,10 +37,21 @@ int main() {
 
     std::vector<std::string> fence_semantics{ "sc", "acq_rel" };
 
-    std::vector<int> ld_sizes{ 8, 16, 32, 64 };
-    std::vector<std::string> ld_semantics{ "relaxed", "acquire" };
+    bool const ld_as_atom = true;
 
-    std::vector<int> st_sizes{ 8, 16, 32, 64 };
+    std::vector<int> ld_sizes{  //8,
+                                //16,
+                                32,
+                                64
+                                };
+    std::vector<std::string> ld_semantics{ "relaxed",
+                                           "acquire"
+                                           };
+
+    std::vector<int> st_sizes{  //8,
+                                //16,
+                                32,
+                                64 };
     std::vector<std::string> st_semantics{ "relaxed", "release" };
 
     std::vector<int> rmw_sizes{ 32, 64 };
@@ -55,8 +66,8 @@ int main() {
 
     std::vector<std::string> cv_qualifier{ "volatile "/*, ""*/ };
 
-    std::map<int, std::string> registers{ { 8, "r" } ,
-                                          { 16, "h" },
+    std::map<int, std::string> registers{ //{ 8, "r" } ,
+                                          //{ 16, "h" },
                                           { 32, "r" },
                                           { 64, "l" } };
 
@@ -115,7 +126,10 @@ THE SOFTWARE.
             for(auto& sem : ld_semantics) {
                 out << "template<class _CUDA_A, class _CUDA_B> ";
                 out << "static inline __device__ void __cuda_load_" << sem << "_" << sz << "_" << s.first << "(_CUDA_A _ptr, _CUDA_B& _dst) {";
-                out << "asm volatile(\"ld." << sem << "." << s.second << ".b" << sz << " %0,[%1];\" : ";
+                if(ld_as_atom)
+                    out << "asm volatile(\"atom.add." << sem << "." << s.second << ".u" << sz << " %0, [%1], 0;\" : ";
+                else
+                    out << "asm volatile(\"ld." << sem << "." << s.second << ".b" << sz << " %0,[%1];\" : ";
                 out << "\"=" << registers[sz] << "\"(_dst) : \"l\"(_ptr)";
                 out << " : \"memory\"); }\n";
             }
