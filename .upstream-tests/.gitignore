@@ -62,6 +62,3 @@ keep.lst
 
 # Random things
 build-*
-
-# Perforce files
-.p4config

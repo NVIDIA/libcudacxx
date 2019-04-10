@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 //
-// UNSUPPORTED: libcpp-has-no-threads, pre-sm-70
+// UNSUPPORTED: libcpp-has-no-threads
 
 // <cuda/std/atomic>
 
@@ -16,7 +16,7 @@
 
 int main(int, char**)
 {
-  cuda::std::atomic_thread_fence(cuda::std::memory_order_seq_cst);
+    cuda::std::atomic_thread_fence(cuda::std::memory_order_seq_cst);
 
   return 0;
 }

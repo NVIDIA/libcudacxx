@@ -511,20 +511,6 @@ class Configuration(object):
         additional_flags = self.get_lit_conf('test_compiler_flags')
         if additional_flags:
             self.cxx.compile_flags += shlex.split(additional_flags)
-        compute_archs = self.get_lit_conf('compute_archs')
-        if compute_archs:
-            pre_sm_70 = False
-            compute_archs = [int(a) for a in sorted(shlex.split(compute_archs))]
-            for arch in compute_archs:
-                if arch < 70: pre_sm_70 = True
-                arch_flag = '-gencode=arch=compute_{0},code=sm_{0}'.format(arch)
-                self.cxx.compile_flags += [arch_flag]
-            enable_compute_future = self.get_lit_conf('enable_compute_future')
-            if enable_compute_future:
-                arch_flag = '-gencode=arch=compute_{0},code=compute_{0}'.format(arch)
-                self.cxx.compile_flags += [arch_flag]
-            if pre_sm_70:
-                self.config.available_features.add("pre-sm-70")
 
     def configure_default_compile_flags(self):
         # Try and get the std version from the command line. Fall back to
@@ -731,7 +717,7 @@ class Configuration(object):
           self.cxx.compile_flags += ['-D_LIBCPP_ABI_UNSTABLE']
 
     def configure_filesystem_compile_flags(self):
-        if not self.get_lit_bool('enable_filesystem', default=True):
+        if self.config.enable_filesystem == 'False':
             return
 
         static_env = os.path.join(self.libcxx_src_root, 'test', 'std',
