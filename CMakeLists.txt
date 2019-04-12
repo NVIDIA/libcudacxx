@@ -33,7 +33,7 @@ if (LIBCXX_ENABLE_COMPUTE_FUTURE)
   set(COMPUTE_MESSAGE "${COMPUTE_MESSAGE} compute_${LIBCXX_HIGHEST_COMPUTE_ARCH}")
 endif ()
 
-message("-- Enabled CUDA architectures:${COMPUTE_MESSAGE}")
+message(STATUS "-- Enabled CUDA architectures:${COMPUTE_MESSAGE}")
 
 # TODO: this has to be reconfigurable with other options
 # this has to land in cache, but has to be forced, and controlled by other variables
@@ -42,7 +42,7 @@ set(LIBCXX_TEST_COMPILER_FLAGS
     CACHE STRING "Flags for libcxx testing.")
 
 set(LIBCXX_TEST_LINKER_FLAGS
-    "-ccbin ${LIBCXX_HOST_COMPILER}"
+    "-ccbin ${LIBCXX_HOST_COMPILER} -Xcompiler \\\\\\\"-Wl,-rpath,${LIBCXX_TEST_LD_LIBRARY_PATH}\\\\\\\""
     CACHE STRING "Flags for libcxx testing.")
 
 set(LIBCXX_ENABLE_EXPERIMENTAL_LIBRARY OFF CACHE BOOL "")
