@@ -65,6 +65,40 @@ type __device__ __atomic_fetch_add_cuda(type volatile *ptr, delta val, int memor
 }
 
 template<class type, class delta, class scope, typename std::enable_if<sizeof(type)<=2, int>::type = 0>
+type __host__ __device__ __atomic_fetch_max_cuda(type volatile *ptr, delta val, int memorder, scope s) {
+
+    type expected = __atomic_load_n_cuda(ptr, __ATOMIC_RELAXED, s);
+    type const desired = expected > val ? expected : val;
+#ifdef __CUDA_ARCH__
+    while(desired == val &&
+          !__atomic_compare_exchange_cuda(ptr, &expected, &desired, true, memorder, memorder, s)) {
+#else
+    while(desired == val &&
+          !::std::atomic_compare_exchange_strong_explicit(ptr, &expected, desired, memorder, memorder)) {
+#endif
+        desired = expected > val ? expected : val;
+    }
+    return expected;
+}
+
+template<class type, class delta, class scope, typename std::enable_if<sizeof(type)<=2, int>::type = 0>
+type __host__ __device__ __atomic_fetch_min_cuda(type volatile *ptr, delta val, int memorder, scope s) {
+
+    type expected = __atomic_load_n_cuda(ptr, __ATOMIC_RELAXED, s);
+    type const desired = expected < val ? expected : val;
+#ifdef __CUDA_ARCH__
+    while(desired != val &&
+          !__atomic_compare_exchange_cuda(ptr, &expected, &desired, true, memorder, memorder, s)) {
+#else
+    while(desired != val &&
+          !::std::atomic_compare_exchange_strong_explicit(ptr, &expected, desired, memorder, memorder)) {
+#endif
+        desired = expected < val ? expected : val;
+    }
+    return expected;
+}
+
+template<class type, class delta, class scope, typename std::enable_if<sizeof(type)<=2, int>::type = 0>
 type __device__ __atomic_fetch_sub_cuda(type volatile *ptr, delta val, int memorder, scope s) {
 
     type expected = __atomic_load_n_cuda(ptr, __ATOMIC_RELAXED, s);
