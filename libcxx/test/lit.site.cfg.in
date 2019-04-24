@@ -25,6 +25,9 @@ config.target_info              = "@LIBCXX_TARGET_INFO@"
 config.test_linker_flags        = "@LIBCXX_TEST_LINKER_FLAGS@"
 config.test_compiler_flags      = "@LIBCXX_TEST_COMPILER_FLAGS@"
 
+config.compute_archs            = "@LIBCXX_COMPUTE_ARCHS@"
+config.enable_compute_future    = @LIBCXX_ENABLE_COMPUTE_FUTURE@
+
 config.executor                 = "@LIBCXX_EXECUTOR@"
 config.llvm_unwinder            = @LIBCXXABI_USE_LLVM_UNWINDER@
 config.builtins_library         = "@LIBCXX_BUILTINS_LIBRARY@"
