@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: libcpp-has-no-threads
+// UNSUPPORTED: libcpp-has-no-threads, pre-sm-70
 
 // This test verifies behavior specified by [atomics.types.operations.req]/21:
 //

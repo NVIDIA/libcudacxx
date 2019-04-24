@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 //
-// UNSUPPORTED: libcpp-has-no-threads
+// UNSUPPORTED: libcpp-has-no-threads, pre-sm-70
 // UNSUPPORTED: c++98, c++03
 
 // NOTE: atomic<> of a TriviallyCopyable class is wrongly rejected by older
