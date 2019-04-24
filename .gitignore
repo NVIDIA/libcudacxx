@@ -27,5 +27,5 @@ samples/trial
 samples/trie_st
 samples/trie_mt
 *.pyc
-build*
+build-*/
 .p4config
