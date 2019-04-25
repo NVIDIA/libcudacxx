@@ -1,6 +1,6 @@
-# Dockerfile for libcudacxx_base:host_x86-64_ubuntu_18.04__target_x86-64_ubuntu_18.04__gcc_7
+# Dockerfile for libcudacxx_base:host_x86_64_ubuntu_16.04__target_x86_64_ubuntu_16.04__gcc_7
 
-FROM ubuntu:18.04
+FROM ubuntu:16.04
 
 MAINTAINER Bryce Adelstein Lelbach <blelbach@nvidia.com>
 
@@ -8,13 +8,13 @@ MAINTAINER Bryce Adelstein Lelbach <blelbach@nvidia.com>
 # BUILD: The following is invoked when the image is built.
 
 RUN apt-get -y update\
- && apt-get -y install g++-7 clang-6.0 python python-pip cmake\
+ && apt-get -y install g++-5 clang-5.0 python python-pip cmake\
  && pip install lit\
  && mkdir -p /sw/gpgpu/libcudacxx/build\
  && mkdir -p /sw/gpgpu/libcudacxx/libcxx/build
 
 # For debugging.
-RUN apt-get -y install gdb strace vim
+#RUN apt-get -y install gdb strace vim
 
 # We use ADD here because it invalidates the cache for subsequent steps, which
 # is what we want, as we need to rebuild if the sources have changed.
@@ -42,9 +42,9 @@ RUN cd /sw/gpgpu/libcudacxx/libcxx/build\
       -DLIBCXX_INCLUDE_BENCHMARKS=OFF\
       -DLIBCXX_CXX_ABI=libsupc++\
       -DLLVM_EXTERNAL_LIT=$(which lit)\
-      -DLLVM_CONFIG_PATH=$(which llvm-config-6.0)\
-      -DCMAKE_C_COMPILER=gcc-7\
-      -DCMAKE_CXX_COMPILER=g++-7
+      -DLLVM_CONFIG_PATH=$(which llvm-config-5.0)\
+      -DCMAKE_C_COMPILER=gcc-5\
+      -DCMAKE_CXX_COMPILER=g++-5
 
 # Configure libcu++ tests.
 RUN cd /sw/gpgpu/libcudacxx/build\
@@ -53,8 +53,8 @@ RUN cd /sw/gpgpu/libcudacxx/build\
       -DLIBCXX_INCLUDE_BENCHMARKS=OFF\
       -DLIBCXX_CXX_ABI=libsupc++\
       -DLLVM_EXTERNAL_LIT=$(which lit)\
-      -DLLVM_CONFIG_PATH=$(which llvm-config-6.0)\
+      -DLLVM_CONFIG_PATH=$(which llvm-config-5.0)\
       -DCMAKE_C_COMPILER=/sw/gpgpu/bin/x86_64_Linux_release/nvcc\
       -DCMAKE_CXX_COMPILER=/sw/gpgpu/bin/x86_64_Linux_release/nvcc\
-      -DLIBCXX_HOST_COMPILER=g++-7
+      -DLIBCXX_HOST_COMPILER=g++-5
 

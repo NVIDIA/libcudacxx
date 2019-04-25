@@ -1,9 +1,9 @@
-# Dockerfile for libcudacxx:host_x86-64_ubuntu_18.04__target_x86-64_ubuntu_18.04__gcc_7
+# Dockerfile for libcudacxx:host_x86_64_ubuntu_16.04__target_x86_64_ubuntu_16.04__gcc_5
 
 ###############################################################################
 # BUILD: The following is invoked when the CUDA driver is attached.
 
-FROM libcudacxx_base:host_x86-64_ubuntu_18.04__target_x86-64_ubuntu_18.04__gcc_7
+FROM libcudacxx_base:host_x86_64_ubuntu_16.04__target_x86_64_ubuntu_16.04__gcc_5
 
 MAINTAINER Bryce Adelstein Lelbach <blelbach@nvidia.com>
 
@@ -24,6 +24,6 @@ WORKDIR /sw/gpgpu/libcudacxx
 
 ENV LIBCXX_SITE_CONFIG /sw/gpgpu/libcudacxx/build/libcxx/test/lit.site.cfg
 
-CMD LIBCXX_SITE_CONFIG=/sw/gpgpu/libcudacxx/libcxx/build/libcxx/test/lit.site.cfg lit libcxx/test\
- && LIBCXX_SITE_CONFIG=/sw/gpgpu/libcudacxx/build/libcxx/test/lit.site.cfg lit test
+CMD LIBCXX_SITE_CONFIG=/sw/gpgpu/libcudacxx/libcxx/build/libcxx/test/lit.site.cfg lit -vv -a libcxx/test\
+ && LIBCXX_SITE_CONFIG=/sw/gpgpu/libcudacxx/build/libcxx/test/lit.site.cfg lit -vv -a test
 
