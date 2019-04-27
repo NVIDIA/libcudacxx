@@ -31,40 +31,51 @@ using namespace std::string_literals;
 
 int main() {
 
-    std::map<std::string, std::string> scopes{ {"system", "sys"},
-                                               {"device", "gpu"},
-                                               {"block", "cta"} };
+    std::map<std::string, std::string> scopes{ {"system", ".sys"},
+                                               {"device", ".gpu"},
+                                               {"block", ".cta"} };
 
-    std::vector<std::string> fence_semantics{ "sc", "acq_rel" };
+    std::map<std::string, std::string> membar_scopes{ {"system", ".sys"},
+                                                      {"device", ".gl"},
+                                                      {"block", ".cta"} };
 
-    bool const ld_as_atom = true;
+    std::map<std::string, std::string> fence_semantics{ { "sc", ".sc" },
+                                                        { "acq_rel", ".acq_rel" } };
+
+    bool const ld_as_atom = false;
 
     std::vector<int> ld_sizes{  //8,
                                 //16,
                                 32,
                                 64
                                 };
-    std::vector<std::string> ld_semantics{ "relaxed",
-                                           "acquire"
-                                           };
+    std::map<std::string, std::string> ld_semantics{ { "relaxed", ".relaxed" },
+                                                     { "acquire", ".acquire" },
+                                                     { "volatile", ".volatile" } };
 
     std::vector<int> st_sizes{  //8,
                                 //16,
                                 32,
                                 64 };
-    std::vector<std::string> st_semantics{ "relaxed", "release" };
+    std::map<std::string, std::string> st_semantics{ { "relaxed", ".relaxed" },
+                                                     { "release", ".release" },
+                                                     { "volatile", ".volatile" } };
 
     std::vector<int> rmw_sizes{ 32, 64 };
-    std::vector<std::string> rmw_semantics{ "relaxed", "acquire", "release", "acq_rel" };
-    std::map<std::string, std::string> rmw_operations{ { "exchange", "exch" },
-                                                       { "compare_exchange", "cas" },
-                                                       { "fetch_add", "add" },
-                                                       { "fetch_sub", "add" },
-                                                       { "fetch_max", "max" },
-                                                       { "fetch_min", "min" },
-                                                       { "fetch_and", "and" },
-                                                       { "fetch_or", "or" },
-                                                       { "fetch_xor", "xor" } };
+    std::map<std::string, std::string> rmw_semantics{ { "relaxed", ".relaxed" },
+                                                      { "acquire", ".acquire" },
+                                                      { "release", ".release" },
+                                                      { "acq_rel", ".acq_rel" },
+                                                      { "volatile", "" } };
+    std::map<std::string, std::string> rmw_operations{ { "exchange", ".exch" },
+                                                       { "compare_exchange", ".cas" },
+                                                       { "fetch_add", ".add" },
+                                                       { "fetch_sub", ".add" },
+                                                       { "fetch_max", ".max" },
+                                                       { "fetch_min", ".min" },
+                                                       { "fetch_and", ".and" },
+                                                       { "fetch_or", ".or" },
+                                                       { "fetch_xor", ".xor" } };
 
     std::vector<std::string> cv_qualifier{ "volatile "/*, ""*/ };
 
@@ -111,15 +122,24 @@ THE SOFTWARE.
     out << "\n";
 
     for(auto& s : scopes) {
+        out << "static inline __device__ void __cuda_membar_" << s.first << "() { asm volatile(\"membar" << membar_scopes[s.first] << ";\":::\"memory\"); }\n";
         for(auto& sem : fence_semantics)
-            out << "static inline __device__ void " << fencename(sem, s.first) << "() { asm volatile(\"fence." << sem << "." << s.second << ";\":::\"memory\"); }\n";
+            out << "static inline __device__ void " << fencename(sem.first, s.first) << "() { asm volatile(\"fence" << sem.second << s.second << ";\":::\"memory\"); }\n";
         out << "static inline __device__ void __atomic_thread_fence_cuda(int memorder, " << scopenametag(s.first) << ") {\n";
         out << "    switch (memorder) {\n";
+        out << "#if __CUDA_ARCH__ >= 700\n";
         out << "    case __ATOMIC_SEQ_CST: " << fencename("sc"s, s.first) << "(); break;\n";
         out << "    case __ATOMIC_CONSUME:\n";
         out << "    case __ATOMIC_ACQUIRE:\n";
         out << "    case __ATOMIC_ACQ_REL:\n";
         out << "    case __ATOMIC_RELEASE: " << fencename("acq_rel"s, s.first) << "(); break;\n";
+        out << "#else\n";
+        out << "    case __ATOMIC_SEQ_CST:\n";
+        out << "    case __ATOMIC_CONSUME:\n";
+        out << "    case __ATOMIC_ACQUIRE:\n";
+        out << "    case __ATOMIC_ACQ_REL:\n";
+        out << "    case __ATOMIC_RELEASE: __cuda_membar_" << s.first << "(); break;\n";
+        out << "#endif // __CUDA_ARCH__ >= 700\n";
         out << "    case __ATOMIC_RELAXED: break;\n";
         out << "    default: assert(0);\n";
         out << "    }\n";
@@ -127,11 +147,11 @@ THE SOFTWARE.
         for(auto& sz : ld_sizes) {
             for(auto& sem : ld_semantics) {
                 out << "template<class _CUDA_A, class _CUDA_B> ";
-                out << "static inline __device__ void __cuda_load_" << sem << "_" << sz << "_" << s.first << "(_CUDA_A _ptr, _CUDA_B& _dst) {";
+                out << "static inline __device__ void __cuda_load_" << sem.first << "_" << sz << "_" << s.first << "(_CUDA_A _ptr, _CUDA_B& _dst) {";
                 if(ld_as_atom)
-                    out << "asm volatile(\"atom.add." << sem << "." << s.second << ".u" << sz << " %0, [%1], 0;\" : ";
+                    out << "asm volatile(\"atom.add" << (sem.first == "volatile" ? "" : sem.second.c_str()) << s.second << ".u" << sz << " %0, [%1], 0;\" : ";
                 else
-                    out << "asm volatile(\"ld." << sem << "." << s.second << ".b" << sz << " %0,[%1];\" : ";
+                    out << "asm volatile(\"ld" << sem.second << (sem.first == "volatile" ? "" : s.second.c_str()) << ".b" << sz << " %0,[%1];\" : ";
                 out << "\"=" << registers[sz] << "\"(_dst) : \"l\"(_ptr)";
                 out << " : \"memory\"); }\n";
             }
@@ -140,10 +160,17 @@ THE SOFTWARE.
                 out << "__device__ void __atomic_load_cuda(const " << cv << "type *ptr, type *ret, int memorder, " << scopenametag(s.first) << ") {\n";
                 out << "    uint" << (registers[sz] == "r" ? 32 : sz) << "_t tmp = 0;\n";
                 out << "    switch (memorder) {\n";
+                out << "#if __CUDA_ARCH__ >= 700\n";
                 out << "    case __ATOMIC_SEQ_CST: " << fencename("sc"s, s.first) << "();\n";
                 out << "    case __ATOMIC_CONSUME:\n";
                 out << "    case __ATOMIC_ACQUIRE: __cuda_load_acquire_" << sz << "_" << s.first << "(ptr, tmp); break;\n";
                 out << "    case __ATOMIC_RELAXED: __cuda_load_relaxed_" << sz << "_" << s.first << "(ptr, tmp); break;\n";
+                out << "#else\n";
+                out << "    case __ATOMIC_SEQ_CST: __cuda_membar_" << s.first << "();\n";
+                out << "    case __ATOMIC_CONSUME:\n";
+                out << "    case __ATOMIC_ACQUIRE: __cuda_load_volatile_" << sz << "_" << s.first << "(ptr, tmp); __cuda_membar_" << s.first << "(); break;\n";
+                out << "    case __ATOMIC_RELAXED: __cuda_load_volatile_" << sz << "_" << s.first << "(ptr, tmp); break;\n";
+                out << "#endif // __CUDA_ARCH__ >= 700\n";
                 out << "    default: assert(0);\n";
                 out << "    }\n";
                 out << "    memcpy(ret, &tmp, " << sz/8 << ");\n";
@@ -153,8 +180,8 @@ THE SOFTWARE.
         for(auto& sz : st_sizes) {
             for(auto& sem : st_semantics) {
                 out << "template<class _CUDA_A, class _CUDA_B> ";
-                out << "static inline __device__ void __cuda_store_" << sem << "_" << sz << "_" << s.first << "(_CUDA_A _ptr, _CUDA_B _src) { ";
-                out << "asm volatile(\"st." << sem << "." << s.second << ".b" << sz << " [%0], %1;\" :: ";
+                out << "static inline __device__ void __cuda_store_" << sem.first << "_" << sz << "_" << s.first << "(_CUDA_A _ptr, _CUDA_B _src) { ";
+                out << "asm volatile(\"st" << sem.second << (sem.first == "volatile" ? "" : s.second.c_str()) << ".b" << sz << " [%0], %1;\" :: ";
                 out << "\"l\"(_ptr),\"" << registers[sz] << "\"(_src)";
                 out << " : \"memory\"); }\n";
             }
@@ -164,9 +191,15 @@ THE SOFTWARE.
                 out << "    uint" << (registers[sz] == "r" ? 32 : sz) << "_t tmp = 0;\n";
                 out << "    memcpy(&tmp, val, " << sz/8 << ");\n";
                 out << "    switch (memorder) {\n";
+                out << "#if __CUDA_ARCH__ >= 700\n";
                 out << "    case __ATOMIC_RELEASE: __cuda_store_release_" << sz << "_" << s.first << "(ptr, tmp); break;\n";
                 out << "    case __ATOMIC_SEQ_CST: " << fencename("sc"s, s.first) << "();\n";
                 out << "    case __ATOMIC_RELAXED: __cuda_store_relaxed_" << sz << "_" << s.first << "(ptr, tmp); break;\n";
+                out << "#else\n";
+                out << "    case __ATOMIC_RELEASE:\n";
+                out << "    case __ATOMIC_SEQ_CST: __cuda_membar_" << s.first << "();\n";
+                out << "    case __ATOMIC_RELAXED: __cuda_store_volatile_" << sz << "_" << s.first << "(ptr, tmp); break;\n";
+                out << "#endif // __CUDA_ARCH__ >= 700\n";
                 out << "    default: assert(0);\n";
                 out << "    }\n";
                 out << "}\n";
@@ -174,33 +207,34 @@ THE SOFTWARE.
         }
         for(auto& sz : rmw_sizes) {
             for(auto& rmw: rmw_operations) {
-                if(rmw.first != "fetch_sub")
-                    for(auto& sem : rmw_semantics) {
-                        if(rmw.first == "compare_exchange")
-                            out << "template<class _CUDA_A, class _CUDA_B, class _CUDA_C, class _CUDA_D> ";
-                        else
-                            out << "template<class _CUDA_A, class _CUDA_B, class _CUDA_C> ";
-                        out << "static inline __device__ void __cuda_" << rmw.second << "_" << sem << "_" << sz << "_" << s.first << "(";
-                        if(rmw.first == "compare_exchange")
-                            out << "_CUDA_A _ptr, _CUDA_B& _dst, _CUDA_C _cmp, _CUDA_D _op";
-                        else
-                            out << "_CUDA_A _ptr, _CUDA_B& _dst, _CUDA_C _op";
-                        out << ") { ";
-                        if(rmw.first == "fetch_add" || rmw.first == "fetch_sub" || rmw.first == "fetch_max" || rmw.first == "fetch_min")
-                            out << "asm volatile(\"atom." << rmw.second << "." << sem << "." << s.second << ".u" << sz << " ";
-                        else
-                            out << "asm volatile(\"atom." << rmw.second << "." << sem << "." << s.second << ".b" << sz << " ";
-                        if(rmw.first == "compare_exchange")
-                            out << "%0,[%1],%2,%3";
-                        else
-                            out << "%0,[%1],%2";
-                        out << ";\" : ";
-                        if(rmw.first == "compare_exchange")
-                            out << "\"=" << registers[sz] << "\"(_dst) : \"l\"(_ptr),\"" << registers[sz] << "\"(_cmp),\"" << registers[sz] << "\"(_op)";
-                        else
-                            out << "\"=" << registers[sz] << "\"(_dst) : \"l\"(_ptr),\"" << registers[sz] << "\"(_op)";
-                        out << " : \"memory\"); }\n";
-                    }
+                for(auto& sem : rmw_semantics) {
+                    if(rmw.first == "compare_exchange")
+                        out << "template<class _CUDA_A, class _CUDA_B, class _CUDA_C, class _CUDA_D> ";
+                    else
+                        out << "template<class _CUDA_A, class _CUDA_B, class _CUDA_C> ";
+                    out << "static inline __device__ void __cuda_" << rmw.first << "_" << sem.first << "_" << sz << "_" << s.first << "(";
+                    if(rmw.first == "compare_exchange")
+                        out << "_CUDA_A _ptr, _CUDA_B& _dst, _CUDA_C _cmp, _CUDA_D _op";
+                    else
+                        out << "_CUDA_A _ptr, _CUDA_B& _dst, _CUDA_C _op";
+                    out << ") { ";
+                    if(rmw.first == "fetch_sub")
+                        out << "_op = -_op;" << std::endl;
+                    if(rmw.first == "fetch_add" || rmw.first == "fetch_sub" || rmw.first == "fetch_max" || rmw.first == "fetch_min")
+                        out << "asm volatile(\"atom" << rmw.second << sem.second << s.second << ".u" << sz << " ";
+                    else
+                        out << "asm volatile(\"atom" << rmw.second << sem.second << s.second << ".b" << sz << " ";
+                    if(rmw.first == "compare_exchange")
+                        out << "%0,[%1],%2,%3";
+                    else
+                        out << "%0,[%1],%2";
+                    out << ";\" : ";
+                    if(rmw.first == "compare_exchange")
+                        out << "\"=" << registers[sz] << "\"(_dst) : \"l\"(_ptr),\"" << registers[sz] << "\"(_cmp),\"" << registers[sz] << "\"(_op)";
+                    else
+                        out << "\"=" << registers[sz] << "\"(_dst) : \"l\"(_ptr),\"" << registers[sz] << "\"(_op)";
+                    out << " : \"memory\"); }\n";
+                }
                 for(auto& cv: cv_qualifier) {
                     if(rmw.first == "compare_exchange") {
                         out << "template<class type, typename cuda::std::enable_if<sizeof(type)==" << sz/8 << ", int>::type = 0>\n";
@@ -210,12 +244,21 @@ THE SOFTWARE.
                         out << "    memcpy(&old, expected, " << sz/8 << ");\n";
                         out << "    old_tmp = old;\n";
                         out << "    switch (__stronger_order_cuda(success_memorder, failure_memorder)) {\n";
+                        out << "#if __CUDA_ARCH__ >= 700\n";
                         out << "    case __ATOMIC_SEQ_CST: " << fencename("sc"s, s.first) << "();\n";
                         out << "    case __ATOMIC_CONSUME:\n";
-                        out << "    case __ATOMIC_ACQUIRE: __cuda_cas_acquire_" << sz << "_" << s.first << "(ptr, old, old_tmp, tmp); break;\n";
-                        out << "    case __ATOMIC_ACQ_REL: __cuda_cas_acq_rel_" << sz << "_" << s.first << "(ptr, old, old_tmp, tmp); break;\n";
-                        out << "    case __ATOMIC_RELEASE: __cuda_cas_release_" << sz << "_" << s.first << "(ptr, old, old_tmp, tmp); break;\n";
-                        out << "    case __ATOMIC_RELAXED: __cuda_cas_relaxed_" << sz << "_" << s.first << "(ptr, old, old_tmp, tmp); break;\n";
+                        out << "    case __ATOMIC_ACQUIRE: __cuda_compare_exchange_acquire_" << sz << "_" << s.first << "(ptr, old, old_tmp, tmp); break;\n";
+                        out << "    case __ATOMIC_ACQ_REL: __cuda_compare_exchange_acq_rel_" << sz << "_" << s.first << "(ptr, old, old_tmp, tmp); break;\n";
+                        out << "    case __ATOMIC_RELEASE: __cuda_compare_exchange_release_" << sz << "_" << s.first << "(ptr, old, old_tmp, tmp); break;\n";
+                        out << "    case __ATOMIC_RELAXED: __cuda_compare_exchange_relaxed_" << sz << "_" << s.first << "(ptr, old, old_tmp, tmp); break;\n";
+                        out << "#else\n";
+                        out << "    case __ATOMIC_SEQ_CST:\n";
+                        out << "    case __ATOMIC_ACQ_REL: __cuda_membar_" << s.first << "();\n";
+                        out << "    case __ATOMIC_CONSUME:\n";
+                        out << "    case __ATOMIC_ACQUIRE: __cuda_compare_exchange_volatile_" << sz << "_" << s.first << "(ptr, old, old_tmp, tmp); __cuda_membar_" << s.first << "(); break;\n";
+                        out << "    case __ATOMIC_RELEASE: __cuda_membar_" << s.first << "(); __cuda_compare_exchange_volatile_" << sz << "_" << s.first << "(ptr, old, old_tmp, tmp); break;\n";
+                        out << "    case __ATOMIC_RELAXED: __cuda_compare_exchange_volatile_" << sz << "_" << s.first << "(ptr, old, old_tmp, tmp); break;\n";
+                        out << "#endif // __CUDA_ARCH__ >= 700\n";
                         out << "    default: assert(0);\n";
                         out << "    }\n";
                         out << "    bool const ret = old == old_tmp;\n";
@@ -236,15 +279,22 @@ THE SOFTWARE.
                             out << "    uint" << sz << "_t tmp = 0;\n";
                             out << "    memcpy(&tmp, &val, " << sz/8 << ");\n";
                         }
-                        if(rmw.first == "fetch_sub")
-                            out << "    tmp = -tmp;\n";
                         out << "    switch (memorder) {\n";
+                        out << "#if __CUDA_ARCH__ >= 700\n";
                         out << "    case __ATOMIC_SEQ_CST: " << fencename("sc"s, s.first) << "();\n";
                         out << "    case __ATOMIC_CONSUME:\n";
-                        out << "    case __ATOMIC_ACQUIRE: __cuda_" << rmw.second << "_acquire_" << sz << "_" << s.first << "(ptr, tmp, tmp); break;\n";
-                        out << "    case __ATOMIC_ACQ_REL: __cuda_" << rmw.second << "_acq_rel_" << sz << "_" << s.first << "(ptr, tmp, tmp); break;\n";
-                        out << "    case __ATOMIC_RELEASE: __cuda_" << rmw.second << "_release_" << sz << "_" << s.first << "(ptr, tmp, tmp); break;\n";
-                        out << "    case __ATOMIC_RELAXED: __cuda_" << rmw.second << "_relaxed_" << sz << "_" << s.first << "(ptr, tmp, tmp); break;\n";
+                        out << "    case __ATOMIC_ACQUIRE: __cuda_" << rmw.first << "_acquire_" << sz << "_" << s.first << "(ptr, tmp, tmp); break;\n";
+                        out << "    case __ATOMIC_ACQ_REL: __cuda_" << rmw.first << "_acq_rel_" << sz << "_" << s.first << "(ptr, tmp, tmp); break;\n";
+                        out << "    case __ATOMIC_RELEASE: __cuda_" << rmw.first << "_release_" << sz << "_" << s.first << "(ptr, tmp, tmp); break;\n";
+                        out << "    case __ATOMIC_RELAXED: __cuda_" << rmw.first << "_relaxed_" << sz << "_" << s.first << "(ptr, tmp, tmp); break;\n";
+                        out << "#else\n";
+                        out << "    case __ATOMIC_SEQ_CST:\n";
+                        out << "    case __ATOMIC_ACQ_REL: __cuda_membar_" << s.first << "();\n";
+                        out << "    case __ATOMIC_CONSUME:\n";
+                        out << "    case __ATOMIC_ACQUIRE: __cuda_" << rmw.first << "_volatile_" << sz << "_" << s.first << "(ptr, tmp, tmp); __cuda_membar_" << s.first << "(); break;\n";
+                        out << "    case __ATOMIC_RELEASE: __cuda_membar_" << s.first << "(); __cuda_" << rmw.first << "_volatile_" << sz << "_" << s.first << "(ptr, tmp, tmp); break;\n";
+                        out << "    case __ATOMIC_RELAXED: __cuda_" << rmw.first << "_volatile_" << sz << "_" << s.first << "(ptr, tmp, tmp); break;\n";
+                        out << "#endif // __CUDA_ARCH__ >= 700\n";
                         out << "    default: assert(0);\n";
                         out << "    }\n";
                         if(rmw.first == "exchange")
@@ -270,12 +320,21 @@ THE SOFTWARE.
                     out << "    tmp = -tmp;\n";
                 out << "    tmp *= sizeof(type);\n";
                 out << "    switch (memorder) {\n";
+                out << "#if __CUDA_ARCH__ >= 700\n";
                 out << "    case __ATOMIC_SEQ_CST: " << fencename("sc"s, s.first) << "();\n";
                 out << "    case __ATOMIC_CONSUME:\n";
-                out << "    case __ATOMIC_ACQUIRE: __cuda_add_acquire_64_" << s.first << "(ptr, tmp, tmp); break;\n";
-                out << "    case __ATOMIC_ACQ_REL: __cuda_add_acq_rel_64_" << s.first << "(ptr, tmp, tmp); break;\n";
-                out << "    case __ATOMIC_RELEASE: __cuda_add_release_64_" << s.first << "(ptr, tmp, tmp); break;\n";
-                out << "    case __ATOMIC_RELAXED: __cuda_add_relaxed_64_" << s.first << "(ptr, tmp, tmp); break;\n";
+                out << "    case __ATOMIC_ACQUIRE: __cuda_fetch_add_acquire_64_" << s.first << "(ptr, tmp, tmp); break;\n";
+                out << "    case __ATOMIC_ACQ_REL: __cuda_fetch_add_acq_rel_64_" << s.first << "(ptr, tmp, tmp); break;\n";
+                out << "    case __ATOMIC_RELEASE: __cuda_fetch_add_release_64_" << s.first << "(ptr, tmp, tmp); break;\n";
+                out << "    case __ATOMIC_RELAXED: __cuda_fetch_add_relaxed_64_" << s.first << "(ptr, tmp, tmp); break;\n";
+                out << "#else\n";
+                out << "    case __ATOMIC_SEQ_CST:\n";
+                out << "    case __ATOMIC_ACQ_REL: __cuda_membar_" << s.first << "();\n";
+                out << "    case __ATOMIC_CONSUME:\n";
+                out << "    case __ATOMIC_ACQUIRE: __cuda_fetch_add_volatile_64_" << s.first << "(ptr, tmp, tmp); __cuda_membar_" << s.first << "(); break;\n";
+                out << "    case __ATOMIC_RELEASE: __cuda_membar_" << s.first << "(); __cuda_fetch_add_volatile_64_" << s.first << "(ptr, tmp, tmp); break;\n";
+                out << "    case __ATOMIC_RELAXED: __cuda_fetch_add_volatile_64_" << s.first << "(ptr, tmp, tmp); break;\n";
+                out << "#endif // __CUDA_ARCH__ >= 700\n";
                 out << "    default: assert(0);\n";
                 out << "    }\n";
                 out << "    memcpy(&ret, &tmp, 8);\n";

@@ -1,6 +1,6 @@
 samples/trie
 samples/trie.exe
-.vscode/settings.json
+.vscode/*
 samples/pg996.txt
 samples/1342-0.txt
 samples/2600-0.txt
