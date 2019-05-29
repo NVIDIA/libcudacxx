@@ -22,8 +22,6 @@ ADD libnvidia-ptxjitcompiler.so* /usr/lib/x86_64-linux-gnu/
 
 WORKDIR /sw/gpgpu/libcudacxx
 
-ENV LIBCXX_SITE_CONFIG /sw/gpgpu/libcudacxx/build/libcxx/test/lit.site.cfg
-
-CMD LIBCXX_SITE_CONFIG=/sw/gpgpu/libcudacxx/libcxx/build/libcxx/test/lit.site.cfg lit -vv -a libcxx/test\
+CMD LIBCXX_SITE_CONFIG=/sw/gpgpu/libcudacxx/libcxx/build/test/lit.site.cfg lit -vv -a libcxx/test\
  && LIBCXX_SITE_CONFIG=/sw/gpgpu/libcudacxx/build/libcxx/test/lit.site.cfg lit -vv -a test
 

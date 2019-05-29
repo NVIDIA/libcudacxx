@@ -8,10 +8,15 @@ MAINTAINER Bryce Adelstein Lelbach <blelbach@nvidia.com>
 # BUILD: The following is invoked when the image is built.
 
 RUN apt-get -y update\
- && apt-get -y install g++-5 clang-5.0 python python-pip cmake\
+ && apt-get -y install g++-5 clang-5.0 python python-pip\
  && pip install lit\
  && mkdir -p /sw/gpgpu/libcudacxx/build\
  && mkdir -p /sw/gpgpu/libcudacxx/libcxx/build
+
+# The distro doesn't have CMake 3.8 in its repositories, so we need to install
+# it ourselves.
+ADD https://github.com/Kitware/CMake/releases/download/v3.8.2/cmake-3.8.2-Linux-x86_64.sh /tmp/cmake.sh
+RUN sh /tmp/cmake.sh --skip-license
 
 # For debugging.
 #RUN apt-get -y install gdb strace vim
