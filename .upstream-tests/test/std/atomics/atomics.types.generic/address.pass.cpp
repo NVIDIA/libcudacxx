@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 //
-// UNSUPPORTED: libcpp-has-no-threads, pre-sm-70
+// UNSUPPORTED: libcpp-has-no-threads
 //  ... test case crashes clang.
 
 // <cuda/std/atomic>
@@ -86,10 +86,6 @@ do_test()
     bool b0 = obj.is_lock_free();
     ((void)b0); // mark as unused
     assert(obj == T(0));
-    cuda::std::atomic_init(&obj, T(1));
-    assert(obj == T(1));
-    cuda::std::atomic_init(&obj, T(2));
-    assert(obj == T(2));
     obj.store(T(0));
     assert(obj == T(0));
     obj.store(T(1), cuda::std::memory_order_release);
@@ -132,15 +128,41 @@ do_test()
 
 template <class A, class T>
 __host__ __device__
+void do_test_std()
+{
+    A obj(T(0));
+    cuda::std::atomic_init(&obj, T(1));
+    assert(obj == T(1));
+    cuda::std::atomic_init(&obj, T(2));
+    assert(obj == T(2));
+
+    do_test<A, T>();
+}
+
+template <class A, class T>
+__host__ __device__
 void test()
 {
     do_test<A, T>();
     do_test<volatile A, T>();
 }
 
+template <class A, class T>
+__host__ __device__
+void test_std()
+{
+    do_test_std<A, T>();
+    do_test_std<volatile A, T>();
+}
+
 int main(int, char**)
 {
-    test<cuda::std::atomic<int*>, int*>();
+#if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 600
+    test_std<cuda::std::atomic<int*>, int*>();
+    test<cuda::atomic<int*, cuda::thread_scope_system>, int*>();
+#endif
+    test<cuda::atomic<int*, cuda::thread_scope_device>, int*>();
+    test<cuda::atomic<int*, cuda::thread_scope_block>, int*>();
 
   return 0;
 }

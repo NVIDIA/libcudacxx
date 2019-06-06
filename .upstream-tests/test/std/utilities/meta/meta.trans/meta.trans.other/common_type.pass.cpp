@@ -24,10 +24,8 @@ struct X { explicit X(T const&){} };
 template <class T>
 struct S { explicit S(T const&){} };
 
-namespace cuda
-{
-namespace std
-{
+_LIBCPP_BEGIN_NAMESPACE_STD
+
     template <typename T>
     struct common_type<T, ::S<T> >
     {
@@ -48,8 +46,8 @@ namespace std
     template <> struct common_type< ::S<long>, long> {};
     template <> struct common_type<long, ::S<long> > {};
     template <> struct common_type< ::X<double>, ::X<double> > {};
-}
-}
+
+_LIBCPP_END_NAMESPACE_STD
 
 #if TEST_STD_VER >= 11
 template <class Tp>

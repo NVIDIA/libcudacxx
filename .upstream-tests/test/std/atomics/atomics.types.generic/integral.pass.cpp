@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 //
-// UNSUPPORTED: libcpp-has-no-threads, pre-sm-70
+// UNSUPPORTED: libcpp-has-no-threads, pre-sm-32
 
 // <cuda/std/atomic>
 
@@ -99,11 +99,6 @@ void
 do_test()
 {
     A obj(T(0));
-    assert(obj == T(0));
-    cuda::std::atomic_init(&obj, T(1));
-    assert(obj == T(1));
-    cuda::std::atomic_init(&obj, T(2));
-    assert(obj == T(2));
     bool b0 = obj.is_lock_free();
     ((void)b0); // mark as unused
     obj.store(T(0));
@@ -168,60 +163,51 @@ void test()
     do_test<volatile A, T>();
 }
 
+template<template<typename, cuda::thread_scope> typename Atomic, cuda::thread_scope Scope>
+__host__ __device__
+void test_for_all_types()
+{
+    test<Atomic<char, Scope>, char>();
+    test<Atomic<signed char, Scope>, signed char>();
+    test<Atomic<unsigned char, Scope>, unsigned char>();
+    test<Atomic<short, Scope>, short>();
+    test<Atomic<unsigned short, Scope>, unsigned short>();
+    test<Atomic<int, Scope>, int>();
+    test<Atomic<unsigned int, Scope>, unsigned int>();
+    test<Atomic<long, Scope>, long>();
+    test<Atomic<unsigned long, Scope>, unsigned long>();
+    test<Atomic<long long, Scope>, long long>();
+    test<Atomic<unsigned long long, Scope>, unsigned long long>();
+#ifndef _LIBCPP_HAS_NO_UNICODE_CHARS
+    test<Atomic<char16_t, Scope>, char16_t>();
+    test<Atomic<char32_t, Scope>, char32_t>();
+#endif  // _LIBCPP_HAS_NO_UNICODE_CHARS
+    test<Atomic<wchar_t, Scope>, wchar_t>();
+
+    test<Atomic<int8_t, Scope>,    int8_t>();
+    test<Atomic<uint8_t, Scope>,  uint8_t>();
+    test<Atomic<int16_t, Scope>,   int16_t>();
+    test<Atomic<uint16_t, Scope>, uint16_t>();
+    test<Atomic<int32_t, Scope>,   int32_t>();
+    test<Atomic<uint32_t, Scope>, uint32_t>();
+    test<Atomic<int64_t, Scope>,   int64_t>();
+    test<Atomic<uint64_t, Scope>, uint64_t>();
+}
+
+template<typename T, cuda::thread_scope Scope>
+using cuda_std_atomic = cuda::std::atomic<T>;
+
+template<typename T, cuda::thread_scope Scope>
+using cuda_atomic = cuda::atomic<T, Scope>;
 
 int main(int, char**)
 {
-    test<cuda::std::atomic_char, char>();
-    test<cuda::std::atomic_schar, signed char>();
-    test<cuda::std::atomic_uchar, unsigned char>();
-    test<cuda::std::atomic_short, short>();
-    test<cuda::std::atomic_ushort, unsigned short>();
-    test<cuda::std::atomic_int, int>();
-    test<cuda::std::atomic_uint, unsigned int>();
-    test<cuda::std::atomic_long, long>();
-    test<cuda::std::atomic_ulong, unsigned long>();
-    test<cuda::std::atomic_llong, long long>();
-    test<cuda::std::atomic_ullong, unsigned long long>();
-#ifndef _LIBCPP_HAS_NO_UNICODE_CHARS
-    test<cuda::std::atomic_char16_t, char16_t>();
-    test<cuda::std::atomic_char32_t, char32_t>();
-#endif  // _LIBCPP_HAS_NO_UNICODE_CHARS
-    test<cuda::std::atomic_wchar_t, wchar_t>();
-
-    test<cuda::std::atomic_int8_t,    int8_t>();
-    test<cuda::std::atomic_uint8_t,  uint8_t>();
-    test<cuda::std::atomic_int16_t,   int16_t>();
-    test<cuda::std::atomic_uint16_t, uint16_t>();
-    test<cuda::std::atomic_int32_t,   int32_t>();
-    test<cuda::std::atomic_uint32_t, uint32_t>();
-    test<cuda::std::atomic_int64_t,   int64_t>();
-    test<cuda::std::atomic_uint64_t, uint64_t>();
-
-    test<volatile cuda::std::atomic_char, char>();
-    test<volatile cuda::std::atomic_schar, signed char>();
-    test<volatile cuda::std::atomic_uchar, unsigned char>();
-    test<volatile cuda::std::atomic_short, short>();
-    test<volatile cuda::std::atomic_ushort, unsigned short>();
-    test<volatile cuda::std::atomic_int, int>();
-    test<volatile cuda::std::atomic_uint, unsigned int>();
-    test<volatile cuda::std::atomic_long, long>();
-    test<volatile cuda::std::atomic_ulong, unsigned long>();
-    test<volatile cuda::std::atomic_llong, long long>();
-    test<volatile cuda::std::atomic_ullong, unsigned long long>();
-#ifndef _LIBCPP_HAS_NO_UNICODE_CHARS
-    test<volatile cuda::std::atomic_char16_t, char16_t>();
-    test<volatile cuda::std::atomic_char32_t, char32_t>();
-#endif  // _LIBCPP_HAS_NO_UNICODE_CHARS
-    test<volatile cuda::std::atomic_wchar_t, wchar_t>();
-
-    test<volatile cuda::std::atomic_int8_t,    int8_t>();
-    test<volatile cuda::std::atomic_uint8_t,  uint8_t>();
-    test<volatile cuda::std::atomic_int16_t,   int16_t>();
-    test<volatile cuda::std::atomic_uint16_t, uint16_t>();
-    test<volatile cuda::std::atomic_int32_t,   int32_t>();
-    test<volatile cuda::std::atomic_uint32_t, uint32_t>();
-    test<volatile cuda::std::atomic_int64_t,   int64_t>();
-    test<volatile cuda::std::atomic_uint64_t, uint64_t>();
+#if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 600
+    test_for_all_types<cuda_std_atomic, cuda::thread_scope_system>();
+    test_for_all_types<cuda_atomic, cuda::thread_scope_system>();
+#endif
+    test_for_all_types<cuda_atomic, cuda::thread_scope_device>();
+    test_for_all_types<cuda_atomic, cuda::thread_scope_block>();
 
   return 0;
 }

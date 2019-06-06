@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 //
-// UNSUPPORTED: libcpp-has-no-threads, pre-sm-70
+// UNSUPPORTED: libcpp-has-no-threads
 // UNSUPPORTED: c++98, c++03
 
 // NOTE: atomic<> of a TriviallyCopyable class is wrongly rejected by older
@@ -37,12 +37,12 @@ struct UserType {
     }
 };
 
-template <class Tp>
+template <class Tp, cuda::thread_scope Scope>
 __host__ __device__
 struct TestFunc {
     __host__ __device__
     void operator()() const {
-        typedef cuda::std::atomic<Tp> Atomic;
+        typedef cuda::atomic<Tp, Scope> Atomic;
         static_assert(cuda::std::is_literal_type<Atomic>::value, "");
         constexpr Tp t(42);
         {
@@ -63,8 +63,14 @@ struct TestFunc {
 
 int main(int, char**)
 {
-    TestFunc<UserType>()();
-    TestEachIntegralType<TestFunc>()();
+#if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 600
+    TestFunc<UserType, cuda::thread_scope_system>()();
+    TestEachIntegralType<TestFunc, cuda::thread_scope_system>()();
+#endif
+    TestFunc<UserType, cuda::thread_scope_device>()();
+    TestEachIntegralType<TestFunc, cuda::thread_scope_device>()();
+    TestFunc<UserType, cuda::thread_scope_block>()();
+    TestEachIntegralType<TestFunc, cuda::thread_scope_block>()();
 
   return 0;
 }

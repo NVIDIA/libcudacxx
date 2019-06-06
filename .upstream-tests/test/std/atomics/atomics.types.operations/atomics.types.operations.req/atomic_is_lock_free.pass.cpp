@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 //
-// UNSUPPORTED: libcpp-has-no-threads
+// UNSUPPORTED: libcpp-has-no-threads, pre-sm-60
 
 // <cuda/std/atomic>
 
@@ -23,7 +23,7 @@
 
 #include "atomic_helpers.h"
 
-template <class T>
+template <class T, cuda::thread_scope>
 struct TestFn {
   __host__ __device__
   void operator()() const {
@@ -43,7 +43,7 @@ struct A
 
 int main(int, char**)
 {
-    TestFn<A>()();
+    TestFn<A, cuda::thread_scope_system>()();
     TestEachAtomicType<TestFn>()();
 
   return 0;

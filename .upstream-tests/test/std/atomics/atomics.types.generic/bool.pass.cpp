@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 //
-// UNSUPPORTED: libcpp-has-no-threads, pre-sm-70
+// UNSUPPORTED: libcpp-has-no-threads
 
 // <cuda/std/atomic>
 
@@ -58,14 +58,12 @@
 
 #include "test_macros.h"
 
-int main(int, char**)
+template<template<cuda::thread_scope> typename Atomic, cuda::thread_scope Scope>
+__host__ __device__
+void do_test()
 {
     {
-        volatile cuda::std::atomic<bool> obj(true);
-        assert(obj == true);
-        cuda::std::atomic_init(&obj, false);
-        assert(obj == false);
-        cuda::std::atomic_init(&obj, true);
+        volatile Atomic<Scope> obj(true);
         assert(obj == true);
         bool b0 = obj.is_lock_free();
         (void)b0; // to placate scan-build
@@ -116,11 +114,7 @@ int main(int, char**)
         assert(obj == true);
     }
     {
-        cuda::std::atomic<bool> obj(true);
-        assert(obj == true);
-        cuda::std::atomic_init(&obj, false);
-        assert(obj == false);
-        cuda::std::atomic_init(&obj, true);
+        Atomic<Scope> obj(true);
         assert(obj == true);
         bool b0 = obj.is_lock_free();
         (void)b0; // to placate scan-build
@@ -171,11 +165,7 @@ int main(int, char**)
         assert(obj == true);
     }
     {
-        cuda::std::atomic_bool obj(true);
-        assert(obj == true);
-        cuda::std::atomic_init(&obj, false);
-        assert(obj == false);
-        cuda::std::atomic_init(&obj, true);
+        Atomic<Scope> obj(true);
         assert(obj == true);
         bool b0 = obj.is_lock_free();
         (void)b0; // to placate scan-build
@@ -226,12 +216,29 @@ int main(int, char**)
         assert(obj == true);
     }
     {
-        typedef cuda::std::atomic<bool> A;
+        typedef Atomic<Scope> A;
         TEST_ALIGNAS_TYPE(A) char storage[sizeof(A)] = {1};
         A& zero = *new (storage) A();
         assert(zero == false);
         zero.~A();
     }
+}
+
+template<cuda::thread_scope Scope>
+using cuda_std_atomic = cuda::std::atomic<bool>;
+
+template<cuda::thread_scope Scope>
+using cuda_atomic = cuda::atomic<bool, Scope>;
+
+
+int main(int, char**)
+{
+#if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 600
+    do_test<cuda_std_atomic, cuda::thread_scope_system>();
+    do_test<cuda_atomic, cuda::thread_scope_system>();
+#endif
+    do_test<cuda_atomic, cuda::thread_scope_device>();
+    do_test<cuda_atomic, cuda::thread_scope_block>();
 
   return 0;
 }
