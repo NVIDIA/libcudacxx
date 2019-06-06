@@ -2260,6 +2260,7 @@ atomic_fetch_xor_explicit(atomic<_Tp>* __o, _Tp __op, memory_order __m) _NOEXCEP
 
 // flag type and operations
 
+#if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 600
 typedef struct atomic_flag
 {
     __cxx_atomic_impl<_LIBCPP_ATOMIC_FLAG_TYPE, 0> __a_;
@@ -2350,6 +2351,7 @@ atomic_flag_clear_explicit(atomic_flag* __o, memory_order __m) _NOEXCEPT
 {
     __o->clear(__m);
 }
+#endif
 
 // fences
 
