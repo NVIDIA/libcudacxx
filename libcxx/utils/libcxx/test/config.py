@@ -139,6 +139,7 @@ class Configuration(object):
         self.configure_use_clang_verify()
         self.configure_use_thread_safety()
         self.configure_execute_external()
+        self.configure_no_execute()
         self.configure_ccache()
         self.configure_compile_flags()
         self.configure_filesystem_compile_flags()
@@ -367,6 +368,10 @@ class Configuration(object):
         use_lit_shell = self.get_lit_bool('use_lit_shell',
                                           use_lit_shell_default)
         self.execute_external = not use_lit_shell
+
+    def configure_no_execute(self):
+        if type(self.executor) == NoopExecutor:
+            self.config.available_features.add('no_execute')
 
     def configure_ccache(self):
         use_ccache_default = os.environ.get('LIBCXX_USE_CCACHE') is not None
