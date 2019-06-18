@@ -1,14 +1,11 @@
 # Dockerfile for libcudacxx:host_x86_64_ubuntu_18.04__target_x86_64_ubuntu_18.04__gcc_7
 
-###############################################################################
-# BUILD: The following is invoked when the CUDA driver is attached.
-
 FROM libcudacxx_base:host_x86_64_ubuntu_18.04__target_x86_64_ubuntu_18.04__gcc_7
 
 MAINTAINER Bryce Adelstein Lelbach <blelbach@nvidia.com>
 
 ###############################################################################
-# BUILD: The following is invoked when the image is built.
+# BUILD: The following is invoked when the CUDA driver is attached.
 
 # We use ADD here because it invalidates the cache for subsequent steps, which
 # is what we want, as we need to rebuild if the sources have changed.
@@ -18,10 +15,11 @@ ADD libnvidia-fatbinaryloader.so* /usr/lib/x86_64-linux-gnu/
 ADD libnvidia-ptxjitcompiler.so* /usr/lib/x86_64-linux-gnu/ 
 
 ###############################################################################
-# RUN: The following is invoked when the image is run.
+# CMD: The following is invoked when the image is run.
 
 WORKDIR /sw/gpgpu/libcudacxx
 
-CMD LIBCXX_SITE_CONFIG=/sw/gpgpu/libcudacxx/libcxx/build/test/lit.site.cfg lit -vv -a libcxx/test\
- && LIBCXX_SITE_CONFIG=/sw/gpgpu/libcudacxx/build/libcxx/test/lit.site.cfg lit -vv -a test
+ENV LIBCUDACXX_COMPUTE_ARCHS="30 32 35 50 52 53 60 61 62 70 72 75"
+
+CMD /sw/gpgpu/libcudacxx/utils/nvidia/linux/perform_tests.bash
 

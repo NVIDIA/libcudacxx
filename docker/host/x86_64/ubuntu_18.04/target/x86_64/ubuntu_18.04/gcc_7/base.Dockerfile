@@ -4,6 +4,8 @@ FROM ubuntu:18.04
 
 MAINTAINER Bryce Adelstein Lelbach <blelbach@nvidia.com>
 
+ARG LIBCUDACXX_SKIP_BASE_TESTS_BUILD
+
 ###############################################################################
 # BUILD: The following is invoked when the image is built.
 
@@ -38,23 +40,29 @@ ADD libcudacxx /sw/gpgpu/libcudacxx
 # Configure libc++ tests.
 RUN cd /sw/gpgpu/libcudacxx/libcxx/build\
  && cmake ..\
-      -DLIBCXX_INCLUDE_TESTS=ON\
-      -DLIBCXX_INCLUDE_BENCHMARKS=OFF\
-      -DLIBCXX_CXX_ABI=libsupc++\
-      -DLLVM_EXTERNAL_LIT=$(which lit)\
-      -DLLVM_CONFIG_PATH=$(which llvm-config-6.0)\
-      -DCMAKE_C_COMPILER=gcc-7\
-      -DCMAKE_CXX_COMPILER=g++-7
+ -DLIBCXX_INCLUDE_TESTS=ON\
+ -DLIBCXX_INCLUDE_BENCHMARKS=OFF\
+ -DLIBCXX_CXX_ABI=libsupc++\
+ -DLLVM_CONFIG_PATH=$(which llvm-config-6.0)\
+ -DCMAKE_C_COMPILER=gcc-7\
+ -DCMAKE_CXX_COMPILER=g++-7\
+ && make -j
 
 # Configure libcu++ tests.
 RUN cd /sw/gpgpu/libcudacxx/build\
  && cmake ..\
-      -DLIBCXX_INCLUDE_TESTS=ON\
-      -DLIBCXX_INCLUDE_BENCHMARKS=OFF\
-      -DLIBCXX_CXX_ABI=libsupc++\
-      -DLLVM_EXTERNAL_LIT=$(which lit)\
-      -DLLVM_CONFIG_PATH=$(which llvm-config-6.0)\
-      -DCMAKE_C_COMPILER=/sw/gpgpu/bin/x86_64_Linux_release/nvcc\
-      -DCMAKE_CXX_COMPILER=/sw/gpgpu/bin/x86_64_Linux_release/nvcc\
-      -DLIBCXX_HOST_COMPILER=g++-7
+ -DLIBCXX_INCLUDE_TESTS=ON\
+ -DLIBCXX_INCLUDE_BENCHMARKS=OFF\
+ -DLIBCXX_CXX_ABI=libsupc++\
+ -DLLVM_CONFIG_PATH=$(which llvm-config-6.0)\
+ -DCMAKE_C_COMPILER=/sw/gpgpu/bin/x86_64_Linux_release/nvcc\
+ -DCMAKE_CXX_COMPILER=/sw/gpgpu/bin/x86_64_Linux_release/nvcc\
+ -DLIBCXX_HOST_COMPILER=g++-7
+
+# TODO: Fix passthrough.
+ENV LIBCUDACXX_COMPUTE_ARCHS="30 32 35 50 52 53 60 61 62 70 72 75"
+
+# Build tests if requested.
+RUN LIBCUDACXX_SKIP_BASE_TESTS_BUILD=$LIBCUDACXX_SKIP_BASE_TESTS_BUILD\
+cd /sw/gpgpu/libcudacxx && /sw/gpgpu/libcudacxx/utils/nvidia/linux/perform_tests.bash
 
