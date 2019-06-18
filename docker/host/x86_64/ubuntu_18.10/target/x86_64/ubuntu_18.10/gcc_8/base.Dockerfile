@@ -1,6 +1,6 @@
-# Dockerfile for libcudacxx_base:host_x86_64_ubuntu_18.04__target_x86_64_ubuntu_18.04__gcc_7
+# Dockerfile for libcudacxx_base:host_x86_64_ubuntu_18.10__target_x86_64_ubuntu_18.10__gcc_7
 
-FROM ubuntu:18.04
+FROM ubuntu:18.10
 
 MAINTAINER Bryce Adelstein Lelbach <blelbach@nvidia.com>
 
@@ -11,7 +11,7 @@ ARG LIBCUDACXX_COMPUTE_ARCHS
 # BUILD: The following is invoked when the image is built.
 
 RUN apt-get -y update\
- && apt-get -y install g++-7 clang-6.0 python python-pip cmake\
+ && apt-get -y install g++-8 clang-6.0 python python-pip cmake\
  && pip install lit\
  && mkdir -p /sw/gpgpu/libcudacxx/build\
  && mkdir -p /sw/gpgpu/libcudacxx/libcxx/build
@@ -45,8 +45,8 @@ RUN cd /sw/gpgpu/libcudacxx/libcxx/build\
  -DLIBCXX_INCLUDE_BENCHMARKS=OFF\
  -DLIBCXX_CXX_ABI=libsupc++\
  -DLLVM_CONFIG_PATH=$(which llvm-config-6.0)\
- -DCMAKE_C_COMPILER=gcc-7\
- -DCMAKE_CXX_COMPILER=g++-7\
+ -DCMAKE_C_COMPILER=gcc-8\
+ -DCMAKE_CXX_COMPILER=g++-8\
  && make -j\
  2>&1 | tee /sw/gpgpu/libcudacxx/libcxx/build/libcxx_cmake.log
 
@@ -59,7 +59,7 @@ RUN cd /sw/gpgpu/libcudacxx/build\
  -DLLVM_CONFIG_PATH=$(which llvm-config-6.0)\
  -DCMAKE_C_COMPILER=/sw/gpgpu/bin/x86_64_Linux_release/nvcc\
  -DCMAKE_CXX_COMPILER=/sw/gpgpu/bin/x86_64_Linux_release/nvcc\
- -DLIBCXX_HOST_COMPILER=g++-7\
+ -DLIBCXX_HOST_COMPILER=g++-8\
  2>&1 | tee /sw/gpgpu/libcudacxx/build/libcudacxx_cmake.log
 
 # Build tests if requested.

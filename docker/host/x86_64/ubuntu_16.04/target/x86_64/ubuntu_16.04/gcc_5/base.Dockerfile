@@ -5,6 +5,7 @@ FROM ubuntu:16.04
 MAINTAINER Bryce Adelstein Lelbach <blelbach@nvidia.com>
 
 ARG LIBCUDACXX_SKIP_BASE_TESTS_BUILD
+ARG LIBCUDACXX_COMPUTE_ARCHS
 
 ###############################################################################
 # BUILD: The following is invoked when the image is built.
@@ -18,7 +19,7 @@ RUN apt-get -y update\
 # The distro doesn't have CMake 3.8 in its repositories, so we need to install
 # it ourselves.
 ADD https://github.com/Kitware/CMake/releases/download/v3.8.2/cmake-3.8.2-Linux-x86_64.sh /tmp/cmake.sh
-RUN sh /tmp/cmake.sh --skip-license
+RUN sh /tmp/cmake.sh --skip-license --prefix=/usr
 
 # For debugging.
 #RUN apt-get -y install gdb strace vim
@@ -51,7 +52,8 @@ RUN cd /sw/gpgpu/libcudacxx/libcxx/build\
  -DLLVM_CONFIG_PATH=$(which llvm-config-5.0)\
  -DCMAKE_C_COMPILER=gcc-5\
  -DCMAKE_CXX_COMPILER=g++-5\
- && make -j
+ && make -j\
+ 2>&1 | tee /sw/gpgpu/libcudacxx/libcxx/build/libcxx_cmake.log
 
 # Configure libcu++ tests.
 RUN cd /sw/gpgpu/libcudacxx/build\
@@ -62,14 +64,15 @@ RUN cd /sw/gpgpu/libcudacxx/build\
  -DLLVM_CONFIG_PATH=$(which llvm-config-5.0)\
  -DCMAKE_C_COMPILER=/sw/gpgpu/bin/x86_64_Linux_release/nvcc\
  -DCMAKE_CXX_COMPILER=/sw/gpgpu/bin/x86_64_Linux_release/nvcc\
- -DLIBCXX_HOST_COMPILER=g++-5
-
-# TODO: Fix passthrough.
-ENV LIBCUDACXX_COMPUTE_ARCHS="30 32 35 50 52 53 60 61 62 70 72 75"
+ -DLIBCXX_HOST_COMPILER=g++-5\
+ 2>&1 | tee /sw/gpgpu/libcudacxx/build/libcudacxx_cmake.log
 
 # Build tests if requested.
 RUN cd /sw/gpgpu/libcudacxx\
- && LIBCUDACXX_SKIP_BASE_TESTS_BUILD=$LIBCUDACXX_SKIP_BASE_TESTS_BUILD\
- LIBCUDACXX_SKIP_TESTS_RUN=1\
- /sw/gpgpu/libcudacxx/utils/nvidia/linux/perform_tests.bash
+ && LIBCUDACXX_SKIP_TESTS_RUN=1\
+ LIBCUDACXX_COMPUTE_ARCHS=$LIBCUDACXX_COMPUTE_ARCHS\
+ LIBCUDACXX_SKIP_BASE_TESTS_BUILD=$LIBCUDACXX_SKIP_BASE_TESTS_BUILD\
+ /sw/gpgpu/libcudacxx/utils/nvidia/linux/perform_tests.bash\
+ --log-libcxx-results /sw/gpgpu/libcudacxx/libcxx/build/libcxx_lit.log\
+ --log-libcudacxx-results /sw/gpgpu/libcudacxx/build/libcudacxx_lit.log
 
