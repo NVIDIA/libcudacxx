@@ -138,6 +138,7 @@ class Configuration(object):
         self.configure_cxx_library_root()
         self.configure_use_clang_verify()
         self.configure_use_thread_safety()
+        self.configure_no_execute()
         self.configure_execute_external()
         self.configure_ccache()
         self.configure_compile_flags()
@@ -230,8 +231,6 @@ class Configuration(object):
                                   '(e.g., --param=cxx_under_test=clang++)')
         self.cxx = CXXCompiler(cxx) if not self.cxx_is_clang_cl else \
                    self._configure_clang_cl(cxx)
-        if self.lit_config.noExecute and self.cxx.type == 'nvcc':
-            self.cxx.type = 'nvcc_no_execute'
         cxx_type = self.cxx.type
         if cxx_type is not None:
             assert self.cxx.version is not None
@@ -369,6 +368,10 @@ class Configuration(object):
         use_lit_shell = self.get_lit_bool('use_lit_shell',
                                           use_lit_shell_default)
         self.execute_external = not use_lit_shell
+
+    def configure_no_execute(self):
+        if type(self.executor) == NoopExecutor:
+            self.config.available_features.add('no_execute')
 
     def configure_ccache(self):
         use_ccache_default = os.environ.get('LIBCXX_USE_CCACHE') is not None
@@ -623,7 +626,7 @@ class Configuration(object):
                                  and self.cxx_stdlib_under_test != 'libc++'):
             self.lit_config.note('using the system cxx headers')
             return
-        if self.cxx.type != 'nvcc' and self.cxx.type != 'nvcc_no_execute':
+        if self.cxx.type != 'nvcc':
             self.cxx.compile_flags += ['-nostdinc++']
         if cxx_headers is None:
             cxx_headers = os.path.join(self.libcxx_src_root, 'include')
@@ -707,7 +710,7 @@ class Configuration(object):
         enable_exceptions = self.get_lit_bool('enable_exceptions', True)
         if not enable_exceptions:
             self.config.available_features.add('libcpp-no-exceptions')
-            if self.cxx.type == 'nvcc' or self.cxx.type == 'nvcc_no_execute':
+            if self.cxx.type == 'nvcc':
                 self.cxx.compile_flags += ['-Xcompiler']
             self.cxx.compile_flags += ['-fno-exceptions']
 
@@ -715,7 +718,7 @@ class Configuration(object):
         enable_rtti = self.get_lit_bool('enable_rtti', True)
         if not enable_rtti:
             self.config.available_features.add('libcpp-no-rtti')
-            if self.cxx.type == 'nvcc' or self.cxx.type == 'nvcc_no_execute':
+            if self.cxx.type == 'nvcc':
                 self.cxx.compile_flags += ['-Xcompiler']
             self.cxx.compile_flags += ['-fno-rtti', '-D_LIBCPP_NO_RTTI']
 
@@ -763,7 +766,7 @@ class Configuration(object):
 
         # Configure libraries
         if self.cxx_stdlib_under_test == 'libc++':
-            if self.cxx.type == 'nvcc' or self.cxx.type == 'nvcc_no_execute':
+            if self.cxx.type == 'nvcc':
                 self.cxx.link_flags += ['-Xcompiler']
             self.cxx.link_flags += ['-nodefaultlibs']
             # FIXME: Handle MSVCRT as part of the ABI library handling.
@@ -832,7 +835,7 @@ class Configuration(object):
             self.cxx.link_flags += ['-lc++experimental']
         if self.link_shared:
             self.cxx.link_flags += ['-lc++']
-        elif self.cxx.type != 'nvcc' and self.cxx.type != 'nvcc_no_execute':
+        elif self.cxx.type != 'nvcc':
             cxx_library_root = self.get_lit_conf('cxx_library_root')
             if cxx_library_root:
                 libname = self.make_static_lib_name('c++')

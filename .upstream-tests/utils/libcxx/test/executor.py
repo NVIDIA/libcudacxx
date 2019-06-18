@@ -43,6 +43,14 @@ class LocalExecutor(Executor):
         return (cmd, out, err, rc)
 
 
+class NoopExecutor(Executor):
+    def __init__(self):
+        super(NoopExecutor, self).__init__()
+
+    def run(self, exe_path, cmd=None, work_dir='.', file_deps=None, env=None):
+        return (cmd, '', '', 0)
+
+
 class PrefixExecutor(Executor):
     """Prefix an executor with some other command wrapper.
 
