@@ -7,7 +7,7 @@
 //===----------------------------------------------------------------------===//
 //
 // Test the "test_macros.h" header.
-#include <cuda/details/__config>
+#include <cuda/std/detail/__config>
 #include "test_macros.h"
 
 #ifndef TEST_STD_VER
