@@ -20,7 +20,7 @@ void test_decay()
 {
     ASSERT_SAME_TYPE(U, typename cuda::std::decay<T>::type);
 #if TEST_STD_VER > 11
-    ASSERT_SAME_TYPE(U,        cuda::std::decay_t<T>);
+    ASSERT_SAME_TYPE(U,          cuda::std::decay_t<T>);
 #endif
 }
 

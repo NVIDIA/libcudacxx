@@ -7,7 +7,10 @@
 //===----------------------------------------------------------------------===//
 
 // UNSUPPORTED: c++98, c++03
-// XFAIL: nvcc, nvcc_no_execute
+// XFAIL: nvcc
+
+// If we're just building the test and not executing it, it should pass.
+// UNSUPPORTED: no_execute
 
 // <cuda/std/initializer_list>
 

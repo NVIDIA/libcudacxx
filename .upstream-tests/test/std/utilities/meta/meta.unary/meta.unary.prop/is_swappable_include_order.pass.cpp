@@ -10,7 +10,10 @@
 
 // is_swappable
 
-// XFAIL: nvcc, nvcc_no_execute
+// XFAIL: nvcc
+
+// If we're just building the test and not executing it, it should pass.
+// UNSUPPORTED: no_execute
 
 // IMPORTANT: The include order is part of the test. We want to pick up
 // the following definitions in this order:

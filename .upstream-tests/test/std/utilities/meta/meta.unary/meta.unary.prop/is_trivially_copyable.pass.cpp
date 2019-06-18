@@ -12,7 +12,10 @@
 
 // These compilers have not implemented Core 2094 which makes volatile
 // qualified types trivially copyable.
-// XFAIL: clang-3, clang-4, apple-clang-6, apple-clang-7, apple-clang-8, apple-clang-9.0, gcc, nvcc, nvcc_no_execute
+// XFAIL: clang-3, clang-4, apple-clang-6, apple-clang-7, apple-clang-8, apple-clang-9.0, gcc, nvcc
+
+// If we're just building the test and not executing it, it should pass.
+// UNSUPPORTED: no_execute
 
 #include <cuda/std/type_traits>
 #include <cuda/std/cassert>

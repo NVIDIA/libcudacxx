@@ -12,6 +12,9 @@
 
 // XFAIL: c++98, c++03, c++11, c++14
 
+// If we're just building the test and not executing it, it should pass.
+// UNSUPPORTED: no_execute
+
 // cuda::std::byte is not an integer type, nor a character type.
 // It is a distinct type for accessing the bits that ultimately make up object storage.
 
