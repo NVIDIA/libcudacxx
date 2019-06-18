@@ -54,8 +54,8 @@ LIT_PREFIX="time"
 LIBCXX_BUILD_PATH=${LIBCUDACXX_PATH}/libcxx/build
 LIBCUDACXX_BUILD_PATH=${LIBCUDACXX_PATH}/build/libcxx
 
-LOG_LIBCXX_RESULTS=/dev/null
-LOG_LIBCUDACXX_RESULTS=/dev/null
+LIBCXX_LOG_FILE=/dev/null
+LIBCUDACXX_LOG_FILE=/dev/null
 
 RAW_TEST_TARGETS=""
 
@@ -80,11 +80,11 @@ do
   --skip-libcudacxx-tests) LIBCUDACXX_SKIP_LIBCUDACXX_TESTS=1 ;;
   --log-libcxx-results)
     shift # The next argument is the file.
-    LOG_LIBCXX_RESULTS=${1}
+    LIBCXX_LOG_FILE=${1}
     ;;
   --log-libcudacxx-results)
     shift # The next argument is the file.
-    LOG_LIBCUDACXX_RESULTS=${1}
+    LIBCUDACXX_LOG_FILE=${1}
     ;;
   *)
     shift # The next argument is the test target.
@@ -133,7 +133,8 @@ if [ "${LIBCUDACXX_SKIP_LIBCXX_TESTS:-0}" == "0" ]
 then
   TIMEFORMAT="TIMING, libc++ tests (build only), %R [sec]" \
   LIBCXX_SITE_CONFIG=${LIBCXX_BUILD_PATH}/test/lit.site.cfg \
-  bash -c "${LIT_PREFIX} lit ${LIT_FLAGS} ${LIBCXX_TEST_TARGETS}" 2>&1 | tee 
+  bash -c "${LIT_PREFIX} lit ${LIT_FLAGS} ${LIBCXX_TEST_TARGETS}" \
+  2>&1 | tee ${LIBCXX_LOG_FILE}
   if [ "${?}" != "0" ]; then exit 1; fi
 fi
 
@@ -141,7 +142,8 @@ if [ "${LIBCUDACXX_SKIP_LIBCUDACXX_TESTS:-0}" == "0" ]
 then
   TIMEFORMAT="TIMING, libcu++ build tests (build only), %R [sec]" \
   LIBCXX_SITE_CONFIG=${LIBCUDACXX_BUILD_PATH}/test/lit.site.cfg \
-  bash -c "${LIT_PREFIX} lit ${LIT_FLAGS} ${LIT_COMPUTE_ARCHS_FLAG}\"${LIBCUDACXX_COMPUTE_ARCHS}\" ${LIBCUDACXX_TEST_TARGETS}"
+  bash -c "${LIT_PREFIX} lit ${LIT_FLAGS} ${LIT_COMPUTE_ARCHS_FLAG}\"${LIBCUDACXX_COMPUTE_ARCHS}\" ${LIBCUDACXX_TEST_TARGETS}" \
+  2>&1 | tee ${LIBCUDACXX_LOG_FILE}
   if [ "${?}" != "0" ]; then exit 1; fi
 fi
 
