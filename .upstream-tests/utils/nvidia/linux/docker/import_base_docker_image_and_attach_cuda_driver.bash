@@ -1,31 +1,26 @@
 #! /bin/bash
 
-SCRIPTPATH=$(cd $(dirname ${0}); pwd -P)
+SCRIPT_PATH=$(cd $(dirname ${0}); pwd -P)
+source ${SCRIPT_PATH}/configuration.bash
 
-source ${SCRIPTPATH}/variant_configuration.bash
-
-SWPATH=$(realpath ${SCRIPTPATH}/../../../../../../../../../..)
-
-if [ "" == "$1" ]
+# If invoked with an argument, the argument is the name of the tar.bz2 to import.
+if [ "" == "${1}" ]
 then
-  IMAGE=libcudacxx_base__host_${HOSTARCH}_${HOSTOS}__target_${TARGETARCH}_${TARGETOS}__${COMPILER}.tar.bz2
+  TARBZ2=${BASE_NAME}.tar.bz2
 else
-  IMAGE="$1"
+  TARBZ2="${1}"
 fi
 
-bunzip2 ${IMAGE}
+bunzip2 ${TARBZ2}
+if [ "${?}" != "0" ]; then exit 1; fi
 
-if [ "$?" != "0" ]; then exit 1; fi
+docker load --input ${TARBZ2%.tar.bz2}.tar
+if [ "${?}" != "0" ]; then exit 1; fi
 
-docker load --input ${IMAGE%.tar.bz2}.tar
+${SCRIPT_PATH}/attach_cuda_driver_to_docker_image.bash
+if [ "${?}" != "0" ]; then exit 1; fi
 
-if [ "$?" != "0" ]; then exit 1; fi
+docker image rm ${BASE_IMAGE}
 
-${SCRIPTPATH}/attach_cuda_driver_to_docker_image.bash
-
-if [ "$?" != "0" ]; then exit 1; fi
-
-docker image rm libcudacxx_base:host_${HOSTARCH}_${HOSTOS}__target_${TARGETARCH}_${TARGETOS}__${COMPILER}
-
-rm -f ${IMAGE%.tar.bz2}.tar
+rm -f ${TARBZ2%.tar.bz2}.tar
 
