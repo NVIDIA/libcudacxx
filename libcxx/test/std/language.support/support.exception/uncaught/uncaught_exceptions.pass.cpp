@@ -17,6 +17,8 @@
 // XFAIL: with_system_cxx_lib=macosx10.12
 // XFAIL: with_system_cxx_lib=macosx10.13
 
+// XFAIL: c++98, c++03, c++11, c++14
+
 // test uncaught_exceptions
 
 #include <exception>

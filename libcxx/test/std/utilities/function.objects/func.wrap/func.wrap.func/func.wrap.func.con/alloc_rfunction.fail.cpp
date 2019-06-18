@@ -9,6 +9,9 @@
 // <functional>
 // XFAIL: c++98, c++03, c++11, c++14
 
+// If we're just building the test and not executing it, it should pass.
+// UNSUPPORTED: no_execute
+
 // class function<R(ArgTypes...)>
 
 // template<class A> function(allocator_arg_t, const A&, function&&);

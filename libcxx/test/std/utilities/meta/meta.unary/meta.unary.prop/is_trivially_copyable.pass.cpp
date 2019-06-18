@@ -14,6 +14,9 @@
 // qualified types trivially copyable.
 // XFAIL: clang-3, clang-4, apple-clang-6, apple-clang-7, apple-clang-8, apple-clang-9.0, gcc
 
+// If we're just building the test and not executing it, it should pass.
+// UNSUPPORTED: no_execute
+
 #include <type_traits>
 #include <cassert>
 #include "test_macros.h"

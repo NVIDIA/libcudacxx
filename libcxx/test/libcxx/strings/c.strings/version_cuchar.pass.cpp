@@ -7,6 +7,9 @@
 //===----------------------------------------------------------------------===//
 //
 // XFAIL: *
+//
+// If we're just building the test and not executing it, it should pass.
+// UNSUPPORTED: no_execute
 
 // <cuchar>
 

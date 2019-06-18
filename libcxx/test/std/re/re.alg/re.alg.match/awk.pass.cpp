@@ -20,6 +20,9 @@
 // TODO(netbsd): incomplete support for locales
 // XFAIL: linux-gnu, netbsd
 
+// If we're just building the test and not executing it, it should pass.
+// UNSUPPORTED: no_execute
+
 #include <regex>
 #include <cassert>
 #include "test_macros.h"

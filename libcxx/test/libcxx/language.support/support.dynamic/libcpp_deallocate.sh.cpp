@@ -36,6 +36,9 @@
 // GCC doesn't support the aligned-allocation flags.
 // XFAIL: gcc
 
+// If we're just building the test and not executing it, it should pass.
+// UNSUPPORTED: no_execute
+
 // RUN: %build -faligned-allocation -fsized-deallocation
 // RUN: %run
 // RUN: %build -faligned-allocation -fno-sized-deallocation -DNO_SIZE
