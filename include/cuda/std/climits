@@ -34,4 +34,6 @@ THE SOFTWARE.
 
 #include "detail/libcxx/climits"
 
+#define __CHAR_BIT__ 8
+
 #endif //_CUDA_CLIMITS

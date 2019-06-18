@@ -26,11 +26,13 @@ THE SOFTWARE.
 #define _CUDA_CISO646
 
 #ifndef __CUDACC_RTC__
-    #include <ciso646>
-#endif //__CUDACC_RTC__
+
+#include <ciso646>
 
 #include "detail/__config"
 
 #include "detail/libcxx/ciso646"
+
+#endif //__CUDACC_RTC__
 
 #endif //_CUDA_CISO646

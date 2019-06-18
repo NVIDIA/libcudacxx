@@ -26,12 +26,14 @@ THE SOFTWARE.
 #define _CUDA_CSTDARG
 
 #ifndef __CUDACC_RTC__
-    #include <cstdarg>
-#endif //__CUDACC_RTC__
+
+#include <cstdarg>
 
 #include <stdarg.h>
 #include "detail/__config"
 
 #include "detail/libcxx/cstdarg"
+
+#endif //__CUDACC_RTC__
 
 #endif //_CUDA_CSTDARG

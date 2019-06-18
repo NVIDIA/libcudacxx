@@ -26,13 +26,14 @@ THE SOFTWARE.
 #define _CUDA_CASSERT
 
 #ifndef __CUDACC_RTC__
-    #include <cassert>
-#endif //__CUDACC_RTC__
 
+#include <cassert>
 #include <assert.h>
 
 #include "detail/__config"
 
 #include "detail/libcxx/cassert"
+
+#endif //__CUDACC_RTC__
 
 #endif //_CUDA_CASSERT

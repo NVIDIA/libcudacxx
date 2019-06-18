@@ -25,6 +25,8 @@ THE SOFTWARE.
 #ifndef _CUDA_NEW
 #define _CUDA_NEW
 
+#ifndef __CUDACC_RTC__
+
 #include <new>
 
 #include "detail/__config"
@@ -43,5 +45,7 @@ _LIBCPP_BEGIN_NAMESPACE_STD
         return ::std::get_new_handler(); }
 
 _LIBCPP_END_NAMESPACE_STD
+
+#endif // __CUDACC_RTC__
 
 #endif //_CUDA_NEW

@@ -31,12 +31,16 @@ if (LIBCXX_ENABLE_COMPUTE_FUTURE)
   set(COMPUTE_MESSAGE "${COMPUTE_MESSAGE} compute_${LIBCXX_HIGHEST_COMPUTE_ARCH}")
 endif ()
 
-message(STATUS "-- Enabled CUDA architectures:${COMPUTE_MESSAGE}")
+message(STATUS "Enabled CUDA architectures:${COMPUTE_MESSAGE}")
+
+if (NOT LIBCXX_TEST_WITH_NVRTC)
+    set(LIBCXX_FORCE_INCLUDE "-include ${CMAKE_SOURCE_DIR}/test/force_include.h")
+endif()
 
 # TODO: this has to be reconfigurable with other options
 # this has to land in cache, but has to be forced, and controlled by other variables
 set(LIBCXX_TEST_COMPILER_FLAGS
-    "-include ${CMAKE_SOURCE_DIR}/test/force_include.h -I${CMAKE_SOURCE_DIR}/include"
+    "${LIBCXX_FORCE_INCLUDE} -I${CMAKE_SOURCE_DIR}/include"
     CACHE STRING "Flags for libcxx testing.")
 
 foreach (PATH IN LISTS LIBCXX_TEST_LD_LIBRARY_PATHS)

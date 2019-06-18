@@ -25,7 +25,7 @@ THE SOFTWARE.
 _LIBCPP_BEGIN_NAMESPACE_CUDA
 namespace detail {
 
-template<class type, class scope, typename std::enable_if<sizeof(type) <= 2, int>::type = 0> \
+template<class type, class scope, typename std::enable_if<sizeof(type) <= 2, int>::type = 0>
 bool __device__ __atomic_compare_exchange_cuda(type volatile *ptr, type *expected, const type *desired, bool, int success_memorder, int failure_memorder, scope s) {
 
     auto const aligned = (uint32_t*)((intptr_t)ptr & ~(sizeof(uint32_t) - 1));

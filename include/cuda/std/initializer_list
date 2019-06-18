@@ -25,7 +25,9 @@ THE SOFTWARE.
 #ifndef _CUDA_INITIALIZER_LIST
 #define _CUDA_INITIALIZER_LIST
 
+#ifndef __CUDACC_RTC__
 #include <initializer_list>
+#endif // __CUDACC_RTC__
 
 #include "detail/__config"
 
