@@ -27,5 +27,5 @@ if [ "$?" != "0" ]; then exit 1; fi
 
 docker image rm libcudacxx_base:host_${HOSTARCH}_${HOSTOS}__target_${TARGETARCH}_${TARGETOS}__${COMPILER}
 
-rm ${IMAGE%.tar.bz2}.tar
+rm -f ${IMAGE%.tar.bz2}.tar
 
