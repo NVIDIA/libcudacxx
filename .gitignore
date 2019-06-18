@@ -30,3 +30,4 @@ samples/trie_mt
 build-*/
 .p4config
 compare_git_to_perforce.bash
+*.log
