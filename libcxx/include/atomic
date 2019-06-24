@@ -1408,7 +1408,7 @@ _Tp __cxx_atomic_fetch_xor(__cxx_atomic_lock_impl<_Tp, _Sco>* __a,
 #ifdef __cpp_lib_atomic_is_always_lock_free
 
 template<typename _Tp> struct __cxx_is_always_lock_free {
-    enum { __value = __atomic_always_lock_free(sizeof(_Tp), 0); } };
+    enum { __value = __atomic_always_lock_free(sizeof(_Tp), 0) }; };
 
 #else
 
