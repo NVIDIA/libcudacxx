@@ -87,12 +87,14 @@ do
     LIBCUDACXX_LOG_FILE=${1}
     ;;
   *)
-    shift # The next argument is the test target.
     RAW_TEST_TARGETS="${RAW_TEST_TARGETS:+${RAW_TEST_TARGETS} }${1}"
     ;;
   esac
   shift
 done
+
+touch ${LIBCXX_LOG_FILE}
+touch ${LIBCUDACXX_LOG_FILE}
 
 LIBCXX_TEST_TARGETS="libcxx/test"
 LIBCUDACXX_TEST_TARGETS="test"
@@ -104,7 +106,7 @@ then
   for test in ${RAW_TEST_TARGETS}
   do
     LIBCXX_TEST_TARGETS="${LIBCXX_TEST_TARGETS:+${LIBCXX_TEST_TARGETS} }libcxx/test/${test}"
-    LIBCUDACXX_TEST_TARGETS="${LIBCUDACXX_TEST_TARGETS:+${LIBCUDACXX_TEST_TARGETS} }libcxx/test/${test}"
+    LIBCUDACXX_TEST_TARGETS="${LIBCUDACXX_TEST_TARGETS:+${LIBCUDACXX_TEST_TARGETS} }test/${test}"
   done
 fi
 
