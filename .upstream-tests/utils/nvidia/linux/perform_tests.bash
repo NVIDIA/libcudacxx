@@ -135,7 +135,7 @@ then
   LIBCXX_SITE_CONFIG=${LIBCXX_BUILD_PATH}/test/lit.site.cfg \
   bash -c "${LIT_PREFIX} lit ${LIT_FLAGS} ${LIBCXX_TEST_TARGETS}" \
   2>&1 | tee ${LIBCXX_LOG_FILE}
-  if [ "${?}" != "0" ]; then exit 1; fi
+  if [ "${PIPESTATUS[0]}" != "0" ]; then exit 1; fi
 fi
 
 if [ "${LIBCUDACXX_SKIP_LIBCUDACXX_TESTS:-0}" == "0" ]
@@ -144,6 +144,6 @@ then
   LIBCXX_SITE_CONFIG=${LIBCUDACXX_BUILD_PATH}/test/lit.site.cfg \
   bash -c "${LIT_PREFIX} lit ${LIT_FLAGS} ${LIT_COMPUTE_ARCHS_FLAG}\"${LIBCUDACXX_COMPUTE_ARCHS}\" ${LIBCUDACXX_TEST_TARGETS}" \
   2>&1 | tee ${LIBCUDACXX_LOG_FILE}
-  if [ "${?}" != "0" ]; then exit 1; fi
+  if [ "${PIPESTATUS[0]}" != "0" ]; then exit 1; fi
 fi
 

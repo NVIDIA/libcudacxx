@@ -19,14 +19,13 @@ if [ "${?}" != "0" ]; then exit 1; fi
 
 # Create a temporary container so we can extract the log files.
 TMP_CONTAINER=$(docker create ${BASE_IMAGE})
-if [ "${?}" != "0" ]; then exit 1; fi
 
 docker cp ${TMP_CONTAINER}:/sw/gpgpu/libcudacxx/libcxx/build/libcxx_lit.log .
 docker cp ${TMP_CONTAINER}:/sw/gpgpu/libcudacxx/libcxx/build/libcxx_cmake.log .
 docker cp ${TMP_CONTAINER}:/sw/gpgpu/libcudacxx/build/libcudacxx_lit.log .
 docker cp ${TMP_CONTAINER}:/sw/gpgpu/libcudacxx/build/libcudacxx_cmake.log .
 
-docker container rm ${TMP_CONTAINER}
+docker container rm ${TMP_CONTAINER} > /dev/null
 
 # Remove the .dockerignore from //sw/gpgpu.
 rm ${SW_PATH}/gpgpu/.dockerignore
