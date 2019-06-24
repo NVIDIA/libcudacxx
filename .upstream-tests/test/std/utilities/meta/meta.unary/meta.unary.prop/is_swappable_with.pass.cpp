@@ -13,7 +13,8 @@
 // is_swappable_with
 
 #include <cuda/std/type_traits>
-#include <cuda/std/vector>
+// NOTE: This header is not currently supported by libcu++.
+//#include <cuda/std/vector>
 #include "test_macros.h"
 
 namespace MyNS {

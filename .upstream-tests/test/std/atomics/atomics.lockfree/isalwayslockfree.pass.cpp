@@ -88,7 +88,8 @@ void run()
     CHECK_ALWAYS_LOCK_FREE(float);
     CHECK_ALWAYS_LOCK_FREE(double);
     CHECK_ALWAYS_LOCK_FREE(long double);
-#if __has_attribute(vector_size) && defined(_LIBCPP_VERSION)
+#if __has_attribute(vector_size) && defined(_LIBCPP_VERSION) && !defined(__CUDACC__)
+    // NOTE: NVCC doesn't support the vector_size attribute in device code.
     CHECK_ALWAYS_LOCK_FREE(int __attribute__((vector_size(1 * sizeof(int)))));
     CHECK_ALWAYS_LOCK_FREE(int __attribute__((vector_size(2 * sizeof(int)))));
     CHECK_ALWAYS_LOCK_FREE(int __attribute__((vector_size(4 * sizeof(int)))));

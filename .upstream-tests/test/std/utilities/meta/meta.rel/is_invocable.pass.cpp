@@ -8,6 +8,9 @@
 
 // UNSUPPORTED: c++98, c++03, c++11, c++14
 
+// XFAIL: nvcc
+// FIXME: Triage and fix this.
+
 // type_traits
 
 // is_invocable
@@ -19,9 +22,10 @@
 //  complete types, cv void, or arrays of unknown bound.
 
 #include <cuda/std/type_traits>
-#include <cuda/std/functional>
-#include <cuda/std/memory>
-#include <cuda/std/vector>
+// NOTE: These headers are not currently supported by libcu++.
+#include <functional>
+#include <memory>
+#include <vector>
 
 #include "test_macros.h"
 
@@ -70,9 +74,9 @@ int main(int, char**) {
     static_assert(!cuda::std::is_invocable<const int&>::value, "");
     static_assert(!cuda::std::is_invocable<int&&>::value, "");
 
-    static_assert(!cuda::std::is_invocable<cuda::std::vector<int> >::value, "");
-    static_assert(!cuda::std::is_invocable<cuda::std::vector<int*> >::value, "");
-    static_assert(!cuda::std::is_invocable<cuda::std::vector<int**> >::value, "");
+    static_assert(!cuda::std::is_invocable<std::vector<int> >::value, "");
+    static_assert(!cuda::std::is_invocable<std::vector<int*> >::value, "");
+    static_assert(!cuda::std::is_invocable<std::vector<int**> >::value, "");
 
     static_assert(!cuda::std::is_invocable<AbominableFunc>::value, "");
 
@@ -105,9 +109,9 @@ int main(int, char**) {
     static_assert(!cuda::std::is_invocable_r<int, const int&>::value, "");
     static_assert(!cuda::std::is_invocable_r<int, int&&>::value, "");
 
-    static_assert(!cuda::std::is_invocable_r<int, cuda::std::vector<int> >::value, "");
-    static_assert(!cuda::std::is_invocable_r<int, cuda::std::vector<int*> >::value, "");
-    static_assert(!cuda::std::is_invocable_r<int, cuda::std::vector<int**> >::value, "");
+    static_assert(!cuda::std::is_invocable_r<int, std::vector<int> >::value, "");
+    static_assert(!cuda::std::is_invocable_r<int, std::vector<int*> >::value, "");
+    static_assert(!cuda::std::is_invocable_r<int, std::vector<int**> >::value, "");
     static_assert(!cuda::std::is_invocable_r<void, AbominableFunc>::value, "");
 
     //  with parameters
@@ -135,9 +139,9 @@ int main(int, char**) {
     }
     {
       // Bullet 2
-      using T = cuda::std::reference_wrapper<Tag>;
-      using DT = cuda::std::reference_wrapper<DerFromTag>;
-      using CT = cuda::std::reference_wrapper<const Tag>;
+      using T = std::reference_wrapper<Tag>;
+      using DT = std::reference_wrapper<DerFromTag>;
+      using CT = std::reference_wrapper<const Tag>;
       static_assert(cuda::std::is_invocable<Fn, T&, int>::value, "");
       static_assert(cuda::std::is_invocable<Fn, DT&, int>::value, "");
       static_assert(cuda::std::is_invocable<Fn, const T&, int>::value, "");
@@ -150,7 +154,7 @@ int main(int, char**) {
       using T = Tag*;
       using DT = DerFromTag*;
       using CT = const Tag*;
-      using ST = cuda::std::unique_ptr<Tag>;
+      using ST = std::unique_ptr<Tag>;
       static_assert(cuda::std::is_invocable<Fn, T&, int>::value, "");
       static_assert(cuda::std::is_invocable<Fn, DT&, int>::value, "");
       static_assert(cuda::std::is_invocable<Fn, const T&, int>::value, "");
@@ -173,9 +177,9 @@ int main(int, char**) {
     }
     {
       // Bullet 5
-      using T = cuda::std::reference_wrapper<Tag>;
-      using DT = cuda::std::reference_wrapper<DerFromTag>;
-      using CT = cuda::std::reference_wrapper<const Tag>;
+      using T = std::reference_wrapper<Tag>;
+      using DT = std::reference_wrapper<DerFromTag>;
+      using CT = std::reference_wrapper<const Tag>;
       static_assert(cuda::std::is_invocable<Fn, T&>::value, "");
       static_assert(cuda::std::is_invocable<Fn, DT&>::value, "");
       static_assert(cuda::std::is_invocable<Fn, const T&>::value, "");
@@ -187,7 +191,7 @@ int main(int, char**) {
       using T = Tag*;
       using DT = DerFromTag*;
       using CT = const Tag*;
-      using ST = cuda::std::unique_ptr<Tag>;
+      using ST = std::unique_ptr<Tag>;
       static_assert(cuda::std::is_invocable<Fn, T&>::value, "");
       static_assert(cuda::std::is_invocable<Fn, DT&>::value, "");
       static_assert(cuda::std::is_invocable<Fn, const T&>::value, "");
