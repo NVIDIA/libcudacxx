@@ -27,10 +27,10 @@ RUN sh /tmp/cmake.sh --skip-license --prefix=/usr
 # We use ADD here because it invalidates the cache for subsequent steps, which
 # is what we want, as we need to rebuild if the sources have changed.
 
-# Copy NVCC and the CUDA runtime from the Perforce tree.
+# Copy NVCC and the CUDA runtime from the source tree.
 ADD bin /sw/gpgpu/bin
 
-# Copy the core CUDA headers from the Perforce tree.
+# Copy the core CUDA headers from the source tree.
 ADD cuda/import/*.h* /sw/gpgpu/cuda/import/
 ADD cuda/common/*.h* /sw/gpgpu/cuda/common/
 ADD cuda/tools/cudart/*.h* /sw/gpgpu/cuda/tools/cudart/
@@ -40,10 +40,10 @@ ADD cuda/tools/cooperative_groups/*.h* /sw/gpgpu/cuda/tools/cooperative_groups/
 ADD cuda/tools/cudart/cudart_etbl/*.h* /sw/gpgpu/cuda/tools/cudart/cudart_etbl/
 ADD opencl/import/cl_rel/CL/*.h* /sw/gpgpu/opencl/import/cl_rel/CL/
 
-# Copy libcu++ sources from the Perforce tree.
+# Copy libcu++ sources from the source tree.
 ADD libcudacxx /sw/gpgpu/libcudacxx
 
-# Configure libc++ tests.
+# Build libc++ and configure libc++ tests.
 RUN cd /sw/gpgpu/libcudacxx/libcxx/build\
  && cmake ..\
  -DLIBCXX_INCLUDE_TESTS=ON\
@@ -69,10 +69,10 @@ RUN cd /sw/gpgpu/libcudacxx/build\
 
 # Build tests if requested.
 RUN cd /sw/gpgpu/libcudacxx\
- && LIBCUDACXX_SKIP_TESTS_RUN=1\
- LIBCUDACXX_COMPUTE_ARCHS=$LIBCUDACXX_COMPUTE_ARCHS\
+ && LIBCUDACXX_COMPUTE_ARCHS=$LIBCUDACXX_COMPUTE_ARCHS\
  LIBCUDACXX_SKIP_BASE_TESTS_BUILD=$LIBCUDACXX_SKIP_BASE_TESTS_BUILD\
  /sw/gpgpu/libcudacxx/utils/nvidia/linux/perform_tests.bash\
+ --skip-tests-runs\
  --log-libcxx-results /sw/gpgpu/libcudacxx/libcxx/build/libcxx_lit.log\
  --log-libcudacxx-results /sw/gpgpu/libcudacxx/build/libcudacxx_lit.log
 
