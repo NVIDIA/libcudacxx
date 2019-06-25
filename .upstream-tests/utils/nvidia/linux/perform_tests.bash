@@ -126,7 +126,8 @@ fi
 
 if [ -n "${LIBCUDACXX_COMPUTE_ARCHS}" ]
 then
-  LIT_COMPUTE_ARCHS_FLAG="-Dcompute_archs="
+  LIT_COMPUTE_ARCHS_FLAG="-Dcompute_archs=\""
+  LIT_COMPUTE_ARCHS_SUFFIX="\""
 fi
 
 ###############################################################################
@@ -144,7 +145,7 @@ if [ "${LIBCUDACXX_SKIP_LIBCUDACXX_TESTS:-0}" == "0" ]
 then
   TIMEFORMAT="TIMING, libcu++ build tests (build only), %R [sec]" \
   LIBCXX_SITE_CONFIG=${LIBCUDACXX_BUILD_PATH}/test/lit.site.cfg \
-  bash -c "${LIT_PREFIX} lit ${LIT_FLAGS} ${LIT_COMPUTE_ARCHS_FLAG}\"${LIBCUDACXX_COMPUTE_ARCHS}\" ${LIBCUDACXX_TEST_TARGETS}" \
+  bash -c "${LIT_PREFIX} lit ${LIT_FLAGS} ${LIT_COMPUTE_ARCHS_FLAG}${LIBCUDACXX_COMPUTE_ARCHS}${LIT_COMPUTE_ARCHS_SUFFIX} ${LIBCUDACXX_TEST_TARGETS}" \
   2>&1 | tee ${LIBCUDACXX_LOG_FILE}
   if [ "${PIPESTATUS[0]}" != "0" ]; then exit 1; fi
 fi
