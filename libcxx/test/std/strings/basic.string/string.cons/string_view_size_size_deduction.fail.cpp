@@ -10,6 +10,9 @@
 // UNSUPPORTED: c++98, c++03, c++11, c++14
 // XFAIL: libcpp-no-deduction-guides
 
+// If we're just building the test and not executing it, it should pass.
+// UNSUPPORTED: no_execute
+
 // template<class InputIterator>
 //   basic_string(InputIterator begin, InputIterator end,
 //   const Allocator& a = Allocator());
