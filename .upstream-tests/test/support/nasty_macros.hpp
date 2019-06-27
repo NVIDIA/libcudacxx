@@ -57,7 +57,8 @@
 #ifndef _WIN32
 #define __allocator NASTY_MACRO
 #define __deallocate NASTY_MACRO
-#define __out NASTY_MACRO
+// GCC's c++locale.h
+// #define __out NASTY_MACRO
 #endif
 
 #define __output NASTY_MACRO

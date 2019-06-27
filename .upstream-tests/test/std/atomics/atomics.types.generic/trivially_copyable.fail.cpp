@@ -6,6 +6,9 @@
 //
 //===----------------------------------------------------------------------===//
 
+// .fail. expects compilation to fail, but this would only fail at runtime with NVRTC
+// UNSUPPORTED: nvrtc
+
 // <cuda/std/atomic>
 
 // template <class T>
@@ -48,7 +51,7 @@
 
 #include <cuda/std/atomic>
 #include <cuda/std/cassert>
-#include <new>
+#include <cuda/std/new>
 
 struct NotTriviallyCopyable {
     NotTriviallyCopyable ( int i ) : i_(i) {}

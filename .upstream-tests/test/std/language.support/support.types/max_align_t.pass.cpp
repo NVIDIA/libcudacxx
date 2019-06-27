@@ -12,7 +12,9 @@
 // max_align_t is a trivial standard-layout type whose alignment requirement
 //   is at least as great as that of every scalar type
 
+#ifndef __CUDACC_RTC__
 #include <stdio.h>
+#endif // __CUDACC_RTC__
 #include "test_macros.h"
 
 int main(int, char**)

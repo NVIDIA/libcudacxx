@@ -52,7 +52,7 @@
 
 #include <cuda/std/atomic>
 #include <cuda/std/cassert>
-#include <new>
+#include <cuda/std/new>
 
 #include <cmpxchg_loop.h>
 

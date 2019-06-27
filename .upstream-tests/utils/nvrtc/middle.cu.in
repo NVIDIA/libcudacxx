@@ -1,0 +1,38 @@
+)program";
+
+int main() {
+    nvrtcProgram prog;
+    NVRTC_SAFE_CALL(nvrtcCreateProgram(
+        &prog,
+        program,
+        "test.cu",
+        0, NULL, NULL));
+
+    const char * opts[] = {
+        "-rdc=true",
+        "-default-device",
+        "--gpu-architecture=compute_70",
+
+        "-D__LIBCUDACXX_NVRTC_TEST__=1",
+
+#if __cplusplus < 201103L
+        "-std=c++98",
+#elif __cplusplus < 201402L
+        "-std=c++11",
+#elif __cplusplus < 201703L
+        "-std=c++14",
+#elif __cplusplus == 201703L
+        "-std=c++17",
+#else
+        #error "Unknown C++ standard!"
+#endif
+
+#if defined(__x86_64__)
+        "-D__x86_64__",
+#elif defined(__powerpc64__)
+        "-D__powerpc64__",
+#elif defined(__aarch64__)
+        "-D__aarch64__",
+#else
+        #error "unsupported host environment architecture!"
+#endif

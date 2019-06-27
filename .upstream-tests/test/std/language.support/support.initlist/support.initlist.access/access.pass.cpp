@@ -36,6 +36,7 @@ struct A
 };
 
 #if TEST_STD_VER > 11
+#ifndef __CUDACC_RTC__
 struct B
 {
     __host__ __device__
@@ -50,15 +51,17 @@ struct B
         assert(*b++ == 1);
     }
 };
-
+#endif
 #endif  // TEST_STD_VER > 11
 
 int main(int, char**)
 {
     A test1 = {3, 2, 1};
 #if TEST_STD_VER > 11
+#ifndef __CUDACC_RTC__
     constexpr B test2 = {3, 2, 1};
     (void)test2;
+#endif
 #endif  // TEST_STD_VER > 11
 
   return 0;

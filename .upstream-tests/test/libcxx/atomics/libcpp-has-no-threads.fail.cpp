@@ -11,6 +11,9 @@
 // Test that including <cuda/std/atomic> fails to compile when _LIBCPP_HAS_NO_THREADS
 // is defined.
 
+// .fail. expects compilation to fail, but this would only fail at runtime with NVRTC
+// UNSUPPORTED: nvrtc
+
 // MODULES_DEFINES: _LIBCPP_HAS_NO_THREADS
 #ifndef _LIBCPP_HAS_NO_THREADS
 #define _LIBCPP_HAS_NO_THREADS

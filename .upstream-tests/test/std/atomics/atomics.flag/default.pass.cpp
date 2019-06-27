@@ -16,7 +16,7 @@
 
 #include <cuda/std/atomic>
 #include <cuda/std/cassert>
-#include <new>
+#include <cuda/std/new>
 
 #include "test_macros.h"
 

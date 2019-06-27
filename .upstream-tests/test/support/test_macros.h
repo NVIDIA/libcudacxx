@@ -20,7 +20,9 @@
 # endif
 #endif
 #ifndef TEST_IMP_INCLUDED_HEADER
+#ifndef __CUDACC_RTC__
 #include <ciso646>
+#endif // __CUDACC_RTC__
 #endif
 
 #if defined(__GNUC__)
@@ -279,7 +281,7 @@ struct is_same<T, T> { enum {value = 1}; };
 #endif
 #endif
 
-#if defined(__GNUC__) || defined(__clang__)
+#if defined(__GNUC__) || defined(__clang__) || defined(__CUDACC_RTC__)
 template <class Tp>
 inline
 void DoNotOptimize(Tp const& value) {

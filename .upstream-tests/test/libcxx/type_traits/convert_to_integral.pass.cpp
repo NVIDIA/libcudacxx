@@ -8,6 +8,8 @@
 //
 // TODO: Make this test pass for all standards.
 // XFAIL: c++98, c++03
+// no support for underlying_type in NVRTC right now
+// XFAIL: nvrtc
 
 // <cuda/std/type_traits>
 

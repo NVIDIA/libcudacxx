@@ -15,7 +15,7 @@
 // #include <cuda/std/cwctype>
 #include <cuda/std/climits>
 #include <cuda/std/type_traits>
-#include <cuda/std/limits>
+// #include <cuda/std/limits>
 #include <cuda/std/cassert>
 
 int main(int, char**)
@@ -204,6 +204,7 @@ int main(int, char**)
     static_assert(UINT_FAST32_MAX >= 4294967295U, "UINT_FAST32_MAX >= 4294967295");
     static_assert(UINT_FAST64_MAX >= 18446744073709551615ULL, "UINT_FAST64_MAX >= 18446744073709551615ULL");
 
+#if 0
     // INTPTR_MIN
     assert(INTPTR_MIN == cuda::std::numeric_limits<cuda::std::intptr_t>::min());
 
@@ -248,6 +249,7 @@ int main(int, char**)
 
     // WINT_MAX
     // assert(WINT_MAX == cuda::std::numeric_limits<cuda::std::wint_t>::max());
+#endif
 
 #ifndef INT8_C
 #error INT8_C not defined

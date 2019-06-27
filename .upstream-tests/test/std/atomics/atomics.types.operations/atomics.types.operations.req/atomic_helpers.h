@@ -9,8 +9,8 @@
 #ifndef ATOMIC_HELPERS_H
 #define ATOMIC_HELPERS_H
 
-#include <cassert>
 #include <cuda/std/atomic>
+#include <cuda/std/cassert>
 
 #include "test_macros.h"
 

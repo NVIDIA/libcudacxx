@@ -17,7 +17,7 @@
 
 #include <cuda/std/type_traits>
 // NOTE: This header is not currently supported by libcu++.
-#include <vector>
+#include <cuda/std/vector>
 
 #include "test_macros.h"
 
@@ -106,9 +106,9 @@ int main(int, char**) {
     static_assert(!cuda::std::is_nothrow_invocable<const int&>::value, "");
     static_assert(!cuda::std::is_nothrow_invocable<int&&>::value, "");
 
-    static_assert(!cuda::std::is_nothrow_invocable<int, std::vector<int> >::value,
+    static_assert(!cuda::std::is_nothrow_invocable<int, cuda::std::vector<int> >::value,
                   "");
-    static_assert(!cuda::std::is_nothrow_invocable<int, std::vector<int*> >::value,
+    static_assert(!cuda::std::is_nothrow_invocable<int, cuda::std::vector<int*> >::value,
                   "");
     static_assert(!cuda::std::is_nothrow_invocable<int, cuda::std::vector<int**> >::value,
                   "");
@@ -145,11 +145,11 @@ int main(int, char**) {
     static_assert(!cuda::std::is_nothrow_invocable_r<int, const int&>::value, "");
     static_assert(!cuda::std::is_nothrow_invocable_r<int, int&&>::value, "");
 
-    static_assert(!cuda::std::is_nothrow_invocable_r<int, std::vector<int> >::value,
+    static_assert(!cuda::std::is_nothrow_invocable_r<int, cuda::std::vector<int> >::value,
                   "");
-    static_assert(!cuda::std::is_nothrow_invocable_r<int, std::vector<int*> >::value,
+    static_assert(!cuda::std::is_nothrow_invocable_r<int, cuda::std::vector<int*> >::value,
                   "");
-    static_assert(!cuda::std::is_nothrow_invocable_r<int, std::vector<int**> >::value,
+    static_assert(!cuda::std::is_nothrow_invocable_r<int, cuda::std::vector<int**> >::value,
                   "");
     static_assert(!cuda::std::is_nothrow_invocable_r<void, AbominableFunc>::value,
                   "");

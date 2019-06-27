@@ -17,7 +17,8 @@ class CXXCompiler(object):
     CM_Compile = 2
     CM_Link = 3
 
-    def __init__(self, path, flags=None, compile_flags=None, link_flags=None,
+    def __init__(self, path, first_arg,
+                 flags=None, compile_flags=None, link_flags=None,
                  warning_flags=None, verify_supported=None,
                  verify_flags=None, use_verify=False,
                  modules_flags=None, use_modules=False,
@@ -25,6 +26,7 @@ class CXXCompiler(object):
                  cxx_type=None, cxx_version=None):
         self.source_lang = 'c++'
         self.path = path
+        self.first_arg = first_arg or ''
         self.flags = list(flags or [])
         self.compile_flags = list(compile_flags or [])
         self.link_flags = list(link_flags or [])
@@ -75,7 +77,10 @@ class CXXCompiler(object):
         self.use_warnings = value
 
     def _initTypeAndVersion(self):
-        (self.type, self.version) = self.dumpVersion()
+        (self.type, self.version, self.is_nvrtc) = self.dumpVersion()
+        if self.type == 'nvcc':
+            # Treat C++ as CUDA when the compiler is NVCC.
+            self.source_lang = 'cu'
 
     def _basicCmd(self, source_files, out, mode=CM_Default, flags=[],
                   input_is_cxx=False):
@@ -84,7 +89,7 @@ class CXXCompiler(object):
                 and not mode == self.CM_Link \
                 and not mode == self.CM_PreProcess:
             cmd += ['ccache']
-        cmd += [self.path]
+        cmd += [self.path] + ([self.first_arg] if self.first_arg != '' else [])
         if out is not None:
             cmd += ['-o', out]
         if input_is_cxx:
@@ -180,7 +185,7 @@ class CXXCompiler(object):
         dumpversion_cpp = os.path.join(
           os.path.dirname(os.path.abspath(__file__)), "dumpversion.cpp")
         with_fn = lambda: libcxx.util.guardedTempFilename()
-        with with_fn() as exe:  
+        with with_fn() as exe:
           cmd, out, err, rc = self.compileLink([dumpversion_cpp], out=exe,
                                                flags=flags, cwd=cwd)
           if rc != 0:
@@ -192,8 +197,8 @@ class CXXCompiler(object):
             type_version = eval(out)
           except:
             pass
-          if not (isinstance(type_version, tuple) and 2 == len(type_version)):
-            type_version = ("unknown", (0, 0, 0))
+          if not (isinstance(type_version, tuple) and 3 == len(type_version)):
+            type_version = ("unknown", (0, 0, 0), False)
         return type_version
 
     def dumpMacros(self, source_files=None, flags=[], cwd=None):

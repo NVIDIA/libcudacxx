@@ -8,6 +8,9 @@
 //
 // UNSUPPORTED: pre-sm-60
 
+// .fail. expects compilation to fail, but this would only fail at runtime with NVRTC
+// UNSUPPORTED: nvrtc
+
 // <cuda/std/atomic>
 
 // struct atomic_flag

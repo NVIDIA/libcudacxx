@@ -210,6 +210,7 @@ class Configuration(object):
     def configure_cxx(self):
         # Gather various compiler parameters.
         cxx = self.get_lit_conf('cxx_under_test')
+        cxx_first_arg = self.get_lit_conf('cxx_first_arg')
         self.cxx_is_clang_cl = cxx is not None and \
                                os.path.basename(cxx) == 'clang-cl.exe'
         # If no specific cxx_under_test was given, attempt to infer it as
@@ -229,7 +230,7 @@ class Configuration(object):
         if not cxx:
             self.lit_config.fatal('must specify user parameter cxx_under_test '
                                   '(e.g., --param=cxx_under_test=clang++)')
-        self.cxx = CXXCompiler(cxx) if not self.cxx_is_clang_cl else \
+        self.cxx = CXXCompiler(cxx, cxx_first_arg) if not self.cxx_is_clang_cl else \
                    self._configure_clang_cl(cxx)
         cxx_type = self.cxx.type
         if cxx_type is not None:
@@ -241,13 +242,14 @@ class Configuration(object):
                 cxx_type, maj_v, min_v))
         self.lit_config.note("detected cxx.type as: {}".format(self.cxx.type))
         self.lit_config.note("detected cxx.version as: {}".format(self.cxx.version))
+        self.lit_config.note("detected cxx.is_nvrtc as: {}".format(self.cxx.is_nvrtc))
         self.cxx.compile_env = dict(os.environ)
         # 'CCACHE_CPP2' prevents ccache from stripping comments while
         # preprocessing. This is required to prevent stripping of '-verify'
         # comments.
         self.cxx.compile_env['CCACHE_CPP2'] = '1'
 
-        if self.cxx.type == 'nvcc':
+        if self.cxx.type == 'nvcc' and not self.cxx.is_nvrtc:
           nvcc_host_compiler = self.get_lit_conf('nvcc_host_compiler')
           if len(nvcc_host_compiler.strip()) == 0:
             if platform.system() == 'Darwin':
@@ -257,7 +259,7 @@ class Configuration(object):
             else:
               nvcc_host_compiler = 'gcc'
 
-          self.host_cxx = CXXCompiler(nvcc_host_compiler) 
+          self.host_cxx = CXXCompiler(nvcc_host_compiler, None)
           self.host_cxx_type = self.host_cxx.type
           if self.host_cxx_type is not None:
               assert self.host_cxx.version is not None
@@ -539,6 +541,8 @@ class Configuration(object):
         if additional_flags:
             self.cxx.compile_flags += shlex.split(additional_flags)
         compute_archs = self.get_lit_conf('compute_archs')
+        if self.cxx.is_nvrtc is True:
+            self.config.available_features.add("nvrtc")
         if compute_archs and self.cxx.type == 'nvcc':
             pre_sm_32 = False
             pre_sm_60 = False
