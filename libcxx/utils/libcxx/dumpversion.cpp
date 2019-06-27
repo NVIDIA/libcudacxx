@@ -14,12 +14,16 @@ int main()
   unsigned major_version = 0;
   unsigned minor_version = 0;
   unsigned patch_level   = 0;
+  char const* is_nvrtc = "False";
 
   #if defined(__NVCC__)
     compiler_type = "nvcc";
     major_version = __CUDACC_VER_MAJOR__;
     minor_version = __CUDACC_VER_MINOR__;
     patch_level   = __CUDACC_VER_BUILD__;
+    #if defined(__LIBCUDACXX_NVRTC_TEST__)
+      is_nvrtc = "True";
+    #endif
   #elif defined(__clang__)
     // Treat apple's llvm fork differently.
     #if defined(__apple_build_version__)
@@ -42,7 +46,7 @@ int main()
     patch_level   = __GNUC_PATCHLEVEL__;
   #endif
 
-  printf("(\"%s\", (%d, %d, %d))\n", 
-         compiler_type, major_version, minor_version, patch_level);
+  printf("(\"%s\", (%d, %d, %d), %s)\n",
+         compiler_type, major_version, minor_version, patch_level, is_nvrtc);
 }
 
