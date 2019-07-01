@@ -138,8 +138,8 @@ class Configuration(object):
         self.configure_cxx_library_root()
         self.configure_use_clang_verify()
         self.configure_use_thread_safety()
-        self.configure_execute_external()
         self.configure_no_execute()
+        self.configure_execute_external()
         self.configure_ccache()
         self.configure_compile_flags()
         self.configure_filesystem_compile_flags()
@@ -244,6 +244,20 @@ class Configuration(object):
         # preprocessing. This is required to prevent stripping of '-verify'
         # comments.
         self.cxx.compile_env['CCACHE_CPP2'] = '1'
+
+        nvcc_host_compiler = self.get_lit_conf('nvcc_host_compiler')
+        if nvcc_host_compiler and self.cxx.type == 'nvcc':
+          self.host_cxx = CXXCompiler(nvcc_host_compiler) 
+          self.host_cxx_type = self.host_cxx.type
+          if self.host_cxx_type is not None:
+              assert self.host_cxx.version is not None
+              maj_v, min_v, _ = self.host_cxx.version
+              self.config.available_features.add(self.host_cxx_type)
+              self.config.available_features.add('%s-%s' % (
+                  self.host_cxx_type, maj_v))
+              self.config.available_features.add('%s-%s.%s' % (
+                  self.host_cxx_type, maj_v, min_v))
+
 
     def _configure_clang_cl(self, clang_path):
         def _split_env_var(var):
@@ -514,8 +528,26 @@ class Configuration(object):
         additional_flags = self.get_lit_conf('test_compiler_flags')
         if additional_flags:
             self.cxx.compile_flags += shlex.split(additional_flags)
+        compute_archs = self.get_lit_conf('compute_archs')
+        if compute_archs and self.cxx.type == 'nvcc':
+            pre_sm_70 = False
+            compute_archs = [int(a) for a in sorted(shlex.split(compute_archs))]
+            for arch in compute_archs:
+                if arch < 70: pre_sm_70 = True
+                arch_flag = '-gencode=arch=compute_{0},code=sm_{0}'.format(arch)
+                self.cxx.compile_flags += [arch_flag]
+            enable_compute_future = self.get_lit_conf('enable_compute_future')
+            if enable_compute_future:
+                arch_flag = '-gencode=arch=compute_{0},code=compute_{0}'.format(arch)
+                self.cxx.compile_flags += [arch_flag]
+            if pre_sm_70:
+                self.config.available_features.add("pre-sm-70")
 
     def configure_default_compile_flags(self):
+        nvcc_host_compiler = self.get_lit_conf('nvcc_host_compiler')
+        if nvcc_host_compiler and self.cxx.type == 'nvcc':
+            self.cxx.compile_flags += ['-ccbin={0}'.format(nvcc_host_compiler)]
+
         # Try and get the std version from the command line. Fall back to
         # default given in lit.site.cfg is not present. If default is not
         # present then force c++11.
@@ -613,7 +645,8 @@ class Configuration(object):
                                  and self.cxx_stdlib_under_test != 'libc++'):
             self.lit_config.note('using the system cxx headers')
             return
-        self.cxx.compile_flags += ['-nostdinc++']
+        if self.cxx.type != 'nvcc':
+            self.cxx.compile_flags += ['-nostdinc++']
         if cxx_headers is None:
             cxx_headers = os.path.join(self.libcxx_src_root, 'include')
         if not os.path.isdir(cxx_headers):
@@ -666,7 +699,8 @@ class Configuration(object):
         # If modules are enabled then we have to lift all of the definitions
         # in __config_site onto the command line.
         modules_enabled = self.get_modules_enabled()
-        self.cxx.compile_flags += ['-Wno-macro-redefined']
+        if self.cxx.hasCompileFlag('-Wno-macro-redefined'):
+            self.cxx.compile_flags += ['-Wno-macro-redefined']
         # Transform each macro name into the feature name used in the tests.
         # Ex. _LIBCPP_HAS_NO_THREADS -> libcpp-has-no-threads
         for m in feature_macros:
@@ -696,12 +730,16 @@ class Configuration(object):
         enable_exceptions = self.get_lit_bool('enable_exceptions', True)
         if not enable_exceptions:
             self.config.available_features.add('libcpp-no-exceptions')
+            if self.cxx.type == 'nvcc':
+                self.cxx.compile_flags += ['-Xcompiler']
             self.cxx.compile_flags += ['-fno-exceptions']
 
     def configure_compile_flags_rtti(self):
         enable_rtti = self.get_lit_bool('enable_rtti', True)
         if not enable_rtti:
             self.config.available_features.add('libcpp-no-rtti')
+            if self.cxx.type == 'nvcc':
+                self.cxx.compile_flags += ['-Xcompiler']
             self.cxx.compile_flags += ['-fno-rtti', '-D_LIBCPP_NO_RTTI']
 
     def configure_compile_flags_abi_version(self):
@@ -716,6 +754,9 @@ class Configuration(object):
           self.cxx.compile_flags += ['-D_LIBCPP_ABI_UNSTABLE']
 
     def configure_filesystem_compile_flags(self):
+        if not self.get_lit_bool('enable_filesystem', default=True):
+            return
+
         static_env = os.path.join(self.libcxx_src_root, 'test', 'std',
                                   'input.output', 'filesystems', 'Inputs', 'static_test_env')
         static_env = os.path.realpath(static_env)
@@ -739,12 +780,18 @@ class Configuration(object):
 
 
     def configure_link_flags(self):
+        nvcc_host_compiler = self.get_lit_conf('nvcc_host_compiler')
+        if nvcc_host_compiler and self.cxx.type == 'nvcc':
+            self.cxx.link_flags += ['-ccbin={0}'.format(nvcc_host_compiler)]
+
         # Configure library path
         self.configure_link_flags_cxx_library_path()
         self.configure_link_flags_abi_library_path()
 
         # Configure libraries
         if self.cxx_stdlib_under_test == 'libc++':
+            if self.cxx.type == 'nvcc':
+                self.cxx.link_flags += ['-Xcompiler']
             self.cxx.link_flags += ['-nodefaultlibs']
             # FIXME: Handle MSVCRT as part of the ABI library handling.
             if self.is_windows:
@@ -774,13 +821,17 @@ class Configuration(object):
                     self.add_path(self.cxx.compile_env, self.cxx_library_root)
             if self.cxx_runtime_root:
                 if not self.is_windows:
-                    self.cxx.link_flags += ['-Wl,-rpath,' +
-                                            self.cxx_runtime_root]
+                    if self.cxx.type == 'nvcc':
+                        self.cxx.link_flags += ['-Xcompiler']
+                    self.cxx.link_flags += ['"-Wl,-rpath,' +
+                                            self.cxx_runtime_root + '"']
                 elif self.is_windows and self.link_shared:
                     self.add_path(self.exec_env, self.cxx_runtime_root)
         elif os.path.isdir(str(self.use_system_cxx_lib)):
             self.cxx.link_flags += ['-L' + self.use_system_cxx_lib]
             if not self.is_windows:
+                if self.cxx.type == 'nvcc':
+                    self.cxx.link_flags += ['-Xlinker']
                 self.cxx.link_flags += ['-Wl,-rpath,' +
                                         self.use_system_cxx_lib]
             if self.is_windows and self.link_shared:
@@ -795,6 +846,8 @@ class Configuration(object):
         if self.abi_library_root:
             self.cxx.link_flags += ['-L' + self.abi_library_root]
             if not self.is_windows:
+                if self.cxx.type == 'nvcc':
+                    self.cxx.link_flags += ['-Xlinker']
                 self.cxx.link_flags += ['-Wl,-rpath,' + self.abi_library_root]
             else:
                 self.add_path(self.exec_env, self.abi_library_root)
@@ -806,7 +859,7 @@ class Configuration(object):
             self.cxx.link_flags += ['-lc++experimental']
         if self.link_shared:
             self.cxx.link_flags += ['-lc++']
-        else:
+        elif self.cxx.type != 'nvcc':
             cxx_library_root = self.get_lit_conf('cxx_library_root')
             if cxx_library_root:
                 libname = self.make_static_lib_name('c++')

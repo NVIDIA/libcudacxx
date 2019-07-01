@@ -81,7 +81,15 @@ class CXXCompiler(object):
             return
         compiler_type = None
         major_ver = minor_ver = patchlevel = None
-        if '__clang__' in macros.keys():
+        if '__NVCC__' in macros.keys():
+            compiler_type = 'nvcc'
+            major_ver = macros['__CUDACC_VER_MAJOR__']
+            minor_ver = macros['__CUDACC_VER_MINOR__']
+            patchlevel = macros['__CUDACC_VER_BUILD__']
+
+            # Treat C++ as CUDA when the compiler is NVCC.
+            self.source_lang = 'cu'
+        elif '__clang__' in macros.keys():
             compiler_type = 'clang'
             # Treat apple's llvm fork differently.
             if '__apple_build_version__' in macros.keys():
@@ -203,7 +211,10 @@ class CXXCompiler(object):
         flags = ['-dM'] + flags
         cmd, out, err, rc = self.preprocess(source_files, flags=flags, cwd=cwd)
         if rc != 0:
-            return cmd, out, err, rc
+            flags = ['-Xcompiler'] + flags
+            cmd, out, err, rc = self.preprocess(source_files, flags=flags, cwd=cwd)
+            if rc != 0:
+                return cmd, out, err, rc
         parsed_macros = {}
         lines = [l.strip() for l in out.split('\n') if l.strip()]
         for l in lines:
@@ -222,12 +233,15 @@ class CXXCompiler(object):
             flags = list(flag)
         else:
             flags = [flag]
+
         # Add -Werror to ensure that an unrecognized flag causes a non-zero
-        # exit code. -Werror is supported on all known compiler types.
-        if self.type is not None:
+        # exit code. -Werror is supported on all known non-nvcc compiler types.
+        if self.type is not None and self.type != 'nvcc':
             flags += ['-Werror', '-fsyntax-only']
         cmd, out, err, rc = self.compile(os.devnull, out=os.devnull,
                                          flags=flags)
+        if err.find('flag is not supported with the configured host compiler') != -1:
+            return False
         return rc == 0
 
     def addFlagIfSupported(self, flag):

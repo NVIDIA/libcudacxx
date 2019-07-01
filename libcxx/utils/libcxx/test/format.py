@@ -234,7 +234,7 @@ class LibcxxTestFormat(object):
         # are dependant on a template parameter when '-fsyntax-only' is passed.
         # This is fixed in GCC 6. However for now we only pass "-fsyntax-only"
         # when using Clang.
-        if test_cxx.type != 'gcc':
+        if test_cxx.type != 'gcc' and test_cxx.type != 'nvcc':
             test_cxx.flags += ['-fsyntax-only']
         if use_verify:
             test_cxx.useVerify()

@@ -27,6 +27,7 @@ config.test_compiler_flags      = "@LIBCXX_TEST_COMPILER_FLAGS@"
 
 config.compute_archs            = "@LIBCXX_COMPUTE_ARCHS@"
 config.enable_compute_future    = @LIBCXX_ENABLE_COMPUTE_FUTURE@
+config.nvcc_host_compiler       = "@LIBCXX_NVCC_HOST_COMPILER@"
 
 config.executor                 = "@LIBCXX_EXECUTOR@"
 config.llvm_unwinder            = @LIBCXXABI_USE_LLVM_UNWINDER@
