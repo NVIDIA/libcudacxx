@@ -245,6 +245,20 @@ class Configuration(object):
         # comments.
         self.cxx.compile_env['CCACHE_CPP2'] = '1'
 
+        nvcc_host_compiler = self.get_lit_conf('nvcc_host_compiler')
+        if nvcc_host_compiler and self.cxx.type == 'nvcc':
+          self.host_cxx = CXXCompiler(nvcc_host_compiler) 
+          self.host_cxx_type = self.host_cxx.type
+          if self.host_cxx_type is not None:
+              assert self.host_cxx.version is not None
+              maj_v, min_v, _ = self.host_cxx.version
+              self.config.available_features.add(self.host_cxx_type)
+              self.config.available_features.add('%s-%s' % (
+                  self.host_cxx_type, maj_v))
+              self.config.available_features.add('%s-%s.%s' % (
+                  self.host_cxx_type, maj_v, min_v))
+
+
     def _configure_clang_cl(self, clang_path):
         def _split_env_var(var):
             return [p.strip() for p in os.environ.get(var, '').split(';') if p.strip()]
@@ -515,7 +529,7 @@ class Configuration(object):
         if additional_flags:
             self.cxx.compile_flags += shlex.split(additional_flags)
         compute_archs = self.get_lit_conf('compute_archs')
-        if compute_archs:
+        if compute_archs and self.cxx.type == 'nvcc':
             pre_sm_32 = False
             pre_sm_60 = False
             pre_sm_70 = False
@@ -538,6 +552,10 @@ class Configuration(object):
                 self.config.available_features.add("pre-sm-70")
 
     def configure_default_compile_flags(self):
+        nvcc_host_compiler = self.get_lit_conf('nvcc_host_compiler')
+        if nvcc_host_compiler and self.cxx.type == 'nvcc':
+            self.cxx.compile_flags += ['-ccbin={0}'.format(nvcc_host_compiler)]
+
         # Try and get the std version from the command line. Fall back to
         # default given in lit.site.cfg is not present. If default is not
         # present then force c++11.
@@ -551,6 +569,7 @@ class Configuration(object):
                 maj_v = int(maj_v)
                 if maj_v < 7:
                     possible_stds.remove('c++1z')
+                    possible_stds.remove('c++17')
                 # FIXME: How many C++14 tests actually fail under GCC 5 and 6?
                 # Should we XFAIL them individually instead?
                 if maj_v <= 6:
@@ -688,7 +707,8 @@ class Configuration(object):
         # If modules are enabled then we have to lift all of the definitions
         # in __config_site onto the command line.
         modules_enabled = self.get_modules_enabled()
-        self.cxx.compile_flags += ['-Wno-macro-redefined']
+        if self.cxx.hasCompileFlag('-Wno-macro-redefined'):
+            self.cxx.compile_flags += ['-Wno-macro-redefined']
         # Transform each macro name into the feature name used in the tests.
         # Ex. _LIBCPP_HAS_NO_THREADS -> libcpp-has-no-threads
         for m in feature_macros:
@@ -768,6 +788,10 @@ class Configuration(object):
 
 
     def configure_link_flags(self):
+        nvcc_host_compiler = self.get_lit_conf('nvcc_host_compiler')
+        if nvcc_host_compiler and self.cxx.type == 'nvcc':
+            self.cxx.link_flags += ['-ccbin={0}'.format(nvcc_host_compiler)]
+
         # Configure library path
         self.configure_link_flags_cxx_library_path()
         self.configure_link_flags_abi_library_path()

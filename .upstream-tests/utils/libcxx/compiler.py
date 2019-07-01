@@ -236,8 +236,7 @@ class CXXCompiler(object):
 
         # Add -Werror to ensure that an unrecognized flag causes a non-zero
         # exit code. -Werror is supported on all known non-nvcc compiler types.
-        if self.type is not None \
-                and self.type != 'nvcc':
+        if self.type is not None and self.type != 'nvcc':
             flags += ['-Werror', '-fsyntax-only']
         cmd, out, err, rc = self.compile(os.devnull, out=os.devnull,
                                          flags=flags)
