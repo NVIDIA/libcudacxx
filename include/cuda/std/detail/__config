@@ -76,6 +76,10 @@ THE SOFTWARE.
 #undef _LIBCPP_INLINE_VISIBILITY
 #define _LIBCPP_INLINE_VISIBILITY __host__ __device__
 
+#ifndef _LIBCPP_ABI_UNSTABLE
+#  define _LIBCPP_ABI_UNSTABLE
+#endif
+
 #ifndef _LIBCPP_CUDA_ABI_VERSION
 #  define _LIBCPP_CUDA_ABI_VERSION 1
 #endif
