@@ -51,6 +51,7 @@ RUN set -o pipefail; cd /sw/gpgpu/libcudacxx/libcxx/build\
  -DLIBCXX_INCLUDE_TESTS=ON\
  -DLIBCXX_INCLUDE_BENCHMARKS=OFF\
  -DLIBCXX_CXX_ABI=libsupc++\
+ -DLIBCXX_ABI_UNSTABLE=ON\
  -DLLVM_CONFIG_PATH=$(which llvm-config)\
  -DCMAKE_C_COMPILER=gcc\
  -DCMAKE_CXX_COMPILER=g++\
@@ -64,10 +65,11 @@ RUN set -o pipefail; cd /sw/gpgpu/libcudacxx/build\
  -DLIBCXX_INCLUDE_TESTS=ON\
  -DLIBCXX_INCLUDE_BENCHMARKS=OFF\
  -DLIBCXX_CXX_ABI=libsupc++\
+ -DLIBCXX_ABI_UNSTABLE=ON\
  -DLLVM_CONFIG_PATH=$(which llvm-config)\
  -DCMAKE_C_COMPILER=/sw/gpgpu/bin/x86_64_Linux_release/nvcc\
  -DCMAKE_CXX_COMPILER=/sw/gpgpu/bin/x86_64_Linux_release/nvcc\
- -DLIBCXX_HOST_COMPILER=g++\
+ -DLIBCXX_NVCC_HOST_COMPILER=g++\
  2>&1 | tee /sw/gpgpu/libcudacxx/build/libcudacxx_cmake.log
 
 # Build tests if requested.
@@ -80,4 +82,6 @@ RUN cd /sw/gpgpu/libcudacxx\
  --skip-libcxx-tests\
  --log-libcxx-results /sw/gpgpu/libcudacxx/libcxx/build/libcxx_lit.log\
  --log-libcudacxx-results /sw/gpgpu/libcudacxx/build/libcudacxx_lit.log
+
+WORKDIR /sw/gpgpu/libcudacxx
 

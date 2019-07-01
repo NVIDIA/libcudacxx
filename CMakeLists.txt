@@ -36,7 +36,7 @@ message(STATUS "-- Enabled CUDA architectures:${COMPUTE_MESSAGE}")
 # TODO: this has to be reconfigurable with other options
 # this has to land in cache, but has to be forced, and controlled by other variables
 set(LIBCXX_TEST_COMPILER_FLAGS
-    "-ccbin ${LIBCXX_HOST_COMPILER} -include ${CMAKE_SOURCE_DIR}/test/force_include.h -I${CMAKE_SOURCE_DIR}/include"
+    "-include ${CMAKE_SOURCE_DIR}/test/force_include.h -I${CMAKE_SOURCE_DIR}/include"
     CACHE STRING "Flags for libcxx testing.")
 
 foreach (PATH IN LISTS LIBCXX_TEST_LD_LIBRARY_PATHS)
@@ -47,7 +47,7 @@ foreach (PATH IN LISTS LIBCXX_TEST_LD_LIBRARY_PATHS)
 endforeach ()
 
 set(LIBCXX_TEST_LINKER_FLAGS
-    "-ccbin ${LIBCXX_HOST_COMPILER} ${LIBCXX_TEST_RPATH_FLAGS}"
+    "${LIBCXX_TEST_RPATH_FLAGS}"
     CACHE STRING "Flags for libcxx testing.")
 
 set(LIBCXX_ENABLE_EXPERIMENTAL_LIBRARY OFF CACHE BOOL "")

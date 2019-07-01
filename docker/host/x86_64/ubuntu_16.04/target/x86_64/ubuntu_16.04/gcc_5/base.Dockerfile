@@ -49,6 +49,7 @@ RUN cd /sw/gpgpu/libcudacxx/libcxx/build\
  -DLIBCXX_INCLUDE_TESTS=ON\
  -DLIBCXX_INCLUDE_BENCHMARKS=OFF\
  -DLIBCXX_CXX_ABI=libsupc++\
+ -DLIBCXX_ABI_UNSTABLE=ON\
  -DLLVM_CONFIG_PATH=$(which llvm-config-5.0)\
  -DCMAKE_C_COMPILER=gcc-5\
  -DCMAKE_CXX_COMPILER=g++-5\
@@ -61,10 +62,11 @@ RUN cd /sw/gpgpu/libcudacxx/build\
  -DLIBCXX_INCLUDE_TESTS=ON\
  -DLIBCXX_INCLUDE_BENCHMARKS=OFF\
  -DLIBCXX_CXX_ABI=libsupc++\
+ -DLIBCXX_ABI_UNSTABLE=ON\
  -DLLVM_CONFIG_PATH=$(which llvm-config-5.0)\
  -DCMAKE_C_COMPILER=/sw/gpgpu/bin/x86_64_Linux_release/nvcc\
  -DCMAKE_CXX_COMPILER=/sw/gpgpu/bin/x86_64_Linux_release/nvcc\
- -DLIBCXX_HOST_COMPILER=g++-5\
+ -DLIBCXX_NVCC_HOST_COMPILER=g++-5\
  2>&1 | tee /sw/gpgpu/libcudacxx/build/libcudacxx_cmake.log
 
 # Build tests if requested.
@@ -75,4 +77,6 @@ RUN cd /sw/gpgpu/libcudacxx\
  --skip-tests-runs\
  --log-libcxx-results /sw/gpgpu/libcudacxx/libcxx/build/libcxx_lit.log\
  --log-libcudacxx-results /sw/gpgpu/libcudacxx/build/libcudacxx_lit.log
+
+WORKDIR /sw/gpgpu/libcudacxx
 
