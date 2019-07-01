@@ -10,7 +10,7 @@
 
 // This workaround option is specific to MSVC's C1XX, so we don't care that
 // it isn't set for older GCC versions.
-// XFAIL: gcc-4.9
+// XFAIL: gcc-4.8, gcc-4.9
 
 // Verify TEST_WORKAROUND_C1XX_BROKEN_IS_TRIVIALLY_COPYABLE.
 

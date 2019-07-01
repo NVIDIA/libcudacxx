@@ -15,8 +15,8 @@
 // atomic_flag() = default;
 
 #include <cuda/std/atomic>
-#include <cuda/std/new>
 #include <cuda/std/cassert>
+#include <new>
 
 #include "test_macros.h"
 

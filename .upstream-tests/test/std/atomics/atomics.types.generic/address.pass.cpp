@@ -68,9 +68,9 @@
 // };
 
 #include <cuda/std/atomic>
-#include <cuda/std/new>
 #include <cuda/std/type_traits>
 #include <cuda/std/cassert>
+#include <new>
 
 #include <cmpxchg_loop.h>
 

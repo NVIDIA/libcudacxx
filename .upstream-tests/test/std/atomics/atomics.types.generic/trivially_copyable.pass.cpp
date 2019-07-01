@@ -53,8 +53,8 @@
 // };
 
 #include <cuda/std/atomic>
-#include <cuda/std/new>
 #include <cuda/std/cassert>
+#include <new>
 // #include <cuda/std/thread> // for thread_id
 // #include <cuda/std/chrono> // for nanoseconds
 

@@ -10,7 +10,7 @@
 
 // is_trivially_move_assignable
 
-// XFAIL: gcc-4.9
+// XFAIL: gcc-4.8, gcc-4.9
 
 #include <cuda/std/type_traits>
 #include "test_macros.h"

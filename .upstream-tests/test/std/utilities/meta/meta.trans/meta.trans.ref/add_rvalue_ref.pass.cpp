@@ -8,6 +8,8 @@
 
 // UNSUPPORTED: c++98, c++03
 
+// XFAIL: gcc-4.8
+
 // type_traits
 
 // add_rvalue_reference

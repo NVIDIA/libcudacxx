@@ -51,8 +51,8 @@
 // typedef atomic<bool> atomic_bool;
 
 #include <cuda/std/atomic>
-#include <cuda/std/new>
 #include <cuda/std/cassert>
+#include <new>
 
 #include <cmpxchg_loop.h>
 
