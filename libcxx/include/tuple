@@ -142,7 +142,7 @@ template <class... Types>
 #include <__functional_base>
 #include <utility>
 #include <version>
-#endif //
+#endif // __cuda_std__
 
 #if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
