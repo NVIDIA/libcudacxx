@@ -118,10 +118,10 @@ struct managed_allocator {
   typedef simt::std::ptrdiff_t difference_type;
 
   typedef T value_type;
-  typedef T* pointer;// (deprecated in C++17)(removed in C++20)	T*
-  typedef const T* const_pointer;// (deprecated in C++17)(removed in C++20)	const T*
-  typedef T& reference;// (deprecated in C++17)(removed in C++20)	T&
-  typedef const T& const_reference;// (deprecated in C++17)(removed in C++20)	const T&
+  typedef T* pointer;// (deprecated in C++17)(removed in C++20) T*
+  typedef const T* const_pointer;// (deprecated in C++17)(removed in C++20) const T*
+  typedef T& reference;// (deprecated in C++17)(removed in C++20) T&
+  typedef const T& const_reference;// (deprecated in C++17)(removed in C++20) const T&
 
   template< class U > struct rebind { typedef managed_allocator<U> other; };
   managed_allocator() = default;
@@ -179,7 +179,7 @@ int main() {
 
     char const* files[] = {
         "2600-0.txt", "2701-0.txt", "35-0.txt", "84-0.txt", "8800.txt",
-      	"pg1727.txt", "pg55.txt", "pg6130.txt", "pg996.txt", "1342-0.txt"
+        "pg1727.txt", "pg55.txt", "pg6130.txt", "pg996.txt", "1342-0.txt"
     };
 
     for(auto* ptr : files) {
