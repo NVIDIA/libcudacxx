@@ -51,6 +51,10 @@ macro(find_llvm_parts)
     else()
       file(TO_CMAKE_PATH "${LLVM_BINARY_DIR}" LLVM_BINARY_DIR_CMAKE_STYLE)
       set(LLVM_CMAKE_PATH "${LLVM_BINARY_DIR_CMAKE_STYLE}/lib${LLVM_LIBDIR_SUFFIX}/cmake/llvm")
+      if (NOT EXISTS "${LLVM_CMAKE_PATH}")
+        # Older RHEL/CentOS systems place it here.
+        set(LLVM_CMAKE_PATH "${LLVM_BINARY_DIR_CMAKE_STYLE}/share/llvm/cmake")
+      endif()
     endif()
   else()
     set(LLVM_FOUND OFF)
@@ -82,7 +86,11 @@ macro(configure_out_of_tree_llvm)
 
   # Add LLVM Functions --------------------------------------------------------
   if (LLVM_FOUND AND LIBCXX_USING_INSTALLED_LLVM)
-    include(LLVMConfig) # For TARGET_TRIPLE
+    # For TARGET_TRIPLE
+    include(LLVMConfig OPTIONAL RESULT_VARIABLE LLVM_CONFIG_FOUND)
+    if ("NOTFOUND" STREQUAL "${LLVM_CONFIG_FOUND}")
+      message(WARNING "LLVMConfig.cmake not found; TARGET_TRIPLE will not be set")
+    endif()
   else()
     if (WIN32)
       set(LLVM_ON_UNIX 0)
