@@ -6,6 +6,13 @@ source ${SCRIPT_PATH}/configuration.bash
 # Arguments are a list of SM architectures to target; if there are no arguments,
 # all known SM architectures are targeted.
 
+# Pull the OS image from Docker Hub; try a few times in case our connection is
+# slow.
+docker pull ${OS_IMAGE} \
+|| docker pull ${OS_IMAGE} \
+|| docker pull ${OS_IMAGE} \
+|| docker pull ${OS_IMAGE}
+
 # Copy the .dockerignore file from //sw/gpgpu/libcudacxx to //sw/gpgpu.
 cp ${SW_PATH}/gpgpu/libcudacxx/docker/.dockerignore ${SW_PATH}/gpgpu
 
