@@ -47,7 +47,6 @@ ADD libcudacxx /sw/gpgpu/libcudacxx
 # Build libc++ and configure libc++ tests.
 RUN set -o pipefail; cd /sw/gpgpu/libcudacxx/libcxx/build\
  && cmake ..\
- -DCMAKE_MODULE_PATH=/usr/share/llvm/cmake\
  -DLIBCXX_INCLUDE_TESTS=ON\
  -DLIBCXX_INCLUDE_BENCHMARKS=OFF\
  -DLIBCXX_CXX_ABI=libsupc++\
@@ -61,7 +60,6 @@ RUN set -o pipefail; cd /sw/gpgpu/libcudacxx/libcxx/build\
 # Configure libcu++ tests.
 RUN set -o pipefail; cd /sw/gpgpu/libcudacxx/build\
  && cmake ..\
- -DCMAKE_MODULE_PATH=/usr/share/llvm/cmake\
  -DLIBCXX_INCLUDE_TESTS=ON\
  -DLIBCXX_INCLUDE_BENCHMARKS=OFF\
  -DLIBCXX_CXX_ABI=libsupc++\
