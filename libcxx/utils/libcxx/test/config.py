@@ -245,8 +245,16 @@ class Configuration(object):
         # comments.
         self.cxx.compile_env['CCACHE_CPP2'] = '1'
 
-        nvcc_host_compiler = self.get_lit_conf('nvcc_host_compiler')
-        if nvcc_host_compiler and self.cxx.type == 'nvcc':
+        if self.cxx.type == 'nvcc':
+          nvcc_host_compiler = self.get_lit_conf('nvcc_host_compiler')
+          if len(nvcc_host_compiler.strip()) == 0:
+            if platform.system() == 'Darwin':
+              nvcc_host_compiler = 'clang'
+            elif platform.system() == 'Windows':
+              nvcc_host_compiler = 'cl.exe'
+            else:
+              nvcc_host_compiler = 'gcc'
+
           self.host_cxx = CXXCompiler(nvcc_host_compiler) 
           self.host_cxx_type = self.host_cxx.type
           if self.host_cxx_type is not None:
@@ -1159,7 +1167,8 @@ class Configuration(object):
         # If no target triple was given, try to infer it from the compiler
         # under test.
         if not self.config.target_triple:
-            target_triple = self.cxx.getTriple()
+            target_triple = (self.cxx if self.cxx.type != 'nvcc' else
+                             self.host_cxx).getTriple()
             # Drop sub-major version components from the triple, because the
             # current XFAIL handling expects exact matches for feature checks.
             # Example: x86_64-apple-darwin14.0.0 -> x86_64-apple-darwin14
@@ -1197,7 +1206,8 @@ class Configuration(object):
         # may fail spuriously.
         arch = self.get_lit_conf('arch')
         if not arch:
-            arch = self.cxx.getTriple().split('-', 1)[0]
+            arch = (self.cxx if self.cxx.type != 'nvcc' else
+                    self.host_cxx).getTriple().split('-', 1)[0]
             self.lit_config.note("inferred arch as: %r" % arch)
 
         inferred_platform, name, version = self.target_info.get_platform()
