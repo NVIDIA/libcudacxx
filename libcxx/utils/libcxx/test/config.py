@@ -822,18 +822,22 @@ class Configuration(object):
             if self.cxx_runtime_root:
                 if not self.is_windows:
                     if self.cxx.type == 'nvcc':
-                        self.cxx.link_flags += ['-Xcompiler']
-                    self.cxx.link_flags += ['"-Wl,-rpath,' +
-                                            self.cxx_runtime_root + '"']
+                        self.cxx.link_flags += ['-Xcompiler',
+                            '"-Wl,-rpath,' + self.cxx_runtime_root + '"']
+                    else:
+                        self.cxx.link_flags += ['-Wl,-rpath,' +
+                                                self.cxx_runtime_root]
                 elif self.is_windows and self.link_shared:
                     self.add_path(self.exec_env, self.cxx_runtime_root)
         elif os.path.isdir(str(self.use_system_cxx_lib)):
             self.cxx.link_flags += ['-L' + self.use_system_cxx_lib]
             if not self.is_windows:
                 if self.cxx.type == 'nvcc':
-                    self.cxx.link_flags += ['-Xlinker']
-                self.cxx.link_flags += ['-Wl,-rpath,' +
-                                        self.use_system_cxx_lib]
+                    self.cxx.link_flags += ['-Xcompiler',
+                        '"-Wl,-rpath,' + self.cxx_runtime_root + '"']
+                else:
+                    self.cxx.link_flags += ['-Wl,-rpath,' +
+                                            self.use_system_cxx_lib]
             if self.is_windows and self.link_shared:
                 self.add_path(self.cxx.compile_env, self.use_system_cxx_lib)
         additional_flags = self.get_lit_conf('test_linker_flags')
@@ -847,8 +851,11 @@ class Configuration(object):
             self.cxx.link_flags += ['-L' + self.abi_library_root]
             if not self.is_windows:
                 if self.cxx.type == 'nvcc':
-                    self.cxx.link_flags += ['-Xlinker']
-                self.cxx.link_flags += ['-Wl,-rpath,' + self.abi_library_root]
+                    self.cxx.link_flags += ['-Xlinker',
+                        '"-Wl,-rpath,' + self.cxx_runtime_root + '"']
+                else:
+                    self.cxx.link_flags += ['-Wl,-rpath,' + 
+                                            self.abi_library_root]
             else:
                 self.add_path(self.exec_env, self.abi_library_root)
 
@@ -1030,8 +1037,12 @@ class Configuration(object):
                                       'use_sanitizer: {0}'.format(san))
             san_lib = self.get_lit_conf('sanitizer_library')
             if san_lib:
-                self.cxx.link_flags += [
-                    san_lib, '-Wl,-rpath,%s' % os.path.dirname(san_lib)]
+                if self.cxx.type == 'nvcc':
+                    self.cxx.link_flags += ['-Xcompiler',
+                        '"-Wl,-rpath,' + os.path.dirname(san_lib) + '"']
+                else:
+                    self.cxx.link_flags += ['-Wl,-rpath,' +
+                                            os.path.dirname(san_lib)]
 
     def configure_coverage(self):
         self.generate_coverage = self.get_lit_bool('generate_coverage', False)
