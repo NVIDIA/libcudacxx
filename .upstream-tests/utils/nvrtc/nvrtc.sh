@@ -16,6 +16,7 @@ echo "original flags: ${original_flags[@]}" >> ${logdir}/log
 original_flags=("${original_flags[@]}" -D__LIBCUDACXX_NVRTC_TEST__=1)
 
 declare -a modified_flags
+declare -a gpu_archs
 
 input=""
 input_type=""
@@ -41,6 +42,10 @@ do
         -x)
             input_type="-x $2"
             shift
+            ;;
+
+        -gencode=*)
+            gpu_archs=("${gpu_archs[@]}" "$(echo $1 | egrep -o 'compute_[0-9]+')")
             ;;
 
         -?*|\"-?*)
@@ -86,8 +91,14 @@ trap finish EXIT
 cat "${nvrtcdir}/head.cu.in" >> "${tempfile}"
 cat "${input}" >> "${tempfile}"
 cat "${nvrtcdir}/middle.cu.in" >> "${tempfile}"
-echo '"-I'"${libcudacxxdir}/include"'",' >> "${tempfile}"
-echo '"-I'"${libcudacxxdir}/test/support"'",' >> "${tempfile}"
+echo '        // BEGIN SCRIPT GENERATED OPTIONS' >> "${tempfile}"
+echo '        "-I'"${libcudacxxdir}/include"'",' >> "${tempfile}"
+echo '        "-I'"${libcudacxxdir}/test/support"'",' >> "${tempfile}"
+for arch in "${gpu_archs[@]}"
+do
+    echo '        "--gpu-architecture='"${arch}"'",' >> "${tempfile}"
+done
+echo '        // END SCRIPT GENERATED OPTIONS' >> "${tempfile}"
 cat "${nvrtcdir}/tail.cu.in" >> "${tempfile}"
 
 cat "${tempfile}" > ${logdir}/generated_file

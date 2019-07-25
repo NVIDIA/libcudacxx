@@ -11,9 +11,6 @@ int main() {
     const char * opts[] = {
         "-rdc=true",
         "-default-device",
-        "--gpu-architecture=compute_70",
-
-        "-D__LIBCUDACXX_NVRTC_TEST__=1",
 
 #if __cplusplus < 201103L
         "-std=c++98",
@@ -36,3 +33,4 @@ int main() {
 #else
         #error "unsupported host environment architecture!"
 #endif
+
