@@ -156,12 +156,12 @@ class big_not_lockfree_type
 {
 public:
     __host__ __device__
-    big_not_lockfree_type() : big_not_lockfree_type(0)
+    big_not_lockfree_type() noexcept : big_not_lockfree_type(0)
     {
     }
 
     __host__ __device__
-    big_not_lockfree_type(int value)
+    big_not_lockfree_type(int value) noexcept
     {
         for (auto && elem : array)
         {
@@ -170,7 +170,7 @@ public:
     }
 
     __host__ __device__
-    friend bool operator==(const big_not_lockfree_type & lhs, const big_not_lockfree_type & rhs)
+    friend bool operator==(const big_not_lockfree_type & lhs, const big_not_lockfree_type & rhs) noexcept
     {
         for (int i = 0; i < 128; ++i)
         {
@@ -186,6 +186,13 @@ public:
 private:
     int array[128];
 };
+
+__host__ __device__
+void validate_not_lock_free()
+{
+    cuda::std::atomic<big_not_lockfree_type> test;
+    assert(!test.is_lock_free());
+}
 
 void kernel_invoker()
 {
@@ -206,6 +213,8 @@ void kernel_invoker()
 
 int main(int arg, char ** argv)
 {
+    validate_not_lock_free();
+
 #ifndef __CUDA_ARCH__
     kernel_invoker();
 #endif
