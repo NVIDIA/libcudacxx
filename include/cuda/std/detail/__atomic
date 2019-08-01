@@ -1,26 +1,10 @@
-/*
-
-Copyright (c) 2018, NVIDIA Corporation
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-
-*/
+//===----------------------------------------------------------------------===//
+//
+// Part of the CUDA Toolkit, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+//
+//===----------------------------------------------------------------------===//
 
 #if defined(__CUDA_ARCH__) && __CUDA_ARCH__ < 600
 #  error "CUDA atomics are only supported for sm_60 and up."
@@ -64,16 +48,16 @@ _LIBCPP_BEGIN_NAMESPACE_CUDA
 
 namespace detail {
 
-    inline __device__ int __stronger_order_cuda(int a, int b) {
-        int const max = a > b ? a : b;
-        if(max != __ATOMIC_RELEASE)
-            return max;
-        static int const xform[] = {
+    inline __device__ int __stronger_order_cuda(int __a, int __b) {
+        int const __max = __a > __b ? __a : __b;
+        if(__max != __ATOMIC_RELEASE)
+            return __max;
+        static int const __xform[] = {
             __ATOMIC_RELEASE,
             __ATOMIC_ACQ_REL,
             __ATOMIC_ACQ_REL,
             __ATOMIC_RELEASE };
-        return xform[a < b ? a : b];
+        return __xform[__a < __b ? __a : __b];
     }
 }
 
@@ -123,8 +107,8 @@ template <typename _Tp, typename _Tv> _LIBCPP_INLINE_VISIBILITY
 typename enable_if<is_assignable<_Tp&, _Tv>::value>::type
 __cxx_atomic_assign_volatile(_Tp volatile& __a_value, _Tv volatile const& __val);
 
-__host__ __device__ inline bool __cxx_atomic_is_lock_free(size_t x) {
-    return x <= 8;
+__host__ __device__ inline bool __cxx_atomic_is_lock_free(size_t __x) {
+    return __x <= 8;
 }
 __host__ __device__ inline void __cxx_atomic_thread_fence(int __order) {
 #ifdef __CUDA_ARCH__
@@ -146,7 +130,7 @@ struct __cxx_atomic_base_impl_default {
 
   __host__ __device__ __cxx_atomic_base_impl_default() : __a_value() {
   }
-  __host__ __device__ constexpr explicit __cxx_atomic_base_impl_default(_Tp value) : __a_value(value) {
+  __host__ __device__ constexpr explicit __cxx_atomic_base_impl_default(_Tp __value) : __a_value(__value) {
   }
 #ifdef __CUDA_ARCH__
   _ALIGNAS(sizeof(_Tp)) _Tp __a_value;
@@ -265,7 +249,7 @@ struct __cxx_atomic_base_impl_small {
 
   __host__ __device__ __cxx_atomic_base_impl_small() : __a_value() {
   }
-  __host__ __device__ constexpr explicit __cxx_atomic_base_impl_small(_Tp value) : __a_value(value) {
+  __host__ __device__ constexpr explicit __cxx_atomic_base_impl_small(_Tp __value) : __a_value(__value) {
   }
 
   __cxx_atomic_base_impl_default<uint32_t, _Sco> __a_value;

@@ -1,26 +1,10 @@
-/*
-
-Copyright (c) 2018-2019, NVIDIA Corporation
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-
-*/
+//===----------------------------------------------------------------------===//
+//
+// Part of the CUDA Toolkit, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+//
+//===----------------------------------------------------------------------===//
 
 #include <fstream>
 #include <vector>
@@ -86,29 +70,14 @@ int main() {
 
     std::ofstream out("__atomic_generated");
 
-    out << R"XXX(/*
-
-Copyright (c) 2018-2019, NVIDIA Corporation
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-
-*/)XXX" << "\n\n";
+    out << R"XXX(//===----------------------------------------------------------------------===//
+//
+// Part of the CUDA Toolkit, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+//
+//===----------------------------------------------------------------------===//
+)XXX" << "\n\n";
 
     auto scopenametag = [&](auto scope) {
         return "__thread_scope_" + scope + "_tag";
@@ -125,8 +94,8 @@ THE SOFTWARE.
         out << "static inline __device__ void __cuda_membar_" << s.first << "() { asm volatile(\"membar" << membar_scopes[s.first] << ";\":::\"memory\"); }\n";
         for(auto& sem : fence_semantics)
             out << "static inline __device__ void " << fencename(sem.first, s.first) << "() { asm volatile(\"fence" << sem.second << s.second << ";\":::\"memory\"); }\n";
-        out << "static inline __device__ void __atomic_thread_fence_cuda(int memorder, " << scopenametag(s.first) << ") {\n";
-        out << "    switch (memorder) {\n";
+        out << "static inline __device__ void __atomic_thread_fence_cuda(int __memorder, " << scopenametag(s.first) << ") {\n";
+        out << "    switch (__memorder) {\n";
         out << "#if __CUDA_ARCH__ >= 700\n";
         out << "    case __ATOMIC_SEQ_CST: " << fencename("sc"s, s.first) << "(); break;\n";
         out << "    case __ATOMIC_CONSUME:\n";
@@ -147,58 +116,58 @@ THE SOFTWARE.
         for(auto& sz : ld_sizes) {
             for(auto& sem : ld_semantics) {
                 out << "template<class _CUDA_A, class _CUDA_B> ";
-                out << "static inline __device__ void __cuda_load_" << sem.first << "_" << sz << "_" << s.first << "(_CUDA_A _ptr, _CUDA_B& _dst) {";
+                out << "static inline __device__ void __cuda_load_" << sem.first << "_" << sz << "_" << s.first << "(_CUDA_A __ptr, _CUDA_B& __dst) {";
                 if(ld_as_atom)
                     out << "asm volatile(\"atom.add" << (sem.first == "volatile" ? "" : sem.second.c_str()) << s.second << ".u" << sz << " %0, [%1], 0;\" : ";
                 else
                     out << "asm volatile(\"ld" << sem.second << (sem.first == "volatile" ? "" : s.second.c_str()) << ".b" << sz << " %0,[%1];\" : ";
-                out << "\"=" << registers[sz] << "\"(_dst) : \"l\"(_ptr)";
+                out << "\"=" << registers[sz] << "\"(__dst) : \"l\"(__ptr)";
                 out << " : \"memory\"); }\n";
             }
             for(auto& cv: cv_qualifier) {
-                out << "template<class type, typename _VSTD::enable_if<sizeof(type)==" << sz/8 << ", int>::type = 0>\n";
-                out << "__device__ void __atomic_load_cuda(const " << cv << "type *ptr, type *ret, int memorder, " << scopenametag(s.first) << ") {\n";
-                out << "    uint" << (registers[sz] == "r" ? 32 : sz) << "_t tmp = 0;\n";
-                out << "    switch (memorder) {\n";
+                out << "template<class _Type, typename _VSTD::enable_if<sizeof(_Type)==" << sz/8 << ", int>::type = 0>\n";
+                out << "__device__ void __atomic_load_cuda(const " << cv << "_Type *__ptr, _Type *__ret, int __memorder, " << scopenametag(s.first) << ") {\n";
+                out << "    uint" << (registers[sz] == "r" ? 32 : sz) << "_t __tmp = 0;\n";
+                out << "    switch (__memorder) {\n";
                 out << "#if __CUDA_ARCH__ >= 700\n";
                 out << "    case __ATOMIC_SEQ_CST: " << fencename("sc"s, s.first) << "();\n";
                 out << "    case __ATOMIC_CONSUME:\n";
-                out << "    case __ATOMIC_ACQUIRE: __cuda_load_acquire_" << sz << "_" << s.first << "(ptr, tmp); break;\n";
-                out << "    case __ATOMIC_RELAXED: __cuda_load_relaxed_" << sz << "_" << s.first << "(ptr, tmp); break;\n";
+                out << "    case __ATOMIC_ACQUIRE: __cuda_load_acquire_" << sz << "_" << s.first << "(__ptr, __tmp); break;\n";
+                out << "    case __ATOMIC_RELAXED: __cuda_load_relaxed_" << sz << "_" << s.first << "(__ptr, __tmp); break;\n";
                 out << "#else\n";
                 out << "    case __ATOMIC_SEQ_CST: __cuda_membar_" << s.first << "();\n";
                 out << "    case __ATOMIC_CONSUME:\n";
-                out << "    case __ATOMIC_ACQUIRE: __cuda_load_volatile_" << sz << "_" << s.first << "(ptr, tmp); __cuda_membar_" << s.first << "(); break;\n";
-                out << "    case __ATOMIC_RELAXED: __cuda_load_volatile_" << sz << "_" << s.first << "(ptr, tmp); break;\n";
+                out << "    case __ATOMIC_ACQUIRE: __cuda_load_volatile_" << sz << "_" << s.first << "(__ptr, __tmp); __cuda_membar_" << s.first << "(); break;\n";
+                out << "    case __ATOMIC_RELAXED: __cuda_load_volatile_" << sz << "_" << s.first << "(__ptr, __tmp); break;\n";
                 out << "#endif // __CUDA_ARCH__ >= 700\n";
                 out << "    default: assert(0);\n";
                 out << "    }\n";
-                out << "    memcpy(ret, &tmp, " << sz/8 << ");\n";
+                out << "    memcpy(__ret, &__tmp, " << sz/8 << ");\n";
                 out << "}\n";
             }
         }
         for(auto& sz : st_sizes) {
             for(auto& sem : st_semantics) {
                 out << "template<class _CUDA_A, class _CUDA_B> ";
-                out << "static inline __device__ void __cuda_store_" << sem.first << "_" << sz << "_" << s.first << "(_CUDA_A _ptr, _CUDA_B _src) { ";
+                out << "static inline __device__ void __cuda_store_" << sem.first << "_" << sz << "_" << s.first << "(_CUDA_A __ptr, _CUDA_B __src) { ";
                 out << "asm volatile(\"st" << sem.second << (sem.first == "volatile" ? "" : s.second.c_str()) << ".b" << sz << " [%0], %1;\" :: ";
-                out << "\"l\"(_ptr),\"" << registers[sz] << "\"(_src)";
+                out << "\"l\"(__ptr),\"" << registers[sz] << "\"(__src)";
                 out << " : \"memory\"); }\n";
             }
             for(auto& cv: cv_qualifier) {
-                out << "template<class type, typename cuda::std::enable_if<sizeof(type)==" << sz/8 << ", int>::type = 0>\n";
-                out << "__device__ void __atomic_store_cuda(" << cv << "type *ptr, type *val, int memorder, " << scopenametag(s.first) << ") {\n";
-                out << "    uint" << (registers[sz] == "r" ? 32 : sz) << "_t tmp = 0;\n";
-                out << "    memcpy(&tmp, val, " << sz/8 << ");\n";
-                out << "    switch (memorder) {\n";
+                out << "template<class _Type, typename cuda::std::enable_if<sizeof(_Type)==" << sz/8 << ", int>::type = 0>\n";
+                out << "__device__ void __atomic_store_cuda(" << cv << "_Type *__ptr, _Type *__val, int __memorder, " << scopenametag(s.first) << ") {\n";
+                out << "    uint" << (registers[sz] == "r" ? 32 : sz) << "_t __tmp = 0;\n";
+                out << "    memcpy(&__tmp, __val, " << sz/8 << ");\n";
+                out << "    switch (__memorder) {\n";
                 out << "#if __CUDA_ARCH__ >= 700\n";
-                out << "    case __ATOMIC_RELEASE: __cuda_store_release_" << sz << "_" << s.first << "(ptr, tmp); break;\n";
+                out << "    case __ATOMIC_RELEASE: __cuda_store_release_" << sz << "_" << s.first << "(__ptr, __tmp); break;\n";
                 out << "    case __ATOMIC_SEQ_CST: " << fencename("sc"s, s.first) << "();\n";
-                out << "    case __ATOMIC_RELAXED: __cuda_store_relaxed_" << sz << "_" << s.first << "(ptr, tmp); break;\n";
+                out << "    case __ATOMIC_RELAXED: __cuda_store_relaxed_" << sz << "_" << s.first << "(__ptr, __tmp); break;\n";
                 out << "#else\n";
                 out << "    case __ATOMIC_RELEASE:\n";
                 out << "    case __ATOMIC_SEQ_CST: __cuda_membar_" << s.first << "();\n";
-                out << "    case __ATOMIC_RELAXED: __cuda_store_volatile_" << sz << "_" << s.first << "(ptr, tmp); break;\n";
+                out << "    case __ATOMIC_RELAXED: __cuda_store_volatile_" << sz << "_" << s.first << "(__ptr, __tmp); break;\n";
                 out << "#endif // __CUDA_ARCH__ >= 700\n";
                 out << "    default: assert(0);\n";
                 out << "    }\n";
@@ -214,12 +183,12 @@ THE SOFTWARE.
                         out << "template<class _CUDA_A, class _CUDA_B, class _CUDA_C> ";
                     out << "static inline __device__ void __cuda_" << rmw.first << "_" << sem.first << "_" << sz << "_" << s.first << "(";
                     if(rmw.first == "compare_exchange")
-                        out << "_CUDA_A _ptr, _CUDA_B& _dst, _CUDA_C _cmp, _CUDA_D _op";
+                        out << "_CUDA_A __ptr, _CUDA_B& __dst, _CUDA_C __cmp, _CUDA_D __op";
                     else
-                        out << "_CUDA_A _ptr, _CUDA_B& _dst, _CUDA_C _op";
+                        out << "_CUDA_A __ptr, _CUDA_B& __dst, _CUDA_C __op";
                     out << ") { ";
                     if(rmw.first == "fetch_sub")
-                        out << "_op = -_op;" << std::endl;
+                        out << "__op = -__op;" << std::endl;
                     if(rmw.first == "fetch_add" || rmw.first == "fetch_sub" || rmw.first == "fetch_max" || rmw.first == "fetch_min")
                         out << "asm volatile(\"atom" << rmw.second << sem.second << s.second << ".u" << sz << " ";
                     else
@@ -230,78 +199,78 @@ THE SOFTWARE.
                         out << "%0,[%1],%2";
                     out << ";\" : ";
                     if(rmw.first == "compare_exchange")
-                        out << "\"=" << registers[sz] << "\"(_dst) : \"l\"(_ptr),\"" << registers[sz] << "\"(_cmp),\"" << registers[sz] << "\"(_op)";
+                        out << "\"=" << registers[sz] << "\"(__dst) : \"l\"(__ptr),\"" << registers[sz] << "\"(__cmp),\"" << registers[sz] << "\"(__op)";
                     else
-                        out << "\"=" << registers[sz] << "\"(_dst) : \"l\"(_ptr),\"" << registers[sz] << "\"(_op)";
+                        out << "\"=" << registers[sz] << "\"(__dst) : \"l\"(__ptr),\"" << registers[sz] << "\"(__op)";
                     out << " : \"memory\"); }\n";
                 }
                 for(auto& cv: cv_qualifier) {
                     if(rmw.first == "compare_exchange") {
-                        out << "template<class type, typename cuda::std::enable_if<sizeof(type)==" << sz/8 << ", int>::type = 0>\n";
-                        out << "__device__ bool __atomic_compare_exchange_cuda(" << cv << "type *ptr, type *expected, const type *desired, bool, int success_memorder, int failure_memorder, " << scopenametag(s.first) << ") {\n";
-                        out << "    uint" << sz << "_t tmp = 0, old = 0, old_tmp;\n";
-                        out << "    memcpy(&tmp, desired, " << sz/8 << ");\n";
-                        out << "    memcpy(&old, expected, " << sz/8 << ");\n";
-                        out << "    old_tmp = old;\n";
-                        out << "    switch (__stronger_order_cuda(success_memorder, failure_memorder)) {\n";
+                        out << "template<class _Type, typename cuda::std::enable_if<sizeof(_Type)==" << sz/8 << ", int>::type = 0>\n";
+                        out << "__device__ bool __atomic_compare_exchange_cuda(" << cv << "_Type *__ptr, _Type *__expected, const _Type *__desired, bool, int __success_memorder, int __failure_memorder, " << scopenametag(s.first) << ") {\n";
+                        out << "    uint" << sz << "_t __tmp = 0, __old = 0, __old_tmp;\n";
+                        out << "    memcpy(&__tmp, __desired, " << sz/8 << ");\n";
+                        out << "    memcpy(&__old, __expected, " << sz/8 << ");\n";
+                        out << "    __old_tmp = __old;\n";
+                        out << "    switch (__stronger_order_cuda(__success_memorder, __failure_memorder)) {\n";
                         out << "#if __CUDA_ARCH__ >= 700\n";
                         out << "    case __ATOMIC_SEQ_CST: " << fencename("sc"s, s.first) << "();\n";
                         out << "    case __ATOMIC_CONSUME:\n";
-                        out << "    case __ATOMIC_ACQUIRE: __cuda_compare_exchange_acquire_" << sz << "_" << s.first << "(ptr, old, old_tmp, tmp); break;\n";
-                        out << "    case __ATOMIC_ACQ_REL: __cuda_compare_exchange_acq_rel_" << sz << "_" << s.first << "(ptr, old, old_tmp, tmp); break;\n";
-                        out << "    case __ATOMIC_RELEASE: __cuda_compare_exchange_release_" << sz << "_" << s.first << "(ptr, old, old_tmp, tmp); break;\n";
-                        out << "    case __ATOMIC_RELAXED: __cuda_compare_exchange_relaxed_" << sz << "_" << s.first << "(ptr, old, old_tmp, tmp); break;\n";
+                        out << "    case __ATOMIC_ACQUIRE: __cuda_compare_exchange_acquire_" << sz << "_" << s.first << "(__ptr, __old, __old_tmp, __tmp); break;\n";
+                        out << "    case __ATOMIC_ACQ_REL: __cuda_compare_exchange_acq_rel_" << sz << "_" << s.first << "(__ptr, __old, __old_tmp, __tmp); break;\n";
+                        out << "    case __ATOMIC_RELEASE: __cuda_compare_exchange_release_" << sz << "_" << s.first << "(__ptr, __old, __old_tmp, __tmp); break;\n";
+                        out << "    case __ATOMIC_RELAXED: __cuda_compare_exchange_relaxed_" << sz << "_" << s.first << "(__ptr, __old, __old_tmp, __tmp); break;\n";
                         out << "#else\n";
                         out << "    case __ATOMIC_SEQ_CST:\n";
                         out << "    case __ATOMIC_ACQ_REL: __cuda_membar_" << s.first << "();\n";
                         out << "    case __ATOMIC_CONSUME:\n";
-                        out << "    case __ATOMIC_ACQUIRE: __cuda_compare_exchange_volatile_" << sz << "_" << s.first << "(ptr, old, old_tmp, tmp); __cuda_membar_" << s.first << "(); break;\n";
-                        out << "    case __ATOMIC_RELEASE: __cuda_membar_" << s.first << "(); __cuda_compare_exchange_volatile_" << sz << "_" << s.first << "(ptr, old, old_tmp, tmp); break;\n";
-                        out << "    case __ATOMIC_RELAXED: __cuda_compare_exchange_volatile_" << sz << "_" << s.first << "(ptr, old, old_tmp, tmp); break;\n";
+                        out << "    case __ATOMIC_ACQUIRE: __cuda_compare_exchange_volatile_" << sz << "_" << s.first << "(__ptr, __old, __old_tmp, __tmp); __cuda_membar_" << s.first << "(); break;\n";
+                        out << "    case __ATOMIC_RELEASE: __cuda_membar_" << s.first << "(); __cuda_compare_exchange_volatile_" << sz << "_" << s.first << "(__ptr, __old, __old_tmp, __tmp); break;\n";
+                        out << "    case __ATOMIC_RELAXED: __cuda_compare_exchange_volatile_" << sz << "_" << s.first << "(__ptr, __old, __old_tmp, __tmp); break;\n";
                         out << "#endif // __CUDA_ARCH__ >= 700\n";
                         out << "    default: assert(0);\n";
                         out << "    }\n";
-                        out << "    bool const ret = old == old_tmp;\n";
-                        out << "    memcpy(expected, &old, " << sz/8 << ");\n";
-                        out << "    return ret;\n";
+                        out << "    bool const __ret = __old == __old_tmp;\n";
+                        out << "    memcpy(__expected, &__old, " << sz/8 << ");\n";
+                        out << "    return __ret;\n";
                         out << "}\n";
                     }
                     else {
-                        out << "template<class type, typename cuda::std::enable_if<sizeof(type)==" << sz/8 << ", int>::type = 0>\n";
+                        out << "template<class _Type, typename cuda::std::enable_if<sizeof(_Type)==" << sz/8 << ", int>::type = 0>\n";
                         if(rmw.first == "exchange") {
-                            out << "__device__ void __atomic_exchange_cuda(" << cv << "type *ptr, type *val, type *ret, int memorder, " << scopenametag(s.first) << ") {\n";
-                            out << "    uint" << sz << "_t tmp = 0;\n";
-                            out << "    memcpy(&tmp, val, " << sz/8 << ");\n";
+                            out << "__device__ void __atomic_exchange_cuda(" << cv << "_Type *__ptr, _Type *__val, _Type *__ret, int __memorder, " << scopenametag(s.first) << ") {\n";
+                            out << "    uint" << sz << "_t __tmp = 0;\n";
+                            out << "    memcpy(&__tmp, __val, " << sz/8 << ");\n";
                         }
                         else {
-                            out << "__device__ type __atomic_" << rmw.first << "_cuda(" << cv << "type *ptr, type val, int memorder, " << scopenametag(s.first) << ") {\n";
-                            out << "    type ret;\n";
-                            out << "    uint" << sz << "_t tmp = 0;\n";
-                            out << "    memcpy(&tmp, &val, " << sz/8 << ");\n";
+                            out << "__device__ _Type __atomic_" << rmw.first << "_cuda(" << cv << "_Type *__ptr, _Type __val, int __memorder, " << scopenametag(s.first) << ") {\n";
+                            out << "    _Type __ret;\n";
+                            out << "    uint" << sz << "_t __tmp = 0;\n";
+                            out << "    memcpy(&__tmp, &__val, " << sz/8 << ");\n";
                         }
-                        out << "    switch (memorder) {\n";
+                        out << "    switch (__memorder) {\n";
                         out << "#if __CUDA_ARCH__ >= 700\n";
                         out << "    case __ATOMIC_SEQ_CST: " << fencename("sc"s, s.first) << "();\n";
                         out << "    case __ATOMIC_CONSUME:\n";
-                        out << "    case __ATOMIC_ACQUIRE: __cuda_" << rmw.first << "_acquire_" << sz << "_" << s.first << "(ptr, tmp, tmp); break;\n";
-                        out << "    case __ATOMIC_ACQ_REL: __cuda_" << rmw.first << "_acq_rel_" << sz << "_" << s.first << "(ptr, tmp, tmp); break;\n";
-                        out << "    case __ATOMIC_RELEASE: __cuda_" << rmw.first << "_release_" << sz << "_" << s.first << "(ptr, tmp, tmp); break;\n";
-                        out << "    case __ATOMIC_RELAXED: __cuda_" << rmw.first << "_relaxed_" << sz << "_" << s.first << "(ptr, tmp, tmp); break;\n";
+                        out << "    case __ATOMIC_ACQUIRE: __cuda_" << rmw.first << "_acquire_" << sz << "_" << s.first << "(__ptr, __tmp, __tmp); break;\n";
+                        out << "    case __ATOMIC_ACQ_REL: __cuda_" << rmw.first << "_acq_rel_" << sz << "_" << s.first << "(__ptr, __tmp, __tmp); break;\n";
+                        out << "    case __ATOMIC_RELEASE: __cuda_" << rmw.first << "_release_" << sz << "_" << s.first << "(__ptr, __tmp, __tmp); break;\n";
+                        out << "    case __ATOMIC_RELAXED: __cuda_" << rmw.first << "_relaxed_" << sz << "_" << s.first << "(__ptr, __tmp, __tmp); break;\n";
                         out << "#else\n";
                         out << "    case __ATOMIC_SEQ_CST:\n";
                         out << "    case __ATOMIC_ACQ_REL: __cuda_membar_" << s.first << "();\n";
                         out << "    case __ATOMIC_CONSUME:\n";
-                        out << "    case __ATOMIC_ACQUIRE: __cuda_" << rmw.first << "_volatile_" << sz << "_" << s.first << "(ptr, tmp, tmp); __cuda_membar_" << s.first << "(); break;\n";
-                        out << "    case __ATOMIC_RELEASE: __cuda_membar_" << s.first << "(); __cuda_" << rmw.first << "_volatile_" << sz << "_" << s.first << "(ptr, tmp, tmp); break;\n";
-                        out << "    case __ATOMIC_RELAXED: __cuda_" << rmw.first << "_volatile_" << sz << "_" << s.first << "(ptr, tmp, tmp); break;\n";
+                        out << "    case __ATOMIC_ACQUIRE: __cuda_" << rmw.first << "_volatile_" << sz << "_" << s.first << "(__ptr, __tmp, __tmp); __cuda_membar_" << s.first << "(); break;\n";
+                        out << "    case __ATOMIC_RELEASE: __cuda_membar_" << s.first << "(); __cuda_" << rmw.first << "_volatile_" << sz << "_" << s.first << "(__ptr, __tmp, __tmp); break;\n";
+                        out << "    case __ATOMIC_RELAXED: __cuda_" << rmw.first << "_volatile_" << sz << "_" << s.first << "(__ptr, __tmp, __tmp); break;\n";
                         out << "#endif // __CUDA_ARCH__ >= 700\n";
                         out << "    default: assert(0);\n";
                         out << "    }\n";
                         if(rmw.first == "exchange")
-                            out << "    memcpy(ret, &tmp, " << sz/8 << ");\n";
+                            out << "    memcpy(__ret, &__tmp, " << sz/8 << ");\n";
                         else {
-                            out << "    memcpy(&ret, &tmp, " << sz/8 << ");\n";
-                            out << "    return ret;\n";
+                            out << "    memcpy(&__ret, &__tmp, " << sz/8 << ");\n";
+                            out << "    return __ret;\n";
                         }
                         out << "}\n";
                     }
@@ -311,34 +280,34 @@ THE SOFTWARE.
         for(auto& cv: cv_qualifier) {
             std::vector<std::string> addsub{ "add", "sub" };
             for(auto& op : addsub) {
-                out << "template<class type>\n";
-                out << "__device__ type* __atomic_fetch_" << op << "_cuda(type *" << cv << "*ptr, ptrdiff_t val, int memorder, " << scopenametag(s.first) << ") {\n";
-                out << "    type* ret;\n";
-                out << "    uint64_t tmp = 0;\n";
-                out << "    memcpy(&tmp, &val, 8);\n";
+                out << "template<class _Type>\n";
+                out << "__device__ _Type* __atomic_fetch_" << op << "_cuda(_Type *" << cv << "*__ptr, ptrdiff_t __val, int __memorder, " << scopenametag(s.first) << ") {\n";
+                out << "    _Type* __ret;\n";
+                out << "    uint64_t __tmp = 0;\n";
+                out << "    memcpy(&__tmp, &__val, 8);\n";
                 if(op == "sub")
-                    out << "    tmp = -tmp;\n";
-                out << "    tmp *= sizeof(type);\n";
-                out << "    switch (memorder) {\n";
+                    out << "    __tmp = -__tmp;\n";
+                out << "    __tmp *= sizeof(_Type);\n";
+                out << "    switch (__memorder) {\n";
                 out << "#if __CUDA_ARCH__ >= 700\n";
                 out << "    case __ATOMIC_SEQ_CST: " << fencename("sc"s, s.first) << "();\n";
                 out << "    case __ATOMIC_CONSUME:\n";
-                out << "    case __ATOMIC_ACQUIRE: __cuda_fetch_add_acquire_64_" << s.first << "(ptr, tmp, tmp); break;\n";
-                out << "    case __ATOMIC_ACQ_REL: __cuda_fetch_add_acq_rel_64_" << s.first << "(ptr, tmp, tmp); break;\n";
-                out << "    case __ATOMIC_RELEASE: __cuda_fetch_add_release_64_" << s.first << "(ptr, tmp, tmp); break;\n";
-                out << "    case __ATOMIC_RELAXED: __cuda_fetch_add_relaxed_64_" << s.first << "(ptr, tmp, tmp); break;\n";
+                out << "    case __ATOMIC_ACQUIRE: __cuda_fetch_add_acquire_64_" << s.first << "(__ptr, __tmp, __tmp); break;\n";
+                out << "    case __ATOMIC_ACQ_REL: __cuda_fetch_add_acq_rel_64_" << s.first << "(__ptr, __tmp, __tmp); break;\n";
+                out << "    case __ATOMIC_RELEASE: __cuda_fetch_add_release_64_" << s.first << "(__ptr, __tmp, __tmp); break;\n";
+                out << "    case __ATOMIC_RELAXED: __cuda_fetch_add_relaxed_64_" << s.first << "(__ptr, __tmp, __tmp); break;\n";
                 out << "#else\n";
                 out << "    case __ATOMIC_SEQ_CST:\n";
                 out << "    case __ATOMIC_ACQ_REL: __cuda_membar_" << s.first << "();\n";
                 out << "    case __ATOMIC_CONSUME:\n";
-                out << "    case __ATOMIC_ACQUIRE: __cuda_fetch_add_volatile_64_" << s.first << "(ptr, tmp, tmp); __cuda_membar_" << s.first << "(); break;\n";
-                out << "    case __ATOMIC_RELEASE: __cuda_membar_" << s.first << "(); __cuda_fetch_add_volatile_64_" << s.first << "(ptr, tmp, tmp); break;\n";
-                out << "    case __ATOMIC_RELAXED: __cuda_fetch_add_volatile_64_" << s.first << "(ptr, tmp, tmp); break;\n";
+                out << "    case __ATOMIC_ACQUIRE: __cuda_fetch_add_volatile_64_" << s.first << "(__ptr, __tmp, __tmp); __cuda_membar_" << s.first << "(); break;\n";
+                out << "    case __ATOMIC_RELEASE: __cuda_membar_" << s.first << "(); __cuda_fetch_add_volatile_64_" << s.first << "(__ptr, __tmp, __tmp); break;\n";
+                out << "    case __ATOMIC_RELAXED: __cuda_fetch_add_volatile_64_" << s.first << "(__ptr, __tmp, __tmp); break;\n";
                 out << "#endif // __CUDA_ARCH__ >= 700\n";
                 out << "    default: assert(0);\n";
                 out << "    }\n";
-                out << "    memcpy(&ret, &tmp, 8);\n";
-                out << "    return ret;\n";
+                out << "    memcpy(&__ret, &__tmp, 8);\n";
+                out << "    return __ret;\n";
                 out << "}\n";
             }
         }
