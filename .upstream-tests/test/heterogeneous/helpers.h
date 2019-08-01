@@ -9,6 +9,7 @@
 #ifndef INTEROP_HELPERS_H
 #define INTEROP_HELPERS_H
 
+#include <new>
 #include <stdlib.h>
 
 #define INTEROP_SAFE_CALL(...) \
@@ -21,14 +22,6 @@
             abort(); \
         } \
     } while (false)
-
-
-#ifndef __CUDA_ARCH__
-void * operator new(std::size_t, void * p) noexcept
-{
-    return p;
-}
-#endif
 
 template<typename ...Testers>
 struct tester_list
@@ -202,14 +195,10 @@ template<typename T>
 __managed__ manual_object<T> managed_variable;
 
 template<typename T>
+__host__ __device__
 manual_object<T> & get_managed()
 {
-#ifdef __CUDA_ARCH__
     return managed_variable<T>;
-#else
-    // ...why in the world is this a pointer in host code?!
-    return *managed_variable<T>;
-#endif
 }
 #endif
 

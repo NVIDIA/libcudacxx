@@ -56,7 +56,7 @@ struct strong_cas_tester
     __host__ __device__
     static void initialize(cuda::std::atomic<T> & a)
     {
-        T expected = Expected;
+        T expected = static_cast<T>(Expected);
         assert(a.compare_exchange_strong(expected, static_cast<T>(Desired)) == ShouldSucceed);
         assert(expected == static_cast<T>(PreviousValue));
     }
@@ -77,7 +77,7 @@ struct weak_cas_tester
     __host__ __device__
     static void initialize(cuda::std::atomic<T> & a)
     {
-        T expected = Expected;
+        T expected = static_cast<T>(Expected);
         if (!ShouldSucceed)
         {
             assert(a.compare_exchange_weak(expected, static_cast<T>(Desired)) == false);
