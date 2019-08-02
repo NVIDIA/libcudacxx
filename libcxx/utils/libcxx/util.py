@@ -242,7 +242,6 @@ def executeCommand(command, cwd=None, env=None, input=None, timeout=0):
 
     return out, err, exitCode
 
-
 def killProcessAndChildren(pid):
     """
     This function kills a process with ``pid`` and all its

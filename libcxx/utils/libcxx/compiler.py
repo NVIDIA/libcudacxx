@@ -75,35 +75,7 @@ class CXXCompiler(object):
         self.use_warnings = value
 
     def _initTypeAndVersion(self):
-        # Get compiler type and version
-        macros = self.dumpMacros()
-        if macros is None:
-            return
-        compiler_type = None
-        major_ver = minor_ver = patchlevel = None
-        if '__NVCC__' in macros.keys():
-            compiler_type = 'nvcc'
-            major_ver = macros['__CUDACC_VER_MAJOR__']
-            minor_ver = macros['__CUDACC_VER_MINOR__']
-            patchlevel = macros['__CUDACC_VER_BUILD__']
-
-            # Treat C++ as CUDA when the compiler is NVCC.
-            self.source_lang = 'cu'
-        elif '__clang__' in macros.keys():
-            compiler_type = 'clang'
-            # Treat apple's llvm fork differently.
-            if '__apple_build_version__' in macros.keys():
-                compiler_type = 'apple-clang'
-            major_ver = macros['__clang_major__']
-            minor_ver = macros['__clang_minor__']
-            patchlevel = macros['__clang_patchlevel__']
-        elif '__GNUC__' in macros.keys():
-            compiler_type = 'gcc'
-            major_ver = macros['__GNUC__']
-            minor_ver = macros['__GNUC_MINOR__']
-            patchlevel = macros['__GNUC_PATCHLEVEL__']
-        self.type = compiler_type
-        self.version = (major_ver, minor_ver, patchlevel)
+        (self.type, self.version) = self.dumpVersion()
 
     def _basicCmd(self, source_files, out, mode=CM_Default, flags=[],
                   input_is_cxx=False):
@@ -199,11 +171,30 @@ class CXXCompiler(object):
                 source_file, object_file, flags=flags, cwd=cwd)
             if rc != 0:
                 return cc_cmd, cc_stdout, cc_stderr, rc
-
             link_cmd, link_stdout, link_stderr, rc = self.link(
                 object_file, out=out, flags=flags, cwd=cwd)
             return (cc_cmd + ['&&'] + link_cmd, cc_stdout + link_stdout,
                     cc_stderr + link_stderr, rc)
+
+    def dumpVersion(self, flags=[], cwd=None):
+        dumpversion_cpp = os.path.join(
+          os.path.dirname(os.path.abspath(__file__)), "dumpversion.cpp")
+        with_fn = lambda: libcxx.util.guardedTempFilename()
+        with with_fn() as exe:  
+          cmd, out, err, rc = self.compileLink([dumpversion_cpp], out=exe,
+                                               flags=flags, cwd=cwd)
+          if rc != 0:
+            return ("unknown", (0, 0, 0))
+          out, err, rc = libcxx.util.executeCommand(exe, env=self.compile_env,
+                                                    cwd=cwd)
+          type_version = None
+          try:
+            type_version = eval(out)
+          except:
+            pass
+          if not (isinstance(type_version, tuple) and 2 == len(type_version)):
+            type_version = ("unknown", (0, 0, 0))
+        return type_version
 
     def dumpMacros(self, source_files=None, flags=[], cwd=None):
         if source_files is None:

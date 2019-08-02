@@ -239,6 +239,8 @@ class Configuration(object):
             self.config.available_features.add('%s-%s' % (cxx_type, maj_v))
             self.config.available_features.add('%s-%s.%s' % (
                 cxx_type, maj_v, min_v))
+        self.lit_config.note("detected cxx.type as: {}".format(self.cxx.type))
+        self.lit_config.note("detected cxx.version as: {}".format(self.cxx.version))
         self.cxx.compile_env = dict(os.environ)
         # 'CCACHE_CPP2' prevents ccache from stripping comments while
         # preprocessing. This is required to prevent stripping of '-verify'
