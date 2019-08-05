@@ -1,4 +1,4 @@
-# Dockerfile for libcudacxx_base:host_x86_64_centos_7.6__target_x86_64_centos_7.6__gcc_4.8
+# Dockerfile for libcudacxx_base:host_x86_64_centos_7.6.1810__target_x86_64_centos_7.6.1810__gcc_4.8
 
 FROM centos:7.6.1810
 

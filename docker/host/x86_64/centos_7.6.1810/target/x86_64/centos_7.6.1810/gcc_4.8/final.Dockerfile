@@ -1,6 +1,6 @@
-# Dockerfile for libcudacxx:host_x86_64_centos_7.6__target_x86_64_centos_7.6__gcc_4.8
+# Dockerfile for libcudacxx:host_x86_64_centos_7.6.1810__target_x86_64_centos_7.6.1810__gcc_4.8
 
-FROM libcudacxx_base:host_x86_64_centos_7.6__target_x86_64_centos_7.6__gcc_4.8
+FROM libcudacxx_base:host_x86_64_centos_7.6.1810__target_x86_64_centos_7.6.1810__gcc_4.8
 
 MAINTAINER Bryce Adelstein Lelbach <blelbach@nvidia.com>
 
