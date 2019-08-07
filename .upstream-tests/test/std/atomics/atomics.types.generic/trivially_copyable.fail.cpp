@@ -51,7 +51,6 @@
 
 #include <cuda/std/atomic>
 #include <cuda/std/cassert>
-#include <cuda/std/new>
 
 struct NotTriviallyCopyable {
     NotTriviallyCopyable ( int i ) : i_(i) {}
