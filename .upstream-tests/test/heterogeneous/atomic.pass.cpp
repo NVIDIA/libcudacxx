@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: nvrtc
+// UNSUPPORTED: nvrtc, pre-sm-60
 
 #include "helpers.h"
 
