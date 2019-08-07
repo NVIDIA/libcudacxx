@@ -46,6 +46,7 @@ do
 
         -gencode=*)
             gpu_archs=("${gpu_archs[@]}" "$(echo $1 | egrep -o 'compute_[0-9]+')")
+            modified_flags=("${modified_flags[@]}" "$1")
             ;;
 
         -?*|\"-?*)
