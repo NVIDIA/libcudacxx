@@ -236,6 +236,8 @@ class CXXCompiler(object):
             flags += ['-Werror', '-fsyntax-only']
         cmd, out, err, rc = self.compile(os.devnull, out=os.devnull,
                                          flags=flags)
+        if out.find('flag is not supported with the configured host compiler') != -1:
+            return False
         if err.find('flag is not supported with the configured host compiler') != -1:
             return False
         return rc == 0
