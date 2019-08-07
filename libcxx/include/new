@@ -80,6 +80,7 @@ void  operator delete[](void* ptr, void*) noexcept;
 
 */
 
+#ifndef __cuda_std__
 #include <__config>
 #include <exception>
 #include <type_traits>
@@ -87,6 +88,7 @@ void  operator delete[](void* ptr, void*) noexcept;
 #include <version>
 #ifdef _LIBCPP_NO_EXCEPTIONS
 #include <cstdlib>
+#endif
 #endif
 
 #if defined(_LIBCPP_ABI_VCRUNTIME)
