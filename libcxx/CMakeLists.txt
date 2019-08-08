@@ -799,6 +799,9 @@ endif()
 # However, since some submission systems strip test/ subdirectories, check for
 # it before adding it.
 
+option(LIBCXX_TEST_STANDARD_VER
+       "C++ standard dialect to use when running libc++ tests." "")
+
 if(IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/test")
   add_subdirectory(test)
 endif()
