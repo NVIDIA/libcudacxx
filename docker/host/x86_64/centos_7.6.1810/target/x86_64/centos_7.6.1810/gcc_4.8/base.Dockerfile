@@ -6,6 +6,7 @@ MAINTAINER Bryce Adelstein Lelbach <blelbach@nvidia.com>
 
 ARG LIBCUDACXX_SKIP_BASE_TESTS_BUILD
 ARG LIBCUDACXX_COMPUTE_ARCHS
+ARG LIBCXX_TEST_STANDARD_VER
 
 ###############################################################################
 # BUILD: The following is invoked when the image is built.
@@ -50,6 +51,7 @@ RUN set -o pipefail; cd /sw/gpgpu/libcudacxx/libcxx/build\
  -DLIBCXX_INCLUDE_TESTS=ON\
  -DLIBCXX_INCLUDE_BENCHMARKS=OFF\
  -DLIBCXX_CXX_ABI=libsupc++\
+ -DLIBCXX_TEST_STANDARD_VER=$LIBCXX_TEST_STANDARD_VER\
  -DLIBCXX_ABI_UNSTABLE=ON\
  -DLLVM_CONFIG_PATH=$(which llvm-config)\
  -DCMAKE_C_COMPILER=gcc\
@@ -63,6 +65,7 @@ RUN set -o pipefail; cd /sw/gpgpu/libcudacxx/build\
  -DLIBCXX_INCLUDE_TESTS=ON\
  -DLIBCXX_INCLUDE_BENCHMARKS=OFF\
  -DLIBCXX_CXX_ABI=libsupc++\
+ -DLIBCXX_TEST_STANDARD_VER=$LIBCXX_TEST_STANDARD_VER\
  -DLIBCXX_ABI_UNSTABLE=ON\
  -DLLVM_CONFIG_PATH=$(which llvm-config)\
  -DCMAKE_C_COMPILER=/sw/gpgpu/bin/x86_64_Linux_release/nvcc\
