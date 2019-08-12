@@ -45,6 +45,10 @@
 #endif
 #define _LIBCPP_HAS_EXTERNAL_ATOMIC_IMP
 
+#if defined(__PGIC__) && defined(__linux__)
+#  define __ELF__
+#endif
+
 #include "libcxx/__config"
 
 #ifdef __CUDACC_RTC__
