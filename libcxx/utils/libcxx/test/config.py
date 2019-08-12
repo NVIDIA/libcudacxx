@@ -269,7 +269,9 @@ class Configuration(object):
                   self.host_cxx_type, maj_v))
               self.config.available_features.add('%s-%s.%s' % (
                   self.host_cxx_type, maj_v, min_v))
-
+          self.lit_config.note("detected host_cxx.type as: {}".format(self.host_cxx.type))
+          self.lit_config.note("detected host_cxx.version as: {}".format(self.host_cxx.version))
+          self.lit_config.note("detected host_cxx.is_nvrtc as: {}".format(self.host_cxx.is_nvrtc))
 
     def _configure_clang_cl(self, clang_path):
         def _split_env_var(var):
@@ -752,9 +754,12 @@ class Configuration(object):
         enable_exceptions = self.get_lit_bool('enable_exceptions', True)
         if not enable_exceptions:
             self.config.available_features.add('libcpp-no-exceptions')
-            if self.cxx.type == 'nvcc':
-                self.cxx.compile_flags += ['-Xcompiler']
-            self.cxx.compile_flags += ['-fno-exceptions']
+            if 'pgi' in self.config.available_features:
+                pass
+            else:
+                if self.cxx.type == 'nvcc':
+                    self.cxx.compile_flags += ['-Xcompiler']
+                self.cxx.compile_flags += ['-fno-exceptions']
 
     def configure_compile_flags_rtti(self):
         enable_rtti = self.get_lit_bool('enable_rtti', True)
@@ -762,7 +767,10 @@ class Configuration(object):
             self.config.available_features.add('libcpp-no-rtti')
             if self.cxx.type == 'nvcc':
                 self.cxx.compile_flags += ['-Xcompiler']
-            self.cxx.compile_flags += ['-fno-rtti', '-D_LIBCPP_NO_RTTI']
+            if 'pgi' in self.config.available_features:
+                self.cxx.compile_flags += ['--no_rtti']
+            else:
+                self.cxx.compile_flags += ['-fno-rtti']
 
     def configure_compile_flags_abi_version(self):
         abi_version = self.get_lit_conf('abi_version', '').strip()
@@ -814,7 +822,10 @@ class Configuration(object):
         if self.cxx_stdlib_under_test == 'libc++':
             if self.cxx.type == 'nvcc':
                 self.cxx.link_flags += ['-Xcompiler']
-            self.cxx.link_flags += ['-nodefaultlibs']
+            if 'pgi' in self.config.available_features:
+                pass
+            else:
+                self.cxx.link_flags += ['-nodefaultlibs']
             # FIXME: Handle MSVCRT as part of the ABI library handling.
             if self.is_windows:
                 self.cxx.link_flags += ['-nostdlib']

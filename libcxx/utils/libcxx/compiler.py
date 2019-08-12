@@ -234,7 +234,8 @@ class CXXCompiler(object):
         # exit code. -Werror is supported on all known non-nvcc compiler types.
         if self.type is not None and self.type != 'nvcc':
             flags += ['-Werror', '-fsyntax-only']
-        cmd, out, err, rc = self.compile(os.devnull, out=os.devnull,
+        empty_cpp = os.path.join(os.path.dirname(os.path.abspath(__file__)), "empty.cpp")
+        cmd, out, err, rc = self.compile(empty_cpp, out=os.devnull,
                                          flags=flags)
         if out.find('flag is not supported with the configured host compiler') != -1:
             return False
