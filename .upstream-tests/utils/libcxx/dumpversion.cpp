@@ -24,6 +24,11 @@ int main()
     #if defined(__LIBCUDACXX_NVRTC_TEST__)
       is_nvrtc = "True";
     #endif
+  #elif defined(__PGIC__)
+    compiler_type = "pgi";
+    major_version = __PGIC__;
+    minor_version = __PGIC_MINOR__;
+    patch_level   = __PGIC_PATCHLEVEL__;
   #elif defined(__clang__)
     // Treat apple's llvm fork differently.
     #if defined(__apple_build_version__)
