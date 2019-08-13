@@ -77,8 +77,67 @@ class CXXCompiler(object):
         self.use_warnings = value
 
     def _initTypeAndVersion(self):
-        (self.type, self.version, self.default_dialect, self.is_nvrtc) = \
-            self.dumpVersion()
+        # Get compiler type and version
+        try:
+          macros = self.dumpMacros()
+          compiler_type = None
+          major_ver = minor_ver = patchlevel = None
+          self.is_nvrtc = False
+
+          if '__NVCC__' in macros.keys():
+              compiler_type = 'nvcc'
+              major_ver = macros['__CUDACC_VER_MAJOR__']
+              minor_ver = macros['__CUDACC_VER_MINOR__']
+              patchlevel = macros['__CUDACC_VER_BUILD__']
+              if '__LIBCUDACXX_NVRTC_TEST__' in macro.keys():
+                self.is_nvrtc = True
+          elif '__PGIC__' in macros.keys():
+              compiler_type = "pgi"
+              # PGI, unfortunately, adds an extra space between the macro name
+              # and macro value in their macro dump mode.
+              major_ver = macros['__PGIC__'].strip()
+              minor_ver = macros['__PGIC_MINOR__'].strip()
+              patchlevel = macros['__PGIC_PATCHLEVEL__'].strip()
+          elif '__INTEL_COMPILER' in macros.keys():
+              compiler_type = "icc"
+              major_ver = int(macros['__INTEL_COMPILER']) / 100
+              minor_ver = (int(macros['__INTEL_COMPILER']) % 100) / 10
+              patchlevel = int(macros['__INTEL_COMPILER']) % 10
+          elif '__clang__' in macros.keys():
+              compiler_type = 'clang'
+              # Treat Apple's LLVM fork differently.
+              if '__apple_build_version__' in macros.keys():
+                  compiler_type = 'apple-clang'
+              major_ver = macros['__clang_major__']
+              minor_ver = macros['__clang_minor__']
+              patchlevel = macros['__clang_patchlevel__']
+          elif '__GNUC__' in macros.keys():
+              compiler_type = 'gcc'
+              major_ver = macros['__GNUC__']
+              minor_ver = macros['__GNUC_MINOR__']
+              patchlevel = macros['__GNUC_PATCHLEVEL__']
+
+          if '__cplusplus' in macros.keys():
+            if int(macros['__cplusplus']) <= 199711:
+              default_dialect = "c++03"
+            elif int(macros['__cplusplus']) <= 201103:
+              default_dialect = "c++11"
+            elif int(macros['__cplusplus']) <= 201402:
+              default_dialect = "c++14"
+            elif int(macros['__cplusplus']) <= 201703:
+              default_dialect = "c++17"
+            else:
+              default_dialect = "c++20"
+          else:
+            default_dialect = "c++03"
+
+          self.type = compiler_type
+          self.version = (major_ver, minor_ver, patchlevel)
+          self.default_dialect = default_dialect
+        except:
+          (self.type, self.version, self.default_dialect, self.is_nvrtc) = \
+              self.dumpVersion()
+
         if self.type == 'nvcc':
             # Treat C++ as CUDA when the compiler is NVCC.
             self.source_lang = 'cu'
