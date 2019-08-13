@@ -22,9 +22,9 @@ function usage {
   echo "--skip-libcudacxx-tests         : Do not build (or run) any libcu++ tests."
   echo "                                : Overrides \${LIBCUDACXX_SKIP_LIBCUDACXX_TESTS}."
   echo "--log-libcxx-results <file>     : Log libc++ test results to <file> in addition"
-  echo "                                : to stdout."
+  echo "                                : to stdout (default: libcxx_lit.log)."
   echo "--log-libcudacxx-results <file> : Log libcu++ test results to <file> in addition"
-  echo "                                : to stdout."
+  echo "                                : to stdout (default: libcudacxx_lit.log)."
   echo
   echo "\${LIBCUDACXX_SKIP_BASE_TESTS_BUILD} : If set and non-zero, do not build"
   echo "                                    : (or run) any tests."
@@ -54,8 +54,8 @@ LIT_PREFIX="time"
 LIBCXX_BUILD_PATH=${LIBCUDACXX_PATH}/libcxx/build
 LIBCUDACXX_BUILD_PATH=${LIBCUDACXX_PATH}/build/libcxx
 
-LIBCXX_LOG_FILE=/dev/null
-LIBCUDACXX_LOG_FILE=/dev/null
+LIBCXX_LOG_FILE=libcxx_lit.log
+LIBCUDACXX_LOG_FILE=libcudacxx_lit.log
 
 RAW_TEST_TARGETS=""
 
@@ -134,7 +134,7 @@ fi
 
 if [ "${LIBCUDACXX_SKIP_LIBCXX_TESTS:-0}" == "0" ]
 then
-  TIMEFORMAT="TIMING, libc++ tests (build only), %R [sec]" \
+  TIMEFORMAT="WALLTIME libc++ : %R [sec]" \
   LIBCXX_SITE_CONFIG=${LIBCXX_BUILD_PATH}/test/lit.site.cfg \
   bash -c "${LIT_PREFIX} lit ${LIT_FLAGS} ${LIBCXX_TEST_TARGETS}" \
   2>&1 | tee ${LIBCXX_LOG_FILE}
@@ -143,10 +143,43 @@ fi
 
 if [ "${LIBCUDACXX_SKIP_LIBCUDACXX_TESTS:-0}" == "0" ]
 then
-  TIMEFORMAT="TIMING, libcu++ build tests (build only), %R [sec]" \
+  TIMEFORMAT="WALLTIME libcu++ : %R [sec]" \
   LIBCXX_SITE_CONFIG=${LIBCUDACXX_BUILD_PATH}/test/lit.site.cfg \
   bash -c "${LIT_PREFIX} lit ${LIT_FLAGS} ${LIT_COMPUTE_ARCHS_FLAG}${LIBCUDACXX_COMPUTE_ARCHS}${LIT_COMPUTE_ARCHS_SUFFIX} ${LIBCUDACXX_TEST_TARGETS}" \
   2>&1 | tee ${LIBCUDACXX_LOG_FILE}
   if [ "${PIPESTATUS[0]}" != "0" ]; then exit 1; fi
 fi
+
+###############################################################################
+
+# If any of the lines searched for below aren't present in the log files, the
+# grep commands will return nothing, and the variables will be empty. Bash
+# treats empty variables as zero for the purposes of arithmetic, which is what
+# we want anyways, so we don't need to do anything else.
+
+LIBCXX_EXPECTED_PASSES=$(    egrep 'Expected Passes'     ${LIBCXX_LOG_FILE} | sed 's/  Expected Passes    : \([0-9]\+\)/\1/')
+LIBCXX_EXPECTED_FAILURES=$(  egrep 'Expected Failures'   ${LIBCXX_LOG_FILE} | sed 's/  Expected Failures  : \([0-9]\+\)/\1/')
+LIBCXX_UNSUPPORTED_TESTS=$(  egrep 'Unsupported Tests'   ${LIBCXX_LOG_FILE} | sed 's/  Unsupported Tests  : \([0-9]\+\)/\1/')
+LIBCXX_UNEXPECTED_PASSES=$(  egrep 'Unexpected Passes'   ${LIBCXX_LOG_FILE} | sed 's/  Unexpected Passes  : \([0-9]\+\)/\1/')
+LIBCXX_UNEXPECTED_FAILURES=$(egrep 'Unexpected Failures' ${LIBCXX_LOG_FILE} | sed 's/  Unexpected Failures: \([0-9]\+\)/\1/')
+
+LIBCUDACXX_EXPECTED_PASSES=$(    egrep 'Expected Passes'     ${LIBCUDACXX_LOG_FILE} | sed 's/  Expected Passes    : \([0-9]\+\)/\1/')
+LIBCUDACXX_EXPECTED_FAILURES=$(  egrep 'Expected Failures'   ${LIBCUDACXX_LOG_FILE} | sed 's/  Expected Failures  : \([0-9]\+\)/\1/')
+LIBCUDACXX_UNSUPPORTED_TESTS=$(  egrep 'Unsupported Tests'   ${LIBCUDACXX_LOG_FILE} | sed 's/  Unsupported Tests  : \([0-9]\+\)/\1/')
+LIBCUDACXX_UNEXPECTED_PASSES=$(  egrep 'Unexpected Passes'   ${LIBCUDACXX_LOG_FILE} | sed 's/  Unexpected Passes  : \([0-9]\+\)/\1/')
+LIBCUDACXX_UNEXPECTED_FAILURES=$(egrep 'Unexpected Failures' ${LIBCUDACXX_LOG_FILE} | sed 's/  Unexpected Failures: \([0-9]\+\)/\1/')
+
+LIBCXX_PASSES=$((LIBCXX_EXPECTED_PASSES + LIBCXX_EXPECTED_FAILURES))
+LIBCXX_FAILS=$((LIBCXX_UNEXPECTED_PASSES + LIBCXX_UNEXPECTED_FAILURES))
+LIBCXX_TOTAL=$((LIBCXX_PASSES + LIBCXX_FAILS))
+
+LIBCUDACXX_PASSES=$((LIBCUDACXX_EXPECTED_PASSES + LIBCUDACXX_EXPECTED_FAILURES))
+LIBCUDACXX_FAILS=$((LIBCUDACXX_UNEXPECTED_PASSES + LIBCUDACXX_UNEXPECTED_FAILURES))
+LIBCUDACXX_TOTAL=$((LIBCUDACXX_PASSES + LIBCUDACXX_FAILS))
+
+OVERALL_PASSES=$((LIBCXX_PASSES + LIBCUDACXX_PASSES))
+OVERALL_FAILS=$((LIBCXX_FAILS + LIBCUDACXX_FAILS))
+OVERALL_TOTAL=$((LIBCXX_TOTAL + LIBCUDACXX_TOTAL))
+
+printf "Score: %.2f%%\n" "$((10000 * ${OVERALL_PASSES} / ${OVERALL_TOTAL}))e-2"
 
