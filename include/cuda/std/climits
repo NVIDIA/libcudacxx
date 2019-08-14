@@ -18,6 +18,12 @@
 
 #include "detail/libcxx/climits"
 
-#define __CHAR_BIT__ 8
+// ICC defines __CHAR_BIT__ by default
+// accept that, but assert it is what we expect
+#ifdef __CHAR_BIT__
+    static_assert(__CHAR_BIT__ == 8, "");
+#else
+    #define __CHAR_BIT__ 8
+#endif
 
 #endif //_CUDA_CLIMITS
