@@ -75,7 +75,9 @@ int main(int, char**)
     test_has_not_nothrow_default_constructor<int&>();
     test_has_not_nothrow_default_constructor<A>();
 #if TEST_STD_VER >= 11
+#ifndef __INTEL_COMPILER
     test_has_not_nothrow_default_constructor<DThrows>(); // This is LWG2116
+#endif
 #endif
 
     test_is_nothrow_default_constructible<Union>();

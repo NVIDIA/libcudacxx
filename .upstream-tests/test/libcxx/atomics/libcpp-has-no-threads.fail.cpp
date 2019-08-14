@@ -14,8 +14,8 @@
 // .fail. expects compilation to fail, but this would only fail at runtime with NVRTC
 // UNSUPPORTED: nvrtc
 
-// nvcc doesn't propagate pgi's preprocessor failures
-// UNSUPPORTED: pgi
+// nvcc doesn't propagate pgi's or icc's preprocessor failures
+// UNSUPPORTED: pgi, icc
 
 // MODULES_DEFINES: _LIBCPP_HAS_NO_THREADS
 #ifndef _LIBCPP_HAS_NO_THREADS

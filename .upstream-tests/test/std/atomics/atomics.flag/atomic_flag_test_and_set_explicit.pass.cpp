@@ -26,12 +26,14 @@ int main(int, char**)
         assert(atomic_flag_test_and_set_explicit(&f, cuda::std::memory_order_relaxed) == 0);
         assert(f.test_and_set() == 1);
     }
+#ifndef __INTEL_COMPILER
     {
         cuda::std::atomic_flag f;
         f.clear();
         assert(atomic_flag_test_and_set_explicit(&f, cuda::std::memory_order_consume) == 0);
         assert(f.test_and_set() == 1);
     }
+#endif
     {
         cuda::std::atomic_flag f;
         f.clear();
@@ -62,12 +64,14 @@ int main(int, char**)
         assert(atomic_flag_test_and_set_explicit(&f, cuda::std::memory_order_relaxed) == 0);
         assert(f.test_and_set() == 1);
     }
+#ifndef __INTEL_COMPILER
     {
         volatile cuda::std::atomic_flag f;
         f.clear();
         assert(atomic_flag_test_and_set_explicit(&f, cuda::std::memory_order_consume) == 0);
         assert(f.test_and_set() == 1);
     }
+#endif
     {
         volatile cuda::std::atomic_flag f;
         f.clear();
