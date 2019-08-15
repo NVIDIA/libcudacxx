@@ -887,7 +887,7 @@ class Configuration(object):
             self.cxx.link_flags += ['-L' + self.abi_library_root]
             if not self.is_windows:
                 if self.cxx.type == 'nvcc':
-                    self.cxx.link_flags += ['-Xlinker',
+                    self.cxx.link_flags += ['-Xcompiler',
                         '"-Wl,-rpath,' + self.cxx_runtime_root + '"']
                 else:
                     self.cxx.link_flags += ['-Wl,-rpath,' + 
