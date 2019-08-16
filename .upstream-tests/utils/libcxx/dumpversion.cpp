@@ -4,9 +4,9 @@
 // See https://llvm.org/LICENSE.txt for license information.
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
-//===----------------------------------------------------------------------===////
+//===----------------------------------------------------------------------===##
 
-#include <stdio.h>
+extern "C" int printf(char const* format, ...);
 
 int main()
 {
@@ -35,7 +35,7 @@ int main()
     minor_version = (__INTEL_COMPILER % 100) / 10;
     patch_level   = __INTEL_COMPILER % 10;
   #elif defined(__clang__)
-    // Treat apple's llvm fork differently.
+    // Treat Apple's LLVM fork differently.
     #if defined(__apple_build_version__)
       compiler_type = "apple-clang";
     #else
