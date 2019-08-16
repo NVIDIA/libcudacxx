@@ -184,7 +184,7 @@ class CXXCompiler(object):
     def dumpVersion(self, flags=[], cwd=None):
         dumpversion_cpp = os.path.join(
           os.path.dirname(os.path.abspath(__file__)), "dumpversion.cpp")
-        with_fn = lambda: libcxx.util.guardedTempFilename()
+        with_fn = lambda: libcxx.util.guardedTempFilename(suffix=".exe")
         with with_fn() as exe:
           cmd, out, err, rc = self.compileLink([dumpversion_cpp], out=exe,
                                                flags=flags, cwd=cwd)
