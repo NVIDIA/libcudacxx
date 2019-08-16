@@ -197,6 +197,12 @@
 #  define _LIBCPP_COMPILER_NVRTC
 #endif
 
+#if defined(__NVCC__)
+// This is not mutually exclusive with other compilers, as NVCC uses a host
+// compiler.
+#  define _LIBCPP_COMPILER_NVCC
+#endif
+
 #ifndef _LIBCPP_CLANG_VER
 #define _LIBCPP_CLANG_VER 0
 #endif
