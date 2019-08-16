@@ -184,12 +184,12 @@ class CXXCompiler(object):
     def dumpVersion(self, flags=[], cwd=None):
         dumpversion_cpp = os.path.join(
           os.path.dirname(os.path.abspath(__file__)), "dumpversion.cpp")
-        with_fn = lambda: libcxx.util.guardedTempFilename()
+        with_fn = lambda: libcxx.util.guardedTempFilename(suffix=".exe")
         with with_fn() as exe:
           cmd, out, err, rc = self.compileLink([dumpversion_cpp], out=exe,
                                                flags=flags, cwd=cwd)
           if rc != 0:
-            return ("unknown", (0, 0, 0))
+            return ("unknown", (0, 0, 0), False)
           out, err, rc = libcxx.util.executeCommand(exe, env=self.compile_env,
                                                     cwd=cwd)
           type_version = None
@@ -221,6 +221,8 @@ class CXXCompiler(object):
         return parsed_macros
 
     def getTriple(self):
+        if self.type == "msvc":
+            return "x86_64-pc-windows-msvc"
         cmd = [self.path] + self.flags + ['-dumpmachine']
         return libcxx.util.capture(cmd).strip()
 
@@ -232,7 +234,7 @@ class CXXCompiler(object):
 
         # Add -Werror to ensure that an unrecognized flag causes a non-zero
         # exit code. -Werror is supported on all known non-nvcc compiler types.
-        if self.type is not None and self.type != 'nvcc':
+        if self.type is not None and self.type != 'nvcc' and self.type != 'msvc':
             flags += ['-Werror', '-fsyntax-only']
         empty_cpp = os.path.join(os.path.dirname(os.path.abspath(__file__)), "empty.cpp")
         cmd, out, err, rc = self.compile(empty_cpp, out=os.devnull,
