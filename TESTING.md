@@ -34,7 +34,6 @@ cd ${LIBCUDACXX_ROOT}
 mkdir -p build
 cd build
 cmake .. \
-  -DLLVM_EXTERNAL_LIT=$(which lit) \
   -DLLVM_CONFIG_PATH=$(which llvm-config) \
   -DCMAKE_CXX_COMPILER=nvcc \
   -DLIBCXX_NVCC_HOST_COMPILER=g++ \
@@ -89,12 +88,11 @@ mkdir build
 cd build
 cmake .. ^
   -G "Ninja" ^
-  -DCMAKE_CXX_COMPILER_FORCED=ON ^
-  -DCMAKE_C_COMPILER_FORCED=ON ^
-  -DLLVM_EXTERNAL_LIT=lit ^
   -DLLVM_PATH=%LLVM_ROOT%\llvm ^
   -DCMAKE_CXX_COMPILER=nvcc ^
-  -DLIBCXX_NVCC_HOST_COMPILER=cl
+  -DLIBCXX_NVCC_HOST_COMPILER=cl ^
+  -DCMAKE_CXX_COMPILER_FORCED=ON ^
+  -DCMAKE_C_COMPILER_FORCED=ON
 ```
 
 ### Step 2: 
