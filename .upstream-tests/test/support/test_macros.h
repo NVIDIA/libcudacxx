@@ -62,17 +62,27 @@
 #define TEST_HAS_BUILTIN_IDENTIFIER(X) 0
 #endif
 
-#if defined(__EDG__)
-# define TEST_COMPILER_EDG
-#elif defined(__clang__)
+#if defined(__clang__)
 # define TEST_COMPILER_CLANG
 # if defined(__apple_build_version__)
 #  define TEST_COMPILER_APPLE_CLANG
 # endif
-#elif defined(_MSC_VER)
-# define TEST_COMPILER_C1XX
 #elif defined(__GNUC__)
 # define TEST_COMPILER_GCC
+#elif defined(_MSC_VER)
+# define TEST_COMPILER_C1XX
+#elif defined(__IBMCPP__)
+# define TEST_COMPILER_IBM
+#elif defined(__CUDACC_RTC__)
+# define TEST_COMPILER_NVRTC
+#elif defined(__EDG__)
+# define TEST_COMPILER_EDG
+#endif
+
+#if defined(__NVCC__)
+// This is not mutually exclusive with other compilers, as NVCC uses a host
+// compiler.
+# define TEST_COMPILER_NVCC
 #endif
 
 #if defined(__apple_build_version__)
@@ -86,19 +96,34 @@
 
 /* Make a nice name for the standard version */
 #ifndef TEST_STD_VER
-#if  __cplusplus <= 199711L
-# define TEST_STD_VER 3
-#elif __cplusplus <= 201103L
-# define TEST_STD_VER 11
-#elif __cplusplus <= 201402L
-# define TEST_STD_VER 14
-#elif __cplusplus <= 201703L
-# define TEST_STD_VER 17
-#else
-# define TEST_STD_VER 99    // greater than current standard
-// This is deliberately different than _LIBCPP_STD_VER to discourage matching them up.
-#endif
-#endif
+#  if defined(TEST_COMPILER_C1XX)
+#    if   !defined(_MSVC_LANG)
+#      define TEST_STD_VER 3
+#    elif _MSVC_LANG <= 201103L
+#      define TEST_STD_VER 11
+#    elif _MSVC_LANG <= 201402L
+#      define TEST_STD_VER 14
+#    elif _MSVC_LANG <= 201703L
+#      define TEST_STD_VER 17
+#    else
+#      define TEST_STD_VER 99  // Greater than current standard.
+       // This is deliberately different than _LIBCPP_STD_VER to discourage matching them up.
+#    endif
+#  else
+#    if   __cplusplus <= 199711L
+#      define TEST_STD_VER 3
+#    elif __cplusplus <= 201103L
+#      define TEST_STD_VER 11
+#    elif __cplusplus <= 201402L
+#      define TEST_STD_VER 14
+#    elif __cplusplus <= 201703L
+#      define TEST_STD_VER 17
+#    else
+#      define TEST_STD_VER 99  // Greater than current standard.
+       // This is deliberately different than _LIBCPP_STD_VER to discourage matching them up.
+#    endif
+#  endif
+#endif  // TEST_STD_VER
 
 // Attempt to deduce the GLIBC version
 #if (defined(__has_include) && __has_include(<features.h>)) || \
@@ -168,7 +193,7 @@
 #      define TEST_HAS_TIMESPEC_GET
 #    endif
 #  elif defined(_WIN32)
-#    if defined(_MSC_VER) && !defined(__MINGW32__)
+#    if defined(TEST_COMPILER_C1XX) && !defined(__MINGW32__)
 #      define TEST_HAS_C11_FEATURES // Using Microsoft's C Runtime library
 #      define TEST_HAS_TIMESPEC_GET
 #    endif
@@ -227,7 +252,7 @@
 
 // FIXME: Fix this feature check when either (A) a compiler provides a complete
 // implementation, or (b) a feature check macro is specified
-#if !defined(_MSC_VER) || defined(__clang__) || _MSC_VER < 1920 || _MSVC_LANG <= 201703L
+#if defined(TEST_COMPILER_CLANG) || !defined(TEST_COMPILER_C1XX) || _MSC_VER < 1920 || _MSVC_LANG <= 201703L
 #define TEST_HAS_NO_SPACESHIP_OPERATOR
 #endif
 
