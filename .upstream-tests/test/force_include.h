@@ -30,7 +30,7 @@ void list_devices()
         else
             printf("Unused, ");
 
-        printf("SM%d%d, %ld [bytes]\n",
+        printf("SM%d%d, %zu [bytes]\n",
             device_prop.major, device_prop.minor,
             device_prop.totalGlobalMem);
     }
