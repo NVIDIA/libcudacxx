@@ -52,11 +52,11 @@
 
 #include <cuda/std/atomic>
 #include <cuda/std/cassert>
-#include <cuda/std/new>
 
 #include <cmpxchg_loop.h>
 
 #include "test_macros.h"
+#include "placement_new.h"
 
 template<template<cuda::thread_scope> typename Atomic, cuda::thread_scope Scope>
 __host__ __device__

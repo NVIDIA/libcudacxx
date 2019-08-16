@@ -70,11 +70,11 @@
 #include <cuda/std/atomic>
 #include <cuda/std/type_traits>
 #include <cuda/std/cassert>
-#include <cuda/std/new>
 
 #include <cmpxchg_loop.h>
 
 #include "test_macros.h"
+#include "placement_new.h"
 
 template <class A, class T>
 __host__ __device__

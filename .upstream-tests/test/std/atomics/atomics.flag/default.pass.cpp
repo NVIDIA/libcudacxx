@@ -16,9 +16,9 @@
 
 #include <cuda/std/atomic>
 #include <cuda/std/cassert>
-#include <cuda/std/new>
 
 #include "test_macros.h"
+#include "placement_new.h"
 
 int main(int, char**)
 {
