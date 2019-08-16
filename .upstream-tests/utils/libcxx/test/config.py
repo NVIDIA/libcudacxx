@@ -240,9 +240,14 @@ class Configuration(object):
             self.config.available_features.add('%s-%s' % (cxx_type, maj_v))
             self.config.available_features.add('%s-%s.%s' % (
                 cxx_type, maj_v, min_v))
-        self.lit_config.note("detected cxx.type as: {}".format(self.cxx.type))
-        self.lit_config.note("detected cxx.version as: {}".format(self.cxx.version))
-        self.lit_config.note("detected cxx.is_nvrtc as: {}".format(self.cxx.is_nvrtc))
+        self.lit_config.note("detected cxx.type as: {}".format(
+                             self.cxx.type))
+        self.lit_config.note("detected cxx.version as: {}".format(
+                             self.cxx.version))
+        self.lit_config.note("detected cxx.default_dialect as: {}".format(
+                             self.cxx.default_dialect))
+        self.lit_config.note("detected cxx.is_nvrtc as: {}".format(
+                             self.cxx.is_nvrtc))
         self.cxx.compile_env = dict(os.environ)
         # 'CCACHE_CPP2' prevents ccache from stripping comments while
         # preprocessing. This is required to prevent stripping of '-verify'
@@ -269,9 +274,14 @@ class Configuration(object):
                   self.host_cxx_type, maj_v))
               self.config.available_features.add('%s-%s.%s' % (
                   self.host_cxx_type, maj_v, min_v))
-          self.lit_config.note("detected host_cxx.type as: {}".format(self.host_cxx.type))
-          self.lit_config.note("detected host_cxx.version as: {}".format(self.host_cxx.version))
-          self.lit_config.note("detected host_cxx.is_nvrtc as: {}".format(self.host_cxx.is_nvrtc))
+          self.lit_config.note("detected host_cxx.type as: {}".format(
+                               self.host_cxx.type))
+          self.lit_config.note("detected host_cxx.version as: {}".format(
+                               self.host_cxx.version))
+          self.lit_config.note("detected host_cxx.default_dialect as: {}".format(
+                               self.host_cxx.default_dialect))
+          self.lit_config.note("detected host_cxx.is_nvrtc as: {}".format(
+                               self.host_cxx.is_nvrtc))
 
     def _configure_clang_cl(self, clang_path):
         def _split_env_var(var):

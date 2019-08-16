@@ -77,7 +77,8 @@ class CXXCompiler(object):
         self.use_warnings = value
 
     def _initTypeAndVersion(self):
-        (self.type, self.version, self.is_nvrtc) = self.dumpVersion()
+        (self.type, self.version, self.default_dialect, self.is_nvrtc) = \
+            self.dumpVersion()
         if self.type == 'nvcc':
             # Treat C++ as CUDA when the compiler is NVCC.
             self.source_lang = 'cu'
@@ -189,17 +190,17 @@ class CXXCompiler(object):
           cmd, out, err, rc = self.compileLink([dumpversion_cpp], out=exe,
                                                flags=flags, cwd=cwd)
           if rc != 0:
-            return ("unknown", (0, 0, 0), False)
+            return ("unknown", (0, 0, 0), "c++03", False)
           out, err, rc = libcxx.util.executeCommand(exe, env=self.compile_env,
                                                     cwd=cwd)
-          type_version = None
+          version = None
           try:
-            type_version = eval(out)
+            version = eval(out)
           except:
             pass
-          if not (isinstance(type_version, tuple) and 3 == len(type_version)):
-            type_version = ("unknown", (0, 0, 0), False)
-        return type_version
+          if not (isinstance(version, tuple) and 4 == len(version)):
+            version = ("unknown", (0, 0, 0), "c++03", False)
+        return version
 
     def dumpMacros(self, source_files=None, flags=[], cwd=None):
         if source_files is None:
