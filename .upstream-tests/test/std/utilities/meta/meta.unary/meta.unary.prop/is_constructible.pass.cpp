@@ -326,7 +326,7 @@ int main(int, char**)
 #elif defined(TEST_COMPILER_NVRTC)
     test_is_constructible<const int&, ExplicitTo<int>>();
     test_is_constructible<int&&, ExplicitTo<int>>();
-#elif defiend(TEST_COMPILER_C1XX) && defined(TEST_COMPILER_NVCC)
+#elif defined(TEST_COMPILER_C1XX) && defined(TEST_COMPILER_NVCC)
     // FIXME NVCC and MSVC disagree about the validity of these tests, and give
     //       different answers in host and device code, which is just wonderful.
 #else // GCC and others.
