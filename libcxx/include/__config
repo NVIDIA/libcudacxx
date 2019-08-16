@@ -43,16 +43,32 @@
 #endif
 
 #ifndef _LIBCPP_STD_VER
-#  if  __cplusplus <= 201103L
-#    define _LIBCPP_STD_VER 11
-#  elif __cplusplus <= 201402L
-#    define _LIBCPP_STD_VER 14
-#  elif __cplusplus <= 201703L
-#    define _LIBCPP_STD_VER 17
+#  if defined(_MSC_VER)
+#    if   _MSVC_LANG <= 201103L
+#      define _LIBCPP_STD_VER 11
+#    elif _MSVC_LANG <= 201402L
+#      define _LIBCPP_STD_VER 14
+#    elif _MSVC_LANG <= 201703L
+#      define _LIBCPP_STD_VER 17
+#    else
+#      define _LIBCPP_STD_VER 19  // current year, or date of c++2a ratification
+#    endif
 #  else
-#    define _LIBCPP_STD_VER 18  // current year, or date of c++2a ratification
+#    if   __cplusplus <= 201103L
+#      define _LIBCPP_STD_VER 11
+#    elif __cplusplus <= 201402L
+#      define _LIBCPP_STD_VER 14
+#    elif __cplusplus <= 201703L
+#      define _LIBCPP_STD_VER 17
+#    else
+#      define _LIBCPP_STD_VER 19  // current year, or date of c++2a ratification
+#    endif
 #  endif
 #endif  // _LIBCPP_STD_VER
+
+#if _LIBCPP_STD_VER < 11
+#define _LIBCPP_CXX03_LANG
+#endif
 
 #if defined(__ELF__)
 #  define _LIBCPP_OBJECT_FORMAT_ELF   1
@@ -130,10 +146,6 @@
 # define _LIBCPP_ABI_NAMESPACE _LIBCPP_CONCAT(__,_LIBCPP_ABI_VERSION)
 #endif
 
-#if __cplusplus < 201103L
-#define _LIBCPP_CXX03_LANG
-#endif
-
 #ifndef __has_attribute
 #define __has_attribute(__x) 0
 #endif
@@ -181,6 +193,8 @@
 #  define _LIBCPP_COMPILER_MSVC
 #elif defined(__IBMCPP__)
 #  define _LIBCPP_COMPILER_IBM
+#elif defined(__CUDACC_RTC__)
+#  define _LIBCPP_COMPILER_NVRTC
 #endif
 
 #ifndef _LIBCPP_CLANG_VER
@@ -448,11 +462,11 @@ typedef __char32_t char32_t;
 #endif
 
 #if __has_feature(is_base_of)
-#define _LIBCPP_HAS_IS_BASE_OF
+#define _LIBCPP_IS_BASE_OF(...) __is_base_of(__VA_ARGS__)
 #endif
 
 #if __has_feature(is_final)
-#define _LIBCPP_HAS_IS_FINAL
+#define _LIBCPP_IS_FINAL(...) __is_final(__VA_ARGS__)
 #endif
 
 // Objective-C++ features (opt-in)
@@ -481,11 +495,92 @@ typedef __char32_t char32_t;
 #endif
 
 #if __has_feature(underlying_type)
-#define _LIBCPP_UNDERLYING_TYPE(T) __underlying_type(T)
+#define _LIBCPP_UNDERLYING_TYPE(...) __underlying_type(__VA_ARGS__)
+#endif
+
+#if __has_feature(is_constructible)
+#define _LIBCPP_IS_CONSTRUCTIBLE(...) __is_constructible(__VA_ARGS__)
+#endif
+
+// FIXME: __has_feature(is_nothrow_constructible) returns false, seems to be a bug.
+#if __has_keyword(__is_nothrow_constructible)
+#define _LIBCPP_IS_NOTHROW_CONSTRUCTIBLE(...) __is_nothrow_constructible(__VA_ARGS__)
+#endif
+
+#if __has_feature(is_trivially_constructible)
+#define _LIBCPP_IS_TRIVIALLY_CONSTRUCTIBLE(...) __is_trivially_constructible(__VA_ARGS__)
+#endif
+
+#if __has_feature(has_trivial_constructor)
+#define _LIBCPP_HAS_TRIVIAL_CONSTRUCTOR(...) __has_trivial_constructor(__VA_ARGS__)
+#endif
+
+#if __has_feature(has_nothrow_constructor)
+#define _LIBCPP_HAS_NOTHROW_CONSTRUCTOR(...) __has_nothrow_constructor(__VA_ARGS__)
+#endif
+
+#if __has_feature(has_nothrow_copy)
+#define _LIBCPP_HAS_NOTHROW_COPY(...) __has_nothrow_copy(__VA_ARGS__)
+#endif
+
+#if __has_feature(has_nothrow_assign)
+#define _LIBCPP_HAS_NOTHROW_ASSIGN(...) __has_nothrow_assign(__VA_ARGS__)
+#endif
+
+#if __has_feature(has_trivial_destructor)
+#define _LIBCPP_HAS_TRIVIAL_DESTRUCTOR(...) __has_trivial_destructor(__VA_ARGS__)
+#endif
+
+#if __has_feature(is_trivially_assignable)
+#define _LIBCPP_IS_TRIVIALLY_ASSIGNABLE(...) __is_trivially_assignable(__VA_ARGS__)
+#endif
+
+#if __has_feature(is_trivially_copyable)
+#define _LIBCPP_IS_TRIVIALLY_COPYABLE(...) __is_trivially_copyable(__VA_ARGS__)
+#endif
+
+#if __has_feature(is_trivial)
+#define _LIBCPP_IS_TRIVIAL(...) __is_trivial(__VA_ARGS__)
+#endif
+
+#if __has_feature(is_convertible_to)
+#define _LIBCPP_IS_CONVERTIBLE_TO(...) __is_convertible_to(__VA_ARGS__)
+#endif
+
+#if __has_feature(is_union)
+#define _LIBCPP_IS_UNION(...) __is_union(__VA_ARGS__)
+#endif
+
+#if __has_feature(is_class)
+#define _LIBCPP_IS_CLASS(...) __is_class(__VA_ARGS__)
+#endif
+
+#if __has_feature(is_pod)
+#define _LIBCPP_IS_POD(...) __is_pod(__VA_ARGS__)
+#endif
+
+#if __has_feature(is_standard_layout)
+#define _LIBCPP_IS_STANDARD_LAYOUT(...) __is_standard_layout(__VA_ARGS__)
+#endif
+
+#if __has_feature(is_enum)
+#define _LIBCPP_IS_ENUM(...) __is_enum(__VA_ARGS__)
+#endif
+
+#if __has_feature(is_empty)
+#define _LIBCPP_IS_EMPTY(...) __is_empty(__VA_ARGS__)
+#endif
+
+#if __has_feature(is_polymorphic)
+#define _LIBCPP_IS_POLYMORPHIC(...) __is_polymorphic(__VA_ARGS__)
+#endif
+
+#if __has_feature(has_virtual_destructor)
+#define _LIBCPP_HAS_VIRTUAL_DESTRUCTOR(...) __has_virtual_destructor(__VA_ARGS__)
 #endif
 
 #if __has_feature(is_literal)
-#define _LIBCPP_IS_LITERAL(T) __is_literal(T)
+#define _LIBCPP_IS_LITERAL(...) __is_literal(__VA_ARGS__)
 #endif
 
 #if !defined(_LIBCPP_HAS_NO_ASAN) && !__has_feature(address_sanitizer)
@@ -502,7 +597,7 @@ typedef __char32_t char32_t;
 #endif
 
 #if !__is_identifier(__has_unique_object_representations)
-#define _LIBCPP_HAS_UNIQUE_OBJECT_REPRESENTATIONS
+#define _LIBCPP_HAS_UNIQUE_OBJECT_REPRESENTATIONS(...) __has_unique_object_representations(__VA_ARGS__)
 #endif
 
 #define _LIBCPP_ALWAYS_INLINE __attribute__ ((__always_inline__))
@@ -512,6 +607,10 @@ typedef __char32_t char32_t;
 #define	_LIBCPP_HAS_NO_CXX20_CHRONO_LITERALS
 #endif
 
+#if __has_feature(cxx_reference_qualified_functions)
+#define _LIBCPP_HAS_REFERENCE_QUALIFIED_FUNCTIONS
+#endif
+
 #elif defined(_LIBCPP_COMPILER_GCC)
 
 #define _ALIGNAS(x) __attribute__((__aligned__(x)))
@@ -519,14 +618,48 @@ typedef __char32_t char32_t;
 
 #define _LIBCPP_NORETURN __attribute__((noreturn))
 
-#if _GNUC_VER >= 407
-#define _LIBCPP_UNDERLYING_TYPE(T) __underlying_type(T)
-#define _LIBCPP_IS_LITERAL(T) __is_literal_type(T)
-#define _LIBCPP_HAS_IS_FINAL
+#if _GNUC_VER >= 403
+#define _LIBCPP_IS_UNION(...) __is_union(__VA_ARGS__)
+#define _LIBCPP_IS_CLASS(...) __is_class(__VA_ARGS__)
+#define _LIBCPP_IS_POD(...) __is_pod(__VA_ARGS__)
+#define _LIBCPP_IS_ENUM(...) __is_enum(__VA_ARGS__)
+#define _LIBCPP_IS_EMPTY(...) __is_empty(__VA_ARGS__)
+#define _LIBCPP_IS_POLYMORPHIC(...) __is_polymorphic(__VA_ARGS__)
+#define _LIBCPP_HAS_VIRTUAL_DESTRUCTOR(...) __has_virtual_destructor(__VA_ARGS__)
+#define _LIBCPP_IS_BASE_OF(...) __is_base_of(__VA_ARGS__)
+#define _LIBCPP_HAS_TRIVIAL_CONSTRUCTOR(...) __has_trivial_constructor(__VA_ARGS__)
+#define _LIBCPP_HAS_NOTHROW_CONSTRUCTOR(...) __has_nothrow_constructor(__VA_ARGS__)
+#define _LIBCPP_HAS_NOTHROW_COPY(...) __has_nothrow_copy(__VA_ARGS__)
+#define _LIBCPP_HAS_NOTHROW_ASSIGN(...) __has_nothrow_assign(__VA_ARGS__)
+#define _LIBCPP_HAS_TRIVIAL_DESTRUCTOR(...) __has_trivial_destructor(__VA_ARGS__)
 #endif
 
-#if defined(__GNUC__) && _GNUC_VER >= 403
-#define _LIBCPP_HAS_IS_BASE_OF
+#if _GNUC_VER >= 405
+#define _LIBCPP_IS_TRIVIAL(...) __is_trivial(__VA_ARGS__)
+#endif
+
+#if _GNUC_VER >= 406
+#define _LIBCPP_IS_LITERAL(...) __is_literal_type(__VA_ARGS__)
+#endif
+
+#if _GNUC_VER >= 407
+#define _LIBCPP_UNDERLYING_TYPE(...) __underlying_type(__VA_ARGS__)
+#define _LIBCPP_IS_FINAL(...) __is_final(__VA_ARGS__)
+#define _LIBCPP_IS_STANDARD_LAYOUT(...) __is_standard_layout(__VA_ARGS__)
+#endif
+
+#if _GNUC_VER >= 409
+#define _LIBCPP_HAS_REFERENCE_QUALIFIED_FUNCTIONS
+#endif
+
+#if _GNUC_VER >= 501
+#define _LIBCPP_IS_TRIVIALLY_CONSTRUCTIBLE(...) __is_trivially_constructible(__VA_ARGS__)
+#define _LIBCPP_IS_TRIVIALLY_ASSIGNABLE(...) __is_trivially_assignable(__VA_ARGS__)
+#define _LIBCPP_IS_TRIVIALLY_COPYABLE(...) __is_trivially_copyable(__VA_ARGS__)
+#endif
+
+#if _GNUC_VER >= 801
+#define _LIBCPP_IS_CONSTRUCTIBLE(...) __is_constructible(__VA_ARGS__)
 #endif
 
 #if !__EXCEPTIONS && !defined(_LIBCPP_NO_EXCEPTIONS)
@@ -567,7 +700,6 @@ typedef __char32_t char32_t;
 #define _LIBCPP_HAS_NO_RVALUE_REFERENCES
 #endif
 
-
 #if _GNUC_VER < 404
 #define _LIBCPP_HAS_NO_DECLTYPE
 #define _LIBCPP_HAS_NO_UNICODE_CHARS
@@ -591,7 +723,7 @@ typedef __char32_t char32_t;
 #endif
 
 #if _GNUC_VER >= 700
-#define _LIBCPP_HAS_UNIQUE_OBJECT_REPRESENTATIONS
+#define _LIBCPP_HAS_UNIQUE_OBJECT_REPRESENTATIONS(...) __has_unique_object_representations(__VA_ARGS__)
 #endif
 
 #define _LIBCPP_ALWAYS_INLINE __attribute__ ((__always_inline__))
@@ -606,16 +738,34 @@ typedef __char32_t char32_t;
 #error "MSVC versions prior to Visual Studio 2015 are not supported"
 #endif
 
-#define _LIBCPP_HAS_IS_BASE_OF
-#define _LIBCPP_HAS_NO_CONSTEXPR
-#define _LIBCPP_HAS_NO_CXX14_CONSTEXPR
-#define _LIBCPP_HAS_NO_VARIABLE_TEMPLATES
-#define _LIBCPP_HAS_NO_NOEXCEPT
+#define _LIBCPP_UNDERLYING_TYPE(...) __underlying_type(__VA_ARGS__)
+#define _LIBCPP_IS_CONSTRUCTIBLE(...) __is_constructible(__VA_ARGS__)
+#define _LIBCPP_IS_TRIVIALLY_CONSTRUCTIBLE(...) __is_trivially_constructible(__VA_ARGS__)
+#define _LIBCPP_HAS_TRIVIAL_CONSTRUCTOR(...) __has_trivial_constructor(__VA_ARGS__)
+#define _LIBCPP_HAS_NOTHROW_CONSTRUCTOR(...) __has_nothrow_constructor(__VA_ARGS__)
+#define _LIBCPP_HAS_NOTHROW_COPY(...) __has_nothrow_copy(__VA_ARGS__)
+#define _LIBCPP_HAS_NOTHROW_ASSIGN(...) __has_nothrow_assign(__VA_ARGS__)
+#define _LIBCPP_HAS_TRIVIAL_DESTRUCTOR(...) __has_trivial_destructor(__VA_ARGS__)
+#define _LIBCPP_IS_NOTHROW_DESTRUCTIBLE(...) __is_nothrow_destructible(__VA_ARGS__)
+#define _LIBCPP_IS_TRIVIALLY_ASSIGNABLE(...) __is_trivially_assignable(__VA_ARGS__)
+#define _LIBCPP_IS_TRIVIALLY_COPYABLE(...) __is_trivially_copyable(__VA_ARGS__)
+#define _LIBCPP_IS_TRIVIAL(...) __is_trivial(__VA_ARGS__)
+#define _LIBCPP_IS_LITERAL(X) __is_literal_type(X)
+#define _LIBCPP_IS_UNION(...) __is_union(__VA_ARGS__)
+#define _LIBCPP_IS_CLASS(...) __is_class(__VA_ARGS__)
+#define _LIBCPP_IS_POD(...) __is_pod(__VA_ARGS__)
+#define _LIBCPP_IS_STANDARD_LAYOUT(...) __is_standard_layout(__VA_ARGS__)
+#define _LIBCPP_IS_ENUM(...) __is_enum(__VA_ARGS__)
+#define _LIBCPP_IS_EMPTY(...) __is_empty(__VA_ARGS__)
+#define _LIBCPP_IS_POLYMORPHIC(...) __is_polymorphic(__VA_ARGS__)
+#define _LIBCPP_HAS_VIRTUAL_DESTRUCTOR(...) __has_virtual_destructor(__VA_ARGS__)
+#define _LIBCPP_IS_BASE_OF(...) __is_base_of(__VA_ARGS__)
+#define _LIBCPP_IS_FINAL(...) __is_final(__VA_ARGS__)
+#define _LIBCPP_IS_CONVERTIBLE_TO(...) __is_convertible_to(__VA_ARGS__)
 #define __alignof__ __alignof
 #define _LIBCPP_NORETURN __declspec(noreturn)
 #define _ALIGNAS(x) __declspec(align(x))
 #define _ALIGNAS_TYPE(x) alignas(x)
-#define _LIBCPP_HAS_NO_VARIADICS
 
 #define _LIBCPP_WEAK
 
@@ -624,6 +774,8 @@ typedef __char32_t char32_t;
 #define _LIBCPP_ALWAYS_INLINE __forceinline
 
 #define _LIBCPP_HAS_NO_VECTOR_EXTENSION
+
+#define _LIBCPP_HAS_REFERENCE_QUALIFIED_FUNCTIONS
 
 #elif defined(_LIBCPP_COMPILER_IBM)
 
@@ -636,8 +788,8 @@ typedef __char32_t char32_t;
 #define _LIBCPP_HAS_NO_NOEXCEPT
 #define _LIBCPP_HAS_NO_NULLPTR
 #define _LIBCPP_HAS_NO_UNICODE_CHARS
-#define _LIBCPP_HAS_IS_BASE_OF
-#define _LIBCPP_HAS_IS_FINAL
+#define _LIBCPP_IS_BASE_OF(...) __is_base_of(__VA_ARGS__)
+#define _LIBCPP_IS_FINAL(...) __is_final(__VA_ARGS__)
 #define _LIBCPP_HAS_NO_VARIABLE_TEMPLATES
 
 #if defined(_AIX)
@@ -650,7 +802,36 @@ typedef __char32_t char32_t;
 
 #define _LIBCPP_HAS_NO_VECTOR_EXTENSION
 
-#endif // _LIBCPP_COMPILER_[CLANG|GCC|MSVC|IBM]
+#else defined(_LIBCPP_COMPILER_NVRTC)
+
+#define _LIBCPP_UNDERLYING_TYPE(T) __underlying_type(T)
+#define _LIBCPP_IS_CONSTRUCTIBLE(...) __is_constructible(__VA_ARGS__)
+#define _LIBCPP_IS_TRIVIALLY_CONSTRUCTIBLE(...) __is_trivially_constructible(__VA_ARGS__)
+#define _LIBCPP_HAS_TRIVIAL_CONSTRUCTOR(...) __has_trivial_constructor(__VA_ARGS__)
+#define _LIBCPP_HAS_NOTHROW_CONSTRUCTOR(...) __has_nothrow_constructor(__VA_ARGS__)
+#define _LIBCPP_HAS_NOTHROW_COPY(...) __has_nothrow_copy(__VA_ARGS__)
+#define _LIBCPP_HAS_NOTHROW_ASSIGN(...) __has_nothrow_assign(__VA_ARGS__)
+#define _LIBCPP_HAS_TRIVIAL_DESTRUCTOR(...) __has_trivial_destructor(__VA_ARGS__)
+#define _LIBCPP_IS_NOTHROW_DESTRUCTIBLE(...) __is_nothrow_destructible(__VA_ARGS__)
+#define _LIBCPP_IS_TRIVIALLY_ASSIGNABLE(...) __is_trivially_assignable(__VA_ARGS__)
+#define _LIBCPP_IS_TRIVIALLY_COPYABLE(...) __is_trivially_copyable(__VA_ARGS__)
+#define _LIBCPP_IS_TRIVIAL(...) __is_trivial(__VA_ARGS__)
+#define _LIBCPP_IS_LITERAL(X) __is_literal_type(X)
+#define _LIBCPP_IS_UNION(...) __is_union(__VA_ARGS__)
+#define _LIBCPP_IS_CLASS(...) __is_class(__VA_ARGS__)
+#define _LIBCPP_IS_POD(...) __is_pod(__VA_ARGS__)
+#define _LIBCPP_IS_STANDARD_LAYOUT(...) __is_standard_layout(__VA_ARGS__)
+#define _LIBCPP_IS_ENUM(...) __is_enum(__VA_ARGS__)
+#define _LIBCPP_IS_EMPTY(...) __is_empty(__VA_ARGS__)
+#define _LIBCPP_IS_POLYMORPHIC(...) __is_polymorphic(__VA_ARGS__)
+#define _LIBCPP_HAS_VIRTUAL_DESTRUCTOR(T) __has_virtual_destructor(__VA_ARGS__)
+#define _LIBCPP_IS_BASE_OF(...) __is_base_of(__VA_ARGS__)
+#define _LIBCPP_IS_FINAL(...) __is_final(__VA_ARGS__)
+#define _LIBCPP_IS_CONVERTIBLE_TO(...) __is_convertible_to(__VA_ARGS__)
+
+#define _LIBCPP_HAS_REFERENCE_QUALIFIED_FUNCTIONS
+
+#endif // _LIBCPP_COMPILER_[CLANG|GCC|MSVC|IBM|NVRTC]
 
 #if defined(_LIBCPP_OBJECT_FORMAT_COFF)
 
