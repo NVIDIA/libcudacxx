@@ -56,13 +56,8 @@ RUN cd /sw/gpgpu/libcudacxx/libcxx/build\
 # Configure libcu++ tests.
 RUN cd /sw/gpgpu/libcudacxx/build\
  && cmake ..\
- -DLIBCXX_INCLUDE_TESTS=ON\
- -DLIBCXX_INCLUDE_BENCHMARKS=OFF\
- -DLIBCXX_CXX_ABI=libsupc++\
  -DLIBCXX_TEST_STANDARD_VER=$LIBCXX_TEST_STANDARD_VER\
- -DLIBCXX_ABI_UNSTABLE=ON\
  -DLLVM_CONFIG_PATH=$(which llvm-config-6.0)\
- -DCMAKE_C_COMPILER=/sw/gpgpu/bin/x86_64_Linux_release/nvcc\
  -DCMAKE_CXX_COMPILER=/sw/gpgpu/bin/x86_64_Linux_release/nvcc\
  -DLIBCXX_NVCC_HOST_COMPILER=g++-8\
  2>&1 | tee /sw/gpgpu/libcudacxx/build/libcudacxx_cmake.log
@@ -73,8 +68,18 @@ RUN cd /sw/gpgpu/libcudacxx\
  LIBCUDACXX_SKIP_BASE_TESTS_BUILD=$LIBCUDACXX_SKIP_BASE_TESTS_BUILD\
  /sw/gpgpu/libcudacxx/utils/nvidia/linux/perform_tests.bash\
  --skip-tests-runs\
- --log-libcxx-results /sw/gpgpu/libcudacxx/libcxx/build/libcxx_lit.log\
- --log-libcudacxx-results /sw/gpgpu/libcudacxx/build/libcudacxx_lit.log
+ --libcxx-log-file /sw/gpgpu/libcudacxx/libcxx/build/libcxx_lit.log\
+ --libcudacxx-log-file /sw/gpgpu/libcudacxx/build/libcudacxx_lit.log
+
+# Build tests for sm6x and up if requested.
+RUN cd /sw/gpgpu/libcudacxx\
+ && LIBCUDACXX_COMPUTE_ARCHS="60 61 70 72 75"\
+ LIBCUDACXX_SKIP_BASE_TESTS_BUILD=$LIBCUDACXX_SKIP_BASE_TESTS_BUILD\
+ /sw/gpgpu/libcudacxx/utils/nvidia/linux/perform_tests.bash\
+ --skip-tests-runs\
+ --skip-libcxx-tests\
+ --libcxx-log-file /sw/gpgpu/libcudacxx/libcxx/build/libcxx_lit_sm6x.log\
+ --libcudacxx-log-file /sw/gpgpu/libcudacxx/build/libcudacxx_lit_sm6x.log
 
 WORKDIR /sw/gpgpu/libcudacxx
 
