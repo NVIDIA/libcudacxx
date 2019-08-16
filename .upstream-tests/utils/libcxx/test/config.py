@@ -491,8 +491,7 @@ class Configuration(object):
         if self.get_lit_bool('has_libatomic', False):
             self.config.available_features.add('libatomic')
 
-        if (self.cxx.type if self.cxx.type != 'nvcc' else self.host_cxx.type) \
-            != 'msvc':
+        if 'msvc' not in self.config.available_features:
             macros = self._dump_macros_verbose()
             if '__cpp_if_constexpr' not in macros:
                 self.config.available_features.add('libcpp-no-if-constexpr')
@@ -514,8 +513,7 @@ class Configuration(object):
                 # using this feature. (Also see llvm.org/PR32730)
                 self.config.available_features.add('LIBCXX-WINDOWS-FIXME')
 
-        if (self.cxx.type if self.cxx.type != 'nvcc' else self.host_cxx.type) \
-            != 'msvc':
+        if 'msvc' not in self.config.available_features:
             # Attempt to detect the glibc version by querying for __GLIBC__
             # in 'features.h'.
             macros = self.cxx.dumpMacros(flags=['-include', 'features.h'])
@@ -727,8 +725,8 @@ class Configuration(object):
             header. Return a dictionary containing the macros found in the
             '__config_site' header.
         """
-        if (self.cxx.type if self.cxx.type != 'nvcc' else self.host_cxx.type) \
-            == 'msvc':
+        # MSVC can't dump macros, so we just give up.
+        if 'msvc' in self.config.available_features:
             return {}
         # Parse the macro contents of __config_site by dumping the macros
         # using 'c++ -dM -E' and filtering the predefines.
@@ -783,8 +781,7 @@ class Configuration(object):
                 # a temporary workaround for that.
                 pass
             # TODO: I don't know how to shut off exceptions with MSVC.
-            elif (self.cxx.type if self.cxx.type != 'nvcc' else self.host_cxx.type) \
-                != 'msvc':
+            elif 'msvc' not in self.config.available_features:
                 if self.cxx.type == 'nvcc':
                     self.cxx.compile_flags += ['-Xcompiler']
                 self.cxx.compile_flags += ['-fno-exceptions']
@@ -797,8 +794,7 @@ class Configuration(object):
                 self.cxx.compile_flags += ['-Xcompiler']
             if 'pgi' in self.config.available_features:
                 self.cxx.compile_flags += ['--no_rtti']
-            elif (self.cxx.type if self.cxx.type != 'nvcc' else self.host_cxx.type) \
-                == 'msvc':
+            elif 'msvc' in self.config.available_features:
                 self.cxx.compile_flags += ['/GR-']
             else:
                 self.cxx.compile_flags += ['-fno-rtti']
@@ -859,9 +855,7 @@ class Configuration(object):
             else:
                 self.cxx.link_flags += ['-nodefaultlibs']
             # FIXME: Handle MSVCRT as part of the ABI library handling.
-            if self.is_windows and \
-                (self.cxx.type if self.cxx.type != 'nvcc' else self.host_cxx.type) \
-                != 'msvc':
+            if self.is_windows and 'msvc' not in self.config.available_features:
                 self.cxx.link_flags += ['-nostdlib']
             self.configure_link_flags_cxx_library()
             self.configure_link_flags_abi_library()
