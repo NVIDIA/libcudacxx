@@ -28,7 +28,9 @@ pip install lit
 In a Bash shell:
 
 ```
-cd libcudacxx # This should be //sw/gpgpu/libcudacxx or the repo root.
+export LIBCUDACXX_ROOT=/path/to/libcudacxx # Should be //sw/gpgpu/libcudacxx or the Git repo root.
+
+cd ${LIBCUDACXX_ROOT}
 mkdir -p build
 cd build
 cmake .. \
@@ -44,7 +46,9 @@ cmake .. \
 In a Bash shell:
 
 ```
-cd libcudacxx/build # `libcudacxx` should be //sw/gpgpu/libcudacxx or the Git repo root.
+export LIBCUDACXX_ROOT=/path/to/libcudacxx # Should be //sw/gpgpu/libcudacxx or the Git repo root.
+
+cd ${LIBCUDACXX_ROOT}/build # `libcudacxx` should be //sw/gpgpu/libcudacxx or the Git repo root.
 ../utils/nvidia/linux/perform_tests.bash
 ```
 
@@ -57,7 +61,9 @@ Install [Git for Windows](https://git-scm.com/download/win):
 Checkout [the LLVM Git mono repo](https://github.com/llvm/llvm-project) using a Git Bash shell:
 
 ```
-git clone https://github.com/llvm/llvm-project.git /path/to/llvm
+export LLVM_ROOT=/path/to/llvm
+
+git clone https://github.com/llvm/llvm-project.git ${LLVM_ROOT}
 ```
 
 [Install Python](https://www.python.org/downloads/windows).
@@ -75,7 +81,10 @@ pip install lit
 In a Visual Studio command prompt:
 
 ```
-cd libcudacxx # This should be //sw/gpgpu/libcudacxx or the repo root.
+set LLVM_ROOT=\path\to\llvm
+set LIBCUDACXX_ROOT=\path\to\libcudacxx # Should be //sw/gpgpu/libcudacxx or the Git repo root.
+
+cd %LIBCUDACXX_ROOT% 
 mkdir build
 cd build
 cmake .. ^
@@ -83,7 +92,7 @@ cmake .. ^
   -DCMAKE_CXX_COMPILER_FORCED=ON ^
   -DCMAKE_C_COMPILER_FORCED=ON ^
   -DLLVM_EXTERNAL_LIT=lit ^
-  -DLLVM_PATH="/path/to/llvm" ^
+  -DLLVM_PATH=%LLVM_ROOT%\llvm ^
   -DCMAKE_CXX_COMPILER=nvcc ^
   -DLIBCXX_NVCC_HOST_COMPILER=cl
 ```
@@ -93,8 +102,11 @@ cmake .. ^
 In a Visual Studio command prompt:
 
 ```
-cd libcudacxx\build # `libcudacxx` should be //sw/gpgpu/libcudacxx or the Git repo root.
+set LIBCUDACXX_ROOT=\path\to\libcudacxx # Should be //sw/gpgpu/libcudacxx or the Git repo root.
+set SM_ARCH=70
+
+cd %LIBCUDACXX_ROOT%\build
 set LIBCXX_SITE_CONFIG=libcxx\test\lit.site.cfg
-lit ..\test -vv -a
+lit ..\test -Dcompute_archs=%SM_ARCH% -vv -a 
 ```
 
