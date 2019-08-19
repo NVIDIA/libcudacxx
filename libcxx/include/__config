@@ -664,10 +664,6 @@ typedef __char32_t char32_t;
 #define _LIBCPP_IS_TRIVIALLY_COPYABLE(...) __is_trivially_copyable(__VA_ARGS__)
 #endif
 
-#if _GNUC_VER >= 801
-#define _LIBCPP_IS_CONSTRUCTIBLE(...) __is_constructible(__VA_ARGS__)
-#endif
-
 #if !__EXCEPTIONS && !defined(_LIBCPP_NO_EXCEPTIONS)
 #define _LIBCPP_NO_EXCEPTIONS
 #endif

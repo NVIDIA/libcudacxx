@@ -3104,8 +3104,10 @@ namespace __is_construct
 struct __nat {};
 }
 
+// FIXME: This logic isn't awesome.
 #if !defined(_LIBCPP_CXX03_LANG) && (!defined(_LIBCPP_IS_CONSTRUCTIBLE) || \
-    defined(_LIBCPP_TESTING_FALLBACK_IS_CONSTRUCTIBLE))
+    defined(_LIBCPP_TESTING_FALLBACK_IS_CONSTRUCTIBLE) || \
+    defined(_LIBCPP_USE_IS_CONSTRUCTIBLE_FALLBACK))
 
 template <class _Tp, class... _Args>
 struct __libcpp_is_constructible;
@@ -3512,7 +3514,7 @@ _LIBCPP_INLINE_VAR _LIBCPP_CONSTEXPR bool is_move_constructible_v
 
 #ifndef _LIBCPP_HAS_NO_VARIADICS
 
-#if defined(_LIBCPP_IS_TRIVIALLY_CONSTRUCTIBLE) && !(_LIBCPP_USE_IS_TRIVIALLY_CONSTRUCTIBLE_FALLBACK)
+#if defined(_LIBCPP_IS_TRIVIALLY_CONSTRUCTIBLE) && !defined(_LIBCPP_USE_IS_TRIVIALLY_CONSTRUCTIBLE_FALLBACK)
 
 template <class _Tp, class... _Args>
 struct _LIBCPP_TEMPLATE_VIS is_trivially_constructible
@@ -3530,11 +3532,11 @@ struct _LIBCPP_TEMPLATE_VIS is_trivially_constructible
 
 template <class _Tp>
 struct _LIBCPP_TEMPLATE_VIS is_trivially_constructible<_Tp>
-#if defined(_LIBCPP_HAS_TRIVIAL_CONSTRUCTOR) && !defined(_LIBCPP_HAS_TRIVIAL_CONSTRUCTOR)
+#if defined(_LIBCPP_HAS_TRIVIAL_CONSTRUCTOR) && !defined(_LIBCPP_USE_HAS_TRIVIAL_CONSTRUCTOR_FALLBACK)
     : integral_constant<bool, _LIBCPP_HAS_TRIVIAL_CONSTRUCTOR(_Tp)>
 #else
     : integral_constant<bool, is_scalar<_Tp>::value>
-#endif // defined(_LIBCPP_HAS_TRIVIAL_CONSTRUCTOR) && !defined(_LIBCPP_HAS_TRIVIAL_CONSTRUCTOR)
+#endif // defined(_LIBCPP_HAS_TRIVIAL_CONSTRUCTOR) && !defined(_LIBCPP_USE_HAS_TRIVIAL_CONSTRUCTOR_FALLBACK)
 {
 };
 
@@ -3560,7 +3562,7 @@ struct _LIBCPP_TEMPLATE_VIS is_trivially_constructible<_Tp, _Tp&>
 {
 };
 
-#endif // defined(_LIBCPP_IS_TRIVIALLY_CONSTRUCTIBLE) && !(_LIBCPP_USE_IS_TRIVIALLY_CONSTRUCTIBLE_FALLBACK)
+#endif // defined(_LIBCPP_IS_TRIVIALLY_CONSTRUCTIBLE) && !defined(_LIBCPP_USE_IS_TRIVIALLY_CONSTRUCTIBLE_FALLBACK)
 
 #else  // _LIBCPP_HAS_NO_VARIADICS
 
@@ -3571,7 +3573,7 @@ struct _LIBCPP_TEMPLATE_VIS is_trivially_constructible
 {
 };
 
-#if defined(_LIBCPP_IS_TRIVIALLY_CONSTRUCTIBLE) && !(_LIBCPP_USE_IS_TRIVIALLY_CONSTRUCTIBLE_FALLBACK)
+#if defined(_LIBCPP_IS_TRIVIALLY_CONSTRUCTIBLE) && !defined(_LIBCPP_USE_IS_TRIVIALLY_CONSTRUCTIBLE_FALLBACK)
 
 template <class _Tp>
 struct _LIBCPP_TEMPLATE_VIS is_trivially_constructible<_Tp, __is_construct::__nat,
@@ -3631,7 +3633,7 @@ struct _LIBCPP_TEMPLATE_VIS is_trivially_constructible<_Tp, _Tp&,
 {
 };
 
-#endif // defined(_LIBCPP_IS_TRIVIALLY_CONSTRUCTIBLE) && !(_LIBCPP_USE_IS_TRIVIALLY_CONSTRUCTIBLE_FALLBACK)
+#endif // defined(_LIBCPP_IS_TRIVIALLY_CONSTRUCTIBLE) && !defined(_LIBCPP_USE_IS_TRIVIALLY_CONSTRUCTIBLE_FALLBACK)
 
 #endif  // _LIBCPP_HAS_NO_VARIADICS
 
