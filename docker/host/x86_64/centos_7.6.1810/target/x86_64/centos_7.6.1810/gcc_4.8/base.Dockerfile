@@ -76,18 +76,18 @@ RUN cd /sw/gpgpu/libcudacxx\
  /sw/gpgpu/libcudacxx/utils/nvidia/linux/perform_tests.bash\
  --skip-tests-runs\
  --skip-libcxx-tests\
- --libcxx-log-file /sw/gpgpu/libcudacxx/libcxx/build/libcxx_lit.log\
- --libcudacxx-log-file /sw/gpgpu/libcudacxx/build/libcudacxx_lit.log
+ --libcxx-log /sw/gpgpu/libcudacxx/libcxx/build/libcxx_lit.log\
+ --libcudacxx-log /sw/gpgpu/libcudacxx/build/libcudacxx_lit.log
 
 # Build tests for sm6x and up if requested.
 RUN cd /sw/gpgpu/libcudacxx\
- && LIBCUDACXX_COMPUTE_ARCHS="60 61 70 72 75"\
+ && LIBCUDACXX_COMPUTE_ARCHS="60 61 62 70 72 75"\
  LIBCUDACXX_SKIP_BASE_TESTS_BUILD=$LIBCUDACXX_SKIP_BASE_TESTS_BUILD\
  /sw/gpgpu/libcudacxx/utils/nvidia/linux/perform_tests.bash\
  --skip-tests-runs\
  --skip-libcxx-tests\
- --libcxx-log-file /sw/gpgpu/libcudacxx/libcxx/build/libcxx_lit_sm6x.log\
- --libcudacxx-log-file /sw/gpgpu/libcudacxx/build/libcudacxx_lit_sm6x.log
+ --libcxx-log /sw/gpgpu/libcudacxx/libcxx/build/libcxx_lit_sm6x.log\
+ --libcudacxx-log /sw/gpgpu/libcudacxx/build/libcudacxx_lit_sm6x.log
 
 WORKDIR /sw/gpgpu/libcudacxx
 
