@@ -87,24 +87,24 @@ do
   --help) usage ;;
   --debug) DEBUG=1 ;;
   --dry-run) LIT_PREFIX="echo" ;;
-  --libcxx-lit-site-config)
-    shift # The next argument is the directory.
-    LIBCXX_LIT_SITE_CONFIG=${1}
-    ;;
-  --libcudacxx-lit-site-config)
-    shift # The next argument is the directory.
-    LIBCUDACXX_LIT_SITE_CONFIG=${1}
-    ;;
   --skip-base-tests-build)    LIBCUDACXX_SKIP_BASE_TESTS_BUILD=1 ;;
   --skip-tests-runs)          LIBCUDACXX_SKIP_TESTS_RUN=1 ;;
   --skip-libcxx-tests)        LIBCUDACXX_SKIP_LIBCXX_TESTS=1 ;;
   --skip-libcudacxx-tests)    LIBCUDACXX_SKIP_LIBCUDACXX_TESTS=1 ;;
   --skip-arch-detection)      LIBCUDACXX_SKIP_ARCH_DETECTION=1 ;;
-  --libcxx-log-file)
+  --libcxx-lit-site-config)
+    shift # The next argument is the file.
+    LIBCXX_LIT_SITE_CONFIG=${1}
+    ;;
+  --libcudacxx-lit-site-config)
+    shift # The next argument is the file.
+    LIBCUDACXX_LIT_SITE_CONFIG=${1}
+    ;;
+  --libcxx-log)
     shift # The next argument is the file.
     LIBCXX_LOG=${1}
     ;;
-  --libcudacxx-log-file)
+  --libcudacxx-log)
     shift # The next argument is the file.
     LIBCUDACXX_LOG=${1}
     ;;
