@@ -1,12 +1,13 @@
 #! /bin/bash
 
 function usage {
-  echo "Usage: $0 [flags...] <tests...>|all"
+  echo "Usage: ${0} [flags...] <tests...>|all"
   echo 
   echo "Run <tests> from the libc++ and libcu++ test suites."
   echo "If no tests or \"all\" is specified, all tests are run."
   echo
   echo "-h, -help, --help                : Print this message."
+  echo "--debug                          : Print debugging information."
   echo "--dry-run                        : Show what commands would be invoked;"
   echo "                                 : don't actually execute anything."
   echo "--skip-base-tests-build          : Do not build (or run) any tests."
@@ -25,9 +26,9 @@ function usage {
   echo "                                    : (default: \${LIBCUDACXX_PATH}/build/libcxx/test/lit.site.cfg)."
   echo "--libcudacxx-lit-site-config <file> : Use <file> as the libcu++ lit site config"
   echo "                                    : (default: \${LIBCUDACXX_PATH}/libcxx/build/test/lit.site.cfg)."
-  echo "--libcxx-log-file <file>            : Log libc++ test results to <file> in"
+  echo "--libcxx-log <file>                 : Log libc++ test results to <file> in"
   echo "                                    : addition to stdout (default: libcxx_lit.log)."
-  echo "--libcudacxx-log-file <file>        : Log libcu++ test results to <file> in"
+  echo "--libcudacxx-log <file>             : Log libcu++ test results to <file> in"
   echo "                                    : addition to stdout (default: libcudacxx_lit.log)."
   echo
   echo "\${LIBCUDACXX_SKIP_BASE_TESTS_BUILD}   : If set and non-zero, do not build"
@@ -53,11 +54,19 @@ function usage {
   exit 1
 }
 
+function section_separator {
+  for i in {0..79}
+  do
+    echo -n "#"
+  done
+  echo
+}
+
 SCRIPT_PATH=$(cd $(dirname ${0}); pwd -P)
 
 LIBCUDACXX_PATH=$(realpath ${SCRIPT_PATH}/../../../../)
 
-###############################################################################
+################################################################################
 # Command Line Processing.
 
 LIT_PREFIX="time"
@@ -65,8 +74,8 @@ LIT_PREFIX="time"
 LIBCXX_LIT_SITE_CONFIG=${LIBCUDACXX_PATH}/libcxx/build/test/lit.site.cfg
 LIBCUDACXX_LIT_SITE_CONFIG=${LIBCUDACXX_PATH}/build/libcxx/test/lit.site.cfg
 
-LIBCXX_LOG_FILE=libcxx_lit.log
-LIBCUDACXX_LOG_FILE=libcudacxx_lit.log
+LIBCXX_LOG=libcxx_lit.log
+LIBCUDACXX_LOG=libcudacxx_lit.log
 
 RAW_TEST_TARGETS=""
 
@@ -76,6 +85,7 @@ do
   -h) usage ;;
   -help) usage ;;
   --help) usage ;;
+  --debug) DEBUG=1 ;;
   --dry-run) LIT_PREFIX="echo" ;;
   --libcxx-lit-site-config)
     shift # The next argument is the directory.
@@ -92,11 +102,11 @@ do
   --skip-arch-detection)      LIBCUDACXX_SKIP_ARCH_DETECTION=1 ;;
   --libcxx-log-file)
     shift # The next argument is the file.
-    LIBCXX_LOG_FILE=${1}
+    LIBCXX_LOG=${1}
     ;;
   --libcudacxx-log-file)
     shift # The next argument is the file.
-    LIBCUDACXX_LOG_FILE=${1}
+    LIBCUDACXX_LOG=${1}
     ;;
   *)
     RAW_TEST_TARGETS="${RAW_TEST_TARGETS:+${RAW_TEST_TARGETS} }${1}"
@@ -105,18 +115,18 @@ do
   shift
 done
 
-if [ -e "${LIBCXX_LOG_FILE}" ]
+if [ -e "${LIBCXX_LOG}" ]
 then
-  rm ${LIBCXX_LOG_FILE}
+  rm ${LIBCXX_LOG}
 fi
 
-if [ -e "${LIBCUDACXX_LOG_FILE}" ]
+if [ -e "${LIBCUDACXX_LOG}" ]
 then
-  rm ${LIBCUDACXX_LOG_FILE}
+  rm ${LIBCUDACXX_LOG}
 fi
 
-LIBCXX_TEST_TARGETS="libcxx/test"
-LIBCUDACXX_TEST_TARGETS="test"
+LIBCXX_TEST_TARGETS="${LIBCUDACXX_PATH}/libcxx/test"
+LIBCUDACXX_TEST_TARGETS="${LIBCUDACXX_PATH}/test"
 
 if [ "${RAW_TEST_TARGETS:-all}" != "all" ]
 then
@@ -129,25 +139,27 @@ then
   done
 fi
 
-###############################################################################
+################################################################################
 # SM Architecture Detection
   
 if [ "${LIBCUDACXX_SKIP_ARCH_DETECTION:-0}" == "0" ] && \
    [ "${LIBCUDACXX_SKIP_TESTS_RUN:-0}" == "0" ] && \
    [ ! -n "${LIBCUDACXX_COMPUTE_ARCHS}" ] 
 then
+  section_separator
+
   # Use the libcu++ log file as scratch space for the detection test.
   LIBCXX_SITE_CONFIG=${LIBCUDACXX_LIT_SITE_CONFIG} \
   bash -c "lit -vv -a ${LIBCUDACXX_PATH}/test/nothing_to_do.pass.cpp" \
-  2>&1 | tee ${LIBCUDACXX_LOG_FILE}
+  2>&1 | tee ${LIBCUDACXX_LOG}
   if [ "${PIPESTATUS[0]}" != "0" ]; then exit 1; fi
 
-  DEVICE_0_COMPUTE_ARCH=$(egrep '^Device 0:' ${LIBCUDACXX_LOG_FILE} | sed 's/^Device 0: ".*", Selected, SM\([0-9]\+\), [0-9]\+ \[bytes\]/\1/')
+  DEVICE_0_COMPUTE_ARCH=$(egrep '^Device 0:' ${LIBCUDACXX_LOG} | sed 's/^Device 0: ".*", Selected, SM\([0-9]\+\), [0-9]\+ \[bytes\]/\1/')
 
   # Clear out the libcu++ log file now that we are done with it.
-  if [ -e "${LIBCUDACXX_LOG_FILE}" ]
+  if [ -e "${LIBCUDACXX_LOG}" ]
   then
-    rm ${LIBCUDACXX_LOG_FILE}
+    rm ${LIBCUDACXX_LOG}
   fi
 
   echo "# DETECTION SM Architecture : Device 0, ${DEVICE_0_COMPUTE_ARCH}"
@@ -158,7 +170,7 @@ then
   fi
 fi
 
-###############################################################################
+################################################################################
 # Environment Variable Processing
 
 if [ "${LIBCUDACXX_SKIP_BASE_TESTS_BUILD:-0}" != "0" ]
@@ -178,49 +190,92 @@ then
   LIT_COMPUTE_ARCHS_SUFFIX="\""
 fi
 
-###############################################################################
+################################################################################
+# Dump Debugging Information
+
+if [ "${DEBUG:-0}" != "0" ]
+then
+  VARIABLES="
+    PATH
+    PWD
+    SCRIPT_PATH
+    LIBCUDACXX_PATH
+    LIBCUDACXX_SKIP_BASE_TESTS_BUILD
+    LIBCUDACXX_SKIP_TESTS_RUN
+    LIBCUDACXX_SKIP_LIBCXX_TESTS
+    LIBCUDACXX_SKIP_LIBCUDACXX_TESTS
+    LIBCUDACXX_SKIP_ARCH_DETECTION
+    LIBCXX_LIT_SITE_CONFIG
+    LIBCUDACXX_LIT_SITE_CONFIG
+    LIBCXX_LOG
+    LIBCUDACXX_LOG
+    LIBCXX_TEST_TARGETS
+    LIBCUDACXX_TEST_TARGETS
+    LIT_COMPUTE_ARCHS_FLAG
+    LIT_COMPUTE_ARCHS_SUFFIX
+    LIT_FLAGS
+    LIT_PREFIX
+    RAW_TEST_TARGETS
+    LIBCUDACXX_COMPUTE_ARCHS
+    DEVICE_0_COMPUTE_ARCH
+  "
+
+  section_separator
+
+  for VARIABLE in ${VARIABLES}
+  do
+     printf "# %s%q\n" "${VARIABLE}=" "${!VARIABLE}"
+  done
+fi
+
+################################################################################
+# Build/Run libc++ & libcu++ Tests
 
 if [ "${LIBCUDACXX_SKIP_LIBCXX_TESTS:-0}" == "0" ]
 then
+  section_separator
+
   TIMEFORMAT="# WALLTIME libc++ : %R [sec]" \
   LIBCXX_SITE_CONFIG=${LIBCXX_LIT_SITE_CONFIG} \
   bash -c "${LIT_PREFIX} lit ${LIT_FLAGS} ${LIBCXX_TEST_TARGETS}" \
-  2>&1 | tee ${LIBCXX_LOG_FILE}
+  2>&1 | tee ${LIBCXX_LOG}
   if [ "${PIPESTATUS[0]}" != "0" ]; then exit 1; fi
 fi
 
 if [ "${LIBCUDACXX_SKIP_LIBCUDACXX_TESTS:-0}" == "0" ]
 then
+  section_separator
+
   TIMEFORMAT="# WALLTIME libcu++: %R [sec]" \
   LIBCXX_SITE_CONFIG=${LIBCUDACXX_LIT_SITE_CONFIG} \
   bash -c "${LIT_PREFIX} lit ${LIT_FLAGS} ${LIT_COMPUTE_ARCHS_FLAG}${LIBCUDACXX_COMPUTE_ARCHS}${LIT_COMPUTE_ARCHS_SUFFIX} ${LIBCUDACXX_TEST_TARGETS}" \
-  2>&1 | tee ${LIBCUDACXX_LOG_FILE}
+  2>&1 | tee ${LIBCUDACXX_LOG}
   if [ "${PIPESTATUS[0]}" != "0" ]; then exit 1; fi
 fi
 
-###############################################################################
+################################################################################
 
 # If any of the lines searched for below aren't present in the log files, the
 # grep commands will return nothing, and the variables will be empty. Bash
 # treats empty variables as zero for the purposes of arithmetic, which is what
 # we want anyways, so we don't need to do anything else.
 
-if [ -e "${LIBCXX_LOG_FILE}" ]
+if [ -e "${LIBCXX_LOG}" ]
 then
-  LIBCXX_EXPECTED_PASSES=$(    egrep 'Expected Passes'     ${LIBCXX_LOG_FILE} | sed 's/^  Expected Passes    : \([0-9]\+\)/\1/')
-  LIBCXX_EXPECTED_FAILURES=$(  egrep 'Expected Failures'   ${LIBCXX_LOG_FILE} | sed 's/^  Expected Failures  : \([0-9]\+\)/\1/')
-  LIBCXX_UNSUPPORTED_TESTS=$(  egrep 'Unsupported Tests'   ${LIBCXX_LOG_FILE} | sed 's/^  Unsupported Tests  : \([0-9]\+\)/\1/')
-  LIBCXX_UNEXPECTED_PASSES=$(  egrep 'Unexpected Passes'   ${LIBCXX_LOG_FILE} | sed 's/^  Unexpected Passes  : \([0-9]\+\)/\1/')
-  LIBCXX_UNEXPECTED_FAILURES=$(egrep 'Unexpected Failures' ${LIBCXX_LOG_FILE} | sed 's/^  Unexpected Failures: \([0-9]\+\)/\1/')
+  LIBCXX_EXPECTED_PASSES=$(    egrep 'Expected Passes'     ${LIBCXX_LOG} | sed 's/^  Expected Passes    : \([0-9]\+\)/\1/')
+  LIBCXX_EXPECTED_FAILURES=$(  egrep 'Expected Failures'   ${LIBCXX_LOG} | sed 's/^  Expected Failures  : \([0-9]\+\)/\1/')
+  LIBCXX_UNSUPPORTED_TESTS=$(  egrep 'Unsupported Tests'   ${LIBCXX_LOG} | sed 's/^  Unsupported Tests  : \([0-9]\+\)/\1/')
+  LIBCXX_UNEXPECTED_PASSES=$(  egrep 'Unexpected Passes'   ${LIBCXX_LOG} | sed 's/^  Unexpected Passes  : \([0-9]\+\)/\1/')
+  LIBCXX_UNEXPECTED_FAILURES=$(egrep 'Unexpected Failures' ${LIBCXX_LOG} | sed 's/^  Unexpected Failures: \([0-9]\+\)/\1/')
 fi
 
-if [ -e "${LIBCUDACXX_LOG_FILE}" ]
+if [ -e "${LIBCUDACXX_LOG}" ]
 then
-  LIBCUDACXX_EXPECTED_PASSES=$(    egrep 'Expected Passes'     ${LIBCUDACXX_LOG_FILE} | sed 's/^  Expected Passes    : \([0-9]\+\)/\1/')
-  LIBCUDACXX_EXPECTED_FAILURES=$(  egrep 'Expected Failures'   ${LIBCUDACXX_LOG_FILE} | sed 's/^  Expected Failures  : \([0-9]\+\)/\1/')
-  LIBCUDACXX_UNSUPPORTED_TESTS=$(  egrep 'Unsupported Tests'   ${LIBCUDACXX_LOG_FILE} | sed 's/^  Unsupported Tests  : \([0-9]\+\)/\1/')
-  LIBCUDACXX_UNEXPECTED_PASSES=$(  egrep 'Unexpected Passes'   ${LIBCUDACXX_LOG_FILE} | sed 's/^  Unexpected Passes  : \([0-9]\+\)/\1/')
-  LIBCUDACXX_UNEXPECTED_FAILURES=$(egrep 'Unexpected Failures' ${LIBCUDACXX_LOG_FILE} | sed 's/^  Unexpected Failures: \([0-9]\+\)/\1/')
+  LIBCUDACXX_EXPECTED_PASSES=$(    egrep 'Expected Passes'     ${LIBCUDACXX_LOG} | sed 's/^  Expected Passes    : \([0-9]\+\)/\1/')
+  LIBCUDACXX_EXPECTED_FAILURES=$(  egrep 'Expected Failures'   ${LIBCUDACXX_LOG} | sed 's/^  Expected Failures  : \([0-9]\+\)/\1/')
+  LIBCUDACXX_UNSUPPORTED_TESTS=$(  egrep 'Unsupported Tests'   ${LIBCUDACXX_LOG} | sed 's/^  Unsupported Tests  : \([0-9]\+\)/\1/')
+  LIBCUDACXX_UNEXPECTED_PASSES=$(  egrep 'Unexpected Passes'   ${LIBCUDACXX_LOG} | sed 's/^  Unexpected Passes  : \([0-9]\+\)/\1/')
+  LIBCUDACXX_UNEXPECTED_FAILURES=$(egrep 'Unexpected Failures' ${LIBCUDACXX_LOG} | sed 's/^  Unexpected Failures: \([0-9]\+\)/\1/')
 fi
 
 LIBCXX_PASSES=$((  LIBCXX_EXPECTED_PASSES   + LIBCXX_EXPECTED_FAILURES))
@@ -234,6 +289,8 @@ LIBCUDACXX_TOTAL=$((   LIBCUDACXX_PASSES            + LIBCUDACXX_FAILURES))
 OVERALL_PASSES=$((  LIBCXX_PASSES   + LIBCUDACXX_PASSES))
 OVERALL_FAILURES=$((LIBCXX_FAILURES + LIBCUDACXX_FAILURES))
 OVERALL_TOTAL=$((   LIBCXX_TOTAL    + LIBCUDACXX_TOTAL))
+
+section_separator
 
 if [ "${OVERALL_TOTAL:-0}" != "0" ]
 then
