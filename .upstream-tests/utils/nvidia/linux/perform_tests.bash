@@ -23,9 +23,9 @@ function usage {
   echo "                                 : Overrides \${LIBCUDACXX_SKIP_ARCH_DETECTION}."
   echo
   echo "--libcxx-lit-site-config <file>     : Use <file> as the libc++ lit site config"
-  echo "                                    : (default: \${LIBCUDACXX_PATH}/build/libcxx/test/lit.site.cfg)."
-  echo "--libcudacxx-lit-site-config <file> : Use <file> as the libcu++ lit site config"
   echo "                                    : (default: \${LIBCUDACXX_PATH}/libcxx/build/test/lit.site.cfg)."
+  echo "--libcudacxx-lit-site-config <file> : Use <file> as the libcu++ lit site config"
+  echo "                                    : (default: \${LIBCUDACXX_PATH}/build/libcxx/test/lit.site.cfg)."
   echo "--libcxx-log <file>                 : Log libc++ test results to <file> in"
   echo "                                    : addition to stdout (default: libcxx_lit.log)."
   echo "--libcudacxx-log <file>             : Log libcu++ test results to <file> in"
