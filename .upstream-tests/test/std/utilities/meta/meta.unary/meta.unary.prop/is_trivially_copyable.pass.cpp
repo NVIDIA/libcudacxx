@@ -10,6 +10,11 @@
 
 // is_trivially_copyable
 
+// GCC 4.9 and older have no compiler intrinsic support for
+// is_trivially_copyable; its corresponding standard library provides no
+// implementation.
+// XFAIL: gcc-4.8, gcc-4.9
+
 // If we're just building the test and not executing it, it should pass.
 // UNSUPPORTED: no_execute
 
