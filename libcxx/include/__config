@@ -806,6 +806,9 @@ typedef __char32_t char32_t;
 
 #else defined(_LIBCPP_COMPILER_NVRTC)
 
+#define _ALIGNAS_TYPE(x) alignas(x)
+#define _ALIGNAS(x) alignas(x)
+
 #define _LIBCPP_UNDERLYING_TYPE(T) __underlying_type(T)
 #define _LIBCPP_IS_CONSTRUCTIBLE(...) __is_constructible(__VA_ARGS__)
 #define _LIBCPP_IS_TRIVIALLY_CONSTRUCTIBLE(...) __is_trivially_constructible(__VA_ARGS__)
