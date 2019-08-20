@@ -141,8 +141,10 @@ struct __cxx_atomic_base_impl_default {
 
 template<class _Tp, int _Sco>
 __host__ __device__ inline void __cxx_atomic_init(__cxx_atomic_base_impl_default<_Tp, _Sco> volatile* __a, _Tp __val) {
-#ifdef __CUDA_ARCH__
+#if   defined(__CUDA_ARCH__)
     __cxx_atomic_assign_volatile(__a->__a_value, __val);
+#elif defined(_LIBCPP_CUDA_HAS_NO_HOST_STD_ATOMIC_INIT)
+    __a->__a_value.store(__val, ::std::memory_order_relaxed);
 #else
     ::std::atomic_init(&__a->__a_value, __val);
 #endif

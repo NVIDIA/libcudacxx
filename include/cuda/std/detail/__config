@@ -46,16 +46,13 @@
 #define _LIBCPP_HAS_EXTERNAL_ATOMIC_IMP
 
 #if defined(__PGIC__) && defined(__linux__)
-#  define __ELF__
+    #define __ELF__
 #endif
 
 #include "libcxx/__config"
 
-#ifdef __CUDACC_RTC__
-#  undef _ALIGNAS_TYPE
-#  undef _ALIGNAS
-#  define _ALIGNAS_TYPE(x) alignas(x)
-#  define _ALIGNAS(x) alignas(x)
+#if _GNUC_VER <= 409
+    #define _LIBCPP_CUDA_HAS_NO_HOST_STD_ATOMIC_INIT
 #endif
 
 // force this outcome
