@@ -230,7 +230,7 @@ then
   LIT_FLAGS="${LIT_FLAGS:+${LIT_FLAGS} }-Dexecutor=\"NoopExecutor()\""
 fi
   
-LIT_FILTER_PATTERN="/^-- Testing: /,/^[*]\{20\}$/d"
+LIT_FILTER_PATTERN="/^-- Testing: /,/^Testing Time: /d"
 if [ "${VERBOSE:-0}" != "0" ]
 then
   LIT_FILTER_PATTERN=""
