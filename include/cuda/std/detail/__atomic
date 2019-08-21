@@ -99,7 +99,7 @@ _LIBCPP_END_NAMESPACE_CUDA
 _LIBCPP_BEGIN_NAMESPACE_STD
 
 // Forward-declare the function templates that are defined libcxx later.
-template <typename _Tp, typename _Tv>
+template <typename _Tp, typename _Tv> _LIBCPP_INLINE_VISIBILITY
 typename enable_if<is_assignable<_Tp&, _Tv>::value>::type
 __cxx_atomic_assign_volatile(_Tp& __a_value, _Tv const& __val);
 
@@ -125,69 +125,126 @@ __host__ __device__ inline void __cxx_atomic_signal_fence(int __order) {
 #endif
 }
 
+template <typename _Tp, typename = void>
+struct __cxx_atomic_alignment_wrapper_impl;
+
+template <typename _Tp, typename>
+struct __cxx_atomic_alignment_wrapper_impl {
+  struct type {
+    using __wrapped_type = _Tp;
+    __host__ __device__ constexpr type() noexcept : __a_held() {
+    }
+    __host__ __device__ constexpr type(_Tp __held) noexcept : __a_held(__held) {
+    }
+    _ALIGNAS(sizeof(_Tp)) _Tp __a_held;
+  };
+};
+
+template <typename _Tp>
+struct __cxx_atomic_alignment_wrapper_impl<_Tp, typename enable_if<_LIBCPP_ALIGNOF(_Tp) == sizeof(_Tp)>::type> {
+  using type = _Tp;
+};
+
+template <typename _Tp>
+using __cxx_atomic_alignment_wrapper_t = typename __cxx_atomic_alignment_wrapper_impl<_Tp>::type;
+
+template <typename _Tp>
+__host__ __device__ __cxx_atomic_alignment_wrapper_t<_Tp> __cxx_atomic_alignment_wrap(_Tp __value, true_type) {
+    return __value;
+}
+template <typename _Tp>
+__host__ __device__ __cxx_atomic_alignment_wrapper_t<_Tp> __cxx_atomic_alignment_wrap(_Tp __value, false_type) {
+    return __cxx_atomic_alignment_wrapper_t<_Tp>(__value);
+}
+template <typename _Tp>
+__host__ __device__ __cxx_atomic_alignment_wrapper_t<_Tp> __cxx_atomic_alignment_wrap(_Tp __value) {
+    return __cxx_atomic_alignment_wrap(__value, integral_constant<bool, _LIBCPP_ALIGNOF(_Tp) == sizeof(_Tp)>{});
+}
+
+template <typename _Tp>
+__host__ __device__ _Tp __cxx_atomic_alignment_unwrap(_Tp __value, true_type) {
+    return __value;
+}
+template <typename _Tp>
+__host__ __device__ typename _Tp::__wrapped_type __cxx_atomic_alignment_unwrap(_Tp __value, false_type) {
+    return __value.__a_held;
+}
+template <typename _Tp>
+__host__ __device__ auto __cxx_atomic_alignment_unwrap(_Tp __value)
+    -> decltype(__cxx_atomic_alignment_unwrap(__value, integral_constant<bool, _LIBCPP_ALIGNOF(_Tp) == sizeof(_Tp)>{}))
+{
+    return __cxx_atomic_alignment_unwrap(__value, integral_constant<bool, _LIBCPP_ALIGNOF(_Tp) == sizeof(_Tp)>{});
+}
+
 template <typename _Tp, int _Sco>
 struct __cxx_atomic_base_impl_default {
-
-  __host__ __device__ __cxx_atomic_base_impl_default() : __a_value() {
+  __host__ __device__ constexpr __cxx_atomic_base_impl_default() noexcept : __a_value() {
   }
-  __host__ __device__ constexpr explicit __cxx_atomic_base_impl_default(_Tp __value) : __a_value(__value) {
+  __host__ __device__ constexpr explicit __cxx_atomic_base_impl_default(_Tp __value) noexcept : __a_value(__value) {
   }
 #ifdef __CUDA_ARCH__
-  _ALIGNAS(sizeof(_Tp)) _Tp __a_value;
+  __cxx_atomic_alignment_wrapper_t<_Tp> __a_value;
 #else
-  ::std::atomic<_Tp> __a_value;
+  ::std::atomic<__cxx_atomic_alignment_wrapper_t<_Tp>> __a_value;
 #endif
 };
 
 template<class _Tp, int _Sco>
 __host__ __device__ inline void __cxx_atomic_init(__cxx_atomic_base_impl_default<_Tp, _Sco> volatile* __a, _Tp __val) {
 #if   defined(__CUDA_ARCH__)
-    __cxx_atomic_assign_volatile(__a->__a_value, __val);
+    auto __tmp = __cxx_atomic_alignment_wrap(__val);
+    __cxx_atomic_assign_volatile(__a->__a_value, __tmp);
 #elif defined(_LIBCPP_CUDA_HAS_NO_HOST_STD_ATOMIC_INIT)
     __a->__a_value.store(__val, ::std::memory_order_relaxed);
 #else
-    ::std::atomic_init(&__a->__a_value, __val);
+    ::std::atomic_init(&__a->__a_value, __cxx_atomic_alignment_wrap(__val));
 #endif
 }
 template<class _Tp, int _Sco>
 __host__ __device__ inline void __cxx_atomic_store(__cxx_atomic_base_impl_default<_Tp, _Sco> volatile* __a, _Tp __val, int __order) {
 #ifdef __CUDA_ARCH__
-    detail::__atomic_store_n_cuda(&__a->__a_value, __val, __order, detail::__scope_tag<_Sco>());
+    detail::__atomic_store_n_cuda(&__a->__a_value, __cxx_atomic_alignment_wrap(__val), __order, detail::__scope_tag<_Sco>());
 #else
-    ::std::atomic_store_explicit(&__a->__a_value, __val, (::std::memory_order)__order);
+    ::std::atomic_store_explicit(&__a->__a_value, __cxx_atomic_alignment_wrap(__val), (::std::memory_order)__order);
 #endif
 }
 template<class _Tp, int _Sco>
 __host__ __device__ inline _Tp __cxx_atomic_load(__cxx_atomic_base_impl_default<_Tp, _Sco> volatile* __a, int __order) {
 #ifdef __CUDA_ARCH__
-    return detail::__atomic_load_n_cuda(&__a->__a_value, __order, detail::__scope_tag<_Sco>());
+    return __cxx_atomic_alignment_unwrap(detail::__atomic_load_n_cuda(&__a->__a_value, __order, detail::__scope_tag<_Sco>()));
 #else
-    return ::std::atomic_load_explicit(&__a->__a_value, (::std::memory_order)__order);
+    return __cxx_atomic_alignment_unwrap(::std::atomic_load_explicit(&__a->__a_value, (::std::memory_order)__order));
 #endif
 }
 template<class _Tp, int _Sco>
-__host__ __device__ inline _Tp __cxx_atomic_exchange(__cxx_atomic_base_impl_default<_Tp, _Sco> volatile* __a, _Tp __value, int __order) {
+__host__ __device__ inline _Tp __cxx_atomic_exchange(__cxx_atomic_base_impl_default<_Tp, _Sco> volatile* __a, _Tp __val, int __order) {
 #ifdef __CUDA_ARCH__
-    return detail::__atomic_exchange_n_cuda(&__a->__a_value, __value, __order, detail::__scope_tag<_Sco>());
+    return __cxx_atomic_alignment_unwrap(detail::__atomic_exchange_n_cuda(&__a->__a_value, __cxx_atomic_alignment_wrap(__val), __order, detail::__scope_tag<_Sco>()));
 #else
-    return ::std::atomic_exchange_explicit(&__a->__a_value, __value, (::std::memory_order)__order);
+    return __cxx_atomic_alignment_unwrap(::std::atomic_exchange_explicit(&__a->__a_value, __cxx_atomic_alignment_wrap(__val), (::std::memory_order)__order));
 #endif
 }
 template<class _Tp, int _Sco>
-__host__ __device__ inline bool __cxx_atomic_compare_exchange_strong(__cxx_atomic_base_impl_default<_Tp, _Sco> volatile* __a, _Tp* __expected, _Tp __value, int __success, int __failure) {
+__host__ __device__ inline bool __cxx_atomic_compare_exchange_strong(__cxx_atomic_base_impl_default<_Tp, _Sco> volatile* __a, _Tp* __expected, _Tp __val, int __success, int __failure) {
+    auto __tmp = __cxx_atomic_alignment_wrap(*__expected);
 #ifdef __CUDA_ARCH__
-    return detail::__atomic_compare_exchange_n_cuda(&__a->__a_value, __expected, __value, false, __success, __failure, detail::__scope_tag<_Sco>());
+    bool __result = detail::__atomic_compare_exchange_n_cuda(&__a->__a_value, &__tmp, __cxx_atomic_alignment_wrap(__val), false, __success, __failure, detail::__scope_tag<_Sco>());
 #else
-    return ::std::atomic_compare_exchange_strong_explicit(&__a->__a_value, __expected, __value, (::std::memory_order)__success, (::std::memory_order)__failure);
+    bool __result = ::std::atomic_compare_exchange_strong_explicit(&__a->__a_value, &__tmp, __cxx_atomic_alignment_wrap(__val), (::std::memory_order)__success, (::std::memory_order)__failure);
 #endif
+    *__expected = __cxx_atomic_alignment_unwrap(__tmp);
+    return __result;
 }
 template<class _Tp, int _Sco>
-__host__ __device__ inline bool __cxx_atomic_compare_exchange_weak(__cxx_atomic_base_impl_default<_Tp, _Sco> volatile* __a, _Tp* __expected, _Tp __value, int __success, int __failure) {
+__host__ __device__ inline bool __cxx_atomic_compare_exchange_weak(__cxx_atomic_base_impl_default<_Tp, _Sco> volatile* __a, _Tp* __expected, _Tp __val, int __success, int __failure) {
+    auto __tmp = __cxx_atomic_alignment_wrap(*__expected);
 #ifdef __CUDA_ARCH__
-    return detail::__atomic_compare_exchange_n_cuda(&__a->__a_value, __expected, __value, true, __success, __failure, detail::__scope_tag<_Sco>());
+    bool __result = detail::__atomic_compare_exchange_n_cuda(&__a->__a_value, &__tmp, __cxx_atomic_alignment_wrap(__val), true, __success, __failure, detail::__scope_tag<_Sco>());
 #else
-    return ::std::atomic_compare_exchange_weak_explicit(&__a->__a_value, __expected, __value, (::std::memory_order)__success, (::std::memory_order)__failure);
+    bool __result = ::std::atomic_compare_exchange_strong_explicit(&__a->__a_value, &__tmp, __cxx_atomic_alignment_wrap(__val), (::std::memory_order)__success, (::std::memory_order)__failure);
 #endif
+    *__expected = __cxx_atomic_alignment_unwrap(__tmp);
+    return __result;
 }
 template<class _Tp, int _Sco>
 __host__ __device__ inline _Tp __cxx_atomic_fetch_add(__cxx_atomic_base_impl_default<_Tp, _Sco> volatile* __a, _Tp __delta, int __order) {
