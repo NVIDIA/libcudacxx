@@ -48,7 +48,7 @@ In a Bash shell:
 export LIBCUDACXX_ROOT=/path/to/libcudacxx # Should be //sw/gpgpu/libcudacxx or the Git repo root.
 
 cd ${LIBCUDACXX_ROOT}/build # `libcudacxx` should be //sw/gpgpu/libcudacxx or the Git repo root.
-../utils/nvidia/linux/perform_tests.bash
+../utils/nvidia/linux/perform_tests.bash --skip-libcxx-tests
 ```
 
 ## Windows
