@@ -2,7 +2,7 @@
 
 This document will describe how to build and run the `libcu++` test suite.
 
-## *nix Systems
+## *nix Systems, Native Build/Test
 
 The procedure is demonstrated for NVCC + GCC in C++11 mode on a Debian-like
 Linux systems; the same basic steps are required on all other platforms.
@@ -51,13 +51,49 @@ cd ${LIBCUDACXX_ROOT}/build # `libcudacxx` should be //sw/gpgpu/libcudacxx or th
 ../utils/nvidia/linux/perform_tests.bash --skip-libcxx-tests
 ```
 
-## Windows
+## *nix Systems, Cross Build/Test
+
+The procedure is demonstrated for NVCC + GCC cross compiler in C++14 mode on a
+Debian-like Linux systems targeting an aarch64 L4T system; the same basic steps
+are required on all other platforms.
+
+### Step 0:
+
+Follow Step 0 for *nix native builds/tests.
+
+### Step 1:
+
+In a Bash shell:
+
+```
+export LIBCUDACXX_ROOT=/path/to/libcudacxx # Should be //sw/gpgpu/libcudacxx or the Git repo root.
+
+cd ${LIBCUDACXX_ROOT}
+mkdir -p build
+cd build
+cmake .. \
+  -DLLVM_CONFIG_PATH=$(which llvm-config) \
+  -DCMAKE_CXX_COMPILER=nvcc \
+  -DLIBCXX_NVCC_HOST_COMPILER=aarch64-linux-gnu-g++ \
+  -DLIBCXX_TEST_STANDARD_VER=c++14 \
+  -DLIBCXX_EXECUTOR="SSHExecutor(host='executor.nvidia.com', username='ubuntu')"
+```
+
+Ensure that you can SSH to the target system from the host system without
+inputing a password (e.g. use SSH keys).
+
+### Step 2:
+
+Follow Step 2 for *nix native builds/tests.
+
+## Windows, Native Build/Test
 
 ### Step 0: Install Prerequisites
 
 Install [Git for Windows](https://git-scm.com/download/win):
 
-Checkout [the LLVM Git mono repo](https://github.com/llvm/llvm-project) using a Git Bash shell:
+Checkout [the LLVM Git mono repo](https://github.com/llvm/llvm-project) using a
+Git Bash shell:
 
 ```
 export LLVM_ROOT=/path/to/llvm
