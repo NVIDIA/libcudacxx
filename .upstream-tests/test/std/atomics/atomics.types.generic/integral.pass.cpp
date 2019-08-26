@@ -91,7 +91,9 @@
 #include <cmpxchg_loop.h>
 
 #include "test_macros.h"
-#include "placement_new.h"
+#if !defined(TEST_COMPILER_C1XX)
+  #include "placement_new.h"
+#endif
 
 template <class A, class T>
 __host__ __device__

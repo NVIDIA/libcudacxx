@@ -18,7 +18,10 @@
 #include <cuda/std/cassert>
 
 #include "test_macros.h"
-#include "placement_new.h"
+
+#if !defined(TEST_COMPILER_C1XX)
+  #include "placement_new.h"
+#endif
 
 int main(int, char**)
 {
