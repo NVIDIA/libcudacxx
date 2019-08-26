@@ -250,7 +250,11 @@ then
   LIBCXX_SITE_CONFIG=${LIBCUDACXX_LIT_SITE_CONFIG} \
   bash -c "lit -vv -a ${LIBCUDACXX_PATH}/test/nothing_to_do.pass.cpp" \
   > ${SM_ARCH_DETECTION_LOG} 2>&1 
-  if [ "${PIPESTATUS[0]}" != "0" ]; then report_and_exit 2; fi
+  if [ "${PIPESTATUS[0]}" != "0" ]
+  then
+    cat ${SM_ARCH_DETECTION_LOG}
+    report_and_exit 2
+  fi
 
   DEVICE_0_COMPUTE_ARCH=$(egrep '^Device 0:' ${SM_ARCH_DETECTION_LOG} | sed 's/^Device 0: ".*", Selected, SM\([0-9]\+\), [0-9]\+ \[bytes\]/\1/')
 
