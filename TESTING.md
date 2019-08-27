@@ -66,6 +66,8 @@ Follow Step 0 for *nix native builds/tests.
 In a Bash shell:
 
 ```
+export HOST=executor.nvidia.com
+export USERNAME=ubuntu
 export LIBCUDACXX_ROOT=/path/to/libcudacxx # Should be //sw/gpgpu/libcudacxx or the Git repo root.
 
 cd ${LIBCUDACXX_ROOT}
@@ -76,7 +78,7 @@ cmake .. \
   -DCMAKE_CXX_COMPILER=nvcc \
   -DLIBCXX_NVCC_HOST_COMPILER=aarch64-linux-gnu-g++ \
   -DLIBCXX_TEST_STANDARD_VER=c++14 \
-  -DLIBCXX_EXECUTOR="SSHExecutor(host='executor.nvidia.com', username='ubuntu')"
+  -DLIBCXX_EXECUTOR="SSHExecutor(host='${HOST}', username='${USERNAME}')"
 ```
 
 Ensure that you can SSH to the target system from the host system without
