@@ -86,8 +86,8 @@ RUN cd /sw/gpgpu/libcudacxx\
  /sw/gpgpu/libcudacxx/utils/nvidia/linux/perform_tests.bash\
  --skip-tests-runs\
  --skip-libcxx-tests\
- --libcxx-log /sw/gpgpu/libcudacxx/libcxx/build/libcxx_lit_sm6x.log\
- --libcudacxx-log /sw/gpgpu/libcudacxx/build/libcudacxx_lit_sm6x.log
+ --libcxx-log /sw/gpgpu/libcudacxx/libcxx/build/libcxx_lit_sm6x_plus.log\
+ --libcudacxx-log /sw/gpgpu/libcudacxx/build/libcudacxx_lit_sm6x_plus.log
 
 WORKDIR /sw/gpgpu/libcudacxx
 
