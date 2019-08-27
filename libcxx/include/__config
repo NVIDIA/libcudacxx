@@ -763,7 +763,7 @@ typedef __char32_t char32_t;
 #define _LIBCPP_IS_TRIVIALLY_ASSIGNABLE(...) __is_trivially_assignable(__VA_ARGS__)
 #define _LIBCPP_IS_TRIVIALLY_COPYABLE(...) __is_trivially_copyable(__VA_ARGS__)
 #define _LIBCPP_IS_TRIVIAL(...) __is_trivial(__VA_ARGS__)
-#define _LIBCPP_IS_LITERAL(X) __is_literal_type(X)
+#define _LIBCPP_IS_LITERAL(...) __is_literal_type(__VA_ARGS__)
 #define _LIBCPP_IS_UNION(...) __is_union(__VA_ARGS__)
 #define _LIBCPP_IS_CLASS(...) __is_class(__VA_ARGS__)
 #define _LIBCPP_IS_POD(...) __is_pod(__VA_ARGS__)
@@ -816,12 +816,12 @@ typedef __char32_t char32_t;
 
 #define _LIBCPP_HAS_NO_VECTOR_EXTENSION
 
-#else defined(_LIBCPP_COMPILER_NVRTC)
+#elif defined(_LIBCPP_COMPILER_NVRTC)
 
 #define _ALIGNAS_TYPE(x) alignas(x)
 #define _ALIGNAS(x) alignas(x)
 
-#define _LIBCPP_UNDERLYING_TYPE(T) __underlying_type(T)
+#define _LIBCPP_UNDERLYING_TYPE(...) __underlying_type(__VA_ARGS__)
 #define _LIBCPP_IS_CONSTRUCTIBLE(...) __is_constructible(__VA_ARGS__)
 #define _LIBCPP_IS_TRIVIALLY_CONSTRUCTIBLE(...) __is_trivially_constructible(__VA_ARGS__)
 #define _LIBCPP_HAS_TRIVIAL_CONSTRUCTOR(...) __has_trivial_constructor(__VA_ARGS__)
@@ -833,7 +833,7 @@ typedef __char32_t char32_t;
 #define _LIBCPP_IS_TRIVIALLY_ASSIGNABLE(...) __is_trivially_assignable(__VA_ARGS__)
 #define _LIBCPP_IS_TRIVIALLY_COPYABLE(...) __is_trivially_copyable(__VA_ARGS__)
 #define _LIBCPP_IS_TRIVIAL(...) __is_trivial(__VA_ARGS__)
-#define _LIBCPP_IS_LITERAL(X) __is_literal_type(X)
+#define _LIBCPP_IS_LITERAL(...) __is_literal_type(__VA_ARGS__)
 #define _LIBCPP_IS_UNION(...) __is_union(__VA_ARGS__)
 #define _LIBCPP_IS_CLASS(...) __is_class(__VA_ARGS__)
 #define _LIBCPP_IS_POD(...) __is_pod(__VA_ARGS__)
@@ -841,7 +841,7 @@ typedef __char32_t char32_t;
 #define _LIBCPP_IS_ENUM(...) __is_enum(__VA_ARGS__)
 #define _LIBCPP_IS_EMPTY(...) __is_empty(__VA_ARGS__)
 #define _LIBCPP_IS_POLYMORPHIC(...) __is_polymorphic(__VA_ARGS__)
-#define _LIBCPP_HAS_VIRTUAL_DESTRUCTOR(T) __has_virtual_destructor(__VA_ARGS__)
+#define _LIBCPP_HAS_VIRTUAL_DESTRUCTOR(...) __has_virtual_destructor(__VA_ARGS__)
 #define _LIBCPP_IS_BASE_OF(...) __is_base_of(__VA_ARGS__)
 #define _LIBCPP_IS_FINAL(...) __is_final(__VA_ARGS__)
 #define _LIBCPP_IS_CONVERTIBLE_TO(...) __is_convertible_to(__VA_ARGS__)
