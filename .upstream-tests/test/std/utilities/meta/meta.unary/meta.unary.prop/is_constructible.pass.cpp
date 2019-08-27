@@ -325,12 +325,11 @@ int main(int, char**)
         clang_disallows_valid_static_cast_bug !=
         cuda::std::__libcpp_is_constructible<int&&, ExplicitTo<int>>::value, "");
     static_assert(cuda::std::is_constructible<int&&, ExplicitTo<int>>::value, "");
-#elif defined(TEST_COMPILER_NVRTC)
-    test_is_constructible<const int&, ExplicitTo<int>>();
-    test_is_constructible<int&&, ExplicitTo<int>>();
 #elif defined(TEST_COMPILER_C1XX) && defined(TEST_COMPILER_NVCC)
     // FIXME NVCC and MSVC disagree about the validity of these tests, and give
     //       different answers in host and device code, which is just wonderful.
+#elif defined(TEST_COMPILER_NVRTC)
+    // FIXME NVRTC also doesn't like these tests.
 #else // GCC and others.
     test_is_not_constructible<const int&, ExplicitTo<int>>();
     test_is_not_constructible<int&&, ExplicitTo<int>>();

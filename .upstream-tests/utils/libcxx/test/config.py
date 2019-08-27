@@ -631,7 +631,8 @@ class Configuration(object):
                     % possible_stds)
         if self.cxx.type == 'msvc':
             self.cxx.compile_flags += ['/std:{0}'.format(std)]
-        elif not (self.cxx.type == 'nvcc' and self.host_cxx.type == 'msvc'):
+        elif self.cxx.is_nvrtc \
+                or not (self.cxx.type == 'nvcc' and self.host_cxx.type == 'msvc'):
             self.cxx.compile_flags += ['-std={0}'.format(std)]
         std_feature = std.replace('gnu++', 'c++')
         std_feature = std.replace('1z', '17')
