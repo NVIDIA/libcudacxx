@@ -283,6 +283,9 @@ class Configuration(object):
           self.lit_config.note("detected host_cxx.is_nvrtc as: {}".format(
                                self.host_cxx.is_nvrtc))
 
+          if 'icc' in self.config.available_features:
+              self.cxx.link_flags += ['-lirc']
+
     def _configure_clang_cl(self, clang_path):
         def _split_env_var(var):
             return [p.strip() for p in os.environ.get(var, '').split(';') if p.strip()]
