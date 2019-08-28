@@ -101,11 +101,14 @@ int main(int, char**)
         typedef std::array<T, 3> C;
         constexpr C c = {1, 2, 3.5};
 
+#if (!defined(TEST_COMPILER_GCC) || 600 <= TEST_GCC_VER)
+// TODO: Investigate this.
         constexpr T t1 = c.at(0);
         static_assert (t1 == 1, "");
 
         constexpr T t2 = c.at(2);
         static_assert (t2 == 3.5, "");
+#endif
     }
 #endif
 
