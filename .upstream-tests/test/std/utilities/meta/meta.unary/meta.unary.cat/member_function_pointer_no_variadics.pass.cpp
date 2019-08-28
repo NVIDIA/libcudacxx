@@ -10,7 +10,7 @@
 
 // member_function_pointer
 
-#define _LIBCPP_HAS_NO_VARIADICS
+#define _LIBCUDACXX_HAS_NO_VARIADICS
 #include <cuda/std/type_traits>
 
 #include "test_macros.h"

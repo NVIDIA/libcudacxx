@@ -122,7 +122,7 @@ public:
     void swap(nasty_vector &nv)
 #if TEST_STD_VER > 14
     noexcept(std::is_nothrow_swappable<nested_container>::value)
-#elif defined(_LIBCPP_VERSION)
+#elif defined(_LIBCUDACXX_VERSION)
     TEST_NOEXCEPT_COND(std::__is_nothrow_swappable<nested_container>::value)
 #endif
     { v_.swap(nv.v_); }
@@ -242,7 +242,7 @@ public:
     void swap(nasty_list &nl)
 #if TEST_STD_VER > 14
     noexcept(std::is_nothrow_swappable<nested_container>::value)
-#elif defined(_LIBCPP_VERSION)
+#elif defined(_LIBCUDACXX_VERSION)
     TEST_NOEXCEPT_COND(std::__is_nothrow_swappable<nested_container>::value)
 #endif
     { l_.swap(nl.l_); }

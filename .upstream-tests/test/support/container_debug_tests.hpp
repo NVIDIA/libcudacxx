@@ -10,12 +10,12 @@
 #define TEST_SUPPORT_CONTAINER_DEBUG_TESTS_H
 
 #include <ciso646>
-#ifndef _LIBCPP_VERSION
+#ifndef _LIBCUDACXX_VERSION
 #error This header may only be used for libc++ tests"
 #endif
 
-#ifndef _LIBCPP_DEBUG
-#error _LIBCPP_DEBUG must be defined before including this header
+#ifndef _LIBCUDACXX_DEBUG
+#error _LIBCUDACXX_DEBUG must be defined before including this header
 #endif
 
 #include <__debug>

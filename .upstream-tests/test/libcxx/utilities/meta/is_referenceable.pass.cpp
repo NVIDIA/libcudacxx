@@ -38,7 +38,7 @@ static_assert(( cuda::std::__is_referenceable<Foo &&>::value), "");
 static_assert(( cuda::std::__is_referenceable<const Foo &&>::value), "");
 #endif
 
-#ifndef  _LIBCPP_HAS_NO_VECTOR_EXTENSION
+#ifndef  _LIBCUDACXX_HAS_NO_VECTOR_EXTENSION
 static_assert(( cuda::std::__is_referenceable<int   __attribute__((__vector_size__( 8)))>::value), "");
 static_assert(( cuda::std::__is_referenceable<const int   __attribute__((__vector_size__( 8)))>::value), "");
 static_assert(( cuda::std::__is_referenceable<float __attribute__((__vector_size__(16)))>::value), "");

@@ -264,8 +264,8 @@ int main(int, char**)
     // This test requires access control SFINAE which we only have on non-MSVC
     // compilers in C++11 or when we are using the compiler builtin for
     // is_convertible.
-#if !(defined(TEST_COMPILER_C1XX) && defined(_LIBCPP_USE_IS_CONVERTIBLE_FALLBACK)) && \
-    (TEST_STD_VER >= 11 || !defined(_LIBCPP_USE_IS_CONVERTIBLE_FALLBACK))
+#if !(defined(TEST_COMPILER_C1XX) && defined(_LIBCUDACXX_USE_IS_CONVERTIBLE_FALLBACK)) && \
+    (TEST_STD_VER >= 11 || !defined(_LIBCUDACXX_USE_IS_CONVERTIBLE_FALLBACK))
     test_is_not_convertible<NonCopyable&, NonCopyable>();
 #endif
 

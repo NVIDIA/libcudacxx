@@ -180,10 +180,10 @@ void test_for_all_types()
     test<Atomic<unsigned long, Scope>, unsigned long>();
     test<Atomic<long long, Scope>, long long>();
     test<Atomic<unsigned long long, Scope>, unsigned long long>();
-#ifndef _LIBCPP_HAS_NO_UNICODE_CHARS
+#ifndef _LIBCUDACXX_HAS_NO_UNICODE_CHARS
     test<Atomic<char16_t, Scope>, char16_t>();
     test<Atomic<char32_t, Scope>, char32_t>();
-#endif  // _LIBCPP_HAS_NO_UNICODE_CHARS
+#endif  // _LIBCUDACXX_HAS_NO_UNICODE_CHARS
     test<Atomic<wchar_t, Scope>, wchar_t>();
 
     test<Atomic<int8_t, Scope>,    int8_t>();
