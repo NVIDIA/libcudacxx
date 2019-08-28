@@ -669,9 +669,12 @@ typedef __char32_t char32_t;
 #define _LIBCPP_IS_TRIVIALLY_COPYABLE(...) __is_trivially_copyable(__VA_ARGS__)
 #endif
 
-#if _GNUC_VER >= 800
-#define _LIBCPP_IS_ASSIGNABLE(...) __is_assignable(__VA_ARGS__)
-#endif
+// FIXME: GCC 8.0 supports this trait, but it has a bug.
+// https://gcc.gnu.org/bugzilla/show_bug.cgi?id=91592
+// https://godbolt.org/z/IljfIw
+//#if _GNUC_VER >= 800
+//#define _LIBCPP_IS_ASSIGNABLE(...) __is_assignable(__VA_ARGS__)
+//#endif
 
 #if !__EXCEPTIONS && !defined(_LIBCPP_NO_EXCEPTIONS)
 #define _LIBCPP_NO_EXCEPTIONS
