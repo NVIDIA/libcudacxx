@@ -7,6 +7,7 @@ set(PACKAGE_STRING "${PACKAGE_NAME} ${PACKAGE_VERSION}")
 
 if (NOT CMAKE_C_COMPILER)
   set(CMAKE_C_COMPILER ${CMAKE_CXX_COMPILER})
+  set(CMAKE_C_COMPILER_ARG1 ${CMAKE_CXX_COMPILER_ARG1})
 endif ()
 
 enable_language(C)
@@ -19,7 +20,6 @@ set(OPTION_INIT ON)
 if (LIBCXX_DISABLE_ARCH_BY_DEFAULT)
   set(OPTION_INIT OFF)
 endif ()
-
 if (NOT ${LIBCXX_HIGHEST_COMPUTE_ARCH} IN_LIST LIBCXX_KNOWN_COMPUTE_ARCHS)
   message(FATAL_ERROR "When changing the highest compute version, don't forget to add it to the list!")
 endif ()
@@ -38,6 +38,34 @@ if (LIBCXX_ENABLE_COMPUTE_FUTURE)
 endif ()
 
 message(STATUS "Enabled CUDA architectures:${COMPUTE_MESSAGE}")
+
+# additionally to the above options for controlling the enabled architectures,
+# we configure a project that will be used by the perform_test to find the SM architecture
+# of its first visible device
+
+# we do that here, because here it is easiest to determine what the _actual_ compiler that will
+# produce an executable to run on the host is (NVRTC makes this harder than it'd be otherwise)
+
+# this is used in automated and semi-automated testing
+
+message(STATUS "Configuring GetSM...")
+if (LIBCXX_TEST_WITH_NVRTC)
+    string(STRIP "${CMAKE_CXX_COMPILER_ARG1}" GETSM_COMPILER)
+else()
+    set(GETSM_COMPILER ${CMAKE_CXX_COMPILER})
+endif()
+
+file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/getsm")
+execute_process(
+    COMMAND ${CMAKE_COMMAND} "${CMAKE_SOURCE_DIR}/utils/nvidia/getsm" -DCMAKE_CUDA_COMPILER=${GETSM_COMPILER} -DCMAKE_CUDA_HOST_COMPILER=${LIBCXX_NVCC_HOST_COMPILER}
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/getsm"
+    RESULT_VARIABLE GETSM_RESULT
+)
+if (GETSM_RESULT EQUAL 0)
+    message(STATUS "GetSM configured sucessfully.")
+else()
+    message(FATAL_ERROR "Failed to configure GetSM!")
+endif()
 
 if (NOT LIBCXX_TEST_WITH_NVRTC)
     set(LIBCXX_FORCE_INCLUDE "-include ${CMAKE_SOURCE_DIR}/test/force_include.h")

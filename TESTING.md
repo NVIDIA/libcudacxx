@@ -16,10 +16,10 @@ In a Bash shell:
 apt-get -y install llvm
 
 # Install CMake
-apt-get -y install cmake 
+apt-get -y install cmake
 
 # Install the LLVM Integrated Tester (`lit`)
-apt-get -y install python-pip 
+apt-get -y install python-pip
 pip install lit
 ```
 
@@ -59,7 +59,7 @@ are required on all other platforms.
 
 ### Step 0:
 
-Follow Step 0 for *nix native builds/tests.
+Follow Step 0 for \*nix native builds/tests.
 
 ### Step 1:
 
@@ -86,7 +86,39 @@ inputing a password (e.g. use SSH keys).
 
 ### Step 2:
 
-Follow Step 2 for *nix native builds/tests.
+Follow Step 2 for \*nix native builds/tests.
+
+## *nix Systems, NVRTC Build/Test
+
+The procedure is demonstrated for NVRTC in C++11 mode on a Debian-like
+Linux systems; the same basic steps are required on all other platforms.
+
+### Step 0: Install Prerequisites
+
+Follow Step 0 for \*nix native builds/tests.
+
+### Step 1: Generate the Build Files
+
+In a Bash shell:
+
+```
+export LIBCUDACXX_ROOT=/path/to/libcudacxx # Should be //sw/gpgpu/libcudacxx or the Git repo root.
+export CXX="${LIBCUDACXX_ROOT}/utils/nvrtc/nvrtc.sh nvcc"
+
+cd ${LIBCUDACXX_ROOT}
+mkdir -p build
+cd build
+cmake .. \
+  -DCMAKE_C_COMPILER_WORKS=ON \
+  -DLLVM_CONFIG_PATH=$(which llvm-config) \
+  -DLIBCXX_NVCC_HOST_COMPILER=g++ \
+  -DLIBCXX_TEST_STANDARD_VER=c++11 \
+  -DLIBCXX_TEST_WITH_NVRTC=ON
+```
+
+### Step 2: Build and Run the Tests
+
+Follow Step 2 for \*nix native builds/tests.
 
 ## Windows, Native Build/Test
 
@@ -121,7 +153,7 @@ In a Visual Studio command prompt:
 set LLVM_ROOT=\path\to\llvm
 set LIBCUDACXX_ROOT=\path\to\libcudacxx # Should be //sw/gpgpu/libcudacxx or the Git repo root.
 
-cd %LIBCUDACXX_ROOT% 
+cd %LIBCUDACXX_ROOT%
 mkdir build
 cd build
 cmake .. ^
@@ -133,7 +165,7 @@ cmake .. ^
   -DCMAKE_C_COMPILER_FORCED=ON
 ```
 
-### Step 2: 
+### Step 2:
 
 In a Visual Studio command prompt:
 
@@ -145,4 +177,3 @@ cd %LIBCUDACXX_ROOT%\build
 set LIBCXX_SITE_CONFIG=libcxx\test\lit.site.cfg
 lit ..\test -Dcompute_archs=%SM_ARCH% -sv --no-progress-bar
 ```
-

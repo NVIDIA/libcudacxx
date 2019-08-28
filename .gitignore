@@ -28,6 +28,7 @@ samples/trie_st
 samples/trie_mt
 *.pyc
 build-*/
+build/
 .p4config
 compare_git_to_perforce.bash
 *.log
