@@ -513,6 +513,11 @@ typedef __char32_t char32_t;
 #define _LIBCPP_IS_NOTHROW_CONSTRUCTIBLE(...) __is_nothrow_constructible(__VA_ARGS__)
 #endif
 
+// FIXME: __has_feature(is_assignable) returns false, seems to be a bug.
+#if __has_keyword(__is_assignable)
+#define _LIBCPP_IS_ASSIGNABLE(...) __is_assignable(__VA_ARGS__)
+#endif
+
 #if __has_feature(is_trivially_constructible)
 #define _LIBCPP_IS_TRIVIALLY_CONSTRUCTIBLE(...) __is_trivially_constructible(__VA_ARGS__)
 #endif
