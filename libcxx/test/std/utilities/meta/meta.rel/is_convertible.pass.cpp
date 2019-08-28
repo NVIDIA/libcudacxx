@@ -252,7 +252,7 @@ int main(int, char**)
     static_assert((!std::is_convertible<const NonCopyable&, NonCopyable&>::value), "");
 // This test requires Access control SFINAE which we only have in C++11 or when
 // we are using the compiler builtin for is_convertible.
-#if TEST_STD_VER >= 11 || !defined(_LIBCPP_USE_IS_CONVERTIBLE_FALLBACK)
+#if TEST_STD_VER >= 11 || !defined(_LIBCUDACXX_USE_IS_CONVERTIBLE_FALLBACK)
     test_is_not_convertible<NonCopyable&, NonCopyable>();
 #endif
 

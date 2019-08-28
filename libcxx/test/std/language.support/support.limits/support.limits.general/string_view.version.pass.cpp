@@ -82,14 +82,14 @@
 #   endif
 # endif
 
-# if !defined(_LIBCPP_VERSION)
+# if !defined(_LIBCUDACXX_VERSION)
 #   ifndef __cpp_lib_constexpr_misc
 #     error "__cpp_lib_constexpr_misc should be defined in c++2a"
 #   endif
 #   if __cpp_lib_constexpr_misc != 201811L
 #     error "__cpp_lib_constexpr_misc should have the value 201811L in c++2a"
 #   endif
-# else // _LIBCPP_VERSION
+# else // _LIBCUDACXX_VERSION
 #   ifdef __cpp_lib_constexpr_misc
 #     error "__cpp_lib_constexpr_misc should not be defined because it is unimplemented in libc++!"
 #   endif

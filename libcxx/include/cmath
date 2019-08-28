@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCPP_CMATH
-#define _LIBCPP_CMATH
+#ifndef _LIBCUDACXX_CMATH
+#define _LIBCUDACXX_CMATH
 
 /*
     cmath synopsis
@@ -306,11 +306,11 @@ long double    truncl(long double x);
 #include <version>
 #endif //stdexcept
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
-_LIBCPP_BEGIN_NAMESPACE_STD
+_LIBCUDACXX_BEGIN_NAMESPACE_STD
 
 using ::signbit;
 using ::fpclassify;
@@ -524,13 +524,13 @@ using ::scalbnl;
 using ::tgammal;
 using ::truncl;
 
-#if _LIBCPP_STD_VER > 14
-inline _LIBCPP_INLINE_VISIBILITY float       hypot(       float x,       float y,       float z ) { return sqrt(x*x + y*y + z*z); }
-inline _LIBCPP_INLINE_VISIBILITY double      hypot(      double x,      double y,      double z ) { return sqrt(x*x + y*y + z*z); }
-inline _LIBCPP_INLINE_VISIBILITY long double hypot( long double x, long double y, long double z ) { return sqrt(x*x + y*y + z*z); }
+#if _LIBCUDACXX_STD_VER > 14
+inline _LIBCUDACXX_INLINE_VISIBILITY float       hypot(       float x,       float y,       float z ) { return sqrt(x*x + y*y + z*z); }
+inline _LIBCUDACXX_INLINE_VISIBILITY double      hypot(      double x,      double y,      double z ) { return sqrt(x*x + y*y + z*z); }
+inline _LIBCUDACXX_INLINE_VISIBILITY long double hypot( long double x, long double y, long double z ) { return sqrt(x*x + y*y + z*z); }
 
 template <class _A1, class _A2, class _A3>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 typename __lazy_enable_if
 <
     is_arithmetic<_A1>::value &&
@@ -549,8 +549,8 @@ hypot(_A1 __lcpp_x, _A2 __lcpp_y, _A3 __lcpp_z) _NOEXCEPT
 #endif
 
 template <class _A1>
-_LIBCPP_INLINE_VISIBILITY
-_LIBCPP_CONSTEXPR typename enable_if<is_floating_point<_A1>::value, bool>::type
+_LIBCUDACXX_INLINE_VISIBILITY
+_LIBCUDACXX_CONSTEXPR typename enable_if<is_floating_point<_A1>::value, bool>::type
 __libcpp_isnan_or_builtin(_A1 __lcpp_x) _NOEXCEPT
 {
 #if __has_builtin(__builtin_isnan)
@@ -561,16 +561,16 @@ __libcpp_isnan_or_builtin(_A1 __lcpp_x) _NOEXCEPT
 }
 
 template <class _A1>
-_LIBCPP_INLINE_VISIBILITY
-_LIBCPP_CONSTEXPR typename enable_if<!is_floating_point<_A1>::value, bool>::type
+_LIBCUDACXX_INLINE_VISIBILITY
+_LIBCUDACXX_CONSTEXPR typename enable_if<!is_floating_point<_A1>::value, bool>::type
 __libcpp_isnan_or_builtin(_A1 __lcpp_x) _NOEXCEPT
 {
     return isnan(__lcpp_x);
 }
 
 template <class _A1>
-_LIBCPP_INLINE_VISIBILITY
-_LIBCPP_CONSTEXPR typename enable_if<is_floating_point<_A1>::value, bool>::type
+_LIBCUDACXX_INLINE_VISIBILITY
+_LIBCUDACXX_CONSTEXPR typename enable_if<is_floating_point<_A1>::value, bool>::type
 __libcpp_isinf_or_builtin(_A1 __lcpp_x) _NOEXCEPT
 {
 #if __has_builtin(__builtin_isinf)
@@ -581,16 +581,16 @@ __libcpp_isinf_or_builtin(_A1 __lcpp_x) _NOEXCEPT
 }
 
 template <class _A1>
-_LIBCPP_INLINE_VISIBILITY
-_LIBCPP_CONSTEXPR typename enable_if<!is_floating_point<_A1>::value, bool>::type
+_LIBCUDACXX_INLINE_VISIBILITY
+_LIBCUDACXX_CONSTEXPR typename enable_if<!is_floating_point<_A1>::value, bool>::type
 __libcpp_isinf_or_builtin(_A1 __lcpp_x) _NOEXCEPT
 {
     return isinf(__lcpp_x);
 }
 
 template <class _A1>
-_LIBCPP_INLINE_VISIBILITY
-_LIBCPP_CONSTEXPR typename enable_if<is_floating_point<_A1>::value, bool>::type
+_LIBCUDACXX_INLINE_VISIBILITY
+_LIBCUDACXX_CONSTEXPR typename enable_if<is_floating_point<_A1>::value, bool>::type
 __libcpp_isfinite_or_builtin(_A1 __lcpp_x) _NOEXCEPT
 {
 #if __has_builtin(__builtin_isfinite)
@@ -601,13 +601,13 @@ __libcpp_isfinite_or_builtin(_A1 __lcpp_x) _NOEXCEPT
 }
 
 template <class _A1>
-_LIBCPP_INLINE_VISIBILITY
-_LIBCPP_CONSTEXPR typename enable_if<!is_floating_point<_A1>::value, bool>::type
+_LIBCUDACXX_INLINE_VISIBILITY
+_LIBCUDACXX_CONSTEXPR typename enable_if<!is_floating_point<_A1>::value, bool>::type
 __libcpp_isfinite_or_builtin(_A1 __lcpp_x) _NOEXCEPT
 {
     return isfinite(__lcpp_x);
 }
 
-_LIBCPP_END_NAMESPACE_STD
+_LIBCUDACXX_END_NAMESPACE_STD
 
-#endif  // _LIBCPP_CMATH
+#endif  // _LIBCUDACXX_CMATH

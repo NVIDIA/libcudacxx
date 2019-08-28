@@ -15,7 +15,7 @@
 
 #if !defined(TEST_HAS_NO_DEMANGLE)
 # if defined(__GNUC__) || defined(__clang__)
-#   if __has_include("cxxabi.h") && !defined(_LIBCPP_ABI_MICROSOFT)
+#   if __has_include("cxxabi.h") && !defined(_LIBCUDACXX_ABI_MICROSOFT)
 #     include "cxxabi.h"
 #   else
 #     define TEST_HAS_NO_DEMANGLE

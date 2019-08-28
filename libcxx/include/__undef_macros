@@ -9,9 +9,9 @@
 
 
 #ifdef min
-#if !defined(_LIBCPP_DISABLE_MACRO_CONFLICT_WARNINGS)
-#if defined(_LIBCPP_WARNING)
-_LIBCPP_WARNING("macro min is incompatible with C++.  Try #define NOMINMAX "
+#if !defined(_LIBCUDACXX_DISABLE_MACRO_CONFLICT_WARNINGS)
+#if defined(_LIBCUDACXX_WARNING)
+_LIBCUDACXX_WARNING("macro min is incompatible with C++.  Try #define NOMINMAX "
                 "before any Windows header. #undefing min")
 #else
 #warning: macro min is incompatible with C++.  #undefing min
@@ -21,9 +21,9 @@ _LIBCPP_WARNING("macro min is incompatible with C++.  Try #define NOMINMAX "
 #endif
 
 #ifdef max
-#if !defined(_LIBCPP_DISABLE_MACRO_CONFLICT_WARNINGS)
-#if defined(_LIBCPP_WARNING)
-_LIBCPP_WARNING("macro max is incompatible with C++.  Try #define NOMINMAX "
+#if !defined(_LIBCUDACXX_DISABLE_MACRO_CONFLICT_WARNINGS)
+#if defined(_LIBCUDACXX_WARNING)
+_LIBCUDACXX_WARNING("macro max is incompatible with C++.  Try #define NOMINMAX "
                 "before any Windows header. #undefing max")
 #else
 #warning: macro max is incompatible with C++.  #undefing max

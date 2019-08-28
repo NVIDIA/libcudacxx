@@ -13,7 +13,7 @@
 //   binder2nd<Fn>
 //   bind2nd(const Fn& op, const T& x);
 
-#define _LIBCPP_DISABLE_DEPRECATION_WARNINGS
+#define _LIBCUDACXX_DISABLE_DEPRECATION_WARNINGS
 
 #include <functional>
 #include <cassert>

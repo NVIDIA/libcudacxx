@@ -9,7 +9,7 @@
 
 namespace std {
 
-_LIBCPP_SAFE_STATIC static std::new_handler __new_handler;
+_LIBCUDACXX_SAFE_STATIC static std::new_handler __new_handler;
 
 new_handler
 set_new_handler(new_handler handler) _NOEXCEPT

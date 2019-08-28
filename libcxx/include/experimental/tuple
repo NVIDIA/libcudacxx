@@ -6,15 +6,15 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-#ifndef _LIBCPP_EXPERIMENTAL_TUPLE
-#define _LIBCPP_EXPERIMENTAL_TUPLE
+#ifndef _LIBCUDACXX_EXPERIMENTAL_TUPLE
+#define _LIBCUDACXX_EXPERIMENTAL_TUPLE
 
 #include <__config>
 
-#ifdef _LIBCPP_WARNING
-_LIBCPP_WARNING("<experimental/tuple> has been removed. Use <tuple> instead.")
+#ifdef _LIBCUDACXX_WARNING
+_LIBCUDACXX_WARNING("<experimental/tuple> has been removed. Use <tuple> instead.")
 #else
 # warning "<experimental/tuple> has been removed. Use <tuple> instead."
 #endif
 
-#endif // _LIBCPP_EXPERIMENTAL_TUPLE
+#endif // _LIBCUDACXX_EXPERIMENTAL_TUPLE

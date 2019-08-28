@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCPP_CSTRING
-#define _LIBCPP_CSTRING
+#ifndef _LIBCUDACXX_CSTRING
+#define _LIBCUDACXX_CSTRING
 
 /*
     cstring synopsis
@@ -61,11 +61,11 @@ size_t strlen(const char* s);
 #include <string.h>
 #endif //__simet__
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
-_LIBCPP_BEGIN_NAMESPACE_STD
+_LIBCUDACXX_BEGIN_NAMESPACE_STD
 
 using ::size_t;
 using ::memcpy;
@@ -86,13 +86,13 @@ using ::strpbrk;
 using ::strrchr;
 using ::strspn;
 using ::strstr;
-#ifndef _LIBCPP_HAS_NO_THREAD_UNSAFE_C_FUNCTIONS
+#ifndef _LIBCUDACXX_HAS_NO_THREAD_UNSAFE_C_FUNCTIONS
 using ::strtok;
 #endif
 using ::memset;
 using ::strerror;
 using ::strlen;
 
-_LIBCPP_END_NAMESPACE_STD
+_LIBCUDACXX_END_NAMESPACE_STD
 
-#endif  // _LIBCPP_CSTRING
+#endif  // _LIBCUDACXX_CSTRING

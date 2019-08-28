@@ -126,7 +126,7 @@ option(LIBCXX_ABI_FORCE_MICROSOFT "Ignore auto-detection and force use of the Mi
 option(LIBCXX_HIDE_FROM_ABI_PER_TU_BY_DEFAULT "Enable per TU ABI insulation by default. To be used by vendors." OFF)
 set(LIBCXX_ABI_DEFINES "" CACHE STRING "A semicolon separated list of ABI macros to define in the site config header.")
 option(LIBCXX_USE_COMPILER_RT "Use compiler-rt instead of libgcc" OFF)
-set(LIBCXX_LIBCPPABI_VERSION "2" CACHE STRING "Version of libc++abi's ABI to re-export from libc++ when re-exporting is enabled.
+set(LIBCXX_LIBCUDACXXABI_VERSION "2" CACHE STRING "Version of libc++abi's ABI to re-export from libc++ when re-exporting is enabled.
                                                Note that this is not related to the version of libc++'s ABI itself!")
 
 if (NOT LIBCXX_ENABLE_SHARED AND NOT LIBCXX_ENABLE_STATIC)
@@ -549,14 +549,14 @@ endif()
 
 # Let the library headers know they are currently being used to build the
 # library.
-add_definitions(-D_LIBCPP_BUILDING_LIBRARY)
+add_definitions(-D_LIBCUDACXX_BUILDING_LIBRARY)
 
 if (NOT LIBCXX_ENABLE_NEW_DELETE_DEFINITIONS)
-  add_definitions(-D_LIBCPP_DISABLE_NEW_DELETE_DEFINITIONS)
+  add_definitions(-D_LIBCUDACXX_DISABLE_NEW_DELETE_DEFINITIONS)
 endif()
 
 # Warning flags ===============================================================
-add_definitions(-D_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+add_definitions(-D_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
 add_compile_flags_if_supported(
     -Wall -Wextra -W -Wwrite-strings
     -Wno-unused-parameter -Wno-long-long
@@ -601,7 +601,7 @@ if (LIBCXX_ENABLE_PEDANTIC)
   add_compile_flags_if_supported(-pedantic)
 endif()
 if (LIBCXX_DISABLE_MACRO_CONFLICT_WARNINGS)
-  add_definitions(-D_LIBCPP_DISABLE_MACRO_CONFLICT_WARNINGS)
+  add_definitions(-D_LIBCUDACXX_DISABLE_MACRO_CONFLICT_WARNINGS)
 endif()
 
 # Exception flags =============================================================
@@ -610,14 +610,14 @@ if (LIBCXX_ENABLE_EXCEPTIONS)
   # functions never throw a C++ exception.
   add_compile_flags_if_supported(-EHsc)
 else()
-  add_definitions(-D_LIBCPP_NO_EXCEPTIONS)
+  add_definitions(-D_LIBCUDACXX_NO_EXCEPTIONS)
   add_compile_flags_if_supported(-EHs- -EHa-)
   add_compile_flags_if_supported(-fno-exceptions)
 endif()
 
 # RTTI flags ==================================================================
 if (NOT LIBCXX_ENABLE_RTTI)
-  add_definitions(-D_LIBCPP_NO_RTTI)
+  add_definitions(-D_LIBCUDACXX_NO_RTTI)
   add_compile_flags_if_supported(-GR-)
   add_compile_flags_if_supported(-fno-rtti)
 endif()
@@ -636,7 +636,7 @@ endif()
 # Assertion flags =============================================================
 define_if(LIBCXX_ENABLE_ASSERTIONS -UNDEBUG)
 define_if_not(LIBCXX_ENABLE_ASSERTIONS -DNDEBUG)
-define_if(LIBCXX_ENABLE_ASSERTIONS -D_LIBCPP_DEBUG=0)
+define_if(LIBCXX_ENABLE_ASSERTIONS -D_LIBCUDACXX_DEBUG=0)
 define_if(LIBCXX_DEBUG_BUILD -D_DEBUG)
 if (LIBCXX_ENABLE_ASSERTIONS AND NOT LIBCXX_DEBUG_BUILD)
   # MSVC doesn't like _DEBUG on release builds. See PR 4379.
@@ -701,7 +701,7 @@ endif()
 
 # Configuration file flags =====================================================
 if (NOT LIBCXX_ABI_VERSION EQUAL 1)
-  config_define(${LIBCXX_ABI_VERSION} _LIBCPP_ABI_VERSION)
+  config_define(${LIBCXX_ABI_VERSION} _LIBCUDACXX_ABI_VERSION)
 endif()
 if (NOT LIBCXX_ABI_NAMESPACE STREQUAL "")
   if (NOT LIBCXX_ABI_NAMESPACE MATCHES "__.*")
@@ -710,37 +710,37 @@ if (NOT LIBCXX_ABI_NAMESPACE STREQUAL "")
   if (LIBCXX_ABI_NAMESPACE MATCHES "__[0-9]+$")
     message(FATAL_ERROR "LIBCXX_ABI_NAMESPACE '${LIBCXX_ABI_NAMESPACE}' is reserved for use by libc++.")
   endif()
-  config_define(${LIBCXX_ABI_NAMESPACE} _LIBCPP_ABI_NAMESPACE)
+  config_define(${LIBCXX_ABI_NAMESPACE} _LIBCUDACXX_ABI_NAMESPACE)
 endif()
-config_define_if(LIBCXX_ABI_UNSTABLE _LIBCPP_ABI_UNSTABLE)
-config_define_if(LIBCXX_ABI_FORCE_ITANIUM _LIBCPP_ABI_FORCE_ITANIUM)
-config_define_if(LIBCXX_ABI_FORCE_MICROSOFT _LIBCPP_ABI_FORCE_MICROSOFT)
-config_define_if(LIBCXX_HIDE_FROM_ABI_PER_TU_BY_DEFAULT _LIBCPP_HIDE_FROM_ABI_PER_TU_BY_DEFAULT)
+config_define_if(LIBCXX_ABI_UNSTABLE _LIBCUDACXX_ABI_UNSTABLE)
+config_define_if(LIBCXX_ABI_FORCE_ITANIUM _LIBCUDACXX_ABI_FORCE_ITANIUM)
+config_define_if(LIBCXX_ABI_FORCE_MICROSOFT _LIBCUDACXX_ABI_FORCE_MICROSOFT)
+config_define_if(LIBCXX_HIDE_FROM_ABI_PER_TU_BY_DEFAULT _LIBCUDACXX_HIDE_FROM_ABI_PER_TU_BY_DEFAULT)
 
-config_define_if_not(LIBCXX_ENABLE_GLOBAL_FILESYSTEM_NAMESPACE _LIBCPP_HAS_NO_GLOBAL_FILESYSTEM_NAMESPACE)
-config_define_if_not(LIBCXX_ENABLE_STDIN _LIBCPP_HAS_NO_STDIN)
-config_define_if_not(LIBCXX_ENABLE_STDOUT _LIBCPP_HAS_NO_STDOUT)
-config_define_if_not(LIBCXX_ENABLE_THREADS _LIBCPP_HAS_NO_THREADS)
-config_define_if_not(LIBCXX_ENABLE_MONOTONIC_CLOCK _LIBCPP_HAS_NO_MONOTONIC_CLOCK)
-config_define_if_not(LIBCXX_ENABLE_THREAD_UNSAFE_C_FUNCTIONS _LIBCPP_HAS_NO_THREAD_UNSAFE_C_FUNCTIONS)
+config_define_if_not(LIBCXX_ENABLE_GLOBAL_FILESYSTEM_NAMESPACE _LIBCUDACXX_HAS_NO_GLOBAL_FILESYSTEM_NAMESPACE)
+config_define_if_not(LIBCXX_ENABLE_STDIN _LIBCUDACXX_HAS_NO_STDIN)
+config_define_if_not(LIBCXX_ENABLE_STDOUT _LIBCUDACXX_HAS_NO_STDOUT)
+config_define_if_not(LIBCXX_ENABLE_THREADS _LIBCUDACXX_HAS_NO_THREADS)
+config_define_if_not(LIBCXX_ENABLE_MONOTONIC_CLOCK _LIBCUDACXX_HAS_NO_MONOTONIC_CLOCK)
+config_define_if_not(LIBCXX_ENABLE_THREAD_UNSAFE_C_FUNCTIONS _LIBCUDACXX_HAS_NO_THREAD_UNSAFE_C_FUNCTIONS)
 
-config_define_if(LIBCXX_HAS_PTHREAD_API _LIBCPP_HAS_THREAD_API_PTHREAD)
-config_define_if(LIBCXX_HAS_EXTERNAL_THREAD_API _LIBCPP_HAS_THREAD_API_EXTERNAL)
-config_define_if(LIBCXX_HAS_WIN32_THREAD_API _LIBCPP_HAS_THREAD_API_WIN32)
-config_define_if(LIBCXX_BUILD_EXTERNAL_THREAD_LIBRARY _LIBCPP_HAS_THREAD_LIBRARY_EXTERNAL)
-config_define_if(LIBCXX_HAS_MUSL_LIBC _LIBCPP_HAS_MUSL_LIBC)
-config_define_if(LIBCXX_NO_VCRUNTIME _LIBCPP_NO_VCRUNTIME)
+config_define_if(LIBCXX_HAS_PTHREAD_API _LIBCUDACXX_HAS_THREAD_API_PTHREAD)
+config_define_if(LIBCXX_HAS_EXTERNAL_THREAD_API _LIBCUDACXX_HAS_THREAD_API_EXTERNAL)
+config_define_if(LIBCXX_HAS_WIN32_THREAD_API _LIBCUDACXX_HAS_THREAD_API_WIN32)
+config_define_if(LIBCXX_BUILD_EXTERNAL_THREAD_LIBRARY _LIBCUDACXX_HAS_THREAD_LIBRARY_EXTERNAL)
+config_define_if(LIBCXX_HAS_MUSL_LIBC _LIBCUDACXX_HAS_MUSL_LIBC)
+config_define_if(LIBCXX_NO_VCRUNTIME _LIBCUDACXX_NO_VCRUNTIME)
 
 if (LIBCXX_ABI_DEFINES)
   set(abi_defines)
   foreach (abi_define ${LIBCXX_ABI_DEFINES})
-    if (NOT abi_define MATCHES "^_LIBCPP_ABI_")
+    if (NOT abi_define MATCHES "^_LIBCUDACXX_ABI_")
       message(SEND_ERROR "Invalid ABI macro ${abi_define} in LIBCXX_ABI_DEFINES")
     endif()
     list(APPEND abi_defines "#define ${abi_define}")
   endforeach()
   string(REPLACE ";" "\n" abi_defines "${abi_defines}")
-  config_define(${abi_defines} _LIBCPP_ABI_DEFINES)
+  config_define(${abi_defines} _LIBCUDACXX_ABI_DEFINES)
 endif()
 
 # By default libc++ on Windows expects to use a shared library, which requires
@@ -748,7 +748,7 @@ endif()
 # static library only we modify the headers to disable DLL import/export.
 if (DEFINED WIN32 AND LIBCXX_ENABLE_STATIC AND NOT LIBCXX_ENABLE_SHARED)
   message(STATUS "Generating custom __config for non-DLL Windows build")
-  config_define(ON _LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS)
+  config_define(ON _LIBCUDACXX_DISABLE_VISIBILITY_ANNOTATIONS)
 endif()
 
 set(site_config_path "${LIBCXX_BINARY_DIR}/__config_site")

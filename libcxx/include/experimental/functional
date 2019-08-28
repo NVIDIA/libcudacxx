@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCPP_EXPERIMENTAL_FUNCTIONAL
-#define _LIBCPP_EXPERIMENTAL_FUNCTIONAL
+#ifndef _LIBCUDACXX_EXPERIMENTAL_FUNCTIONAL
+#define _LIBCUDACXX_EXPERIMENTAL_FUNCTIONAL
 
 /*
    experimental/functional synopsis
@@ -96,34 +96,34 @@ inline namespace fundamentals_v1 {
 
 #include <__debug>
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
-_LIBCPP_PUSH_MACROS
+_LIBCUDACXX_PUSH_MACROS
 #include <__undef_macros>
 
 
-_LIBCPP_BEGIN_NAMESPACE_LFTS
+_LIBCUDACXX_BEGIN_NAMESPACE_LFTS
 
-#if _LIBCPP_STD_VER > 11
+#if _LIBCUDACXX_STD_VER > 11
 // default searcher
 template<class _ForwardIterator, class _BinaryPredicate = equal_to<>>
-class _LIBCPP_TYPE_VIS default_searcher {
+class _LIBCUDACXX_TYPE_VIS default_searcher {
 public:
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     default_searcher(_ForwardIterator __f, _ForwardIterator __l, 
                        _BinaryPredicate __p = _BinaryPredicate())
         : __first_(__f), __last_(__l), __pred_(__p) {}
 
     template <typename _ForwardIterator2>
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     pair<_ForwardIterator2, _ForwardIterator2>
     operator () (_ForwardIterator2 __f, _ForwardIterator2 __l) const
     {
-        return _VSTD::__search(__f, __l, __first_, __last_, __pred_,
-            typename _VSTD::iterator_traits<_ForwardIterator>::iterator_category(),
-            typename _VSTD::iterator_traits<_ForwardIterator2>::iterator_category());
+        return _CUDA_VSTD::__search(__f, __l, __first_, __last_, __pred_,
+            typename _CUDA_VSTD::iterator_traits<_ForwardIterator>::iterator_category(),
+            typename _CUDA_VSTD::iterator_traits<_ForwardIterator2>::iterator_category());
     }
 
 private:
@@ -133,7 +133,7 @@ private:
     };
 
 template<class _ForwardIterator, class _BinaryPredicate = equal_to<>>
-_LIBCPP_INLINE_VISIBILITY
+_LIBCUDACXX_INLINE_VISIBILITY
 default_searcher<_ForwardIterator, _BinaryPredicate>
 make_default_searcher( _ForwardIterator __f, _ForwardIterator __l, _BinaryPredicate __p = _BinaryPredicate ())
 {
@@ -153,17 +153,17 @@ public: // TODO private:
     std::unordered_map<_Key, _Value, _Hash, _BinaryPredicate> __table;
     
 public:
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     _BMSkipTable(std::size_t __sz, _Value __default, _Hash __hf, _BinaryPredicate __pred)
         : __default_value_(__default), __table(__sz, __hf, __pred) {}
     
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void insert(const key_type &__key, value_type __val)
     {
         __table [__key] = __val;    // Would skip_.insert (val) be better here?
     }
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     value_type operator [](const key_type & __key) const
     {
         auto __it = __table.find (__key);
@@ -180,23 +180,23 @@ private:
     typedef _Key   key_type;
 
     typedef typename std::make_unsigned<key_type>::type unsigned_key_type;
-    typedef std::array<value_type, _VSTD::numeric_limits<unsigned_key_type>::max()> skip_map;
+    typedef std::array<value_type, _CUDA_VSTD::numeric_limits<unsigned_key_type>::max()> skip_map;
     skip_map __table;
 
 public:
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     _BMSkipTable(std::size_t /*__sz*/, _Value __default, _Hash /*__hf*/, _BinaryPredicate /*__pred*/)
     {
         std::fill_n(__table.begin(), __table.size(), __default);
     }
     
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void insert(key_type __key, value_type __val)
     {
         __table[static_cast<unsigned_key_type>(__key)] = __val;
     }
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     value_type operator [](key_type __key) const
     {
         return __table[static_cast<unsigned_key_type>(__key)];
@@ -207,12 +207,12 @@ public:
 template <class _RandomAccessIterator1, 
           class _Hash = hash<typename iterator_traits<_RandomAccessIterator1>::value_type>, 
           class _BinaryPredicate = equal_to<>>
-class _LIBCPP_TYPE_VIS boyer_moore_searcher {
+class _LIBCUDACXX_TYPE_VIS boyer_moore_searcher {
 private:
     typedef typename std::iterator_traits<_RandomAccessIterator1>::difference_type difference_type;
     typedef typename std::iterator_traits<_RandomAccessIterator1>::value_type      value_type;
     typedef _BMSkipTable<value_type, difference_type, _Hash, _BinaryPredicate,
-                    _VSTD::is_integral<value_type>::value && // what about enums?
+                    _CUDA_VSTD::is_integral<value_type>::value && // what about enums?
                     sizeof(value_type) == 1 &&
                     is_same<_Hash, hash<value_type>>::value &&
                     is_same<_BinaryPredicate, equal_to<>>::value
@@ -222,7 +222,7 @@ public:
     boyer_moore_searcher(_RandomAccessIterator1 __f, _RandomAccessIterator1 __l, 
                 _Hash __hf = _Hash(), _BinaryPredicate __pred = _BinaryPredicate())
             : __first_(__f), __last_(__l), __pred_(__pred),
-              __pattern_length_(_VSTD::distance(__first_, __last_)),
+              __pattern_length_(_CUDA_VSTD::distance(__first_, __last_)),
               __skip_{make_shared<skip_table_type>(__pattern_length_, -1, __hf, __pred_)},
               __suffix_{make_shared<vector<difference_type>>(__pattern_length_ + 1)}
         {
@@ -247,7 +247,7 @@ public:
         if (__first_ == __last_) return make_pair(__f, __f); // empty pattern
 
     //  If the pattern is larger than the corpus, we can't find it!
-        if ( __pattern_length_ > _VSTD::distance (__f, __l)) 
+        if ( __pattern_length_ > _CUDA_VSTD::distance (__f, __l)) 
             return make_pair(__l, __l);
 
     //  Do the search 
@@ -299,7 +299,7 @@ public: // TODO private:
     template<typename _Iterator, typename _Container>
     void __compute_bm_prefix ( _Iterator __f, _Iterator __l, _BinaryPredicate __pred, _Container &__prefix )
     {
-        const std::size_t __count = _VSTD::distance(__f, __l);
+        const std::size_t __count = _CUDA_VSTD::distance(__f, __l);
                         
         __prefix[0] = 0;
         std::size_t __k = 0;
@@ -317,17 +317,17 @@ public: // TODO private:
     void __build_suffix_table(_RandomAccessIterator1 __f, _RandomAccessIterator1 __l, 
                                                     _BinaryPredicate __pred)
     {
-        const std::size_t __count = _VSTD::distance(__f, __l);
+        const std::size_t __count = _CUDA_VSTD::distance(__f, __l);
         vector<difference_type> & __suffix = *__suffix_.get();
         if (__count > 0)
         {
-            _VSTD::vector<value_type> __scratch(__count);
+            _CUDA_VSTD::vector<value_type> __scratch(__count);
             
             __compute_bm_prefix(__f, __l, __pred, __scratch);
             for ( std::size_t __i = 0; __i <= __count; __i++ )
                 __suffix[__i] = __count - __scratch[__count-1];
     
-            typedef _VSTD::reverse_iterator<_RandomAccessIterator1> _RevIter;
+            typedef _CUDA_VSTD::reverse_iterator<_RandomAccessIterator1> _RevIter;
             __compute_bm_prefix(_RevIter(__l), _RevIter(__f), __pred, __scratch);
      
             for ( std::size_t __i = 0; __i < __count; __i++ )
@@ -346,7 +346,7 @@ public: // TODO private:
 template<class _RandomAccessIterator, 
          class _Hash = hash<typename iterator_traits<_RandomAccessIterator>::value_type>, 
          class _BinaryPredicate = equal_to<>>
-_LIBCPP_INLINE_VISIBILITY
+_LIBCUDACXX_INLINE_VISIBILITY
 boyer_moore_searcher<_RandomAccessIterator, _Hash, _BinaryPredicate>
 make_boyer_moore_searcher( _RandomAccessIterator __f, _RandomAccessIterator __l, 
                     _Hash __hf = _Hash(), _BinaryPredicate __p = _BinaryPredicate ())
@@ -358,12 +358,12 @@ make_boyer_moore_searcher( _RandomAccessIterator __f, _RandomAccessIterator __l,
 template <class _RandomAccessIterator1, 
           class _Hash = hash<typename iterator_traits<_RandomAccessIterator1>::value_type>, 
           class _BinaryPredicate = equal_to<>>
-class _LIBCPP_TYPE_VIS boyer_moore_horspool_searcher {
+class _LIBCUDACXX_TYPE_VIS boyer_moore_horspool_searcher {
 private:
     typedef typename std::iterator_traits<_RandomAccessIterator1>::difference_type difference_type;
     typedef typename std::iterator_traits<_RandomAccessIterator1>::value_type      value_type;
     typedef _BMSkipTable<value_type, difference_type, _Hash, _BinaryPredicate,
-                    _VSTD::is_integral<value_type>::value && // what about enums?
+                    _CUDA_VSTD::is_integral<value_type>::value && // what about enums?
                     sizeof(value_type) == 1 &&
                     is_same<_Hash, hash<value_type>>::value &&
                     is_same<_BinaryPredicate, equal_to<>>::value
@@ -373,8 +373,8 @@ public:
     boyer_moore_horspool_searcher(_RandomAccessIterator1 __f, _RandomAccessIterator1 __l, 
                 _Hash __hf = _Hash(), _BinaryPredicate __pred = _BinaryPredicate())
             : __first_(__f), __last_(__l), __pred_(__pred),
-              __pattern_length_(_VSTD::distance(__first_, __last_)),
-              __skip_{_VSTD::make_shared<skip_table_type>(__pattern_length_, __pattern_length_, __hf, __pred_)}
+              __pattern_length_(_CUDA_VSTD::distance(__first_, __last_)),
+              __skip_{_CUDA_VSTD::make_shared<skip_table_type>(__pattern_length_, __pattern_length_, __hf, __pred_)}
         {
     //  build the skip table
             if ( __f != __l )
@@ -399,7 +399,7 @@ public:
         if (__first_ == __last_) return make_pair(__f, __f); // empty pattern
 
     //  If the pattern is larger than the corpus, we can't find it!
-        if ( __pattern_length_ > _VSTD::distance (__f, __l)) 
+        if ( __pattern_length_ > _CUDA_VSTD::distance (__f, __l)) 
             return make_pair(__l, __l);
 
     //  Do the search 
@@ -441,7 +441,7 @@ private:
 template<class _RandomAccessIterator, 
          class _Hash = hash<typename iterator_traits<_RandomAccessIterator>::value_type>, 
          class _BinaryPredicate = equal_to<>>
-_LIBCPP_INLINE_VISIBILITY
+_LIBCUDACXX_INLINE_VISIBILITY
 boyer_moore_horspool_searcher<_RandomAccessIterator, _Hash, _BinaryPredicate>
 make_boyer_moore_horspool_searcher( _RandomAccessIterator __f, _RandomAccessIterator __l, 
                     _Hash __hf = _Hash(), _BinaryPredicate __p = _BinaryPredicate ())
@@ -449,10 +449,10 @@ make_boyer_moore_horspool_searcher( _RandomAccessIterator __f, _RandomAccessIter
     return boyer_moore_horspool_searcher<_RandomAccessIterator, _Hash, _BinaryPredicate>(__f, __l, __hf, __p);
 }
 
-#endif // _LIBCPP_STD_VER > 11
+#endif // _LIBCUDACXX_STD_VER > 11
 
-_LIBCPP_END_NAMESPACE_LFTS
+_LIBCUDACXX_END_NAMESPACE_LFTS
 
-_LIBCPP_POP_MACROS
+_LIBCUDACXX_POP_MACROS
 
-#endif /* _LIBCPP_EXPERIMENTAL_FUNCTIONAL */
+#endif /* _LIBCUDACXX_EXPERIMENTAL_FUNCTIONAL */

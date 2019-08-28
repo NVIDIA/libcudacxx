@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef __LIBCPP_TYPEINFO
-#define __LIBCPP_TYPEINFO
+#ifndef __LIBCUDACXX_TYPEINFO
+#define __LIBCUDACXX_TYPEINFO
 
 /*
 
@@ -60,28 +60,28 @@ public:
 #include <exception>
 #include <cstddef>
 #include <cstdint>
-#ifdef _LIBCPP_NO_EXCEPTIONS
+#ifdef _LIBCUDACXX_NO_EXCEPTIONS
 #include <cstdlib>
 #endif
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
-#if defined(_LIBCPP_ABI_VCRUNTIME)
+#if defined(_LIBCUDACXX_ABI_VCRUNTIME)
 #include <vcruntime_typeinfo.h>
 #else
 
-#if defined(_LIBCPP_NONUNIQUE_RTTI_BIT) && !defined(_LIBCPP_ABI_MICROSOFT)
-#   define _LIBCPP_HAS_NONUNIQUE_TYPEINFO
+#if defined(_LIBCUDACXX_NONUNIQUE_RTTI_BIT) && !defined(_LIBCUDACXX_ABI_MICROSOFT)
+#   define _LIBCUDACXX_HAS_NONUNIQUE_TYPEINFO
 #endif
 
 namespace std  // purposefully not using versioning namespace
 {
 
-#if defined(_LIBCPP_ABI_MICROSOFT)
+#if defined(_LIBCUDACXX_ABI_MICROSOFT)
 
-class _LIBCPP_EXCEPTION_ABI type_info
+class _LIBCUDACXX_EXCEPTION_ABI type_info
 {
     type_info& operator=(const type_info&);
     type_info(const type_info&);
@@ -94,29 +94,29 @@ class _LIBCPP_EXCEPTION_ABI type_info
     int __compare(const type_info &__rhs) const _NOEXCEPT;
 
 public:
-    _LIBCPP_AVAILABILITY_TYPEINFO_VTABLE
+    _LIBCUDACXX_AVAILABILITY_TYPEINFO_VTABLE
     virtual ~type_info();
 
     const char *name() const _NOEXCEPT;
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     bool before(const type_info& __arg) const _NOEXCEPT {
       return __compare(__arg) < 0;
     }
 
     size_t hash_code() const _NOEXCEPT;
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     bool operator==(const type_info& __arg) const _NOEXCEPT {
       return __compare(__arg) == 0;
     }
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     bool operator!=(const type_info& __arg) const _NOEXCEPT
     { return !operator==(__arg); }
 };
 
-#elif defined(_LIBCPP_HAS_NONUNIQUE_TYPEINFO)
+#elif defined(_LIBCUDACXX_HAS_NONUNIQUE_TYPEINFO)
 
 // This implementation of type_info does not assume always a unique copy of
 // the RTTI for a given type inside a program. It packs the pointer to the
@@ -132,45 +132,45 @@ public:
 // Note that the compiler is the one setting (or unsetting) the high bit of
 // the pointer when it constructs the type_info, depending on whether it can
 // guarantee uniqueness for that specific type_info.
-class _LIBCPP_EXCEPTION_ABI type_info
+class _LIBCUDACXX_EXCEPTION_ABI type_info
 {
     type_info& operator=(const type_info&);
     type_info(const type_info&);
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     int __compare_nonunique_names(const type_info &__arg) const _NOEXCEPT
     { return __builtin_strcmp(name(), __arg.name()); }
 
 protected:
     uintptr_t __type_name;
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit type_info(const char* __n)
       : __type_name(reinterpret_cast<uintptr_t>(__n)) {}
 
 public:
-    _LIBCPP_AVAILABILITY_TYPEINFO_VTABLE
+    _LIBCUDACXX_AVAILABILITY_TYPEINFO_VTABLE
     virtual ~type_info();
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     const char* name() const _NOEXCEPT
     {
       return reinterpret_cast<const char*>(__type_name &
-                                           ~_LIBCPP_NONUNIQUE_RTTI_BIT);
+                                           ~_LIBCUDACXX_NONUNIQUE_RTTI_BIT);
     }
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     bool before(const type_info& __arg) const _NOEXCEPT
     {
-      if (!((__type_name & __arg.__type_name) & _LIBCPP_NONUNIQUE_RTTI_BIT))
+      if (!((__type_name & __arg.__type_name) & _LIBCUDACXX_NONUNIQUE_RTTI_BIT))
         return __type_name < __arg.__type_name;
       return __compare_nonunique_names(__arg) < 0;
     }
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     size_t hash_code() const _NOEXCEPT
     {
-      if (!(__type_name & _LIBCPP_NONUNIQUE_RTTI_BIT))
+      if (!(__type_name & _LIBCUDACXX_NONUNIQUE_RTTI_BIT))
         return __type_name;
 
       const char* __ptr = name();
@@ -180,23 +180,23 @@ public:
       return __hash;
     }
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     bool operator==(const type_info& __arg) const _NOEXCEPT
     {
       if (__type_name == __arg.__type_name)
         return true;
 
-      if (!((__type_name & __arg.__type_name) & _LIBCPP_NONUNIQUE_RTTI_BIT))
+      if (!((__type_name & __arg.__type_name) & _LIBCUDACXX_NONUNIQUE_RTTI_BIT))
         return false;
       return __compare_nonunique_names(__arg) == 0;
     }
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     bool operator!=(const type_info& __arg) const _NOEXCEPT
     { return !operator==(__arg); }
 };
 
-#else // !_LIBCPP_ABI_MICROSOFT && !_LIBCPP_HAS_NONUNIQUE_TYPEINFO
+#else // !_LIBCUDACXX_ABI_MICROSOFT && !_LIBCUDACXX_HAS_NONUNIQUE_TYPEINFO
 
 // This implementation of type_info assumes a unique copy of the RTTI for a
 // given type inside a program. This is a valid assumption when abiding to
@@ -204,7 +204,7 @@ public:
 // Under this assumption, we can always compare the addresses of the type names
 // to implement equality-comparison of type_infos instead of having to perform
 // a deep string comparison.
-class _LIBCPP_EXCEPTION_ABI type_info
+class _LIBCUDACXX_EXCEPTION_ABI type_info
 {
     type_info& operator=(const type_info&);
     type_info(const type_info&);
@@ -212,37 +212,37 @@ class _LIBCPP_EXCEPTION_ABI type_info
 protected:
     const char *__type_name;
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit type_info(const char* __n) : __type_name(__n) {}
 
 public:
-    _LIBCPP_AVAILABILITY_TYPEINFO_VTABLE
+    _LIBCUDACXX_AVAILABILITY_TYPEINFO_VTABLE
     virtual ~type_info();
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     const char* name() const _NOEXCEPT
     { return __type_name; }
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     bool before(const type_info& __arg) const _NOEXCEPT
     { return __type_name < __arg.__type_name; }
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     size_t hash_code() const _NOEXCEPT
     { return reinterpret_cast<size_t>(__type_name); }
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     bool operator==(const type_info& __arg) const _NOEXCEPT
     { return __type_name == __arg.__type_name; }
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     bool operator!=(const type_info& __arg) const _NOEXCEPT
     { return !operator==(__arg); }
 };
 
 #endif
 
-class _LIBCPP_EXCEPTION_ABI bad_cast
+class _LIBCUDACXX_EXCEPTION_ABI bad_cast
     : public exception
 {
 public:
@@ -251,7 +251,7 @@ public:
     virtual const char* what() const _NOEXCEPT;
 };
 
-class _LIBCPP_EXCEPTION_ABI bad_typeid
+class _LIBCUDACXX_EXCEPTION_ABI bad_typeid
     : public exception
 {
 public:
@@ -262,18 +262,18 @@ public:
 
 }  // std
 
-#endif // defined(_LIBCPP_ABI_VCRUNTIME)
+#endif // defined(_LIBCUDACXX_ABI_VCRUNTIME)
 
-_LIBCPP_BEGIN_NAMESPACE_STD
-_LIBCPP_NORETURN inline _LIBCPP_INLINE_VISIBILITY
+_LIBCUDACXX_BEGIN_NAMESPACE_STD
+_LIBCUDACXX_NORETURN inline _LIBCUDACXX_INLINE_VISIBILITY
 void __throw_bad_cast()
 {
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
     throw bad_cast();
 #else
-    _VSTD::abort();
+    _CUDA_VSTD::abort();
 #endif
 }
-_LIBCPP_END_NAMESPACE_STD
+_LIBCUDACXX_END_NAMESPACE_STD
 
-#endif  // __LIBCPP_TYPEINFO
+#endif  // __LIBCUDACXX_TYPEINFO

@@ -160,7 +160,7 @@ int main(int, char**)
 
         assert(c0.empty());
     }
-#if _LIBCPP_DEBUG >= 1
+#if _LIBCUDACXX_DEBUG >= 1
     {
         std::unordered_set<int> s1 = {1, 2, 3};
         std::unordered_set<int>::iterator i = s1.begin();

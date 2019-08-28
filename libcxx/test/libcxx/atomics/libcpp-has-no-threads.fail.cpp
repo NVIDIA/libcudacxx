@@ -8,12 +8,12 @@
 
 // <atomic>
 
-// Test that including <atomic> fails to compile when _LIBCPP_HAS_NO_THREADS
+// Test that including <atomic> fails to compile when _LIBCUDACXX_HAS_NO_THREADS
 // is defined.
 
-// MODULES_DEFINES: _LIBCPP_HAS_NO_THREADS
-#ifndef _LIBCPP_HAS_NO_THREADS
-#define _LIBCPP_HAS_NO_THREADS
+// MODULES_DEFINES: _LIBCUDACXX_HAS_NO_THREADS
+#ifndef _LIBCUDACXX_HAS_NO_THREADS
+#define _LIBCUDACXX_HAS_NO_THREADS
 #endif
 
 #include <atomic>

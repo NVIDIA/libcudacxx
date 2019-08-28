@@ -25,7 +25,7 @@ constexpr inline int reg_width() {
 #endif
 }
 
-#ifndef _LIBCPP_HAS_NO_VECTOR_EXTENSION
+#ifndef _LIBCUDACXX_HAS_NO_VECTOR_EXTENSION
 
 static_assert(
     sizeof(ex::simd<char, ex::__simd_abi<ex::_StorageKind::_VecExt, 1>>) == 1,

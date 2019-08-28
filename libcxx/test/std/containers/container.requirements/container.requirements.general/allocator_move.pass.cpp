@@ -69,7 +69,7 @@ int main(int, char**) {
     test<std::forward_list<int, test_allocator<int> > >();
 
     // libc++ stores two allocators in deque
-#ifdef _LIBCPP_VERSION
+#ifdef _LIBCUDACXX_VERSION
     int stored_allocators = 2;
 #else
     int stored_allocators = 1;
@@ -86,7 +86,7 @@ int main(int, char**) {
   }
   { // test unordered containers
     // libc++ stores two allocators in the unordered containers.
-#ifdef _LIBCPP_VERSION
+#ifdef _LIBCUDACXX_VERSION
     int stored_allocators = 2;
 #else
     int stored_allocators = 1;

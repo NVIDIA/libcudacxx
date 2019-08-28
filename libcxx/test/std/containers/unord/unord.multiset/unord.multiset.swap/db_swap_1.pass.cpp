@@ -14,8 +14,8 @@
 
 // void swap(unordered_multiset& x, unordered_multiset& y);
 
-#if _LIBCPP_DEBUG >= 1
-#define _LIBCPP_ASSERT(x, m) ((x) ? (void)0 : std::exit(0))
+#if _LIBCUDACXX_DEBUG >= 1
+#define _LIBCUDACXX_ASSERT(x, m) ((x) ? (void)0 : std::exit(0))
 #endif
 
 #include <unordered_set>
@@ -23,7 +23,7 @@
 
 int main(int, char**)
 {
-#if _LIBCPP_DEBUG >= 1
+#if _LIBCUDACXX_DEBUG >= 1
     {
         int a1[] = {1, 3, 7, 9, 10};
         int a2[] = {0, 2, 4, 5, 6, 8, 11};

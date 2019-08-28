@@ -16,8 +16,8 @@
 
 struct DebugException {};
 
-#define _LIBCPP_DEBUG 0
-#define _LIBCPP_ASSERT(x, m) ((x) ? (void)0 : throw ::DebugException())
+#define _LIBCUDACXX_DEBUG 0
+#define _LIBCUDACXX_ASSERT(x, m) ((x) ? (void)0 : throw ::DebugException())
 
 #include <algorithm>
 #include <iterator>

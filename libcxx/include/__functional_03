@@ -7,12 +7,12 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCPP_FUNCTIONAL_03
-#define _LIBCPP_FUNCTIONAL_03
+#ifndef _LIBCUDACXX_FUNCTIONAL_03
+#define _LIBCUDACXX_FUNCTIONAL_03
 
 // manual variadic expansion for <functional>
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
@@ -33,10 +33,10 @@ public:
     virtual void destroy() = 0;
     virtual void destroy_deallocate() = 0;
     virtual _Rp operator()() = 0;
-#ifndef _LIBCPP_NO_RTTI
+#ifndef _LIBCUDACXX_NO_RTTI
     virtual const void* target(const type_info&) const = 0;
     virtual const std::type_info& target_type() const = 0;
-#endif  // _LIBCPP_NO_RTTI
+#endif  // _LIBCUDACXX_NO_RTTI
 };
 
 template<class _Rp, class _A0>
@@ -52,10 +52,10 @@ public:
     virtual void destroy() = 0;
     virtual void destroy_deallocate() = 0;
     virtual _Rp operator()(_A0) = 0;
-#ifndef _LIBCPP_NO_RTTI
+#ifndef _LIBCUDACXX_NO_RTTI
     virtual const void* target(const type_info&) const = 0;
     virtual const std::type_info& target_type() const = 0;
-#endif  // _LIBCPP_NO_RTTI
+#endif  // _LIBCUDACXX_NO_RTTI
 };
 
 template<class _Rp, class _A0, class _A1>
@@ -71,10 +71,10 @@ public:
     virtual void destroy() = 0;
     virtual void destroy_deallocate() = 0;
     virtual _Rp operator()(_A0, _A1) = 0;
-#ifndef _LIBCPP_NO_RTTI
+#ifndef _LIBCUDACXX_NO_RTTI
     virtual const void* target(const type_info&) const = 0;
     virtual const std::type_info& target_type() const = 0;
-#endif  // _LIBCPP_NO_RTTI
+#endif  // _LIBCUDACXX_NO_RTTI
 };
 
 template<class _Rp, class _A0, class _A1, class _A2>
@@ -90,10 +90,10 @@ public:
     virtual void destroy() = 0;
     virtual void destroy_deallocate() = 0;
     virtual _Rp operator()(_A0, _A1, _A2) = 0;
-#ifndef _LIBCPP_NO_RTTI
+#ifndef _LIBCUDACXX_NO_RTTI
     virtual const void* target(const type_info&) const = 0;
     virtual const std::type_info& target_type() const = 0;
-#endif  // _LIBCPP_NO_RTTI
+#endif  // _LIBCUDACXX_NO_RTTI
 };
 
 template<class _FD, class _Alloc, class _FB> class __func;
@@ -104,17 +104,17 @@ class __func<_Fp, _Alloc, _Rp()>
 {
     __compressed_pair<_Fp, _Alloc> __f_;
 public:
-    explicit __func(_Fp __f) : __f_(_VSTD::move(__f)) {}
-    explicit __func(_Fp __f, _Alloc __a) : __f_(_VSTD::move(__f), _VSTD::move(__a)) {}
+    explicit __func(_Fp __f) : __f_(_CUDA_VSTD::move(__f)) {}
+    explicit __func(_Fp __f, _Alloc __a) : __f_(_CUDA_VSTD::move(__f), _CUDA_VSTD::move(__a)) {}
     virtual __base<_Rp()>* __clone() const;
     virtual void __clone(__base<_Rp()>*) const;
     virtual void destroy();
     virtual void destroy_deallocate();
     virtual _Rp operator()();
-#ifndef _LIBCPP_NO_RTTI
+#ifndef _LIBCUDACXX_NO_RTTI
     virtual const void* target(const type_info&) const;
     virtual const std::type_info& target_type() const;
-#endif  // _LIBCPP_NO_RTTI
+#endif  // _LIBCUDACXX_NO_RTTI
 };
 
 template<class _Fp, class _Alloc, class _Rp>
@@ -163,7 +163,7 @@ __func<_Fp, _Alloc, _Rp()>::operator()()
     return _Invoker::__call(__f_.first());
 }
 
-#ifndef _LIBCPP_NO_RTTI
+#ifndef _LIBCUDACXX_NO_RTTI
 
 template<class _Fp, class _Alloc, class _Rp>
 const void*
@@ -181,7 +181,7 @@ __func<_Fp, _Alloc, _Rp()>::target_type() const
     return typeid(_Fp);
 }
 
-#endif  // _LIBCPP_NO_RTTI
+#endif  // _LIBCUDACXX_NO_RTTI
 
 template<class _Fp, class _Alloc, class _Rp, class _A0>
 class __func<_Fp, _Alloc, _Rp(_A0)>
@@ -189,18 +189,18 @@ class __func<_Fp, _Alloc, _Rp(_A0)>
 {
     __compressed_pair<_Fp, _Alloc> __f_;
 public:
-    _LIBCPP_INLINE_VISIBILITY explicit __func(_Fp __f) : __f_(_VSTD::move(__f)) {}
-    _LIBCPP_INLINE_VISIBILITY explicit __func(_Fp __f, _Alloc __a)
-        : __f_(_VSTD::move(__f), _VSTD::move(__a)) {}
+    _LIBCUDACXX_INLINE_VISIBILITY explicit __func(_Fp __f) : __f_(_CUDA_VSTD::move(__f)) {}
+    _LIBCUDACXX_INLINE_VISIBILITY explicit __func(_Fp __f, _Alloc __a)
+        : __f_(_CUDA_VSTD::move(__f), _CUDA_VSTD::move(__a)) {}
     virtual __base<_Rp(_A0)>* __clone() const;
     virtual void __clone(__base<_Rp(_A0)>*) const;
     virtual void destroy();
     virtual void destroy_deallocate();
     virtual _Rp operator()(_A0);
-#ifndef _LIBCPP_NO_RTTI
+#ifndef _LIBCUDACXX_NO_RTTI
     virtual const void* target(const type_info&) const;
     virtual const std::type_info& target_type() const;
-#endif  // _LIBCPP_NO_RTTI
+#endif  // _LIBCUDACXX_NO_RTTI
 };
 
 template<class _Fp, class _Alloc, class _Rp, class _A0>
@@ -249,7 +249,7 @@ __func<_Fp, _Alloc, _Rp(_A0)>::operator()(_A0 __a0)
     return _Invoker::__call(__f_.first(), __a0);
 }
 
-#ifndef _LIBCPP_NO_RTTI
+#ifndef _LIBCUDACXX_NO_RTTI
 
 template<class _Fp, class _Alloc, class _Rp, class _A0>
 const void*
@@ -267,7 +267,7 @@ __func<_Fp, _Alloc, _Rp(_A0)>::target_type() const
     return typeid(_Fp);
 }
 
-#endif  // _LIBCPP_NO_RTTI
+#endif  // _LIBCUDACXX_NO_RTTI
 
 template<class _Fp, class _Alloc, class _Rp, class _A0, class _A1>
 class __func<_Fp, _Alloc, _Rp(_A0, _A1)>
@@ -275,18 +275,18 @@ class __func<_Fp, _Alloc, _Rp(_A0, _A1)>
 {
     __compressed_pair<_Fp, _Alloc> __f_;
 public:
-    _LIBCPP_INLINE_VISIBILITY explicit __func(_Fp __f) : __f_(_VSTD::move(__f)) {}
-    _LIBCPP_INLINE_VISIBILITY explicit __func(_Fp __f, _Alloc __a)
-        : __f_(_VSTD::move(__f), _VSTD::move(__a)) {}
+    _LIBCUDACXX_INLINE_VISIBILITY explicit __func(_Fp __f) : __f_(_CUDA_VSTD::move(__f)) {}
+    _LIBCUDACXX_INLINE_VISIBILITY explicit __func(_Fp __f, _Alloc __a)
+        : __f_(_CUDA_VSTD::move(__f), _CUDA_VSTD::move(__a)) {}
     virtual __base<_Rp(_A0, _A1)>* __clone() const;
     virtual void __clone(__base<_Rp(_A0, _A1)>*) const;
     virtual void destroy();
     virtual void destroy_deallocate();
     virtual _Rp operator()(_A0, _A1);
-#ifndef _LIBCPP_NO_RTTI
+#ifndef _LIBCUDACXX_NO_RTTI
     virtual const void* target(const type_info&) const;
     virtual const std::type_info& target_type() const;
-#endif  // _LIBCPP_NO_RTTI
+#endif  // _LIBCUDACXX_NO_RTTI
 };
 
 template<class _Fp, class _Alloc, class _Rp, class _A0, class _A1>
@@ -335,7 +335,7 @@ __func<_Fp, _Alloc, _Rp(_A0, _A1)>::operator()(_A0 __a0, _A1 __a1)
     return _Invoker::__call(__f_.first(), __a0, __a1);
 }
 
-#ifndef _LIBCPP_NO_RTTI
+#ifndef _LIBCUDACXX_NO_RTTI
 
 template<class _Fp, class _Alloc, class _Rp, class _A0, class _A1>
 const void*
@@ -353,7 +353,7 @@ __func<_Fp, _Alloc, _Rp(_A0, _A1)>::target_type() const
     return typeid(_Fp);
 }
 
-#endif  // _LIBCPP_NO_RTTI
+#endif  // _LIBCUDACXX_NO_RTTI
 
 template<class _Fp, class _Alloc, class _Rp, class _A0, class _A1, class _A2>
 class __func<_Fp, _Alloc, _Rp(_A0, _A1, _A2)>
@@ -361,18 +361,18 @@ class __func<_Fp, _Alloc, _Rp(_A0, _A1, _A2)>
 {
     __compressed_pair<_Fp, _Alloc> __f_;
 public:
-    _LIBCPP_INLINE_VISIBILITY explicit __func(_Fp __f) : __f_(_VSTD::move(__f)) {}
-    _LIBCPP_INLINE_VISIBILITY explicit __func(_Fp __f, _Alloc __a)
-        : __f_(_VSTD::move(__f), _VSTD::move(__a)) {}
+    _LIBCUDACXX_INLINE_VISIBILITY explicit __func(_Fp __f) : __f_(_CUDA_VSTD::move(__f)) {}
+    _LIBCUDACXX_INLINE_VISIBILITY explicit __func(_Fp __f, _Alloc __a)
+        : __f_(_CUDA_VSTD::move(__f), _CUDA_VSTD::move(__a)) {}
     virtual __base<_Rp(_A0, _A1, _A2)>* __clone() const;
     virtual void __clone(__base<_Rp(_A0, _A1, _A2)>*) const;
     virtual void destroy();
     virtual void destroy_deallocate();
     virtual _Rp operator()(_A0, _A1, _A2);
-#ifndef _LIBCPP_NO_RTTI
+#ifndef _LIBCUDACXX_NO_RTTI
     virtual const void* target(const type_info&) const;
     virtual const std::type_info& target_type() const;
-#endif  // _LIBCPP_NO_RTTI
+#endif  // _LIBCUDACXX_NO_RTTI
 };
 
 template<class _Fp, class _Alloc, class _Rp, class _A0, class _A1, class _A2>
@@ -421,7 +421,7 @@ __func<_Fp, _Alloc, _Rp(_A0, _A1, _A2)>::operator()(_A0 __a0, _A1 __a1, _A2 __a2
     return _Invoker::__call(__f_.first(), __a0, __a1, __a2);
 }
 
-#ifndef _LIBCPP_NO_RTTI
+#ifndef _LIBCUDACXX_NO_RTTI
 
 template<class _Fp, class _Alloc, class _Rp, class _A0, class _A1, class _A2>
 const void*
@@ -439,12 +439,12 @@ __func<_Fp, _Alloc, _Rp(_A0, _A1, _A2)>::target_type() const
     return typeid(_Fp);
 }
 
-#endif  // _LIBCPP_NO_RTTI
+#endif  // _LIBCUDACXX_NO_RTTI
 
 }  // __function
 
 template<class _Rp>
-class _LIBCPP_TEMPLATE_VIS function<_Rp()>
+class _LIBCUDACXX_TEMPLATE_VIS function<_Rp()>
 {
     typedef __function::__base<_Rp()> __base;
     aligned_storage<3*sizeof(void*)>::type __buf_;
@@ -454,18 +454,18 @@ public:
     typedef _Rp result_type;
 
     // 20.7.16.2.1, construct/copy/destroy:
-    _LIBCPP_INLINE_VISIBILITY explicit function() : __f_(0) {}
-    _LIBCPP_INLINE_VISIBILITY function(nullptr_t) : __f_(0) {}
+    _LIBCUDACXX_INLINE_VISIBILITY explicit function() : __f_(0) {}
+    _LIBCUDACXX_INLINE_VISIBILITY function(nullptr_t) : __f_(0) {}
     function(const function&);
     template<class _Fp>
       function(_Fp,
                typename enable_if<!is_integral<_Fp>::value>::type* = 0);
 
     template<class _Alloc>
-      _LIBCPP_INLINE_VISIBILITY
+      _LIBCUDACXX_INLINE_VISIBILITY
       function(allocator_arg_t, const _Alloc&) : __f_(0) {}
     template<class _Alloc>
-      _LIBCPP_INLINE_VISIBILITY
+      _LIBCUDACXX_INLINE_VISIBILITY
       function(allocator_arg_t, const _Alloc&, nullptr_t) : __f_(0) {}
     template<class _Alloc>
       function(allocator_arg_t, const _Alloc&, const function&);
@@ -488,12 +488,12 @@ public:
     // 20.7.16.2.2, function modifiers:
     void swap(function&);
     template<class _Fp, class _Alloc>
-      _LIBCPP_INLINE_VISIBILITY
+      _LIBCUDACXX_INLINE_VISIBILITY
       void assign(_Fp __f, const _Alloc& __a)
         {function(allocator_arg, __a, __f).swap(*this);}
 
     // 20.7.16.2.3, function capacity:
-    _LIBCPP_INLINE_VISIBILITY operator bool() const {return __f_;}
+    _LIBCUDACXX_INLINE_VISIBILITY operator bool() const {return __f_;}
 
 private:
     // deleted overloads close possible hole in the type system
@@ -505,12 +505,12 @@ public:
     // 20.7.16.2.4, function invocation:
     _Rp operator()() const;
 
-#ifndef _LIBCPP_NO_RTTI
+#ifndef _LIBCUDACXX_NO_RTTI
     // 20.7.16.2.5, function target access:
     const std::type_info& target_type() const;
     template <typename _Tp> _Tp* target();
     template <typename _Tp> const _Tp* target() const;
-#endif  // _LIBCPP_NO_RTTI
+#endif  // _LIBCUDACXX_NO_RTTI
 };
 
 template<class _Rp>
@@ -628,7 +628,7 @@ typename enable_if
 >::type
 function<_Rp()>::operator=(_Fp __f)
 {
-    function(_VSTD::move(__f)).swap(*this);
+    function(_CUDA_VSTD::move(__f)).swap(*this);
     return *this;
 }
 
@@ -645,7 +645,7 @@ template<class _Rp>
 void
 function<_Rp()>::swap(function& __f)
 {
-    if (_VSTD::addressof(__f) == this)
+    if (_CUDA_VSTD::addressof(__f) == this)
       return;
     if (__f_ == (__base*)&__buf_ && __f.__f_ == (__base*)&__f.__buf_)
     {
@@ -677,7 +677,7 @@ function<_Rp()>::swap(function& __f)
         __f_ = (__base*)&__buf_;
     }
     else
-        _VSTD::swap(__f_, __f.__f_);
+        _CUDA_VSTD::swap(__f_, __f.__f_);
 }
 
 template<class _Rp>
@@ -689,7 +689,7 @@ function<_Rp()>::operator()() const
     return (*__f_)();
 }
 
-#ifndef _LIBCPP_NO_RTTI
+#ifndef _LIBCUDACXX_NO_RTTI
 
 template<class _Rp>
 const std::type_info&
@@ -720,10 +720,10 @@ function<_Rp()>::target() const
     return (const _Tp*)__f_->target(typeid(_Tp));
 }
 
-#endif  // _LIBCPP_NO_RTTI
+#endif  // _LIBCUDACXX_NO_RTTI
 
 template<class _Rp, class _A0>
-class _LIBCPP_TEMPLATE_VIS function<_Rp(_A0)>
+class _LIBCUDACXX_TEMPLATE_VIS function<_Rp(_A0)>
     : public unary_function<_A0, _Rp>
 {
     typedef __function::__base<_Rp(_A0)> __base;
@@ -734,18 +734,18 @@ public:
     typedef _Rp result_type;
 
     // 20.7.16.2.1, construct/copy/destroy:
-    _LIBCPP_INLINE_VISIBILITY explicit function() : __f_(0) {}
-    _LIBCPP_INLINE_VISIBILITY function(nullptr_t) : __f_(0) {}
+    _LIBCUDACXX_INLINE_VISIBILITY explicit function() : __f_(0) {}
+    _LIBCUDACXX_INLINE_VISIBILITY function(nullptr_t) : __f_(0) {}
     function(const function&);
     template<class _Fp>
       function(_Fp,
                typename enable_if<!is_integral<_Fp>::value>::type* = 0);
 
     template<class _Alloc>
-      _LIBCPP_INLINE_VISIBILITY
+      _LIBCUDACXX_INLINE_VISIBILITY
       function(allocator_arg_t, const _Alloc&) : __f_(0) {}
     template<class _Alloc>
-      _LIBCPP_INLINE_VISIBILITY
+      _LIBCUDACXX_INLINE_VISIBILITY
       function(allocator_arg_t, const _Alloc&, nullptr_t) : __f_(0) {}
     template<class _Alloc>
       function(allocator_arg_t, const _Alloc&, const function&);
@@ -768,12 +768,12 @@ public:
     // 20.7.16.2.2, function modifiers:
     void swap(function&);
     template<class _Fp, class _Alloc>
-      _LIBCPP_INLINE_VISIBILITY
+      _LIBCUDACXX_INLINE_VISIBILITY
       void assign(_Fp __f, const _Alloc& __a)
         {function(allocator_arg, __a, __f).swap(*this);}
 
     // 20.7.16.2.3, function capacity:
-    _LIBCPP_INLINE_VISIBILITY operator bool() const {return __f_;}
+    _LIBCUDACXX_INLINE_VISIBILITY operator bool() const {return __f_;}
 
 private:
     // deleted overloads close possible hole in the type system
@@ -785,12 +785,12 @@ public:
     // 20.7.16.2.4, function invocation:
     _Rp operator()(_A0) const;
 
-#ifndef _LIBCPP_NO_RTTI
+#ifndef _LIBCUDACXX_NO_RTTI
     // 20.7.16.2.5, function target access:
     const std::type_info& target_type() const;
     template <typename _Tp> _Tp* target();
     template <typename _Tp> const _Tp* target() const;
-#endif  // _LIBCPP_NO_RTTI
+#endif  // _LIBCUDACXX_NO_RTTI
 };
 
 template<class _Rp, class _A0>
@@ -908,7 +908,7 @@ typename enable_if
 >::type
 function<_Rp(_A0)>::operator=(_Fp __f)
 {
-    function(_VSTD::move(__f)).swap(*this);
+    function(_CUDA_VSTD::move(__f)).swap(*this);
     return *this;
 }
 
@@ -925,7 +925,7 @@ template<class _Rp, class _A0>
 void
 function<_Rp(_A0)>::swap(function& __f)
 {
-    if (_VSTD::addressof(__f) == this)
+    if (_CUDA_VSTD::addressof(__f) == this)
       return;
     if (__f_ == (__base*)&__buf_ && __f.__f_ == (__base*)&__f.__buf_)
     {
@@ -957,7 +957,7 @@ function<_Rp(_A0)>::swap(function& __f)
         __f_ = (__base*)&__buf_;
     }
     else
-        _VSTD::swap(__f_, __f.__f_);
+        _CUDA_VSTD::swap(__f_, __f.__f_);
 }
 
 template<class _Rp, class _A0>
@@ -969,7 +969,7 @@ function<_Rp(_A0)>::operator()(_A0 __a0) const
     return (*__f_)(__a0);
 }
 
-#ifndef _LIBCPP_NO_RTTI
+#ifndef _LIBCUDACXX_NO_RTTI
 
 template<class _Rp, class _A0>
 const std::type_info&
@@ -1000,10 +1000,10 @@ function<_Rp(_A0)>::target() const
     return (const _Tp*)__f_->target(typeid(_Tp));
 }
 
-#endif  // _LIBCPP_NO_RTTI
+#endif  // _LIBCUDACXX_NO_RTTI
 
 template<class _Rp, class _A0, class _A1>
-class _LIBCPP_TEMPLATE_VIS function<_Rp(_A0, _A1)>
+class _LIBCUDACXX_TEMPLATE_VIS function<_Rp(_A0, _A1)>
     : public binary_function<_A0, _A1, _Rp>
 {
     typedef __function::__base<_Rp(_A0, _A1)> __base;
@@ -1014,18 +1014,18 @@ public:
     typedef _Rp result_type;
 
     // 20.7.16.2.1, construct/copy/destroy:
-    _LIBCPP_INLINE_VISIBILITY explicit function() : __f_(0) {}
-    _LIBCPP_INLINE_VISIBILITY function(nullptr_t) : __f_(0) {}
+    _LIBCUDACXX_INLINE_VISIBILITY explicit function() : __f_(0) {}
+    _LIBCUDACXX_INLINE_VISIBILITY function(nullptr_t) : __f_(0) {}
     function(const function&);
     template<class _Fp>
       function(_Fp,
                typename enable_if<!is_integral<_Fp>::value>::type* = 0);
 
     template<class _Alloc>
-      _LIBCPP_INLINE_VISIBILITY
+      _LIBCUDACXX_INLINE_VISIBILITY
       function(allocator_arg_t, const _Alloc&) : __f_(0) {}
     template<class _Alloc>
-      _LIBCPP_INLINE_VISIBILITY
+      _LIBCUDACXX_INLINE_VISIBILITY
       function(allocator_arg_t, const _Alloc&, nullptr_t) : __f_(0) {}
     template<class _Alloc>
       function(allocator_arg_t, const _Alloc&, const function&);
@@ -1048,7 +1048,7 @@ public:
     // 20.7.16.2.2, function modifiers:
     void swap(function&);
     template<class _Fp, class _Alloc>
-      _LIBCPP_INLINE_VISIBILITY
+      _LIBCUDACXX_INLINE_VISIBILITY
       void assign(_Fp __f, const _Alloc& __a)
         {function(allocator_arg, __a, __f).swap(*this);}
 
@@ -1065,12 +1065,12 @@ public:
     // 20.7.16.2.4, function invocation:
     _Rp operator()(_A0, _A1) const;
 
-#ifndef _LIBCPP_NO_RTTI
+#ifndef _LIBCUDACXX_NO_RTTI
     // 20.7.16.2.5, function target access:
     const std::type_info& target_type() const;
     template <typename _Tp> _Tp* target();
     template <typename _Tp> const _Tp* target() const;
-#endif  // _LIBCPP_NO_RTTI
+#endif  // _LIBCUDACXX_NO_RTTI
 };
 
 template<class _Rp, class _A0, class _A1>
@@ -1188,7 +1188,7 @@ typename enable_if
 >::type
 function<_Rp(_A0, _A1)>::operator=(_Fp __f)
 {
-    function(_VSTD::move(__f)).swap(*this);
+    function(_CUDA_VSTD::move(__f)).swap(*this);
     return *this;
 }
 
@@ -1205,7 +1205,7 @@ template<class _Rp, class _A0, class _A1>
 void
 function<_Rp(_A0, _A1)>::swap(function& __f)
 {
-    if (_VSTD::addressof(__f) == this)
+    if (_CUDA_VSTD::addressof(__f) == this)
       return;
     if (__f_ == (__base*)&__buf_ && __f.__f_ == (__base*)&__f.__buf_)
     {
@@ -1237,7 +1237,7 @@ function<_Rp(_A0, _A1)>::swap(function& __f)
         __f_ = (__base*)&__buf_;
     }
     else
-        _VSTD::swap(__f_, __f.__f_);
+        _CUDA_VSTD::swap(__f_, __f.__f_);
 }
 
 template<class _Rp, class _A0, class _A1>
@@ -1249,7 +1249,7 @@ function<_Rp(_A0, _A1)>::operator()(_A0 __a0, _A1 __a1) const
     return (*__f_)(__a0, __a1);
 }
 
-#ifndef _LIBCPP_NO_RTTI
+#ifndef _LIBCUDACXX_NO_RTTI
 
 template<class _Rp, class _A0, class _A1>
 const std::type_info&
@@ -1280,10 +1280,10 @@ function<_Rp(_A0, _A1)>::target() const
     return (const _Tp*)__f_->target(typeid(_Tp));
 }
 
-#endif  // _LIBCPP_NO_RTTI
+#endif  // _LIBCUDACXX_NO_RTTI
 
 template<class _Rp, class _A0, class _A1, class _A2>
-class _LIBCPP_TEMPLATE_VIS function<_Rp(_A0, _A1, _A2)>
+class _LIBCUDACXX_TEMPLATE_VIS function<_Rp(_A0, _A1, _A2)>
 {
     typedef __function::__base<_Rp(_A0, _A1, _A2)> __base;
     aligned_storage<3*sizeof(void*)>::type __buf_;
@@ -1293,18 +1293,18 @@ public:
     typedef _Rp result_type;
 
     // 20.7.16.2.1, construct/copy/destroy:
-    _LIBCPP_INLINE_VISIBILITY explicit function() : __f_(0) {}
-    _LIBCPP_INLINE_VISIBILITY function(nullptr_t) : __f_(0) {}
+    _LIBCUDACXX_INLINE_VISIBILITY explicit function() : __f_(0) {}
+    _LIBCUDACXX_INLINE_VISIBILITY function(nullptr_t) : __f_(0) {}
     function(const function&);
     template<class _Fp>
       function(_Fp,
                typename enable_if<!is_integral<_Fp>::value>::type* = 0);
 
     template<class _Alloc>
-      _LIBCPP_INLINE_VISIBILITY
+      _LIBCUDACXX_INLINE_VISIBILITY
       function(allocator_arg_t, const _Alloc&) : __f_(0) {}
     template<class _Alloc>
-      _LIBCPP_INLINE_VISIBILITY
+      _LIBCUDACXX_INLINE_VISIBILITY
       function(allocator_arg_t, const _Alloc&, nullptr_t) : __f_(0) {}
     template<class _Alloc>
       function(allocator_arg_t, const _Alloc&, const function&);
@@ -1327,12 +1327,12 @@ public:
     // 20.7.16.2.2, function modifiers:
     void swap(function&);
     template<class _Fp, class _Alloc>
-      _LIBCPP_INLINE_VISIBILITY
+      _LIBCUDACXX_INLINE_VISIBILITY
       void assign(_Fp __f, const _Alloc& __a)
         {function(allocator_arg, __a, __f).swap(*this);}
 
     // 20.7.16.2.3, function capacity:
-    _LIBCPP_INLINE_VISIBILITY operator bool() const {return __f_;}
+    _LIBCUDACXX_INLINE_VISIBILITY operator bool() const {return __f_;}
 
 private:
     // deleted overloads close possible hole in the type system
@@ -1344,12 +1344,12 @@ public:
     // 20.7.16.2.4, function invocation:
     _Rp operator()(_A0, _A1, _A2) const;
 
-#ifndef _LIBCPP_NO_RTTI
+#ifndef _LIBCUDACXX_NO_RTTI
     // 20.7.16.2.5, function target access:
     const std::type_info& target_type() const;
     template <typename _Tp> _Tp* target();
     template <typename _Tp> const _Tp* target() const;
-#endif  // _LIBCPP_NO_RTTI
+#endif  // _LIBCUDACXX_NO_RTTI
 };
 
 template<class _Rp, class _A0, class _A1, class _A2>
@@ -1468,7 +1468,7 @@ typename enable_if
 >::type
 function<_Rp(_A0, _A1, _A2)>::operator=(_Fp __f)
 {
-    function(_VSTD::move(__f)).swap(*this);
+    function(_CUDA_VSTD::move(__f)).swap(*this);
     return *this;
 }
 
@@ -1485,7 +1485,7 @@ template<class _Rp, class _A0, class _A1, class _A2>
 void
 function<_Rp(_A0, _A1, _A2)>::swap(function& __f)
 {
-    if (_VSTD::addressof(__f) == this)
+    if (_CUDA_VSTD::addressof(__f) == this)
       return;
     if (__f_ == (__base*)&__buf_ && __f.__f_ == (__base*)&__f.__buf_)
     {
@@ -1517,7 +1517,7 @@ function<_Rp(_A0, _A1, _A2)>::swap(function& __f)
         __f_ = (__base*)&__buf_;
     }
     else
-        _VSTD::swap(__f_, __f.__f_);
+        _CUDA_VSTD::swap(__f_, __f.__f_);
 }
 
 template<class _Rp, class _A0, class _A1, class _A2>
@@ -1529,7 +1529,7 @@ function<_Rp(_A0, _A1, _A2)>::operator()(_A0 __a0, _A1 __a1, _A2 __a2) const
     return (*__f_)(__a0, __a1, __a2);
 }
 
-#ifndef _LIBCPP_NO_RTTI
+#ifndef _LIBCUDACXX_NO_RTTI
 
 template<class _Rp, class _A0, class _A1, class _A2>
 const std::type_info&
@@ -1560,32 +1560,32 @@ function<_Rp(_A0, _A1, _A2)>::target() const
     return (const _Tp*)__f_->target(typeid(_Tp));
 }
 
-#endif  // _LIBCPP_NO_RTTI
+#endif  // _LIBCUDACXX_NO_RTTI
 
 template <class _Fp>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 bool
 operator==(const function<_Fp>& __f, nullptr_t) {return !__f;}
 
 template <class _Fp>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 bool
 operator==(nullptr_t, const function<_Fp>& __f) {return !__f;}
 
 template <class _Fp>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 bool
 operator!=(const function<_Fp>& __f, nullptr_t) {return (bool)__f;}
 
 template <class _Fp>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 bool
 operator!=(nullptr_t, const function<_Fp>& __f) {return (bool)__f;}
 
 template <class _Fp>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 void
 swap(function<_Fp>& __x, function<_Fp>& __y)
 {return __x.swap(__y);}
 
-#endif  // _LIBCPP_FUNCTIONAL_03
+#endif  // _LIBCUDACXX_FUNCTIONAL_03

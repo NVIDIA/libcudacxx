@@ -10,7 +10,7 @@
 
 // <mutex>
 
-// This test does not define _LIBCPP_ENABLE_THREAD_SAFETY_ANNOTATIONS so it
+// This test does not define _LIBCUDACXX_ENABLE_THREAD_SAFETY_ANNOTATIONS so it
 // should compile without any warnings or errors even though this pattern is not
 // understood by the thread safety annotations.
 

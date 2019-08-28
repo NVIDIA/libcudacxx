@@ -28,7 +28,7 @@ int main(int, char**)
 
   // std::make_integer_sequence is implemented using a compiler builtin if available.
   // this builtin has different diagnostic messages than the fallback implementation.
-#if TEST_HAS_BUILTIN(__make_integer_seq) && !defined(_LIBCPP_TESTING_FALLBACK_MAKE_INTEGER_SEQUENCE)
+#if TEST_HAS_BUILTIN(__make_integer_seq) && !defined(_LIBCUDACXX_TESTING_FALLBACK_MAKE_INTEGER_SEQUENCE)
     MakeSeqT i; // expected-error@utility:* {{integer sequences must have non-negative sequence length}}
 #else
     MakeSeqT i; // expected-error@utility:* {{static_assert failed "std::make_integer_sequence must have a non-negative sequence length"}}

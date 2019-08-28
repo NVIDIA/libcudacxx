@@ -13,10 +13,10 @@
 #include "include/apple_availability.h"
 
 #if !defined(__APPLE__)
-#define _LIBCPP_USE_CLOCK_GETTIME
+#define _LIBCUDACXX_USE_CLOCK_GETTIME
 #endif // __APPLE__
 
-#if defined(_LIBCPP_WIN32API)
+#if defined(_LIBCUDACXX_WIN32API)
 #define WIN32_LEAN_AND_MEAN
 #define VC_EXTRA_LEAN
 #include <windows.h>
@@ -24,20 +24,20 @@
 #include <winapifamily.h>
 #endif
 #else
-#if !defined(CLOCK_REALTIME) || !defined(_LIBCPP_USE_CLOCK_GETTIME)
+#if !defined(CLOCK_REALTIME) || !defined(_LIBCUDACXX_USE_CLOCK_GETTIME)
 #include <sys/time.h>        // for gettimeofday and timeval
 #endif // !defined(CLOCK_REALTIME)
-#endif // defined(_LIBCPP_WIN32API)
+#endif // defined(_LIBCUDACXX_WIN32API)
 
-#if !defined(_LIBCPP_HAS_NO_MONOTONIC_CLOCK)
+#if !defined(_LIBCUDACXX_HAS_NO_MONOTONIC_CLOCK)
 #if __APPLE__
 #include <mach/mach_time.h>  // mach_absolute_time, mach_timebase_info_data_t
-#elif !defined(_LIBCPP_WIN32API) && !defined(CLOCK_MONOTONIC)
+#elif !defined(_LIBCUDACXX_WIN32API) && !defined(CLOCK_MONOTONIC)
 #error "Monotonic clock not implemented"
 #endif
 #endif
 
-_LIBCPP_BEGIN_NAMESPACE_STD
+_LIBCUDACXX_BEGIN_NAMESPACE_STD
 
 namespace chrono
 {
@@ -49,15 +49,15 @@ const bool system_clock::is_steady;
 system_clock::time_point
 system_clock::now() _NOEXCEPT
 {
-#if defined(_LIBCPP_WIN32API)
+#if defined(_LIBCUDACXX_WIN32API)
   // FILETIME is in 100ns units
   using filetime_duration =
-      _VSTD::chrono::duration<__int64,
-                              _VSTD::ratio_multiply<_VSTD::ratio<100, 1>,
+      _CUDA_VSTD::chrono::duration<__int64,
+                              _CUDA_VSTD::ratio_multiply<_CUDA_VSTD::ratio<100, 1>,
                                                     nanoseconds::period>>;
 
   // The Windows epoch is Jan 1 1601, the Unix epoch Jan 1 1970.
-  static _LIBCPP_CONSTEXPR const seconds nt_to_unix_epoch{11644473600};
+  static _LIBCUDACXX_CONSTEXPR const seconds nt_to_unix_epoch{11644473600};
 
   FILETIME ft;
 #if _WIN32_WINNT >= _WIN32_WINNT_WIN8
@@ -74,7 +74,7 @@ system_clock::now() _NOEXCEPT
                        static_cast<__int64>(ft.dwLowDateTime)};
   return time_point(duration_cast<duration>(d - nt_to_unix_epoch));
 #else
-#if defined(_LIBCPP_USE_CLOCK_GETTIME) && defined(CLOCK_REALTIME)
+#if defined(_LIBCUDACXX_USE_CLOCK_GETTIME) && defined(CLOCK_REALTIME)
   struct timespec tp;
   if (0 != clock_gettime(CLOCK_REALTIME, &tp))
     __throw_system_error(errno, "clock_gettime(CLOCK_REALTIME) failed");
@@ -83,7 +83,7 @@ system_clock::now() _NOEXCEPT
     timeval tv;
     gettimeofday(&tv, 0);
     return time_point(seconds(tv.tv_sec) + microseconds(tv.tv_usec));
-#endif // _LIBCPP_USE_CLOCK_GETTIME && CLOCK_REALTIME
+#endif // _LIBCUDACXX_USE_CLOCK_GETTIME && CLOCK_REALTIME
 #endif
 }
 
@@ -99,7 +99,7 @@ system_clock::from_time_t(time_t t) _NOEXCEPT
     return system_clock::time_point(seconds(t));
 }
 
-#ifndef _LIBCPP_HAS_NO_MONOTONIC_CLOCK
+#ifndef _LIBCUDACXX_HAS_NO_MONOTONIC_CLOCK
 // steady_clock
 //
 // Warning:  If this is not truly steady, then it is non-conforming.  It is
@@ -111,7 +111,7 @@ const bool steady_clock::is_steady;
 #if defined(__APPLE__)
 
 // Darwin libc versions >= 1133 provide ns precision via CLOCK_UPTIME_RAW
-#if defined(_LIBCPP_USE_CLOCK_GETTIME) && defined(CLOCK_UPTIME_RAW)
+#if defined(_LIBCUDACXX_USE_CLOCK_GETTIME) && defined(CLOCK_UPTIME_RAW)
 steady_clock::time_point
 steady_clock::now() _NOEXCEPT
 {
@@ -173,9 +173,9 @@ steady_clock::now() _NOEXCEPT
     static FP fp = init_steady_clock();
     return time_point(duration(fp()));
 }
-#endif // defined(_LIBCPP_USE_CLOCK_GETTIME) && defined(CLOCK_UPTIME_RAW)
+#endif // defined(_LIBCUDACXX_USE_CLOCK_GETTIME) && defined(CLOCK_UPTIME_RAW)
 
-#elif defined(_LIBCPP_WIN32API)
+#elif defined(_LIBCUDACXX_WIN32API)
 
 steady_clock::time_point
 steady_clock::now() _NOEXCEPT
@@ -212,8 +212,8 @@ steady_clock::now() _NOEXCEPT
 #error "Monotonic clock not implemented"
 #endif
 
-#endif // !_LIBCPP_HAS_NO_MONOTONIC_CLOCK
+#endif // !_LIBCUDACXX_HAS_NO_MONOTONIC_CLOCK
 
 }
 
-_LIBCPP_END_NAMESPACE_STD
+_LIBCUDACXX_END_NAMESPACE_STD

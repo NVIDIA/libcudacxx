@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCPP_FUNCTIONAL
-#define _LIBCPP_FUNCTIONAL
+#ifndef _LIBCUDACXX_FUNCTIONAL
+#define _LIBCUDACXX_FUNCTIONAL
 
 /*
     functional synopsis
@@ -497,250 +497,250 @@ POLICY:  For non-variadic implementations, the number of arguments is limited
 
 #include <__functional_base>
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
-_LIBCPP_BEGIN_NAMESPACE_STD
+_LIBCUDACXX_BEGIN_NAMESPACE_STD
 
-#if _LIBCPP_STD_VER > 11
+#if _LIBCUDACXX_STD_VER > 11
 template <class _Tp = void>
 #else
 template <class _Tp>
 #endif
-struct _LIBCPP_TEMPLATE_VIS plus : binary_function<_Tp, _Tp, _Tp>
+struct _LIBCUDACXX_TEMPLATE_VIS plus : binary_function<_Tp, _Tp, _Tp>
 {
-    _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     _Tp operator()(const _Tp& __x, const _Tp& __y) const
         {return __x + __y;}
 };
 
-#if _LIBCPP_STD_VER > 11
+#if _LIBCUDACXX_STD_VER > 11
 template <>
-struct _LIBCPP_TEMPLATE_VIS plus<void>
+struct _LIBCUDACXX_TEMPLATE_VIS plus<void>
 {
     template <class _T1, class _T2>
-    _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     auto operator()(_T1&& __t, _T2&& __u) const
-    _NOEXCEPT_(noexcept(_VSTD::forward<_T1>(__t) + _VSTD::forward<_T2>(__u)))
-    -> decltype        (_VSTD::forward<_T1>(__t) + _VSTD::forward<_T2>(__u))
-        { return        _VSTD::forward<_T1>(__t) + _VSTD::forward<_T2>(__u); }
+    _NOEXCEPT_(noexcept(_CUDA_VSTD::forward<_T1>(__t) + _CUDA_VSTD::forward<_T2>(__u)))
+    -> decltype        (_CUDA_VSTD::forward<_T1>(__t) + _CUDA_VSTD::forward<_T2>(__u))
+        { return        _CUDA_VSTD::forward<_T1>(__t) + _CUDA_VSTD::forward<_T2>(__u); }
     typedef void is_transparent;
 };
 #endif
 
 
-#if _LIBCPP_STD_VER > 11
+#if _LIBCUDACXX_STD_VER > 11
 template <class _Tp = void>
 #else
 template <class _Tp>
 #endif
-struct _LIBCPP_TEMPLATE_VIS minus : binary_function<_Tp, _Tp, _Tp>
+struct _LIBCUDACXX_TEMPLATE_VIS minus : binary_function<_Tp, _Tp, _Tp>
 {
-    _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     _Tp operator()(const _Tp& __x, const _Tp& __y) const
         {return __x - __y;}
 };
 
-#if _LIBCPP_STD_VER > 11
+#if _LIBCUDACXX_STD_VER > 11
 template <>
-struct _LIBCPP_TEMPLATE_VIS minus<void>
+struct _LIBCUDACXX_TEMPLATE_VIS minus<void>
 {
     template <class _T1, class _T2>
-    _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     auto operator()(_T1&& __t, _T2&& __u) const
-    _NOEXCEPT_(noexcept(_VSTD::forward<_T1>(__t) - _VSTD::forward<_T2>(__u)))
-    -> decltype        (_VSTD::forward<_T1>(__t) - _VSTD::forward<_T2>(__u))
-        { return        _VSTD::forward<_T1>(__t) - _VSTD::forward<_T2>(__u); }
+    _NOEXCEPT_(noexcept(_CUDA_VSTD::forward<_T1>(__t) - _CUDA_VSTD::forward<_T2>(__u)))
+    -> decltype        (_CUDA_VSTD::forward<_T1>(__t) - _CUDA_VSTD::forward<_T2>(__u))
+        { return        _CUDA_VSTD::forward<_T1>(__t) - _CUDA_VSTD::forward<_T2>(__u); }
     typedef void is_transparent;
 };
 #endif
 
 
-#if _LIBCPP_STD_VER > 11
+#if _LIBCUDACXX_STD_VER > 11
 template <class _Tp = void>
 #else
 template <class _Tp>
 #endif
-struct _LIBCPP_TEMPLATE_VIS multiplies : binary_function<_Tp, _Tp, _Tp>
+struct _LIBCUDACXX_TEMPLATE_VIS multiplies : binary_function<_Tp, _Tp, _Tp>
 {
-    _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     _Tp operator()(const _Tp& __x, const _Tp& __y) const
         {return __x * __y;}
 };
 
-#if _LIBCPP_STD_VER > 11
+#if _LIBCUDACXX_STD_VER > 11
 template <>
-struct _LIBCPP_TEMPLATE_VIS multiplies<void>
+struct _LIBCUDACXX_TEMPLATE_VIS multiplies<void>
 {
     template <class _T1, class _T2>
-    _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     auto operator()(_T1&& __t, _T2&& __u) const
-    _NOEXCEPT_(noexcept(_VSTD::forward<_T1>(__t) * _VSTD::forward<_T2>(__u)))
-    -> decltype        (_VSTD::forward<_T1>(__t) * _VSTD::forward<_T2>(__u))
-        { return        _VSTD::forward<_T1>(__t) * _VSTD::forward<_T2>(__u); }
+    _NOEXCEPT_(noexcept(_CUDA_VSTD::forward<_T1>(__t) * _CUDA_VSTD::forward<_T2>(__u)))
+    -> decltype        (_CUDA_VSTD::forward<_T1>(__t) * _CUDA_VSTD::forward<_T2>(__u))
+        { return        _CUDA_VSTD::forward<_T1>(__t) * _CUDA_VSTD::forward<_T2>(__u); }
     typedef void is_transparent;
 };
 #endif
 
 
-#if _LIBCPP_STD_VER > 11
+#if _LIBCUDACXX_STD_VER > 11
 template <class _Tp = void>
 #else
 template <class _Tp>
 #endif
-struct _LIBCPP_TEMPLATE_VIS divides : binary_function<_Tp, _Tp, _Tp>
+struct _LIBCUDACXX_TEMPLATE_VIS divides : binary_function<_Tp, _Tp, _Tp>
 {
-    _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     _Tp operator()(const _Tp& __x, const _Tp& __y) const
         {return __x / __y;}
 };
 
-#if _LIBCPP_STD_VER > 11
+#if _LIBCUDACXX_STD_VER > 11
 template <>
-struct _LIBCPP_TEMPLATE_VIS divides<void>
+struct _LIBCUDACXX_TEMPLATE_VIS divides<void>
 {
     template <class _T1, class _T2>
-    _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     auto operator()(_T1&& __t, _T2&& __u) const
-    _NOEXCEPT_(noexcept(_VSTD::forward<_T1>(__t) / _VSTD::forward<_T2>(__u)))
-    -> decltype        (_VSTD::forward<_T1>(__t) / _VSTD::forward<_T2>(__u))
-        { return        _VSTD::forward<_T1>(__t) / _VSTD::forward<_T2>(__u); }
+    _NOEXCEPT_(noexcept(_CUDA_VSTD::forward<_T1>(__t) / _CUDA_VSTD::forward<_T2>(__u)))
+    -> decltype        (_CUDA_VSTD::forward<_T1>(__t) / _CUDA_VSTD::forward<_T2>(__u))
+        { return        _CUDA_VSTD::forward<_T1>(__t) / _CUDA_VSTD::forward<_T2>(__u); }
     typedef void is_transparent;
 };
 #endif
 
 
-#if _LIBCPP_STD_VER > 11
+#if _LIBCUDACXX_STD_VER > 11
 template <class _Tp = void>
 #else
 template <class _Tp>
 #endif
-struct _LIBCPP_TEMPLATE_VIS modulus : binary_function<_Tp, _Tp, _Tp>
+struct _LIBCUDACXX_TEMPLATE_VIS modulus : binary_function<_Tp, _Tp, _Tp>
 {
-    _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     _Tp operator()(const _Tp& __x, const _Tp& __y) const
         {return __x % __y;}
 };
 
-#if _LIBCPP_STD_VER > 11
+#if _LIBCUDACXX_STD_VER > 11
 template <>
-struct _LIBCPP_TEMPLATE_VIS modulus<void>
+struct _LIBCUDACXX_TEMPLATE_VIS modulus<void>
 {
     template <class _T1, class _T2>
-    _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     auto operator()(_T1&& __t, _T2&& __u) const
-    _NOEXCEPT_(noexcept(_VSTD::forward<_T1>(__t) % _VSTD::forward<_T2>(__u)))
-    -> decltype        (_VSTD::forward<_T1>(__t) % _VSTD::forward<_T2>(__u))
-        { return        _VSTD::forward<_T1>(__t) % _VSTD::forward<_T2>(__u); }
+    _NOEXCEPT_(noexcept(_CUDA_VSTD::forward<_T1>(__t) % _CUDA_VSTD::forward<_T2>(__u)))
+    -> decltype        (_CUDA_VSTD::forward<_T1>(__t) % _CUDA_VSTD::forward<_T2>(__u))
+        { return        _CUDA_VSTD::forward<_T1>(__t) % _CUDA_VSTD::forward<_T2>(__u); }
     typedef void is_transparent;
 };
 #endif
 
 
-#if _LIBCPP_STD_VER > 11
+#if _LIBCUDACXX_STD_VER > 11
 template <class _Tp = void>
 #else
 template <class _Tp>
 #endif
-struct _LIBCPP_TEMPLATE_VIS negate : unary_function<_Tp, _Tp>
+struct _LIBCUDACXX_TEMPLATE_VIS negate : unary_function<_Tp, _Tp>
 {
-    _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     _Tp operator()(const _Tp& __x) const
         {return -__x;}
 };
 
-#if _LIBCPP_STD_VER > 11
+#if _LIBCUDACXX_STD_VER > 11
 template <>
-struct _LIBCPP_TEMPLATE_VIS negate<void>
+struct _LIBCUDACXX_TEMPLATE_VIS negate<void>
 {
     template <class _Tp>
-    _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     auto operator()(_Tp&& __x) const
-    _NOEXCEPT_(noexcept(- _VSTD::forward<_Tp>(__x)))
-    -> decltype        (- _VSTD::forward<_Tp>(__x))
-        { return        - _VSTD::forward<_Tp>(__x); }
+    _NOEXCEPT_(noexcept(- _CUDA_VSTD::forward<_Tp>(__x)))
+    -> decltype        (- _CUDA_VSTD::forward<_Tp>(__x))
+        { return        - _CUDA_VSTD::forward<_Tp>(__x); }
     typedef void is_transparent;
 };
 #endif
 
 
-#if _LIBCPP_STD_VER > 11
+#if _LIBCUDACXX_STD_VER > 11
 template <class _Tp = void>
 #else
 template <class _Tp>
 #endif
-struct _LIBCPP_TEMPLATE_VIS equal_to : binary_function<_Tp, _Tp, bool>
+struct _LIBCUDACXX_TEMPLATE_VIS equal_to : binary_function<_Tp, _Tp, bool>
 {
-    _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     bool operator()(const _Tp& __x, const _Tp& __y) const
         {return __x == __y;}
 };
 
-#if _LIBCPP_STD_VER > 11
+#if _LIBCUDACXX_STD_VER > 11
 template <>
-struct _LIBCPP_TEMPLATE_VIS equal_to<void>
+struct _LIBCUDACXX_TEMPLATE_VIS equal_to<void>
 {
     template <class _T1, class _T2>
-    _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     auto operator()(_T1&& __t, _T2&& __u) const
-    _NOEXCEPT_(noexcept(_VSTD::forward<_T1>(__t) == _VSTD::forward<_T2>(__u)))
-    -> decltype        (_VSTD::forward<_T1>(__t) == _VSTD::forward<_T2>(__u))
-        { return        _VSTD::forward<_T1>(__t) == _VSTD::forward<_T2>(__u); }
+    _NOEXCEPT_(noexcept(_CUDA_VSTD::forward<_T1>(__t) == _CUDA_VSTD::forward<_T2>(__u)))
+    -> decltype        (_CUDA_VSTD::forward<_T1>(__t) == _CUDA_VSTD::forward<_T2>(__u))
+        { return        _CUDA_VSTD::forward<_T1>(__t) == _CUDA_VSTD::forward<_T2>(__u); }
     typedef void is_transparent;
 };
 #endif
 
 
-#if _LIBCPP_STD_VER > 11
+#if _LIBCUDACXX_STD_VER > 11
 template <class _Tp = void>
 #else
 template <class _Tp>
 #endif
-struct _LIBCPP_TEMPLATE_VIS not_equal_to : binary_function<_Tp, _Tp, bool>
+struct _LIBCUDACXX_TEMPLATE_VIS not_equal_to : binary_function<_Tp, _Tp, bool>
 {
-    _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     bool operator()(const _Tp& __x, const _Tp& __y) const
         {return __x != __y;}
 };
 
-#if _LIBCPP_STD_VER > 11
+#if _LIBCUDACXX_STD_VER > 11
 template <>
-struct _LIBCPP_TEMPLATE_VIS not_equal_to<void>
+struct _LIBCUDACXX_TEMPLATE_VIS not_equal_to<void>
 {
     template <class _T1, class _T2>
-    _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     auto operator()(_T1&& __t, _T2&& __u) const
-    _NOEXCEPT_(noexcept(_VSTD::forward<_T1>(__t) != _VSTD::forward<_T2>(__u)))
-    -> decltype        (_VSTD::forward<_T1>(__t) != _VSTD::forward<_T2>(__u))
-        { return        _VSTD::forward<_T1>(__t) != _VSTD::forward<_T2>(__u); }
+    _NOEXCEPT_(noexcept(_CUDA_VSTD::forward<_T1>(__t) != _CUDA_VSTD::forward<_T2>(__u)))
+    -> decltype        (_CUDA_VSTD::forward<_T1>(__t) != _CUDA_VSTD::forward<_T2>(__u))
+        { return        _CUDA_VSTD::forward<_T1>(__t) != _CUDA_VSTD::forward<_T2>(__u); }
     typedef void is_transparent;
 };
 #endif
 
 
-#if _LIBCPP_STD_VER > 11
+#if _LIBCUDACXX_STD_VER > 11
 template <class _Tp = void>
 #else
 template <class _Tp>
 #endif
-struct _LIBCPP_TEMPLATE_VIS greater : binary_function<_Tp, _Tp, bool>
+struct _LIBCUDACXX_TEMPLATE_VIS greater : binary_function<_Tp, _Tp, bool>
 {
-    _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     bool operator()(const _Tp& __x, const _Tp& __y) const
         {return __x > __y;}
 };
 
-#if _LIBCPP_STD_VER > 11
+#if _LIBCUDACXX_STD_VER > 11
 template <>
-struct _LIBCPP_TEMPLATE_VIS greater<void>
+struct _LIBCUDACXX_TEMPLATE_VIS greater<void>
 {
     template <class _T1, class _T2>
-    _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     auto operator()(_T1&& __t, _T2&& __u) const
-    _NOEXCEPT_(noexcept(_VSTD::forward<_T1>(__t) > _VSTD::forward<_T2>(__u)))
-    -> decltype        (_VSTD::forward<_T1>(__t) > _VSTD::forward<_T2>(__u))
-        { return        _VSTD::forward<_T1>(__t) > _VSTD::forward<_T2>(__u); }
+    _NOEXCEPT_(noexcept(_CUDA_VSTD::forward<_T1>(__t) > _CUDA_VSTD::forward<_T2>(__u)))
+    -> decltype        (_CUDA_VSTD::forward<_T1>(__t) > _CUDA_VSTD::forward<_T2>(__u))
+        { return        _CUDA_VSTD::forward<_T1>(__t) > _CUDA_VSTD::forward<_T2>(__u); }
     typedef void is_transparent;
 };
 #endif
@@ -748,288 +748,288 @@ struct _LIBCPP_TEMPLATE_VIS greater<void>
 
 // less in <__functional_base>
 
-#if _LIBCPP_STD_VER > 11
+#if _LIBCUDACXX_STD_VER > 11
 template <class _Tp = void>
 #else
 template <class _Tp>
 #endif
-struct _LIBCPP_TEMPLATE_VIS greater_equal : binary_function<_Tp, _Tp, bool>
+struct _LIBCUDACXX_TEMPLATE_VIS greater_equal : binary_function<_Tp, _Tp, bool>
 {
-    _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     bool operator()(const _Tp& __x, const _Tp& __y) const
         {return __x >= __y;}
 };
 
-#if _LIBCPP_STD_VER > 11
+#if _LIBCUDACXX_STD_VER > 11
 template <>
-struct _LIBCPP_TEMPLATE_VIS greater_equal<void>
+struct _LIBCUDACXX_TEMPLATE_VIS greater_equal<void>
 {
     template <class _T1, class _T2>
-    _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     auto operator()(_T1&& __t, _T2&& __u) const
-    _NOEXCEPT_(noexcept(_VSTD::forward<_T1>(__t) >= _VSTD::forward<_T2>(__u)))
-    -> decltype        (_VSTD::forward<_T1>(__t) >= _VSTD::forward<_T2>(__u))
-        { return        _VSTD::forward<_T1>(__t) >= _VSTD::forward<_T2>(__u); }
+    _NOEXCEPT_(noexcept(_CUDA_VSTD::forward<_T1>(__t) >= _CUDA_VSTD::forward<_T2>(__u)))
+    -> decltype        (_CUDA_VSTD::forward<_T1>(__t) >= _CUDA_VSTD::forward<_T2>(__u))
+        { return        _CUDA_VSTD::forward<_T1>(__t) >= _CUDA_VSTD::forward<_T2>(__u); }
     typedef void is_transparent;
 };
 #endif
 
 
-#if _LIBCPP_STD_VER > 11
+#if _LIBCUDACXX_STD_VER > 11
 template <class _Tp = void>
 #else
 template <class _Tp>
 #endif
-struct _LIBCPP_TEMPLATE_VIS less_equal : binary_function<_Tp, _Tp, bool>
+struct _LIBCUDACXX_TEMPLATE_VIS less_equal : binary_function<_Tp, _Tp, bool>
 {
-    _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     bool operator()(const _Tp& __x, const _Tp& __y) const
         {return __x <= __y;}
 };
 
-#if _LIBCPP_STD_VER > 11
+#if _LIBCUDACXX_STD_VER > 11
 template <>
-struct _LIBCPP_TEMPLATE_VIS less_equal<void>
+struct _LIBCUDACXX_TEMPLATE_VIS less_equal<void>
 {
     template <class _T1, class _T2>
-    _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     auto operator()(_T1&& __t, _T2&& __u) const
-    _NOEXCEPT_(noexcept(_VSTD::forward<_T1>(__t) <= _VSTD::forward<_T2>(__u)))
-    -> decltype        (_VSTD::forward<_T1>(__t) <= _VSTD::forward<_T2>(__u))
-        { return        _VSTD::forward<_T1>(__t) <= _VSTD::forward<_T2>(__u); }
+    _NOEXCEPT_(noexcept(_CUDA_VSTD::forward<_T1>(__t) <= _CUDA_VSTD::forward<_T2>(__u)))
+    -> decltype        (_CUDA_VSTD::forward<_T1>(__t) <= _CUDA_VSTD::forward<_T2>(__u))
+        { return        _CUDA_VSTD::forward<_T1>(__t) <= _CUDA_VSTD::forward<_T2>(__u); }
     typedef void is_transparent;
 };
 #endif
 
 
-#if _LIBCPP_STD_VER > 11
+#if _LIBCUDACXX_STD_VER > 11
 template <class _Tp = void>
 #else
 template <class _Tp>
 #endif
-struct _LIBCPP_TEMPLATE_VIS logical_and : binary_function<_Tp, _Tp, bool>
+struct _LIBCUDACXX_TEMPLATE_VIS logical_and : binary_function<_Tp, _Tp, bool>
 {
-    _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     bool operator()(const _Tp& __x, const _Tp& __y) const
         {return __x && __y;}
 };
 
-#if _LIBCPP_STD_VER > 11
+#if _LIBCUDACXX_STD_VER > 11
 template <>
-struct _LIBCPP_TEMPLATE_VIS logical_and<void>
+struct _LIBCUDACXX_TEMPLATE_VIS logical_and<void>
 {
     template <class _T1, class _T2>
-    _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     auto operator()(_T1&& __t, _T2&& __u) const
-    _NOEXCEPT_(noexcept(_VSTD::forward<_T1>(__t) && _VSTD::forward<_T2>(__u)))
-    -> decltype        (_VSTD::forward<_T1>(__t) && _VSTD::forward<_T2>(__u))
-        { return        _VSTD::forward<_T1>(__t) && _VSTD::forward<_T2>(__u); }
+    _NOEXCEPT_(noexcept(_CUDA_VSTD::forward<_T1>(__t) && _CUDA_VSTD::forward<_T2>(__u)))
+    -> decltype        (_CUDA_VSTD::forward<_T1>(__t) && _CUDA_VSTD::forward<_T2>(__u))
+        { return        _CUDA_VSTD::forward<_T1>(__t) && _CUDA_VSTD::forward<_T2>(__u); }
     typedef void is_transparent;
 };
 #endif
 
 
-#if _LIBCPP_STD_VER > 11
+#if _LIBCUDACXX_STD_VER > 11
 template <class _Tp = void>
 #else
 template <class _Tp>
 #endif
-struct _LIBCPP_TEMPLATE_VIS logical_or : binary_function<_Tp, _Tp, bool>
+struct _LIBCUDACXX_TEMPLATE_VIS logical_or : binary_function<_Tp, _Tp, bool>
 {
-    _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     bool operator()(const _Tp& __x, const _Tp& __y) const
         {return __x || __y;}
 };
 
-#if _LIBCPP_STD_VER > 11
+#if _LIBCUDACXX_STD_VER > 11
 template <>
-struct _LIBCPP_TEMPLATE_VIS logical_or<void>
+struct _LIBCUDACXX_TEMPLATE_VIS logical_or<void>
 {
     template <class _T1, class _T2>
-    _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     auto operator()(_T1&& __t, _T2&& __u) const
-    _NOEXCEPT_(noexcept(_VSTD::forward<_T1>(__t) || _VSTD::forward<_T2>(__u)))
-    -> decltype        (_VSTD::forward<_T1>(__t) || _VSTD::forward<_T2>(__u))
-        { return        _VSTD::forward<_T1>(__t) || _VSTD::forward<_T2>(__u); }
+    _NOEXCEPT_(noexcept(_CUDA_VSTD::forward<_T1>(__t) || _CUDA_VSTD::forward<_T2>(__u)))
+    -> decltype        (_CUDA_VSTD::forward<_T1>(__t) || _CUDA_VSTD::forward<_T2>(__u))
+        { return        _CUDA_VSTD::forward<_T1>(__t) || _CUDA_VSTD::forward<_T2>(__u); }
     typedef void is_transparent;
 };
 #endif
 
 
-#if _LIBCPP_STD_VER > 11
+#if _LIBCUDACXX_STD_VER > 11
 template <class _Tp = void>
 #else
 template <class _Tp>
 #endif
-struct _LIBCPP_TEMPLATE_VIS logical_not : unary_function<_Tp, bool>
+struct _LIBCUDACXX_TEMPLATE_VIS logical_not : unary_function<_Tp, bool>
 {
-    _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     bool operator()(const _Tp& __x) const
         {return !__x;}
 };
 
-#if _LIBCPP_STD_VER > 11
+#if _LIBCUDACXX_STD_VER > 11
 template <>
-struct _LIBCPP_TEMPLATE_VIS logical_not<void>
+struct _LIBCUDACXX_TEMPLATE_VIS logical_not<void>
 {
     template <class _Tp>
-    _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     auto operator()(_Tp&& __x) const
-    _NOEXCEPT_(noexcept(!_VSTD::forward<_Tp>(__x)))
-    -> decltype        (!_VSTD::forward<_Tp>(__x))
-        { return        !_VSTD::forward<_Tp>(__x); }
+    _NOEXCEPT_(noexcept(!_CUDA_VSTD::forward<_Tp>(__x)))
+    -> decltype        (!_CUDA_VSTD::forward<_Tp>(__x))
+        { return        !_CUDA_VSTD::forward<_Tp>(__x); }
     typedef void is_transparent;
 };
 #endif
 
 
-#if _LIBCPP_STD_VER > 11
+#if _LIBCUDACXX_STD_VER > 11
 template <class _Tp = void>
 #else
 template <class _Tp>
 #endif
-struct _LIBCPP_TEMPLATE_VIS bit_and : binary_function<_Tp, _Tp, _Tp>
+struct _LIBCUDACXX_TEMPLATE_VIS bit_and : binary_function<_Tp, _Tp, _Tp>
 {
-    _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     _Tp operator()(const _Tp& __x, const _Tp& __y) const
         {return __x & __y;}
 };
 
-#if _LIBCPP_STD_VER > 11
+#if _LIBCUDACXX_STD_VER > 11
 template <>
-struct _LIBCPP_TEMPLATE_VIS bit_and<void>
+struct _LIBCUDACXX_TEMPLATE_VIS bit_and<void>
 {
     template <class _T1, class _T2>
-    _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     auto operator()(_T1&& __t, _T2&& __u) const
-    _NOEXCEPT_(noexcept(_VSTD::forward<_T1>(__t) & _VSTD::forward<_T2>(__u)))
-    -> decltype        (_VSTD::forward<_T1>(__t) & _VSTD::forward<_T2>(__u))
-        { return        _VSTD::forward<_T1>(__t) & _VSTD::forward<_T2>(__u); }
+    _NOEXCEPT_(noexcept(_CUDA_VSTD::forward<_T1>(__t) & _CUDA_VSTD::forward<_T2>(__u)))
+    -> decltype        (_CUDA_VSTD::forward<_T1>(__t) & _CUDA_VSTD::forward<_T2>(__u))
+        { return        _CUDA_VSTD::forward<_T1>(__t) & _CUDA_VSTD::forward<_T2>(__u); }
     typedef void is_transparent;
 };
 #endif
 
 
-#if _LIBCPP_STD_VER > 11
+#if _LIBCUDACXX_STD_VER > 11
 template <class _Tp = void>
 #else
 template <class _Tp>
 #endif
-struct _LIBCPP_TEMPLATE_VIS bit_or : binary_function<_Tp, _Tp, _Tp>
+struct _LIBCUDACXX_TEMPLATE_VIS bit_or : binary_function<_Tp, _Tp, _Tp>
 {
-    _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     _Tp operator()(const _Tp& __x, const _Tp& __y) const
         {return __x | __y;}
 };
 
-#if _LIBCPP_STD_VER > 11
+#if _LIBCUDACXX_STD_VER > 11
 template <>
-struct _LIBCPP_TEMPLATE_VIS bit_or<void>
+struct _LIBCUDACXX_TEMPLATE_VIS bit_or<void>
 {
     template <class _T1, class _T2>
-    _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     auto operator()(_T1&& __t, _T2&& __u) const
-    _NOEXCEPT_(noexcept(_VSTD::forward<_T1>(__t) | _VSTD::forward<_T2>(__u)))
-    -> decltype        (_VSTD::forward<_T1>(__t) | _VSTD::forward<_T2>(__u))
-        { return        _VSTD::forward<_T1>(__t) | _VSTD::forward<_T2>(__u); }
+    _NOEXCEPT_(noexcept(_CUDA_VSTD::forward<_T1>(__t) | _CUDA_VSTD::forward<_T2>(__u)))
+    -> decltype        (_CUDA_VSTD::forward<_T1>(__t) | _CUDA_VSTD::forward<_T2>(__u))
+        { return        _CUDA_VSTD::forward<_T1>(__t) | _CUDA_VSTD::forward<_T2>(__u); }
     typedef void is_transparent;
 };
 #endif
 
 
-#if _LIBCPP_STD_VER > 11
+#if _LIBCUDACXX_STD_VER > 11
 template <class _Tp = void>
 #else
 template <class _Tp>
 #endif
-struct _LIBCPP_TEMPLATE_VIS bit_xor : binary_function<_Tp, _Tp, _Tp>
+struct _LIBCUDACXX_TEMPLATE_VIS bit_xor : binary_function<_Tp, _Tp, _Tp>
 {
-    _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     _Tp operator()(const _Tp& __x, const _Tp& __y) const
         {return __x ^ __y;}
 };
 
-#if _LIBCPP_STD_VER > 11
+#if _LIBCUDACXX_STD_VER > 11
 template <>
-struct _LIBCPP_TEMPLATE_VIS bit_xor<void>
+struct _LIBCUDACXX_TEMPLATE_VIS bit_xor<void>
 {
     template <class _T1, class _T2>
-    _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     auto operator()(_T1&& __t, _T2&& __u) const
-    _NOEXCEPT_(noexcept(_VSTD::forward<_T1>(__t) ^ _VSTD::forward<_T2>(__u)))
-    -> decltype        (_VSTD::forward<_T1>(__t) ^ _VSTD::forward<_T2>(__u))
-        { return        _VSTD::forward<_T1>(__t) ^ _VSTD::forward<_T2>(__u); }
+    _NOEXCEPT_(noexcept(_CUDA_VSTD::forward<_T1>(__t) ^ _CUDA_VSTD::forward<_T2>(__u)))
+    -> decltype        (_CUDA_VSTD::forward<_T1>(__t) ^ _CUDA_VSTD::forward<_T2>(__u))
+        { return        _CUDA_VSTD::forward<_T1>(__t) ^ _CUDA_VSTD::forward<_T2>(__u); }
     typedef void is_transparent;
 };
 #endif
 
 
-#if _LIBCPP_STD_VER > 11
+#if _LIBCUDACXX_STD_VER > 11
 template <class _Tp = void>
-struct _LIBCPP_TEMPLATE_VIS bit_not : unary_function<_Tp, _Tp>
+struct _LIBCUDACXX_TEMPLATE_VIS bit_not : unary_function<_Tp, _Tp>
 {
-    _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     _Tp operator()(const _Tp& __x) const
         {return ~__x;}
 };
 
 template <>
-struct _LIBCPP_TEMPLATE_VIS bit_not<void>
+struct _LIBCUDACXX_TEMPLATE_VIS bit_not<void>
 {
     template <class _Tp>
-    _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     auto operator()(_Tp&& __x) const
-    _NOEXCEPT_(noexcept(~_VSTD::forward<_Tp>(__x)))
-    -> decltype        (~_VSTD::forward<_Tp>(__x))
-        { return        ~_VSTD::forward<_Tp>(__x); }
+    _NOEXCEPT_(noexcept(~_CUDA_VSTD::forward<_Tp>(__x)))
+    -> decltype        (~_CUDA_VSTD::forward<_Tp>(__x))
+        { return        ~_CUDA_VSTD::forward<_Tp>(__x); }
     typedef void is_transparent;
 };
 #endif
 
 template <class _Predicate>
-class _LIBCPP_TEMPLATE_VIS _LIBCPP_DEPRECATED_IN_CXX17 unary_negate
+class _LIBCUDACXX_TEMPLATE_VIS _LIBCUDACXX_DEPRECATED_IN_CXX17 unary_negate
     : public unary_function<typename _Predicate::argument_type, bool>
 {
     _Predicate __pred_;
 public:
-    _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     explicit unary_negate(const _Predicate& __pred)
         : __pred_(__pred) {}
-    _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     bool operator()(const typename _Predicate::argument_type& __x) const
         {return !__pred_(__x);}
 };
 
 template <class _Predicate>
-_LIBCPP_DEPRECATED_IN_CXX17 inline _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
+_LIBCUDACXX_DEPRECATED_IN_CXX17 inline _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
 unary_negate<_Predicate>
 not1(const _Predicate& __pred) {return unary_negate<_Predicate>(__pred);}
 
 template <class _Predicate>
-class _LIBCPP_TEMPLATE_VIS _LIBCPP_DEPRECATED_IN_CXX17 binary_negate
+class _LIBCUDACXX_TEMPLATE_VIS _LIBCUDACXX_DEPRECATED_IN_CXX17 binary_negate
     : public binary_function<typename _Predicate::first_argument_type,
                              typename _Predicate::second_argument_type,
                              bool>
 {
     _Predicate __pred_;
 public:
-    _LIBCPP_INLINE_VISIBILITY explicit _LIBCPP_CONSTEXPR_AFTER_CXX11
+    _LIBCUDACXX_INLINE_VISIBILITY explicit _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
     binary_negate(const _Predicate& __pred) : __pred_(__pred) {}
 
-    _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     bool operator()(const typename _Predicate::first_argument_type& __x,
                     const typename _Predicate::second_argument_type& __y) const
         {return !__pred_(__x, __y);}
 };
 
 template <class _Predicate>
-_LIBCPP_DEPRECATED_IN_CXX17 inline _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
+_LIBCUDACXX_DEPRECATED_IN_CXX17 inline _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
 binary_negate<_Predicate>
 not2(const _Predicate& __pred) {return binary_negate<_Predicate>(__pred);}
 
-#if _LIBCPP_STD_VER <= 14 || defined(_LIBCPP_ENABLE_CXX17_REMOVED_BINDERS)
+#if _LIBCUDACXX_STD_VER <= 14 || defined(_LIBCUDACXX_ENABLE_CXX17_REMOVED_BINDERS)
 template <class __Operation>
-class _LIBCPP_TEMPLATE_VIS _LIBCPP_DEPRECATED_IN_CXX11 binder1st
+class _LIBCUDACXX_TEMPLATE_VIS _LIBCUDACXX_DEPRECATED_IN_CXX11 binder1st
     : public unary_function<typename __Operation::second_argument_type,
                             typename __Operation::result_type>
 {
@@ -1037,25 +1037,25 @@ protected:
     __Operation                               op;
     typename __Operation::first_argument_type value;
 public:
-    _LIBCPP_INLINE_VISIBILITY binder1st(const __Operation& __x,
+    _LIBCUDACXX_INLINE_VISIBILITY binder1st(const __Operation& __x,
                                const typename __Operation::first_argument_type __y)
         : op(__x), value(__y) {}
-    _LIBCPP_INLINE_VISIBILITY typename __Operation::result_type operator()
+    _LIBCUDACXX_INLINE_VISIBILITY typename __Operation::result_type operator()
         (typename __Operation::second_argument_type& __x) const
             {return op(value, __x);}
-    _LIBCPP_INLINE_VISIBILITY typename __Operation::result_type operator()
+    _LIBCUDACXX_INLINE_VISIBILITY typename __Operation::result_type operator()
         (const typename __Operation::second_argument_type& __x) const
             {return op(value, __x);}
 };
 
 template <class __Operation, class _Tp>
-_LIBCPP_DEPRECATED_IN_CXX11 inline _LIBCPP_INLINE_VISIBILITY
+_LIBCUDACXX_DEPRECATED_IN_CXX11 inline _LIBCUDACXX_INLINE_VISIBILITY
 binder1st<__Operation>
 bind1st(const __Operation& __op, const _Tp& __x)
     {return binder1st<__Operation>(__op, __x);}
 
 template <class __Operation>
-class _LIBCPP_TEMPLATE_VIS _LIBCPP_DEPRECATED_IN_CXX11 binder2nd
+class _LIBCUDACXX_TEMPLATE_VIS _LIBCUDACXX_DEPRECATED_IN_CXX11 binder2nd
     : public unary_function<typename __Operation::first_argument_type,
                             typename __Operation::result_type>
 {
@@ -1063,199 +1063,199 @@ protected:
     __Operation                                op;
     typename __Operation::second_argument_type value;
 public:
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     binder2nd(const __Operation& __x, const typename __Operation::second_argument_type __y)
         : op(__x), value(__y) {}
-    _LIBCPP_INLINE_VISIBILITY typename __Operation::result_type operator()
+    _LIBCUDACXX_INLINE_VISIBILITY typename __Operation::result_type operator()
         (      typename __Operation::first_argument_type& __x) const
             {return op(__x, value);}
-    _LIBCPP_INLINE_VISIBILITY typename __Operation::result_type operator()
+    _LIBCUDACXX_INLINE_VISIBILITY typename __Operation::result_type operator()
         (const typename __Operation::first_argument_type& __x) const
             {return op(__x, value);}
 };
 
 template <class __Operation, class _Tp>
-_LIBCPP_DEPRECATED_IN_CXX11 inline _LIBCPP_INLINE_VISIBILITY
+_LIBCUDACXX_DEPRECATED_IN_CXX11 inline _LIBCUDACXX_INLINE_VISIBILITY
 binder2nd<__Operation>
 bind2nd(const __Operation& __op, const _Tp& __x)
     {return binder2nd<__Operation>(__op, __x);}
 
 template <class _Arg, class _Result>
-class _LIBCPP_TEMPLATE_VIS _LIBCPP_DEPRECATED_IN_CXX11 pointer_to_unary_function
+class _LIBCUDACXX_TEMPLATE_VIS _LIBCUDACXX_DEPRECATED_IN_CXX11 pointer_to_unary_function
     : public unary_function<_Arg, _Result>
 {
     _Result (*__f_)(_Arg);
 public:
-    _LIBCPP_INLINE_VISIBILITY explicit pointer_to_unary_function(_Result (*__f)(_Arg))
+    _LIBCUDACXX_INLINE_VISIBILITY explicit pointer_to_unary_function(_Result (*__f)(_Arg))
         : __f_(__f) {}
-    _LIBCPP_INLINE_VISIBILITY _Result operator()(_Arg __x) const
+    _LIBCUDACXX_INLINE_VISIBILITY _Result operator()(_Arg __x) const
         {return __f_(__x);}
 };
 
 template <class _Arg, class _Result>
-_LIBCPP_DEPRECATED_IN_CXX11 inline _LIBCPP_INLINE_VISIBILITY
+_LIBCUDACXX_DEPRECATED_IN_CXX11 inline _LIBCUDACXX_INLINE_VISIBILITY
 pointer_to_unary_function<_Arg,_Result>
 ptr_fun(_Result (*__f)(_Arg))
     {return pointer_to_unary_function<_Arg,_Result>(__f);}
 
 template <class _Arg1, class _Arg2, class _Result>
-class _LIBCPP_TEMPLATE_VIS _LIBCPP_DEPRECATED_IN_CXX11 pointer_to_binary_function
+class _LIBCUDACXX_TEMPLATE_VIS _LIBCUDACXX_DEPRECATED_IN_CXX11 pointer_to_binary_function
     : public binary_function<_Arg1, _Arg2, _Result>
 {
     _Result (*__f_)(_Arg1, _Arg2);
 public:
-    _LIBCPP_INLINE_VISIBILITY explicit pointer_to_binary_function(_Result (*__f)(_Arg1, _Arg2))
+    _LIBCUDACXX_INLINE_VISIBILITY explicit pointer_to_binary_function(_Result (*__f)(_Arg1, _Arg2))
         : __f_(__f) {}
-    _LIBCPP_INLINE_VISIBILITY _Result operator()(_Arg1 __x, _Arg2 __y) const
+    _LIBCUDACXX_INLINE_VISIBILITY _Result operator()(_Arg1 __x, _Arg2 __y) const
         {return __f_(__x, __y);}
 };
 
 template <class _Arg1, class _Arg2, class _Result>
-_LIBCPP_DEPRECATED_IN_CXX11 inline _LIBCPP_INLINE_VISIBILITY
+_LIBCUDACXX_DEPRECATED_IN_CXX11 inline _LIBCUDACXX_INLINE_VISIBILITY
 pointer_to_binary_function<_Arg1,_Arg2,_Result>
 ptr_fun(_Result (*__f)(_Arg1,_Arg2))
     {return pointer_to_binary_function<_Arg1,_Arg2,_Result>(__f);}
 
 template<class _Sp, class _Tp>
-class _LIBCPP_TEMPLATE_VIS _LIBCPP_DEPRECATED_IN_CXX11 mem_fun_t
+class _LIBCUDACXX_TEMPLATE_VIS _LIBCUDACXX_DEPRECATED_IN_CXX11 mem_fun_t
     : public unary_function<_Tp*, _Sp>
 {
     _Sp (_Tp::*__p_)();
 public:
-    _LIBCPP_INLINE_VISIBILITY explicit mem_fun_t(_Sp (_Tp::*__p)())
+    _LIBCUDACXX_INLINE_VISIBILITY explicit mem_fun_t(_Sp (_Tp::*__p)())
         : __p_(__p) {}
-    _LIBCPP_INLINE_VISIBILITY _Sp operator()(_Tp* __p) const
+    _LIBCUDACXX_INLINE_VISIBILITY _Sp operator()(_Tp* __p) const
         {return (__p->*__p_)();}
 };
 
 template<class _Sp, class _Tp, class _Ap>
-class _LIBCPP_TEMPLATE_VIS _LIBCPP_DEPRECATED_IN_CXX11 mem_fun1_t
+class _LIBCUDACXX_TEMPLATE_VIS _LIBCUDACXX_DEPRECATED_IN_CXX11 mem_fun1_t
     : public binary_function<_Tp*, _Ap, _Sp>
 {
     _Sp (_Tp::*__p_)(_Ap);
 public:
-    _LIBCPP_INLINE_VISIBILITY explicit mem_fun1_t(_Sp (_Tp::*__p)(_Ap))
+    _LIBCUDACXX_INLINE_VISIBILITY explicit mem_fun1_t(_Sp (_Tp::*__p)(_Ap))
         : __p_(__p) {}
-    _LIBCPP_INLINE_VISIBILITY _Sp operator()(_Tp* __p, _Ap __x) const
+    _LIBCUDACXX_INLINE_VISIBILITY _Sp operator()(_Tp* __p, _Ap __x) const
         {return (__p->*__p_)(__x);}
 };
 
 template<class _Sp, class _Tp>
-_LIBCPP_DEPRECATED_IN_CXX11 inline _LIBCPP_INLINE_VISIBILITY
+_LIBCUDACXX_DEPRECATED_IN_CXX11 inline _LIBCUDACXX_INLINE_VISIBILITY
 mem_fun_t<_Sp,_Tp>
 mem_fun(_Sp (_Tp::*__f)())
     {return mem_fun_t<_Sp,_Tp>(__f);}
 
 template<class _Sp, class _Tp, class _Ap>
-_LIBCPP_DEPRECATED_IN_CXX11 inline _LIBCPP_INLINE_VISIBILITY
+_LIBCUDACXX_DEPRECATED_IN_CXX11 inline _LIBCUDACXX_INLINE_VISIBILITY
 mem_fun1_t<_Sp,_Tp,_Ap>
 mem_fun(_Sp (_Tp::*__f)(_Ap))
     {return mem_fun1_t<_Sp,_Tp,_Ap>(__f);}
 
 template<class _Sp, class _Tp>
-class _LIBCPP_TEMPLATE_VIS _LIBCPP_DEPRECATED_IN_CXX11 mem_fun_ref_t
+class _LIBCUDACXX_TEMPLATE_VIS _LIBCUDACXX_DEPRECATED_IN_CXX11 mem_fun_ref_t
     : public unary_function<_Tp, _Sp>
 {
     _Sp (_Tp::*__p_)();
 public:
-    _LIBCPP_INLINE_VISIBILITY explicit mem_fun_ref_t(_Sp (_Tp::*__p)())
+    _LIBCUDACXX_INLINE_VISIBILITY explicit mem_fun_ref_t(_Sp (_Tp::*__p)())
         : __p_(__p) {}
-    _LIBCPP_INLINE_VISIBILITY _Sp operator()(_Tp& __p) const
+    _LIBCUDACXX_INLINE_VISIBILITY _Sp operator()(_Tp& __p) const
         {return (__p.*__p_)();}
 };
 
 template<class _Sp, class _Tp, class _Ap>
-class _LIBCPP_TEMPLATE_VIS _LIBCPP_DEPRECATED_IN_CXX11 mem_fun1_ref_t
+class _LIBCUDACXX_TEMPLATE_VIS _LIBCUDACXX_DEPRECATED_IN_CXX11 mem_fun1_ref_t
     : public binary_function<_Tp, _Ap, _Sp>
 {
     _Sp (_Tp::*__p_)(_Ap);
 public:
-    _LIBCPP_INLINE_VISIBILITY explicit mem_fun1_ref_t(_Sp (_Tp::*__p)(_Ap))
+    _LIBCUDACXX_INLINE_VISIBILITY explicit mem_fun1_ref_t(_Sp (_Tp::*__p)(_Ap))
         : __p_(__p) {}
-    _LIBCPP_INLINE_VISIBILITY _Sp operator()(_Tp& __p, _Ap __x) const
+    _LIBCUDACXX_INLINE_VISIBILITY _Sp operator()(_Tp& __p, _Ap __x) const
         {return (__p.*__p_)(__x);}
 };
 
 template<class _Sp, class _Tp>
-_LIBCPP_DEPRECATED_IN_CXX11 inline _LIBCPP_INLINE_VISIBILITY
+_LIBCUDACXX_DEPRECATED_IN_CXX11 inline _LIBCUDACXX_INLINE_VISIBILITY
 mem_fun_ref_t<_Sp,_Tp>
 mem_fun_ref(_Sp (_Tp::*__f)())
     {return mem_fun_ref_t<_Sp,_Tp>(__f);}
 
 template<class _Sp, class _Tp, class _Ap>
-_LIBCPP_DEPRECATED_IN_CXX11 inline _LIBCPP_INLINE_VISIBILITY
+_LIBCUDACXX_DEPRECATED_IN_CXX11 inline _LIBCUDACXX_INLINE_VISIBILITY
 mem_fun1_ref_t<_Sp,_Tp,_Ap>
 mem_fun_ref(_Sp (_Tp::*__f)(_Ap))
     {return mem_fun1_ref_t<_Sp,_Tp,_Ap>(__f);}
 
 template <class _Sp, class _Tp>
-class _LIBCPP_TEMPLATE_VIS _LIBCPP_DEPRECATED_IN_CXX11 const_mem_fun_t
+class _LIBCUDACXX_TEMPLATE_VIS _LIBCUDACXX_DEPRECATED_IN_CXX11 const_mem_fun_t
     : public unary_function<const _Tp*, _Sp>
 {
     _Sp (_Tp::*__p_)() const;
 public:
-    _LIBCPP_INLINE_VISIBILITY explicit const_mem_fun_t(_Sp (_Tp::*__p)() const)
+    _LIBCUDACXX_INLINE_VISIBILITY explicit const_mem_fun_t(_Sp (_Tp::*__p)() const)
         : __p_(__p) {}
-    _LIBCPP_INLINE_VISIBILITY _Sp operator()(const _Tp* __p) const
+    _LIBCUDACXX_INLINE_VISIBILITY _Sp operator()(const _Tp* __p) const
         {return (__p->*__p_)();}
 };
 
 template <class _Sp, class _Tp, class _Ap>
-class _LIBCPP_TEMPLATE_VIS _LIBCPP_DEPRECATED_IN_CXX11 const_mem_fun1_t
+class _LIBCUDACXX_TEMPLATE_VIS _LIBCUDACXX_DEPRECATED_IN_CXX11 const_mem_fun1_t
     : public binary_function<const _Tp*, _Ap, _Sp>
 {
     _Sp (_Tp::*__p_)(_Ap) const;
 public:
-    _LIBCPP_INLINE_VISIBILITY explicit const_mem_fun1_t(_Sp (_Tp::*__p)(_Ap) const)
+    _LIBCUDACXX_INLINE_VISIBILITY explicit const_mem_fun1_t(_Sp (_Tp::*__p)(_Ap) const)
         : __p_(__p) {}
-    _LIBCPP_INLINE_VISIBILITY _Sp operator()(const _Tp* __p, _Ap __x) const
+    _LIBCUDACXX_INLINE_VISIBILITY _Sp operator()(const _Tp* __p, _Ap __x) const
         {return (__p->*__p_)(__x);}
 };
 
 template <class _Sp, class _Tp>
-_LIBCPP_DEPRECATED_IN_CXX11 inline _LIBCPP_INLINE_VISIBILITY
+_LIBCUDACXX_DEPRECATED_IN_CXX11 inline _LIBCUDACXX_INLINE_VISIBILITY
 const_mem_fun_t<_Sp,_Tp>
 mem_fun(_Sp (_Tp::*__f)() const)
     {return const_mem_fun_t<_Sp,_Tp>(__f);}
 
 template <class _Sp, class _Tp, class _Ap>
-_LIBCPP_DEPRECATED_IN_CXX11 inline _LIBCPP_INLINE_VISIBILITY
+_LIBCUDACXX_DEPRECATED_IN_CXX11 inline _LIBCUDACXX_INLINE_VISIBILITY
 const_mem_fun1_t<_Sp,_Tp,_Ap>
 mem_fun(_Sp (_Tp::*__f)(_Ap) const)
     {return const_mem_fun1_t<_Sp,_Tp,_Ap>(__f);}
 
 template <class _Sp, class _Tp>
-class _LIBCPP_TEMPLATE_VIS _LIBCPP_DEPRECATED_IN_CXX11 const_mem_fun_ref_t
+class _LIBCUDACXX_TEMPLATE_VIS _LIBCUDACXX_DEPRECATED_IN_CXX11 const_mem_fun_ref_t
     : public unary_function<_Tp, _Sp>
 {
     _Sp (_Tp::*__p_)() const;
 public:
-    _LIBCPP_INLINE_VISIBILITY explicit const_mem_fun_ref_t(_Sp (_Tp::*__p)() const)
+    _LIBCUDACXX_INLINE_VISIBILITY explicit const_mem_fun_ref_t(_Sp (_Tp::*__p)() const)
         : __p_(__p) {}
-    _LIBCPP_INLINE_VISIBILITY _Sp operator()(const _Tp& __p) const
+    _LIBCUDACXX_INLINE_VISIBILITY _Sp operator()(const _Tp& __p) const
         {return (__p.*__p_)();}
 };
 
 template <class _Sp, class _Tp, class _Ap>
-class _LIBCPP_TEMPLATE_VIS _LIBCPP_DEPRECATED_IN_CXX11 const_mem_fun1_ref_t
+class _LIBCUDACXX_TEMPLATE_VIS _LIBCUDACXX_DEPRECATED_IN_CXX11 const_mem_fun1_ref_t
     : public binary_function<_Tp, _Ap, _Sp>
 {
     _Sp (_Tp::*__p_)(_Ap) const;
 public:
-    _LIBCPP_INLINE_VISIBILITY explicit const_mem_fun1_ref_t(_Sp (_Tp::*__p)(_Ap) const)
+    _LIBCUDACXX_INLINE_VISIBILITY explicit const_mem_fun1_ref_t(_Sp (_Tp::*__p)(_Ap) const)
         : __p_(__p) {}
-    _LIBCPP_INLINE_VISIBILITY _Sp operator()(const _Tp& __p, _Ap __x) const
+    _LIBCUDACXX_INLINE_VISIBILITY _Sp operator()(const _Tp& __p, _Ap __x) const
         {return (__p.*__p_)(__x);}
 };
 
 template <class _Sp, class _Tp>
-_LIBCPP_DEPRECATED_IN_CXX11 inline _LIBCPP_INLINE_VISIBILITY
+_LIBCUDACXX_DEPRECATED_IN_CXX11 inline _LIBCUDACXX_INLINE_VISIBILITY
 const_mem_fun_ref_t<_Sp,_Tp>
 mem_fun_ref(_Sp (_Tp::*__f)() const)
     {return const_mem_fun_ref_t<_Sp,_Tp>(__f);}
 
 template <class _Sp, class _Tp, class _Ap>
-_LIBCPP_DEPRECATED_IN_CXX11 inline _LIBCPP_INLINE_VISIBILITY
+_LIBCUDACXX_DEPRECATED_IN_CXX11 inline _LIBCUDACXX_INLINE_VISIBILITY
 const_mem_fun1_ref_t<_Sp,_Tp,_Ap>
 mem_fun_ref(_Sp (_Tp::*__f)(_Ap) const)
     {return const_mem_fun1_ref_t<_Sp,_Tp,_Ap>(__f);}
@@ -1276,111 +1276,111 @@ private:
     type __f_;
 
 public:
-    _LIBCPP_INLINE_VISIBILITY __mem_fn(type __f) _NOEXCEPT : __f_(__f) {}
+    _LIBCUDACXX_INLINE_VISIBILITY __mem_fn(type __f) _NOEXCEPT : __f_(__f) {}
 
-#ifndef _LIBCPP_CXX03_LANG
+#ifndef _LIBCUDACXX_CXX03_LANG
     // invoke
     template <class... _ArgTypes>
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     typename __invoke_return<type, _ArgTypes...>::type
     operator() (_ArgTypes&&... __args) const {
-        return __invoke(__f_, _VSTD::forward<_ArgTypes>(__args)...);
+        return __invoke(__f_, _CUDA_VSTD::forward<_ArgTypes>(__args)...);
     }
 #else
 
     template <class _A0>
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     typename __invoke_return0<type, _A0>::type
     operator() (_A0& __a0) const {
         return __invoke(__f_, __a0);
     }
 
     template <class _A0>
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     typename __invoke_return0<type, _A0 const>::type
     operator() (_A0 const& __a0) const {
         return __invoke(__f_, __a0);
     }
 
     template <class _A0, class _A1>
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     typename __invoke_return1<type, _A0, _A1>::type
     operator() (_A0& __a0, _A1& __a1) const {
         return __invoke(__f_, __a0, __a1);
     }
 
     template <class _A0, class _A1>
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     typename __invoke_return1<type, _A0 const, _A1>::type
     operator() (_A0 const& __a0, _A1& __a1) const {
         return __invoke(__f_, __a0, __a1);
     }
 
     template <class _A0, class _A1>
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     typename __invoke_return1<type, _A0, _A1 const>::type
     operator() (_A0& __a0, _A1 const& __a1) const {
         return __invoke(__f_, __a0, __a1);
     }
 
     template <class _A0, class _A1>
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     typename __invoke_return1<type, _A0 const, _A1 const>::type
     operator() (_A0 const& __a0, _A1 const& __a1) const {
         return __invoke(__f_, __a0, __a1);
     }
 
     template <class _A0, class _A1, class _A2>
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     typename __invoke_return2<type, _A0, _A1, _A2>::type
     operator() (_A0& __a0, _A1& __a1, _A2& __a2) const {
         return __invoke(__f_, __a0, __a1, __a2);
     }
 
     template <class _A0, class _A1, class _A2>
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     typename __invoke_return2<type, _A0 const, _A1, _A2>::type
     operator() (_A0 const& __a0, _A1& __a1, _A2& __a2) const {
         return __invoke(__f_, __a0, __a1, __a2);
     }
 
     template <class _A0, class _A1, class _A2>
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     typename __invoke_return2<type, _A0, _A1 const, _A2>::type
     operator() (_A0& __a0, _A1 const& __a1, _A2& __a2) const {
         return __invoke(__f_, __a0, __a1, __a2);
     }
 
     template <class _A0, class _A1, class _A2>
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     typename __invoke_return2<type, _A0, _A1, _A2 const>::type
     operator() (_A0& __a0, _A1& __a1, _A2 const& __a2) const {
         return __invoke(__f_, __a0, __a1, __a2);
     }
 
     template <class _A0, class _A1, class _A2>
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     typename __invoke_return2<type, _A0 const, _A1 const, _A2>::type
     operator() (_A0 const& __a0, _A1 const& __a1, _A2& __a2) const {
         return __invoke(__f_, __a0, __a1, __a2);
     }
 
     template <class _A0, class _A1, class _A2>
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     typename __invoke_return2<type, _A0 const, _A1, _A2 const>::type
     operator() (_A0 const& __a0, _A1& __a1, _A2 const& __a2) const {
         return __invoke(__f_, __a0, __a1, __a2);
     }
 
     template <class _A0, class _A1, class _A2>
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     typename __invoke_return2<type, _A0, _A1 const, _A2 const>::type
     operator() (_A0& __a0, _A1 const& __a1, _A2 const& __a2) const {
         return __invoke(__f_, __a0, __a1, __a2);
     }
 
     template <class _A0, class _A1, class _A2>
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     typename __invoke_return2<type, _A0 const, _A1 const, _A2 const>::type
     operator() (_A0 const& __a0, _A1 const& __a1, _A2 const& __a2) const {
         return __invoke(__f_, __a0, __a1, __a2);
@@ -1389,7 +1389,7 @@ public:
 };
 
 template<class _Rp, class _Tp>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 __mem_fn<_Rp _Tp::*>
 mem_fn(_Rp _Tp::* __pm) _NOEXCEPT
 {
@@ -1402,10 +1402,10 @@ mem_fn(_Rp _Tp::* __pm) _NOEXCEPT
 
 // bad_function_call
 
-class _LIBCPP_EXCEPTION_ABI bad_function_call
+class _LIBCUDACXX_EXCEPTION_ABI bad_function_call
     : public exception
 {
-#ifdef _LIBCPP_ABI_BAD_FUNCTION_CALL_KEY_FUNCTION
+#ifdef _LIBCUDACXX_ABI_BAD_FUNCTION_CALL_KEY_FUNCTION
 public:
     virtual ~bad_function_call() _NOEXCEPT;
 
@@ -1413,17 +1413,17 @@ public:
 #endif
 };
 
-_LIBCPP_NORETURN inline _LIBCPP_INLINE_VISIBILITY
+_LIBCUDACXX_NORETURN inline _LIBCUDACXX_INLINE_VISIBILITY
 void __throw_bad_function_call()
 {
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
     throw bad_function_call();
 #else
-    _VSTD::abort();
+    _CUDA_VSTD::abort();
 #endif
 }
 
-template<class _Fp> class _LIBCPP_TEMPLATE_VIS function; // undefined
+template<class _Fp> class _LIBCUDACXX_TEMPLATE_VIS function; // undefined
 
 namespace __function
 {
@@ -1451,24 +1451,24 @@ struct __maybe_derive_from_binary_function<_Rp(_A1, _A2)>
 };
 
 template <class _Fp>
-_LIBCPP_INLINE_VISIBILITY
+_LIBCUDACXX_INLINE_VISIBILITY
 bool __not_null(_Fp const&) { return true; }
 
 template <class _Fp>
-_LIBCPP_INLINE_VISIBILITY
+_LIBCUDACXX_INLINE_VISIBILITY
 bool __not_null(_Fp* __ptr) { return __ptr; }
 
 template <class _Ret, class _Class>
-_LIBCPP_INLINE_VISIBILITY
+_LIBCUDACXX_INLINE_VISIBILITY
 bool __not_null(_Ret _Class::*__ptr) { return __ptr; }
 
 template <class _Fp>
-_LIBCPP_INLINE_VISIBILITY
+_LIBCUDACXX_INLINE_VISIBILITY
 bool __not_null(function<_Fp> const& __f) { return !!__f; }
 
 } // namespace __function
 
-#ifndef _LIBCPP_CXX03_LANG
+#ifndef _LIBCUDACXX_CXX03_LANG
 
 namespace __function {
 
@@ -1485,50 +1485,50 @@ class __alloc_func<_Fp, _Ap, _Rp(_ArgTypes...)>
     typedef _Fp _Target;
     typedef _Ap _Alloc;
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     const _Target& __target() const { return __f_.first(); }
 
     // WIN32 APIs may define __allocator, so use __get_allocator instead.
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     const _Alloc& __get_allocator() const { return __f_.second(); }
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit __alloc_func(_Target&& __f)
-        : __f_(piecewise_construct, _VSTD::forward_as_tuple(_VSTD::move(__f)),
-               _VSTD::forward_as_tuple())
+        : __f_(piecewise_construct, _CUDA_VSTD::forward_as_tuple(_CUDA_VSTD::move(__f)),
+               _CUDA_VSTD::forward_as_tuple())
     {
     }
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit __alloc_func(const _Target& __f, const _Alloc& __a)
-        : __f_(piecewise_construct, _VSTD::forward_as_tuple(__f),
-               _VSTD::forward_as_tuple(__a))
+        : __f_(piecewise_construct, _CUDA_VSTD::forward_as_tuple(__f),
+               _CUDA_VSTD::forward_as_tuple(__a))
     {
     }
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit __alloc_func(const _Target& __f, _Alloc&& __a)
-        : __f_(piecewise_construct, _VSTD::forward_as_tuple(__f),
-               _VSTD::forward_as_tuple(_VSTD::move(__a)))
+        : __f_(piecewise_construct, _CUDA_VSTD::forward_as_tuple(__f),
+               _CUDA_VSTD::forward_as_tuple(_CUDA_VSTD::move(__a)))
     {
     }
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit __alloc_func(_Target&& __f, _Alloc&& __a)
-        : __f_(piecewise_construct, _VSTD::forward_as_tuple(_VSTD::move(__f)),
-               _VSTD::forward_as_tuple(_VSTD::move(__a)))
+        : __f_(piecewise_construct, _CUDA_VSTD::forward_as_tuple(_CUDA_VSTD::move(__f)),
+               _CUDA_VSTD::forward_as_tuple(_CUDA_VSTD::move(__a)))
     {
     }
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     _Rp operator()(_ArgTypes&&... __arg)
     {
         typedef __invoke_void_return_wrapper<_Rp> _Invoker;
         return _Invoker::__call(__f_.first(),
-                                _VSTD::forward<_ArgTypes>(__arg)...);
+                                _CUDA_VSTD::forward<_ArgTypes>(__arg)...);
     }
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     __alloc_func* __clone() const
     {
         typedef allocator_traits<_Alloc> __alloc_traits;
@@ -1542,7 +1542,7 @@ class __alloc_func<_Fp, _Ap, _Rp(_ArgTypes...)>
         return __hold.release();
     }
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void destroy() _NOEXCEPT { __f_.~__compressed_pair<_Target, _Alloc>(); }
 };
 
@@ -1556,17 +1556,17 @@ class __base<_Rp(_ArgTypes...)>
     __base(const __base&);
     __base& operator=(const __base&);
 public:
-    _LIBCPP_INLINE_VISIBILITY __base() {}
-    _LIBCPP_INLINE_VISIBILITY virtual ~__base() {}
+    _LIBCUDACXX_INLINE_VISIBILITY __base() {}
+    _LIBCUDACXX_INLINE_VISIBILITY virtual ~__base() {}
     virtual __base* __clone() const = 0;
     virtual void __clone(__base*) const = 0;
     virtual void destroy() _NOEXCEPT = 0;
     virtual void destroy_deallocate() _NOEXCEPT = 0;
     virtual _Rp operator()(_ArgTypes&& ...) = 0;
-#ifndef _LIBCPP_NO_RTTI
+#ifndef _LIBCUDACXX_NO_RTTI
     virtual const void* target(const type_info&) const _NOEXCEPT = 0;
     virtual const std::type_info& target_type() const _NOEXCEPT = 0;
-#endif  // _LIBCPP_NO_RTTI
+#endif  // _LIBCUDACXX_NO_RTTI
 };
 
 // __func implements __base for a given functor type.
@@ -1579,31 +1579,31 @@ class __func<_Fp, _Alloc, _Rp(_ArgTypes...)>
 {
     __alloc_func<_Fp, _Alloc, _Rp(_ArgTypes...)> __f_;
 public:
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit __func(_Fp&& __f)
-        : __f_(_VSTD::move(__f)) {}
+        : __f_(_CUDA_VSTD::move(__f)) {}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit __func(const _Fp& __f, const _Alloc& __a)
         : __f_(__f, __a) {}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit __func(const _Fp& __f, _Alloc&& __a)
-        : __f_(__f, _VSTD::move(__a)) {}
+        : __f_(__f, _CUDA_VSTD::move(__a)) {}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit __func(_Fp&& __f, _Alloc&& __a)
-        : __f_(_VSTD::move(__f), _VSTD::move(__a)) {}
+        : __f_(_CUDA_VSTD::move(__f), _CUDA_VSTD::move(__a)) {}
 
     virtual __base<_Rp(_ArgTypes...)>* __clone() const;
     virtual void __clone(__base<_Rp(_ArgTypes...)>*) const;
     virtual void destroy() _NOEXCEPT;
     virtual void destroy_deallocate() _NOEXCEPT;
     virtual _Rp operator()(_ArgTypes&&... __arg);
-#ifndef _LIBCPP_NO_RTTI
+#ifndef _LIBCUDACXX_NO_RTTI
     virtual const void* target(const type_info&) const _NOEXCEPT;
     virtual const std::type_info& target_type() const _NOEXCEPT;
-#endif  // _LIBCPP_NO_RTTI
+#endif  // _LIBCUDACXX_NO_RTTI
 };
 
 template<class _Fp, class _Alloc, class _Rp, class ..._ArgTypes>
@@ -1648,10 +1648,10 @@ template<class _Fp, class _Alloc, class _Rp, class ..._ArgTypes>
 _Rp
 __func<_Fp, _Alloc, _Rp(_ArgTypes...)>::operator()(_ArgTypes&& ... __arg)
 {
-    return __f_(_VSTD::forward<_ArgTypes>(__arg)...);
+    return __f_(_CUDA_VSTD::forward<_ArgTypes>(__arg)...);
 }
 
-#ifndef _LIBCPP_NO_RTTI
+#ifndef _LIBCUDACXX_NO_RTTI
 
 template<class _Fp, class _Alloc, class _Rp, class ..._ArgTypes>
 const void*
@@ -1669,7 +1669,7 @@ __func<_Fp, _Alloc, _Rp(_ArgTypes...)>::target_type() const _NOEXCEPT
     return typeid(_Fp);
 }
 
-#endif  // _LIBCPP_NO_RTTI
+#endif  // _LIBCUDACXX_NO_RTTI
 
 // __value_func creates a value-type from a __func.
 
@@ -1682,17 +1682,17 @@ template <class _Rp, class... _ArgTypes> class __value_func<_Rp(_ArgTypes...)>
     typedef __base<_Rp(_ArgTypes...)> __func;
     __func* __f_;
 
-    _LIBCPP_NO_CFI static __func* __as_base(void* p)
+    _LIBCUDACXX_NO_CFI static __func* __as_base(void* p)
     {
         return reinterpret_cast<__func*>(p);
     }
 
   public:
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     __value_func() _NOEXCEPT : __f_(0) {}
 
     template <class _Fp, class _Alloc>
-    _LIBCPP_INLINE_VISIBILITY __value_func(_Fp&& __f, const _Alloc __a)
+    _LIBCUDACXX_INLINE_VISIBILITY __value_func(_Fp&& __f, const _Alloc __a)
         : __f_(0)
     {
         typedef allocator_traits<_Alloc> __alloc_traits;
@@ -1708,19 +1708,19 @@ template <class _Rp, class... _ArgTypes> class __value_func<_Rp(_ArgTypes...)>
                 is_nothrow_copy_constructible<_FunAlloc>::value)
             {
                 __f_ =
-                    ::new ((void*)&__buf_) _Fun(_VSTD::move(__f), _Alloc(__af));
+                    ::new ((void*)&__buf_) _Fun(_CUDA_VSTD::move(__f), _Alloc(__af));
             }
             else
             {
                 typedef __allocator_destructor<_FunAlloc> _Dp;
                 unique_ptr<__func, _Dp> __hold(__af.allocate(1), _Dp(__af, 1));
-                ::new ((void*)__hold.get()) _Fun(_VSTD::move(__f), _Alloc(__a));
+                ::new ((void*)__hold.get()) _Fun(_CUDA_VSTD::move(__f), _Alloc(__a));
                 __f_ = __hold.release();
             }
         }
     }
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     __value_func(const __value_func& __f)
     {
         if (__f.__f_ == 0)
@@ -1734,7 +1734,7 @@ template <class _Rp, class... _ArgTypes> class __value_func<_Rp(_ArgTypes...)>
             __f_ = __f.__f_->__clone();
     }
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     __value_func(__value_func&& __f) _NOEXCEPT
     {
         if (__f.__f_ == 0)
@@ -1751,7 +1751,7 @@ template <class _Rp, class... _ArgTypes> class __value_func<_Rp(_ArgTypes...)>
         }
     }
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     ~__value_func()
     {
         if ((void*)__f_ == &__buf_)
@@ -1760,7 +1760,7 @@ template <class _Rp, class... _ArgTypes> class __value_func<_Rp(_ArgTypes...)>
             __f_->destroy_deallocate();
     }
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     __value_func& operator=(__value_func&& __f)
     {
         *this = nullptr;
@@ -1779,7 +1779,7 @@ template <class _Rp, class... _ArgTypes> class __value_func<_Rp(_ArgTypes...)>
         return *this;
     }
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     __value_func& operator=(nullptr_t)
     {
         __func* __f = __f_;
@@ -1791,15 +1791,15 @@ template <class _Rp, class... _ArgTypes> class __value_func<_Rp(_ArgTypes...)>
         return *this;
     }
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     _Rp operator()(_ArgTypes&&... __args) const
     {
         if (__f_ == 0)
             __throw_bad_function_call();
-        return (*__f_)(_VSTD::forward<_ArgTypes>(__args)...);
+        return (*__f_)(_CUDA_VSTD::forward<_ArgTypes>(__args)...);
     }
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void swap(__value_func& __f) _NOEXCEPT
     {
         if (&__f == this)
@@ -1834,14 +1834,14 @@ template <class _Rp, class... _ArgTypes> class __value_func<_Rp(_ArgTypes...)>
             __f_ = __as_base(&__buf_);
         }
         else
-            _VSTD::swap(__f_, __f.__f_);
+            _CUDA_VSTD::swap(__f_, __f.__f_);
     }
 
-    _LIBCPP_INLINE_VISIBILITY
-    _LIBCPP_EXPLICIT operator bool() const _NOEXCEPT { return __f_ != 0; }
+    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCUDACXX_EXPLICIT operator bool() const _NOEXCEPT { return __f_ != 0; }
 
-#ifndef _LIBCPP_NO_RTTI
-    _LIBCPP_INLINE_VISIBILITY
+#ifndef _LIBCUDACXX_NO_RTTI
+    _LIBCUDACXX_INLINE_VISIBILITY
     const std::type_info& target_type() const _NOEXCEPT
     {
         if (__f_ == 0)
@@ -1850,13 +1850,13 @@ template <class _Rp, class... _ArgTypes> class __value_func<_Rp(_ArgTypes...)>
     }
 
     template <typename _Tp>
-    _LIBCPP_INLINE_VISIBILITY const _Tp* target() const _NOEXCEPT
+    _LIBCUDACXX_INLINE_VISIBILITY const _Tp* target() const _NOEXCEPT
     {
         if (__f_ == 0)
             return 0;
         return (const _Tp*)__f_->target(typeid(_Tp));
     }
-#endif // _LIBCPP_NO_RTTI
+#endif // _LIBCUDACXX_NO_RTTI
 };
 
 // Storage for a functor object, to be used with __policy to manage copy and
@@ -1870,11 +1870,11 @@ union __policy_storage
 // True if _Fun can safely be held in __policy_storage.__small.
 template <typename _Fun>
 struct __use_small_storage
-    : public _VSTD::integral_constant<
+    : public _CUDA_VSTD::integral_constant<
           bool, sizeof(_Fun) <= sizeof(__policy_storage) &&
-                    _LIBCPP_ALIGNOF(_Fun) <= _LIBCPP_ALIGNOF(__policy_storage) &&
-                    _VSTD::is_trivially_copy_constructible<_Fun>::value &&
-                    _VSTD::is_trivially_destructible<_Fun>::value> {};
+                    _LIBCUDACXX_ALIGNOF(_Fun) <= _LIBCUDACXX_ALIGNOF(__policy_storage) &&
+                    _CUDA_VSTD::is_trivially_copy_constructible<_Fun>::value &&
+                    _CUDA_VSTD::is_trivially_destructible<_Fun>::value> {};
 
 // Policy contains information about how to copy, destroy, and move the
 // underlying functor. You can think of it as a vtable of sorts.
@@ -1893,17 +1893,17 @@ struct __policy
     // Returns a pointer to a static policy object suitable for the functor
     // type.
     template <typename _Fun>
-    _LIBCPP_INLINE_VISIBILITY static const __policy* __create()
+    _LIBCUDACXX_INLINE_VISIBILITY static const __policy* __create()
     {
         return __choose_policy<_Fun>(__use_small_storage<_Fun>());
     }
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     static const __policy* __create_empty()
     {
-        static const _LIBCPP_CONSTEXPR __policy __policy_ = {nullptr, nullptr,
+        static const _LIBCUDACXX_CONSTEXPR __policy __policy_ = {nullptr, nullptr,
                                                              true,
-#ifndef _LIBCPP_NO_RTTI
+#ifndef _LIBCUDACXX_NO_RTTI
                                                              &typeid(void)
 #else
                                                              nullptr
@@ -1931,12 +1931,12 @@ struct __policy
     }
 
     template <typename _Fun>
-    _LIBCPP_INLINE_VISIBILITY static const __policy*
+    _LIBCUDACXX_INLINE_VISIBILITY static const __policy*
         __choose_policy(/* is_small = */ false_type)
     {
-        static const _LIBCPP_CONSTEXPR __policy __policy_ = {
+        static const _LIBCUDACXX_CONSTEXPR __policy __policy_ = {
             &__large_clone<_Fun>, &__large_destroy<_Fun>, false,
-#ifndef _LIBCPP_NO_RTTI
+#ifndef _LIBCUDACXX_NO_RTTI
             &typeid(typename _Fun::_Target)
 #else
             nullptr
@@ -1946,12 +1946,12 @@ struct __policy
     }
 
     template <typename _Fun>
-    _LIBCPP_INLINE_VISIBILITY static const __policy*
+    _LIBCUDACXX_INLINE_VISIBILITY static const __policy*
         __choose_policy(/* is_small = */ true_type)
     {
-        static const _LIBCPP_CONSTEXPR __policy __policy_ = {
+        static const _LIBCUDACXX_CONSTEXPR __policy __policy_ = {
             nullptr, nullptr, false,
-#ifndef _LIBCPP_NO_RTTI
+#ifndef _LIBCUDACXX_NO_RTTI
             &typeid(typename _Fun::_Target)
 #else
             nullptr
@@ -1965,7 +1965,7 @@ struct __policy
 // faster for types that can be passed in registers.
 template <typename _Tp>
 using __fast_forward =
-    typename _VSTD::conditional<_VSTD::is_scalar<_Tp>::value, _Tp, _Tp&&>::type;
+    typename _CUDA_VSTD::conditional<_CUDA_VSTD::is_scalar<_Tp>::value, _Tp, _Tp&&>::type;
 
 // __policy_invoker calls an instance of __alloc_func held in __policy_storage.
 
@@ -1980,18 +1980,18 @@ struct __policy_invoker<_Rp(_ArgTypes...)>
     __Call __call_;
 
     // Creates an invoker that throws bad_function_call.
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     __policy_invoker() : __call_(&__call_empty) {}
 
     // Creates an invoker that calls the given instance of __func.
     template <typename _Fun>
-    _LIBCPP_INLINE_VISIBILITY static __policy_invoker __create()
+    _LIBCUDACXX_INLINE_VISIBILITY static __policy_invoker __create()
     {
         return __policy_invoker(&__call_impl<_Fun>);
     }
 
   private:
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit __policy_invoker(__Call __c) : __call_(__c) {}
 
     static _Rp __call_empty(const __policy_storage*,
@@ -2007,7 +2007,7 @@ struct __policy_invoker<_Rp(_ArgTypes...)>
         _Fun* __f = reinterpret_cast<_Fun*>(__use_small_storage<_Fun>::value
                                                 ? &__buf->__small
                                                 : __buf->__large);
-        return (*__f)(_VSTD::forward<_ArgTypes>(__args)...);
+        return (*__f)(_CUDA_VSTD::forward<_ArgTypes>(__args)...);
     }
 };
 
@@ -2032,11 +2032,11 @@ template <class _Rp, class... _ArgTypes> class __policy_func<_Rp(_ArgTypes...)>
     const __policy* __policy_;
 
   public:
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     __policy_func() : __policy_(__policy::__create_empty()) {}
 
     template <class _Fp, class _Alloc>
-    _LIBCPP_INLINE_VISIBILITY __policy_func(_Fp&& __f, const _Alloc& __a)
+    _LIBCUDACXX_INLINE_VISIBILITY __policy_func(_Fp&& __f, const _Alloc& __a)
         : __policy_(__policy::__create_empty())
     {
         typedef __alloc_func<_Fp, _Alloc, _Rp(_ArgTypes...)> _Fun;
@@ -2053,20 +2053,20 @@ template <class _Rp, class... _ArgTypes> class __policy_func<_Rp(_ArgTypes...)>
             if (__use_small_storage<_Fun>())
             {
                 ::new ((void*)&__buf_.__small)
-                    _Fun(_VSTD::move(__f), _Alloc(__af));
+                    _Fun(_CUDA_VSTD::move(__f), _Alloc(__af));
             }
             else
             {
                 typedef __allocator_destructor<_FunAlloc> _Dp;
                 unique_ptr<_Fun, _Dp> __hold(__af.allocate(1), _Dp(__af, 1));
                 ::new ((void*)__hold.get())
-                    _Fun(_VSTD::move(__f), _Alloc(__af));
+                    _Fun(_CUDA_VSTD::move(__f), _Alloc(__af));
                 __buf_.__large = __hold.release();
             }
         }
     }
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     __policy_func(const __policy_func& __f)
         : __buf_(__f.__buf_), __invoker_(__f.__invoker_),
           __policy_(__f.__policy_)
@@ -2075,7 +2075,7 @@ template <class _Rp, class... _ArgTypes> class __policy_func<_Rp(_ArgTypes...)>
             __buf_.__large = __policy_->__clone(__f.__buf_.__large);
     }
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     __policy_func(__policy_func&& __f)
         : __buf_(__f.__buf_), __invoker_(__f.__invoker_),
           __policy_(__f.__policy_)
@@ -2087,14 +2087,14 @@ template <class _Rp, class... _ArgTypes> class __policy_func<_Rp(_ArgTypes...)>
         }
     }
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     ~__policy_func()
     {
         if (__policy_->__destroy)
             __policy_->__destroy(__buf_.__large);
     }
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     __policy_func& operator=(__policy_func&& __f)
     {
         *this = nullptr;
@@ -2106,7 +2106,7 @@ template <class _Rp, class... _ArgTypes> class __policy_func<_Rp(_ArgTypes...)>
         return *this;
     }
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     __policy_func& operator=(nullptr_t)
     {
         const __policy* __p = __policy_;
@@ -2117,36 +2117,36 @@ template <class _Rp, class... _ArgTypes> class __policy_func<_Rp(_ArgTypes...)>
         return *this;
     }
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     _Rp operator()(_ArgTypes&&... __args) const
     {
-        return __invoker_.__call_(_VSTD::addressof(__buf_),
-                                  _VSTD::forward<_ArgTypes>(__args)...);
+        return __invoker_.__call_(_CUDA_VSTD::addressof(__buf_),
+                                  _CUDA_VSTD::forward<_ArgTypes>(__args)...);
     }
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void swap(__policy_func& __f)
     {
-        _VSTD::swap(__invoker_, __f.__invoker_);
-        _VSTD::swap(__policy_, __f.__policy_);
-        _VSTD::swap(__buf_, __f.__buf_);
+        _CUDA_VSTD::swap(__invoker_, __f.__invoker_);
+        _CUDA_VSTD::swap(__policy_, __f.__policy_);
+        _CUDA_VSTD::swap(__buf_, __f.__buf_);
     }
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit operator bool() const _NOEXCEPT
     {
         return !__policy_->__is_null;
     }
 
-#ifndef _LIBCPP_NO_RTTI
-    _LIBCPP_INLINE_VISIBILITY
+#ifndef _LIBCUDACXX_NO_RTTI
+    _LIBCUDACXX_INLINE_VISIBILITY
     const std::type_info& target_type() const _NOEXCEPT
     {
         return *__policy_->__type_info;
     }
 
     template <typename _Tp>
-    _LIBCPP_INLINE_VISIBILITY const _Tp* target() const _NOEXCEPT
+    _LIBCUDACXX_INLINE_VISIBILITY const _Tp* target() const _NOEXCEPT
     {
         if (__policy_->__is_null || typeid(_Tp) != *__policy_->__type_info)
             return nullptr;
@@ -2155,17 +2155,17 @@ template <class _Rp, class... _ArgTypes> class __policy_func<_Rp(_ArgTypes...)>
         else
             return reinterpret_cast<const _Tp*>(&__buf_.__small);
     }
-#endif // _LIBCPP_NO_RTTI
+#endif // _LIBCUDACXX_NO_RTTI
 };
 
 }  // __function
 
 template<class _Rp, class ..._ArgTypes>
-class _LIBCPP_TEMPLATE_VIS function<_Rp(_ArgTypes...)>
+class _LIBCUDACXX_TEMPLATE_VIS function<_Rp(_ArgTypes...)>
     : public __function::__maybe_derive_from_unary_function<_Rp(_ArgTypes...)>,
       public __function::__maybe_derive_from_binary_function<_Rp(_ArgTypes...)>
 {
-#ifndef _LIBCPP_ABI_OPTIMIZED_FUNCTION
+#ifndef _LIBCUDACXX_ABI_OPTIMIZED_FUNCTION
     typedef __function::__value_func<_Rp(_ArgTypes...)> __func;
 #else
     typedef __function::__policy_func<_Rp(_ArgTypes...)> __func;
@@ -2197,21 +2197,21 @@ public:
     typedef _Rp result_type;
 
     // construct/copy/destroy:
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     function() _NOEXCEPT { }
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     function(nullptr_t) _NOEXCEPT {}
     function(const function&);
     function(function&&) _NOEXCEPT;
     template<class _Fp, class = _EnableIfCallable<_Fp>>
     function(_Fp);
 
-#if _LIBCPP_STD_VER <= 14
+#if _LIBCUDACXX_STD_VER <= 14
     template<class _Alloc>
-      _LIBCPP_INLINE_VISIBILITY
+      _LIBCUDACXX_INLINE_VISIBILITY
       function(allocator_arg_t, const _Alloc&) _NOEXCEPT {}
     template<class _Alloc>
-      _LIBCPP_INLINE_VISIBILITY
+      _LIBCUDACXX_INLINE_VISIBILITY
       function(allocator_arg_t, const _Alloc&, nullptr_t) _NOEXCEPT {}
     template<class _Alloc>
       function(allocator_arg_t, const _Alloc&, const function&);
@@ -2232,16 +2232,16 @@ public:
     // function modifiers:
     void swap(function&) _NOEXCEPT;
 
-#if _LIBCPP_STD_VER <= 14
+#if _LIBCUDACXX_STD_VER <= 14
     template<class _Fp, class _Alloc>
-      _LIBCPP_INLINE_VISIBILITY
+      _LIBCUDACXX_INLINE_VISIBILITY
       void assign(_Fp&& __f, const _Alloc& __a)
-        {function(allocator_arg, __a, _VSTD::forward<_Fp>(__f)).swap(*this);}
+        {function(allocator_arg, __a, _CUDA_VSTD::forward<_Fp>(__f)).swap(*this);}
 #endif
 
     // function capacity:
-    _LIBCPP_INLINE_VISIBILITY
-    _LIBCPP_EXPLICIT operator bool() const _NOEXCEPT {
+    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCUDACXX_EXPLICIT operator bool() const _NOEXCEPT {
       return static_cast<bool>(__f_);
     }
 
@@ -2254,18 +2254,18 @@ public:
     // function invocation:
     _Rp operator()(_ArgTypes...) const;
 
-#ifndef _LIBCPP_NO_RTTI
+#ifndef _LIBCUDACXX_NO_RTTI
     // function target access:
     const std::type_info& target_type() const _NOEXCEPT;
     template <typename _Tp> _Tp* target() _NOEXCEPT;
     template <typename _Tp> const _Tp* target() const _NOEXCEPT;
-#endif  // _LIBCPP_NO_RTTI
+#endif  // _LIBCUDACXX_NO_RTTI
 };
 
 template<class _Rp, class ..._ArgTypes>
 function<_Rp(_ArgTypes...)>::function(const function& __f) : __f_(__f.__f_) {}
 
-#if _LIBCPP_STD_VER <= 14
+#if _LIBCUDACXX_STD_VER <= 14
 template<class _Rp, class ..._ArgTypes>
 template <class _Alloc>
 function<_Rp(_ArgTypes...)>::function(allocator_arg_t, const _Alloc&,
@@ -2274,27 +2274,27 @@ function<_Rp(_ArgTypes...)>::function(allocator_arg_t, const _Alloc&,
 
 template <class _Rp, class... _ArgTypes>
 function<_Rp(_ArgTypes...)>::function(function&& __f) _NOEXCEPT
-    : __f_(_VSTD::move(__f.__f_)) {}
+    : __f_(_CUDA_VSTD::move(__f.__f_)) {}
 
-#if _LIBCPP_STD_VER <= 14
+#if _LIBCUDACXX_STD_VER <= 14
 template<class _Rp, class ..._ArgTypes>
 template <class _Alloc>
 function<_Rp(_ArgTypes...)>::function(allocator_arg_t, const _Alloc&,
                                       function&& __f)
-    : __f_(_VSTD::move(__f.__f_)) {}
+    : __f_(_CUDA_VSTD::move(__f.__f_)) {}
 #endif
 
 template <class _Rp, class... _ArgTypes>
 template <class _Fp, class>
 function<_Rp(_ArgTypes...)>::function(_Fp __f)
-    : __f_(_VSTD::move(__f), allocator<_Fp>()) {}
+    : __f_(_CUDA_VSTD::move(__f), allocator<_Fp>()) {}
 
-#if _LIBCPP_STD_VER <= 14
+#if _LIBCUDACXX_STD_VER <= 14
 template <class _Rp, class... _ArgTypes>
 template <class _Fp, class _Alloc, class>
 function<_Rp(_ArgTypes...)>::function(allocator_arg_t, const _Alloc& __a,
                                       _Fp __f)
-    : __f_(_VSTD::move(__f), __a) {}
+    : __f_(_CUDA_VSTD::move(__f), __a) {}
 #endif
 
 template<class _Rp, class ..._ArgTypes>
@@ -2326,7 +2326,7 @@ template <class _Fp, class>
 function<_Rp(_ArgTypes...)>&
 function<_Rp(_ArgTypes...)>::operator=(_Fp&& __f)
 {
-    function(_VSTD::forward<_Fp>(__f)).swap(*this);
+    function(_CUDA_VSTD::forward<_Fp>(__f)).swap(*this);
     return *this;
 }
 
@@ -2344,10 +2344,10 @@ template<class _Rp, class ..._ArgTypes>
 _Rp
 function<_Rp(_ArgTypes...)>::operator()(_ArgTypes... __arg) const
 {
-    return __f_(_VSTD::forward<_ArgTypes>(__arg)...);
+    return __f_(_CUDA_VSTD::forward<_ArgTypes>(__arg)...);
 }
 
-#ifndef _LIBCPP_NO_RTTI
+#ifndef _LIBCUDACXX_NO_RTTI
 
 template<class _Rp, class ..._ArgTypes>
 const std::type_info&
@@ -2372,35 +2372,35 @@ function<_Rp(_ArgTypes...)>::target() const _NOEXCEPT
     return __f_.template target<_Tp>();
 }
 
-#endif  // _LIBCPP_NO_RTTI
+#endif  // _LIBCUDACXX_NO_RTTI
 
 template <class _Rp, class... _ArgTypes>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 bool
 operator==(const function<_Rp(_ArgTypes...)>& __f, nullptr_t) _NOEXCEPT {return !__f;}
 
 template <class _Rp, class... _ArgTypes>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 bool
 operator==(nullptr_t, const function<_Rp(_ArgTypes...)>& __f) _NOEXCEPT {return !__f;}
 
 template <class _Rp, class... _ArgTypes>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 bool
 operator!=(const function<_Rp(_ArgTypes...)>& __f, nullptr_t) _NOEXCEPT {return (bool)__f;}
 
 template <class _Rp, class... _ArgTypes>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 bool
 operator!=(nullptr_t, const function<_Rp(_ArgTypes...)>& __f) _NOEXCEPT {return (bool)__f;}
 
 template <class _Rp, class... _ArgTypes>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 void
 swap(function<_Rp(_ArgTypes...)>& __x, function<_Rp(_ArgTypes...)>& __y) _NOEXCEPT
 {return __x.swap(__y);}
 
-#else // _LIBCPP_CXX03_LANG
+#else // _LIBCUDACXX_CXX03_LANG
 
 #include <__functional_03>
 
@@ -2411,21 +2411,21 @@ swap(function<_Rp(_ArgTypes...)>& __x, function<_Rp(_ArgTypes...)>& __y) _NOEXCE
 //==============================================================================
 
 template<class _Tp> struct __is_bind_expression : public false_type {};
-template<class _Tp> struct _LIBCPP_TEMPLATE_VIS is_bind_expression
+template<class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_bind_expression
     : public __is_bind_expression<typename remove_cv<_Tp>::type> {};
 
-#if _LIBCPP_STD_VER > 14
+#if _LIBCUDACXX_STD_VER > 14
 template <class _Tp>
-_LIBCPP_INLINE_VAR constexpr size_t is_bind_expression_v = is_bind_expression<_Tp>::value;
+_LIBCUDACXX_INLINE_VAR constexpr size_t is_bind_expression_v = is_bind_expression<_Tp>::value;
 #endif
 
 template<class _Tp> struct __is_placeholder : public integral_constant<int, 0> {};
-template<class _Tp> struct _LIBCPP_TEMPLATE_VIS is_placeholder
+template<class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_placeholder
     : public __is_placeholder<typename remove_cv<_Tp>::type> {};
 
-#if _LIBCPP_STD_VER > 14
+#if _LIBCUDACXX_STD_VER > 14
 template <class _Tp>
-_LIBCPP_INLINE_VAR constexpr size_t is_placeholder_v = is_placeholder<_Tp>::value;
+_LIBCUDACXX_INLINE_VAR constexpr size_t is_placeholder_v = is_placeholder<_Tp>::value;
 #endif
 
 namespace placeholders
@@ -2433,29 +2433,29 @@ namespace placeholders
 
 template <int _Np> struct __ph {};
 
-#if defined(_LIBCPP_CXX03_LANG) || defined(_LIBCPP_BUILDING_LIBRARY)
-_LIBCPP_FUNC_VIS extern const __ph<1>   _1;
-_LIBCPP_FUNC_VIS extern const __ph<2>   _2;
-_LIBCPP_FUNC_VIS extern const __ph<3>   _3;
-_LIBCPP_FUNC_VIS extern const __ph<4>   _4;
-_LIBCPP_FUNC_VIS extern const __ph<5>   _5;
-_LIBCPP_FUNC_VIS extern const __ph<6>   _6;
-_LIBCPP_FUNC_VIS extern const __ph<7>   _7;
-_LIBCPP_FUNC_VIS extern const __ph<8>   _8;
-_LIBCPP_FUNC_VIS extern const __ph<9>   _9;
-_LIBCPP_FUNC_VIS extern const __ph<10> _10;
+#if defined(_LIBCUDACXX_CXX03_LANG) || defined(_LIBCUDACXX_BUILDING_LIBRARY)
+_LIBCUDACXX_FUNC_VIS extern const __ph<1>   _1;
+_LIBCUDACXX_FUNC_VIS extern const __ph<2>   _2;
+_LIBCUDACXX_FUNC_VIS extern const __ph<3>   _3;
+_LIBCUDACXX_FUNC_VIS extern const __ph<4>   _4;
+_LIBCUDACXX_FUNC_VIS extern const __ph<5>   _5;
+_LIBCUDACXX_FUNC_VIS extern const __ph<6>   _6;
+_LIBCUDACXX_FUNC_VIS extern const __ph<7>   _7;
+_LIBCUDACXX_FUNC_VIS extern const __ph<8>   _8;
+_LIBCUDACXX_FUNC_VIS extern const __ph<9>   _9;
+_LIBCUDACXX_FUNC_VIS extern const __ph<10> _10;
 #else
-/* _LIBCPP_INLINE_VAR */ constexpr __ph<1>   _1{};
-/* _LIBCPP_INLINE_VAR */ constexpr __ph<2>   _2{};
-/* _LIBCPP_INLINE_VAR */ constexpr __ph<3>   _3{};
-/* _LIBCPP_INLINE_VAR */ constexpr __ph<4>   _4{};
-/* _LIBCPP_INLINE_VAR */ constexpr __ph<5>   _5{};
-/* _LIBCPP_INLINE_VAR */ constexpr __ph<6>   _6{};
-/* _LIBCPP_INLINE_VAR */ constexpr __ph<7>   _7{};
-/* _LIBCPP_INLINE_VAR */ constexpr __ph<8>   _8{};
-/* _LIBCPP_INLINE_VAR */ constexpr __ph<9>   _9{};
-/* _LIBCPP_INLINE_VAR */ constexpr __ph<10> _10{};
-#endif // defined(_LIBCPP_CXX03_LANG) || defined(_LIBCPP_BUILDING_LIBRARY)
+/* _LIBCUDACXX_INLINE_VAR */ constexpr __ph<1>   _1{};
+/* _LIBCUDACXX_INLINE_VAR */ constexpr __ph<2>   _2{};
+/* _LIBCUDACXX_INLINE_VAR */ constexpr __ph<3>   _3{};
+/* _LIBCUDACXX_INLINE_VAR */ constexpr __ph<4>   _4{};
+/* _LIBCUDACXX_INLINE_VAR */ constexpr __ph<5>   _5{};
+/* _LIBCUDACXX_INLINE_VAR */ constexpr __ph<6>   _6{};
+/* _LIBCUDACXX_INLINE_VAR */ constexpr __ph<7>   _7{};
+/* _LIBCUDACXX_INLINE_VAR */ constexpr __ph<8>   _8{};
+/* _LIBCUDACXX_INLINE_VAR */ constexpr __ph<9>   _9{};
+/* _LIBCUDACXX_INLINE_VAR */ constexpr __ph<10> _10{};
+#endif // defined(_LIBCUDACXX_CXX03_LANG) || defined(_LIBCUDACXX_BUILDING_LIBRARY)
 
 }  // placeholders
 
@@ -2464,10 +2464,10 @@ struct __is_placeholder<placeholders::__ph<_Np> >
     : public integral_constant<int, _Np> {};
 
 
-#ifndef _LIBCPP_CXX03_LANG
+#ifndef _LIBCUDACXX_CXX03_LANG
 
 template <class _Tp, class _Uj>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 _Tp&
 __mu(reference_wrapper<_Tp> __t, _Uj&)
 {
@@ -2475,15 +2475,15 @@ __mu(reference_wrapper<_Tp> __t, _Uj&)
 }
 
 template <class _Ti, class ..._Uj, size_t ..._Indx>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 typename __invoke_of<_Ti&, _Uj...>::type
 __mu_expand(_Ti& __ti, tuple<_Uj...>& __uj, __tuple_indices<_Indx...>)
 {
-    return __ti(_VSTD::forward<_Uj>(_VSTD::get<_Indx>(__uj))...);
+    return __ti(_CUDA_VSTD::forward<_Uj>(_CUDA_VSTD::get<_Indx>(__uj))...);
 }
 
 template <class _Ti, class ..._Uj>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 typename __lazy_enable_if
 <
     is_bind_expression<_Ti>::value,
@@ -2505,7 +2505,7 @@ struct __mu_return2<true, _Ti, _Uj>
 };
 
 template <class _Ti, class _Uj>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 typename enable_if
 <
     0 < is_placeholder<_Ti>::value,
@@ -2514,11 +2514,11 @@ typename enable_if
 __mu(_Ti&, _Uj& __uj)
 {
     const size_t _Indx = is_placeholder<_Ti>::value - 1;
-    return _VSTD::forward<typename tuple_element<_Indx, _Uj>::type>(_VSTD::get<_Indx>(__uj));
+    return _CUDA_VSTD::forward<typename tuple_element<_Indx, _Uj>::type>(_CUDA_VSTD::get<_Indx>(__uj));
 }
 
 template <class _Ti, class _Uj>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 typename enable_if
 <
     !is_bind_expression<_Ti>::value &&
@@ -2636,12 +2636,12 @@ struct __bind_return<_Fp, const tuple<_BoundArgs...>, _TupleUj, true>
 };
 
 template <class _Fp, class _BoundArgs, size_t ..._Indx, class _Args>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 typename __bind_return<_Fp, _BoundArgs, _Args>::type
 __apply_functor(_Fp& __f, _BoundArgs& __bound_args, __tuple_indices<_Indx...>,
                 _Args&& __args)
 {
-    return _VSTD::__invoke(__f, _VSTD::__mu(_VSTD::get<_Indx>(__bound_args), __args)...);
+    return _CUDA_VSTD::__invoke(__f, _CUDA_VSTD::__mu(_CUDA_VSTD::get<_Indx>(__bound_args), __args)...);
 }
 
 template<class _Fp, class ..._BoundArgs>
@@ -2664,27 +2664,27 @@ public:
                                   !is_same<typename remove_reference<_Gp>::type,
                                            __bind>::value
                                >::type>
-      _LIBCPP_INLINE_VISIBILITY
+      _LIBCUDACXX_INLINE_VISIBILITY
       explicit __bind(_Gp&& __f, _BA&& ...__bound_args)
-        : __f_(_VSTD::forward<_Gp>(__f)),
-          __bound_args_(_VSTD::forward<_BA>(__bound_args)...) {}
+        : __f_(_CUDA_VSTD::forward<_Gp>(__f)),
+          __bound_args_(_CUDA_VSTD::forward<_BA>(__bound_args)...) {}
 
     template <class ..._Args>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         typename __bind_return<_Fd, _Td, tuple<_Args&&...> >::type
         operator()(_Args&& ...__args)
         {
-            return _VSTD::__apply_functor(__f_, __bound_args_, __indices(),
-                                  tuple<_Args&&...>(_VSTD::forward<_Args>(__args)...));
+            return _CUDA_VSTD::__apply_functor(__f_, __bound_args_, __indices(),
+                                  tuple<_Args&&...>(_CUDA_VSTD::forward<_Args>(__args)...));
         }
 
     template <class ..._Args>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         typename __bind_return<const _Fd, const _Td, tuple<_Args&&...> >::type
         operator()(_Args&& ...__args) const
         {
-            return _VSTD::__apply_functor(__f_, __bound_args_, __indices(),
-                                   tuple<_Args&&...>(_VSTD::forward<_Args>(__args)...));
+            return _CUDA_VSTD::__apply_functor(__f_, __bound_args_, __indices(),
+                                   tuple<_Args&&...>(_CUDA_VSTD::forward<_Args>(__args)...));
         }
 };
 
@@ -2709,13 +2709,13 @@ public:
                                   !is_same<typename remove_reference<_Gp>::type,
                                            __bind_r>::value
                                >::type>
-      _LIBCPP_INLINE_VISIBILITY
+      _LIBCUDACXX_INLINE_VISIBILITY
       explicit __bind_r(_Gp&& __f, _BA&& ...__bound_args)
-        : base(_VSTD::forward<_Gp>(__f),
-               _VSTD::forward<_BA>(__bound_args)...) {}
+        : base(_CUDA_VSTD::forward<_Gp>(__f),
+               _CUDA_VSTD::forward<_BA>(__bound_args)...) {}
 
     template <class ..._Args>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         typename enable_if
         <
             is_convertible<typename __bind_return<_Fd, _Td, tuple<_Args&&...> >::type,
@@ -2725,11 +2725,11 @@ public:
         operator()(_Args&& ...__args)
         {
             typedef __invoke_void_return_wrapper<_Rp> _Invoker;
-            return _Invoker::__call(static_cast<base&>(*this), _VSTD::forward<_Args>(__args)...);
+            return _Invoker::__call(static_cast<base&>(*this), _CUDA_VSTD::forward<_Args>(__args)...);
         }
 
     template <class ..._Args>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         typename enable_if
         <
             is_convertible<typename __bind_return<const _Fd, const _Td, tuple<_Args&&...> >::type,
@@ -2739,7 +2739,7 @@ public:
         operator()(_Args&& ...__args) const
         {
             typedef __invoke_void_return_wrapper<_Rp> _Invoker;
-            return _Invoker::__call(static_cast<base const&>(*this), _VSTD::forward<_Args>(__args)...);
+            return _Invoker::__call(static_cast<base const&>(*this), _CUDA_VSTD::forward<_Args>(__args)...);
         }
 };
 
@@ -2747,87 +2747,87 @@ template<class _Rp, class _Fp, class ..._BoundArgs>
 struct __is_bind_expression<__bind_r<_Rp, _Fp, _BoundArgs...> > : public true_type {};
 
 template<class _Fp, class ..._BoundArgs>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 __bind<_Fp, _BoundArgs...>
 bind(_Fp&& __f, _BoundArgs&&... __bound_args)
 {
     typedef __bind<_Fp, _BoundArgs...> type;
-    return type(_VSTD::forward<_Fp>(__f), _VSTD::forward<_BoundArgs>(__bound_args)...);
+    return type(_CUDA_VSTD::forward<_Fp>(__f), _CUDA_VSTD::forward<_BoundArgs>(__bound_args)...);
 }
 
 template<class _Rp, class _Fp, class ..._BoundArgs>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 __bind_r<_Rp, _Fp, _BoundArgs...>
 bind(_Fp&& __f, _BoundArgs&&... __bound_args)
 {
     typedef __bind_r<_Rp, _Fp, _BoundArgs...> type;
-    return type(_VSTD::forward<_Fp>(__f), _VSTD::forward<_BoundArgs>(__bound_args)...);
+    return type(_CUDA_VSTD::forward<_Fp>(__f), _CUDA_VSTD::forward<_BoundArgs>(__bound_args)...);
 }
 
-#endif  // _LIBCPP_CXX03_LANG
+#endif  // _LIBCUDACXX_CXX03_LANG
 
-#if _LIBCPP_STD_VER > 14
+#if _LIBCUDACXX_STD_VER > 14
 
 template <class _Fn, class ..._Args>
 result_of_t<_Fn&&(_Args&&...)>
 invoke(_Fn&& __f, _Args&&... __args)
-    noexcept(noexcept(_VSTD::__invoke(_VSTD::forward<_Fn>(__f), _VSTD::forward<_Args>(__args)...)))
+    noexcept(noexcept(_CUDA_VSTD::__invoke(_CUDA_VSTD::forward<_Fn>(__f), _CUDA_VSTD::forward<_Args>(__args)...)))
 {
-    return _VSTD::__invoke(_VSTD::forward<_Fn>(__f), _VSTD::forward<_Args>(__args)...);
+    return _CUDA_VSTD::__invoke(_CUDA_VSTD::forward<_Fn>(__f), _CUDA_VSTD::forward<_Args>(__args)...);
 }
 
 template <class _DecayFunc>
-class _LIBCPP_TEMPLATE_VIS __not_fn_imp {
+class _LIBCUDACXX_TEMPLATE_VIS __not_fn_imp {
   _DecayFunc __fd;
 
 public:
     __not_fn_imp() = delete;
 
     template <class ..._Args>
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     auto operator()(_Args&& ...__args) &
-            noexcept(noexcept(!_VSTD::invoke(__fd, _VSTD::forward<_Args>(__args)...)))
-        -> decltype(          !_VSTD::invoke(__fd, _VSTD::forward<_Args>(__args)...))
-        { return              !_VSTD::invoke(__fd, _VSTD::forward<_Args>(__args)...); }
+            noexcept(noexcept(!_CUDA_VSTD::invoke(__fd, _CUDA_VSTD::forward<_Args>(__args)...)))
+        -> decltype(          !_CUDA_VSTD::invoke(__fd, _CUDA_VSTD::forward<_Args>(__args)...))
+        { return              !_CUDA_VSTD::invoke(__fd, _CUDA_VSTD::forward<_Args>(__args)...); }
 
     template <class ..._Args>
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     auto operator()(_Args&& ...__args) &&
-            noexcept(noexcept(!_VSTD::invoke(_VSTD::move(__fd), _VSTD::forward<_Args>(__args)...)))
-        -> decltype(          !_VSTD::invoke(_VSTD::move(__fd), _VSTD::forward<_Args>(__args)...))
-        { return              !_VSTD::invoke(_VSTD::move(__fd), _VSTD::forward<_Args>(__args)...); }
+            noexcept(noexcept(!_CUDA_VSTD::invoke(_CUDA_VSTD::move(__fd), _CUDA_VSTD::forward<_Args>(__args)...)))
+        -> decltype(          !_CUDA_VSTD::invoke(_CUDA_VSTD::move(__fd), _CUDA_VSTD::forward<_Args>(__args)...))
+        { return              !_CUDA_VSTD::invoke(_CUDA_VSTD::move(__fd), _CUDA_VSTD::forward<_Args>(__args)...); }
 
     template <class ..._Args>
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     auto operator()(_Args&& ...__args) const&
-            noexcept(noexcept(!_VSTD::invoke(__fd, _VSTD::forward<_Args>(__args)...)))
-        -> decltype(          !_VSTD::invoke(__fd, _VSTD::forward<_Args>(__args)...))
-        { return              !_VSTD::invoke(__fd, _VSTD::forward<_Args>(__args)...); }
+            noexcept(noexcept(!_CUDA_VSTD::invoke(__fd, _CUDA_VSTD::forward<_Args>(__args)...)))
+        -> decltype(          !_CUDA_VSTD::invoke(__fd, _CUDA_VSTD::forward<_Args>(__args)...))
+        { return              !_CUDA_VSTD::invoke(__fd, _CUDA_VSTD::forward<_Args>(__args)...); }
 
 
     template <class ..._Args>
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     auto operator()(_Args&& ...__args) const&&
-            noexcept(noexcept(!_VSTD::invoke(_VSTD::move(__fd), _VSTD::forward<_Args>(__args)...)))
-        -> decltype(          !_VSTD::invoke(_VSTD::move(__fd), _VSTD::forward<_Args>(__args)...))
-        { return              !_VSTD::invoke(_VSTD::move(__fd), _VSTD::forward<_Args>(__args)...); }
+            noexcept(noexcept(!_CUDA_VSTD::invoke(_CUDA_VSTD::move(__fd), _CUDA_VSTD::forward<_Args>(__args)...)))
+        -> decltype(          !_CUDA_VSTD::invoke(_CUDA_VSTD::move(__fd), _CUDA_VSTD::forward<_Args>(__args)...))
+        { return              !_CUDA_VSTD::invoke(_CUDA_VSTD::move(__fd), _CUDA_VSTD::forward<_Args>(__args)...); }
 
 private:
     template <class _RawFunc,
               class = enable_if_t<!is_same<decay_t<_RawFunc>, __not_fn_imp>::value>>
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit __not_fn_imp(_RawFunc&& __rf)
-        : __fd(_VSTD::forward<_RawFunc>(__rf)) {}
+        : __fd(_CUDA_VSTD::forward<_RawFunc>(__rf)) {}
 
     template <class _RawFunc>
-    friend inline _LIBCPP_INLINE_VISIBILITY
+    friend inline _LIBCUDACXX_INLINE_VISIBILITY
     __not_fn_imp<decay_t<_RawFunc>> not_fn(_RawFunc&&);
 };
 
 template <class _RawFunc>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 __not_fn_imp<decay_t<_RawFunc>> not_fn(_RawFunc&& __fn) {
-    return __not_fn_imp<decay_t<_RawFunc>>(_VSTD::forward<_RawFunc>(__fn));
+    return __not_fn_imp<decay_t<_RawFunc>>(_CUDA_VSTD::forward<_RawFunc>(__fn));
 }
 
 #endif
@@ -2835,7 +2835,7 @@ __not_fn_imp<decay_t<_RawFunc>> not_fn(_RawFunc&& __fn) {
 // struct hash<T*> in <memory>
 
 template <class _BinaryPredicate, class _ForwardIterator1, class _ForwardIterator2>
-pair<_ForwardIterator1, _ForwardIterator1> _LIBCPP_CONSTEXPR_AFTER_CXX11
+pair<_ForwardIterator1, _ForwardIterator1> _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
 __search(_ForwardIterator1 __first1, _ForwardIterator1 __last1,
          _ForwardIterator2 __first2, _ForwardIterator2 __last2, _BinaryPredicate __pred,
          forward_iterator_tag, forward_iterator_tag)
@@ -2872,7 +2872,7 @@ __search(_ForwardIterator1 __first1, _ForwardIterator1 __last1,
 }
 
 template <class _BinaryPredicate, class _RandomAccessIterator1, class _RandomAccessIterator2>
-_LIBCPP_CONSTEXPR_AFTER_CXX11
+_LIBCUDACXX_CONSTEXPR_AFTER_CXX11
 pair<_RandomAccessIterator1, _RandomAccessIterator1>
 __search(_RandomAccessIterator1 __first1, _RandomAccessIterator1 __last1,
          _RandomAccessIterator2 __first2, _RandomAccessIterator2 __last2, _BinaryPredicate __pred,
@@ -2916,25 +2916,25 @@ __search(_RandomAccessIterator1 __first1, _RandomAccessIterator1 __last1,
     }
 }
 
-#if _LIBCPP_STD_VER > 14
+#if _LIBCUDACXX_STD_VER > 14
 
 // default searcher
 template<class _ForwardIterator, class _BinaryPredicate = equal_to<>>
-class _LIBCPP_TYPE_VIS default_searcher {
+class _LIBCUDACXX_TYPE_VIS default_searcher {
 public:
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     default_searcher(_ForwardIterator __f, _ForwardIterator __l,
                        _BinaryPredicate __p = _BinaryPredicate())
         : __first_(__f), __last_(__l), __pred_(__p) {}
 
     template <typename _ForwardIterator2>
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     pair<_ForwardIterator2, _ForwardIterator2>
     operator () (_ForwardIterator2 __f, _ForwardIterator2 __l) const
     {
-        return _VSTD::__search(__f, __l, __first_, __last_, __pred_,
-            typename _VSTD::iterator_traits<_ForwardIterator>::iterator_category(),
-            typename _VSTD::iterator_traits<_ForwardIterator2>::iterator_category());
+        return _CUDA_VSTD::__search(__f, __l, __first_, __last_, __pred_,
+            typename _CUDA_VSTD::iterator_traits<_ForwardIterator>::iterator_category(),
+            typename _CUDA_VSTD::iterator_traits<_ForwardIterator2>::iterator_category());
     }
 
 private:
@@ -2943,9 +2943,9 @@ private:
     _BinaryPredicate __pred_;
     };
 
-#endif // _LIBCPP_STD_VER > 14
+#endif // _LIBCUDACXX_STD_VER > 14
 
-#if _LIBCPP_STD_VER > 17
+#if _LIBCUDACXX_STD_VER > 17
 template <class _Tp>
 using unwrap_reference_t = typename unwrap_reference<_Tp>::type;
 
@@ -2965,6 +2965,6 @@ inline void __libcpp_erase_if_container( _Container& __c, _Predicate __pred)
 	}
 }
 
-_LIBCPP_END_NAMESPACE_STD
+_LIBCUDACXX_END_NAMESPACE_STD
 
-#endif  // _LIBCPP_FUNCTIONAL
+#endif  // _LIBCUDACXX_FUNCTIONAL

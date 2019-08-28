@@ -11,8 +11,8 @@
 // template<class InputIterator>
 //   iterator insert(const_iterator p, InputIterator first, InputIterator last);
 
-#if _LIBCPP_DEBUG >= 1
-#define _LIBCPP_ASSERT(x, m) ((x) ? (void)0 : std::exit(0))
+#if _LIBCUDACXX_DEBUG >= 1
+#define _LIBCUDACXX_ASSERT(x, m) ((x) ? (void)0 : std::exit(0))
 #endif
 
 #include <string>
@@ -158,7 +158,7 @@ int main(int, char**)
     test_exceptions(S(), 0, TIter(s, s+10, 6, TIter::TAComparison), TIter());
     }
 #endif
-#if _LIBCPP_DEBUG >= 1
+#if _LIBCUDACXX_DEBUG >= 1
     {
         std::string v;
         std::string v2;

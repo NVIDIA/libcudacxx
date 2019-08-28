@@ -54,7 +54,7 @@
 
 #elif TEST_STD_VER == 17
 
-# if !defined(_LIBCPP_HAS_NO_THREADS)
+# if !defined(_LIBCUDACXX_HAS_NO_THREADS)
 #   ifndef __cpp_lib_atomic_is_always_lock_free
 #     error "__cpp_lib_atomic_is_always_lock_free should be defined in c++17"
 #   endif
@@ -63,7 +63,7 @@
 #   endif
 # else
 #   ifdef __cpp_lib_atomic_is_always_lock_free
-#     error "__cpp_lib_atomic_is_always_lock_free should not be defined when !defined(_LIBCPP_HAS_NO_THREADS) is not defined!"
+#     error "__cpp_lib_atomic_is_always_lock_free should not be defined when !defined(_LIBCUDACXX_HAS_NO_THREADS) is not defined!"
 #   endif
 # endif
 
@@ -77,7 +77,7 @@
 
 #elif TEST_STD_VER > 17
 
-# if !defined(_LIBCPP_HAS_NO_THREADS)
+# if !defined(_LIBCUDACXX_HAS_NO_THREADS)
 #   ifndef __cpp_lib_atomic_is_always_lock_free
 #     error "__cpp_lib_atomic_is_always_lock_free should be defined in c++2a"
 #   endif
@@ -86,18 +86,18 @@
 #   endif
 # else
 #   ifdef __cpp_lib_atomic_is_always_lock_free
-#     error "__cpp_lib_atomic_is_always_lock_free should not be defined when !defined(_LIBCPP_HAS_NO_THREADS) is not defined!"
+#     error "__cpp_lib_atomic_is_always_lock_free should not be defined when !defined(_LIBCUDACXX_HAS_NO_THREADS) is not defined!"
 #   endif
 # endif
 
-# if !defined(_LIBCPP_VERSION)
+# if !defined(_LIBCUDACXX_VERSION)
 #   ifndef __cpp_lib_atomic_ref
 #     error "__cpp_lib_atomic_ref should be defined in c++2a"
 #   endif
 #   if __cpp_lib_atomic_ref != 201806L
 #     error "__cpp_lib_atomic_ref should have the value 201806L in c++2a"
 #   endif
-# else // _LIBCPP_VERSION
+# else // _LIBCUDACXX_VERSION
 #   ifdef __cpp_lib_atomic_ref
 #     error "__cpp_lib_atomic_ref should not be defined because it is unimplemented in libc++!"
 #   endif

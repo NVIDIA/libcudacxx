@@ -8,7 +8,7 @@
 
 #include "typeinfo"
 
-#if defined(_LIBCPP_ABI_MICROSOFT) && !defined(_LIBCPP_ABI_VCRUNTIME)
+#if defined(_LIBCUDACXX_ABI_MICROSOFT) && !defined(_LIBCUDACXX_ABI_VCRUNTIME)
 #include <string.h>
 
 int std::type_info::__compare(const type_info &__rhs) const _NOEXCEPT {
@@ -43,14 +43,14 @@ size_t std::type_info::hash_code() const _NOEXCEPT {
 
   return value;
 }
-#endif // _LIBCPP_ABI_MICROSOFT
+#endif // _LIBCUDACXX_ABI_MICROSOFT
 
 // FIXME: Remove __APPLE__ default here once buildit is gone.
-// FIXME: Remove the _LIBCPP_BUILDING_HAS_NO_ABI_LIBRARY configuration.
+// FIXME: Remove the _LIBCUDACXX_BUILDING_HAS_NO_ABI_LIBRARY configuration.
 #if (!defined(LIBCXX_BUILDING_LIBCXXABI) && !defined(LIBCXXRT) &&              \
      !defined(__GLIBCXX__) && !defined(__APPLE__) &&                           \
-     !defined(_LIBCPP_ABI_VCRUNTIME)) ||   \
-    defined(_LIBCPP_BUILDING_HAS_NO_ABI_LIBRARY)
+     !defined(_LIBCUDACXX_ABI_VCRUNTIME)) ||   \
+    defined(_LIBCUDACXX_BUILDING_HAS_NO_ABI_LIBRARY)
 std::type_info::~type_info()
 {
 }

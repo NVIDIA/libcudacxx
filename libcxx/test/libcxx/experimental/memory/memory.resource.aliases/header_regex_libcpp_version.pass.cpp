@@ -12,8 +12,8 @@
 
 #include <experimental/regex>
 
-#ifndef _LIBCPP_VERSION
-#error header must provide _LIBCPP_VERSION
+#ifndef _LIBCUDACXX_VERSION
+#error header must provide _LIBCUDACXX_VERSION
 #endif
 
 int main(int, char**)

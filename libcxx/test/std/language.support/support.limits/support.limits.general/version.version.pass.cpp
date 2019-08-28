@@ -748,7 +748,7 @@
 #   error "__cpp_lib_shared_ptr_weak_type should not be defined before c++17"
 # endif
 
-# if !defined(_LIBCPP_HAS_NO_THREADS)
+# if !defined(_LIBCUDACXX_HAS_NO_THREADS)
 #   ifndef __cpp_lib_shared_timed_mutex
 #     error "__cpp_lib_shared_timed_mutex should be defined in c++14"
 #   endif
@@ -757,7 +757,7 @@
 #   endif
 # else
 #   ifdef __cpp_lib_shared_timed_mutex
-#     error "__cpp_lib_shared_timed_mutex should not be defined when !defined(_LIBCPP_HAS_NO_THREADS) is not defined!"
+#     error "__cpp_lib_shared_timed_mutex should not be defined when !defined(_LIBCUDACXX_HAS_NO_THREADS) is not defined!"
 #   endif
 # endif
 
@@ -878,7 +878,7 @@
 #   error "__cpp_lib_as_const should have the value 201510L in c++17"
 # endif
 
-# if !defined(_LIBCPP_HAS_NO_THREADS)
+# if !defined(_LIBCUDACXX_HAS_NO_THREADS)
 #   ifndef __cpp_lib_atomic_is_always_lock_free
 #     error "__cpp_lib_atomic_is_always_lock_free should be defined in c++17"
 #   endif
@@ -887,7 +887,7 @@
 #   endif
 # else
 #   ifdef __cpp_lib_atomic_is_always_lock_free
-#     error "__cpp_lib_atomic_is_always_lock_free should not be defined when !defined(_LIBCPP_HAS_NO_THREADS) is not defined!"
+#     error "__cpp_lib_atomic_is_always_lock_free should not be defined when !defined(_LIBCUDACXX_HAS_NO_THREADS) is not defined!"
 #   endif
 # endif
 
@@ -910,14 +910,14 @@
 #   error "__cpp_lib_bool_constant should have the value 201505L in c++17"
 # endif
 
-# if !defined(_LIBCPP_VERSION)
+# if !defined(_LIBCUDACXX_VERSION)
 #   ifndef __cpp_lib_boyer_moore_searcher
 #     error "__cpp_lib_boyer_moore_searcher should be defined in c++17"
 #   endif
 #   if __cpp_lib_boyer_moore_searcher != 201603L
 #     error "__cpp_lib_boyer_moore_searcher should have the value 201603L in c++17"
 #   endif
-# else // _LIBCPP_VERSION
+# else // _LIBCUDACXX_VERSION
 #   ifdef __cpp_lib_boyer_moore_searcher
 #     error "__cpp_lib_boyer_moore_searcher should not be defined because it is unimplemented in libc++!"
 #   endif
@@ -996,14 +996,14 @@
 #   error "__cpp_lib_exchange_function should have the value 201304L in c++17"
 # endif
 
-# if !defined(_LIBCPP_VERSION)
+# if !defined(_LIBCUDACXX_VERSION)
 #   ifndef __cpp_lib_execution
 #     error "__cpp_lib_execution should be defined in c++17"
 #   endif
 #   if __cpp_lib_execution != 201603L
 #     error "__cpp_lib_execution should have the value 201603L in c++17"
 #   endif
-# else // _LIBCPP_VERSION
+# else // _LIBCUDACXX_VERSION
 #   ifdef __cpp_lib_execution
 #     error "__cpp_lib_execution should not be defined because it is unimplemented in libc++!"
 #   endif
@@ -1180,27 +1180,27 @@
 #   error "__cpp_lib_map_try_emplace should have the value 201411L in c++17"
 # endif
 
-# if !defined(_LIBCPP_VERSION)
+# if !defined(_LIBCUDACXX_VERSION)
 #   ifndef __cpp_lib_math_special_functions
 #     error "__cpp_lib_math_special_functions should be defined in c++17"
 #   endif
 #   if __cpp_lib_math_special_functions != 201603L
 #     error "__cpp_lib_math_special_functions should have the value 201603L in c++17"
 #   endif
-# else // _LIBCPP_VERSION
+# else // _LIBCUDACXX_VERSION
 #   ifdef __cpp_lib_math_special_functions
 #     error "__cpp_lib_math_special_functions should not be defined because it is unimplemented in libc++!"
 #   endif
 # endif
 
-# if !defined(_LIBCPP_VERSION)
+# if !defined(_LIBCUDACXX_VERSION)
 #   ifndef __cpp_lib_memory_resource
 #     error "__cpp_lib_memory_resource should be defined in c++17"
 #   endif
 #   if __cpp_lib_memory_resource != 201603L
 #     error "__cpp_lib_memory_resource should have the value 201603L in c++17"
 #   endif
-# else // _LIBCPP_VERSION
+# else // _LIBCUDACXX_VERSION
 #   ifdef __cpp_lib_memory_resource
 #     error "__cpp_lib_memory_resource should not be defined because it is unimplemented in libc++!"
 #   endif
@@ -1241,14 +1241,14 @@
 #   error "__cpp_lib_optional should have the value 201606L in c++17"
 # endif
 
-# if !defined(_LIBCPP_VERSION)
+# if !defined(_LIBCUDACXX_VERSION)
 #   ifndef __cpp_lib_parallel_algorithm
 #     error "__cpp_lib_parallel_algorithm should be defined in c++17"
 #   endif
 #   if __cpp_lib_parallel_algorithm != 201603L
 #     error "__cpp_lib_parallel_algorithm should have the value 201603L in c++17"
 #   endif
-# else // _LIBCPP_VERSION
+# else // _LIBCUDACXX_VERSION
 #   ifdef __cpp_lib_parallel_algorithm
 #     error "__cpp_lib_parallel_algorithm should not be defined because it is unimplemented in libc++!"
 #   endif
@@ -1300,7 +1300,7 @@
 #   error "__cpp_lib_scoped_lock should have the value 201703L in c++17"
 # endif
 
-# if !defined(_LIBCPP_HAS_NO_THREADS)
+# if !defined(_LIBCUDACXX_HAS_NO_THREADS)
 #   ifndef __cpp_lib_shared_mutex
 #     error "__cpp_lib_shared_mutex should be defined in c++17"
 #   endif
@@ -1309,18 +1309,18 @@
 #   endif
 # else
 #   ifdef __cpp_lib_shared_mutex
-#     error "__cpp_lib_shared_mutex should not be defined when !defined(_LIBCPP_HAS_NO_THREADS) is not defined!"
+#     error "__cpp_lib_shared_mutex should not be defined when !defined(_LIBCUDACXX_HAS_NO_THREADS) is not defined!"
 #   endif
 # endif
 
-# if !defined(_LIBCPP_VERSION)
+# if !defined(_LIBCUDACXX_VERSION)
 #   ifndef __cpp_lib_shared_ptr_arrays
 #     error "__cpp_lib_shared_ptr_arrays should be defined in c++17"
 #   endif
 #   if __cpp_lib_shared_ptr_arrays != 201611L
 #     error "__cpp_lib_shared_ptr_arrays should have the value 201611L in c++17"
 #   endif
-# else // _LIBCPP_VERSION
+# else // _LIBCUDACXX_VERSION
 #   ifdef __cpp_lib_shared_ptr_arrays
 #     error "__cpp_lib_shared_ptr_arrays should not be defined because it is unimplemented in libc++!"
 #   endif
@@ -1333,7 +1333,7 @@
 #   error "__cpp_lib_shared_ptr_weak_type should have the value 201606L in c++17"
 # endif
 
-# if !defined(_LIBCPP_HAS_NO_THREADS)
+# if !defined(_LIBCUDACXX_HAS_NO_THREADS)
 #   ifndef __cpp_lib_shared_timed_mutex
 #     error "__cpp_lib_shared_timed_mutex should be defined in c++17"
 #   endif
@@ -1342,7 +1342,7 @@
 #   endif
 # else
 #   ifdef __cpp_lib_shared_timed_mutex
-#     error "__cpp_lib_shared_timed_mutex should not be defined when !defined(_LIBCPP_HAS_NO_THREADS) is not defined!"
+#     error "__cpp_lib_shared_timed_mutex should not be defined when !defined(_LIBCUDACXX_HAS_NO_THREADS) is not defined!"
 #   endif
 # endif
 
@@ -1364,14 +1364,14 @@
 #   error "__cpp_lib_three_way_comparison should not be defined before c++2a"
 # endif
 
-# if !defined(_LIBCPP_VERSION)
+# if !defined(_LIBCUDACXX_VERSION)
 #   ifndef __cpp_lib_to_chars
 #     error "__cpp_lib_to_chars should be defined in c++17"
 #   endif
 #   if __cpp_lib_to_chars != 201611L
 #     error "__cpp_lib_to_chars should have the value 201611L in c++17"
 #   endif
-# else // _LIBCPP_VERSION
+# else // _LIBCUDACXX_VERSION
 #   ifdef __cpp_lib_to_chars
 #     error "__cpp_lib_to_chars should not be defined because it is unimplemented in libc++!"
 #   endif
@@ -1490,7 +1490,7 @@
 #   error "__cpp_lib_as_const should have the value 201510L in c++2a"
 # endif
 
-# if !defined(_LIBCPP_HAS_NO_THREADS)
+# if !defined(_LIBCUDACXX_HAS_NO_THREADS)
 #   ifndef __cpp_lib_atomic_is_always_lock_free
 #     error "__cpp_lib_atomic_is_always_lock_free should be defined in c++2a"
 #   endif
@@ -1499,44 +1499,44 @@
 #   endif
 # else
 #   ifdef __cpp_lib_atomic_is_always_lock_free
-#     error "__cpp_lib_atomic_is_always_lock_free should not be defined when !defined(_LIBCPP_HAS_NO_THREADS) is not defined!"
+#     error "__cpp_lib_atomic_is_always_lock_free should not be defined when !defined(_LIBCUDACXX_HAS_NO_THREADS) is not defined!"
 #   endif
 # endif
 
-# if !defined(_LIBCPP_VERSION)
+# if !defined(_LIBCUDACXX_VERSION)
 #   ifndef __cpp_lib_atomic_ref
 #     error "__cpp_lib_atomic_ref should be defined in c++2a"
 #   endif
 #   if __cpp_lib_atomic_ref != 201806L
 #     error "__cpp_lib_atomic_ref should have the value 201806L in c++2a"
 #   endif
-# else // _LIBCPP_VERSION
+# else // _LIBCUDACXX_VERSION
 #   ifdef __cpp_lib_atomic_ref
 #     error "__cpp_lib_atomic_ref should not be defined because it is unimplemented in libc++!"
 #   endif
 # endif
 
-# if !defined(_LIBCPP_VERSION)
+# if !defined(_LIBCUDACXX_VERSION)
 #   ifndef __cpp_lib_bind_front
 #     error "__cpp_lib_bind_front should be defined in c++2a"
 #   endif
 #   if __cpp_lib_bind_front != 201811L
 #     error "__cpp_lib_bind_front should have the value 201811L in c++2a"
 #   endif
-# else // _LIBCPP_VERSION
+# else // _LIBCUDACXX_VERSION
 #   ifdef __cpp_lib_bind_front
 #     error "__cpp_lib_bind_front should not be defined because it is unimplemented in libc++!"
 #   endif
 # endif
 
-# if !defined(_LIBCPP_VERSION)
+# if !defined(_LIBCUDACXX_VERSION)
 #   ifndef __cpp_lib_bit_cast
 #     error "__cpp_lib_bit_cast should be defined in c++2a"
 #   endif
 #   if __cpp_lib_bit_cast != 201806L
 #     error "__cpp_lib_bit_cast should have the value 201806L in c++2a"
 #   endif
-# else // _LIBCPP_VERSION
+# else // _LIBCUDACXX_VERSION
 #   ifdef __cpp_lib_bit_cast
 #     error "__cpp_lib_bit_cast should not be defined because it is unimplemented in libc++!"
 #   endif
@@ -1549,14 +1549,14 @@
 #   error "__cpp_lib_bool_constant should have the value 201505L in c++2a"
 # endif
 
-# if !defined(_LIBCPP_VERSION)
+# if !defined(_LIBCUDACXX_VERSION)
 #   ifndef __cpp_lib_boyer_moore_searcher
 #     error "__cpp_lib_boyer_moore_searcher should be defined in c++2a"
 #   endif
 #   if __cpp_lib_boyer_moore_searcher != 201603L
 #     error "__cpp_lib_boyer_moore_searcher should have the value 201603L in c++2a"
 #   endif
-# else // _LIBCPP_VERSION
+# else // _LIBCUDACXX_VERSION
 #   ifdef __cpp_lib_boyer_moore_searcher
 #     error "__cpp_lib_boyer_moore_searcher should not be defined because it is unimplemented in libc++!"
 #   endif
@@ -1610,53 +1610,53 @@
 #   error "__cpp_lib_complex_udls should have the value 201309L in c++2a"
 # endif
 
-# if !defined(_LIBCPP_VERSION)
+# if !defined(_LIBCUDACXX_VERSION)
 #   ifndef __cpp_lib_concepts
 #     error "__cpp_lib_concepts should be defined in c++2a"
 #   endif
 #   if __cpp_lib_concepts != 201806L
 #     error "__cpp_lib_concepts should have the value 201806L in c++2a"
 #   endif
-# else // _LIBCPP_VERSION
+# else // _LIBCUDACXX_VERSION
 #   ifdef __cpp_lib_concepts
 #     error "__cpp_lib_concepts should not be defined because it is unimplemented in libc++!"
 #   endif
 # endif
 
-# if !defined(_LIBCPP_VERSION)
+# if !defined(_LIBCUDACXX_VERSION)
 #   ifndef __cpp_lib_constexpr_misc
 #     error "__cpp_lib_constexpr_misc should be defined in c++2a"
 #   endif
 #   if __cpp_lib_constexpr_misc != 201811L
 #     error "__cpp_lib_constexpr_misc should have the value 201811L in c++2a"
 #   endif
-# else // _LIBCPP_VERSION
+# else // _LIBCUDACXX_VERSION
 #   ifdef __cpp_lib_constexpr_misc
 #     error "__cpp_lib_constexpr_misc should not be defined because it is unimplemented in libc++!"
 #   endif
 # endif
 
-# if !defined(_LIBCPP_VERSION)
+# if !defined(_LIBCUDACXX_VERSION)
 #   ifndef __cpp_lib_constexpr_swap_algorithms
 #     error "__cpp_lib_constexpr_swap_algorithms should be defined in c++2a"
 #   endif
 #   if __cpp_lib_constexpr_swap_algorithms != 201806L
 #     error "__cpp_lib_constexpr_swap_algorithms should have the value 201806L in c++2a"
 #   endif
-# else // _LIBCPP_VERSION
+# else // _LIBCUDACXX_VERSION
 #   ifdef __cpp_lib_constexpr_swap_algorithms
 #     error "__cpp_lib_constexpr_swap_algorithms should not be defined because it is unimplemented in libc++!"
 #   endif
 # endif
 
-# if !defined(_LIBCPP_VERSION)
+# if !defined(_LIBCUDACXX_VERSION)
 #   ifndef __cpp_lib_destroying_delete
 #     error "__cpp_lib_destroying_delete should be defined in c++2a"
 #   endif
 #   if __cpp_lib_destroying_delete != 201806L
 #     error "__cpp_lib_destroying_delete should have the value 201806L in c++2a"
 #   endif
-# else // _LIBCPP_VERSION
+# else // _LIBCUDACXX_VERSION
 #   ifdef __cpp_lib_destroying_delete
 #     error "__cpp_lib_destroying_delete should not be defined because it is unimplemented in libc++!"
 #   endif
@@ -1683,14 +1683,14 @@
 #   error "__cpp_lib_exchange_function should have the value 201304L in c++2a"
 # endif
 
-# if !defined(_LIBCPP_VERSION)
+# if !defined(_LIBCUDACXX_VERSION)
 #   ifndef __cpp_lib_execution
 #     error "__cpp_lib_execution should be defined in c++2a"
 #   endif
 #   if __cpp_lib_execution != 201603L
 #     error "__cpp_lib_execution should have the value 201603L in c++2a"
 #   endif
-# else // _LIBCPP_VERSION
+# else // _LIBCUDACXX_VERSION
 #   ifdef __cpp_lib_execution
 #     error "__cpp_lib_execution should not be defined because it is unimplemented in libc++!"
 #   endif
@@ -1717,14 +1717,14 @@
 #   error "__cpp_lib_generic_associative_lookup should have the value 201304L in c++2a"
 # endif
 
-# if !defined(_LIBCPP_VERSION)
+# if !defined(_LIBCUDACXX_VERSION)
 #   ifndef __cpp_lib_generic_unordered_lookup
 #     error "__cpp_lib_generic_unordered_lookup should be defined in c++2a"
 #   endif
 #   if __cpp_lib_generic_unordered_lookup != 201811L
 #     error "__cpp_lib_generic_unordered_lookup should have the value 201811L in c++2a"
 #   endif
-# else // _LIBCPP_VERSION
+# else // _LIBCUDACXX_VERSION
 #   ifdef __cpp_lib_generic_unordered_lookup
 #     error "__cpp_lib_generic_unordered_lookup should not be defined because it is unimplemented in libc++!"
 #   endif
@@ -1798,14 +1798,14 @@
 #   endif
 # endif
 
-# if !defined(_LIBCPP_VERSION)
+# if !defined(_LIBCUDACXX_VERSION)
 #   ifndef __cpp_lib_is_constant_evaluated
 #     error "__cpp_lib_is_constant_evaluated should be defined in c++2a"
 #   endif
 #   if __cpp_lib_is_constant_evaluated != 201811L
 #     error "__cpp_lib_is_constant_evaluated should have the value 201811L in c++2a"
 #   endif
-# else // _LIBCPP_VERSION
+# else // _LIBCUDACXX_VERSION
 #   ifdef __cpp_lib_is_constant_evaluated
 #     error "__cpp_lib_is_constant_evaluated should not be defined because it is unimplemented in libc++!"
 #   endif
@@ -1846,14 +1846,14 @@
 #   error "__cpp_lib_launder should have the value 201606L in c++2a"
 # endif
 
-# if !defined(_LIBCPP_VERSION)
+# if !defined(_LIBCUDACXX_VERSION)
 #   ifndef __cpp_lib_list_remove_return_type
 #     error "__cpp_lib_list_remove_return_type should be defined in c++2a"
 #   endif
 #   if __cpp_lib_list_remove_return_type != 201806L
 #     error "__cpp_lib_list_remove_return_type should have the value 201806L in c++2a"
 #   endif
-# else // _LIBCPP_VERSION
+# else // _LIBCUDACXX_VERSION
 #   ifdef __cpp_lib_list_remove_return_type
 #     error "__cpp_lib_list_remove_return_type should not be defined because it is unimplemented in libc++!"
 #   endif
@@ -1894,27 +1894,27 @@
 #   error "__cpp_lib_map_try_emplace should have the value 201411L in c++2a"
 # endif
 
-# if !defined(_LIBCPP_VERSION)
+# if !defined(_LIBCUDACXX_VERSION)
 #   ifndef __cpp_lib_math_special_functions
 #     error "__cpp_lib_math_special_functions should be defined in c++2a"
 #   endif
 #   if __cpp_lib_math_special_functions != 201603L
 #     error "__cpp_lib_math_special_functions should have the value 201603L in c++2a"
 #   endif
-# else // _LIBCPP_VERSION
+# else // _LIBCUDACXX_VERSION
 #   ifdef __cpp_lib_math_special_functions
 #     error "__cpp_lib_math_special_functions should not be defined because it is unimplemented in libc++!"
 #   endif
 # endif
 
-# if !defined(_LIBCPP_VERSION)
+# if !defined(_LIBCUDACXX_VERSION)
 #   ifndef __cpp_lib_memory_resource
 #     error "__cpp_lib_memory_resource should be defined in c++2a"
 #   endif
 #   if __cpp_lib_memory_resource != 201603L
 #     error "__cpp_lib_memory_resource should have the value 201603L in c++2a"
 #   endif
-# else // _LIBCPP_VERSION
+# else // _LIBCUDACXX_VERSION
 #   ifdef __cpp_lib_memory_resource
 #     error "__cpp_lib_memory_resource should not be defined because it is unimplemented in libc++!"
 #   endif
@@ -1955,14 +1955,14 @@
 #   error "__cpp_lib_optional should have the value 201606L in c++2a"
 # endif
 
-# if !defined(_LIBCPP_VERSION)
+# if !defined(_LIBCUDACXX_VERSION)
 #   ifndef __cpp_lib_parallel_algorithm
 #     error "__cpp_lib_parallel_algorithm should be defined in c++2a"
 #   endif
 #   if __cpp_lib_parallel_algorithm != 201603L
 #     error "__cpp_lib_parallel_algorithm should have the value 201603L in c++2a"
 #   endif
-# else // _LIBCPP_VERSION
+# else // _LIBCUDACXX_VERSION
 #   ifdef __cpp_lib_parallel_algorithm
 #     error "__cpp_lib_parallel_algorithm should not be defined because it is unimplemented in libc++!"
 #   endif
@@ -1975,14 +1975,14 @@
 #   error "__cpp_lib_quoted_string_io should have the value 201304L in c++2a"
 # endif
 
-# if !defined(_LIBCPP_VERSION)
+# if !defined(_LIBCUDACXX_VERSION)
 #   ifndef __cpp_lib_ranges
 #     error "__cpp_lib_ranges should be defined in c++2a"
 #   endif
 #   if __cpp_lib_ranges != 201811L
 #     error "__cpp_lib_ranges should have the value 201811L in c++2a"
 #   endif
-# else // _LIBCPP_VERSION
+# else // _LIBCUDACXX_VERSION
 #   ifdef __cpp_lib_ranges
 #     error "__cpp_lib_ranges should not be defined because it is unimplemented in libc++!"
 #   endif
@@ -2023,7 +2023,7 @@
 #   error "__cpp_lib_scoped_lock should have the value 201703L in c++2a"
 # endif
 
-# if !defined(_LIBCPP_HAS_NO_THREADS)
+# if !defined(_LIBCUDACXX_HAS_NO_THREADS)
 #   ifndef __cpp_lib_shared_mutex
 #     error "__cpp_lib_shared_mutex should be defined in c++2a"
 #   endif
@@ -2032,18 +2032,18 @@
 #   endif
 # else
 #   ifdef __cpp_lib_shared_mutex
-#     error "__cpp_lib_shared_mutex should not be defined when !defined(_LIBCPP_HAS_NO_THREADS) is not defined!"
+#     error "__cpp_lib_shared_mutex should not be defined when !defined(_LIBCUDACXX_HAS_NO_THREADS) is not defined!"
 #   endif
 # endif
 
-# if !defined(_LIBCPP_VERSION)
+# if !defined(_LIBCUDACXX_VERSION)
 #   ifndef __cpp_lib_shared_ptr_arrays
 #     error "__cpp_lib_shared_ptr_arrays should be defined in c++2a"
 #   endif
 #   if __cpp_lib_shared_ptr_arrays != 201611L
 #     error "__cpp_lib_shared_ptr_arrays should have the value 201611L in c++2a"
 #   endif
-# else // _LIBCPP_VERSION
+# else // _LIBCUDACXX_VERSION
 #   ifdef __cpp_lib_shared_ptr_arrays
 #     error "__cpp_lib_shared_ptr_arrays should not be defined because it is unimplemented in libc++!"
 #   endif
@@ -2056,7 +2056,7 @@
 #   error "__cpp_lib_shared_ptr_weak_type should have the value 201606L in c++2a"
 # endif
 
-# if !defined(_LIBCPP_HAS_NO_THREADS)
+# if !defined(_LIBCUDACXX_HAS_NO_THREADS)
 #   ifndef __cpp_lib_shared_timed_mutex
 #     error "__cpp_lib_shared_timed_mutex should be defined in c++2a"
 #   endif
@@ -2065,7 +2065,7 @@
 #   endif
 # else
 #   ifdef __cpp_lib_shared_timed_mutex
-#     error "__cpp_lib_shared_timed_mutex should not be defined when !defined(_LIBCPP_HAS_NO_THREADS) is not defined!"
+#     error "__cpp_lib_shared_timed_mutex should not be defined when !defined(_LIBCUDACXX_HAS_NO_THREADS) is not defined!"
 #   endif
 # endif
 
@@ -2083,27 +2083,27 @@
 #   error "__cpp_lib_string_view should have the value 201606L in c++2a"
 # endif
 
-# if !defined(_LIBCPP_VERSION)
+# if !defined(_LIBCUDACXX_VERSION)
 #   ifndef __cpp_lib_three_way_comparison
 #     error "__cpp_lib_three_way_comparison should be defined in c++2a"
 #   endif
 #   if __cpp_lib_three_way_comparison != 201711L
 #     error "__cpp_lib_three_way_comparison should have the value 201711L in c++2a"
 #   endif
-# else // _LIBCPP_VERSION
+# else // _LIBCUDACXX_VERSION
 #   ifdef __cpp_lib_three_way_comparison
 #     error "__cpp_lib_three_way_comparison should not be defined because it is unimplemented in libc++!"
 #   endif
 # endif
 
-# if !defined(_LIBCPP_VERSION)
+# if !defined(_LIBCUDACXX_VERSION)
 #   ifndef __cpp_lib_to_chars
 #     error "__cpp_lib_to_chars should be defined in c++2a"
 #   endif
 #   if __cpp_lib_to_chars != 201611L
 #     error "__cpp_lib_to_chars should have the value 201611L in c++2a"
 #   endif
-# else // _LIBCPP_VERSION
+# else // _LIBCUDACXX_VERSION
 #   ifdef __cpp_lib_to_chars
 #     error "__cpp_lib_to_chars should not be defined because it is unimplemented in libc++!"
 #   endif

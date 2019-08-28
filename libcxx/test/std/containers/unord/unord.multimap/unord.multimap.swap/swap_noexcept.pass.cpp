@@ -125,7 +125,7 @@ int main(int, char**)
         typedef std::unordered_multimap<MoveOnly, MoveOnly> C;
         static_assert(noexcept(swap(std::declval<C&>(), std::declval<C&>())), "");
     }
-#if defined(_LIBCPP_VERSION)
+#if defined(_LIBCUDACXX_VERSION)
     {
         typedef std::unordered_multimap<MoveOnly, MoveOnly, std::hash<MoveOnly>,
                            std::equal_to<MoveOnly>, test_allocator<V>> C;
@@ -136,7 +136,7 @@ int main(int, char**)
                           std::equal_to<MoveOnly>, other_allocator<V>> C;
         static_assert(noexcept(swap(std::declval<C&>(), std::declval<C&>())), "");
     }
-#endif // _LIBCPP_VERSION
+#endif // _LIBCUDACXX_VERSION
     {
         typedef std::unordered_multimap<MoveOnly, MoveOnly, some_hash<MoveOnly>> C;
         static_assert(!noexcept(swap(std::declval<C&>(), std::declval<C&>())), "");
@@ -180,12 +180,12 @@ int main(int, char**)
     typedef std::unordered_multimap<MoveOnly, MoveOnly, some_hash2<MoveOnly>, some_comp2<MoveOnly>, some_alloc2<V>> C;
     static_assert( noexcept(swap(std::declval<C&>(), std::declval<C&>())), "");
     }
-#if defined(_LIBCPP_VERSION)
+#if defined(_LIBCUDACXX_VERSION)
     { // NOT always equal allocator, nothrow swap for hash, nothrow swap for comp
     typedef std::unordered_multimap<MoveOnly, MoveOnly, some_hash2<MoveOnly>, some_comp2<MoveOnly>, some_alloc3<V>> C;
     static_assert( noexcept(swap(std::declval<C&>(), std::declval<C&>())), "");
     }
-#endif // _LIBCPP_VERSION
+#endif // _LIBCUDACXX_VERSION
 #endif
 
   return 0;

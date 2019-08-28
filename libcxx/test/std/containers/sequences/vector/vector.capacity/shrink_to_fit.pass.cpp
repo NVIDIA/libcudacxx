@@ -36,7 +36,7 @@ int main(int, char**)
         assert(v.size() == 101);
         assert(is_contiguous_container_asan_correct(v));
     }
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
     {
         std::vector<int, limited_allocator<int, 400> > v(100);
         v.push_back(1);

@@ -19,7 +19,7 @@
 
 int main(int, char**)
 {
-#ifdef _LIBCPP_HAS_OPEN_WITH_WCHAR
+#ifdef _LIBCUDACXX_HAS_OPEN_WITH_WCHAR
     std::wstring temp = get_wide_temp_file_name();
     {
         std::ofstream fs(temp.c_str());

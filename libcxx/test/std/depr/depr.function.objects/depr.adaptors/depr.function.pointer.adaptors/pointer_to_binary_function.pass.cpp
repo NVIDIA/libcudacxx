@@ -11,7 +11,7 @@
 
 // pointer_to_binary_function
 
-#define _LIBCPP_DISABLE_DEPRECATION_WARNINGS
+#define _LIBCUDACXX_DISABLE_DEPRECATION_WARNINGS
 
 #include <functional>
 #include <type_traits>

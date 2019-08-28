@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCPP_CONDITION_VARIABLE
-#define _LIBCPP_CONDITION_VARIABLE
+#ifndef _LIBCUDACXX_CONDITION_VARIABLE
+#define _LIBCUDACXX_CONDITION_VARIABLE
 
 /*
     condition_variable synopsis
@@ -110,56 +110,56 @@ public:
 #include <__mutex_base>
 #include <memory>
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
-#ifndef _LIBCPP_HAS_NO_THREADS
+#ifndef _LIBCUDACXX_HAS_NO_THREADS
 
-_LIBCPP_BEGIN_NAMESPACE_STD
+_LIBCUDACXX_BEGIN_NAMESPACE_STD
 
-class _LIBCPP_TYPE_VIS condition_variable_any
+class _LIBCUDACXX_TYPE_VIS condition_variable_any
 {
     condition_variable __cv_;
     shared_ptr<mutex>  __mut_;
 public:
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     condition_variable_any();
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void notify_one() _NOEXCEPT;
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void notify_all() _NOEXCEPT;
 
     template <class _Lock>
-        _LIBCPP_METHOD_TEMPLATE_IMPLICIT_INSTANTIATION_VIS
+        _LIBCUDACXX_METHOD_TEMPLATE_IMPLICIT_INSTANTIATION_VIS
         void wait(_Lock& __lock);
     template <class _Lock, class _Predicate>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         void wait(_Lock& __lock, _Predicate __pred);
 
     template <class _Lock, class _Clock, class _Duration>
-        _LIBCPP_METHOD_TEMPLATE_IMPLICIT_INSTANTIATION_VIS
+        _LIBCUDACXX_METHOD_TEMPLATE_IMPLICIT_INSTANTIATION_VIS
         cv_status
         wait_until(_Lock& __lock,
                    const chrono::time_point<_Clock, _Duration>& __t);
 
     template <class _Lock, class _Clock, class _Duration, class _Predicate>
         bool
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         wait_until(_Lock& __lock,
                    const chrono::time_point<_Clock, _Duration>& __t,
                    _Predicate __pred);
 
     template <class _Lock, class _Rep, class _Period>
         cv_status
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         wait_for(_Lock& __lock,
                  const chrono::duration<_Rep, _Period>& __d);
 
     template <class _Lock, class _Rep, class _Period, class _Predicate>
         bool
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         wait_for(_Lock& __lock,
                  const chrono::duration<_Rep, _Period>& __d,
                  _Predicate __pred);
@@ -255,14 +255,14 @@ condition_variable_any::wait_for(_Lock& __lock,
                                  _Predicate __pred)
 {
     return wait_until(__lock, chrono::steady_clock::now() + __d,
-                      _VSTD::move(__pred));
+                      _CUDA_VSTD::move(__pred));
 }
 
-_LIBCPP_FUNC_VIS
+_LIBCUDACXX_FUNC_VIS
 void notify_all_at_thread_exit(condition_variable& cond, unique_lock<mutex> lk);
 
-_LIBCPP_END_NAMESPACE_STD
+_LIBCUDACXX_END_NAMESPACE_STD
 
-#endif // !_LIBCPP_HAS_NO_THREADS
+#endif // !_LIBCUDACXX_HAS_NO_THREADS
 
-#endif  // _LIBCPP_CONDITION_VARIABLE
+#endif  // _LIBCUDACXX_CONDITION_VARIABLE

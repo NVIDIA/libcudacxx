@@ -8,9 +8,9 @@
 
 #include "functional"
 
-_LIBCPP_BEGIN_NAMESPACE_STD
+_LIBCUDACXX_BEGIN_NAMESPACE_STD
 
-#ifdef _LIBCPP_ABI_BAD_FUNCTION_CALL_KEY_FUNCTION
+#ifdef _LIBCUDACXX_ABI_BAD_FUNCTION_CALL_KEY_FUNCTION
 bad_function_call::~bad_function_call() _NOEXCEPT
 {
 }
@@ -22,4 +22,4 @@ bad_function_call::what() const _NOEXCEPT
 }
 #endif
 
-_LIBCPP_END_NAMESPACE_STD
+_LIBCUDACXX_END_NAMESPACE_STD

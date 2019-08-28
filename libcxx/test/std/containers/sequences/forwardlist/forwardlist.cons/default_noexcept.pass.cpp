@@ -31,7 +31,7 @@ struct some_alloc
 
 int main(int, char**)
 {
-#if defined(_LIBCPP_VERSION)
+#if defined(_LIBCUDACXX_VERSION)
     {
         typedef std::forward_list<MoveOnly> C;
         static_assert(std::is_nothrow_default_constructible<C>::value, "");
@@ -40,7 +40,7 @@ int main(int, char**)
         typedef std::forward_list<MoveOnly, test_allocator<MoveOnly>> C;
         static_assert(std::is_nothrow_default_constructible<C>::value, "");
     }
-#endif // _LIBCPP_VERSION
+#endif // _LIBCUDACXX_VERSION
     {
         typedef std::forward_list<MoveOnly, other_allocator<MoveOnly>> C;
         static_assert(!std::is_nothrow_default_constructible<C>::value, "");

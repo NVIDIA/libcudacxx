@@ -13,14 +13,14 @@
 // UNSUPPORTED: gcc-4, gcc-5, gcc-6
 
 // Test that entities declared [[nodiscard]] as at extension by libc++, are
-// only actually declared such when _LIBCPP_ENABLE_NODISCARD is specified.
+// only actually declared such when _LIBCUDACXX_ENABLE_NODISCARD is specified.
 
 // All entities to which libc++ applies [[nodiscard]] as an extension should
 // be tested here and in nodiscard_extensions.pass.cpp. They should also
 // be listed in `UsingLibcxx.rst` in the documentation for the extension.
 
-// MODULES_DEFINES: _LIBCPP_ENABLE_NODISCARD
-#define _LIBCPP_ENABLE_NODISCARD
+// MODULES_DEFINES: _LIBCUDACXX_ENABLE_NODISCARD
+#define _LIBCUDACXX_ENABLE_NODISCARD
 
 #include <memory>
 
