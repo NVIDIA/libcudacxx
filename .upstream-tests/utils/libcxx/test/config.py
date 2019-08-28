@@ -866,7 +866,7 @@ class Configuration(object):
                 self.cxx.link_flags += ['-Xcompiler']
             if 'pgi' in self.config.available_features:
                 pass
-            else:
+            elif not self.cxx.is_nvrtc:
                 self.cxx.link_flags += ['-nodefaultlibs']
             # FIXME: Handle MSVCRT as part of the ABI library handling.
             if self.is_windows and 'msvc' not in self.config.available_features:

@@ -3,7 +3,7 @@
 set -e
 
 nvrtcdir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
-libcudacxxdir="$(cd "${nvrtcdir}/../.." && pwd)"
+libcudacxxdir="$(cd "${nvrtcdir}/../../.." && pwd)"
 
 logdir=${FAUX_NVRTC_LOG_DIR:-.}
 
@@ -45,7 +45,8 @@ do
             ;;
 
         -gencode=*)
-            gpu_archs=("${gpu_archs[@]}" "$(echo $1 | egrep -o 'compute_[0-9]+')")
+            # head -n1 to handle "compute_70,compute_70"
+            gpu_archs=("${gpu_archs[@]}" "$(echo $1 | egrep -o 'compute_[0-9]+' | head -n1)")
             modified_flags=("${modified_flags[@]}" "$1")
             ;;
 
@@ -89,16 +90,20 @@ finish() {
 }
 trap finish EXIT
 
+gpu_archs=($(printf "%s\n" "${gpu_archs[@]}" | sort -u | tr '\n' ' '))
+if "${#gpu_archs[@]}" -ne 1
+then
+    echo "Multiple GPU architectures specified: ${gpu_archs[@]}, exiting." >&2
+    exit 1
+fi
+
 cat "${nvrtcdir}/head.cu.in" >> "${tempfile}"
 cat "${input}" >> "${tempfile}"
 cat "${nvrtcdir}/middle.cu.in" >> "${tempfile}"
 echo '        // BEGIN SCRIPT GENERATED OPTIONS' >> "${tempfile}"
 echo '        "-I'"${libcudacxxdir}/include"'",' >> "${tempfile}"
 echo '        "-I'"${libcudacxxdir}/test/support"'",' >> "${tempfile}"
-for arch in "${gpu_archs[@]}"
-do
-    echo '        "--gpu-architecture='"${arch}"'",' >> "${tempfile}"
-done
+echo '        "--gpu-architecture='"${gpu_archs}"'",' >> "${tempfile}"
 echo '        // END SCRIPT GENERATED OPTIONS' >> "${tempfile}"
 cat "${nvrtcdir}/tail.cu.in" >> "${tempfile}"
 
