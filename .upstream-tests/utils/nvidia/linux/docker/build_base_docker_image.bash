@@ -19,7 +19,6 @@ cp ${SW_PATH}/gpgpu/libcudacxx/docker/.dockerignore ${SW_PATH}/gpgpu
 LIBCUDACXX_COMPUTE_ARCHS="${@}" docker -D build \
   --build-arg LIBCUDACXX_SKIP_BASE_TESTS_BUILD \
   --build-arg LIBCUDACXX_COMPUTE_ARCHS \
-  --build-arg LIBCXX_TEST_STANDARD_VER \
   -t ${BASE_IMAGE} \
   -f ${BASE_DOCKERFILE} \
   ${SW_PATH}/gpgpu
@@ -36,5 +35,5 @@ docker cp ${TMP_CONTAINER}:/sw/gpgpu/libcudacxx/build/libcudacxx_cmake.log .
 docker container rm ${TMP_CONTAINER} > /dev/null
 
 # Remove the .dockerignore from //sw/gpgpu.
-rm ${SW_PATH}/gpgpu/.dockerignore
+rm -f ${SW_PATH}/gpgpu/.dockerignore
 
