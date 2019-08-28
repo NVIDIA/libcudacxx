@@ -51,7 +51,8 @@ int main(int, char**)
 {
     test_is_nothrow_assignable<int&, int&> ();
     test_is_nothrow_assignable<int&, int> ();
-#if TEST_STD_VER >= 11
+#if TEST_STD_VER >= 11 && !defined(_LIBCPP_HAS_NOEXCEPT_SFINAE)
+    // The `__has_nothrow_assign`-based fallback for can't handle this case.
     test_is_nothrow_assignable<int&, double> ();
 #endif
 

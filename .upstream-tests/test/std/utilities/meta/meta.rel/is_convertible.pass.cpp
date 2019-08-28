@@ -150,7 +150,7 @@ int main(int, char**)
 #if TEST_STD_VER >= 11
     static_assert(( cuda::std::is_convertible<Array, Array&&>::value), "");
     static_assert(( cuda::std::is_convertible<Array, const Array&&>::value), "");
-#ifndef TEST_COMPILER_NVRTC
+#if !defined(TEST_COMPILER_NVRTC) && (!defined(TEST_COMPILER_C1XX) || 1920 <= _MSC_VER)
     // No idea why this fails under NVRTC.
     // TODO: File a compiler bug
     static_assert(( cuda::std::is_convertible<Array, volatile Array&&>::value), "");

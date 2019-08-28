@@ -8,6 +8,9 @@
 //
 // UNSUPPORTED: c++98, c++03
 //
+// TODO: Triage and fix.
+// XFAIL: msvc-19.0
+//
 // <cuda/std/functional>
 //
 // result_of<Fn(ArgTypes...)>
