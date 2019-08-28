@@ -821,6 +821,14 @@ typedef __char32_t char32_t;
 
 #elif defined(_LIBCUDACXX_COMPILER_NVRTC)
 
+#if !defined(__cpp_constexpr) || __cpp_constexpr < 201304L
+#define _LIBCUDACXX_HAS_NO_CXX14_CONSTEXPR
+#endif
+
+#if !defined(__cpp_variable_templates) || __cpp_variable_templates < 201304L
+#define _LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES
+#endif
+
 #define _ALIGNAS_TYPE(x) alignas(x)
 #define _ALIGNAS(x) alignas(x)
 
