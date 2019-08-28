@@ -44,7 +44,7 @@
 #endif //__ATOMIC_BLOCK
 
 
-_LIBCPP_BEGIN_NAMESPACE_CUDA
+_LIBCUDACXX_BEGIN_NAMESPACE_CUDA
 
 namespace detail {
 
@@ -67,8 +67,8 @@ enum thread_scope {
     thread_scope_block = __ATOMIC_BLOCK
 };
 
-#define _LIBCPP_ATOMIC_SCOPE_TYPE ::cuda::thread_scope
-#define _LIBCPP_ATOMIC_SCOPE_DEFAULT ::cuda::thread_scope::system
+#define _LIBCUDACXX_ATOMIC_SCOPE_TYPE ::cuda::thread_scope
+#define _LIBCUDACXX_ATOMIC_SCOPE_DEFAULT ::cuda::thread_scope::system
 
 namespace detail {
 
@@ -91,19 +91,19 @@ namespace detail {
     }
 }
 
-_LIBCPP_END_NAMESPACE_CUDA
+_LIBCUDACXX_END_NAMESPACE_CUDA
 
 #include "__atomic_generated"
 #include "__atomic_derived"
 
-_LIBCPP_BEGIN_NAMESPACE_STD
+_LIBCUDACXX_BEGIN_NAMESPACE_STD
 
 // Forward-declare the function templates that are defined libcxx later.
-template <typename _Tp, typename _Tv> _LIBCPP_INLINE_VISIBILITY
+template <typename _Tp, typename _Tv> _LIBCUDACXX_INLINE_VISIBILITY
 typename enable_if<is_assignable<_Tp&, _Tv>::value>::type
 __cxx_atomic_assign_volatile(_Tp& __a_value, _Tv const& __val);
 
-template <typename _Tp, typename _Tv> _LIBCPP_INLINE_VISIBILITY
+template <typename _Tp, typename _Tv> _LIBCUDACXX_INLINE_VISIBILITY
 typename enable_if<is_assignable<_Tp&, _Tv>::value>::type
 __cxx_atomic_assign_volatile(_Tp volatile& __a_value, _Tv volatile const& __val);
 
@@ -141,7 +141,7 @@ struct __cxx_atomic_alignment_wrapper_impl {
 };
 
 template <typename _Tp>
-struct __cxx_atomic_alignment_wrapper_impl<_Tp, typename enable_if<_LIBCPP_ALIGNOF(_Tp) == sizeof(_Tp)>::type> {
+struct __cxx_atomic_alignment_wrapper_impl<_Tp, typename enable_if<_LIBCUDACXX_ALIGNOF(_Tp) == sizeof(_Tp)>::type> {
   using type = _Tp;
 };
 
@@ -158,7 +158,7 @@ __host__ __device__ __cxx_atomic_alignment_wrapper_t<_Tp> __cxx_atomic_alignment
 }
 template <typename _Tp>
 __host__ __device__ __cxx_atomic_alignment_wrapper_t<_Tp> __cxx_atomic_alignment_wrap(_Tp __value) {
-    return __cxx_atomic_alignment_wrap(__value, integral_constant<bool, _LIBCPP_ALIGNOF(_Tp) == sizeof(_Tp)>{});
+    return __cxx_atomic_alignment_wrap(__value, integral_constant<bool, _LIBCUDACXX_ALIGNOF(_Tp) == sizeof(_Tp)>{});
 }
 
 template <typename _Tp>
@@ -171,9 +171,9 @@ __host__ __device__ typename _Tp::__wrapped_type __cxx_atomic_alignment_unwrap(_
 }
 template <typename _Tp>
 __host__ __device__ auto __cxx_atomic_alignment_unwrap(_Tp __value)
-    -> decltype(__cxx_atomic_alignment_unwrap(__value, integral_constant<bool, _LIBCPP_ALIGNOF(_Tp) == sizeof(_Tp)>{}))
+    -> decltype(__cxx_atomic_alignment_unwrap(__value, integral_constant<bool, _LIBCUDACXX_ALIGNOF(_Tp) == sizeof(_Tp)>{}))
 {
-    return __cxx_atomic_alignment_unwrap(__value, integral_constant<bool, _LIBCPP_ALIGNOF(_Tp) == sizeof(_Tp)>{});
+    return __cxx_atomic_alignment_unwrap(__value, integral_constant<bool, _LIBCUDACXX_ALIGNOF(_Tp) == sizeof(_Tp)>{});
 }
 
 template <typename _Tp, int _Sco>
@@ -194,7 +194,7 @@ __host__ __device__ inline void __cxx_atomic_init(__cxx_atomic_base_impl_default
 #if   defined(__CUDA_ARCH__)
     auto __tmp = __cxx_atomic_alignment_wrap(__val);
     __cxx_atomic_assign_volatile(__a->__a_value, __tmp);
-#elif defined(_LIBCPP_CUDA_HAS_NO_HOST_STD_ATOMIC_INIT)
+#elif defined(_LIBCUDACXX_CUDA_HAS_NO_HOST_STD_ATOMIC_INIT)
     __a->__a_value.store(__val, ::std::memory_order_relaxed);
 #else
     ::std::atomic_init(&__a->__a_value, __cxx_atomic_alignment_wrap(__val));
@@ -416,4 +416,4 @@ using __cxx_atomic_base_impl = typename conditional<sizeof(_Tp) < 4,
                                     __cxx_atomic_base_impl_small<_Tp, _Sco>,
                                     __cxx_atomic_base_impl_default<_Tp, _Sco> >::type;
 
-_LIBCPP_END_NAMESPACE_STD
+_LIBCUDACXX_END_NAMESPACE_STD

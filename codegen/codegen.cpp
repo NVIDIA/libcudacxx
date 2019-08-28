@@ -86,7 +86,7 @@ int main() {
         return "__cuda_fence_" + sem + "_" + scope;
     };
 
-    out << "_LIBCPP_BEGIN_NAMESPACE_CUDA\n";
+    out << "_LIBCUDACXX_BEGIN_NAMESPACE_CUDA\n";
     out << "namespace detail {\n";
     out << "\n";
 
@@ -125,7 +125,7 @@ int main() {
                 out << " : \"memory\"); }\n";
             }
             for(auto& cv: cv_qualifier) {
-                out << "template<class _Type, typename _VSTD::enable_if<sizeof(_Type)==" << sz/8 << ", int>::type = 0>\n";
+                out << "template<class _Type, typename _CUDA_VSTD::enable_if<sizeof(_Type)==" << sz/8 << ", int>::type = 0>\n";
                 out << "__device__ void __atomic_load_cuda(const " << cv << "_Type *__ptr, _Type *__ret, int __memorder, " << scopenametag(s.first) << ") {\n";
                 out << "    uint" << (registers[sz] == "r" ? 32 : sz) << "_t __tmp = 0;\n";
                 out << "    switch (__memorder) {\n";
@@ -315,7 +315,7 @@ int main() {
 
     out << "\n";
     out << "}\n";
-    out << "_LIBCPP_END_NAMESPACE_CUDA\n";
+    out << "_LIBCUDACXX_END_NAMESPACE_CUDA\n";
 
     return 0;
 }

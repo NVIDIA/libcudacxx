@@ -15,7 +15,7 @@
 
 #include "detail/__config"
 
-_LIBCPP_BEGIN_NAMESPACE_STD
+_LIBCUDACXX_BEGIN_NAMESPACE_STD
 
     using bad_alloc = ::std::bad_alloc;
     using bad_array_new_length = ::std::bad_array_new_length;
@@ -28,7 +28,7 @@ _LIBCPP_BEGIN_NAMESPACE_STD
     inline new_handler get_new_handler() noexcept {
         return ::std::get_new_handler(); }
 
-_LIBCPP_END_NAMESPACE_STD
+_LIBCUDACXX_END_NAMESPACE_STD
 
 #endif // __CUDACC_RTC__
 

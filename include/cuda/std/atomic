@@ -44,25 +44,25 @@
 #include "detail/__config"
 #include "detail/__atomic"
 
-#undef _LIBCPP_CXX03_LANG
-#undef _LIBCPP_DEFAULT
-#define _LIBCPP_CXX03_LANG
-#define _LIBCPP_DEFAULT { }
+#undef _LIBCUDACXX_CXX03_LANG
+#undef _LIBCUDACXX_DEFAULT
+#define _LIBCUDACXX_CXX03_LANG
+#define _LIBCUDACXX_DEFAULT { }
 
-#undef _LIBCPP_HAS_GCC_ATOMIC_IMP
-#undef _LIBCPP_HAS_C_ATOMIC_IMP
+#undef _LIBCUDACXX_HAS_GCC_ATOMIC_IMP
+#undef _LIBCUDACXX_HAS_C_ATOMIC_IMP
 #include "detail/libcxx/include/atomic"
 
-#undef _LIBCPP_CXX03_LANG
-#undef _LIBCPP_DEFAULT
-#define _LIBCPP_DEFAULT = default;
+#undef _LIBCUDACXX_CXX03_LANG
+#undef _LIBCUDACXX_DEFAULT
+#define _LIBCUDACXX_DEFAULT = default;
 
 #ifdef _MSC_VER
     #pragma warning(push)
     #pragma warning(disable:4522)
 #endif //_MSC_VER
 
-_LIBCPP_BEGIN_NAMESPACE_CUDA
+_LIBCUDACXX_BEGIN_NAMESPACE_CUDA
 
 using memory_order = std::memory_order;
 
@@ -193,7 +193,7 @@ inline __host__ __device__ void atomic_signal_fence(memory_order __m) {
 #endif
 }
 
-_LIBCPP_END_NAMESPACE_CUDA
+_LIBCUDACXX_END_NAMESPACE_CUDA
 
 #ifdef _MSC_VER
     #pragma warning(pop)
