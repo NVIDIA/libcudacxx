@@ -664,6 +664,10 @@ typedef __char32_t char32_t;
 #define _LIBCPP_IS_TRIVIALLY_COPYABLE(...) __is_trivially_copyable(__VA_ARGS__)
 #endif
 
+#if _GNUC_VER >= 800
+#define _LIBCPP_IS_ASSIGNABLE(...) __is_assignable(__VA_ARGS__)
+#endif
+
 #if !__EXCEPTIONS && !defined(_LIBCPP_NO_EXCEPTIONS)
 #define _LIBCPP_NO_EXCEPTIONS
 #endif
@@ -722,9 +726,6 @@ typedef __char32_t char32_t;
 
 #if _GNUC_VER >= 700
 #define _LIBCPP_COMPILER_HAS_BUILTIN_LAUNDER
-#endif
-
-#if _GNUC_VER >= 700
 #define _LIBCPP_HAS_UNIQUE_OBJECT_REPRESENTATIONS(...) __has_unique_object_representations(__VA_ARGS__)
 #endif
 
@@ -740,10 +741,15 @@ typedef __char32_t char32_t;
 #error "MSVC versions prior to Visual Studio 2015 are not supported"
 #endif
 
+#if _MSC_VER < 1920
+#define _LIBCPP_HAS_NOEXCEPT_SFINAE
+#endif
+
 #define _LIBCPP_UNDERLYING_TYPE(...) __underlying_type(__VA_ARGS__)
 #define _LIBCPP_IS_CONSTRUCTIBLE(...) __is_constructible(__VA_ARGS__)
 #define _LIBCPP_IS_TRIVIALLY_CONSTRUCTIBLE(...) __is_trivially_constructible(__VA_ARGS__)
 #define _LIBCPP_HAS_TRIVIAL_CONSTRUCTOR(...) __has_trivial_constructor(__VA_ARGS__)
+#define _LIBCPP_IS_NOTHROW_CONSTRUCTIBLE(...) __is_nothrow_constructible(__VA_ARGS__)
 #define _LIBCPP_HAS_NOTHROW_CONSTRUCTOR(...) __has_nothrow_constructor(__VA_ARGS__)
 #define _LIBCPP_HAS_NOTHROW_COPY(...) __has_nothrow_copy(__VA_ARGS__)
 #define _LIBCPP_HAS_NOTHROW_ASSIGN(...) __has_nothrow_assign(__VA_ARGS__)
@@ -764,6 +770,7 @@ typedef __char32_t char32_t;
 #define _LIBCPP_IS_BASE_OF(...) __is_base_of(__VA_ARGS__)
 #define _LIBCPP_IS_FINAL(...) __is_final(__VA_ARGS__)
 #define _LIBCPP_IS_CONVERTIBLE_TO(...) __is_convertible_to(__VA_ARGS__)
+#define _LIBCPP_IS_ASSIGNABLE(...) __is_assignable(__VA_ARGS__)
 #define __alignof__ __alignof
 #define _LIBCPP_NORETURN __declspec(noreturn)
 #define _ALIGNAS(x) __declspec(align(x))
