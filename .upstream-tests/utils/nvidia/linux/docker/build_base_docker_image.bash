@@ -27,11 +27,10 @@ if [ "${?}" != "0" ]; then exit 1; fi
 # Create a temporary container so we can extract the log files.
 TMP_CONTAINER=$(docker create ${BASE_IMAGE})
 
-docker cp ${TMP_CONTAINER}:/sw/gpgpu/libcudacxx/libcxx/build/libcxx_cmake.log .
-docker cp ${TMP_CONTAINER}:/sw/gpgpu/libcudacxx/libcxx/build/libcxx_lit.log .
-docker cp ${TMP_CONTAINER}:/sw/gpgpu/libcudacxx/build/libcudacxx_cmake.log .
-docker cp ${TMP_CONTAINER}:/sw/gpgpu/libcudacxx/build/libcudacxx_lit.log .
-docker cp ${TMP_CONTAINER}:/sw/gpgpu/libcudacxx/build/libcudacxx_sm6x_plus_lit.log .
+docker cp ${TMP_CONTAINER}:/sw/gpgpu/libcudacxx/libcxx/build/cmake_libcxx.log .
+docker cp ${TMP_CONTAINER}:/sw/gpgpu/libcudacxx/build/cmake_libcudacxx.log .
+docker cp ${TMP_CONTAINER}:/sw/gpgpu/libcudacxx/build/lit.log .
+docker cp ${TMP_CONTAINER}:/sw/gpgpu/libcudacxx/build/lit_sm6x_plus.log .
 
 docker container rm ${TMP_CONTAINER} > /dev/null
 
