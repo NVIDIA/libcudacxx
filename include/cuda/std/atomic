@@ -51,7 +51,7 @@
 
 #undef _LIBCPP_HAS_GCC_ATOMIC_IMP
 #undef _LIBCPP_HAS_C_ATOMIC_IMP
-#include "detail/libcxx/atomic"
+#include "detail/libcxx/include/atomic"
 
 #undef _LIBCPP_CXX03_LANG
 #undef _LIBCPP_DEFAULT

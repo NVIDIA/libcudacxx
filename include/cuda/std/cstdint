@@ -17,6 +17,6 @@
 #include "version"
 #include "detail/__config"
 
-#include "detail/libcxx/cstdint"
+#include "detail/libcxx/include/cstdint"
 
 #endif //_CUDA_CSTDINT

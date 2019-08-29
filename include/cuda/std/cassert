@@ -16,7 +16,7 @@
 
 #include "detail/__config"
 
-#include "detail/libcxx/cassert"
+#include "detail/libcxx/include/cassert"
 
 #endif //__CUDACC_RTC__
 

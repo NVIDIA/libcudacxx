@@ -17,6 +17,6 @@
 #include "version"
 #include "detail/__config"
 
-#include "detail/libcxx/type_traits"
+#include "detail/libcxx/include/type_traits"
 
 #endif //_CUDA_TYPE_TRAITS

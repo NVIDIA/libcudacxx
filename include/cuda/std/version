@@ -11,6 +11,6 @@
 
 #include "detail/__config"
 
-#include "detail/libcxx/version"
+#include "detail/libcxx/include/version"
 
 #endif //_CUDA_VERSION

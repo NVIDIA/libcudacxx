@@ -49,7 +49,7 @@
     #define __ELF__
 #endif
 
-#include "libcxx/__config"
+#include "libcxx/include/__config"
 
 #if _GNUC_VER <= 409
     #define _LIBCPP_CUDA_HAS_NO_HOST_STD_ATOMIC_INIT
