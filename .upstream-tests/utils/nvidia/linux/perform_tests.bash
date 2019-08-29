@@ -138,7 +138,7 @@ LIBCUDACXX_LIT_SITE_CONFIG=${LIBCUDACXX_PATH}/build/libcxx/test/lit.site.cfg
 
 LIBCXX_LOG=libcxx_lit.log
 LIBCUDACXX_LOG=libcudacxx_lit.log
-ARCH_DETECTION_LOG=libcudacxx_lit_arch_detection.log
+ARCH_DETECTION_LOG=libcudacxx_arch_detection_lit.log
 
 RAW_TEST_TARGETS=""
 
