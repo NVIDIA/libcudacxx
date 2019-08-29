@@ -28,12 +28,6 @@ function usage {
   echo
   echo "--verbose                           : Print SM architecture detection and test results"
   echo "                                    : to stdout in addition to log files."
-  echo "--libcxx-log <file>                 : Log libc++ test results to <file>"
-  echo "                                    : (default: libcxx_lit.log)."
-  echo "--libcudacxx-log <file>             : Log libcu++ test results to <file>"
-  echo "                                    : (default: libcudacxx_lit.log)."
-  echo "--arch-detection-log <file>         : Log SM architecture detection results to <file>"
-  echo "                                    : (default: libcudacxx_lit_arch_detection.log)."
   echo
   echo "\${LIBCUDACXX_SKIP_BASE_TESTS_BUILD}   : If set and non-zero, do not build"
   echo "                                      : (or run) any tests."
@@ -136,10 +130,6 @@ LIT_PREFIX="time"
 LIBCXX_LIT_SITE_CONFIG=${LIBCUDACXX_PATH}/libcxx/build/test/lit.site.cfg
 LIBCUDACXX_LIT_SITE_CONFIG=${LIBCUDACXX_PATH}/build/libcxx/test/lit.site.cfg
 
-LIBCXX_LOG=libcxx_lit.log
-LIBCUDACXX_LOG=libcudacxx_lit.log
-ARCH_DETECTION_LOG=libcudacxx_arch_detection_lit.log
-
 RAW_TEST_TARGETS=""
 
 while test ${#} != 0
@@ -163,39 +153,12 @@ do
     LIBCUDACXX_LIT_SITE_CONFIG=${1}
     ;;
   --verbose) VERBOSE=1 ;;
-  --libcxx-log)
-    shift # The next argument is the file.
-    LIBCXX_LOG=${1}
-    ;;
-  --libcudacxx-log)
-    shift # The next argument is the file.
-    LIBCUDACXX_LOG=${1}
-    ;;
-  --sm-arch-detection-log)
-    shift # The next argument is the file.
-    ARCH_DETECTION_LOG=${1}
-    ;;
   *)
     RAW_TEST_TARGETS="${RAW_TEST_TARGETS:+${RAW_TEST_TARGETS} }${1}"
     ;;
   esac
   shift
 done
-
-if [ -e "${LIBCXX_LOG}" ]
-then
-  rm ${LIBCXX_LOG}
-fi
-
-if [ -e "${LIBCUDACXX_LOG}" ]
-then
-  rm ${LIBCUDACXX_LOG}
-fi
-
-if [ -e "${ARCH_DETECTION_LOG}" ]
-then
-  rm ${ARCH_DETECTION_LOG}
-fi
 
 LIBCXX_TEST_TARGETS="${LIBCUDACXX_PATH}/libcxx/test"
 LIBCUDACXX_TEST_TARGETS="${LIBCUDACXX_PATH}/test"
@@ -224,16 +187,16 @@ then
   exit 0
 fi
 
-LIT_FLAGS="-vv -a"
+if [ "${VERBOSE:-0}" != "0" ]
+then
+  LIT_FLAGS="-vv -a"
+else
+  LIT_FLAGS="-sv --no-progress-bar"
+fi
+
 if [ "${LIBCUDACXX_SKIP_TESTS_RUN:-0}" != "0" ]
 then
   LIT_FLAGS="${LIT_FLAGS:+${LIT_FLAGS} }-Dexecutor=\"NoopExecutor()\""
-fi
-
-LIT_FILTER_PATTERN="/^-- Testing: /,/^Testing Time: /d"
-if [ "${VERBOSE:-0}" != "0" ]
-then
-  LIT_FILTER_PATTERN=""
 fi
 
 ################################################################################
@@ -247,6 +210,8 @@ then
 
   echo "# TEST SM Architecture Detection"
 
+  ARCH_DETECTION_LOG=$(mktemp)
+
   LIBCXX_SITE_CONFIG=${LIBCUDACXX_LIT_SITE_CONFIG} \
   bash -c "lit -vv -a ${LIBCUDACXX_PATH}/test/nothing_to_do.pass.cpp" \
   > ${ARCH_DETECTION_LOG} 2>&1
@@ -257,6 +222,8 @@ then
   fi
 
   DEVICE_0_COMPUTE_ARCH=$(egrep '^Device 0:' ${ARCH_DETECTION_LOG} | sed 's/^Device 0: ".*", Selected, SM\([0-9]\+\), [0-9]\+ \[bytes\]/\1/')
+
+  rm -f ${ARCH_DETECTION_LOG}
 
   echo "# DETECTION SM Architecture : Device 0, ${DEVICE_0_COMPUTE_ARCH}"
 
@@ -319,7 +286,7 @@ then
   TIMEFORMAT="# WALLTIME libc++ : %R [sec]" \
   LIBCXX_SITE_CONFIG=${LIBCXX_LIT_SITE_CONFIG} \
   bash -c "${LIT_PREFIX} lit ${LIT_FLAGS} ${LIBCXX_TEST_TARGETS}" \
-  2>&1 | tee ${LIBCXX_LOG} | sed "${LIT_FILTER_PATTERN}"
+  2>&1
   if [ "${PIPESTATUS[0]}" != "0" ]; then report_and_exit 2; fi
 else
   echo "# TEST libc++ : Skipped"
@@ -343,7 +310,7 @@ then
   TIMEFORMAT="# WALLTIME libcu++: %R [sec]" \
   LIBCXX_SITE_CONFIG=${LIBCUDACXX_LIT_SITE_CONFIG} \
   bash -c "${LIT_PREFIX} lit ${LIT_FLAGS} ${LIT_COMPUTE_ARCHS_FLAG}${LIBCUDACXX_COMPUTE_ARCHS}${LIT_COMPUTE_ARCHS_SUFFIX} ${LIBCUDACXX_TEST_TARGETS}" \
-  2>&1 | tee ${LIBCUDACXX_LOG} | sed "${LIT_FILTER_PATTERN}"
+  2>&1
   if [ "${PIPESTATUS[0]}" != "0" ]; then report_and_exit 2; fi
 else
   echo "# TEST libcu++ : Skipped"
