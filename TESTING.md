@@ -143,6 +143,6 @@ set SM_ARCH=70
 
 cd %LIBCUDACXX_ROOT%\build
 set LIBCXX_SITE_CONFIG=libcxx\test\lit.site.cfg
-lit ..\test -Dcompute_archs=%SM_ARCH% -vv -a 
+lit ..\test -Dcompute_archs=%SM_ARCH% -sv --no-progress-bar
 ```
 
