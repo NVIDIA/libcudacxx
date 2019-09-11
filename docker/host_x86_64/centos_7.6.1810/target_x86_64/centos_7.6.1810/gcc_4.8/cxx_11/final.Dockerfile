@@ -1,6 +1,6 @@
 # Dockerfile for libcudacxx:host_x86_64_centos_7.6.1810__target_x86_64_centos_7.6.1810__gcc_4.8
 
-FROM libcudacxx_base:host_x86_64_centos_7.6.1810__target_x86_64_centos_7.6.1810__gcc_4.8
+FROM libcudacxx_base:host_x86_64_centos_7.6.1810__target_x86_64_centos_7.6.1810__gcc_4.8_cxx_11
 
 MAINTAINER Bryce Adelstein Lelbach <blelbach@nvidia.com>
 
@@ -17,9 +17,10 @@ ADD libnvidia-ptxjitcompiler.so* /usr/lib64/
 ###############################################################################
 # CMD: The following is invoked when the image is run.
 
+RUN useradd -ms /bin/bash libcudacxx && chown -R libcudacxx:libcudacxx /sw/gpgpu/libcudacxx
+USER libcudacxx
+
 WORKDIR /sw/gpgpu/libcudacxx
 
-ENV LIBCUDACXX_COMPUTE_ARCHS="30 32 35 50 52 53 60 61 62 70 72 75"
-
-CMD /sw/gpgpu/libcudacxx/utils/nvidia/linux/perform_tests.bash
+CMD /sw/gpgpu/libcudacxx/utils/nvidia/linux/perform_tests.bash --skip-libcxx-tests
 

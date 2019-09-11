@@ -103,7 +103,7 @@ In a Bash shell:
 
 ```
 export LIBCUDACXX_ROOT=/path/to/libcudacxx # Should be //sw/gpgpu/libcudacxx or the Git repo root.
-export CXX="${LIBCUDACXX_ROOT}/utils/nvrtc/nvrtc.sh nvcc"
+export CXX="${LIBCUDACXX_ROOT}/utils/nvidia/nvrtc/nvrtc.sh nvcc"
 
 cd ${LIBCUDACXX_ROOT}
 mkdir -p build
