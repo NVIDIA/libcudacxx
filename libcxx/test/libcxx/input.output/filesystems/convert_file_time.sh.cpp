@@ -8,6 +8,9 @@
 
 // UNSUPPORTED: c++98, c++03, c++11
 
+// appears to be failing for constexpr related reasons on GCC 5
+// XFAIL: gcc-5
+
 // <filesystem>
 
 // typedef TrivialClock file_time_type;
