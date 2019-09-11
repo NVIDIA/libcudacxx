@@ -1,5 +1,7 @@
 #! /bin/bash
 
+set -e
+
 SCRIPT_PATH=$(cd $(dirname ${0}); pwd -P)
 source ${SCRIPT_PATH}/configuration.bash
 
@@ -11,6 +13,6 @@ then
   COMPUTE_ARCHS_FLAG="-eLIBCUDACXX_COMPUTE_ARCHS=\"${@}\""
 fi
 
-docker run ${COMPUTE_ARCHS_FLAG} --privileged ${FINAL_IMAGE}
+docker run -t ${COMPUTE_ARCHS_FLAG} --privileged ${FINAL_IMAGE}
 if [ "${?}" != "0" ]; then exit 1; fi
 

@@ -1,6 +1,8 @@
 )program";
 
 int main() {
+    list_devices();
+
     nvrtcProgram prog;
     NVRTC_SAFE_CALL(nvrtcCreateProgram(
         &prog,

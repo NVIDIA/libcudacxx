@@ -1,5 +1,7 @@
 #! /bin/bash
 
+set -e
+
 SCRIPT_PATH=$(cd $(dirname ${0}); pwd -P)
 source ${SCRIPT_PATH}/variant_configuration.bash
 
@@ -26,7 +28,7 @@ FINAL_DOCKERFILE=${VARIANT_PATH}/final.Dockerfile
 echo "SCRIPT_PATH=${SCRIPT_PATH}"
 echo "SW_PATH=${SW_PATH}"
 echo "VARIANT_PATH=${VARIANT_PATH}"
-echo 
+echo
 echo "HOST_ARCH=${HOST_ARCH}"
 echo "HOST_OS_KIND=${HOST_OS_KIND}"
 echo "HOST_OS_VERSION=${HOST_OS_VERSION}"
@@ -43,7 +45,7 @@ echo "COMPILER_CXX_DIALECT=${COMPILER_CXX_DIALECT}"
 echo "COMPILER=${COMPILER}"
 echo
 echo "OS_IMAGE=${OS_IMAGE}"
-echo 
+echo
 echo "BASE_NAME=${BASE_NAME}"
 echo "BASE_IMAGE=${BASE_IMAGE}"
 echo "BASE_DOCKERFILE=${BASE_DOCKERFILE}"

@@ -60,6 +60,9 @@ function section_separator {
   echo
 }
 
+LIBCXX_LOG=$(mktemp)
+LIBCUDACXX_LOG=$(mktemp)
+
 function report_and_exit {
   # If any of the lines searched for below aren't present in the log files, the
   # grep commands will return nothing, and the variables will be empty. Bash
@@ -212,16 +215,16 @@ then
 
   ARCH_DETECTION_LOG=$(mktemp)
 
-  pushd "$(dirname ${LIBCUDACXX_LIT_SITE_CONFIG})/../../getsm"
-  make > ${ARCH_DETECTION_LOG} 2>&1
+  LIBCXX_SITE_CONFIG=${LIBCUDACXX_LIT_SITE_CONFIG} \
+  bash -c "lit -vv -a ${LIBCUDACXX_PATH}/test/nothing_to_do.pass.cpp" \
+  > ${ARCH_DETECTION_LOG} 2>&1
   if [ "${PIPESTATUS[0]}" != "0" ]
   then
     cat ${ARCH_DETECTION_LOG}
     report_and_exit 2
   fi
 
-  DEVICE_0_COMPUTE_ARCH=$(cat sm)
-  popd
+  DEVICE_0_COMPUTE_ARCH=$(egrep '^Device 0:' ${ARCH_DETECTION_LOG} | sed 's/^Device 0: ".*", Selected, SM\([0-9]\+\), [0-9]\+ \[bytes\]/\1/')
 
   rm -f ${ARCH_DETECTION_LOG}
 
@@ -286,7 +289,7 @@ then
   TIMEFORMAT="# WALLTIME libc++ : %R [sec]" \
   LIBCXX_SITE_CONFIG=${LIBCXX_LIT_SITE_CONFIG} \
   bash -c "${LIT_PREFIX} lit ${LIT_FLAGS} ${LIBCXX_TEST_TARGETS}" \
-  2>&1
+  2>&1 | tee "${LIBCXX_LOG}"
   if [ "${PIPESTATUS[0]}" != "0" ]; then report_and_exit 2; fi
 else
   echo "# TEST libc++ : Skipped"
@@ -310,7 +313,7 @@ then
   TIMEFORMAT="# WALLTIME libcu++: %R [sec]" \
   LIBCXX_SITE_CONFIG=${LIBCUDACXX_LIT_SITE_CONFIG} \
   bash -c "${LIT_PREFIX} lit ${LIT_FLAGS} ${LIT_COMPUTE_ARCHS_FLAG}${LIBCUDACXX_COMPUTE_ARCHS}${LIT_COMPUTE_ARCHS_SUFFIX} ${LIBCUDACXX_TEST_TARGETS}" \
-  2>&1
+  2>&1 | tee "${LIBCUDACXX_LOG}"
   if [ "${PIPESTATUS[0]}" != "0" ]; then report_and_exit 2; fi
 else
   echo "# TEST libcu++ : Skipped"

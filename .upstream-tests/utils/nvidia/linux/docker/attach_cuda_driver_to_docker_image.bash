@@ -1,9 +1,11 @@
 #! /bin/bash
 
+set -e
+
 SCRIPT_PATH=$(cd $(dirname ${0}); pwd -P)
 source ${SCRIPT_PATH}/configuration.bash
- 
-TMP_PATH=$(mktemp -d --suffix=-${FINAL_NAME}) 
+
+TMP_PATH=$(mktemp -d --suffix=-${FINAL_NAME})
 LIBCUDA=$(ldconfig -p | grep libcuda.so | tr ' ' '\n' | grep / | tr '\n' ' ' | sed 's/ *$//')
 LIBNVIDIAFATBINARYLOADER=$(ldconfig -p | grep libnvidia-fatbinaryloader.so | tr ' ' '\n' | grep / | tr '\n' ' ' | sed 's/ *$//')
 LIBNVIDIAPTXJITCOMPILER=$(ldconfig -p | grep libnvidia-ptxjitcompiler.so | tr ' ' '\n' | grep / | tr '\n' ' ' | sed 's/ *$//')
