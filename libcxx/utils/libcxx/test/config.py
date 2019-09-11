@@ -240,9 +240,14 @@ class Configuration(object):
             self.config.available_features.add('%s-%s' % (cxx_type, maj_v))
             self.config.available_features.add('%s-%s.%s' % (
                 cxx_type, maj_v, min_v))
-        self.lit_config.note("detected cxx.type as: {}".format(self.cxx.type))
-        self.lit_config.note("detected cxx.version as: {}".format(self.cxx.version))
-        self.lit_config.note("detected cxx.is_nvrtc as: {}".format(self.cxx.is_nvrtc))
+        self.lit_config.note("detected cxx.type as: {}".format(
+                             self.cxx.type))
+        self.lit_config.note("detected cxx.version as: {}".format(
+                             self.cxx.version))
+        self.lit_config.note("detected cxx.default_dialect as: {}".format(
+                             self.cxx.default_dialect))
+        self.lit_config.note("detected cxx.is_nvrtc as: {}".format(
+                             self.cxx.is_nvrtc))
         self.cxx.compile_env = dict(os.environ)
         # 'CCACHE_CPP2' prevents ccache from stripping comments while
         # preprocessing. This is required to prevent stripping of '-verify'
@@ -269,9 +274,17 @@ class Configuration(object):
                   self.host_cxx_type, maj_v))
               self.config.available_features.add('%s-%s.%s' % (
                   self.host_cxx_type, maj_v, min_v))
-          self.lit_config.note("detected host_cxx.type as: {}".format(self.host_cxx.type))
-          self.lit_config.note("detected host_cxx.version as: {}".format(self.host_cxx.version))
-          self.lit_config.note("detected host_cxx.is_nvrtc as: {}".format(self.host_cxx.is_nvrtc))
+          self.lit_config.note("detected host_cxx.type as: {}".format(
+                               self.host_cxx.type))
+          self.lit_config.note("detected host_cxx.version as: {}".format(
+                               self.host_cxx.version))
+          self.lit_config.note("detected host_cxx.default_dialect as: {}".format(
+                               self.host_cxx.default_dialect))
+          self.lit_config.note("detected host_cxx.is_nvrtc as: {}".format(
+                               self.host_cxx.is_nvrtc))
+
+          if 'icc' in self.config.available_features:
+              self.cxx.link_flags += ['-lirc']
 
     def _configure_clang_cl(self, clang_path):
         def _split_env_var(var):
@@ -491,16 +504,17 @@ class Configuration(object):
         if self.get_lit_bool('has_libatomic', False):
             self.config.available_features.add('libatomic')
 
-        macros = self._dump_macros_verbose()
-        if '__cpp_if_constexpr' not in macros:
-            self.config.available_features.add('libcpp-no-if-constexpr')
+        if 'msvc' not in self.config.available_features:
+            macros = self._dump_macros_verbose()
+            if '__cpp_if_constexpr' not in macros:
+                self.config.available_features.add('libcpp-no-if-constexpr')
 
-        if '__cpp_structured_bindings' not in macros:
-            self.config.available_features.add('libcpp-no-structured-bindings')
+            if '__cpp_structured_bindings' not in macros:
+                self.config.available_features.add('libcpp-no-structured-bindings')
 
-        if '__cpp_deduction_guides' not in macros or \
-                intMacroValue(macros['__cpp_deduction_guides']) < 201611:
-            self.config.available_features.add('libcpp-no-deduction-guides')
+            if '__cpp_deduction_guides' not in macros or \
+                    intMacroValue(macros['__cpp_deduction_guides']) < 201611:
+                self.config.available_features.add('libcpp-no-deduction-guides')
 
         if self.is_windows:
             self.config.available_features.add('windows')
@@ -512,14 +526,15 @@ class Configuration(object):
                 # using this feature. (Also see llvm.org/PR32730)
                 self.config.available_features.add('LIBCXX-WINDOWS-FIXME')
 
-        # Attempt to detect the glibc version by querying for __GLIBC__
-        # in 'features.h'.
-        macros = self.cxx.dumpMacros(flags=['-include', 'features.h'])
-        if isinstance(macros, dict) and '__GLIBC__' in macros:
-            maj_v, min_v = (macros['__GLIBC__'], macros['__GLIBC_MINOR__'])
-            self.config.available_features.add('glibc')
-            self.config.available_features.add('glibc-%s' % maj_v)
-            self.config.available_features.add('glibc-%s.%s' % (maj_v, min_v))
+        if 'msvc' not in self.config.available_features:
+            # Attempt to detect the glibc version by querying for __GLIBC__
+            # in 'features.h'.
+            macros = self.cxx.dumpMacros(flags=['-include', 'features.h'])
+            if isinstance(macros, dict) and '__GLIBC__' in macros:
+                maj_v, min_v = (macros['__GLIBC__'], macros['__GLIBC_MINOR__'])
+                self.config.available_features.add('glibc')
+                self.config.available_features.add('glibc-%s' % maj_v)
+                self.config.available_features.add('glibc-%s.%s' % (maj_v, min_v))
 
         # Support Objective-C++ only on MacOS and if the compiler supports it.
         if self.target_info.platform() == "darwin" and \
@@ -591,18 +606,37 @@ class Configuration(object):
                 if maj_v <= 6:
                     possible_stds.remove('c++14')
             for s in possible_stds:
-                if self.cxx.hasCompileFlag('-std=%s' % s):
-                    std = s
-                    self.lit_config.note(
-                        'inferred language dialect as: %s' % std)
-                    break
+                # NVCC always supports the GCC-style flag, even when MSVC
+                # is the host compiler, so we just have to worry about unwrapped
+                # MSVC here.
+                if self.cxx.type == 'msvc':
+                    if self.cxx.hasCompileFlag('/std:%s' % s):
+                        std = s
+                        self.lit_config.note(
+                            'inferred language dialect as: %s' % std)
+                        break
+                else:
+                    if self.cxx.hasCompileFlag('-std=%s' % s):
+                        std = s
+                        self.lit_config.note(
+                            'inferred language dialect as: %s' % std)
+                        break
+            if not std and \
+               (self.cxx.type == 'nvcc' and self.host_cxx.type == 'msvc'):
+                # TODO: Replace this with proper version checks.
+                std = 'c++14'
             if not std:
                 self.lit_config.fatal(
                     'Failed to infer a supported language dialect from one of %r'
                     % possible_stds)
-        self.cxx.compile_flags += ['-std={0}'.format(std)]
+        if self.cxx.type == 'msvc':
+            self.cxx.compile_flags += ['/std:{0}'.format(std)]
+        elif self.cxx.is_nvrtc \
+                or not (self.cxx.type == 'nvcc' and self.host_cxx.type == 'msvc'):
+            self.cxx.compile_flags += ['-std={0}'.format(std)]
         std_feature = std.replace('gnu++', 'c++')
         std_feature = std.replace('1z', '17')
+        std_feature = std.replace('2a', '20')
         self.config.available_features.add(std_feature)
         # Configure include paths
         self.configure_compile_flags_header_includes()
@@ -705,6 +739,9 @@ class Configuration(object):
             header. Return a dictionary containing the macros found in the
             '__config_site' header.
         """
+        # MSVC can't dump macros, so we just give up.
+        if 'msvc' in self.config.available_features:
+            return {}
         # Parse the macro contents of __config_site by dumping the macros
         # using 'c++ -dM -E' and filtering the predefines.
         predefines = self._dump_macros_verbose()
@@ -748,15 +785,17 @@ class Configuration(object):
             self.config.available_features.add(m)
         return feature_macros
 
-
-
     def configure_compile_flags_exceptions(self):
         enable_exceptions = self.get_lit_bool('enable_exceptions', True)
         if not enable_exceptions:
             self.config.available_features.add('libcpp-no-exceptions')
             if 'pgi' in self.config.available_features:
+                # PGI reports all expressions as `noexcept(true)` with its
+                # "no exceptions" mode. Override the setting from CMake as
+                # a temporary workaround for that.
                 pass
-            else:
+            # TODO: I don't know how to shut off exceptions with MSVC.
+            elif 'msvc' not in self.config.available_features:
                 if self.cxx.type == 'nvcc':
                     self.cxx.compile_flags += ['-Xcompiler']
                 self.cxx.compile_flags += ['-fno-exceptions']
@@ -769,8 +808,11 @@ class Configuration(object):
                 self.cxx.compile_flags += ['-Xcompiler']
             if 'pgi' in self.config.available_features:
                 self.cxx.compile_flags += ['--no_rtti']
+            elif 'msvc' in self.config.available_features:
+                self.cxx.compile_flags += ['/GR-']
             else:
                 self.cxx.compile_flags += ['-fno-rtti']
+            self.cxx.compile_flags += ['-D_LIBCUDACXX_NO_RTTI']
 
     def configure_compile_flags_abi_version(self):
         abi_version = self.get_lit_conf('abi_version', '').strip()
@@ -824,10 +866,10 @@ class Configuration(object):
                 self.cxx.link_flags += ['-Xcompiler']
             if 'pgi' in self.config.available_features:
                 pass
-            else:
+            elif not self.cxx.is_nvrtc:
                 self.cxx.link_flags += ['-nodefaultlibs']
             # FIXME: Handle MSVCRT as part of the ABI library handling.
-            if self.is_windows:
+            if self.is_windows and 'msvc' not in self.config.available_features:
                 self.cxx.link_flags += ['-nostdlib']
             self.configure_link_flags_cxx_library()
             self.configure_link_flags_abi_library()
@@ -884,7 +926,7 @@ class Configuration(object):
             self.cxx.link_flags += ['-L' + self.abi_library_root]
             if not self.is_windows:
                 if self.cxx.type == 'nvcc':
-                    self.cxx.link_flags += ['-Xlinker',
+                    self.cxx.link_flags += ['-Xcompiler',
                         '"-Wl,-rpath,' + self.cxx_runtime_root + '"']
                 else:
                     self.cxx.link_flags += ['-Wl,-rpath,' + 

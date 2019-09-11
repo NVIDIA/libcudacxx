@@ -14,6 +14,7 @@ int main()
   unsigned major_version = 0;
   unsigned minor_version = 0;
   unsigned patch_level   = 0;
+  unsigned default_dialect = 3;
   char const* is_nvrtc = "False";
 
   #if defined(__NVCC__)
@@ -56,7 +57,36 @@ int main()
     patch_level   = __GNUC_PATCHLEVEL__;
   #endif
 
-  printf("(\"%s\", (%d, %d, %d), %s)\n",
-         compiler_type, major_version, minor_version, patch_level, is_nvrtc);
+  #if defined(_MSC_VER)
+    #if   !defined(_MSVC_LANG)
+    default_dialect = 3;
+  #elif _MSVC_LANG <= 201103L
+    default_dialect = 11;
+    #elif _MSVC_LANG <= 201402L
+    default_dialect = 14;
+    #elif _MSVC_LANG <= 201703L
+    default_dialect = 17;
+    #else
+    default_dialect = 20;
+    #endif
+  #else
+    #if   __cplusplus <= 199711L
+    default_dialect = 3;
+    #elif __cplusplus <= 201103L
+    default_dialect = 11;
+    #elif __cplusplus <= 201402L
+    default_dialect = 14;
+    #elif __cplusplus <= 201703L
+    default_dialect = 17;
+    #else
+    default_dialect = 20;
+    #endif
+  #endif
+
+  printf("(\"%s\", (%d, %d, %d), \"c++%02u\", %s)\n",
+         compiler_type,
+         major_version, minor_version, patch_level,
+         default_dialect,
+         is_nvrtc);
 }
 
