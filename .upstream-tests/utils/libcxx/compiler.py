@@ -118,13 +118,18 @@ class CXXCompiler(object):
               patchlevel = macros['__GNUC_PATCHLEVEL__']
 
           if '__cplusplus' in macros.keys():
-            if int(macros['__cplusplus']) <= 199711:
+            cplusplus = macros['__cplusplus']
+            if cplusplus[-1] == 'L':
+              cplusplus = cplusplus[:-1]
+            cpp_standard = int(cplusplus)
+
+            if cpp_standard <= 199711:
               default_dialect = "c++03"
-            elif int(macros['__cplusplus']) <= 201103:
+            elif cpp_standard <= 201103:
               default_dialect = "c++11"
-            elif int(macros['__cplusplus']) <= 201402:
+            elif cpp_standard <= 201402:
               default_dialect = "c++14"
-            elif int(macros['__cplusplus']) <= 201703:
+            elif cpp_standard <= 201703:
               default_dialect = "c++17"
             else:
               default_dialect = "c++20"
