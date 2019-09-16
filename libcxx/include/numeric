@@ -328,7 +328,7 @@ exclusive_scan(_InputIterator __first, _InputIterator __last,
     return _CUDA_VSTD::exclusive_scan(__first, __last, __result, __init, _CUDA_VSTD::plus<>());
 }
 
-template <class _InputIterator, class _OutputIterator, class _Tp, class _BinaryOp>
+template <class _InputIterator, class _OutputIterator, class _BinaryOp, class _Tp>
 _OutputIterator inclusive_scan(_InputIterator __first, _InputIterator __last,
                                _OutputIterator __result, _BinaryOp __b,  _Tp __init)
 {
