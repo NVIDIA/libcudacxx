@@ -48,27 +48,6 @@ message(STATUS "Enabled CUDA architectures:${COMPUTE_MESSAGE}")
 
 # this is used in automated and semi-automated testing
 
-message(STATUS "Configuring GetSM...")
-if (LIBCXX_TEST_WITH_NVRTC)
-    string(STRIP "${CMAKE_CXX_COMPILER_ARG1}" GETSM_COMPILER)
-else()
-    set(GETSM_COMPILER ${CMAKE_CXX_COMPILER})
-endif()
-
-find_program(GETSM_HOST_COMPILER NAMES ${LIBCXX_NVCC_HOST_COMPILER})
-
-file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/getsm")
-execute_process(
-    COMMAND ${CMAKE_COMMAND} ${CMAKE_SOURCE_DIR}/utils/nvidia/getsm -DCMAKE_CUDA_COMPILER=${GETSM_COMPILER} -DCMAKE_CUDA_HOST_COMPILER=${GETSM_HOST_COMPILER}
-    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/getsm"
-    RESULT_VARIABLE GETSM_RESULT
-)
-if (GETSM_RESULT EQUAL 0)
-    message(STATUS "GetSM configured sucessfully.")
-else()
-    message(FATAL_ERROR "Failed to configure GetSM!")
-endif()
-
 if (NOT LIBCXX_TEST_WITH_NVRTC)
     set(LIBCXX_FORCE_INCLUDE "-include ${CMAKE_SOURCE_DIR}/test/force_include.h")
 endif()
