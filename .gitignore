@@ -26,6 +26,8 @@ samples/trie_st.obj
 samples/trial
 samples/trie_st
 samples/trie_mt
+samples/rtc
+samples/benchmark
 *.pyc
 build-*/
 build/

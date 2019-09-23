@@ -19,8 +19,7 @@
         #define _Float16 __half
     #endif
 #else
-    #define __host__
-    #define __device__
+    #include <cuda_runtime_api.h>
 #endif
 
 #ifdef _MSC_VER
@@ -37,6 +36,12 @@
 #endif
 #define _LIBCPP_HAS_NO_INT128
 #define _LIBCPP_FREESTANDING
+#define _LIBCPP_HAS_NO_THREAD_CONTENTION_TABLE
+#define _LIBCPP_HAS_NO_PLATFORM_WAIT
+#define _LIBCPP_HAS_CLOCK_API_EXTERNAL
+#ifndef _LIBCUDACXX_HAS_TREE_BARRIER
+    #define _LIBCPP_HAS_NO_BARRIER_BUTTERFLY
+#endif
 #ifdef __CUDACC_RTC__
     #define __ELF__
     #define _LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER

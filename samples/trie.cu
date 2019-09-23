@@ -74,10 +74,11 @@ void make_trie(/* trie to insert word counts into */ trie& root,
         }
         if(n->next[index].ptr.load(simt::memory_order_acquire) == nullptr) {
             if(n->next[index].flag.test_and_set(simt::std::memory_order_relaxed))
-                while(n->next[index].ptr.load(simt::std::memory_order_acquire) == nullptr);
+		n->next[index].ptr.wait(nullptr, simt::std::memory_order_acquire);
             else {
                 auto next = bump.fetch_add(1, simt::std::memory_order_relaxed);
                 n->next[index].ptr.store(next, simt::std::memory_order_release);
+		n->next[index].ptr.notify_all();
             } 
         } 
         n = n->next[index].ptr.load(simt::std::memory_order_relaxed);

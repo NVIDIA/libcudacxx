@@ -209,7 +209,7 @@ __host__ __device__ inline void __cxx_atomic_store(__cxx_atomic_base_impl_defaul
 #endif
 }
 template<class _Tp, int _Sco>
-__host__ __device__ inline _Tp __cxx_atomic_load(__cxx_atomic_base_impl_default<_Tp, _Sco> volatile* __a, int __order) {
+__host__ __device__ inline _Tp __cxx_atomic_load(__cxx_atomic_base_impl_default<_Tp, _Sco> const volatile* __a, int __order) {
 #ifdef __CUDA_ARCH__
     return __cxx_atomic_alignment_unwrap(detail::__atomic_load_n_cuda(&__a->__a_value, __order, detail::__scope_tag<_Sco>()));
 #else
@@ -345,7 +345,7 @@ __host__ __device__ inline void __cxx_atomic_store(__cxx_atomic_base_impl_small<
     __cxx_atomic_store(&__a->__a_value, __cxx_small_to_32(__val), __order);
 }
 template<class _Tp, int _Sco>
-__host__ __device__ inline _Tp __cxx_atomic_load(__cxx_atomic_base_impl_small<_Tp, _Sco> volatile* __a, int __order) {
+__host__ __device__ inline _Tp __cxx_atomic_load(__cxx_atomic_base_impl_small<_Tp, _Sco> const volatile* __a, int __order) {
     return __cxx_small_from_32<_Tp>(__cxx_atomic_load(&__a->__a_value, __order));
 }
 template<class _Tp, int _Sco>
@@ -373,11 +373,12 @@ __host__ __device__ inline bool __cxx_atomic_compare_exchange_weak(__cxx_atomic_
     auto __temp = __cxx_small_to_32(*__expected);
     auto const __ret = __cxx_atomic_compare_exchange_weak(&__a->__a_value, &__temp, __cxx_small_to_32(__value), __success, __failure);
     auto const __actual = __cxx_small_from_32<_Tp>(__temp);
-    if(!__ret)
+    if(!__ret) {
         if(0 == __cuda_memcmp(&__actual, __expected, sizeof(_Tp)))
             __cxx_atomic_fetch_and(&__a->__a_value, (1u << (8*sizeof(_Tp))) - 1, __ATOMIC_RELAXED);
         else
             *__expected = __actual;
+    }
     return __ret;
 }
 template<class _Tp, int _Sco>
