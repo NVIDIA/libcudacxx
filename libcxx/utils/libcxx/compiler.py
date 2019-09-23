@@ -89,7 +89,7 @@ class CXXCompiler(object):
               major_ver = macros['__CUDACC_VER_MAJOR__']
               minor_ver = macros['__CUDACC_VER_MINOR__']
               patchlevel = macros['__CUDACC_VER_BUILD__']
-              if '__LIBCUDACXX_NVRTC_TEST__' in macro.keys():
+              if '__LIBCUDACXX_NVRTC_TEST__' in macros.keys():
                 self.is_nvrtc = True
           elif '__PGIC__' in macros.keys():
               compiler_type = "pgi"
