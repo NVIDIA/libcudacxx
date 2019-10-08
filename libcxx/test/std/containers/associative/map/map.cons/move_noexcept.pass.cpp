@@ -33,7 +33,7 @@ struct some_comp
 
 int main(int, char**)
 {
-#if defined(_LIBCUDACXX_VERSION)
+#if defined(_LIBCPP_VERSION)
     typedef std::pair<const MoveOnly, MoveOnly> V;
     {
         typedef std::map<MoveOnly, MoveOnly> C;
@@ -47,7 +47,7 @@ int main(int, char**)
         typedef std::map<MoveOnly, MoveOnly, std::less<MoveOnly>, other_allocator<V>> C;
         static_assert(std::is_nothrow_move_constructible<C>::value, "");
     }
-#endif // _LIBCUDACXX_VERSION
+#endif // _LIBCPP_VERSION
     {
         typedef std::map<MoveOnly, MoveOnly, some_comp<MoveOnly>> C;
         static_assert(!std::is_nothrow_move_constructible<C>::value, "");

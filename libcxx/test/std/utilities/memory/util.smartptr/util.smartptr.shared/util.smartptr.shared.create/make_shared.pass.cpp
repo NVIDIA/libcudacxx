@@ -53,7 +53,7 @@ struct Foo
     virtual ~Foo() = default;
 };
 
-#ifdef _LIBCUDACXX_VERSION
+#ifdef _LIBCPP_VERSION
 struct Result {};
 static Result theFunction() { return Result(); }
 static int resultDeletorCount;
@@ -69,9 +69,9 @@ void test_pointer_to_function() {
     }
     assert(resultDeletorCount == 2);
 }
-#else // _LIBCUDACXX_VERSION
+#else // _LIBCPP_VERSION
 void test_pointer_to_function() {}
-#endif // _LIBCUDACXX_VERSION
+#endif // _LIBCPP_VERSION
 
 int main(int, char**)
 {

@@ -6,15 +6,15 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-#ifndef _LIBCUDACXX_EXPERIMENTAL_RATIO
-#define _LIBCUDACXX_EXPERIMENTAL_RATIO
+#ifndef _LIBCPP_EXPERIMENTAL_RATIO
+#define _LIBCPP_EXPERIMENTAL_RATIO
 
 #include <__config>
 
-#ifdef _LIBCUDACXX_WARNING
-_LIBCUDACXX_WARNING("<experimental/ratio> has been removed. Use <ratio> instead.")
+#ifdef _LIBCPP_WARNING
+_LIBCPP_WARNING("<experimental/ratio> has been removed. Use <ratio> instead.")
 #else
 # warning "<experimental/ratio> has been removed. Use <ratio> instead."
 #endif
 
-#endif // _LIBCUDACXX_EXPERIMENTAL_RATIO
+#endif // _LIBCPP_EXPERIMENTAL_RATIO

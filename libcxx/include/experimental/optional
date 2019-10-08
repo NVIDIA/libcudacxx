@@ -6,15 +6,15 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-#ifndef _LIBCUDACXX_EXPERIMENTAL_OPTIONAL
-#define _LIBCUDACXX_EXPERIMENTAL_OPTIONAL
+#ifndef _LIBCPP_EXPERIMENTAL_OPTIONAL
+#define _LIBCPP_EXPERIMENTAL_OPTIONAL
 
 #include <__config>
 
-#ifdef _LIBCUDACXX_WARNING
-_LIBCUDACXX_WARNING("<experimental/optional> has been removed. Use <optional> instead.")
+#ifdef _LIBCPP_WARNING
+_LIBCPP_WARNING("<experimental/optional> has been removed. Use <optional> instead.")
 #else
 # warning "<experimental/optional> has been removed. Use <optional> instead."
 #endif
 
-#endif // _LIBCUDACXX_EXPERIMENTAL_OPTIONAL
+#endif // _LIBCPP_EXPERIMENTAL_OPTIONAL

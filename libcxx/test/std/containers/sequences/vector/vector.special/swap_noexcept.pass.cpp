@@ -59,12 +59,12 @@ int main(int, char**)
         typedef std::vector<MoveOnly> C;
         static_assert(noexcept(swap(std::declval<C&>(), std::declval<C&>())), "");
     }
-#if defined(_LIBCUDACXX_VERSION)
+#if defined(_LIBCPP_VERSION)
     {
         typedef std::vector<MoveOnly, test_allocator<MoveOnly>> C;
         static_assert(noexcept(swap(std::declval<C&>(), std::declval<C&>())), "");
     }
-#endif // _LIBCUDACXX_VERSION
+#endif // _LIBCPP_VERSION
     {
         typedef std::vector<MoveOnly, other_allocator<MoveOnly>> C;
         static_assert(noexcept(swap(std::declval<C&>(), std::declval<C&>())), "");

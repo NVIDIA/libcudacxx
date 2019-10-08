@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCUDACXX_CERRNO
-#define _LIBCUDACXX_CERRNO
+#ifndef _LIBCPP_CERRNO
+#define _LIBCPP_CERRNO
 
 /*
     cerrno synopsis
@@ -25,8 +25,8 @@ Macros:
 #include <__config>
 #include <errno.h>
 
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
-#endif  // _LIBCUDACXX_CERRNO
+#endif  // _LIBCPP_CERRNO

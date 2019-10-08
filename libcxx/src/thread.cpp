@@ -7,7 +7,7 @@
 //===----------------------------------------------------------------------===//
 
 #include "__config"
-#ifndef _LIBCUDACXX_HAS_NO_THREADS
+#ifndef _LIBCPP_HAS_NO_THREADS
 
 #include "thread"
 #include "exception"
@@ -31,11 +31,11 @@
 #pragma weak pthread_create // Do not create libpthread dependency
 #endif
 
-#if defined(_LIBCUDACXX_WIN32API)
+#if defined(_LIBCPP_WIN32API)
 #include <windows.h>
 #endif
 
-_LIBCUDACXX_BEGIN_NAMESPACE_STD
+_LIBCPP_BEGIN_NAMESPACE_STD
 
 thread::~thread()
 {
@@ -51,7 +51,7 @@ thread::join()
     {
         ec = __libcpp_thread_join(&__t_);
         if (ec == 0)
-            __t_ = _LIBCUDACXX_NULL_THREAD;
+            __t_ = _LIBCPP_NULL_THREAD;
     }
 
     if (ec)
@@ -66,7 +66,7 @@ thread::detach()
     {
         ec = __libcpp_thread_detach(&__t_);
         if (ec == 0)
-            __t_ = _LIBCUDACXX_NULL_THREAD;
+            __t_ = _LIBCPP_NULL_THREAD;
     }
 
     if (ec)
@@ -91,15 +91,15 @@ thread::hardware_concurrency() _NOEXCEPT
     if (result < 0)
         return 0;
     return static_cast<unsigned>(result);
-#elif defined(_LIBCUDACXX_WIN32API)
+#elif defined(_LIBCPP_WIN32API)
     SYSTEM_INFO info;
     GetSystemInfo(&info);
     return info.dwNumberOfProcessors;
 #else  // defined(CTL_HW) && defined(HW_NCPU)
     // TODO: grovel through /proc or check cpuid on x86 and similar
     // instructions on other architectures.
-#   if defined(_LIBCUDACXX_WARNING)
-        _LIBCUDACXX_WARNING("hardware_concurrency not yet implemented")
+#   if defined(_LIBCPP_WARNING)
+        _LIBCPP_WARNING("hardware_concurrency not yet implemented")
 #   else
 #       warning hardware_concurrency not yet implemented
 #   endif
@@ -131,7 +131,7 @@ __thread_local_data()
 // __thread_struct_imp
 
 template <class T>
-class _LIBCUDACXX_HIDDEN __hidden_allocator
+class _LIBCPP_HIDDEN __hidden_allocator
 {
 public:
     typedef T  value_type;
@@ -143,7 +143,7 @@ public:
     size_t max_size() const {return size_t(~0) / sizeof(T);}
 };
 
-class _LIBCUDACXX_HIDDEN __thread_struct_imp
+class _LIBCPP_HIDDEN __thread_struct_imp
 {
     typedef vector<__assoc_sub_state*,
                           __hidden_allocator<__assoc_sub_state*> > _AsyncStates;
@@ -216,6 +216,6 @@ __thread_struct::__make_ready_at_thread_exit(__assoc_sub_state* __s)
     __p_->__make_ready_at_thread_exit(__s);
 }
 
-_LIBCUDACXX_END_NAMESPACE_STD
+_LIBCPP_END_NAMESPACE_STD
 
-#endif // !_LIBCUDACXX_HAS_NO_THREADS
+#endif // !_LIBCPP_HAS_NO_THREADS

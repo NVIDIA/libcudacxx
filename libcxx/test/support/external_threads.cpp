@@ -5,5 +5,5 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-#define _LIBCUDACXX_BUILDING_THREAD_LIBRARY_EXTERNAL
+#define _LIBCPP_BUILDING_THREAD_LIBRARY_EXTERNAL
 #include <__threading_support>

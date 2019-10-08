@@ -9,12 +9,12 @@
 #ifndef TEST_SUPPORT_DEBUG_MODE_HELPER_H
 #define TEST_SUPPORT_DEBUG_MODE_HELPER_H
 
-#ifndef _LIBCUDACXX_DEBUG
-#error _LIBCUDACXX_DEBUG must be defined before including this header
+#ifndef _LIBCPP_DEBUG
+#error _LIBCPP_DEBUG must be defined before including this header
 #endif
 
 #include <ciso646>
-#ifndef _LIBCUDACXX_VERSION
+#ifndef _LIBCPP_VERSION
 #error "This header may only be used for libc++ tests"
 #endif
 

@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCUDACXX_CFLOAT
-#define _LIBCUDACXX_CFLOAT
+#ifndef _LIBCPP_CFLOAT
+#define _LIBCPP_CFLOAT
 
 /*
     cfloat synopsis
@@ -74,8 +74,8 @@ Macros:
 #include <float.h>
 #endif //__cuda_std__
 
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
-#endif  // _LIBCUDACXX_CFLOAT
+#endif  // _LIBCPP_CFLOAT

@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCUDACXX_CTIME
-#define _LIBCUDACXX_CTIME
+#ifndef _LIBCPP_CTIME
+#define _LIBCPP_CTIME
 
 /*
     ctime synopsis
@@ -48,34 +48,34 @@ int timespec_get( struct timespec *ts, int base); // C++17
 #include <__config>
 #include <time.h>
 
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
-_LIBCUDACXX_BEGIN_NAMESPACE_STD
+_LIBCPP_BEGIN_NAMESPACE_STD
 
 using ::clock_t;
 using ::size_t;
 using ::time_t;
 using ::tm;
-#if _LIBCUDACXX_STD_VER > 14 && defined(_LIBCUDACXX_HAS_C11_FEATURES)
+#if _LIBCPP_STD_VER > 14 && defined(_LIBCPP_HAS_C11_FEATURES)
 using ::timespec;
 #endif
 using ::clock;
 using ::difftime;
 using ::mktime;
 using ::time;
-#ifndef _LIBCUDACXX_HAS_NO_THREAD_UNSAFE_C_FUNCTIONS
+#ifndef _LIBCPP_HAS_NO_THREAD_UNSAFE_C_FUNCTIONS
 using ::asctime;
 using ::ctime;
 using ::gmtime;
 using ::localtime;
 #endif
 using ::strftime;
-#if _LIBCUDACXX_STD_VER > 14 && defined(_LIBCUDACXX_HAS_TIMESPEC_GET)
+#if _LIBCPP_STD_VER > 14 && defined(_LIBCPP_HAS_TIMESPEC_GET)
 using ::timespec_get;
 #endif
 
-_LIBCUDACXX_END_NAMESPACE_STD
+_LIBCPP_END_NAMESPACE_STD
 
-#endif  // _LIBCUDACXX_CTIME
+#endif  // _LIBCPP_CTIME

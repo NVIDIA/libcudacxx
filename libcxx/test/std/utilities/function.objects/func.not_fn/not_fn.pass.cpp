@@ -310,11 +310,11 @@ void constructor_tests()
         assert(ret() == false);
         auto ret2 = std::not_fn(value2);
         assert(ret2() == true);
-#if defined(_LIBCUDACXX_VERSION)
+#if defined(_LIBCPP_VERSION)
         ret = ret2;
         assert(ret() == true);
         assert(ret2() == true);
-#endif // _LIBCUDACXX_VERSION
+#endif // _LIBCPP_VERSION
     }
     {
         using T = MoveAssignableWrapper;
@@ -329,10 +329,10 @@ void constructor_tests()
         assert(ret() == false);
         auto ret2 = std::not_fn(std::move(value2));
         assert(ret2() == true);
-#if defined(_LIBCUDACXX_VERSION)
+#if defined(_LIBCPP_VERSION)
         ret = std::move(ret2);
         assert(ret() == true);
-#endif // _LIBCUDACXX_VERSION
+#endif // _LIBCPP_VERSION
     }
 }
 
@@ -563,7 +563,7 @@ void call_operator_noexcept_test()
         using T = NoExceptCallable<bool>;
         T value(true);
         auto ret = std::not_fn(value);
-        LIBCPP_STATIC_ASSERT(noexcept(!_CUDA_VSTD::__invoke(value)), "");
+        LIBCPP_STATIC_ASSERT(noexcept(!_VSTD::__invoke(value)), "");
 #if TEST_STD_VER > 14
         static_assert(noexcept(!std::invoke(value)), "");
 #endif

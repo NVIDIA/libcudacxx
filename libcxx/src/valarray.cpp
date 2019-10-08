@@ -8,7 +8,7 @@
 
 #include "valarray"
 
-_LIBCUDACXX_BEGIN_NAMESPACE_STD
+_LIBCPP_BEGIN_NAMESPACE_STD
 
 template valarray<size_t>::valarray(size_t);
 template valarray<size_t>::~valarray();
@@ -50,4 +50,4 @@ gslice::__init(size_t __start)
     }
 }
 
-_LIBCUDACXX_END_NAMESPACE_STD
+_LIBCPP_END_NAMESPACE_STD

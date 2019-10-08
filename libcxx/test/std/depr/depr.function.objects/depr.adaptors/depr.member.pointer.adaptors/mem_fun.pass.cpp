@@ -13,7 +13,7 @@
 //   mem_fun_t<S,T>
 //   mem_fun(S (T::*f)());
 
-#define _LIBCUDACXX_DISABLE_DEPRECATION_WARNINGS
+#define _LIBCPP_DISABLE_DEPRECATION_WARNINGS
 
 #include <functional>
 #include <cassert>

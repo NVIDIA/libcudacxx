@@ -30,7 +30,7 @@ struct some_alloc
 
 int main(int, char**)
 {
-#if defined(_LIBCUDACXX_VERSION)
+#if defined(_LIBCPP_VERSION)
     {
         typedef std::vector<bool> C;
         static_assert(std::is_nothrow_move_constructible<C>::value, "");
@@ -43,14 +43,14 @@ int main(int, char**)
         typedef std::vector<bool, other_allocator<bool>> C;
         static_assert(std::is_nothrow_move_constructible<C>::value, "");
     }
-#endif // _LIBCUDACXX_VERSION
+#endif // _LIBCPP_VERSION
     {
     //  In C++17, move constructors for allocators are not allowed to throw
 #if TEST_STD_VER > 14
-#if defined(_LIBCUDACXX_VERSION)
+#if defined(_LIBCPP_VERSION)
         typedef std::vector<bool, some_alloc<bool>> C;
         static_assert( std::is_nothrow_move_constructible<C>::value, "");
-#endif // _LIBCUDACXX_VERSION
+#endif // _LIBCPP_VERSION
 #else
         typedef std::vector<bool, some_alloc<bool>> C;
         static_assert(!std::is_nothrow_move_constructible<C>::value, "");

@@ -38,7 +38,7 @@ struct TestEachIntegralType {
         TestFunctor<long long>()();
         TestFunctor<unsigned long long>()();
         TestFunctor<wchar_t>();
-#ifndef _LIBCUDACXX_HAS_NO_UNICODE_CHARS
+#ifndef _LIBCPP_HAS_NO_UNICODE_CHARS
         TestFunctor<char16_t>()();
         TestFunctor<char32_t>()();
 #endif

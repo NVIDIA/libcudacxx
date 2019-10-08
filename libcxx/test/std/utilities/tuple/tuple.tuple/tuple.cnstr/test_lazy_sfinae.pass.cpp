@@ -53,7 +53,7 @@ struct AllowAssertT {
 // short circuits before evaluating is_constructible<T2, int>, which
 // will cause a static assertion.
 void test_tuple_like_lazy_sfinae() {
-#if defined(_LIBCUDACXX_VERSION)
+#if defined(_LIBCPP_VERSION)
     // This test requires libc++'s reduced arity initialization.
     using T1 = ConstructibleFromT<std::pair<int, int>>;
     using T2 = CtorAssertsT<int>;

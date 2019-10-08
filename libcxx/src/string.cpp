@@ -14,12 +14,12 @@
 #include "stdexcept"
 #include <stdio.h>
 
-_LIBCUDACXX_BEGIN_NAMESPACE_STD
+_LIBCPP_BEGIN_NAMESPACE_STD
 
-template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS __basic_string_common<true>;
+template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS __basic_string_common<true>;
 
-template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS basic_string<char>;
-template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS basic_string<wchar_t>;
+template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS basic_string<char>;
+template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS basic_string<wchar_t>;
 
 template
     string
@@ -32,11 +32,11 @@ template<typename T>
 inline
 void throw_helper( const string& msg )
 {
-#ifndef _LIBCUDACXX_NO_EXCEPTIONS
+#ifndef _LIBCPP_NO_EXCEPTIONS
     throw T( msg );
 #else
     fprintf(stderr, "%s\n", msg.c_str());
-    _CUDA_VSTD::abort();
+    _VSTD::abort();
 #endif
 }
 
@@ -423,7 +423,7 @@ inline
 wide_printf
 get_swprintf()
 {
-#ifndef _LIBCUDACXX_MSVCRT
+#ifndef _LIBCPP_MSVCRT
     return swprintf;
 #else
     return static_cast<int (__cdecl*)(wchar_t* __restrict, size_t, const wchar_t*__restrict, ...)>(_snwprintf);
@@ -521,4 +521,4 @@ wstring to_wstring(long double val)
 {
     return as_string(get_swprintf(), initial_string<wstring, long double>()(), L"%Lf", val);
 }
-_LIBCUDACXX_END_NAMESPACE_STD
+_LIBCPP_END_NAMESPACE_STD

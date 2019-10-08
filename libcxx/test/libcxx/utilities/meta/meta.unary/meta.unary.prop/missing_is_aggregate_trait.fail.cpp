@@ -17,8 +17,8 @@
 
 int main(int, char**)
 {
-#ifdef _LIBCUDACXX_HAS_NO_IS_AGGREGATE
-  // This should not compile when _LIBCUDACXX_HAS_NO_IS_AGGREGATE is defined.
+#ifdef _LIBCPP_HAS_NO_IS_AGGREGATE
+  // This should not compile when _LIBCPP_HAS_NO_IS_AGGREGATE is defined.
   bool b = __is_aggregate(void);
   ((void)b);
 #else

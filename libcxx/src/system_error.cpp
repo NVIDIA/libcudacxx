@@ -23,11 +23,11 @@
 #include <android/api-level.h>
 #endif
 
-_LIBCUDACXX_BEGIN_NAMESPACE_STD
+_LIBCPP_BEGIN_NAMESPACE_STD
 
 // class error_category
 
-#if defined(_LIBCUDACXX_DEPRECATED_ABI_LEGACY_LIBRARY_DEFINITIONS_FOR_INLINE_FUNCTIONS)
+#if defined(_LIBCPP_DEPRECATED_ABI_LEGACY_LIBRARY_DEFINITIONS_FOR_INLINE_FUNCTIONS)
 error_category::error_category() _NOEXCEPT
 {
 }
@@ -55,7 +55,7 @@ error_category::equivalent(const error_code& code, int condition) const _NOEXCEP
     return *this == code.category() && code.value() == condition;
 }
 
-#if !defined(_LIBCUDACXX_HAS_NO_THREADS)
+#if !defined(_LIBCPP_HAS_NO_THREADS)
 namespace {
 
 //  GLIBC also uses 1024 as the maximum buffer size internally.
@@ -63,7 +63,7 @@ constexpr size_t strerror_buff_size = 1024;
 
 string do_strerror_r(int ev);
 
-#if defined(_LIBCUDACXX_MSVCRT_LIKE)
+#if defined(_LIBCPP_MSVCRT_LIKE)
 string do_strerror_r(int ev) {
   char buffer[strerror_buff_size];
   if (::strerror_s(buffer, strerror_buff_size, ev) == 0)
@@ -100,7 +100,7 @@ handle_strerror_r_return(int strerror_return, char *buffer) {
   if (new_errno == EINVAL)
     return "";
 
-  _LIBCUDACXX_ASSERT(new_errno == ERANGE, "unexpected error from ::strerror_r");
+  _LIBCPP_ASSERT(new_errno == ERANGE, "unexpected error from ::strerror_r");
   // FIXME maybe? 'strerror_buff_size' is likely to exceed the
   // maximum error size so ERANGE shouldn't be returned.
   std::abort();
@@ -130,14 +130,14 @@ string do_strerror_r(int ev) {
 string
 __do_message::message(int ev) const
 {
-#if defined(_LIBCUDACXX_HAS_NO_THREADS)
+#if defined(_LIBCPP_HAS_NO_THREADS)
     return string(::strerror(ev));
 #else
     return do_strerror_r(ev);
 #endif
 }
 
-class _LIBCUDACXX_HIDDEN __generic_error_category
+class _LIBCPP_HIDDEN __generic_error_category
     : public __do_message
 {
 public:
@@ -154,10 +154,10 @@ __generic_error_category::name() const _NOEXCEPT
 string
 __generic_error_category::message(int ev) const
 {
-#ifdef _LIBCUDACXX_ELAST
-    if (ev > _LIBCUDACXX_ELAST)
+#ifdef _LIBCPP_ELAST
+    if (ev > _LIBCPP_ELAST)
       return string("unspecified generic_category error");
-#endif  // _LIBCUDACXX_ELAST
+#endif  // _LIBCPP_ELAST
     return __do_message::message(ev);
 }
 
@@ -168,7 +168,7 @@ generic_category() _NOEXCEPT
     return s;
 }
 
-class _LIBCUDACXX_HIDDEN __system_error_category
+class _LIBCPP_HIDDEN __system_error_category
     : public __do_message
 {
 public:
@@ -186,20 +186,20 @@ __system_error_category::name() const _NOEXCEPT
 string
 __system_error_category::message(int ev) const
 {
-#ifdef _LIBCUDACXX_ELAST
-    if (ev > _LIBCUDACXX_ELAST)
+#ifdef _LIBCPP_ELAST
+    if (ev > _LIBCPP_ELAST)
       return string("unspecified system_category error");
-#endif  // _LIBCUDACXX_ELAST
+#endif  // _LIBCPP_ELAST
     return __do_message::message(ev);
 }
 
 error_condition
 __system_error_category::default_error_condition(int ev) const _NOEXCEPT
 {
-#ifdef _LIBCUDACXX_ELAST
-    if (ev > _LIBCUDACXX_ELAST)
+#ifdef _LIBCPP_ELAST
+    if (ev > _LIBCPP_ELAST)
       return error_condition(ev, system_category());
-#endif  // _LIBCUDACXX_ELAST
+#endif  // _LIBCPP_ELAST
     return error_condition(ev, generic_category());
 }
 
@@ -283,13 +283,13 @@ system_error::~system_error() _NOEXCEPT
 void
 __throw_system_error(int ev, const char* what_arg)
 {
-#ifndef _LIBCUDACXX_NO_EXCEPTIONS
+#ifndef _LIBCPP_NO_EXCEPTIONS
     throw system_error(error_code(ev, system_category()), what_arg);
 #else
     (void)ev;
     (void)what_arg;
-    _CUDA_VSTD::abort();
+    _VSTD::abort();
 #endif
 }
 
-_LIBCUDACXX_END_NAMESPACE_STD
+_LIBCPP_END_NAMESPACE_STD

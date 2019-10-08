@@ -149,7 +149,7 @@ TEST_CASE(pop_does_not_reset_value)
     // to call recursion_pending().
     if (it == endIt) {
         TEST_CHECK(notSeenDepth0.empty());
-#if defined(_LIBCUDACXX_VERSION)
+#if defined(_LIBCPP_VERSION)
         TEST_CHECK(it.recursion_pending() == false);
 #endif
     } else {

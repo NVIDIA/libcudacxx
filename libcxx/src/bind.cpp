@@ -8,7 +8,7 @@
 
 #include "functional"
 
-_LIBCUDACXX_BEGIN_NAMESPACE_STD
+_LIBCPP_BEGIN_NAMESPACE_STD
 
 namespace placeholders
 {
@@ -26,4 +26,4 @@ const __ph<10> _10{};
 
 }  // placeholders
 
-_LIBCUDACXX_END_NAMESPACE_STD
+_LIBCPP_END_NAMESPACE_STD

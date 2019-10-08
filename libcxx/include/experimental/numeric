@@ -6,15 +6,15 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-#ifndef _LIBCUDACXX_EXPERIMENTAL_NUMERIC
-#define _LIBCUDACXX_EXPERIMENTAL_NUMERIC
+#ifndef _LIBCPP_EXPERIMENTAL_NUMERIC
+#define _LIBCPP_EXPERIMENTAL_NUMERIC
 
 #include <__config>
 
-#ifdef _LIBCUDACXX_WARNING
-_LIBCUDACXX_WARNING("<experimental/numeric> has been removed. Use <numeric> instead.")
+#ifdef _LIBCPP_WARNING
+_LIBCPP_WARNING("<experimental/numeric> has been removed. Use <numeric> instead.")
 #else
 # warning "<experimental/numeric> has been removed. Use <numeric> instead."
 #endif
 
-#endif // _LIBCUDACXX_EXPERIMENTAL_NUMERIC
+#endif // _LIBCPP_EXPERIMENTAL_NUMERIC

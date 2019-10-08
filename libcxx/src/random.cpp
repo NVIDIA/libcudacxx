@@ -8,10 +8,10 @@
 
 #include <__config>
 
-#if defined(_LIBCUDACXX_USING_WIN32_RANDOM)
+#if defined(_LIBCPP_USING_WIN32_RANDOM)
 // Must be defined before including stdlib.h to enable rand_s().
 #define _CRT_RAND_S
-#endif // defined(_LIBCUDACXX_USING_WIN32_RANDOM)
+#endif // defined(_LIBCPP_USING_WIN32_RANDOM)
 
 #include "random"
 #include "system_error"
@@ -24,19 +24,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#if defined(_LIBCUDACXX_USING_GETENTROPY)
+#if defined(_LIBCPP_USING_GETENTROPY)
 #include <sys/random.h>
-#elif defined(_LIBCUDACXX_USING_DEV_RANDOM)
+#elif defined(_LIBCPP_USING_DEV_RANDOM)
 #include <fcntl.h>
 #include <unistd.h>
-#elif defined(_LIBCUDACXX_USING_NACL_RANDOM)
+#elif defined(_LIBCPP_USING_NACL_RANDOM)
 #include <nacl/nacl_random.h>
 #endif
 
 
-_LIBCUDACXX_BEGIN_NAMESPACE_STD
+_LIBCPP_BEGIN_NAMESPACE_STD
 
-#if defined(_LIBCUDACXX_USING_GETENTROPY)
+#if defined(_LIBCPP_USING_GETENTROPY)
 
 random_device::random_device(const string& __token)
 {
@@ -59,7 +59,7 @@ random_device::operator()()
     return r;
 }
 
-#elif defined(_LIBCUDACXX_USING_ARC4_RANDOM)
+#elif defined(_LIBCPP_USING_ARC4_RANDOM)
 
 random_device::random_device(const string& __token)
 {
@@ -77,7 +77,7 @@ random_device::operator()()
     return arc4random();
 }
 
-#elif defined(_LIBCUDACXX_USING_DEV_RANDOM)
+#elif defined(_LIBCPP_USING_DEV_RANDOM)
 
 random_device::random_device(const string& __token)
     : __f_(open(__token.c_str(), O_RDONLY))
@@ -114,7 +114,7 @@ random_device::operator()()
     return r;
 }
 
-#elif defined(_LIBCUDACXX_USING_NACL_RANDOM)
+#elif defined(_LIBCPP_USING_NACL_RANDOM)
 
 random_device::random_device(const string& __token)
 {
@@ -143,7 +143,7 @@ random_device::operator()()
     return r;
 }
 
-#elif defined(_LIBCUDACXX_USING_WIN32_RANDOM)
+#elif defined(_LIBCPP_USING_WIN32_RANDOM)
 
 random_device::random_device(const string& __token)
 {
@@ -175,4 +175,4 @@ random_device::entropy() const _NOEXCEPT
     return 0;
 }
 
-_LIBCUDACXX_END_NAMESPACE_STD
+_LIBCPP_END_NAMESPACE_STD

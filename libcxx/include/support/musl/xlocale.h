@@ -14,8 +14,8 @@
 // in Musl.
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCUDACXX_SUPPORT_MUSL_XLOCALE_H
-#define _LIBCUDACXX_SUPPORT_MUSL_XLOCALE_H
+#ifndef _LIBCPP_SUPPORT_MUSL_XLOCALE_H
+#define _LIBCPP_SUPPORT_MUSL_XLOCALE_H
 
 #include <cstdlib>
 #include <cwchar>
@@ -54,4 +54,4 @@ static inline long double wcstold_l(const wchar_t *nptr, wchar_t **endptr,
 }
 #endif
 
-#endif // _LIBCUDACXX_SUPPORT_MUSL_XLOCALE_H
+#endif // _LIBCPP_SUPPORT_MUSL_XLOCALE_H

@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCUDACXX___ERRC
-#define _LIBCUDACXX___ERRC
+#ifndef _LIBCPP___ERRC
+#define _LIBCPP___ERRC
 
 /*
     system_error synopsis
@@ -103,17 +103,17 @@ enum class errc
 #include <__config>
 #include <cerrno>
 
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
-_LIBCUDACXX_BEGIN_NAMESPACE_STD
+_LIBCPP_BEGIN_NAMESPACE_STD
 
 // Some error codes are not present on all platforms, so we provide equivalents
 // for them:
 
 //enum class errc
-_LIBCUDACXX_DECLARE_STRONG_ENUM(errc)
+_LIBCPP_DECLARE_STRONG_ENUM(errc)
 {
     address_family_not_supported        = EAFNOSUPPORT,
     address_in_use                      = EADDRINUSE,
@@ -210,8 +210,8 @@ _LIBCUDACXX_DECLARE_STRONG_ENUM(errc)
     value_too_large                     = EOVERFLOW,
     wrong_protocol_type                 = EPROTOTYPE
 };
-_LIBCUDACXX_DECLARE_STRONG_ENUM_EPILOG(errc)
+_LIBCPP_DECLARE_STRONG_ENUM_EPILOG(errc)
 
-_LIBCUDACXX_END_NAMESPACE_STD
+_LIBCPP_END_NAMESPACE_STD
 
-#endif  // _LIBCUDACXX___ERRC
+#endif  // _LIBCPP___ERRC

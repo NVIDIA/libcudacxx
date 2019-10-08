@@ -23,7 +23,7 @@
 #include <crtdbg.h>
 #include <stdlib.h>
 
-#if defined(_LIBCUDACXX_VERSION)
+#if defined(_LIBCPP_VERSION)
     #error This header may not be used when targeting libc++
 #endif
 
@@ -63,10 +63,10 @@ const AssertionDialogAvoider assertion_dialog_avoider{};
 #endif // !defined(__clang__)
 
 // MSVC doesn't have __int128_t.
-#define _LIBCUDACXX_HAS_NO_INT128
+#define _LIBCPP_HAS_NO_INT128
 
 // MSVC has quick_exit() and at_quick_exit().
-#define _LIBCUDACXX_HAS_QUICK_EXIT
+#define _LIBCPP_HAS_QUICK_EXIT
 
 #ifndef _LIBCXX_IN_DEVCRT
     // atomic_is_lock_free.pass.cpp needs this VS 2015 Update 2 fix.
@@ -86,6 +86,6 @@ const AssertionDialogAvoider assertion_dialog_avoider{};
     #define TEST_STD_VER 14
 #endif
 
-#define _LIBCUDACXX_AVAILABILITY_THROW_BAD_ANY_CAST
+#define _LIBCPP_AVAILABILITY_THROW_BAD_ANY_CAST
 
 #endif // SUPPORT_MSVC_STDLIB_FORCE_INCLUDE_HPP

@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCUDACXX_CISO646
-#define _LIBCUDACXX_CISO646
+#ifndef _LIBCPP_CISO646
+#define _LIBCPP_CISO646
 
 /*
     ciso646 synopsis
@@ -19,8 +19,8 @@
 #include <__config>
 #endif //__cuda_std__
 
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
-#endif  // _LIBCUDACXX_CISO646
+#endif  // _LIBCPP_CISO646

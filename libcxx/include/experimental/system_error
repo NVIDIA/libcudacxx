@@ -6,15 +6,15 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-#ifndef _LIBCUDACXX_EXPERIMENTAL_SYSTEM_ERROR
-#define _LIBCUDACXX_EXPERIMENTAL_SYSTEM_ERROR
+#ifndef _LIBCPP_EXPERIMENTAL_SYSTEM_ERROR
+#define _LIBCPP_EXPERIMENTAL_SYSTEM_ERROR
 
 #include <__config>
 
-#ifdef _LIBCUDACXX_WARNING
-_LIBCUDACXX_WARNING("<experimental/system_error> has been removed. Use <system_error> instead.")
+#ifdef _LIBCPP_WARNING
+_LIBCPP_WARNING("<experimental/system_error> has been removed. Use <system_error> instead.")
 #else
 # warning "<experimental/system_error> has been removed. Use <system_error> instead."
 #endif
 
-#endif // _LIBCUDACXX_EXPERIMENTAL_SYSTEM_ERROR
+#endif // _LIBCPP_EXPERIMENTAL_SYSTEM_ERROR

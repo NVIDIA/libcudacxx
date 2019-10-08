@@ -50,14 +50,14 @@
 #   error "__cpp_lib_gcd_lcm should have the value 201606L in c++17"
 # endif
 
-# if !defined(_LIBCUDACXX_VERSION)
+# if !defined(_LIBCPP_VERSION)
 #   ifndef __cpp_lib_parallel_algorithm
 #     error "__cpp_lib_parallel_algorithm should be defined in c++17"
 #   endif
 #   if __cpp_lib_parallel_algorithm != 201603L
 #     error "__cpp_lib_parallel_algorithm should have the value 201603L in c++17"
 #   endif
-# else // _LIBCUDACXX_VERSION
+# else // _LIBCPP_VERSION
 #   ifdef __cpp_lib_parallel_algorithm
 #     error "__cpp_lib_parallel_algorithm should not be defined because it is unimplemented in libc++!"
 #   endif
@@ -72,14 +72,14 @@
 #   error "__cpp_lib_gcd_lcm should have the value 201606L in c++2a"
 # endif
 
-# if !defined(_LIBCUDACXX_VERSION)
+# if !defined(_LIBCPP_VERSION)
 #   ifndef __cpp_lib_parallel_algorithm
 #     error "__cpp_lib_parallel_algorithm should be defined in c++2a"
 #   endif
 #   if __cpp_lib_parallel_algorithm != 201603L
 #     error "__cpp_lib_parallel_algorithm should have the value 201603L in c++2a"
 #   endif
-# else // _LIBCUDACXX_VERSION
+# else // _LIBCPP_VERSION
 #   ifdef __cpp_lib_parallel_algorithm
 #     error "__cpp_lib_parallel_algorithm should not be defined because it is unimplemented in libc++!"
 #   endif

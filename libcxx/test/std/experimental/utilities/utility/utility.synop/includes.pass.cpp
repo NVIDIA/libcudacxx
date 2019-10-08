@@ -10,7 +10,7 @@
 
 #include <experimental/utility>
 
-#ifndef _LIBCUDACXX_UTILITY
+#ifndef _LIBCPP_UTILITY
 #   error "<experimental/utility> must include <utility>"
 #endif
 

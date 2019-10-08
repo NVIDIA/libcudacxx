@@ -12,8 +12,8 @@
 
 #include <experimental/deque>
 
-#ifndef _LIBCUDACXX_VERSION
-#error header must provide _LIBCUDACXX_VERSION
+#ifndef _LIBCPP_VERSION
+#error header must provide _LIBCPP_VERSION
 #endif
 
 int main(int, char**)

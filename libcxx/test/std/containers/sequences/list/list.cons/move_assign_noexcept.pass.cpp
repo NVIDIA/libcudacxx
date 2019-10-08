@@ -41,7 +41,7 @@ int main(int, char**)
         typedef std::list<MoveOnly, test_allocator<MoveOnly>> C;
         static_assert(!std::is_nothrow_move_assignable<C>::value, "");
     }
-#if defined(_LIBCUDACXX_VERSION)
+#if defined(_LIBCPP_VERSION)
     {
         typedef std::list<MoveOnly, other_allocator<MoveOnly>> C;
         static_assert(std::is_nothrow_move_assignable<C>::value, "");
@@ -50,7 +50,7 @@ int main(int, char**)
         typedef std::list<MoveOnly, some_alloc<MoveOnly>> C;
         static_assert(!std::is_nothrow_move_assignable<C>::value, "");
     }
-#endif // _LIBCUDACXX_VERSION
+#endif // _LIBCPP_VERSION
 
   return 0;
 }

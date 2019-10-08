@@ -11,7 +11,7 @@ To support both cases, libc++ allows specifying the ABI version at the
 build time.  The version is defined with a cmake option
 LIBCXX_ABI_VERSION. Another option LIBCXX_ABI_UNSTABLE can be used to
 include all present ABI breaking features. These options translate
-into C++ macro definitions _LIBCUDACXX_ABI_VERSION, _LIBCUDACXX_ABI_UNSTABLE.
+into C++ macro definitions _LIBCPP_ABI_VERSION, _LIBCPP_ABI_UNSTABLE.
 
-Any ABI-changing feature is placed under it's own macro, _LIBCUDACXX_ABI_XXX, which is enabled
-based on the value of _LIBCUDACXX_ABI_VERSION. _LIBCUDACXX_ABI_UNSTABLE, if set, enables all features at once.
+Any ABI-changing feature is placed under it's own macro, _LIBCPP_ABI_XXX, which is enabled
+based on the value of _LIBCPP_ABI_VERSION. _LIBCPP_ABI_UNSTABLE, if set, enables all features at once.

@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCUDACXX_CINTTYPES
-#define _LIBCUDACXX_CINTTYPES
+#ifndef _LIBCPP_CINTTYPES
+#define _LIBCPP_CINTTYPES
 
 /*
     cinttypes synopsis
@@ -238,11 +238,11 @@ uintmax_t wcstoumax(const wchar_t* restrict nptr, wchar_t** restrict endptr, int
 #include <cstdint>
 #include <inttypes.h>
 
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
-_LIBCUDACXX_BEGIN_NAMESPACE_STD
+_LIBCPP_BEGIN_NAMESPACE_STD
 
 using::imaxdiv_t;
 using::imaxabs;
@@ -252,6 +252,6 @@ using::strtoumax;
 using::wcstoimax;
 using::wcstoumax;
 
-_LIBCUDACXX_END_NAMESPACE_STD
+_LIBCPP_END_NAMESPACE_STD
 
-#endif  // _LIBCUDACXX_CINTTYPES
+#endif  // _LIBCPP_CINTTYPES

@@ -28,7 +28,7 @@
 // We can use the presence of UTIME_OMIT to detect platforms that provide
 // utimensat.
 #if defined(UTIME_OMIT)
-#define _LIBCUDACXX_USE_UTIMENSAT
+#define _LIBCPP_USE_UTIMENSAT
 #endif
 #endif
 
@@ -37,7 +37,7 @@
 #pragma GCC diagnostic ignored "-Wunused-function"
 #endif
 
-_LIBCUDACXX_BEGIN_NAMESPACE_FILESYSTEM
+_LIBCPP_BEGIN_NAMESPACE_FILESYSTEM
 
 namespace detail {
 namespace {
@@ -88,7 +88,7 @@ static string format_string_imp(const char* msg, ...) {
   size_with_null = static_cast<size_t>(ret) + 1;
   result.__resize_default_init(size_with_null - 1);
   ret = ::vsnprintf(&result[0], size_with_null, msg, args);
-  _LIBCUDACXX_ASSERT(static_cast<size_t>(ret) == (size_with_null - 1), "TODO");
+  _LIBCPP_ASSERT(static_cast<size_t>(ret) == (size_with_null - 1), "TODO");
 
   return result;
 }
@@ -107,14 +107,14 @@ string format_string(const char* fmt, Args const&... args) {
 }
 
 error_code capture_errno() {
-  _LIBCUDACXX_ASSERT(errno, "Expected errno to be non-zero");
+  _LIBCPP_ASSERT(errno, "Expected errno to be non-zero");
   return error_code(errno, generic_category());
 }
 
 template <class T>
 T error_value();
 template <>
-_LIBCUDACXX_CONSTEXPR_AFTER_CXX11 void error_value<void>() {}
+_LIBCPP_CONSTEXPR_AFTER_CXX11 void error_value<void>() {}
 template <>
 bool error_value<bool>() {
   return false;
@@ -124,7 +124,7 @@ uintmax_t error_value<uintmax_t>() {
   return uintmax_t(-1);
 }
 template <>
-_LIBCUDACXX_CONSTEXPR_AFTER_CXX11 file_time_type error_value<file_time_type>() {
+_LIBCPP_CONSTEXPR_AFTER_CXX11 file_time_type error_value<file_time_type>() {
   return file_time_type::min();
 }
 template <>
@@ -160,7 +160,7 @@ struct ErrorHandler {
     case 2:
       __throw_filesystem_error(what, *p1, *p2, m_ec);
     }
-    _LIBCUDACXX_UNREACHABLE();
+    _LIBCPP_UNREACHABLE();
   }
 
   template <class... Args>
@@ -179,7 +179,7 @@ struct ErrorHandler {
     case 2:
       __throw_filesystem_error(what, *p1, *p2, m_ec);
     }
-    _LIBCUDACXX_UNREACHABLE();
+    _LIBCPP_UNREACHABLE();
   }
 
   T report(errc const& err) const { return report(make_error_code(err)); }
@@ -227,7 +227,7 @@ struct time_util_base {
           .count();
 
 private:
-#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_CXX14_CONSTEXPR)
+#if _LIBCPP_STD_VER > 11 && !defined(_LIBCPP_HAS_NO_CXX14_CONSTEXPR)
   static constexpr fs_duration get_min_nsecs() {
     return duration_cast<fs_duration>(
         fs_nanoseconds(min_nsec_timespec) -
@@ -305,7 +305,7 @@ struct time_util : time_util_base<FileTimeT, TimeT> {
 
 public:
   template <class CType, class ChronoType>
-  static _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 bool checked_set(CType* out,
+  static _LIBCPP_CONSTEXPR_AFTER_CXX11 bool checked_set(CType* out,
                                                         ChronoType time) {
     using Lim = numeric_limits<CType>;
     if (time > Lim::max() || time < Lim::min())
@@ -314,7 +314,7 @@ public:
     return true;
   }
 
-  static _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 bool is_representable(TimeSpecT tm) {
+  static _LIBCPP_CONSTEXPR_AFTER_CXX11 bool is_representable(TimeSpecT tm) {
     if (tm.tv_sec >= 0) {
       return tm.tv_sec < max_seconds ||
              (tm.tv_sec == max_seconds && tm.tv_nsec <= max_nsec);
@@ -325,7 +325,7 @@ public:
     }
   }
 
-  static _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 bool is_representable(FileTimeT tm) {
+  static _LIBCPP_CONSTEXPR_AFTER_CXX11 bool is_representable(FileTimeT tm) {
     auto secs = duration_cast<fs_seconds>(tm.time_since_epoch());
     auto nsecs = duration_cast<fs_nanoseconds>(tm.time_since_epoch() - secs);
     if (nsecs.count() < 0) {
@@ -338,7 +338,7 @@ public:
     return secs.count() >= TLim::min();
   }
 
-  static _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 FileTimeT
+  static _LIBCPP_CONSTEXPR_AFTER_CXX11 FileTimeT
   convert_from_timespec(TimeSpecT tm) {
     if (tm.tv_sec >= 0 || tm.tv_nsec == 0) {
       return FileTimeT(fs_seconds(tm.tv_sec) +
@@ -352,7 +352,7 @@ public:
   }
 
   template <class SubSecT>
-  static _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 bool
+  static _LIBCPP_CONSTEXPR_AFTER_CXX11 bool
   set_times_checked(TimeT* sec_out, SubSecT* subsec_out, FileTimeT tp) {
     auto dur = tp.time_since_epoch();
     auto sec_dur = duration_cast<fs_seconds>(dur);
@@ -369,7 +369,7 @@ public:
     return checked_set(sec_out, sec_dur.count()) &&
            checked_set(subsec_out, subsec_dur.count());
   }
-  static _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 bool convert_to_timespec(TimeSpecT& dest,
+  static _LIBCPP_CONSTEXPR_AFTER_CXX11 bool convert_to_timespec(TimeSpecT& dest,
                                                                 FileTimeT tp) {
     if (!is_representable(tp))
       return false;
@@ -407,7 +407,7 @@ bool posix_utimes(const path& p, std::array<TimeSpec, 2> const& TS,
   return false;
 }
 
-#if defined(_LIBCUDACXX_USE_UTIMENSAT)
+#if defined(_LIBCPP_USE_UTIMENSAT)
 bool posix_utimensat(const path& p, std::array<TimeSpec, 2> const& TS,
                      error_code& ec) {
   if (::utimensat(AT_FDCWD, p.c_str(), TS.data(), 0) == -1) {
@@ -420,7 +420,7 @@ bool posix_utimensat(const path& p, std::array<TimeSpec, 2> const& TS,
 
 bool set_file_times(const path& p, std::array<TimeSpec, 2> const& TS,
                     error_code& ec) {
-#if !defined(_LIBCUDACXX_USE_UTIMENSAT)
+#if !defined(_LIBCPP_USE_UTIMENSAT)
   return posix_utimes(p, TS, ec);
 #else
   return posix_utimensat(p, TS, ec);
@@ -430,6 +430,6 @@ bool set_file_times(const path& p, std::array<TimeSpec, 2> const& TS,
 } // namespace
 } // end namespace detail
 
-_LIBCUDACXX_END_NAMESPACE_FILESYSTEM
+_LIBCPP_END_NAMESPACE_FILESYSTEM
 
 #endif // FILESYSTEM_COMMON_H

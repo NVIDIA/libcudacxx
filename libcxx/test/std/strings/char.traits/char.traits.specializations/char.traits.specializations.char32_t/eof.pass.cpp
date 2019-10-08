@@ -17,7 +17,7 @@
 
 int main(int, char**)
 {
-#ifndef _LIBCUDACXX_HAS_NO_UNICODE_CHARS
+#ifndef _LIBCPP_HAS_NO_UNICODE_CHARS
     std::char_traits<char32_t>::int_type i = std::char_traits<char32_t>::eof();
     ((void)i); // Prevent unused warning
 #endif

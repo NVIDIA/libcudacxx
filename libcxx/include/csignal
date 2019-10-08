@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCUDACXX_CSIGNAL
-#define _LIBCUDACXX_CSIGNAL
+#ifndef _LIBCPP_CSIGNAL
+#define _LIBCPP_CSIGNAL
 
 /*
     csignal synopsis
@@ -42,16 +42,16 @@ int raise(int sig);
 #include <__config>
 #include <signal.h>
 
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
-_LIBCUDACXX_BEGIN_NAMESPACE_STD
+_LIBCPP_BEGIN_NAMESPACE_STD
 
 using ::sig_atomic_t;
 using ::signal;
 using ::raise;
 
-_LIBCUDACXX_END_NAMESPACE_STD
+_LIBCPP_END_NAMESPACE_STD
 
-#endif  // _LIBCUDACXX_CSIGNAL
+#endif  // _LIBCPP_CSIGNAL

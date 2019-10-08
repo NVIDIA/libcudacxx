@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCUDACXX_CCTYPE
-#define _LIBCUDACXX_CCTYPE
+#ifndef _LIBCPP_CCTYPE
+#define _LIBCPP_CCTYPE
 
 /*
     cctype synopsis
@@ -37,11 +37,11 @@ int toupper(int c);
 #include <__config>
 #include <ctype.h>
 
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
-_LIBCUDACXX_BEGIN_NAMESPACE_STD
+_LIBCPP_BEGIN_NAMESPACE_STD
 
 #ifdef isalnum
 #undef isalnum
@@ -115,6 +115,6 @@ using ::isxdigit;
 using ::tolower;
 using ::toupper;
 
-_LIBCUDACXX_END_NAMESPACE_STD
+_LIBCPP_END_NAMESPACE_STD
 
-#endif  // _LIBCUDACXX_CCTYPE
+#endif  // _LIBCPP_CCTYPE

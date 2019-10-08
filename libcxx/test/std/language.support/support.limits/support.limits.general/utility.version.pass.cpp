@@ -113,14 +113,14 @@
 #   error "__cpp_lib_integer_sequence should have the value 201304L in c++17"
 # endif
 
-# if !defined(_LIBCUDACXX_VERSION)
+# if !defined(_LIBCPP_VERSION)
 #   ifndef __cpp_lib_to_chars
 #     error "__cpp_lib_to_chars should be defined in c++17"
 #   endif
 #   if __cpp_lib_to_chars != 201611L
 #     error "__cpp_lib_to_chars should have the value 201611L in c++17"
 #   endif
-# else // _LIBCUDACXX_VERSION
+# else // _LIBCPP_VERSION
 #   ifdef __cpp_lib_to_chars
 #     error "__cpp_lib_to_chars should not be defined because it is unimplemented in libc++!"
 #   endif
@@ -142,14 +142,14 @@
 #   error "__cpp_lib_as_const should have the value 201510L in c++2a"
 # endif
 
-# if !defined(_LIBCUDACXX_VERSION)
+# if !defined(_LIBCPP_VERSION)
 #   ifndef __cpp_lib_constexpr_misc
 #     error "__cpp_lib_constexpr_misc should be defined in c++2a"
 #   endif
 #   if __cpp_lib_constexpr_misc != 201811L
 #     error "__cpp_lib_constexpr_misc should have the value 201811L in c++2a"
 #   endif
-# else // _LIBCUDACXX_VERSION
+# else // _LIBCPP_VERSION
 #   ifdef __cpp_lib_constexpr_misc
 #     error "__cpp_lib_constexpr_misc should not be defined because it is unimplemented in libc++!"
 #   endif
@@ -169,14 +169,14 @@
 #   error "__cpp_lib_integer_sequence should have the value 201304L in c++2a"
 # endif
 
-# if !defined(_LIBCUDACXX_VERSION)
+# if !defined(_LIBCPP_VERSION)
 #   ifndef __cpp_lib_to_chars
 #     error "__cpp_lib_to_chars should be defined in c++2a"
 #   endif
 #   if __cpp_lib_to_chars != 201611L
 #     error "__cpp_lib_to_chars should have the value 201611L in c++2a"
 #   endif
-# else // _LIBCUDACXX_VERSION
+# else // _LIBCPP_VERSION
 #   ifdef __cpp_lib_to_chars
 #     error "__cpp_lib_to_chars should not be defined because it is unimplemented in libc++!"
 #   endif

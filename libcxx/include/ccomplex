@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCUDACXX_CCOMPLEX
-#define _LIBCUDACXX_CCOMPLEX
+#ifndef _LIBCPP_CCOMPLEX
+#define _LIBCPP_CCOMPLEX
 
 /*
     ccomplex synopsis
@@ -19,10 +19,10 @@
 
 #include <complex>
 
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
 // hh 080623 Created
 
-#endif  // _LIBCUDACXX_CCOMPLEX
+#endif  // _LIBCPP_CCOMPLEX
