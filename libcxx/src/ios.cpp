@@ -23,23 +23,23 @@
 #include "string"
 #include "__undef_macros"
 
-_LIBCPP_BEGIN_NAMESPACE_STD
+_LIBCUDACXX_BEGIN_NAMESPACE_STD
 
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS basic_ios<char>;
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS basic_ios<wchar_t>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS basic_ios<char>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS basic_ios<wchar_t>;
 
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS basic_streambuf<char>;
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS basic_streambuf<wchar_t>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS basic_streambuf<char>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS basic_streambuf<wchar_t>;
 
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS basic_istream<char>;
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS basic_istream<wchar_t>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS basic_istream<char>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS basic_istream<wchar_t>;
 
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS basic_ostream<char>;
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS basic_ostream<wchar_t>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS basic_ostream<char>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS basic_ostream<wchar_t>;
 
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS basic_iostream<char>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS basic_iostream<char>;
 
-class _LIBCPP_HIDDEN __iostream_category
+class _LIBCUDACXX_HIDDEN __iostream_category
     : public __do_message
 {
 public:
@@ -57,9 +57,9 @@ string
 __iostream_category::message(int ev) const
 {
     if (ev != static_cast<int>(io_errc::stream)
-#ifdef _LIBCPP_ELAST
-        && ev <= _LIBCPP_ELAST
-#endif  // _LIBCPP_ELAST
+#ifdef _LIBCUDACXX_ELAST
+        && ev <= _LIBCUDACXX_ELAST
+#endif  // _LIBCUDACXX_ELAST
         )
         return __do_message::message(ev);
     return string("unspecified iostream_category error");
@@ -152,7 +152,7 @@ ios_base::getloc() const
 }
 
 // xalloc
-#if defined(_LIBCPP_HAS_C_ATOMIC_IMP) && !defined(_LIBCPP_HAS_NO_THREADS)
+#if defined(_LIBCUDACXX_HAS_C_ATOMIC_IMP) && !defined(_LIBCUDACXX_HAS_NO_THREADS)
 atomic<int> ios_base::__xindex_ = ATOMIC_VAR_INIT(0);
 #else
 int ios_base::__xindex_ = 0;
@@ -163,7 +163,7 @@ static size_t __ios_new_cap(size_t __req_size, size_t __current_cap)
 { // Precondition: __req_size > __current_cap
 	const size_t mx = std::numeric_limits<size_t>::max() / sizeof(_Tp);
 	if (__req_size < mx/2)
-		return _VSTD::max(2 * __current_cap, __req_size);
+		return _CUDA_VSTD::max(2 * __current_cap, __req_size);
 	else
 		return mx;
 }
@@ -405,44 +405,44 @@ ios_base::move(ios_base& rhs)
 void
 ios_base::swap(ios_base& rhs) _NOEXCEPT
 {
-    _VSTD::swap(__fmtflags_, rhs.__fmtflags_);
-    _VSTD::swap(__precision_, rhs.__precision_);
-    _VSTD::swap(__width_, rhs.__width_);
-    _VSTD::swap(__rdstate_, rhs.__rdstate_);
-    _VSTD::swap(__exceptions_, rhs.__exceptions_);
+    _CUDA_VSTD::swap(__fmtflags_, rhs.__fmtflags_);
+    _CUDA_VSTD::swap(__precision_, rhs.__precision_);
+    _CUDA_VSTD::swap(__width_, rhs.__width_);
+    _CUDA_VSTD::swap(__rdstate_, rhs.__rdstate_);
+    _CUDA_VSTD::swap(__exceptions_, rhs.__exceptions_);
     locale& lhs_loc = *reinterpret_cast<locale*>(&__loc_);
     locale& rhs_loc = *reinterpret_cast<locale*>(&rhs.__loc_);
-    _VSTD::swap(lhs_loc, rhs_loc);
-    _VSTD::swap(__fn_, rhs.__fn_);
-    _VSTD::swap(__index_, rhs.__index_);
-    _VSTD::swap(__event_size_, rhs.__event_size_);
-    _VSTD::swap(__event_cap_, rhs.__event_cap_);
-    _VSTD::swap(__iarray_, rhs.__iarray_);
-    _VSTD::swap(__iarray_size_, rhs.__iarray_size_);
-    _VSTD::swap(__iarray_cap_, rhs.__iarray_cap_);
-    _VSTD::swap(__parray_, rhs.__parray_);
-    _VSTD::swap(__parray_size_, rhs.__parray_size_);
-    _VSTD::swap(__parray_cap_, rhs.__parray_cap_);
+    _CUDA_VSTD::swap(lhs_loc, rhs_loc);
+    _CUDA_VSTD::swap(__fn_, rhs.__fn_);
+    _CUDA_VSTD::swap(__index_, rhs.__index_);
+    _CUDA_VSTD::swap(__event_size_, rhs.__event_size_);
+    _CUDA_VSTD::swap(__event_cap_, rhs.__event_cap_);
+    _CUDA_VSTD::swap(__iarray_, rhs.__iarray_);
+    _CUDA_VSTD::swap(__iarray_size_, rhs.__iarray_size_);
+    _CUDA_VSTD::swap(__iarray_cap_, rhs.__iarray_cap_);
+    _CUDA_VSTD::swap(__parray_, rhs.__parray_);
+    _CUDA_VSTD::swap(__parray_size_, rhs.__parray_size_);
+    _CUDA_VSTD::swap(__parray_cap_, rhs.__parray_cap_);
 }
 
 void
 ios_base::__set_badbit_and_consider_rethrow()
 {
     __rdstate_ |= badbit;
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
     if (__exceptions_ & badbit)
         throw;
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
 }
 
 void
 ios_base::__set_failbit_and_consider_rethrow()
 {
     __rdstate_ |= failbit;
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
     if (__exceptions_ & failbit)
         throw;
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
 }
 
 bool
@@ -454,4 +454,4 @@ ios_base::sync_with_stdio(bool sync)
     return r;
 }
 
-_LIBCPP_END_NAMESPACE_STD
+_LIBCUDACXX_END_NAMESPACE_STD

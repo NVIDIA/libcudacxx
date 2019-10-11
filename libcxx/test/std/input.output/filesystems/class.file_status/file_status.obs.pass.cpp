@@ -15,9 +15,11 @@
 // file_type type() const noexcept;
 // perms permissions(p) const noexcept;
 
-#include "filesystem_include.hpp"
+#include "filesystem_include.h"
 #include <type_traits>
 #include <cassert>
+
+#include "test_macros.h"
 
 
 int main(int, char**) {

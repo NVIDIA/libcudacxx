@@ -9,20 +9,20 @@
 // UNSUPPORTED: c++98, c++03
 // UNSUPPORTED: windows
 
-// MODULES_DEFINES: _LIBCPP_DEBUG=0
+// MODULES_DEFINES: _LIBCUDACXX_DEBUG=0
 
 // <filesystem>
 
 // class path
 
-#define _LIBCPP_DEBUG 0
-#include "filesystem_include.hpp"
+#define _LIBCUDACXX_DEBUG 0
+#include "filesystem_include.h"
 #include <iterator>
 #include <type_traits>
 #include <cassert>
 
 #include "test_macros.h"
-#include "filesystem_test_helper.hpp"
+#include "filesystem_test_helper.h"
 #include "debug_mode_helper.h"
 
 int main(int, char**) {

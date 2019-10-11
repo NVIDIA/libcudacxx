@@ -14,6 +14,8 @@
 #include <exception>
 #include <cassert>
 
+#include "test_macros.h"
+
 struct A
 {
     static int constructed;
@@ -37,7 +39,7 @@ int main(int, char**)
         }
         catch (const A& a)
         {
-#ifndef _LIBCPP_ABI_MICROSOFT
+#ifndef _LIBCUDACXX_ABI_MICROSOFT
             assert(A::constructed == 1);
 #else
             // On Windows exception_ptr copies the exception

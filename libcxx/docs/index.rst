@@ -93,7 +93,7 @@ and GCC.
 ============ ==================== ============ ========================
 OS           Arch                 Compilers    ABI Library
 ============ ==================== ============ ========================
-Mac OS X     i386, x86_64         Clang, GCC   libc++abi
+macOS        i386, x86_64         Clang, GCC   libc++abi
 FreeBSD 10+  i386, x86_64, ARM    Clang, GCC   libcxxrt, libc++abi
 Linux        i386, x86_64         Clang, GCC   libc++abi
 ============ ==================== ============ ========================
@@ -101,9 +101,9 @@ Linux        i386, x86_64         Clang, GCC   libc++abi
 The following minimum compiler versions are strongly recommended.
 
 * Clang 3.5 and above
-* GCC 4.7 and above.
+* GCC 5.0 and above.
 
-Anything older *may* work.
+The C++03 dialect is only supported for Clang compilers.
 
 C++ Dialect Support
 ---------------------
@@ -137,10 +137,12 @@ Design Documents
    DesignDocs/DebugMode
    DesignDocs/CapturingConfigInfo
    DesignDocs/ABIVersioning
+   DesignDocs/ExperimentalFeatures
    DesignDocs/VisibilityMacros
    DesignDocs/ThreadingSupportAPI
    DesignDocs/FileTimeType
    DesignDocs/FeatureTestMacros
+   DesignDocs/ExtendedCXX03Support
 
 * `<atomic> design <http://libcxx.llvm.org/atomic_design.html>`_
 * `<type_traits> design <http://libcxx.llvm.org/type_traits_design.html>`_

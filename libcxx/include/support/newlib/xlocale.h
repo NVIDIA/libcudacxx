@@ -6,8 +6,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCPP_SUPPORT_NEWLIB_XLOCALE_H
-#define _LIBCPP_SUPPORT_NEWLIB_XLOCALE_H
+#ifndef _LIBCUDACXX_SUPPORT_NEWLIB_XLOCALE_H
+#define _LIBCUDACXX_SUPPORT_NEWLIB_XLOCALE_H
 
 #if defined(_NEWLIB_VERSION)
 

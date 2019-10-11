@@ -14,11 +14,12 @@
 //   class tuple_size<tuple<Types...>>
 //     : public integral_constant<size_t, sizeof...(Types)> { };
 
-// XFAIL: gcc-4.9
 // UNSUPPORTED: c++98, c++03
 
 #include <tuple>
 #include <type_traits>
+
+#include "test_macros.h"
 
 template <class T, class = decltype(std::tuple_size<T>::value)>
 constexpr bool has_value(int) { return true; }

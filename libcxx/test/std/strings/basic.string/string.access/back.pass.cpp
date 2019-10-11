@@ -11,13 +11,14 @@
 // const charT& back() const;
 //       charT& back();
 
-#ifdef _LIBCPP_DEBUG
-#define _LIBCPP_ASSERT(x, m) ((x) ? (void)0 : std::exit(0))
+#ifdef _LIBCUDACXX_DEBUG
+#define _LIBCUDACXX_ASSERT(x, m) ((x) ? (void)0 : std::exit(0))
 #endif
 
 #include <string>
 #include <cassert>
 
+#include "test_macros.h"
 #include "min_allocator.h"
 
 template <class S>
@@ -49,10 +50,10 @@ int main(int, char**)
     test(S("1234567890123456789012345678901234567890"));
     }
 #endif
-#ifdef _LIBCPP_DEBUG
+#ifdef _LIBCUDACXX_DEBUG
     {
         std::string s;
-        char c = s.back();
+        (void) s.back();
         assert(false);
     }
 #endif

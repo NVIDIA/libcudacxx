@@ -6,19 +6,21 @@
 //
 //===----------------------------------------------------------------------===//
 
-// Test that defining _LIBCPP_ENABLE_CXX17_REMOVED_FEATURES correctly defines
-// _LIBCPP_ENABLE_CXX17_REMOVED_FOO for each individual component macro.
+// Test that defining _LIBCUDACXX_ENABLE_CXX17_REMOVED_FEATURES correctly defines
+// _LIBCUDACXX_ENABLE_CXX17_REMOVED_FOO for each individual component macro.
 
-// MODULES_DEFINES: _LIBCPP_ENABLE_CXX17_REMOVED_FEATURES
-#define _LIBCPP_ENABLE_CXX17_REMOVED_FEATURES
+// MODULES_DEFINES: _LIBCUDACXX_ENABLE_CXX17_REMOVED_FEATURES
+#define _LIBCUDACXX_ENABLE_CXX17_REMOVED_FEATURES
 #include <__config>
 
-#ifndef _LIBCPP_ENABLE_CXX17_REMOVED_UNEXPECTED_FUNCTIONS
-#error _LIBCPP_ENABLE_CXX17_REMOVED_UNEXPECTED_FUNCTIONS must be defined
+#include "test_macros.h"
+
+#ifndef _LIBCUDACXX_ENABLE_CXX17_REMOVED_UNEXPECTED_FUNCTIONS
+#error _LIBCUDACXX_ENABLE_CXX17_REMOVED_UNEXPECTED_FUNCTIONS must be defined
 #endif
 
-#ifndef _LIBCPP_ENABLE_CXX17_REMOVED_AUTO_PTR
-#error _LIBCPP_ENABLE_CXX17_REMOVED_AUTO_PTR must be defined
+#ifndef _LIBCUDACXX_ENABLE_CXX17_REMOVED_AUTO_PTR
+#error _LIBCUDACXX_ENABLE_CXX17_REMOVED_AUTO_PTR must be defined
 #endif
 
 int main(int, char**) {

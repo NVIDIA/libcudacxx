@@ -10,21 +10,21 @@
 //	We have two macros for checking whether or not the underlying C library
 //	 has C11 features:
 //		TEST_HAS_C11_FEATURES    - which is defined in "test_macros.h"
-//		_LIBCPP_HAS_C11_FEATURES - which is defined in <__config>
+//		_LIBCUDACXX_HAS_C11_FEATURES - which is defined in <__config>
 //	They should always be the same
 
 #include <__config>
 #include "test_macros.h"
 
 #ifdef TEST_HAS_C11_FEATURES
-# ifndef _LIBCPP_HAS_C11_FEATURES
-#  error "TEST_HAS_C11_FEATURES is defined, but _LIBCPP_HAS_C11_FEATURES is not"
+# ifndef _LIBCUDACXX_HAS_C11_FEATURES
+#  error "TEST_HAS_C11_FEATURES is defined, but _LIBCUDACXX_HAS_C11_FEATURES is not"
 # endif
 #endif
 
-#ifdef _LIBCPP_HAS_C11_FEATURES
+#ifdef _LIBCUDACXX_HAS_C11_FEATURES
 # ifndef TEST_HAS_C11_FEATURES
-#  error "_LIBCPP_HAS_C11_FEATURES is defined, but TEST_HAS_C11_FEATURES is not"
+#  error "_LIBCUDACXX_HAS_C11_FEATURES is defined, but TEST_HAS_C11_FEATURES is not"
 # endif
 #endif
 

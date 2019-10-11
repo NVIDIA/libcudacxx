@@ -16,7 +16,7 @@
 #include <cassert>
 
 #include "test_macros.h"
-#include "archetypes.hpp"
+#include "archetypes.h"
 
 using std::optional;
 
@@ -70,7 +70,7 @@ int main(int, char**)
     test_constexpr<optional<NonConstexprTypes::NoCtors>>();
     test<optional<NonLiteralTypes::NoCtors>>();
     // EXTENSIONS
-#if defined(_LIBCPP_VERSION) && 0 // FIXME these extensions are currently disabled.
+#if defined(_LIBCUDACXX_VERSION) && 0 // FIXME these extensions are currently disabled.
     test_constexpr<optional<int&>>();
     test_constexpr<optional<const int&>>();
     test_constexpr<optional<int&>>();

@@ -7,18 +7,20 @@
 //
 //===----------------------------------------------------------------------===//
 
-// MODULES_DEFINES: _LIBCPP_DEBUG=0
+// MODULES_DEFINES: _LIBCUDACXX_DEBUG=0
 
 // Can't test the system lib because this test enables debug mode
 // UNSUPPORTED: with_system_cxx_lib
 
 // Test that the default debug handler aborts the program.
 
-#define _LIBCPP_DEBUG 0
+#define _LIBCUDACXX_DEBUG 0
 
 #include <csignal>
 #include <cstdlib>
 #include <__debug>
+
+#include "test_macros.h"
 
 void signal_handler(int signal)
 {
@@ -30,6 +32,6 @@ void signal_handler(int signal)
 int main(int, char**)
 {
   if (std::signal(SIGABRT, signal_handler) != SIG_ERR)
-    _LIBCPP_ASSERT(false, "foo");
+    _LIBCUDACXX_ASSERT(false, "foo");
   return EXIT_FAILURE;
 }

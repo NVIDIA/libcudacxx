@@ -6,8 +6,8 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-#ifndef _LIBCPP_EXPERIMENTAL_SIMD
-#define _LIBCPP_EXPERIMENTAL_SIMD
+#ifndef _LIBCUDACXX_EXPERIMENTAL_SIMD
+#define _LIBCUDACXX_EXPERIMENTAL_SIMD
 
 /*
     experimental/simd synopsis
@@ -655,13 +655,13 @@ public:
 #include <cstddef>
 #include <functional>
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
-_LIBCPP_BEGIN_NAMESPACE_EXPERIMENTAL_SIMD
+_LIBCUDACXX_BEGIN_NAMESPACE_EXPERIMENTAL_SIMD
 
-#if _LIBCPP_STD_VER >= 17
+#if _LIBCUDACXX_STD_VER >= 17
 
 enum class _StorageKind {
   _Scalar,
@@ -709,7 +709,7 @@ public:
   }
 };
 
-#ifndef _LIBCPP_HAS_NO_VECTOR_EXTENSION
+#ifndef _LIBCUDACXX_HAS_NO_VECTOR_EXTENSION
 
 constexpr size_t __floor_pow_of_2(size_t __val) {
   return ((__val - 1) & __val) == 0 ? __val
@@ -722,73 +722,73 @@ constexpr size_t __ceil_pow_of_2(size_t __val) {
 
 template <class _Tp, size_t __bytes>
 struct __vec_ext_traits {
-#if !defined(_LIBCPP_COMPILER_CLANG)
+#if !defined(_LIBCUDACXX_COMPILER_CLANG)
   typedef _Tp type __attribute__((vector_size(__ceil_pow_of_2(__bytes))));
 #endif
 };
 
-#if defined(_LIBCPP_COMPILER_CLANG)
-#define _LIBCPP_SPECIALIZE_VEC_EXT(_TYPE, _NUM_ELEMENT)                        \
+#if defined(_LIBCUDACXX_COMPILER_CLANG)
+#define _LIBCUDACXX_SPECIALIZE_VEC_EXT(_TYPE, _NUM_ELEMENT)                        \
   template <>                                                                  \
   struct __vec_ext_traits<_TYPE, sizeof(_TYPE) * _NUM_ELEMENT> {               \
     using type =                                                               \
         _TYPE __attribute__((vector_size(sizeof(_TYPE) * _NUM_ELEMENT)));      \
   }
 
-#define _LIBCPP_SPECIALIZE_VEC_EXT_32(_TYPE)                                   \
-  _LIBCPP_SPECIALIZE_VEC_EXT(_TYPE, 1);                                        \
-  _LIBCPP_SPECIALIZE_VEC_EXT(_TYPE, 2);                                        \
-  _LIBCPP_SPECIALIZE_VEC_EXT(_TYPE, 3);                                        \
-  _LIBCPP_SPECIALIZE_VEC_EXT(_TYPE, 4);                                        \
-  _LIBCPP_SPECIALIZE_VEC_EXT(_TYPE, 5);                                        \
-  _LIBCPP_SPECIALIZE_VEC_EXT(_TYPE, 6);                                        \
-  _LIBCPP_SPECIALIZE_VEC_EXT(_TYPE, 7);                                        \
-  _LIBCPP_SPECIALIZE_VEC_EXT(_TYPE, 8);                                        \
-  _LIBCPP_SPECIALIZE_VEC_EXT(_TYPE, 9);                                        \
-  _LIBCPP_SPECIALIZE_VEC_EXT(_TYPE, 10);                                       \
-  _LIBCPP_SPECIALIZE_VEC_EXT(_TYPE, 11);                                       \
-  _LIBCPP_SPECIALIZE_VEC_EXT(_TYPE, 12);                                       \
-  _LIBCPP_SPECIALIZE_VEC_EXT(_TYPE, 13);                                       \
-  _LIBCPP_SPECIALIZE_VEC_EXT(_TYPE, 14);                                       \
-  _LIBCPP_SPECIALIZE_VEC_EXT(_TYPE, 15);                                       \
-  _LIBCPP_SPECIALIZE_VEC_EXT(_TYPE, 16);                                       \
-  _LIBCPP_SPECIALIZE_VEC_EXT(_TYPE, 17);                                       \
-  _LIBCPP_SPECIALIZE_VEC_EXT(_TYPE, 18);                                       \
-  _LIBCPP_SPECIALIZE_VEC_EXT(_TYPE, 19);                                       \
-  _LIBCPP_SPECIALIZE_VEC_EXT(_TYPE, 20);                                       \
-  _LIBCPP_SPECIALIZE_VEC_EXT(_TYPE, 21);                                       \
-  _LIBCPP_SPECIALIZE_VEC_EXT(_TYPE, 22);                                       \
-  _LIBCPP_SPECIALIZE_VEC_EXT(_TYPE, 23);                                       \
-  _LIBCPP_SPECIALIZE_VEC_EXT(_TYPE, 24);                                       \
-  _LIBCPP_SPECIALIZE_VEC_EXT(_TYPE, 25);                                       \
-  _LIBCPP_SPECIALIZE_VEC_EXT(_TYPE, 26);                                       \
-  _LIBCPP_SPECIALIZE_VEC_EXT(_TYPE, 27);                                       \
-  _LIBCPP_SPECIALIZE_VEC_EXT(_TYPE, 28);                                       \
-  _LIBCPP_SPECIALIZE_VEC_EXT(_TYPE, 29);                                       \
-  _LIBCPP_SPECIALIZE_VEC_EXT(_TYPE, 30);                                       \
-  _LIBCPP_SPECIALIZE_VEC_EXT(_TYPE, 31);                                       \
-  _LIBCPP_SPECIALIZE_VEC_EXT(_TYPE, 32);
+#define _LIBCUDACXX_SPECIALIZE_VEC_EXT_32(_TYPE)                                   \
+  _LIBCUDACXX_SPECIALIZE_VEC_EXT(_TYPE, 1);                                        \
+  _LIBCUDACXX_SPECIALIZE_VEC_EXT(_TYPE, 2);                                        \
+  _LIBCUDACXX_SPECIALIZE_VEC_EXT(_TYPE, 3);                                        \
+  _LIBCUDACXX_SPECIALIZE_VEC_EXT(_TYPE, 4);                                        \
+  _LIBCUDACXX_SPECIALIZE_VEC_EXT(_TYPE, 5);                                        \
+  _LIBCUDACXX_SPECIALIZE_VEC_EXT(_TYPE, 6);                                        \
+  _LIBCUDACXX_SPECIALIZE_VEC_EXT(_TYPE, 7);                                        \
+  _LIBCUDACXX_SPECIALIZE_VEC_EXT(_TYPE, 8);                                        \
+  _LIBCUDACXX_SPECIALIZE_VEC_EXT(_TYPE, 9);                                        \
+  _LIBCUDACXX_SPECIALIZE_VEC_EXT(_TYPE, 10);                                       \
+  _LIBCUDACXX_SPECIALIZE_VEC_EXT(_TYPE, 11);                                       \
+  _LIBCUDACXX_SPECIALIZE_VEC_EXT(_TYPE, 12);                                       \
+  _LIBCUDACXX_SPECIALIZE_VEC_EXT(_TYPE, 13);                                       \
+  _LIBCUDACXX_SPECIALIZE_VEC_EXT(_TYPE, 14);                                       \
+  _LIBCUDACXX_SPECIALIZE_VEC_EXT(_TYPE, 15);                                       \
+  _LIBCUDACXX_SPECIALIZE_VEC_EXT(_TYPE, 16);                                       \
+  _LIBCUDACXX_SPECIALIZE_VEC_EXT(_TYPE, 17);                                       \
+  _LIBCUDACXX_SPECIALIZE_VEC_EXT(_TYPE, 18);                                       \
+  _LIBCUDACXX_SPECIALIZE_VEC_EXT(_TYPE, 19);                                       \
+  _LIBCUDACXX_SPECIALIZE_VEC_EXT(_TYPE, 20);                                       \
+  _LIBCUDACXX_SPECIALIZE_VEC_EXT(_TYPE, 21);                                       \
+  _LIBCUDACXX_SPECIALIZE_VEC_EXT(_TYPE, 22);                                       \
+  _LIBCUDACXX_SPECIALIZE_VEC_EXT(_TYPE, 23);                                       \
+  _LIBCUDACXX_SPECIALIZE_VEC_EXT(_TYPE, 24);                                       \
+  _LIBCUDACXX_SPECIALIZE_VEC_EXT(_TYPE, 25);                                       \
+  _LIBCUDACXX_SPECIALIZE_VEC_EXT(_TYPE, 26);                                       \
+  _LIBCUDACXX_SPECIALIZE_VEC_EXT(_TYPE, 27);                                       \
+  _LIBCUDACXX_SPECIALIZE_VEC_EXT(_TYPE, 28);                                       \
+  _LIBCUDACXX_SPECIALIZE_VEC_EXT(_TYPE, 29);                                       \
+  _LIBCUDACXX_SPECIALIZE_VEC_EXT(_TYPE, 30);                                       \
+  _LIBCUDACXX_SPECIALIZE_VEC_EXT(_TYPE, 31);                                       \
+  _LIBCUDACXX_SPECIALIZE_VEC_EXT(_TYPE, 32);
 
-_LIBCPP_SPECIALIZE_VEC_EXT_32(char);
-_LIBCPP_SPECIALIZE_VEC_EXT_32(char16_t);
-_LIBCPP_SPECIALIZE_VEC_EXT_32(char32_t);
-_LIBCPP_SPECIALIZE_VEC_EXT_32(wchar_t);
-_LIBCPP_SPECIALIZE_VEC_EXT_32(signed char);
-_LIBCPP_SPECIALIZE_VEC_EXT_32(signed short);
-_LIBCPP_SPECIALIZE_VEC_EXT_32(signed int);
-_LIBCPP_SPECIALIZE_VEC_EXT_32(signed long);
-_LIBCPP_SPECIALIZE_VEC_EXT_32(signed long long);
-_LIBCPP_SPECIALIZE_VEC_EXT_32(unsigned char);
-_LIBCPP_SPECIALIZE_VEC_EXT_32(unsigned short);
-_LIBCPP_SPECIALIZE_VEC_EXT_32(unsigned int);
-_LIBCPP_SPECIALIZE_VEC_EXT_32(unsigned long);
-_LIBCPP_SPECIALIZE_VEC_EXT_32(unsigned long long);
-_LIBCPP_SPECIALIZE_VEC_EXT_32(float);
-_LIBCPP_SPECIALIZE_VEC_EXT_32(double);
-_LIBCPP_SPECIALIZE_VEC_EXT_32(long double);
+_LIBCUDACXX_SPECIALIZE_VEC_EXT_32(char);
+_LIBCUDACXX_SPECIALIZE_VEC_EXT_32(char16_t);
+_LIBCUDACXX_SPECIALIZE_VEC_EXT_32(char32_t);
+_LIBCUDACXX_SPECIALIZE_VEC_EXT_32(wchar_t);
+_LIBCUDACXX_SPECIALIZE_VEC_EXT_32(signed char);
+_LIBCUDACXX_SPECIALIZE_VEC_EXT_32(signed short);
+_LIBCUDACXX_SPECIALIZE_VEC_EXT_32(signed int);
+_LIBCUDACXX_SPECIALIZE_VEC_EXT_32(signed long);
+_LIBCUDACXX_SPECIALIZE_VEC_EXT_32(signed long long);
+_LIBCUDACXX_SPECIALIZE_VEC_EXT_32(unsigned char);
+_LIBCUDACXX_SPECIALIZE_VEC_EXT_32(unsigned short);
+_LIBCUDACXX_SPECIALIZE_VEC_EXT_32(unsigned int);
+_LIBCUDACXX_SPECIALIZE_VEC_EXT_32(unsigned long);
+_LIBCUDACXX_SPECIALIZE_VEC_EXT_32(unsigned long long);
+_LIBCUDACXX_SPECIALIZE_VEC_EXT_32(float);
+_LIBCUDACXX_SPECIALIZE_VEC_EXT_32(double);
+_LIBCUDACXX_SPECIALIZE_VEC_EXT_32(long double);
 
-#undef _LIBCPP_SPECIALIZE_VEC_EXT_32
-#undef _LIBCPP_SPECIALIZE_VEC_EXT
+#undef _LIBCUDACXX_SPECIALIZE_VEC_EXT_32
+#undef _LIBCUDACXX_SPECIALIZE_VEC_EXT
 #endif
 
 template <class _Tp, int __num_element>
@@ -811,7 +811,7 @@ public:
   }
 };
 
-#endif // _LIBCPP_HAS_NO_VECTOR_EXTENSION
+#endif // _LIBCUDACXX_HAS_NO_VECTOR_EXTENSION
 
 template <class _Vp, class _Tp, class _Abi>
 class __simd_reference {
@@ -951,8 +951,8 @@ constexpr bool __vectorizable() {
          !std::is_volatile<_Tp>::value && !std::is_same<_Tp, bool>::value;
 }
 
-_LIBCPP_END_NAMESPACE_EXPERIMENTAL_SIMD
-_LIBCPP_BEGIN_NAMESPACE_EXPERIMENTAL_SIMD_ABI
+_LIBCUDACXX_END_NAMESPACE_EXPERIMENTAL_SIMD
+_LIBCUDACXX_BEGIN_NAMESPACE_EXPERIMENTAL_SIMD_ABI
 
 using scalar = __simd_abi<_StorageKind::_Scalar, 1>;
 
@@ -960,23 +960,23 @@ template <int _Np>
 using fixed_size = __simd_abi<_StorageKind::_Array, _Np>;
 
 template <class _Tp>
-_LIBCPP_INLINE_VAR constexpr size_t max_fixed_size = 32;
+_LIBCUDACXX_INLINE_VAR constexpr size_t max_fixed_size = 32;
 
 template <class _Tp>
 using compatible = fixed_size<16 / sizeof(_Tp)>;
 
-#ifndef _LIBCPP_HAS_NO_VECTOR_EXTENSION
+#ifndef _LIBCUDACXX_HAS_NO_VECTOR_EXTENSION
 template <class _Tp>
 using native = __simd_abi<_StorageKind::_VecExt,
-                          _LIBCPP_NATIVE_SIMD_WIDTH_IN_BYTES / sizeof(_Tp)>;
+                          _LIBCUDACXX_NATIVE_SIMD_WIDTH_IN_BYTES / sizeof(_Tp)>;
 #else
 template <class _Tp>
 using native =
-    fixed_size<_Tp, _LIBCPP_NATIVE_SIMD_WIDTH_IN_BYTES / sizeof(_Tp)>;
-#endif // _LIBCPP_HAS_NO_VECTOR_EXTENSION
+    fixed_size<_Tp, _LIBCUDACXX_NATIVE_SIMD_WIDTH_IN_BYTES / sizeof(_Tp)>;
+#endif // _LIBCUDACXX_HAS_NO_VECTOR_EXTENSION
 
-_LIBCPP_END_NAMESPACE_EXPERIMENTAL_SIMD_ABI
-_LIBCPP_BEGIN_NAMESPACE_EXPERIMENTAL_SIMD
+_LIBCUDACXX_END_NAMESPACE_EXPERIMENTAL_SIMD_ABI
+_LIBCUDACXX_BEGIN_NAMESPACE_EXPERIMENTAL_SIMD
 
 template <class _Tp, class _Abi = simd_abi::compatible<_Tp>>
 class simd;
@@ -987,10 +987,10 @@ struct element_aligned_tag {};
 struct vector_aligned_tag {};
 template <size_t>
 struct overaligned_tag {};
-_LIBCPP_INLINE_VAR constexpr element_aligned_tag element_aligned{};
-_LIBCPP_INLINE_VAR constexpr vector_aligned_tag vector_aligned{};
+_LIBCUDACXX_INLINE_VAR constexpr element_aligned_tag element_aligned{};
+_LIBCUDACXX_INLINE_VAR constexpr vector_aligned_tag vector_aligned{};
 template <size_t _Np>
-_LIBCPP_INLINE_VAR constexpr overaligned_tag<_Np> overaligned{};
+_LIBCUDACXX_INLINE_VAR constexpr overaligned_tag<_Np> overaligned{};
 
 // traits [simd.traits]
 template <class _Tp>
@@ -1029,13 +1029,13 @@ struct is_simd_flag_type<overaligned_tag<_Align>>
     : std::integral_constant<bool, true> {};
 
 template <class _Tp>
-_LIBCPP_INLINE_VAR constexpr bool is_abi_tag_v = is_abi_tag<_Tp>::value;
+_LIBCUDACXX_INLINE_VAR constexpr bool is_abi_tag_v = is_abi_tag<_Tp>::value;
 template <class _Tp>
-_LIBCPP_INLINE_VAR constexpr bool is_simd_v = is_simd<_Tp>::value;
+_LIBCUDACXX_INLINE_VAR constexpr bool is_simd_v = is_simd<_Tp>::value;
 template <class _Tp>
-_LIBCPP_INLINE_VAR constexpr bool is_simd_mask_v = is_simd_mask<_Tp>::value;
+_LIBCUDACXX_INLINE_VAR constexpr bool is_simd_mask_v = is_simd_mask<_Tp>::value;
 template <class _Tp>
-_LIBCPP_INLINE_VAR constexpr bool is_simd_flag_type_v =
+_LIBCUDACXX_INLINE_VAR constexpr bool is_simd_flag_type_v =
     is_simd_flag_type<_Tp>::value;
 template <class _Tp, size_t _Np>
 struct abi_for_size {
@@ -1061,10 +1061,10 @@ template <class _Tp, class _Up = typename _Tp::value_type>
 struct memory_alignment;
 
 template <class _Tp, class _Abi = simd_abi::compatible<_Tp>>
-_LIBCPP_INLINE_VAR constexpr size_t simd_size_v = simd_size<_Tp, _Abi>::value;
+_LIBCUDACXX_INLINE_VAR constexpr size_t simd_size_v = simd_size<_Tp, _Abi>::value;
 
 template <class _Tp, class _Up = typename _Tp::value_type>
-_LIBCPP_INLINE_VAR constexpr size_t memory_alignment_v =
+_LIBCUDACXX_INLINE_VAR constexpr size_t memory_alignment_v =
     memory_alignment<_Tp, _Up>::value;
 
 // class template simd [simd.class]
@@ -1562,8 +1562,8 @@ public:
   friend simd_mask operator!=(const simd_mask&, const simd_mask&) noexcept;
 };
 
-#endif // _LIBCPP_STD_VER >= 17
+#endif // _LIBCUDACXX_STD_VER >= 17
 
-_LIBCPP_END_NAMESPACE_EXPERIMENTAL_SIMD
+_LIBCUDACXX_END_NAMESPACE_EXPERIMENTAL_SIMD
 
-#endif /* _LIBCPP_EXPERIMENTAL_SIMD */
+#endif /* _LIBCUDACXX_EXPERIMENTAL_SIMD */

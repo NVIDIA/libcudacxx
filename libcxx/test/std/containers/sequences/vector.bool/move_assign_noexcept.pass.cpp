@@ -58,40 +58,40 @@ struct some_alloc3
 
 int main(int, char**)
 {
-#if defined(_LIBCPP_VERSION)
+#if defined(_LIBCUDACXX_VERSION)
     {
         typedef std::vector<bool> C;
         static_assert(std::is_nothrow_move_assignable<C>::value, "");
     }
-#endif // _LIBCPP_VERSION
+#endif // _LIBCUDACXX_VERSION
     {
         typedef std::vector<bool, test_allocator<bool>> C;
         static_assert(!std::is_nothrow_move_assignable<C>::value, "");
     }
-#if defined(_LIBCPP_VERSION)
+#if defined(_LIBCUDACXX_VERSION)
     {
         typedef std::vector<bool, other_allocator<bool>> C;
         static_assert(std::is_nothrow_move_assignable<C>::value, "");
     }
-#endif // _LIBCPP_VERSION
+#endif // _LIBCUDACXX_VERSION
     {
 #if TEST_STD_VER > 14
-#if defined(_LIBCPP_VERSION)
+#if defined(_LIBCUDACXX_VERSION)
         typedef std::vector<bool, some_alloc<bool>> C;
         static_assert( std::is_nothrow_move_assignable<C>::value, "");
-#endif // _LIBCPP_VERSION
+#endif // _LIBCUDACXX_VERSION
 #else
         typedef std::vector<bool, some_alloc<bool>> C;
         static_assert(!std::is_nothrow_move_assignable<C>::value, "");
 #endif
     }
 #if TEST_STD_VER > 14
-#if defined(_LIBCPP_VERSION)
+#if defined(_LIBCUDACXX_VERSION)
     {  // POCMA false, is_always_equal true
         typedef std::vector<bool, some_alloc2<bool>> C;
         static_assert( std::is_nothrow_move_assignable<C>::value, "");
     }
-#endif // _LIBCPP_VERSION
+#endif // _LIBCUDACXX_VERSION
     {  // POCMA false, is_always_equal false
         typedef std::vector<bool, some_alloc3<bool>> C;
         static_assert(!std::is_nothrow_move_assignable<C>::value, "");

@@ -13,12 +13,14 @@
 
 // Call erase(const_iterator first, const_iterator last); with both iterators from another container
 
-#define _LIBCPP_DEBUG 1
-#define _LIBCPP_ASSERT(x, m) ((x) ? (void)0 : std::exit(0))
+#define _LIBCUDACXX_DEBUG 1
+#define _LIBCUDACXX_ASSERT(x, m) ((x) ? (void)0 : std::exit(0))
 
 #include <list>
 #include <cassert>
 #include <cstdlib>
+
+#include "test_macros.h"
 
 int main(int, char**)
 {

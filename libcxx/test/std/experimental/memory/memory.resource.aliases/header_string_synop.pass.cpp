@@ -28,7 +28,9 @@
 #include <type_traits>
 #include <cassert>
 
-#include "constexpr_char_traits.hpp"
+#include "constexpr_char_traits.h"
+
+#include "test_macros.h"
 
 namespace pmr = std::experimental::pmr;
 

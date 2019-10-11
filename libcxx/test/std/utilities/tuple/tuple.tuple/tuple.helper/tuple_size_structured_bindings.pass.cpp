@@ -22,6 +22,8 @@
 #include <type_traits>
 #include <cassert>
 
+#include "test_macros.h"
+
 struct S { int x; };
 
 void test_decomp_user_type() {
@@ -116,8 +118,7 @@ template <size_t N>
 int get(Test const&) { static_assert(N == 0, ""); return -1; }
 
 template <>
-class std::tuple_element<0, Test> {
-public:
+struct std::tuple_element<0, Test> {
   typedef int type;
 };
 

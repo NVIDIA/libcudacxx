@@ -145,14 +145,14 @@
 #   error "__cpp_lib_raw_memory_algorithms should have the value 201606L in c++17"
 # endif
 
-# if !defined(_LIBCPP_VERSION)
+# if !defined(_LIBCUDACXX_VERSION)
 #   ifndef __cpp_lib_shared_ptr_arrays
 #     error "__cpp_lib_shared_ptr_arrays should be defined in c++17"
 #   endif
 #   if __cpp_lib_shared_ptr_arrays != 201611L
 #     error "__cpp_lib_shared_ptr_arrays should have the value 201611L in c++17"
 #   endif
-# else // _LIBCPP_VERSION
+# else // _LIBCUDACXX_VERSION
 #   ifdef __cpp_lib_shared_ptr_arrays
 #     error "__cpp_lib_shared_ptr_arrays should not be defined because it is unimplemented in libc++!"
 #   endif
@@ -201,14 +201,14 @@
 #   error "__cpp_lib_make_unique should have the value 201304L in c++2a"
 # endif
 
-# if !defined(_LIBCPP_VERSION)
+# if !defined(_LIBCUDACXX_VERSION)
 #   ifndef __cpp_lib_ranges
 #     error "__cpp_lib_ranges should be defined in c++2a"
 #   endif
 #   if __cpp_lib_ranges != 201811L
 #     error "__cpp_lib_ranges should have the value 201811L in c++2a"
 #   endif
-# else // _LIBCPP_VERSION
+# else // _LIBCUDACXX_VERSION
 #   ifdef __cpp_lib_ranges
 #     error "__cpp_lib_ranges should not be defined because it is unimplemented in libc++!"
 #   endif
@@ -221,14 +221,14 @@
 #   error "__cpp_lib_raw_memory_algorithms should have the value 201606L in c++2a"
 # endif
 
-# if !defined(_LIBCPP_VERSION)
+# if !defined(_LIBCUDACXX_VERSION)
 #   ifndef __cpp_lib_shared_ptr_arrays
 #     error "__cpp_lib_shared_ptr_arrays should be defined in c++2a"
 #   endif
 #   if __cpp_lib_shared_ptr_arrays != 201611L
 #     error "__cpp_lib_shared_ptr_arrays should have the value 201611L in c++2a"
 #   endif
-# else // _LIBCPP_VERSION
+# else // _LIBCUDACXX_VERSION
 #   ifdef __cpp_lib_shared_ptr_arrays
 #     error "__cpp_lib_shared_ptr_arrays should not be defined because it is unimplemented in libc++!"
 #   endif

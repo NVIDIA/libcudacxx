@@ -13,12 +13,14 @@
 #include <iostream>
 #include <cassert>
 
+#include "test_macros.h"
+
 int main(int, char**)
 {
 #if 0
     std::wcerr << L"Hello World!\n";
 #else
-#ifdef _LIBCPP_HAS_NO_STDOUT
+#ifdef _LIBCUDACXX_HAS_NO_STDOUT
     assert(std::wcerr.tie() == NULL);
 #else
     assert(std::wcerr.tie() == &std::wcout);

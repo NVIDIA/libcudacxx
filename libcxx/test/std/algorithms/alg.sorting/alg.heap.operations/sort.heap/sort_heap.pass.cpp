@@ -17,6 +17,9 @@
 #include <random>
 #include <cassert>
 
+#include "test_macros.h"
+#include "test_iterators.h"
+
 std::mt19937 randomness;
 
 void test(int N)
@@ -28,6 +31,13 @@ void test(int N)
     std::make_heap(ia, ia+N);
     std::sort_heap(ia, ia+N);
     assert(std::is_sorted(ia, ia+N));
+
+    typedef random_access_iterator<int *> RI;
+    std::shuffle(RI(ia), RI(ia+N), randomness);
+    std::make_heap(RI(ia), RI(ia+N));
+    std::sort_heap(RI(ia), RI(ia+N));
+    assert(std::is_sorted(RI(ia), RI(ia+N)));
+
     delete [] ia;
 }
 

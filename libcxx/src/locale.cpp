@@ -18,17 +18,17 @@
 #include "vector"
 #include "algorithm"
 #include "typeinfo"
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
 #  include "type_traits"
 #endif
 #include "clocale"
 #include "cstring"
-#if defined(_LIBCPP_MSVCRT)
+#if defined(_LIBCUDACXX_MSVCRT)
 #define _CTYPE_DISABLE_MACROS
 #endif
 #include "cwctype"
 #include "__sso_allocator"
-#if defined(_LIBCPP_MSVCRT) || defined(__MINGW32__)
+#if defined(_LIBCUDACXX_MSVCRT) || defined(__MINGW32__)
 #include "support/win32/locale_win32.h"
 #elif !defined(__BIONIC__)
 #include <langinfo.h>
@@ -44,7 +44,7 @@
 #pragma clang diagnostic ignored "-Wsign-conversion"
 #endif
 
-_LIBCPP_BEGIN_NAMESPACE_STD
+_LIBCUDACXX_BEGIN_NAMESPACE_STD
 
 struct __libcpp_unique_locale {
   __libcpp_unique_locale(const char* nm) : __loc_(newlocale(LC_ALL_MASK, nm, 0)) {}
@@ -113,7 +113,7 @@ make(A0 a0, A1 a1, A2 a2)
 
 template <typename T, size_t N>
 inline
-_LIBCPP_CONSTEXPR
+_LIBCUDACXX_CONSTEXPR
 size_t
 countof(const T (&)[N])
 {
@@ -122,20 +122,20 @@ countof(const T (&)[N])
 
 template <typename T>
 inline
-_LIBCPP_CONSTEXPR
+_LIBCUDACXX_CONSTEXPR
 size_t
 countof(const T * const begin, const T * const end)
 {
     return static_cast<size_t>(end - begin);
 }
 
-_LIBCPP_NORETURN static void __throw_runtime_error(const string &msg)
+_LIBCUDACXX_NORETURN static void __throw_runtime_error(const string &msg)
 {
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
     throw runtime_error(msg);
 #else
     (void)msg;
-    _VSTD::abort();
+    _CUDA_VSTD::abort();
 #endif
 }
 
@@ -155,11 +155,11 @@ const locale::category locale::time;
 const locale::category locale::messages;
 const locale::category locale::all;
 
-class _LIBCPP_HIDDEN locale::__imp
+class _LIBCUDACXX_HIDDEN locale::__imp
     : public facet
 {
     enum {N = 28};
-#if defined(_LIBCPP_COMPILER_MSVC)
+#if defined(_LIBCUDACXX_COMPILER_MSVC)
 // FIXME: MSVC doesn't support aligned parameters by value.
 // I can't get the __sso_allocator to work here
 // for MSVC I think for this reason.
@@ -196,10 +196,10 @@ locale::__imp::__imp(size_t refs)
       name_("C")
 {
     facets_.clear();
-    install(&make<_VSTD::collate<char> >(1u));
-    install(&make<_VSTD::collate<wchar_t> >(1u));
-    install(&make<_VSTD::ctype<char> >(nullptr, false, 1u));
-    install(&make<_VSTD::ctype<wchar_t> >(1u));
+    install(&make<_CUDA_VSTD::collate<char> >(1u));
+    install(&make<_CUDA_VSTD::collate<wchar_t> >(1u));
+    install(&make<_CUDA_VSTD::ctype<char> >(nullptr, false, 1u));
+    install(&make<_CUDA_VSTD::ctype<wchar_t> >(1u));
     install(&make<codecvt<char, char, mbstate_t> >(1u));
     install(&make<codecvt<wchar_t, char, mbstate_t> >(1u));
     install(&make<codecvt<char16_t, char, mbstate_t> >(1u));
@@ -222,8 +222,8 @@ locale::__imp::__imp(size_t refs)
     install(&make<time_get<wchar_t> >(1u));
     install(&make<time_put<char> >(1u));
     install(&make<time_put<wchar_t> >(1u));
-    install(&make<_VSTD::messages<char> >(1u));
-    install(&make<_VSTD::messages<wchar_t> >(1u));
+    install(&make<_CUDA_VSTD::messages<char> >(1u));
+    install(&make<_CUDA_VSTD::messages<wchar_t> >(1u));
 }
 
 locale::__imp::__imp(const string& name, size_t refs)
@@ -231,10 +231,10 @@ locale::__imp::__imp(const string& name, size_t refs)
       facets_(N),
       name_(name)
 {
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
     try
     {
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
         facets_ = locale::classic().__locale_->facets_;
         for (unsigned i = 0; i < facets_.size(); ++i)
             if (facets_[i])
@@ -259,7 +259,7 @@ locale::__imp::__imp(const string& name, size_t refs)
         install(new time_put_byname<wchar_t>(name_));
         install(new messages_byname<char>(name_));
         install(new messages_byname<wchar_t>(name_));
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
     }
     catch (...)
     {
@@ -268,7 +268,7 @@ locale::__imp::__imp(const string& name, size_t refs)
                 facets_[i]->__release_shared();
         throw;
     }
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
 }
 
 // NOTE avoid the `base class should be explicitly initialized in the
@@ -300,10 +300,10 @@ locale::__imp::__imp(const __imp& other, const string& name, locale::category c)
     for (unsigned i = 0; i < facets_.size(); ++i)
         if (facets_[i])
             facets_[i]->__add_shared();
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
     try
     {
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
         if (c & locale::collate)
         {
             install(new collate_byname<char>(name));
@@ -342,7 +342,7 @@ locale::__imp::__imp(const __imp& other, const string& name, locale::category c)
             install(new messages_byname<char>(name));
             install(new messages_byname<wchar_t>(name));
         }
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
     }
     catch (...)
     {
@@ -351,7 +351,7 @@ locale::__imp::__imp(const __imp& other, const string& name, locale::category c)
                 facets_[i]->__release_shared();
         throw;
     }
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
 }
 
 template<class F>
@@ -371,23 +371,23 @@ locale::__imp::__imp(const __imp& other, const __imp& one, locale::category c)
     for (unsigned i = 0; i < facets_.size(); ++i)
         if (facets_[i])
             facets_[i]->__add_shared();
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
     try
     {
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
         if (c & locale::collate)
         {
-            install_from<_VSTD::collate<char> >(one);
-            install_from<_VSTD::collate<wchar_t> >(one);
+            install_from<_CUDA_VSTD::collate<char> >(one);
+            install_from<_CUDA_VSTD::collate<wchar_t> >(one);
         }
         if (c & locale::ctype)
         {
-            install_from<_VSTD::ctype<char> >(one);
-            install_from<_VSTD::ctype<wchar_t> >(one);
-            install_from<_VSTD::codecvt<char, char, mbstate_t> >(one);
-            install_from<_VSTD::codecvt<char16_t, char, mbstate_t> >(one);
-            install_from<_VSTD::codecvt<char32_t, char, mbstate_t> >(one);
-            install_from<_VSTD::codecvt<wchar_t, char, mbstate_t> >(one);
+            install_from<_CUDA_VSTD::ctype<char> >(one);
+            install_from<_CUDA_VSTD::ctype<wchar_t> >(one);
+            install_from<_CUDA_VSTD::codecvt<char, char, mbstate_t> >(one);
+            install_from<_CUDA_VSTD::codecvt<char16_t, char, mbstate_t> >(one);
+            install_from<_CUDA_VSTD::codecvt<char32_t, char, mbstate_t> >(one);
+            install_from<_CUDA_VSTD::codecvt<wchar_t, char, mbstate_t> >(one);
         }
         if (c & locale::monetary)
         {
@@ -418,10 +418,10 @@ locale::__imp::__imp(const __imp& other, const __imp& one, locale::category c)
         }
         if (c & locale::messages)
         {
-            install_from<_VSTD::messages<char> >(one);
-            install_from<_VSTD::messages<wchar_t> >(one);
+            install_from<_CUDA_VSTD::messages<char> >(one);
+            install_from<_CUDA_VSTD::messages<wchar_t> >(one);
         }
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
     }
     catch (...)
     {
@@ -430,7 +430,7 @@ locale::__imp::__imp(const __imp& other, const __imp& one, locale::category c)
                 facets_[i]->__release_shared();
         throw;
     }
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
 }
 
 locale::__imp::__imp(const __imp& other, facet* f, long id)
@@ -813,13 +813,13 @@ ctype<wchar_t>::do_scan_not(mask m, const char_type* low, const char_type* high)
 wchar_t
 ctype<wchar_t>::do_toupper(char_type c) const
 {
-#ifdef _LIBCPP_HAS_DEFAULTRUNELOCALE
+#ifdef _LIBCUDACXX_HAS_DEFAULTRUNELOCALE
     return isascii(c) ? _DefaultRuneLocale.__mapupper[c] : c;
 #elif defined(__GLIBC__) || defined(__EMSCRIPTEN__) || \
       defined(__NetBSD__)
     return isascii(c) ? ctype<char>::__classic_upper_table()[c] : c;
 #else
-    return (isascii(c) && iswlower_l(c, _LIBCPP_GET_C_LOCALE)) ? c-L'a'+L'A' : c;
+    return (isascii(c) && iswlower_l(c, _LIBCUDACXX_GET_C_LOCALE)) ? c-L'a'+L'A' : c;
 #endif
 }
 
@@ -827,14 +827,14 @@ const wchar_t*
 ctype<wchar_t>::do_toupper(char_type* low, const char_type* high) const
 {
     for (; low != high; ++low)
-#ifdef _LIBCPP_HAS_DEFAULTRUNELOCALE
+#ifdef _LIBCUDACXX_HAS_DEFAULTRUNELOCALE
         *low = isascii(*low) ? _DefaultRuneLocale.__mapupper[*low] : *low;
 #elif defined(__GLIBC__) || defined(__EMSCRIPTEN__) || \
       defined(__NetBSD__)
         *low = isascii(*low) ? ctype<char>::__classic_upper_table()[*low]
                              : *low;
 #else
-        *low = (isascii(*low) && islower_l(*low, _LIBCPP_GET_C_LOCALE)) ? (*low-L'a'+L'A') : *low;
+        *low = (isascii(*low) && islower_l(*low, _LIBCUDACXX_GET_C_LOCALE)) ? (*low-L'a'+L'A') : *low;
 #endif
     return low;
 }
@@ -842,13 +842,13 @@ ctype<wchar_t>::do_toupper(char_type* low, const char_type* high) const
 wchar_t
 ctype<wchar_t>::do_tolower(char_type c) const
 {
-#ifdef _LIBCPP_HAS_DEFAULTRUNELOCALE
+#ifdef _LIBCUDACXX_HAS_DEFAULTRUNELOCALE
     return isascii(c) ? _DefaultRuneLocale.__maplower[c] : c;
 #elif defined(__GLIBC__) || defined(__EMSCRIPTEN__) || \
       defined(__NetBSD__)
     return isascii(c) ? ctype<char>::__classic_lower_table()[c] : c;
 #else
-    return (isascii(c) && isupper_l(c, _LIBCPP_GET_C_LOCALE)) ? c-L'A'+'a' : c;
+    return (isascii(c) && isupper_l(c, _LIBCUDACXX_GET_C_LOCALE)) ? c-L'A'+'a' : c;
 #endif
 }
 
@@ -856,14 +856,14 @@ const wchar_t*
 ctype<wchar_t>::do_tolower(char_type* low, const char_type* high) const
 {
     for (; low != high; ++low)
-#ifdef _LIBCPP_HAS_DEFAULTRUNELOCALE
+#ifdef _LIBCUDACXX_HAS_DEFAULTRUNELOCALE
         *low = isascii(*low) ? _DefaultRuneLocale.__maplower[*low] : *low;
 #elif defined(__GLIBC__) || defined(__EMSCRIPTEN__) || \
       defined(__NetBSD__)
         *low = isascii(*low) ? ctype<char>::__classic_lower_table()[*low]
                              : *low;
 #else
-        *low = (isascii(*low) && isupper_l(*low, _LIBCPP_GET_C_LOCALE)) ? *low-L'A'+L'a' : *low;
+        *low = (isascii(*low) && isupper_l(*low, _LIBCUDACXX_GET_C_LOCALE)) ? *low-L'A'+L'a' : *low;
 #endif
     return low;
 }
@@ -923,7 +923,7 @@ ctype<char>::~ctype()
 char
 ctype<char>::do_toupper(char_type c) const
 {
-#ifdef _LIBCPP_HAS_DEFAULTRUNELOCALE
+#ifdef _LIBCUDACXX_HAS_DEFAULTRUNELOCALE
     return isascii(c) ?
       static_cast<char>(_DefaultRuneLocale.__mapupper[static_cast<ptrdiff_t>(c)]) : c;
 #elif defined(__NetBSD__)
@@ -932,7 +932,7 @@ ctype<char>::do_toupper(char_type c) const
     return isascii(c) ?
       static_cast<char>(__classic_upper_table()[static_cast<unsigned char>(c)]) : c;
 #else
-    return (isascii(c) && islower_l(c, _LIBCPP_GET_C_LOCALE)) ? c-'a'+'A' : c;
+    return (isascii(c) && islower_l(c, _LIBCUDACXX_GET_C_LOCALE)) ? c-'a'+'A' : c;
 #endif
 }
 
@@ -940,7 +940,7 @@ const char*
 ctype<char>::do_toupper(char_type* low, const char_type* high) const
 {
     for (; low != high; ++low)
-#ifdef _LIBCPP_HAS_DEFAULTRUNELOCALE
+#ifdef _LIBCUDACXX_HAS_DEFAULTRUNELOCALE
         *low = isascii(*low) ?
           static_cast<char>(_DefaultRuneLocale.__mapupper[static_cast<ptrdiff_t>(*low)]) : *low;
 #elif defined(__NetBSD__)
@@ -949,7 +949,7 @@ ctype<char>::do_toupper(char_type* low, const char_type* high) const
         *low = isascii(*low) ?
           static_cast<char>(__classic_upper_table()[static_cast<size_t>(*low)]) : *low;
 #else
-        *low = (isascii(*low) && islower_l(*low, _LIBCPP_GET_C_LOCALE)) ? *low-'a'+'A' : *low;
+        *low = (isascii(*low) && islower_l(*low, _LIBCUDACXX_GET_C_LOCALE)) ? *low-'a'+'A' : *low;
 #endif
     return low;
 }
@@ -957,7 +957,7 @@ ctype<char>::do_toupper(char_type* low, const char_type* high) const
 char
 ctype<char>::do_tolower(char_type c) const
 {
-#ifdef _LIBCPP_HAS_DEFAULTRUNELOCALE
+#ifdef _LIBCUDACXX_HAS_DEFAULTRUNELOCALE
     return isascii(c) ?
       static_cast<char>(_DefaultRuneLocale.__maplower[static_cast<ptrdiff_t>(c)]) : c;
 #elif defined(__NetBSD__)
@@ -966,7 +966,7 @@ ctype<char>::do_tolower(char_type c) const
     return isascii(c) ?
       static_cast<char>(__classic_lower_table()[static_cast<size_t>(c)]) : c;
 #else
-    return (isascii(c) && isupper_l(c, _LIBCPP_GET_C_LOCALE)) ? c-'A'+'a' : c;
+    return (isascii(c) && isupper_l(c, _LIBCUDACXX_GET_C_LOCALE)) ? c-'A'+'a' : c;
 #endif
 }
 
@@ -974,14 +974,14 @@ const char*
 ctype<char>::do_tolower(char_type* low, const char_type* high) const
 {
     for (; low != high; ++low)
-#ifdef _LIBCPP_HAS_DEFAULTRUNELOCALE
+#ifdef _LIBCUDACXX_HAS_DEFAULTRUNELOCALE
         *low = isascii(*low) ? static_cast<char>(_DefaultRuneLocale.__maplower[static_cast<ptrdiff_t>(*low)]) : *low;
 #elif defined(__NetBSD__)
         *low = static_cast<char>(__classic_lower_table()[static_cast<unsigned char>(*low)]);
 #elif defined(__GLIBC__) || defined(__EMSCRIPTEN__)
         *low = isascii(*low) ? static_cast<char>(__classic_lower_table()[static_cast<size_t>(*low)]) : *low;
 #else
-        *low = (isascii(*low) && isupper_l(*low, _LIBCPP_GET_C_LOCALE)) ? *low-'A'+'a' : *low;
+        *low = (isascii(*low) && isupper_l(*low, _LIBCUDACXX_GET_C_LOCALE)) ? *low-'A'+'a' : *low;
 #endif
     return low;
 }
@@ -1025,11 +1025,11 @@ extern "C" const int ** __ctype_tolower_loc();
 extern "C" const int ** __ctype_toupper_loc();
 #endif
 
-#ifdef _LIBCPP_PROVIDES_DEFAULT_RUNE_TABLE
+#ifdef _LIBCUDACXX_PROVIDES_DEFAULT_RUNE_TABLE
 const ctype<char>::mask*
 ctype<char>::classic_table()  _NOEXCEPT
 {
-    static _LIBCPP_CONSTEXPR const ctype<char>::mask builtin_table[table_size] = {
+    static _LIBCUDACXX_CONSTEXPR const ctype<char>::mask builtin_table[table_size] = {
         cntrl,                          cntrl,
         cntrl,                          cntrl,
         cntrl,                          cntrl,
@@ -1114,10 +1114,10 @@ ctype<char>::classic_table()  _NOEXCEPT
 #elif defined(__NetBSD__)
     return _C_ctype_tab_ + 1;
 #elif defined(__GLIBC__)
-    return _LIBCPP_GET_C_LOCALE->__ctype_b;
+    return _LIBCUDACXX_GET_C_LOCALE->__ctype_b;
 #elif __sun__
     return __ctype_mask;
-#elif defined(_LIBCPP_MSVCRT) || defined(__MINGW32__)
+#elif defined(_LIBCUDACXX_MSVCRT) || defined(__MINGW32__)
     return __pctype_func();
 #elif defined(__EMSCRIPTEN__)
     return *__ctype_b_loc();
@@ -1141,13 +1141,13 @@ ctype<char>::classic_table()  _NOEXCEPT
 const int*
 ctype<char>::__classic_lower_table() _NOEXCEPT
 {
-    return _LIBCPP_GET_C_LOCALE->__ctype_tolower;
+    return _LIBCUDACXX_GET_C_LOCALE->__ctype_tolower;
 }
 
 const int*
 ctype<char>::__classic_upper_table() _NOEXCEPT
 {
-    return _LIBCPP_GET_C_LOCALE->__ctype_toupper;
+    return _LIBCUDACXX_GET_C_LOCALE->__ctype_toupper;
 }
 #elif __NetBSD__
 const short*
@@ -1257,7 +1257,7 @@ ctype_byname<wchar_t>::~ctype_byname()
 bool
 ctype_byname<wchar_t>::do_is(mask m, char_type c) const
 {
-#ifdef _LIBCPP_WCTYPE_IS_MASK
+#ifdef _LIBCUDACXX_WCTYPE_IS_MASK
     return static_cast<bool>(iswctype_l(c, m, __l));
 #else
     bool result = false;
@@ -1289,7 +1289,7 @@ ctype_byname<wchar_t>::do_is(const char_type* low, const char_type* high, mask* 
             wint_t ch = static_cast<wint_t>(*low);
             if (iswspace_l(ch, __l))
                 *vec |= space;
-#ifndef _LIBCPP_CTYPE_MASK_IS_COMPOSITE_PRINT
+#ifndef _LIBCUDACXX_CTYPE_MASK_IS_COMPOSITE_PRINT
             if (iswprint_l(ch, __l))
                 *vec |= print;
 #endif
@@ -1299,7 +1299,7 @@ ctype_byname<wchar_t>::do_is(const char_type* low, const char_type* high, mask* 
                 *vec |= upper;
             if (iswlower_l(ch, __l))
                 *vec |= lower;
-#ifndef _LIBCPP_CTYPE_MASK_IS_COMPOSITE_ALPHA
+#ifndef _LIBCUDACXX_CTYPE_MASK_IS_COMPOSITE_ALPHA
             if (iswalpha_l(ch, __l))
                 *vec |= alpha;
 #endif
@@ -1307,7 +1307,7 @@ ctype_byname<wchar_t>::do_is(const char_type* low, const char_type* high, mask* 
                 *vec |= digit;
             if (iswpunct_l(ch, __l))
                 *vec |= punct;
-#ifndef _LIBCPP_CTYPE_MASK_IS_COMPOSITE_XDIGIT
+#ifndef _LIBCUDACXX_CTYPE_MASK_IS_COMPOSITE_XDIGIT
             if (iswxdigit_l(ch, __l))
                 *vec |= xdigit;
 #endif
@@ -1325,7 +1325,7 @@ ctype_byname<wchar_t>::do_scan_is(mask m, const char_type* low, const char_type*
 {
     for (; low != high; ++low)
     {
-#ifdef _LIBCPP_WCTYPE_IS_MASK
+#ifdef _LIBCUDACXX_WCTYPE_IS_MASK
         if (iswctype_l(*low, m, __l))
             break;
 #else
@@ -1350,7 +1350,7 @@ ctype_byname<wchar_t>::do_scan_not(mask m, const char_type* low, const char_type
 {
     for (; low != high; ++low)
     {
-#ifdef _LIBCPP_WCTYPE_IS_MASK
+#ifdef _LIBCUDACXX_WCTYPE_IS_MASK
         if (!iswctype_l(*low, m, __l))
             break;
 #else
@@ -1498,7 +1498,7 @@ locale::id codecvt<wchar_t, char, mbstate_t>::id;
 
 codecvt<wchar_t, char, mbstate_t>::codecvt(size_t refs)
     : locale::facet(refs),
-      __l(_LIBCPP_GET_C_LOCALE)
+      __l(_LIBCUDACXX_GET_C_LOCALE)
 {
 }
 
@@ -1513,7 +1513,7 @@ codecvt<wchar_t, char, mbstate_t>::codecvt(const char* nm, size_t refs)
 
 codecvt<wchar_t, char, mbstate_t>::~codecvt()
 {
-    if (__l != _LIBCPP_GET_C_LOCALE)
+    if (__l != _LIBCUDACXX_GET_C_LOCALE)
         freelocale(__l);
 }
 
@@ -3255,7 +3255,7 @@ __codecvt_utf8<wchar_t>::do_out(state_type&,
     const intern_type* frm, const intern_type* frm_end, const intern_type*& frm_nxt,
     extern_type* to, extern_type* to_end, extern_type*& to_nxt) const
 {
-#if defined(_LIBCPP_SHORT_WCHAR)
+#if defined(_LIBCUDACXX_SHORT_WCHAR)
     const uint16_t* _frm = reinterpret_cast<const uint16_t*>(frm);
     const uint16_t* _frm_end = reinterpret_cast<const uint16_t*>(frm_end);
     const uint16_t* _frm_nxt = _frm;
@@ -3267,7 +3267,7 @@ __codecvt_utf8<wchar_t>::do_out(state_type&,
     uint8_t* _to = reinterpret_cast<uint8_t*>(to);
     uint8_t* _to_end = reinterpret_cast<uint8_t*>(to_end);
     uint8_t* _to_nxt = _to;
-#if defined(_LIBCPP_SHORT_WCHAR)
+#if defined(_LIBCUDACXX_SHORT_WCHAR)
     result r = ucs2_to_utf8(_frm, _frm_end, _frm_nxt, _to, _to_end, _to_nxt,
                             _Maxcode_, _Mode_);
 #else
@@ -3287,7 +3287,7 @@ __codecvt_utf8<wchar_t>::do_in(state_type&,
     const uint8_t* _frm = reinterpret_cast<const uint8_t*>(frm);
     const uint8_t* _frm_end = reinterpret_cast<const uint8_t*>(frm_end);
     const uint8_t* _frm_nxt = _frm;
-#if defined(_LIBCPP_SHORT_WCHAR)
+#if defined(_LIBCUDACXX_SHORT_WCHAR)
     uint16_t* _to = reinterpret_cast<uint16_t*>(to);
     uint16_t* _to_end = reinterpret_cast<uint16_t*>(to_end);
     uint16_t* _to_nxt = _to;
@@ -4236,7 +4236,7 @@ static bool checked_string_to_char_convert(char& dest,
   default:
     return false;
   }
-  _LIBCPP_UNREACHABLE();
+  _LIBCUDACXX_UNREACHABLE();
 }
 
 
@@ -4379,7 +4379,9 @@ void
 __check_grouping(const string& __grouping, unsigned* __g, unsigned* __g_end,
                  ios_base::iostate& __err)
 {
-    if (__grouping.size() != 0)
+//  if the grouping pattern is empty _or_ there are no grouping bits, then do nothing
+//  we always have at least a single entry in [__g, __g_end); the end of the input sequence
+	if (__grouping.size() != 0 && __g_end - __g > 1)
     {
         reverse(__g, __g_end);
         const char* __ig = __grouping.data();
@@ -5186,7 +5188,7 @@ __time_get_storage<wchar_t>::init(const ctype<wchar_t>& ct)
 }
 
 template <class CharT>
-struct _LIBCPP_HIDDEN __time_get_temp
+struct _LIBCUDACXX_HIDDEN __time_get_temp
     : public ctype_byname<CharT>
 {
     explicit __time_get_temp(const char* nm)
@@ -5421,7 +5423,7 @@ __time_put::__time_put(const string& nm)
 
 __time_put::~__time_put()
 {
-    if (__loc_ != _LIBCPP_GET_C_LOCALE)
+    if (__loc_ != _LIBCUDACXX_GET_C_LOCALE)
         freelocale(__loc_);
 }
 
@@ -5894,19 +5896,19 @@ moneypunct_byname<char, true>::init(const char* nm)
         __frac_digits_ = lc->int_frac_digits;
     else
         __frac_digits_ = base::do_frac_digits();
-#if defined(_LIBCPP_MSVCRT) || defined(__MINGW32__)
+#if defined(_LIBCUDACXX_MSVCRT) || defined(__MINGW32__)
     if (lc->p_sign_posn == 0)
-#else // _LIBCPP_MSVCRT
+#else // _LIBCUDACXX_MSVCRT
     if (lc->int_p_sign_posn == 0)
-#endif // !_LIBCPP_MSVCRT
+#endif // !_LIBCUDACXX_MSVCRT
         __positive_sign_ = "()";
     else
         __positive_sign_ = lc->positive_sign;
-#if defined(_LIBCPP_MSVCRT) || defined(__MINGW32__)
+#if defined(_LIBCUDACXX_MSVCRT) || defined(__MINGW32__)
     if(lc->n_sign_posn == 0)
-#else // _LIBCPP_MSVCRT
+#else // _LIBCUDACXX_MSVCRT
     if (lc->int_n_sign_posn == 0)
-#endif // !_LIBCPP_MSVCRT
+#endif // !_LIBCUDACXX_MSVCRT
         __negative_sign_ = "()";
     else
         __negative_sign_ = lc->negative_sign;
@@ -5914,19 +5916,19 @@ moneypunct_byname<char, true>::init(const char* nm)
     // the same places in curr_symbol since there's no way to
     // represent anything else.
     string_type __dummy_curr_symbol = __curr_symbol_;
-#if defined(_LIBCPP_MSVCRT) || defined(__MINGW32__)
+#if defined(_LIBCUDACXX_MSVCRT) || defined(__MINGW32__)
     __init_pat(__pos_format_, __dummy_curr_symbol, true,
                lc->p_cs_precedes, lc->p_sep_by_space, lc->p_sign_posn, ' ');
     __init_pat(__neg_format_, __curr_symbol_, true,
                lc->n_cs_precedes, lc->n_sep_by_space, lc->n_sign_posn, ' ');
-#else // _LIBCPP_MSVCRT
+#else // _LIBCUDACXX_MSVCRT
     __init_pat(__pos_format_, __dummy_curr_symbol, true,
                lc->int_p_cs_precedes, lc->int_p_sep_by_space,
                lc->int_p_sign_posn, ' ');
     __init_pat(__neg_format_, __curr_symbol_, true,
                lc->int_n_cs_precedes, lc->int_n_sep_by_space,
                lc->int_n_sign_posn, ' ');
-#endif // !_LIBCPP_MSVCRT
+#endif // !_LIBCUDACXX_MSVCRT
 }
 
 template<>
@@ -6026,11 +6028,11 @@ moneypunct_byname<wchar_t, true>::init(const char* nm)
         __frac_digits_ = lc->int_frac_digits;
     else
         __frac_digits_ = base::do_frac_digits();
-#if defined(_LIBCPP_MSVCRT) || defined(__MINGW32__)
+#if defined(_LIBCUDACXX_MSVCRT) || defined(__MINGW32__)
     if (lc->p_sign_posn == 0)
-#else // _LIBCPP_MSVCRT
+#else // _LIBCUDACXX_MSVCRT
     if (lc->int_p_sign_posn == 0)
-#endif // !_LIBCPP_MSVCRT
+#endif // !_LIBCUDACXX_MSVCRT
         __positive_sign_ = L"()";
     else
     {
@@ -6042,11 +6044,11 @@ moneypunct_byname<wchar_t, true>::init(const char* nm)
         wbe = wbuf + j;
         __positive_sign_.assign(wbuf, wbe);
     }
-#if defined(_LIBCPP_MSVCRT) || defined(__MINGW32__)
+#if defined(_LIBCUDACXX_MSVCRT) || defined(__MINGW32__)
     if (lc->n_sign_posn == 0)
-#else // _LIBCPP_MSVCRT
+#else // _LIBCUDACXX_MSVCRT
     if (lc->int_n_sign_posn == 0)
-#endif // !_LIBCPP_MSVCRT
+#endif // !_LIBCUDACXX_MSVCRT
         __negative_sign_ = L"()";
     else
     {
@@ -6062,91 +6064,91 @@ moneypunct_byname<wchar_t, true>::init(const char* nm)
     // the same places in curr_symbol since there's no way to
     // represent anything else.
     string_type __dummy_curr_symbol = __curr_symbol_;
-#if defined(_LIBCPP_MSVCRT) || defined(__MINGW32__)
+#if defined(_LIBCUDACXX_MSVCRT) || defined(__MINGW32__)
     __init_pat(__pos_format_, __dummy_curr_symbol, true,
                lc->p_cs_precedes, lc->p_sep_by_space, lc->p_sign_posn, L' ');
     __init_pat(__neg_format_, __curr_symbol_, true,
                lc->n_cs_precedes, lc->n_sep_by_space, lc->n_sign_posn, L' ');
-#else // _LIBCPP_MSVCRT
+#else // _LIBCUDACXX_MSVCRT
     __init_pat(__pos_format_, __dummy_curr_symbol, true,
                lc->int_p_cs_precedes, lc->int_p_sep_by_space,
                lc->int_p_sign_posn, L' ');
     __init_pat(__neg_format_, __curr_symbol_, true,
                lc->int_n_cs_precedes, lc->int_n_sep_by_space,
                lc->int_n_sign_posn, L' ');
-#endif // !_LIBCPP_MSVCRT
+#endif // !_LIBCUDACXX_MSVCRT
 }
 
 void __do_nothing(void*) {}
 
 void __throw_runtime_error(const char* msg)
 {
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
     throw runtime_error(msg);
 #else
     (void)msg;
-    _VSTD::abort();
+    _CUDA_VSTD::abort();
 #endif
 }
 
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS collate<char>;
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS collate<wchar_t>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS collate<char>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS collate<wchar_t>;
 
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS num_get<char>;
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS num_get<wchar_t>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS num_get<char>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS num_get<wchar_t>;
 
-template struct _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS __num_get<char>;
-template struct _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS __num_get<wchar_t>;
+template struct _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS __num_get<char>;
+template struct _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS __num_get<wchar_t>;
 
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS num_put<char>;
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS num_put<wchar_t>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS num_put<char>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS num_put<wchar_t>;
 
-template struct _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS __num_put<char>;
-template struct _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS __num_put<wchar_t>;
+template struct _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS __num_put<char>;
+template struct _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS __num_put<wchar_t>;
 
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS time_get<char>;
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS time_get<wchar_t>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS time_get<char>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS time_get<wchar_t>;
 
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS time_get_byname<char>;
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS time_get_byname<wchar_t>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS time_get_byname<char>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS time_get_byname<wchar_t>;
 
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS time_put<char>;
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS time_put<wchar_t>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS time_put<char>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS time_put<wchar_t>;
 
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS time_put_byname<char>;
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS time_put_byname<wchar_t>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS time_put_byname<char>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS time_put_byname<wchar_t>;
 
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS moneypunct<char, false>;
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS moneypunct<char, true>;
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS moneypunct<wchar_t, false>;
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS moneypunct<wchar_t, true>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS moneypunct<char, false>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS moneypunct<char, true>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS moneypunct<wchar_t, false>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS moneypunct<wchar_t, true>;
 
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS moneypunct_byname<char, false>;
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS moneypunct_byname<char, true>;
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS moneypunct_byname<wchar_t, false>;
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS moneypunct_byname<wchar_t, true>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS moneypunct_byname<char, false>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS moneypunct_byname<char, true>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS moneypunct_byname<wchar_t, false>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS moneypunct_byname<wchar_t, true>;
 
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS money_get<char>;
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS money_get<wchar_t>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS money_get<char>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS money_get<wchar_t>;
 
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS __money_get<char>;
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS __money_get<wchar_t>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS __money_get<char>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS __money_get<wchar_t>;
 
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS money_put<char>;
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS money_put<wchar_t>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS money_put<char>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS money_put<wchar_t>;
 
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS __money_put<char>;
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS __money_put<wchar_t>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS __money_put<char>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS __money_put<wchar_t>;
 
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS messages<char>;
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS messages<wchar_t>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS messages<char>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS messages<wchar_t>;
 
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS messages_byname<char>;
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS messages_byname<wchar_t>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS messages_byname<char>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS messages_byname<wchar_t>;
 
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS codecvt_byname<char, char, mbstate_t>;
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS codecvt_byname<wchar_t, char, mbstate_t>;
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS codecvt_byname<char16_t, char, mbstate_t>;
-template class _LIBCPP_CLASS_TEMPLATE_INSTANTIATION_VIS codecvt_byname<char32_t, char, mbstate_t>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS codecvt_byname<char, char, mbstate_t>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS codecvt_byname<wchar_t, char, mbstate_t>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS codecvt_byname<char16_t, char, mbstate_t>;
+template class _LIBCUDACXX_CLASS_TEMPLATE_INSTANTIATION_VIS codecvt_byname<char32_t, char, mbstate_t>;
 
-_LIBCPP_END_NAMESPACE_STD
+_LIBCUDACXX_END_NAMESPACE_STD

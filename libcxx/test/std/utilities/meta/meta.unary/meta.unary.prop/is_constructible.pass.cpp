@@ -13,12 +13,12 @@
 // template <class T, class... Args>
 //   struct is_constructible;
 
-// MODULES_DEFINES: _LIBCPP_TESTING_FALLBACK_IS_CONSTRUCTIBLE
-#define _LIBCPP_TESTING_FALLBACK_IS_CONSTRUCTIBLE
+// MODULES_DEFINES: _LIBCUDACXX_TESTING_FALLBACK_IS_CONSTRUCTIBLE
+#define _LIBCUDACXX_TESTING_FALLBACK_IS_CONSTRUCTIBLE
 #include <type_traits>
 #include "test_macros.h"
 
-#if TEST_STD_VER >= 11 && defined(_LIBCPP_VERSION)
+#if TEST_STD_VER >= 11 && defined(_LIBCUDACXX_VERSION)
 #define LIBCPP11_STATIC_ASSERT(...) static_assert(__VA_ARGS__)
 #else
 #define LIBCPP11_STATIC_ASSERT(...) ((void)0)
@@ -244,13 +244,17 @@ int main(int, char**)
 
     test_is_constructible<const int&, ExplicitTo<int&>&>();
     test_is_constructible<const int&, ExplicitTo<int&>>();
-    test_is_constructible<int&, ExplicitTo<int&>>();
-    test_is_constructible<const int&, ExplicitTo<int&&>>();
+
 
     // Binding through reference-compatible type is required to perform
     // direct-initialization as described in [over.match.ref] p. 1 b. 1:
+    //
+    // But the rvalue to lvalue reference binding isn't allowed according to
+    // [over.match.ref] despite Clang accepting it.
     test_is_constructible<int&, ExplicitTo<int&>>();
+#ifndef TEST_COMPILER_GCC
     test_is_constructible<const int&, ExplicitTo<int&&>>();
+#endif
 
     static_assert(std::is_constructible<int&&, ExplicitTo<int&&>>::value, "");
 #ifdef __clang__

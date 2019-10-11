@@ -17,7 +17,9 @@
 #include <experimental/memory_resource>
 #include <cassert>
 
-#include "test_memory_resource.hpp"
+#include "test_memory_resource.h"
+
+#include "test_macros.h"
 
 namespace ex = std::experimental::pmr;
 

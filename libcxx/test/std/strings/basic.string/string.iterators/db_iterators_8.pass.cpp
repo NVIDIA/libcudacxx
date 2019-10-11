@@ -10,9 +10,9 @@
 
 // Dereference non-dereferenceable iterator.
 
-#if _LIBCPP_DEBUG >= 1
+#if _LIBCUDACXX_DEBUG >= 1
 
-#define _LIBCPP_ASSERT(x, m) ((x) ? (void)0 : std::exit(0))
+#define _LIBCUDACXX_ASSERT(x, m) ((x) ? (void)0 : std::exit(0))
 
 #include <string>
 #include <cassert>
@@ -20,6 +20,7 @@
 #include <exception>
 #include <cstdlib>
 
+#include "test_macros.h"
 #include "min_allocator.h"
 
 int main(int, char**)
@@ -28,7 +29,7 @@ int main(int, char**)
     typedef std::string C;
     C c(1, '\0');
     C::iterator i = c.end();
-    char j = *i;
+    (void) *i;
     assert(false);
     }
 #if TEST_STD_VER >= 11
@@ -36,7 +37,7 @@ int main(int, char**)
     typedef std::basic_string<char, std::char_traits<char>, min_allocator<char>> C;
     C c(1, '\0');
     C::iterator i = c.end();
-    char j = *i;
+    (void) *i;
     assert(false);
     }
 #endif

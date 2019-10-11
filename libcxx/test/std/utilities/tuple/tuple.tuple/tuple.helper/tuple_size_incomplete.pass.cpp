@@ -14,12 +14,13 @@
 //   struct tuple_size<tuple<Types...>>
 //     : public integral_constant<size_t, sizeof...(Types)> { };
 
-// XFAIL: gcc-4.9
 // UNSUPPORTED: c++98, c++03
 
 #include <tuple>
 #include <array>
 #include <type_traits>
+
+#include "test_macros.h"
 
 template <class T, size_t Size = sizeof(std::tuple_size<T>)>
 constexpr bool is_complete(int) { static_assert(Size > 0, ""); return true; }

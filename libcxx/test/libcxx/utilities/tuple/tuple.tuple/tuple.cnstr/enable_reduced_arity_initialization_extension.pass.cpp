@@ -15,8 +15,8 @@
 
 // UNSUPPORTED: c++98, c++03
 
-// MODULES_DEFINES: _LIBCPP_ENABLE_TUPLE_IMPLICIT_REDUCED_ARITY_EXTENSION
-#define _LIBCPP_ENABLE_TUPLE_IMPLICIT_REDUCED_ARITY_EXTENSION
+// MODULES_DEFINES: _LIBCUDACXX_ENABLE_TUPLE_IMPLICIT_REDUCED_ARITY_EXTENSION
+#define _LIBCUDACXX_ENABLE_TUPLE_IMPLICIT_REDUCED_ARITY_EXTENSION
 #include <tuple>
 #include <cassert>
 #include <type_traits>
@@ -24,7 +24,7 @@
 #include <system_error>
 
 #include "test_macros.h"
-#include "test_convertible.hpp"
+#include "test_convertible.h"
 #include "MoveOnly.h"
 
 

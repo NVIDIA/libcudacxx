@@ -10,9 +10,9 @@
 
 // Compare iterators from different containers with <.
 
-#if _LIBCPP_DEBUG >= 1
+#if _LIBCUDACXX_DEBUG >= 1
 
-#define _LIBCPP_ASSERT(x, m) ((x) ? (void)0 : std::exit(0))
+#define _LIBCUDACXX_ASSERT(x, m) ((x) ? (void)0 : std::exit(0))
 
 #include <string>
 #include <cassert>
@@ -20,6 +20,7 @@
 #include <exception>
 #include <cstdlib>
 
+#include "test_macros.h"
 #include "min_allocator.h"
 
 int main(int, char**)
@@ -29,6 +30,7 @@ int main(int, char**)
     S s1;
     S s2;
     bool b = s1.begin() < s2.begin();
+    (void) b;
     assert(false);
     }
 #if TEST_STD_VER >= 11
@@ -37,6 +39,7 @@ int main(int, char**)
     S s1;
     S s2;
     bool b = s1.begin() < s2.begin();
+    (void) b;
     assert(false);
     }
 #endif

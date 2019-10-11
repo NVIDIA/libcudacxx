@@ -9,19 +9,20 @@
 // UNSUPPORTED: c++98, c++03, c++11, c++14
 // UNSUPPORTED: windows
 // UNSUPPORTED: libcpp-no-if-constexpr
-// MODULES_DEFINES: _LIBCPP_DEBUG=1
+// MODULES_DEFINES: _LIBCUDACXX_DEBUG=1
 
 // Can't test the system lib because this test enables debug mode
 // UNSUPPORTED: with_system_cxx_lib
 
 // test container debugging
 
-#define _LIBCPP_DEBUG 1
+#define _LIBCUDACXX_DEBUG 1
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
 #include <cassert>
-#include "container_debug_tests.hpp"
+#include "container_debug_tests.h"
+#include "test_macros.h"
 #include "debug_mode_helper.h"
 
 using namespace IteratorDebugChecks;

@@ -8,13 +8,16 @@
 
 #include "experimental/memory_resource"
 
-#ifndef _LIBCPP_HAS_NO_ATOMIC_HEADER
+#ifndef _LIBCUDACXX_HAS_NO_ATOMIC_HEADER
 #include "atomic"
-#elif !defined(_LIBCPP_HAS_NO_THREADS)
+#elif !defined(_LIBCUDACXX_HAS_NO_THREADS)
 #include "mutex"
+#if defined(__unix__) && !defined(__ANDROID__) && defined(__ELF__) && defined(_LIBCUDACXX_HAS_COMMENT_LIB_PRAGMA)
+#pragma comment(lib, "pthread")
+#endif
 #endif
 
-_LIBCPP_BEGIN_NAMESPACE_LFTS_PMR
+_LIBCUDACXX_BEGIN_NAMESPACE_LFTS_PMR
 
 // memory_resource
 
@@ -22,19 +25,19 @@ _LIBCPP_BEGIN_NAMESPACE_LFTS_PMR
 
 // new_delete_resource()
 
-class _LIBCPP_TYPE_VIS __new_delete_memory_resource_imp
+class _LIBCUDACXX_TYPE_VIS __new_delete_memory_resource_imp
     : public memory_resource
 {
     void *do_allocate(size_t size, size_t align) override {
-#ifdef _LIBCPP_HAS_NO_ALIGNED_ALLOCATION
+#ifdef _LIBCUDACXX_HAS_NO_ALIGNED_ALLOCATION
         if (__is_overaligned_for_new(align))
             __throw_bad_alloc();
 #endif
-        return _VSTD::__libcpp_allocate(size, align);
+        return _CUDA_VSTD::__libcpp_allocate(size, align);
     }
 
     void do_deallocate(void *p, size_t n, size_t align) override {
-      _VSTD::__libcpp_deallocate(p, n, align);
+      _CUDA_VSTD::__libcpp_deallocate(p, n, align);
     }
 
     bool do_is_equal(memory_resource const & other) const _NOEXCEPT override
@@ -46,7 +49,7 @@ public:
 
 // null_memory_resource()
 
-class _LIBCPP_TYPE_VIS __null_memory_resource_imp
+class _LIBCUDACXX_TYPE_VIS __null_memory_resource_imp
     : public memory_resource
 {
 public:
@@ -69,26 +72,26 @@ union ResourceInitHelper {
     __null_memory_resource_imp       null_res;
   } resources;
   char dummy;
-  _LIBCPP_CONSTEXPR_AFTER_CXX11 ResourceInitHelper() : resources() {}
+  _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 ResourceInitHelper() : resources() {}
   ~ResourceInitHelper() {}
 };
 
 // Detect if the init_priority attribute is supported.
-#if (defined(_LIBCPP_COMPILER_GCC) && defined(__APPLE__)) \
-  || defined(_LIBCPP_COMPILER_MSVC)
+#if (defined(_LIBCUDACXX_COMPILER_GCC) && defined(__APPLE__)) \
+  || defined(_LIBCUDACXX_COMPILER_MSVC)
 // GCC on Apple doesn't support the init priority attribute,
 // and MSVC doesn't support any GCC attributes.
-# define _LIBCPP_INIT_PRIORITY_MAX
+# define _LIBCUDACXX_INIT_PRIORITY_MAX
 #else
-# define _LIBCPP_INIT_PRIORITY_MAX __attribute__((init_priority(101)))
+# define _LIBCUDACXX_INIT_PRIORITY_MAX __attribute__((init_priority(101)))
 #endif
 
 // When compiled in C++14 this initialization should be a constant expression.
 // Only in C++11 is "init_priority" needed to ensure initialization order.
-#if _LIBCPP_STD_VER > 11
-_LIBCPP_SAFE_STATIC
+#if _LIBCUDACXX_STD_VER > 11
+_LIBCUDACXX_SAFE_STATIC
 #endif
-ResourceInitHelper res_init _LIBCPP_INIT_PRIORITY_MAX;
+ResourceInitHelper res_init _LIBCUDACXX_INIT_PRIORITY_MAX;
 
 } // end namespace
 
@@ -106,21 +109,21 @@ memory_resource * null_memory_resource() _NOEXCEPT {
 static memory_resource *
 __default_memory_resource(bool set = false, memory_resource * new_res = nullptr) _NOEXCEPT
 {
-#ifndef _LIBCPP_HAS_NO_ATOMIC_HEADER
-    _LIBCPP_SAFE_STATIC static atomic<memory_resource*> __res =
+#ifndef _LIBCUDACXX_HAS_NO_ATOMIC_HEADER
+    _LIBCUDACXX_SAFE_STATIC static atomic<memory_resource*> __res =
         ATOMIC_VAR_INIT(&res_init.resources.new_delete_res);
     if (set) {
         new_res = new_res ? new_res : new_delete_resource();
         // TODO: Can a weaker ordering be used?
-        return _VSTD::atomic_exchange_explicit(
-            &__res, new_res, memory_order::memory_order_acq_rel);
+        return _CUDA_VSTD::atomic_exchange_explicit(
+            &__res, new_res, memory_order_acq_rel);
     }
     else {
-        return _VSTD::atomic_load_explicit(
-            &__res, memory_order::memory_order_acquire);
+        return _CUDA_VSTD::atomic_load_explicit(
+            &__res, memory_order_acquire);
     }
-#elif !defined(_LIBCPP_HAS_NO_THREADS)
-    _LIBCPP_SAFE_STATIC static memory_resource * res = &res_init.resources.new_delete_res;
+#elif !defined(_LIBCUDACXX_HAS_NO_THREADS)
+    _LIBCUDACXX_SAFE_STATIC static memory_resource * res = &res_init.resources.new_delete_res;
     static mutex res_lock;
     if (set) {
         new_res = new_res ? new_res : new_delete_resource();
@@ -133,7 +136,7 @@ __default_memory_resource(bool set = false, memory_resource * new_res = nullptr)
         return res;
     }
 #else
-    _LIBCPP_SAFE_STATIC static memory_resource* res = &res_init.resources.new_delete_res;
+    _LIBCUDACXX_SAFE_STATIC static memory_resource* res = &res_init.resources.new_delete_res;
     if (set) {
         new_res = new_res ? new_res : new_delete_resource();
         memory_resource * old_res = res;
@@ -155,4 +158,4 @@ memory_resource * set_default_resource(memory_resource * __new_res) _NOEXCEPT
     return __default_memory_resource(true, __new_res);
 }
 
-_LIBCPP_END_NAMESPACE_LFTS_PMR
+_LIBCUDACXX_END_NAMESPACE_LFTS_PMR

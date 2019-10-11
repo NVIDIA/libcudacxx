@@ -11,7 +11,7 @@
 // template<class Y> explicit shared_ptr(auto_ptr<Y>&& r);
 // REQUIRES: c++98 || c++03 || c++11 || c++14
 
-#define _LIBCPP_DISABLE_DEPRECATION_WARNINGS
+#define _LIBCUDACXX_DISABLE_DEPRECATION_WARNINGS
 
 #include <memory>
 #include <new>
@@ -19,7 +19,7 @@
 #include <cassert>
 
 #include "test_macros.h"
-#include "count_new.hpp"
+#include "count_new.h"
 
 struct B
 {

@@ -6,6 +6,8 @@
 //
 //===----------------------------------------------------------------------===//
 
+// UNSUPPORTED: c++98, c++03
+
 // type_traits
 
 // is_convertible
@@ -20,6 +22,8 @@
 #pragma clang diagnostic ignored "-Wkeyword-compat"
 #endif
 
-#define _LIBCPP_USE_IS_CONVERTIBLE_FALLBACK
+#define _LIBCUDACXX_USE_IS_CONVERTIBLE_FALLBACK
 #include "is_convertible.pass.cpp"
+
+#include "test_macros.h"
 

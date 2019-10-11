@@ -22,9 +22,9 @@
 #include <type_traits>
 #include <variant>
 
-#include "test_convertible.hpp"
+#include "test_convertible.h"
 #include "test_macros.h"
-#include "variant_test_helpers.hpp"
+#include "variant_test_helpers.h"
 
 struct NotSwappable {};
 void swap(NotSwappable &, NotSwappable &) = delete;
@@ -392,7 +392,7 @@ void test_swap_different_alternatives() {
     assert(std::get<1>(v2).value == 100);
   }
 // FIXME: The tests below are just very libc++ specific
-#ifdef _LIBCPP_VERSION
+#ifdef _LIBCUDACXX_VERSION
   {
     using T1 = ThrowsOnSecondMove;
     using T2 = NonThrowingNonNoexceptType;
@@ -426,7 +426,7 @@ void test_swap_different_alternatives() {
 // testing libc++ extension. If either variant stores a nothrow move
 // constructible type v1.swap(v2) provides the strong exception safety
 // guarantee.
-#ifdef _LIBCPP_VERSION
+#ifdef _LIBCUDACXX_VERSION
   {
 
     using T1 = ThrowingTypeWithNothrowSwap;
@@ -466,7 +466,7 @@ void test_swap_different_alternatives() {
     assert(std::get<0>(v1).value == 42);
     assert(std::get<1>(v2).value == 100);
   }
-#endif // _LIBCPP_VERSION
+#endif // _LIBCUDACXX_VERSION
 #endif
 }
 
@@ -578,7 +578,7 @@ void test_swap_noexcept() {
   }
 }
 
-#ifdef _LIBCPP_VERSION
+#ifdef _LIBCUDACXX_VERSION
 // This is why variant should SFINAE member swap. :-)
 template class std::variant<int, NotSwappable>;
 #endif

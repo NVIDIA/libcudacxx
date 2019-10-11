@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCPP_SETJMP_H
-#define _LIBCPP_SETJMP_H
+#ifndef _LIBCUDACXX_SETJMP_H
+#define _LIBCUDACXX_SETJMP_H
 
 /*
     setjmp.h synopsis
@@ -27,7 +27,7 @@ void longjmp(jmp_buf env, int val);
 
 #include <__config>
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
@@ -41,4 +41,4 @@ void longjmp(jmp_buf env, int val);
 
 #endif // __cplusplus
 
-#endif  // _LIBCPP_SETJMP_H
+#endif  // _LIBCUDACXX_SETJMP_H

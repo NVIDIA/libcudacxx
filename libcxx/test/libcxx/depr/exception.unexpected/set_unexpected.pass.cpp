@@ -8,11 +8,13 @@
 
 // test set_unexpected
 
-// MODULES_DEFINES: _LIBCPP_ENABLE_CXX17_REMOVED_UNEXPECTED_FUNCTIONS
-#define _LIBCPP_ENABLE_CXX17_REMOVED_UNEXPECTED_FUNCTIONS
+// MODULES_DEFINES: _LIBCUDACXX_ENABLE_CXX17_REMOVED_UNEXPECTED_FUNCTIONS
+#define _LIBCUDACXX_ENABLE_CXX17_REMOVED_UNEXPECTED_FUNCTIONS
 #include <exception>
 #include <cassert>
 #include <cstdlib>
+
+#include "test_macros.h"
 
 void f1() {}
 void f2() {}

@@ -15,10 +15,12 @@
 
 // <mutex>
 
-// MODULES_DEFINES: _LIBCPP_ENABLE_THREAD_SAFETY_ANNOTATIONS
-#define _LIBCPP_ENABLE_THREAD_SAFETY_ANNOTATIONS
+// MODULES_DEFINES: _LIBCUDACXX_ENABLE_THREAD_SAFETY_ANNOTATIONS
+#define _LIBCUDACXX_ENABLE_THREAD_SAFETY_ANNOTATIONS
 
 #include <mutex>
+
+#include "test_macros.h"
 
 std::mutex m;
 int foo __attribute__((guarded_by(m)));

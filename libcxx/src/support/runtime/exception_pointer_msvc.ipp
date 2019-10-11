@@ -10,16 +10,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-_LIBCPP_CRT_FUNC void __cdecl __ExceptionPtrCreate(void*);
-_LIBCPP_CRT_FUNC void __cdecl __ExceptionPtrDestroy(void*);
-_LIBCPP_CRT_FUNC void __cdecl __ExceptionPtrCopy(void*, const void*);
-_LIBCPP_CRT_FUNC void __cdecl __ExceptionPtrAssign(void*, const void*);
-_LIBCPP_CRT_FUNC bool __cdecl __ExceptionPtrCompare(const void*, const void*);
-_LIBCPP_CRT_FUNC bool __cdecl __ExceptionPtrToBool(const void*);
-_LIBCPP_CRT_FUNC void __cdecl __ExceptionPtrSwap(void*, void*);
-_LIBCPP_CRT_FUNC void __cdecl __ExceptionPtrCurrentException(void*);
-[[noreturn]] _LIBCPP_CRT_FUNC void __cdecl __ExceptionPtrRethrow(const void*);
-_LIBCPP_CRT_FUNC void __cdecl
+_LIBCUDACXX_CRT_FUNC void __cdecl __ExceptionPtrCreate(void*);
+_LIBCUDACXX_CRT_FUNC void __cdecl __ExceptionPtrDestroy(void*);
+_LIBCUDACXX_CRT_FUNC void __cdecl __ExceptionPtrCopy(void*, const void*);
+_LIBCUDACXX_CRT_FUNC void __cdecl __ExceptionPtrAssign(void*, const void*);
+_LIBCUDACXX_CRT_FUNC bool __cdecl __ExceptionPtrCompare(const void*, const void*);
+_LIBCUDACXX_CRT_FUNC bool __cdecl __ExceptionPtrToBool(const void*);
+_LIBCUDACXX_CRT_FUNC void __cdecl __ExceptionPtrSwap(void*, void*);
+_LIBCUDACXX_CRT_FUNC void __cdecl __ExceptionPtrCurrentException(void*);
+[[noreturn]] _LIBCUDACXX_CRT_FUNC void __cdecl __ExceptionPtrRethrow(const void*);
+_LIBCUDACXX_CRT_FUNC void __cdecl
 __ExceptionPtrCopyException(void*, const void*, const void*);
 
 namespace std {
@@ -69,14 +69,14 @@ exception_ptr current_exception() _NOEXCEPT {
   return __ret;
 }
 
-_LIBCPP_NORETURN
+_LIBCUDACXX_NORETURN
 void rethrow_exception(exception_ptr p) { __ExceptionPtrRethrow(&p); }
 
 nested_exception::nested_exception() _NOEXCEPT : __ptr_(current_exception()) {}
 
 nested_exception::~nested_exception() _NOEXCEPT {}
 
-_LIBCPP_NORETURN
+_LIBCUDACXX_NORETURN
 void nested_exception::rethrow_nested() const {
   if (__ptr_ == nullptr)
     terminate();

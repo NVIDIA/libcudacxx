@@ -12,8 +12,10 @@
 
 #include <condition_variable>
 
-#ifndef _LIBCPP_VERSION
-#error _LIBCPP_VERSION not defined
+#include "test_macros.h"
+
+#ifndef _LIBCUDACXX_VERSION
+#error _LIBCUDACXX_VERSION not defined
 #endif
 
 int main(int, char**)

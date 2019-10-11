@@ -15,7 +15,9 @@
 #include <functional>
 #include <cassert>
 
-#include "counting_predicates.hpp"
+#include "counting_predicates.h"
+
+#include "test_macros.h"
 
 bool is5 ( int i ) { return i == 5; }
 

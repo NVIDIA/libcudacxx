@@ -12,6 +12,8 @@
 
 #include <type_traits>
 
+#include "test_macros.h"
+
 template <class T>
 void test_integral_imp()
 {
@@ -48,7 +50,7 @@ int main(int, char**)
     test_integral<unsigned long>();
     test_integral<long long>();
     test_integral<unsigned long long>();
-#ifndef _LIBCPP_HAS_NO_INT128
+#ifndef _LIBCUDACXX_HAS_NO_INT128
     test_integral<__int128_t>();
     test_integral<__uint128_t>();
 #endif

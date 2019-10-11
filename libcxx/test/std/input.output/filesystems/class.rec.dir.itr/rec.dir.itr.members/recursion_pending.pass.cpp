@@ -14,14 +14,14 @@
 
 // bool recursion_pending() const;
 
-#include "filesystem_include.hpp"
+#include "filesystem_include.h"
 #include <type_traits>
 #include <set>
 #include <cassert>
 
 #include "test_macros.h"
-#include "rapid-cxx-test.hpp"
-#include "filesystem_test_helper.hpp"
+#include "rapid-cxx-test.h"
+#include "filesystem_test_helper.h"
 
 using namespace fs;
 
@@ -149,7 +149,7 @@ TEST_CASE(pop_does_not_reset_value)
     // to call recursion_pending().
     if (it == endIt) {
         TEST_CHECK(notSeenDepth0.empty());
-#if defined(_LIBCPP_VERSION)
+#if defined(_LIBCUDACXX_VERSION)
         TEST_CHECK(it.recursion_pending() == false);
 #endif
     } else {

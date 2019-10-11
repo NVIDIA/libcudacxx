@@ -18,6 +18,7 @@
 #include <tuple>
 #include <cassert>
 
+#include "test_macros.h"
 #include "MoveOnly.h"
 #include "allocators.h"
 #include "../alloc_first.h"
@@ -53,7 +54,7 @@ int main(int, char**)
         assert(std::get<0>(t) == 1);
     }
 // testing extensions
-#ifdef _LIBCPP_VERSION
+#ifdef _LIBCUDACXX_VERSION
     {
         typedef std::tuple<MoveOnly, alloc_first> T;
         T t0(0 ,1);

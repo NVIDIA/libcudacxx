@@ -13,11 +13,13 @@
 // pointer_to_unary_function<Arg, Result>
 // ptr_fun(Result (*f)(Arg));
 
-#define _LIBCPP_DISABLE_DEPRECATION_WARNINGS
+#define _LIBCUDACXX_DISABLE_DEPRECATION_WARNINGS
 
 #include <functional>
 #include <type_traits>
 #include <cassert>
+
+#include "test_macros.h"
 
 double unary_f(int i) {return 0.5 - i;}
 

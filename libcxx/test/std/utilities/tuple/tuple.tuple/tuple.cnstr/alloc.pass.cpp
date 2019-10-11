@@ -13,7 +13,7 @@
 // template <class... Types> class tuple;
 
 // template <class Alloc>
-//   tuple(allocator_arg_t, const Alloc& a);
+//   explicit(see-below) tuple(allocator_arg_t, const Alloc& a);
 
 // NOTE: this constructor does not currently support tags derived from
 // allocator_arg_t because libc++ has to deduce the parameter as a template
@@ -22,6 +22,7 @@
 #include <tuple>
 #include <cassert>
 
+#include "test_macros.h"
 #include "DefaultOnly.h"
 #include "allocators.h"
 #include "../alloc_first.h"

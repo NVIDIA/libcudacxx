@@ -15,7 +15,9 @@
 #include <type_traits>
 #include <cassert>
 
-#include "archetypes.hpp"
+#include "archetypes.h"
+
+#include "test_macros.h"
 
 using std::optional;
 using std::nullopt_t;

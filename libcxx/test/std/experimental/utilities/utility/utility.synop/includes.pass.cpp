@@ -10,7 +10,9 @@
 
 #include <experimental/utility>
 
-#ifndef _LIBCPP_UTILITY
+#include "test_macros.h"
+
+#ifndef _LIBCUDACXX_UTILITY
 #   error "<experimental/utility> must include <utility>"
 #endif
 

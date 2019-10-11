@@ -12,7 +12,7 @@
 #include <process.h>
 #include <fibersapi.h>
 
-_LIBCPP_BEGIN_NAMESPACE_STD
+_LIBCUDACXX_BEGIN_NAMESPACE_STD
 
 static_assert(sizeof(__libcpp_mutex_t) == sizeof(SRWLOCK), "");
 static_assert(alignof(__libcpp_mutex_t) == alignof(SRWLOCK), "");
@@ -110,9 +110,9 @@ int __libcpp_condvar_wait(__libcpp_condvar_t *__cv, __libcpp_mutex_t *__m)
 }
 
 int __libcpp_condvar_timedwait(__libcpp_condvar_t *__cv, __libcpp_mutex_t *__m,
-                               timespec *__ts)
+                               __libcpp_timespec_t *__ts)
 {
-  using namespace _VSTD::chrono;
+  using namespace _CUDA_VSTD::chrono;
 
   auto duration = seconds(__ts->tv_sec) + nanoseconds(__ts->tv_nsec);
   auto abstime =
@@ -137,7 +137,7 @@ int __libcpp_condvar_destroy(__libcpp_condvar_t *__cv)
 }
 
 // Execute Once
-static inline _LIBCPP_INLINE_VISIBILITY BOOL CALLBACK
+static inline _LIBCUDACXX_INLINE_VISIBILITY BOOL CALLBACK
 __libcpp_init_once_execute_once_thunk(PINIT_ONCE __init_once, PVOID __parameter,
                                       PVOID *__context)
 {
@@ -177,7 +177,7 @@ struct __libcpp_beginthreadex_thunk_data
   void *__arg;
 };
 
-static inline _LIBCPP_INLINE_VISIBILITY unsigned WINAPI
+static inline _LIBCUDACXX_INLINE_VISIBILITY unsigned WINAPI
 __libcpp_beginthreadex_thunk(void *__raw_data)
 {
   auto *__data =
@@ -251,7 +251,7 @@ void __libcpp_thread_sleep_for(const chrono::nanoseconds& __ns)
 
 // Thread Local Storage
 int __libcpp_tls_create(__libcpp_tls_key* __key,
-                        void(_LIBCPP_TLS_DESTRUCTOR_CC* __at_exit)(void*))
+                        void(_LIBCUDACXX_TLS_DESTRUCTOR_CC* __at_exit)(void*))
 {
   DWORD index = FlsAlloc(__at_exit);
   if (index == FLS_OUT_OF_INDEXES)
@@ -272,4 +272,4 @@ int __libcpp_tls_set(__libcpp_tls_key __key, void *__p)
   return 0;
 }
 
-_LIBCPP_END_NAMESPACE_STD
+_LIBCUDACXX_END_NAMESPACE_STD

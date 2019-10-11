@@ -46,7 +46,7 @@ struct some_hash
 
 int main(int, char**)
 {
-#if defined(_LIBCPP_VERSION)
+#if defined(_LIBCUDACXX_VERSION)
     {
         typedef std::unordered_multimap<MoveOnly, MoveOnly> C;
         static_assert(std::is_nothrow_default_constructible<C>::value, "");
@@ -56,7 +56,7 @@ int main(int, char**)
                            std::equal_to<MoveOnly>, test_allocator<std::pair<const MoveOnly, MoveOnly>>> C;
         static_assert(std::is_nothrow_default_constructible<C>::value, "");
     }
-#endif // _LIBCPP_VERSION
+#endif // _LIBCUDACXX_VERSION
     {
         typedef std::unordered_multimap<MoveOnly, MoveOnly, std::hash<MoveOnly>,
                           std::equal_to<MoveOnly>, other_allocator<std::pair<const MoveOnly, MoveOnly>>> C;

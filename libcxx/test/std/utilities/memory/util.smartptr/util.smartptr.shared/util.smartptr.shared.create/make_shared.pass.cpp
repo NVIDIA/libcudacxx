@@ -16,7 +16,7 @@
 #include <cassert>
 
 #include "test_macros.h"
-#include "count_new.hpp"
+#include "count_new.h"
 
 #if TEST_STD_VER >= 11
 #define DELETE_FUNCTION = delete
@@ -53,7 +53,7 @@ struct Foo
     virtual ~Foo() = default;
 };
 
-#ifdef _LIBCPP_VERSION
+#ifdef _LIBCUDACXX_VERSION
 struct Result {};
 static Result theFunction() { return Result(); }
 static int resultDeletorCount;
@@ -69,9 +69,9 @@ void test_pointer_to_function() {
     }
     assert(resultDeletorCount == 2);
 }
-#else // _LIBCPP_VERSION
+#else // _LIBCUDACXX_VERSION
 void test_pointer_to_function() {}
-#endif // _LIBCPP_VERSION
+#endif // _LIBCUDACXX_VERSION
 
 int main(int, char**)
 {

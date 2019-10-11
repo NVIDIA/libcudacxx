@@ -27,7 +27,7 @@ TEST_MACROS();
 TEST_MACROS();
 #include <array>
 TEST_MACROS();
-#ifndef _LIBCPP_HAS_NO_THREADS
+#ifndef _LIBCUDACXX_HAS_NO_THREADS
 #include <atomic>
 TEST_MACROS();
 #endif
@@ -111,7 +111,7 @@ TEST_MACROS();
 TEST_MACROS();
 #include <functional>
 TEST_MACROS();
-#ifndef _LIBCPP_HAS_NO_THREADS
+#ifndef _LIBCUDACXX_HAS_NO_THREADS
 #include <future>
 TEST_MACROS();
 #endif
@@ -147,7 +147,7 @@ TEST_MACROS();
 TEST_MACROS();
 #include <memory>
 TEST_MACROS();
-#ifndef _LIBCPP_HAS_NO_THREADS
+#ifndef _LIBCUDACXX_HAS_NO_THREADS
 #include <mutex>
 TEST_MACROS();
 #endif
@@ -173,7 +173,7 @@ TEST_MACROS();
 TEST_MACROS();
 #include <setjmp.h>
 TEST_MACROS();
-#ifndef _LIBCPP_HAS_NO_THREADS
+#ifndef _LIBCUDACXX_HAS_NO_THREADS
 #include <shared_mutex>
 TEST_MACROS();
 #endif
@@ -207,7 +207,7 @@ TEST_MACROS();
 TEST_MACROS();
 #include <tgmath.h>
 TEST_MACROS();
-#ifndef _LIBCPP_HAS_NO_THREADS
+#ifndef _LIBCUDACXX_HAS_NO_THREADS
 #include <thread>
 TEST_MACROS();
 #endif

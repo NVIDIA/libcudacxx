@@ -15,12 +15,14 @@
 
 // template <class... Args> void emplace(const_iterator p, Args&&... args);
 
-#define _LIBCPP_DEBUG 1
-#define _LIBCPP_ASSERT(x, m) ((x) ? (void)0 : std::exit(0))
+#define _LIBCUDACXX_DEBUG 1
+#define _LIBCUDACXX_ASSERT(x, m) ((x) ? (void)0 : std::exit(0))
 
 #include <list>
 #include <cstdlib>
 #include <cassert>
+
+#include "test_macros.h"
 
 class A
 {

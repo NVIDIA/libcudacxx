@@ -13,6 +13,8 @@
 // _Tp midpoint(_Tp __a, _Tp __b) noexcept
 //
 
+#include <stdint.h>
+#include <limits>
 #include <numeric>
 #include <cassert>
 #include "test_macros.h"
@@ -127,7 +129,7 @@ int main(int, char**)
     unsigned_test<uint32_t>();
     unsigned_test<uint64_t>();
 
-#ifndef _LIBCPP_HAS_NO_INT128
+#ifndef _LIBCUDACXX_HAS_NO_INT128
     unsigned_test<__uint128_t>();
     signed_test<__int128_t>();
 #endif

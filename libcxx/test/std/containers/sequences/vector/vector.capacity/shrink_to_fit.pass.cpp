@@ -12,6 +12,7 @@
 
 #include <vector>
 #include <cassert>
+#include "test_macros.h"
 #include "test_allocator.h"
 #include "min_allocator.h"
 #include "asan_testing.h"
@@ -36,7 +37,7 @@ int main(int, char**)
         assert(v.size() == 101);
         assert(is_contiguous_container_asan_correct(v));
     }
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
     {
         std::vector<int, limited_allocator<int, 400> > v(100);
         v.push_back(1);

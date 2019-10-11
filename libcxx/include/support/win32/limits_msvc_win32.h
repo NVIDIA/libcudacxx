@@ -7,10 +7,10 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCPP_SUPPORT_WIN32_LIMITS_MSVC_WIN32_H
-#define _LIBCPP_SUPPORT_WIN32_LIMITS_MSVC_WIN32_H
+#ifndef _LIBCUDACXX_SUPPORT_WIN32_LIMITS_MSVC_WIN32_H
+#define _LIBCUDACXX_SUPPORT_WIN32_LIMITS_MSVC_WIN32_H
 
-#if !defined(_LIBCPP_MSVCRT)
+#if !defined(_LIBCUDACXX_MSVCRT)
 #error "This header complements the Microsoft C Runtime library, and should not be included otherwise."
 #endif
 #if defined(__clang__)
@@ -68,4 +68,4 @@
 #define __builtin_nanl(__dummmy) _LNan._Long_double
 #define __builtin_nansl(__dummy) _LSnan._Long_double
 
-#endif // _LIBCPP_SUPPORT_WIN32_LIMITS_MSVC_WIN32_H
+#endif // _LIBCUDACXX_SUPPORT_WIN32_LIMITS_MSVC_WIN32_H

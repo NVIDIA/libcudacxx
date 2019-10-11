@@ -40,6 +40,8 @@
 #include <atomic>
 #include <type_traits>
 
+#include "test_macros.h"
+
 int main(int, char**)
 {
     static_assert((std::is_same<std::atomic<char>, std::atomic_char>::value), "");
@@ -54,10 +56,10 @@ int main(int, char**)
     static_assert((std::is_same<std::atomic<long long>, std::atomic_llong>::value), "");
     static_assert((std::is_same<std::atomic<unsigned long long>, std::atomic_ullong>::value), "");
     static_assert((std::is_same<std::atomic<wchar_t>, std::atomic_wchar_t>::value), "");
-#ifndef _LIBCPP_HAS_NO_UNICODE_CHARS
+#ifndef _LIBCUDACXX_HAS_NO_UNICODE_CHARS
     static_assert((std::is_same<std::atomic<char16_t>, std::atomic_char16_t>::value), "");
     static_assert((std::is_same<std::atomic<char32_t>, std::atomic_char32_t>::value), "");
-#endif  // _LIBCPP_HAS_NO_UNICODE_CHARS
+#endif  // _LIBCUDACXX_HAS_NO_UNICODE_CHARS
 
 //  Added by LWG 2441
     static_assert((std::is_same<std::atomic<intptr_t>,  std::atomic_intptr_t>::value), "");

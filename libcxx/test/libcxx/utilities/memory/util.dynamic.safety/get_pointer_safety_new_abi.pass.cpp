@@ -13,10 +13,12 @@
 // The pointer_safety interface is no longer provided in C++03 in the new ABI.
 // XFAIL: c++98, c++03
 
-// MODULES_DEFINES: _LIBCPP_ABI_POINTER_SAFETY_ENUM_TYPE
-#define _LIBCPP_ABI_POINTER_SAFETY_ENUM_TYPE
+// MODULES_DEFINES: _LIBCUDACXX_ABI_POINTER_SAFETY_ENUM_TYPE
+#define _LIBCUDACXX_ABI_POINTER_SAFETY_ENUM_TYPE
 #include <memory>
 #include <cassert>
+
+#include "test_macros.h"
 
 int main(int, char**)
 {

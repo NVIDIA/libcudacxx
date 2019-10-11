@@ -7,7 +7,7 @@
 //===----------------------------------------------------------------------===//
 
 // UNSUPPORTED: c++98, c++03, c++11, c++14
-// XFAIL: gcc-4, gcc-5, gcc-6
+// XFAIL: gcc-5, gcc-6
 
 // <memory>
 
@@ -15,6 +15,8 @@
 
 #include <memory>
 #include <cassert>
+
+#include "test_macros.h"
 
 struct Pointer {
   constexpr Pointer(void* v) : value(v) {}

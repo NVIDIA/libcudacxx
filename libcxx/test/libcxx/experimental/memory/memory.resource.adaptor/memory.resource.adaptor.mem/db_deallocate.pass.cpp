@@ -16,13 +16,15 @@
 
 int AssertCount = 0;
 
-#define _LIBCPP_ASSERT(x, m) ((x) ? (void)0 : (void)::AssertCount++)
-#define _LIBCPP_DEBUG 0
+#define _LIBCUDACXX_ASSERT(x, m) ((x) ? (void)0 : (void)::AssertCount++)
+#define _LIBCUDACXX_DEBUG 0
 #include <experimental/memory_resource>
 #include <type_traits>
 #include <cassert>
 
-#include "test_memory_resource.hpp"
+#include "test_memory_resource.h"
+
+#include "test_macros.h"
 
 namespace ex = std::experimental::pmr;
 

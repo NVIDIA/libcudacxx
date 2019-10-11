@@ -10,10 +10,12 @@
 
 // pop_back() more than the number of elements in a deque
 
-#define _LIBCPP_ASSERT(x, m) ((x) ? (void)0 : std::exit(0))
+#define _LIBCUDACXX_ASSERT(x, m) ((x) ? (void)0 : std::exit(0))
 
 #include <cstdlib>
 #include <deque>
+
+#include "test_macros.h"
 
 
 int main(int, char**) {

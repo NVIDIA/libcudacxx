@@ -17,7 +17,9 @@
 #include <utility>
 #include <memory>
 #include <cassert>
-#include <archetypes.hpp>
+#include <archetypes.h>
+
+#include "test_macros.h"
 
 struct Base
 {

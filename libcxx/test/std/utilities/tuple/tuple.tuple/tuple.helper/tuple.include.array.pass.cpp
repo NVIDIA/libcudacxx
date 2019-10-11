@@ -11,9 +11,8 @@
 // template <class... Types> class tuple;
 
 // template <size_t I, class... Types>
-// class tuple_element<I, tuple<Types...> >
+// struct tuple_element<I, tuple<Types...> >
 // {
-// public:
 //     typedef Ti type;
 // };
 //
@@ -22,6 +21,8 @@
 
 #include <array>
 #include <type_traits>
+
+#include "test_macros.h"
 
 template <class T, std::size_t N, class U, size_t idx>
 void test()

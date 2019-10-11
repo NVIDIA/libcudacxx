@@ -15,6 +15,8 @@
 #include <iostream>
 #include <cassert>
 
+#include "test_macros.h"
+
 int main(int, char**)
 {
 #if 0
@@ -24,7 +26,7 @@ int main(int, char**)
     std::wcin >> i;
     std::wcout << L"The number is : " << i << L'\n';
 #else  // 0
-#ifdef _LIBCPP_HAS_NO_STDOUT
+#ifdef _LIBCUDACXX_HAS_NO_STDOUT
     assert(std::wcin.tie() == NULL);
 #else
     assert(std::wcin.tie() == &std::wcout);

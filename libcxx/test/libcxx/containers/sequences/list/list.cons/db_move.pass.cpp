@@ -15,12 +15,13 @@
 
 // list(list&& c);
 
-#define _LIBCPP_DEBUG 1
-#define _LIBCPP_ASSERT(x, m) ((x) ? (void)0 : std::exit(1))
+#define _LIBCUDACXX_DEBUG 1
+#define _LIBCUDACXX_ASSERT(x, m) ((x) ? (void)0 : std::exit(1))
 
 #include <list>
 #include <cstdlib>
 #include <cassert>
+#include "test_macros.h"
 #include "MoveOnly.h"
 #include "test_allocator.h"
 #include "min_allocator.h"

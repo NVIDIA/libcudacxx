@@ -16,6 +16,23 @@ New entries should be added directly below the "Version" header.
 Version 9.0
 -----------
 
+* rXXXXX - Re-rexport missing symbols from libc++abi
+
+  libc++ now re-exports `__cxa_throw_bad_array_new_length` and `__cxa_uncaught_exceptions`,
+  both of which are provided by libc++abi. This is not an ABI break because
+  we're just adding symbols. Also, this does mean that libc++ can't be linked
+  against an older version of libc++abi that doesn't provide those symbols,
+  however doing so is not supported anyway.
+
+  x86_64-unknown-linux-gnu
+  ------------------------
+  TODO
+
+  x86_64-apple-apple-darwin
+  -------------------------
+  Symbol added: ___cxa_throw_bad_array_new_length
+  Symbol added: ___cxa_uncaught_exceptions
+
 * r356518 - Integrate <filesystem> support into the shared library
 
   This patch introduces support for <filesystem> into the shared library,
@@ -210,7 +227,7 @@ Version 9.0
   Symbol added: __ZTSNSt3__14__fs10filesystem16filesystem_errorE
   Symbol added: __ZTVNSt3__14__fs10filesystem16filesystem_errorE
 
-* rTBD - Remove exception throwing debug mode handler support.
+* r356417 - Remove exception throwing debug mode handler support.
 
   The reason libc++ implemented a throwing debug mode handler was for ease of testing. Specifically,
   I thought that if a debug violation aborted, we could only test one violation per file. This made
@@ -453,7 +470,7 @@ Version 5.0
 Version 4.0
 -----------
 
-* r290651 - Add _LIBCPP_ASSERT debug handling functions
+* r290651 - Add _LIBCUDACXX_ASSERT debug handling functions
 
   All Platforms
   -------------

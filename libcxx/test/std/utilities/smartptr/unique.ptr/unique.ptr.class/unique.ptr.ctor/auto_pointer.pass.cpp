@@ -16,7 +16,7 @@
 
 // template <class U> unique_ptr(auto_ptr<U>&&) noexcept
 
-#define _LIBCPP_DISABLE_DEPRECATION_WARNINGS
+#define _LIBCUDACXX_DISABLE_DEPRECATION_WARNINGS
 
 #include <memory>
 #include <utility>

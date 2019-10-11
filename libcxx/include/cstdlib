@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCPP_CSTDLIB
-#define _LIBCPP_CSTDLIB
+#ifndef _LIBCUDACXX_CSTDLIB
+#define _LIBCUDACXX_CSTDLIB
 
 /*
     cstdlib synopsis
@@ -86,41 +86,41 @@ void *aligned_alloc(size_t alignment, size_t size);                       // C11
 #include <stdlib.h>
 #endif //__cuda_std__
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
 #ifdef __GNUC__
-#define _LIBCPP_UNREACHABLE() __builtin_unreachable()
+#define _LIBCUDACXX_UNREACHABLE() __builtin_unreachable()
 #else
-#define _LIBCPP_UNREACHABLE() _VSTD::abort()
+#define _LIBCUDACXX_UNREACHABLE() _CUDA_VSTD::abort()
 #endif
 
-_LIBCPP_BEGIN_NAMESPACE_STD
+_LIBCUDACXX_BEGIN_NAMESPACE_STD
 
 using ::size_t;
 using ::div_t;
 using ::ldiv_t;
-#ifndef _LIBCPP_HAS_NO_LONG_LONG
+#ifndef _LIBCUDACXX_HAS_NO_LONG_LONG
 using ::lldiv_t;
-#endif // _LIBCPP_HAS_NO_LONG_LONG
+#endif // _LIBCUDACXX_HAS_NO_LONG_LONG
 using ::atof;
 using ::atoi;
 using ::atol;
-#ifndef _LIBCPP_HAS_NO_LONG_LONG
+#ifndef _LIBCUDACXX_HAS_NO_LONG_LONG
 using ::atoll;
-#endif // _LIBCPP_HAS_NO_LONG_LONG
+#endif // _LIBCUDACXX_HAS_NO_LONG_LONG
 using ::strtod;
 using ::strtof;
 using ::strtold;
 using ::strtol;
-#ifndef _LIBCPP_HAS_NO_LONG_LONG
+#ifndef _LIBCUDACXX_HAS_NO_LONG_LONG
 using ::strtoll;
-#endif // _LIBCPP_HAS_NO_LONG_LONG
+#endif // _LIBCUDACXX_HAS_NO_LONG_LONG
 using ::strtoul;
-#ifndef _LIBCPP_HAS_NO_LONG_LONG
+#ifndef _LIBCUDACXX_HAS_NO_LONG_LONG
 using ::strtoull;
-#endif // _LIBCPP_HAS_NO_LONG_LONG
+#endif // _LIBCUDACXX_HAS_NO_LONG_LONG
 using ::rand;
 using ::srand;
 using ::calloc;
@@ -131,7 +131,7 @@ using ::abort;
 using ::atexit;
 using ::exit;
 using ::_Exit;
-#ifndef _LIBCPP_WINDOWS_STORE_APP
+#ifndef _LIBCUDACXX_WINDOWS_STORE_APP
 using ::getenv;
 using ::system;
 #endif
@@ -139,27 +139,27 @@ using ::bsearch;
 using ::qsort;
 using ::abs;
 using ::labs;
-#ifndef _LIBCPP_HAS_NO_LONG_LONG
+#ifndef _LIBCUDACXX_HAS_NO_LONG_LONG
 using ::llabs;
-#endif // _LIBCPP_HAS_NO_LONG_LONG
+#endif // _LIBCUDACXX_HAS_NO_LONG_LONG
 using ::div;
 using ::ldiv;
-#ifndef _LIBCPP_HAS_NO_LONG_LONG
+#ifndef _LIBCUDACXX_HAS_NO_LONG_LONG
 using ::lldiv;
-#endif // _LIBCPP_HAS_NO_LONG_LONG
+#endif // _LIBCUDACXX_HAS_NO_LONG_LONG
 using ::mblen;
 using ::mbtowc;
 using ::wctomb;
 using ::mbstowcs;
 using ::wcstombs;
-#if !defined(_LIBCPP_CXX03_LANG) && defined(_LIBCPP_HAS_QUICK_EXIT)
+#if !defined(_LIBCUDACXX_CXX03_LANG) && defined(_LIBCUDACXX_HAS_QUICK_EXIT)
 using ::at_quick_exit;
 using ::quick_exit;
 #endif
-#if _LIBCPP_STD_VER > 14 && defined(_LIBCPP_HAS_C11_FEATURES)
+#if _LIBCUDACXX_STD_VER > 14 && defined(_LIBCUDACXX_HAS_C11_FEATURES)
 using ::aligned_alloc;
 #endif
 
-_LIBCPP_END_NAMESPACE_STD
+_LIBCUDACXX_END_NAMESPACE_STD
 
-#endif  // _LIBCPP_CSTDLIB
+#endif  // _LIBCUDACXX_CSTDLIB

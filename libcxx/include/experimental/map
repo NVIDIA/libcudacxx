@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCPP_EXPERIMENTAL_MAP
-#define _LIBCPP_EXPERIMENTAL_MAP
+#ifndef _LIBCUDACXX_EXPERIMENTAL_MAP
+#define _LIBCUDACXX_EXPERIMENTAL_MAP
 /*
     experimental/map synopsis
 
@@ -37,20 +37,20 @@ namespace pmr {
 #include <map>
 #include <experimental/memory_resource>
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
-_LIBCPP_BEGIN_NAMESPACE_LFTS_PMR
+_LIBCUDACXX_BEGIN_NAMESPACE_LFTS_PMR
 
 template <class _Key, class _Value, class  _Compare = less<_Key>>
-using map = _VSTD::map<_Key, _Value, _Compare,
+using map = _CUDA_VSTD::map<_Key, _Value, _Compare,
                         polymorphic_allocator<pair<const _Key, _Value>>>;
 
 template <class _Key, class _Value, class  _Compare = less<_Key>>
-using multimap = _VSTD::multimap<_Key, _Value, _Compare,
+using multimap = _CUDA_VSTD::multimap<_Key, _Value, _Compare,
                         polymorphic_allocator<pair<const _Key, _Value>>>;
 
-_LIBCPP_END_NAMESPACE_LFTS_PMR
+_LIBCUDACXX_END_NAMESPACE_LFTS_PMR
 
-#endif /* _LIBCPP_EXPERIMENTAL_MAP */
+#endif /* _LIBCUDACXX_EXPERIMENTAL_MAP */

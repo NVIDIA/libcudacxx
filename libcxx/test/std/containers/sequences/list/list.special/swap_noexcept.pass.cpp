@@ -58,7 +58,7 @@ int main(int, char**)
         typedef std::list<MoveOnly> C;
         static_assert(noexcept(swap(std::declval<C&>(), std::declval<C&>())), "");
     }
-#if defined(_LIBCPP_VERSION)
+#if defined(_LIBCUDACXX_VERSION)
     {
         typedef std::list<MoveOnly, test_allocator<MoveOnly>> C;
         static_assert(noexcept(swap(std::declval<C&>(), std::declval<C&>())), "");
@@ -67,7 +67,7 @@ int main(int, char**)
         typedef std::list<MoveOnly, other_allocator<MoveOnly>> C;
         static_assert(noexcept(swap(std::declval<C&>(), std::declval<C&>())), "");
     }
-#endif // _LIBCPP_VERSION
+#endif // _LIBCUDACXX_VERSION
     {
         typedef std::list<MoveOnly, some_alloc<MoveOnly>> C;
 #if TEST_STD_VER >= 14

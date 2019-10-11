@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCPP_ERRNO_H
-#define _LIBCPP_ERRNO_H
+#ifndef _LIBCUDACXX_ERRNO_H
+#define _LIBCUDACXX_ERRNO_H
 
 /*
     errno.h synopsis
@@ -24,7 +24,7 @@ Macros:
 
 #include <__config>
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
@@ -394,4 +394,4 @@ static const int __elast2 = 105;
 
 #endif // __cplusplus
 
-#endif  // _LIBCPP_ERRNO_H
+#endif  // _LIBCUDACXX_ERRNO_H

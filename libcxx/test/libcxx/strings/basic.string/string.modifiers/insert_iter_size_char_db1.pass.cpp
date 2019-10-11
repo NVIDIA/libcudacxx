@@ -10,16 +10,18 @@
 
 // iterator insert(const_iterator p, size_type n, charT c);
 
-#if _LIBCPP_DEBUG >= 1
-#define _LIBCPP_ASSERT(x, m) ((x) ? (void)0 : std::exit(0))
+#if _LIBCUDACXX_DEBUG >= 1
+#define _LIBCUDACXX_ASSERT(x, m) ((x) ? (void)0 : std::exit(0))
 #endif
 
 #include <string>
 #include <cassert>
 
+#include "test_macros.h"
+
 int main(int, char**)
 {
-#if _LIBCPP_DEBUG >= 1
+#if _LIBCUDACXX_DEBUG >= 1
     {
         std::string s;
         std::string s2;

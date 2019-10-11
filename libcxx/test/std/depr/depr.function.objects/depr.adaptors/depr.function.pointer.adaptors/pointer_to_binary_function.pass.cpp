@@ -11,11 +11,13 @@
 
 // pointer_to_binary_function
 
-#define _LIBCPP_DISABLE_DEPRECATION_WARNINGS
+#define _LIBCUDACXX_DISABLE_DEPRECATION_WARNINGS
 
 #include <functional>
 #include <type_traits>
 #include <cassert>
+
+#include "test_macros.h"
 
 double binary_f(int i, short j) {return i - j + .75;}
 

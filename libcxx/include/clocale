@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCPP_CLOCALE
-#define _LIBCPP_CLOCALE
+#ifndef _LIBCUDACXX_CLOCALE
+#define _LIBCUDACXX_CLOCALE
 
 /*
     clocale synopsis
@@ -37,18 +37,18 @@ lconv* localeconv();
 #include <__config>
 #include <locale.h>
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
-_LIBCPP_BEGIN_NAMESPACE_STD
+_LIBCUDACXX_BEGIN_NAMESPACE_STD
 
 using ::lconv;
-#ifndef _LIBCPP_HAS_NO_THREAD_UNSAFE_C_FUNCTIONS
+#ifndef _LIBCUDACXX_HAS_NO_THREAD_UNSAFE_C_FUNCTIONS
 using ::setlocale;
 #endif
 using ::localeconv;
 
-_LIBCPP_END_NAMESPACE_STD
+_LIBCUDACXX_END_NAMESPACE_STD
 
-#endif  // _LIBCPP_CLOCALE
+#endif  // _LIBCUDACXX_CLOCALE

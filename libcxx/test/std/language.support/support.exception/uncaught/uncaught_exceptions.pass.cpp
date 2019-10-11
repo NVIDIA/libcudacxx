@@ -24,6 +24,8 @@
 #include <exception>
 #include <cassert>
 
+#include "test_macros.h"
+
 struct Uncaught {
     Uncaught(int depth) : d_(depth) {}
     ~Uncaught() { assert(std::uncaught_exceptions() == d_); }

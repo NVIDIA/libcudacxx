@@ -15,8 +15,9 @@
 #include <locale>
 #include <cassert>
 
+#include "test_macros.h"
 #include "platform_support.h" // locale name macros
-#include "count_new.hpp"
+#include "count_new.h"
 
 void check(const std::locale& loc)
 {

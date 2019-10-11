@@ -15,7 +15,9 @@
 
 #include <string>
 
-#include "poisoned_hash_helper.hpp"
+#include "poisoned_hash_helper.h"
+
+#include "test_macros.h"
 
 int main(int, char**) {
   test_library_hash_specializations_available();
@@ -25,7 +27,7 @@ int main(int, char**) {
 #if defined(__cpp_lib_char8_t) && __cpp_lib_char8_t >= 201811L
     test_hash_enabled_for_type<std::u8string>();
 #endif
-#ifndef _LIBCPP_HAS_NO_UNICODE_CHARS
+#ifndef _LIBCUDACXX_HAS_NO_UNICODE_CHARS
     test_hash_enabled_for_type<std::u16string>();
     test_hash_enabled_for_type<std::u32string>();
 #endif

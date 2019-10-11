@@ -41,7 +41,7 @@ The basic steps needed to build libc++ are:
 
    .. warning::
      * Replacing your systems libc++ installation could render the system non-functional.
-     * Mac OS X will not boot without a valid copy of ``libc++.1.dylib`` in ``/usr/lib``.
+     * macOS will not boot without a valid copy of ``libc++.1.dylib`` in ``/usr/lib``.
 
 
 The instructions are for building libc++ on
@@ -201,10 +201,10 @@ libc++ specific options
 
   **Default**: ``OFF``
 
-  Do not export any symbols from the static libc++ library. This is useful when
+  Do not export any symbols from the static libc++ library.
   This is useful when the static libc++ library is being linked into shared
   libraries that may be used in with other shared libraries that use different
-  C++ library. We want to avoid avoid exporting any libc++ symbols in that case.
+  C++ library. We want to avoid exporting any libc++ symbols in that case.
 
 .. option:: LIBCXX_ENABLE_FILESYSTEM:BOOL
 
@@ -288,6 +288,12 @@ libc++ Feature Options
 
   Build libc++ with run time type information.
 
+.. option:: LIBCXX_INCLUDE_TESTS:BOOL
+
+  **Default**: ``ON`` (or value of ``LLVM_INCLUDE_DIR``)
+
+  Build the libc++ tests.
+
 .. option:: LIBCXX_INCLUDE_BENCHMARKS:BOOL
 
   **Default**: ``ON``
@@ -311,7 +317,7 @@ libc++ Feature Options
   **Values**:: ``libc++``, ``libstdc++``
 
   Build the libc++ benchmark tests and Google Benchmark library against the
-  specified standard library on the platform. On linux this can be used to
+  specified standard library on the platform. On Linux this can be used to
   compare libc++ to libstdc++ by building the benchmark tests against both
   standard libraries.
 
@@ -326,7 +332,7 @@ libc++ Feature Options
 
   Pick the default for whether to constrain ABI-unstable symbols to
   each individual translation unit. This setting controls whether
-  `_LIBCPP_HIDE_FROM_ABI_PER_TU_BY_DEFAULT` is defined by default --
+  `_LIBCUDACXX_HIDE_FROM_ABI_PER_TU_BY_DEFAULT` is defined by default --
   see the documentation of that macro for details.
 
 
@@ -369,6 +375,21 @@ The following options allow building libc++ for a different ABI version.
   A semicolon-separated list of ABI macros to persist in the site config header.
   See ``include/__config`` for the list of ABI macros.
 
+
+.. option:: LIBCXX_HAS_MERGED_TYPEINFO_NAMES_DEFAULT
+
+  **Default**: ``None``. When defined this option overrides the libraries default configuration
+  for whether merged type info names are present.
+
+
+  Build ``std::type_info`` with the assumption that type info names for a type have been fully
+  merged are unique across the entire program. This may not be the case for libraries built with
+  ``-Bsymbolic`` or due to compiler or linker bugs (Ex. llvm.org/PR37398).
+
+  When the value is ``ON`` typeinfo comparisons compare only the pointer value, otherwise ``strcmp``
+  is used as a fallback.
+
+
 .. _LLVM-specific variables:
 
 LLVM-specific options
@@ -383,7 +404,7 @@ LLVM-specific options
 .. option:: LLVM_BUILD_32_BITS:BOOL
 
   Build 32-bits executables and libraries on 64-bits systems. This option is
-  available only on some 64-bits unix systems. Defaults to OFF.
+  available only on some 64-bits Unix systems. Defaults to OFF.
 
 .. option:: LLVM_LIT_ARGS:STRING
 
@@ -506,7 +527,7 @@ These instructions should only be used when you can't install your ABI library.
 
 Normally you must link libc++ against a ABI shared library that the
 linker can find.  If you want to build and test libc++ against an ABI
-library not in the linker's path you needq to set
+library not in the linker's path you need to set
 ``-DLIBCXX_CXX_ABI_LIBRARY_PATH=/path/to/abi/lib`` when configuring CMake.
 
 An example build using libc++abi would look like:

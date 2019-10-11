@@ -11,6 +11,7 @@
 #include <cwchar>
 #include <ctime>
 #include <cstdarg>
+#include <cstdio>
 #include <type_traits>
 
 #include "test_macros.h"
@@ -109,7 +110,7 @@ int main(int, char**)
     // These tests fail on systems whose C library doesn't provide a correct overload
     // set for wcschr, wcspbrk, wcsrchr, wcsstr, and wmemchr, unless the compiler is
     // a suitably recent version of Clang.
-#if !defined(__APPLE__) || defined(_LIBCPP_PREFERRED_OVERLOAD)
+#if !defined(__APPLE__) || defined(_LIBCUDACXX_PREFERRED_OVERLOAD)
     ASSERT_SAME_TYPE(const wchar_t*,     decltype(std::wcschr((const wchar_t*)0, L' ')));
     ASSERT_SAME_TYPE(const wchar_t*,     decltype(std::wcspbrk((const wchar_t*)0, L"")));
     ASSERT_SAME_TYPE(const wchar_t*,     decltype(std::wcsrchr((const wchar_t*)0, L' ')));
@@ -117,13 +118,13 @@ int main(int, char**)
     ASSERT_SAME_TYPE(const wchar_t*,     decltype(std::wmemchr((const wchar_t*)0, L' ', s)));
 #endif
 
-#ifndef _LIBCPP_HAS_NO_STDIN
+#ifndef _LIBCUDACXX_HAS_NO_STDIN
     ASSERT_SAME_TYPE(std::wint_t,        decltype(std::getwchar()));
     ASSERT_SAME_TYPE(int,                decltype(std::vwscanf(L"", va)));
     ASSERT_SAME_TYPE(int,                decltype(std::wscanf(L"")));
 #endif
 
-#ifndef _LIBCPP_HAS_NO_STDOUT
+#ifndef _LIBCUDACXX_HAS_NO_STDOUT
     ASSERT_SAME_TYPE(std::wint_t,        decltype(std::putwchar(L' ')));
     ASSERT_SAME_TYPE(int,                decltype(std::vwprintf(L"", va)));
     ASSERT_SAME_TYPE(int,                decltype(std::wprintf(L"")));

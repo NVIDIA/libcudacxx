@@ -13,11 +13,12 @@
 // Can't test the system lib because this test enables debug mode
 // UNSUPPORTED: with_system_cxx_lib
 
-// MODULES_DEFINES: _LIBCPP_DEBUG=1
+// MODULES_DEFINES: _LIBCUDACXX_DEBUG=1
 
-#define _LIBCPP_DEBUG 1
+#define _LIBCUDACXX_DEBUG 1
 
 #include <__debug>
+#include "test_macros.h"
 #include "debug_mode_helper.h"
 
 
@@ -46,7 +47,7 @@ inline bool TestDeathTest(const char* stmt, Func&& func, DeathTest::ResultKind E
 #define TEST_DEATH_TEST_MATCHES(RK, Matcher, ...) assert((TestDeathTest(#__VA_ARGS__, [&]() { __VA_ARGS__; }, RK, Matcher)))
 
 void my_libcpp_assert() {
-  _LIBCPP_ASSERT(false, "other");
+  _LIBCUDACXX_ASSERT(false, "other");
 }
 
 void test_no_match_found() {

@@ -11,10 +11,12 @@
 // deque()
 // deque::iterator()
 
-// MODULES_DEFINES: _LIBCPP_ABI_INCOMPLETE_TYPES_IN_DEQUE
-#define _LIBCPP_ABI_INCOMPLETE_TYPES_IN_DEQUE
+// MODULES_DEFINES: _LIBCUDACXX_ABI_INCOMPLETE_TYPES_IN_DEQUE
+#define _LIBCUDACXX_ABI_INCOMPLETE_TYPES_IN_DEQUE
 #include <deque>
 #include <cassert>
+
+#include "test_macros.h"
 
 struct A {
   std::deque<A> d;

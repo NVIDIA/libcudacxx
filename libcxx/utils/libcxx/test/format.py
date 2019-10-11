@@ -131,13 +131,13 @@ class LibcxxTestFormat(object):
             test_cxx.compile_flags += [('-D%s' % mdef.strip()) for
                                        mdef in extra_modules_defines]
             test_cxx.addWarningFlagIfSupported('-Wno-macro-redefined')
-            # FIXME: libc++ debug tests #define _LIBCPP_ASSERT to override it
+            # FIXME: libc++ debug tests #define _LIBCUDACXX_ASSERT to override it
             # If we see this we need to build the test against uniquely built
             # modules.
             if is_libcxx_test:
-                with open(test.getSourcePath(), 'r') as f:
+                with open(test.getSourcePath(), 'rb') as f:
                     contents = f.read()
-                if '#define _LIBCPP_ASSERT' in contents:
+                if b'#define _LIBCUDACXX_ASSERT' in contents:
                     test_cxx.useModules(False)
 
         if is_objcxx_test:
@@ -224,10 +224,11 @@ class LibcxxTestFormat(object):
     def _evaluate_fail_test(self, test, test_cxx, parsers):
         source_path = test.getSourcePath()
         # FIXME: lift this detection into LLVM/LIT.
-        with open(source_path, 'r') as f:
+        with open(source_path, 'rb') as f:
             contents = f.read()
-        verify_tags = ['expected-note', 'expected-remark', 'expected-warning',
-                       'expected-error', 'expected-no-diagnostics']
+        verify_tags = [b'expected-note', b'expected-remark',
+                       b'expected-warning', b'expected-error',
+                       b'expected-no-diagnostics']
         use_verify = self.use_verify_for_fail and \
                      any([tag in contents for tag in verify_tags])
         # FIXME(EricWF): GCC 5 does not evaluate static assertions that
@@ -249,13 +250,14 @@ class LibcxxTestFormat(object):
             #
             # Therefore, we check if the test was expected to fail because of
             # nodiscard before enabling it
-            test_str_list = ['ignoring return value', 'nodiscard', 'NODISCARD']
+            test_str_list = [b'ignoring return value', b'nodiscard',
+                             b'NODISCARD']
             if any(test_str in contents for test_str in test_str_list):
                 test_cxx.flags += ['-Werror=unused-result']
         cmd, out, err, rc = test_cxx.compile(source_path, out=os.devnull)
-        expected_rc = [0] if use_verify else [1,2]
+        check_rc = lambda rc: rc == 0 if use_verify else rc != 0
         report = libcxx.util.makeReport(cmd, out, err, rc)
-        if rc in expected_rc:
+        if check_rc(rc):
             return lit.Test.Result(lit.Test.PASS, report)
         else:
             report += ('Expected compilation to fail!\n' if not use_verify else

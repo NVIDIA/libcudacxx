@@ -10,9 +10,9 @@
 
 // Dereference non-dereferenceable iterator.
 
-#if _LIBCPP_DEBUG >= 1
+#if _LIBCUDACXX_DEBUG >= 1
 
-#define _LIBCPP_ASSERT(x, m) ((x) ? (void)0 : std::exit(0))
+#define _LIBCUDACXX_ASSERT(x, m) ((x) ? (void)0 : std::exit(0))
 
 #include <unordered_set>
 #include <cassert>
@@ -20,6 +20,7 @@
 #include <exception>
 #include <cstdlib>
 
+#include "test_macros.h"
 #include "min_allocator.h"
 
 int main(int, char**)
@@ -29,16 +30,16 @@ int main(int, char**)
     typedef std::unordered_multiset<T> C;
     C c(1);
     C::iterator i = c.end();
-    T j = *i;
+    (void) *i;
     assert(false);
     }
 #if TEST_STD_VER >= 11
     {
     typedef int T;
-    typedef std::unordered_multiset<T, min_allocator<T>> C;
+    typedef std::unordered_multiset<T, std::hash<T>, std::equal_to<T>, min_allocator<T>> C;
     C c(1);
     C::iterator i = c.end();
-    T j = *i;
+    (void) *i;
     assert(false);
     }
 #endif

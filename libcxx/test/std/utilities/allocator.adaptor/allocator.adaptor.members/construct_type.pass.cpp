@@ -22,8 +22,10 @@
 #include <tuple>
 #include <cassert>
 #include <cstdlib>
-#include "uses_alloc_types.hpp"
-#include "controlled_allocators.hpp"
+#include "uses_alloc_types.h"
+#include "controlled_allocators.h"
+
+#include "test_macros.h"
 
 // - If uses_allocator_v<T, inner_allocator_type> is false and
 //   is_constructible_v<T, Args...> is true, calls
