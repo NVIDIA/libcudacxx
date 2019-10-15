@@ -49,39 +49,52 @@ _LIBCPP_BEGIN_NAMESPACE_STD
 
 _LIBCPP_END_NAMESPACE_STD
 
-#if TEST_STD_VER >= 11
+template <class> struct VoidT { typedef void type; };
+
+#if TEST_STD_VER < 11
+template <class Trait, class = void>
+struct no_common_type_imp : std::true_type {};
+
+template <class Trait>
+struct no_common_type_imp<Trait, typename VoidT<typename Trait::type>::type>
+    : std::false_type {};
+
+struct NoArgTag;
+
+template <class Tp = NoArgTag, class Up = NoArgTag, class Vp = NoArgTag>
+struct no_common_type : no_common_type_imp<std::common_type<Tp, Up, Vp> > {};
+template <class Tp, class Up>
+struct no_common_type<Tp, Up> : no_common_type_imp<std::common_type<Tp, Up> > {
+};
+template <class Tp>
+struct no_common_type<Tp> : no_common_type_imp<std::common_type<Tp> > {};
+template <>
+struct no_common_type<> : no_common_type_imp<std::common_type<> > {};
+#else
 template <class Tp>
 struct always_bool_imp { using type = bool; };
 template <class Tp> using always_bool = typename always_bool_imp<Tp>::type;
 
 template <class ...Args>
 constexpr auto no_common_type_imp(int)
-  -> always_bool<typename std::common_type<Args...>::type>
-  { return false; }
+-> always_bool<typename std::common_type<Args...>::type>
+{ return false; }
 
 template <class ...Args>
 constexpr bool no_common_type_imp(long) { return true; }
 
 template <class ...Args>
 using no_common_type = std::integral_constant<bool, no_common_type_imp<Args...>(0)>;
-
-template <class Tp>
-using Decay = typename std::decay<Tp>::type;
-
-template <class ...Args>
-using CommonType = typename std::common_type<Args...>::type;
+#endif
 
 template <class T1, class T2>
-struct TernaryOpImp {
-  static_assert(std::is_same<Decay<T1>, T1>::value, "must be same");
-  static_assert(std::is_same<Decay<T2>, T2>::value, "must be same");
-  using type = typename std::decay<
+struct TernaryOp {
+  static_assert((std::is_same<typename std::decay<T1>::type, T1>::value), "must be same");
+  static_assert((std::is_same<typename std::decay<T2>::type, T2>::value), "must be same");
+  typedef typename std::decay<
       decltype(false ? std::declval<T1>() : std::declval<T2>())
-    >::type;
+    >::type type;
 };
-
-template <class T1, class T2>
-using TernaryOp = typename TernaryOpImp<T1, T2>::type;
 
 // -- If sizeof...(T) is zero, there shall be no member type.
 __host__ __device__
@@ -93,24 +106,24 @@ void test_bullet_one() {
 // The member typedef-name type shall denote the same type as decay_t<T0>.
 __host__ __device__
 void test_bullet_two() {
-  static_assert(std::is_same<CommonType<void>, void>::value, "");
-  static_assert(std::is_same<CommonType<int>, int>::value, "");
-  static_assert(std::is_same<CommonType<int const>, int>::value, "");
-  static_assert(std::is_same<CommonType<int volatile[]>, int volatile*>::value, "");
-  static_assert(std::is_same<CommonType<void(&)()>, void(*)()>::value, "");
+  static_assert((std::is_same<std::common_type<void>::type, void>::value), "");
+  static_assert((std::is_same<std::common_type<int>::type, int>::value), "");
+  static_assert((std::is_same<std::common_type<int const>::type, int>::value), "");
+  static_assert((std::is_same<std::common_type<int volatile[]>::type, int volatile*>::value), "");
+  static_assert((std::is_same<std::common_type<void(&)()>::type, void(*)()>::value), "");
 
-  static_assert(no_common_type<X<double> >::value, "");
+  static_assert((no_common_type<X<double> >::value), "");
 }
 
 template <class T, class U, class Expect>
 __host__ __device__
 void test_bullet_three_one_imp() {
-  using DT = Decay<T>;
-  using DU = Decay<U>;
-  static_assert(!std::is_same<T, DT>::value || !std::is_same<U, DU>::value, "");
-  static_assert(std::is_same<CommonType<T, U>, Expect>::value, "");
-  static_assert(std::is_same<CommonType<U, T>, Expect>::value, "");
-  static_assert(std::is_same<CommonType<T, U>, CommonType<DT, DU>>::value, "");
+  typedef typename std::decay<T>::type DT;
+  typedef typename std::decay<U>::type DU;
+  static_assert((!std::is_same<T, DT>::value || !std::is_same<U, DU>::value), "");
+  static_assert((std::is_same<typename std::common_type<T, U>::type, Expect>::value), "");
+  static_assert((std::is_same<typename std::common_type<U, T>::type, Expect>::value), "");
+  static_assert((std::is_same<typename std::common_type<T, U>::type, typename std::common_type<DT, DU>::type>::value), "");
 }
 
 // (3.3)
@@ -125,30 +138,30 @@ void test_bullet_three_one() {
   // Test that the user provided specialization of common_type is used after
   // decaying T1.
   {
-    using T1 = S<int> const;
-    using T2 = int;
+    typedef const S<int> T1;
+    typedef int T2;
     test_bullet_three_one_imp<T1, T2, S<int> >();
   }
   // Test a user provided specialization that does not provide a typedef.
   {
-    using T1 = ::S<long> const;
-    using T2 = long;
-    static_assert(no_common_type<T1, T2>::value, "");
-    static_assert(no_common_type<T2, T1>::value, "");
+    typedef const ::S<long> T1;
+    typedef long T2;
+    static_assert((no_common_type<T1, T2>::value), "");
+    static_assert((no_common_type<T2, T1>::value), "");
   }
   // Test that the ternary operator is not applied when the types are the
   // same.
   {
-    using T1 = const void;
-    using Expect = void;
-    static_assert(std::is_same<CommonType<T1, T1>, Expect>::value, "");
-    static_assert(std::is_same<CommonType<T1, T1>, CommonType<T1>>::value, "");
+    typedef const void T1;
+    typedef void Expect;
+    static_assert((std::is_same<std::common_type<T1, T1>::type, Expect>::value), "");
+    static_assert((std::is_same<std::common_type<T1, T1>::type, std::common_type<T1>::type>::value), "");
   }
   {
-    using T1 = int const[];
-    using Expect = int const*;
-    static_assert(std::is_same<CommonType<T1, T1>, Expect>::value, "");
-    static_assert(std::is_same<CommonType<T1, T1>, CommonType<T1>>::value, "");
+    typedef int const T1[];
+    typedef int const* Expect;
+    static_assert((std::is_same<std::common_type<T1, T1>::type, Expect>::value), "");
+    static_assert((std::is_same<std::common_type<T1, T1>::type, std::common_type<T1>::type>::value), "");
   }
 }
 
@@ -164,35 +177,35 @@ void test_bullet_three_one() {
 __host__ __device__
 void test_bullet_three_two() {
   {
-    using T1 = int const*;
-    using T2 = int*;
-    using Expect = TernaryOp<T1, T2>;
-    static_assert(std::is_same<CommonType<T1, T2>, Expect>::value, "");
-    static_assert(std::is_same<CommonType<T2, T1>, Expect>::value, "");
+    typedef int const* T1;
+    typedef int* T2;
+    typedef TernaryOp<T1, T2>::type Expect;
+    static_assert((std::is_same<std::common_type<T1, T2>::type, Expect>::value), "");
+    static_assert((std::is_same<std::common_type<T2, T1>::type, Expect>::value), "");
   }
   // Test that there is no ::type member when the ternary op is ill-formed
 #ifndef TEST_COMPILER_C1XX
   // TODO: Investigate why this fails.
   {
-    using T1 = int;
-    using T2 = void;
-    static_assert(no_common_type<T1, T2>::value, "");
-    static_assert(no_common_type<T2, T1>::value, "");
+    typedef int T1;
+    typedef void T2;
+    static_assert((no_common_type<T1, T2>::value), "");
+    static_assert((no_common_type<T2, T1>::value), "");
   }
 #endif
   {
-    using T1 = int;
-    using T2 = X<int>;
-    static_assert(no_common_type<T1, T2>::value, "");
-    static_assert(no_common_type<T2, T1>::value, "");
+    typedef int T1;
+    typedef X<int> T2;
+    static_assert((no_common_type<T1, T2>::value), "");
+    static_assert((no_common_type<T2, T1>::value), "");
   }
   // Test that the ternary operator is not applied when the types are the
   // same.
   {
-    using T1 = void;
-    using Expect = void;
-    static_assert(std::is_same<CommonType<T1, T1>, Expect>::value, "");
-    static_assert(std::is_same<CommonType<T1, T1>, CommonType<T1>>::value, "");
+    typedef void T1;
+    typedef void Expect;
+    static_assert((std::is_same<std::common_type<T1, T1>::type, Expect>::value), "");
+    static_assert((std::is_same<std::common_type<T1, T1>::type, std::common_type<T1>::type>::value), "");
   }
 }
 
@@ -206,10 +219,12 @@ void test_bullet_three_two() {
 __host__ __device__
 void test_bullet_four() {
   { // test that there is no ::type member
-    static_assert(no_common_type<int, E>::value, "");
-    static_assert(no_common_type<int, int, E>::value, "");
-    static_assert(no_common_type<int, int, E, int>::value, "");
-    static_assert(no_common_type<int, int, int, E>::value, "");
+    static_assert((no_common_type<int, E>::value), "");
+    static_assert((no_common_type<int, int, E>::value), "");
+#if TEST_STD_VER >= 11
+    static_assert((no_common_type<int, int, E, int>::value), "");
+    static_assert((no_common_type<int, int, int, E>::value), "");
+#endif
   }
 }
 
@@ -217,8 +232,8 @@ void test_bullet_four() {
 // The example code specified in Note B for common_type
 namespace note_b_example {
 
-using PF1 = bool (&)();
-using PF2 = short (*)(long);
+typedef bool (&PF1)();
+typedef short (*PF2)(long);
 
 struct S {
   operator PF2() const;
@@ -227,22 +242,24 @@ struct S {
   char data;
 };
 
-using PMF = void (S::*)(long) const;
-using PMD = char S::*;
+typedef void (S::*PMF)(long) const;
+typedef char S::*PMD;
 
 using std::is_same;
 using std::result_of;
 // using std::unique_ptr;
 
-static_assert(is_same<typename result_of<S(int)>::type, short>::value, "Error!");
-static_assert(is_same<typename result_of<S&(unsigned char, int&)>::type, double>::value, "Error!");
-static_assert(is_same<typename result_of<PF1()>::type, bool>::value, "Error!");
-// static_assert(is_same<typename result_of<PMF(unique_ptr<S>, int)>::type, void>::value, "Error!");
-static_assert(is_same<typename result_of<PMD(S)>::type, char&&>::value, "Error!");
-static_assert(is_same<typename result_of<PMD(const S*)>::type, const char&>::value, "Error!");
+static_assert((is_same<result_of<S(int)>::type, short>::value), "Error!");
+static_assert((is_same<result_of<S&(unsigned char, int&)>::type, double>::value), "Error!");
+static_assert((is_same<result_of<PF1()>::type, bool>::value), "Error!");
+static_assert((is_same<result_of<PMF(unique_ptr<S>, int)>::type, void>::value), "Error!");
+#if TEST_STD_VER >= 11
+static_assert((is_same<result_of<PMD(S)>::type, char&&>::value), "Error!");
+#endif
+static_assert((is_same<result_of<PMD(const S*)>::type, const char&>::value), "Error!");
 
 } // namespace note_b_example
-#endif // TEST_STD_VER >= 11
+
 
 int main(int, char**)
 {
@@ -296,13 +313,11 @@ int main(int, char**)
     static_assert((std::is_same<std::common_type<int, S<int>, S<int> >::type, S<int> >::value), "");
     static_assert((std::is_same<std::common_type<int, int, S<int> >::type, S<int> >::value), "");
 
-#if TEST_STD_VER >= 11
-    test_bullet_one();
-    test_bullet_two();
-    test_bullet_three_one();
-    test_bullet_three_two();
-    test_bullet_four();
-#endif
+  test_bullet_one();
+  test_bullet_two();
+  test_bullet_three_one();
+  test_bullet_three_two();
+  test_bullet_four();
 
     // P0548
     static_assert((std::is_same<std::common_type<S<int> >::type,         S<int> >::value), "");
@@ -317,6 +332,11 @@ int main(int, char**)
     static_assert((std::is_same<std::common_type<const int, int>::type,       int>::value), "");
     static_assert((std::is_same<std::common_type<int, const int>::type,       int>::value), "");
     static_assert((std::is_same<std::common_type<const int, const int>::type, int>::value), "");
+
+#if TEST_STD_VER >= 11
+    // Test that we're really variadic in C++11
+    static_assert(std::is_same<std::common_type<int, int, int, int, int, int, int, int>::type, int>::value, "");
+#endif
 
   return 0;
 }

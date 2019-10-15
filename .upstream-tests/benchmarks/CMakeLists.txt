@@ -84,6 +84,7 @@ endif()
 
 set(BENCHMARK_TEST_COMPILE_FLAGS
     ${BENCHMARK_DIALECT_FLAG} -O2
+    -fsized-deallocation
     -I${BENCHMARK_LIBCXX_INSTALL}/include
     -I${LIBCXX_SOURCE_DIR}/test/support
 )
@@ -137,7 +138,6 @@ function(add_benchmark_test name source_file)
   add_executable(${libcxx_target} EXCLUDE_FROM_ALL ${source_file})
   add_dependencies(${libcxx_target} cxx cxx-headers google-benchmark-libcxx)
   add_dependencies(cxx-benchmarks ${libcxx_target})
-  target_link_libraries(${libcxx_target} ${LIBCXX_LIBRARIES})
   if (LIBCXX_ENABLE_SHARED)
     target_link_libraries(${libcxx_target} cxx_shared)
   else()
@@ -220,3 +220,4 @@ if (LIBCXX_INCLUDE_TESTS)
           DEPENDS cxx-benchmarks ${LIBCXX_TEST_DEPS}
           ARGS ${BENCHMARK_LIT_ARGS})
 endif()
+

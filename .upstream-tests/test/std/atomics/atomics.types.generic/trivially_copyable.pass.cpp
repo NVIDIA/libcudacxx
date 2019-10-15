@@ -57,6 +57,8 @@
 // #include <thread> // for thread_id
 // #include <chrono> // for nanoseconds
 
+#include "test_macros.h"
+
 struct TriviallyCopyable {
     __host__ __device__
     TriviallyCopyable ( int i ) : i_(i) {}

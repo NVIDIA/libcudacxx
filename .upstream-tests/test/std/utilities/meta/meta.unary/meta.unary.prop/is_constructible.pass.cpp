@@ -284,20 +284,16 @@ int main(int, char**)
 
     test_is_constructible<const int&, ExplicitTo<int&>&>();
     test_is_constructible<const int&, ExplicitTo<int&>>();
-    test_is_constructible<int&, ExplicitTo<int&>>();
-
-    // TODO add nvbug tracking
-#if !(defined(TEST_COMPILER_NVCC) || defined(TEST_COMPILER_NVRTC))
-    test_is_constructible<const int&, ExplicitTo<int&&>>();
-#endif
 
     // Binding through reference-compatible type is required to perform
     // direct-initialization as described in [over.match.ref] p. 1 b. 1:
+    //
+    // But the rvalue to lvalue reference binding isn't allowed according to
+    // [over.match.ref] despite Clang accepting it.
     test_is_constructible<int&, ExplicitTo<int&>>();
-
-    // TODO add nvbug tracking
-#if !(defined(TEST_COMPILER_NVCC) || defined(TEST_COMPILER_NVRTC))
+#ifndef TEST_COMPILER_GCC
     test_is_constructible<const int&, ExplicitTo<int&&>>();
+#endif
 
     static_assert(std::is_constructible<int&&, ExplicitTo<int&&>>::value, "");
 #endif

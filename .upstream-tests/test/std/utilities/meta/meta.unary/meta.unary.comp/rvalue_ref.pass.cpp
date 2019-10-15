@@ -6,13 +6,13 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++98, c++03
-
 // type_traits
 
 // rvalue_ref
 
 #include <type_traits>
+
+#include "test_macros.h"
 
 template <class T>
 __host__ __device__
