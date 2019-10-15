@@ -8,27 +8,27 @@
 //
 // UNSUPPORTED: libcpp-has-no-threads, pre-sm-60
 
-// <cuda/std/atomic>
+// <atomic>
 
 // struct atomic_flag
 
 // void atomic_flag_clear(volatile atomic_flag*);
 // void atomic_flag_clear(atomic_flag*);
 
-#include <cuda/std/atomic>
-#include <cuda/std/cassert>
+#include <atomic>
+#include <cassert>
 
 int main(int, char**)
 {
     {
-        cuda::std::atomic_flag f;
+        std::atomic_flag f;
         f.clear();
         f.test_and_set();
         atomic_flag_clear(&f);
         assert(f.test_and_set() == 0);
     }
     {
-        volatile cuda::std::atomic_flag f;
+        volatile std::atomic_flag f;
         f.clear();
         f.test_and_set();
         atomic_flag_clear(&f);

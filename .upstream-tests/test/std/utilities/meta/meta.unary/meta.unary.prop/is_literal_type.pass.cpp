@@ -10,23 +10,23 @@
 
 // is_literal_type
 
-#include <cuda/std/type_traits>
-#include <cuda/std/cstddef>       // for cuda::std::nullptr_t
+#include <type_traits>
+#include <cstddef>       // for std::nullptr_t
 #include "test_macros.h"
 
 template <class T>
 __host__ __device__
 void test_is_literal_type()
 {
-    static_assert( cuda::std::is_literal_type<T>::value, "");
-    static_assert( cuda::std::is_literal_type<const T>::value, "");
-    static_assert( cuda::std::is_literal_type<volatile T>::value, "");
-    static_assert( cuda::std::is_literal_type<const volatile T>::value, "");
+    static_assert( std::is_literal_type<T>::value, "");
+    static_assert( std::is_literal_type<const T>::value, "");
+    static_assert( std::is_literal_type<volatile T>::value, "");
+    static_assert( std::is_literal_type<const volatile T>::value, "");
 #if TEST_STD_VER > 14
-    static_assert( cuda::std::is_literal_type_v<T>, "");
-    static_assert( cuda::std::is_literal_type_v<const T>, "");
-    static_assert( cuda::std::is_literal_type_v<volatile T>, "");
-    static_assert( cuda::std::is_literal_type_v<const volatile T>, "");
+    static_assert( std::is_literal_type_v<T>, "");
+    static_assert( std::is_literal_type_v<const T>, "");
+    static_assert( std::is_literal_type_v<volatile T>, "");
+    static_assert( std::is_literal_type_v<const volatile T>, "");
 #endif
 }
 
@@ -34,15 +34,15 @@ template <class T>
 __host__ __device__
 void test_is_not_literal_type()
 {
-    static_assert(!cuda::std::is_literal_type<T>::value, "");
-    static_assert(!cuda::std::is_literal_type<const T>::value, "");
-    static_assert(!cuda::std::is_literal_type<volatile T>::value, "");
-    static_assert(!cuda::std::is_literal_type<const volatile T>::value, "");
+    static_assert(!std::is_literal_type<T>::value, "");
+    static_assert(!std::is_literal_type<const T>::value, "");
+    static_assert(!std::is_literal_type<volatile T>::value, "");
+    static_assert(!std::is_literal_type<const volatile T>::value, "");
 #if TEST_STD_VER > 14
-    static_assert(!cuda::std::is_literal_type_v<T>, "");
-    static_assert(!cuda::std::is_literal_type_v<const T>, "");
-    static_assert(!cuda::std::is_literal_type_v<volatile T>, "");
-    static_assert(!cuda::std::is_literal_type_v<const volatile T>, "");
+    static_assert(!std::is_literal_type_v<T>, "");
+    static_assert(!std::is_literal_type_v<const T>, "");
+    static_assert(!std::is_literal_type_v<volatile T>, "");
+    static_assert(!std::is_literal_type_v<const volatile T>, "");
 #endif
 }
 
@@ -74,7 +74,7 @@ typedef void (*FunctionPtr)();
 int main(int, char**)
 {
 #if TEST_STD_VER >= 11
-    test_is_literal_type<cuda::std::nullptr_t>();
+    test_is_literal_type<std::nullptr_t>();
 #endif
 
 // Before C++14, void was not a literal type

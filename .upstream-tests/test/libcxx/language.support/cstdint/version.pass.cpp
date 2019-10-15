@@ -6,12 +6,12 @@
 //
 //===----------------------------------------------------------------------===//
 
-// <cuda/std/cstdint>
+// <cstdint>
 
-#include <cuda/std/cstdint>
+#include <cstdint>
 
-#ifndef _LIBCUDACXX_VERSION
-#error _LIBCUDACXX_VERSION not defined
+#ifndef _LIBCPP_VERSION
+#error _LIBCPP_VERSION not defined
 #endif
 
 int main(int, char**)

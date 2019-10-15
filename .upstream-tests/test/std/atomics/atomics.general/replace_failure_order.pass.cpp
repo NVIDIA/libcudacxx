@@ -21,22 +21,22 @@
 // least check that they are lowered at all (otherwise there is a compile
 // failure with GCC).
 
-#include <cuda/std/atomic>
+#include <atomic>
 
 int main(int, char**) {
-    cuda::std::atomic<int> i;
-    volatile cuda::std::atomic<int> v;
+    std::atomic<int> i;
+    volatile std::atomic<int> v;
     int exp = 0;
 
-    i.compare_exchange_weak(exp, 0, cuda::std::memory_order_acq_rel);
-    i.compare_exchange_weak(exp, 0, cuda::std::memory_order_release);
-    i.compare_exchange_strong(exp, 0, cuda::std::memory_order_acq_rel);
-    i.compare_exchange_strong(exp, 0, cuda::std::memory_order_release);
+    i.compare_exchange_weak(exp, 0, std::memory_order_acq_rel);
+    i.compare_exchange_weak(exp, 0, std::memory_order_release);
+    i.compare_exchange_strong(exp, 0, std::memory_order_acq_rel);
+    i.compare_exchange_strong(exp, 0, std::memory_order_release);
 
-    v.compare_exchange_weak(exp, 0, cuda::std::memory_order_acq_rel);
-    v.compare_exchange_weak(exp, 0, cuda::std::memory_order_release);
-    v.compare_exchange_strong(exp, 0, cuda::std::memory_order_acq_rel);
-    v.compare_exchange_strong(exp, 0, cuda::std::memory_order_release);
+    v.compare_exchange_weak(exp, 0, std::memory_order_acq_rel);
+    v.compare_exchange_weak(exp, 0, std::memory_order_release);
+    v.compare_exchange_strong(exp, 0, std::memory_order_acq_rel);
+    v.compare_exchange_strong(exp, 0, std::memory_order_release);
 
     return 0;
 }

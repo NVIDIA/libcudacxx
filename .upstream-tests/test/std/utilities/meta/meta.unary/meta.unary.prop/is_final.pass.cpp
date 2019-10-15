@@ -11,7 +11,7 @@
 
 // is_final
 
-#include <cuda/std/type_traits>
+#include <type_traits>
 #include "test_macros.h"
 
 struct P final { };
@@ -22,15 +22,15 @@ template <class T>
 __host__ __device__
 void test_is_final()
 {
-    static_assert( cuda::std::is_final<T>::value, "");
-    static_assert( cuda::std::is_final<const T>::value, "");
-    static_assert( cuda::std::is_final<volatile T>::value, "");
-    static_assert( cuda::std::is_final<const volatile T>::value, "");
+    static_assert( std::is_final<T>::value, "");
+    static_assert( std::is_final<const T>::value, "");
+    static_assert( std::is_final<volatile T>::value, "");
+    static_assert( std::is_final<const volatile T>::value, "");
 #if TEST_STD_VER > 14
-    static_assert( cuda::std::is_final_v<T>, "");
-    static_assert( cuda::std::is_final_v<const T>, "");
-    static_assert( cuda::std::is_final_v<volatile T>, "");
-    static_assert( cuda::std::is_final_v<const volatile T>, "");
+    static_assert( std::is_final_v<T>, "");
+    static_assert( std::is_final_v<const T>, "");
+    static_assert( std::is_final_v<volatile T>, "");
+    static_assert( std::is_final_v<const volatile T>, "");
 #endif
 }
 
@@ -38,15 +38,15 @@ template <class T>
 __host__ __device__
 void test_is_not_final()
 {
-    static_assert(!cuda::std::is_final<T>::value, "");
-    static_assert(!cuda::std::is_final<const T>::value, "");
-    static_assert(!cuda::std::is_final<volatile T>::value, "");
-    static_assert(!cuda::std::is_final<const volatile T>::value, "");
+    static_assert(!std::is_final<T>::value, "");
+    static_assert(!std::is_final<const T>::value, "");
+    static_assert(!std::is_final<volatile T>::value, "");
+    static_assert(!std::is_final<const volatile T>::value, "");
 #if TEST_STD_VER > 14
-    static_assert(!cuda::std::is_final_v<T>, "");
-    static_assert(!cuda::std::is_final_v<const T>, "");
-    static_assert(!cuda::std::is_final_v<volatile T>, "");
-    static_assert(!cuda::std::is_final_v<const volatile T>, "");
+    static_assert(!std::is_final_v<T>, "");
+    static_assert(!std::is_final_v<const T>, "");
+    static_assert(!std::is_final_v<volatile T>, "");
+    static_assert(!std::is_final_v<const volatile T>, "");
 #endif
 }
 

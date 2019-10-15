@@ -8,12 +8,12 @@
 //
 // UNSUPPORTED: libcpp-has-no-threads, pre-sm-60
 
-// <cuda/std/atomic>
+// <atomic>
 
-#include <cuda/std/atomic>
+#include <atomic>
 
-#ifndef _LIBCUDACXX_VERSION
-#error _LIBCUDACXX_VERSION not defined
+#ifndef _LIBCPP_VERSION
+#error _LIBCPP_VERSION not defined
 #endif
 
 int main(int, char**)

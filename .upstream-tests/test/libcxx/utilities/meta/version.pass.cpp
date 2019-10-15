@@ -6,12 +6,12 @@
 //
 //===----------------------------------------------------------------------===//
 
-// <cuda/std/type_traits>
+// <type_traits>
 
-#include <cuda/std/type_traits>
+#include <type_traits>
 
-#ifndef _LIBCUDACXX_VERSION
-#error _LIBCUDACXX_VERSION not defined
+#ifndef _LIBCPP_VERSION
+#error _LIBCPP_VERSION not defined
 #endif
 
 int main(int, char**)

@@ -8,28 +8,28 @@
 
 // UNSUPPORTED: c++98, c++03, c++11, c++14, c++17
 
-// <cuda/std/compare>
+// <compare>
 
 // class partial_ordering
 
 
-#include <cuda/std/compare>
-#include <cuda/std/type_traits>
-#include <cuda/std/cassert>
+#include <compare>
+#include <type_traits>
+#include <cassert>
 
 #include "test_macros.h"
 
 const volatile void* volatile sink;
 
 void test_static_members() {
-  DoNotOptimize(&cuda::std::partial_ordering::less);
-  DoNotOptimize(&cuda::std::partial_ordering::equivalent);
-  DoNotOptimize(&cuda::std::partial_ordering::greater);
-  DoNotOptimize(&cuda::std::partial_ordering::unordered);
+  DoNotOptimize(&std::partial_ordering::less);
+  DoNotOptimize(&std::partial_ordering::equivalent);
+  DoNotOptimize(&std::partial_ordering::greater);
+  DoNotOptimize(&std::partial_ordering::unordered);
 }
 
 void test_signatures() {
-  auto& Eq = cuda::std::partial_ordering::equivalent;
+  auto& Eq = std::partial_ordering::equivalent;
 
   ASSERT_NOEXCEPT(Eq == 0);
   ASSERT_NOEXCEPT(0 == Eq);
@@ -46,38 +46,38 @@ void test_signatures() {
 #ifndef TEST_HAS_NO_SPACESHIP_OPERATOR
   ASSERT_NOEXCEPT(0 <=> Eq);
   ASSERT_NOEXCEPT(Eq <=> 0);
-  ASSERT_SAME_TYPE(decltype(Eq <=> 0), cuda::std::partial_ordering);
-  ASSERT_SAME_TYPE(decltype(0 <=> Eq), cuda::std::partial_ordering);
+  ASSERT_SAME_TYPE(decltype(Eq <=> 0), std::partial_ordering);
+  ASSERT_SAME_TYPE(decltype(0 <=> Eq), std::partial_ordering);
 #endif
 }
 
 constexpr bool test_conversion() {
-  static_assert(cuda::std::is_convertible<const cuda::std::partial_ordering, cuda::std::weak_equality>::value, "");
+  static_assert(std::is_convertible<const std::partial_ordering, std::weak_equality>::value, "");
   { // value == 0
-    auto V = cuda::std::partial_ordering::equivalent;
-    cuda::std::weak_equality WV = V;
+    auto V = std::partial_ordering::equivalent;
+    std::weak_equality WV = V;
     assert(WV == 0);
   }
-  cuda::std::partial_ordering TestCases[] = {
-      cuda::std::partial_ordering::less,
-      cuda::std::partial_ordering::greater,
-      cuda::std::partial_ordering::unordered
+  std::partial_ordering TestCases[] = {
+      std::partial_ordering::less,
+      std::partial_ordering::greater,
+      std::partial_ordering::unordered
   };
   for (auto V : TestCases)
   { // value != 0
-    cuda::std::weak_equality WV = V;
+    std::weak_equality WV = V;
     assert(WV != 0);
   }
   return true;
 }
 
 constexpr bool test_constexpr() {
-  auto& Eq = cuda::std::partial_ordering::equivalent;
-  auto& Less = cuda::std::partial_ordering::less;
-  auto& Greater = cuda::std::partial_ordering::greater;
-  auto& Unord = cuda::std::partial_ordering::unordered;
+  auto& Eq = std::partial_ordering::equivalent;
+  auto& Less = std::partial_ordering::less;
+  auto& Greater = std::partial_ordering::greater;
+  auto& Unord = std::partial_ordering::unordered;
   struct {
-    cuda::std::partial_ordering Value;
+    std::partial_ordering Value;
     bool ExpectEq;
     bool ExpectNeq;
     bool ExpectLess;
@@ -107,7 +107,7 @@ constexpr bool test_constexpr() {
   }
 #ifndef TEST_HAS_NO_SPACESHIP_OPERATOR
   {
-    cuda::std::partial_ordering res = (Eq <=> 0);
+    std::partial_ordering res = (Eq <=> 0);
     ((void)res);
     res = (0 <=> Eq);
     ((void)res);
@@ -119,17 +119,17 @@ constexpr bool test_constexpr() {
     ER_Unord
   };
   struct {
-    cuda::std::partial_ordering Value;
+    std::partial_ordering Value;
     ExpectRes Expect;
   } SpaceshipTestCases[] = {
-      {cuda::std::partial_ordering::equivalent, ER_Equiv},
-      {cuda::std::partial_ordering::less, ER_Less},
-      {cuda::std::partial_ordering::greater, ER_Greater},
-      {cuda::std::partial_ordering::unordered, ER_Unord}
+      {std::partial_ordering::equivalent, ER_Equiv},
+      {std::partial_ordering::less, ER_Less},
+      {std::partial_ordering::greater, ER_Greater},
+      {std::partial_ordering::unordered, ER_Unord}
   };
   for (auto TC : SpaceshipTestCases)
   {
-    cuda::std::partial_ordering Res = (TC.Value <=> 0);
+    std::partial_ordering Res = (TC.Value <=> 0);
     switch (TC.Expect) {
     case ER_Equiv:
       assert(Res == 0);

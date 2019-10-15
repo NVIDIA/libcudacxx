@@ -10,21 +10,21 @@
 
 #include "helpers.h"
 
-#include <cuda/std/atomic>
+#include <atomic>
 
 template<int Operand>
 struct store_tester
 {
     template<typename T>
     __host__ __device__
-    static void initialize(cuda::std::atomic<T> & a)
+    static void initialize(std::atomic<T> & a)
     {
         a.store(static_cast<T>(Operand));
     }
 
     template<typename T>
     __host__ __device__
-    static void validate(cuda::std::atomic<T> & a)
+    static void validate(std::atomic<T> & a)
     {
         assert(a.load() == static_cast<T>(Operand));
     }
@@ -35,14 +35,14 @@ struct exchange_tester
 {
     template<typename T>
     __host__ __device__
-    static void initialize(cuda::std::atomic<T> & a)
+    static void initialize(std::atomic<T> & a)
     {
         assert(a.exchange(static_cast<T>(Operand)) == static_cast<T>(PreviousValue));
     }
 
     template<typename T>
     __host__ __device__
-    static void validate(cuda::std::atomic<T> & a)
+    static void validate(std::atomic<T> & a)
     {
         assert(a.load() == static_cast<T>(Operand));
     }
@@ -54,7 +54,7 @@ struct strong_cas_tester
     enum { ShouldSucceed = (Expected == PreviousValue) };
     template<typename T>
     __host__ __device__
-    static void initialize(cuda::std::atomic<T> & a)
+    static void initialize(std::atomic<T> & a)
     {
         T expected = static_cast<T>(Expected);
         assert(a.compare_exchange_strong(expected, static_cast<T>(Desired)) == ShouldSucceed);
@@ -63,7 +63,7 @@ struct strong_cas_tester
 
     template<typename T>
     __host__ __device__
-    static void validate(cuda::std::atomic<T> & a)
+    static void validate(std::atomic<T> & a)
     {
         assert(a.load() == static_cast<T>(Result));
     }
@@ -75,7 +75,7 @@ struct weak_cas_tester
     enum { ShouldSucceed = (Expected == PreviousValue) };
     template<typename T>
     __host__ __device__
-    static void initialize(cuda::std::atomic<T> & a)
+    static void initialize(std::atomic<T> & a)
     {
         T expected = static_cast<T>(Expected);
         if (!ShouldSucceed)
@@ -91,7 +91,7 @@ struct weak_cas_tester
 
     template<typename T>
     __host__ __device__
-    static void validate(cuda::std::atomic<T> & a)
+    static void validate(std::atomic<T> & a)
     {
         assert(a.load() == static_cast<T>(Result));
     }
@@ -103,14 +103,14 @@ struct weak_cas_tester
     { \
         template<typename T> \
         __host__ __device__ \
-        static void initialize(cuda::std::atomic<T> & a) \
+        static void initialize(std::atomic<T> & a) \
         { \
             assert(a.operation(Operand) == static_cast<T>(PreviousValue)); \
         } \
         \
         template<typename T> \
         __host__ __device__ \
-        static void validate(cuda::std::atomic<T> & a) \
+        static void validate(std::atomic<T> & a) \
         { \
             assert(a.load() == static_cast<T>(ExpectedValue)); \
         } \
@@ -190,25 +190,25 @@ private:
 __host__ __device__
 void validate_not_lock_free()
 {
-    cuda::std::atomic<big_not_lockfree_type> test;
+    std::atomic<big_not_lockfree_type> test;
     assert(!test.is_lock_free());
 }
 
 void kernel_invoker()
 {
-    validate_not_movable<cuda::std::atomic<signed char>, arithmetic_atomic_testers>();
-    validate_not_movable<cuda::std::atomic<signed short>, arithmetic_atomic_testers>();
-    validate_not_movable<cuda::std::atomic<signed int>, arithmetic_atomic_testers>();
-    validate_not_movable<cuda::std::atomic<signed long>, arithmetic_atomic_testers>();
-    validate_not_movable<cuda::std::atomic<signed long long>, arithmetic_atomic_testers>();
+    validate_not_movable<std::atomic<signed char>, arithmetic_atomic_testers>();
+    validate_not_movable<std::atomic<signed short>, arithmetic_atomic_testers>();
+    validate_not_movable<std::atomic<signed int>, arithmetic_atomic_testers>();
+    validate_not_movable<std::atomic<signed long>, arithmetic_atomic_testers>();
+    validate_not_movable<std::atomic<signed long long>, arithmetic_atomic_testers>();
 
-    validate_not_movable<cuda::std::atomic<unsigned char>, bitwise_atomic_testers>();
-    validate_not_movable<cuda::std::atomic<unsigned short>, bitwise_atomic_testers>();
-    validate_not_movable<cuda::std::atomic<unsigned int>, bitwise_atomic_testers>();
-    validate_not_movable<cuda::std::atomic<unsigned long>, bitwise_atomic_testers>();
-    validate_not_movable<cuda::std::atomic<unsigned long long>, bitwise_atomic_testers>();
+    validate_not_movable<std::atomic<unsigned char>, bitwise_atomic_testers>();
+    validate_not_movable<std::atomic<unsigned short>, bitwise_atomic_testers>();
+    validate_not_movable<std::atomic<unsigned int>, bitwise_atomic_testers>();
+    validate_not_movable<std::atomic<unsigned long>, bitwise_atomic_testers>();
+    validate_not_movable<std::atomic<unsigned long long>, bitwise_atomic_testers>();
 
-    validate_not_movable<cuda::std::atomic<big_not_lockfree_type>, basic_testers>();
+    validate_not_movable<std::atomic<big_not_lockfree_type>, basic_testers>();
 }
 
 int main(int arg, char ** argv)

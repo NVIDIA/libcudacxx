@@ -8,25 +8,25 @@
 //
 // UNSUPPORTED: libcpp-has-no-threads, pre-sm-60
 
-// <cuda/std/atomic>
+// <atomic>
 
 // struct atomic_flag
 
 // TESTING EXTENSION atomic_flag(bool)
 
-#include <cuda/std/atomic>
-#include <cuda/std/cassert>
+#include <atomic>
+#include <cassert>
 
 #include "test_macros.h"
 
 int main(int, char**)
 {
     {
-        cuda::std::atomic_flag f(false);
+        std::atomic_flag f(false);
         assert(f.test_and_set() == 0);
     }
     {
-        cuda::std::atomic_flag f(true);
+        std::atomic_flag f(true);
         assert(f.test_and_set() == 1);
     }
 

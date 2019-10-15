@@ -9,7 +9,7 @@
 // UNSUPPORTED: libcpp-has-no-threads, pre-sm-60
 //  ... assertion fails line 34
 
-// <cuda/std/atomic>
+// <atomic>
 
 // template <class T>
 //     bool
@@ -19,9 +19,9 @@
 //     bool
 //     atomic_compare_exchange_strong(atomic<T>* obj, T* expc, T desr);
 
-#include <cuda/std/atomic>
-#include <cuda/std/type_traits>
-#include <cuda/std/cassert>
+#include <atomic>
+#include <type_traits>
+#include <cassert>
 
 #include "atomic_helpers.h"
 
@@ -30,26 +30,26 @@ struct TestFn {
   __host__ __device__
   void operator()() const {
     {
-        typedef cuda::std::atomic<T> A;
+        typedef std::atomic<T> A;
         A a;
         T t(T(1));
-        cuda::std::atomic_init(&a, t);
-        assert(cuda::std::atomic_compare_exchange_strong(&a, &t, T(2)) == true);
+        std::atomic_init(&a, t);
+        assert(std::atomic_compare_exchange_strong(&a, &t, T(2)) == true);
         assert(a == T(2));
         assert(t == T(1));
-        assert(cuda::std::atomic_compare_exchange_strong(&a, &t, T(3)) == false);
+        assert(std::atomic_compare_exchange_strong(&a, &t, T(3)) == false);
         assert(a == T(2));
         assert(t == T(2));
     }
     {
-        typedef cuda::std::atomic<T> A;
+        typedef std::atomic<T> A;
         volatile A a;
         T t(T(1));
-        cuda::std::atomic_init(&a, t);
-        assert(cuda::std::atomic_compare_exchange_strong(&a, &t, T(2)) == true);
+        std::atomic_init(&a, t);
+        assert(std::atomic_compare_exchange_strong(&a, &t, T(2)) == true);
         assert(a == T(2));
         assert(t == T(1));
-        assert(cuda::std::atomic_compare_exchange_strong(&a, &t, T(3)) == false);
+        assert(std::atomic_compare_exchange_strong(&a, &t, T(3)) == false);
         assert(a == T(2));
         assert(t == T(2));
     }

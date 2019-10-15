@@ -8,7 +8,7 @@
 //
 // UNSUPPORTED: libcpp-has-no-threads, pre-sm-60
 
-// <cuda/std/atomic>
+// <atomic>
 
 // template <class T>
 // struct atomic
@@ -50,8 +50,8 @@
 //
 // typedef atomic<bool> atomic_bool;
 
-#include <cuda/std/atomic>
-#include <cuda/std/cassert>
+#include <atomic>
+#include <cassert>
 
 #include <cmpxchg_loop.h>
 
@@ -71,27 +71,27 @@ void do_test()
         (void)b0; // to placate scan-build
         obj.store(false);
         assert(obj == false);
-        obj.store(true, cuda::std::memory_order_release);
+        obj.store(true, std::memory_order_release);
         assert(obj == true);
         assert(obj.load() == true);
-        assert(obj.load(cuda::std::memory_order_acquire) == true);
+        assert(obj.load(std::memory_order_acquire) == true);
         assert(obj.exchange(false) == true);
         assert(obj == false);
-        assert(obj.exchange(true, cuda::std::memory_order_relaxed) == false);
+        assert(obj.exchange(true, std::memory_order_relaxed) == false);
         assert(obj == true);
         bool x = obj;
         assert(cmpxchg_weak_loop(obj, x, false) == true);
         assert(obj == false);
         assert(x == true);
         assert(obj.compare_exchange_weak(x, true,
-                                         cuda::std::memory_order_seq_cst) == false);
+                                         std::memory_order_seq_cst) == false);
         assert(obj == false);
         assert(x == false);
         obj.store(true);
         x = true;
         assert(cmpxchg_weak_loop(obj, x, false,
-                                 cuda::std::memory_order_seq_cst,
-                                 cuda::std::memory_order_seq_cst) == true);
+                                 std::memory_order_seq_cst,
+                                 std::memory_order_seq_cst) == true);
         assert(obj == false);
         assert(x == true);
         x = true;
@@ -100,14 +100,14 @@ void do_test()
         assert(obj == false);
         assert(x == true);
         assert(obj.compare_exchange_strong(x, true,
-                                         cuda::std::memory_order_seq_cst) == false);
+                                         std::memory_order_seq_cst) == false);
         assert(obj == false);
         assert(x == false);
         x = true;
         obj.store(true);
         assert(obj.compare_exchange_strong(x, false,
-                                           cuda::std::memory_order_seq_cst,
-                                           cuda::std::memory_order_seq_cst) == true);
+                                           std::memory_order_seq_cst,
+                                           std::memory_order_seq_cst) == true);
         assert(obj == false);
         assert(x == true);
         assert((obj = false) == false);
@@ -122,27 +122,27 @@ void do_test()
         (void)b0; // to placate scan-build
         obj.store(false);
         assert(obj == false);
-        obj.store(true, cuda::std::memory_order_release);
+        obj.store(true, std::memory_order_release);
         assert(obj == true);
         assert(obj.load() == true);
-        assert(obj.load(cuda::std::memory_order_acquire) == true);
+        assert(obj.load(std::memory_order_acquire) == true);
         assert(obj.exchange(false) == true);
         assert(obj == false);
-        assert(obj.exchange(true, cuda::std::memory_order_relaxed) == false);
+        assert(obj.exchange(true, std::memory_order_relaxed) == false);
         assert(obj == true);
         bool x = obj;
         assert(cmpxchg_weak_loop(obj, x, false) == true);
         assert(obj == false);
         assert(x == true);
         assert(obj.compare_exchange_weak(x, true,
-                                         cuda::std::memory_order_seq_cst) == false);
+                                         std::memory_order_seq_cst) == false);
         assert(obj == false);
         assert(x == false);
         obj.store(true);
         x = true;
         assert(cmpxchg_weak_loop(obj, x, false,
-                                 cuda::std::memory_order_seq_cst,
-                                 cuda::std::memory_order_seq_cst) == true);
+                                 std::memory_order_seq_cst,
+                                 std::memory_order_seq_cst) == true);
         assert(obj == false);
         assert(x == true);
         x = true;
@@ -151,14 +151,14 @@ void do_test()
         assert(obj == false);
         assert(x == true);
         assert(obj.compare_exchange_strong(x, true,
-                                         cuda::std::memory_order_seq_cst) == false);
+                                         std::memory_order_seq_cst) == false);
         assert(obj == false);
         assert(x == false);
         x = true;
         obj.store(true);
         assert(obj.compare_exchange_strong(x, false,
-                                           cuda::std::memory_order_seq_cst,
-                                           cuda::std::memory_order_seq_cst) == true);
+                                           std::memory_order_seq_cst,
+                                           std::memory_order_seq_cst) == true);
         assert(obj == false);
         assert(x == true);
         assert((obj = false) == false);
@@ -173,27 +173,27 @@ void do_test()
         (void)b0; // to placate scan-build
         obj.store(false);
         assert(obj == false);
-        obj.store(true, cuda::std::memory_order_release);
+        obj.store(true, std::memory_order_release);
         assert(obj == true);
         assert(obj.load() == true);
-        assert(obj.load(cuda::std::memory_order_acquire) == true);
+        assert(obj.load(std::memory_order_acquire) == true);
         assert(obj.exchange(false) == true);
         assert(obj == false);
-        assert(obj.exchange(true, cuda::std::memory_order_relaxed) == false);
+        assert(obj.exchange(true, std::memory_order_relaxed) == false);
         assert(obj == true);
         bool x = obj;
         assert(cmpxchg_weak_loop(obj, x, false) == true);
         assert(obj == false);
         assert(x == true);
         assert(obj.compare_exchange_weak(x, true,
-                                         cuda::std::memory_order_seq_cst) == false);
+                                         std::memory_order_seq_cst) == false);
         assert(obj == false);
         assert(x == false);
         obj.store(true);
         x = true;
         assert(cmpxchg_weak_loop(obj, x, false,
-                                 cuda::std::memory_order_seq_cst,
-                                 cuda::std::memory_order_seq_cst) == true);
+                                 std::memory_order_seq_cst,
+                                 std::memory_order_seq_cst) == true);
         assert(obj == false);
         assert(x == true);
         x = true;
@@ -202,14 +202,14 @@ void do_test()
         assert(obj == false);
         assert(x == true);
         assert(obj.compare_exchange_strong(x, true,
-                                         cuda::std::memory_order_seq_cst) == false);
+                                         std::memory_order_seq_cst) == false);
         assert(obj == false);
         assert(x == false);
         x = true;
         obj.store(true);
         assert(obj.compare_exchange_strong(x, false,
-                                           cuda::std::memory_order_seq_cst,
-                                           cuda::std::memory_order_seq_cst) == true);
+                                           std::memory_order_seq_cst,
+                                           std::memory_order_seq_cst) == true);
         assert(obj == false);
         assert(x == true);
         assert((obj = false) == false);
@@ -227,7 +227,7 @@ void do_test()
 }
 
 template<cuda::thread_scope Scope>
-using cuda_std_atomic = cuda::std::atomic<bool>;
+using cuda_std_atomic = std::atomic<bool>;
 
 template<cuda::thread_scope Scope>
 using cuda_atomic = cuda::atomic<bool, Scope>;

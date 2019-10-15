@@ -8,7 +8,7 @@
 //
 // UNSUPPORTED: libcpp-has-no-threads, pre-sm-60
 
-// <cuda/std/atomic>
+// <atomic>
 
 // typedef atomic<int_least8_t>   atomic_int_least8_t;
 // typedef atomic<uint_least8_t>  atomic_uint_least8_t;
@@ -35,36 +35,36 @@
 // typedef atomic<intmax_t>  atomic_intmax_t;
 // typedef atomic<uintmax_t> atomic_uintmax_t;
 
-#include <cuda/std/atomic>
-#include <cuda/std/type_traits>
-#include <cuda/std/cstdint>
+#include <atomic>
+#include <type_traits>
+#include <cstdint>
 
 int main(int, char**)
 {
-    static_assert((cuda::std::is_same<cuda::std::atomic<  cuda::std::int_least8_t>,   cuda::std::atomic_int_least8_t>::value), "");
-    static_assert((cuda::std::is_same<cuda::std::atomic< cuda::std::uint_least8_t>,  cuda::std::atomic_uint_least8_t>::value), "");
-    static_assert((cuda::std::is_same<cuda::std::atomic< cuda::std::int_least16_t>,  cuda::std::atomic_int_least16_t>::value), "");
-    static_assert((cuda::std::is_same<cuda::std::atomic<cuda::std::uint_least16_t>, cuda::std::atomic_uint_least16_t>::value), "");
-    static_assert((cuda::std::is_same<cuda::std::atomic< cuda::std::int_least32_t>,  cuda::std::atomic_int_least32_t>::value), "");
-    static_assert((cuda::std::is_same<cuda::std::atomic<cuda::std::uint_least32_t>, cuda::std::atomic_uint_least32_t>::value), "");
-    static_assert((cuda::std::is_same<cuda::std::atomic< cuda::std::int_least64_t>,  cuda::std::atomic_int_least64_t>::value), "");
-    static_assert((cuda::std::is_same<cuda::std::atomic<cuda::std::uint_least64_t>, cuda::std::atomic_uint_least64_t>::value), "");
+    static_assert((std::is_same<std::atomic<  std::int_least8_t>,   std::atomic_int_least8_t>::value), "");
+    static_assert((std::is_same<std::atomic< std::uint_least8_t>,  std::atomic_uint_least8_t>::value), "");
+    static_assert((std::is_same<std::atomic< std::int_least16_t>,  std::atomic_int_least16_t>::value), "");
+    static_assert((std::is_same<std::atomic<std::uint_least16_t>, std::atomic_uint_least16_t>::value), "");
+    static_assert((std::is_same<std::atomic< std::int_least32_t>,  std::atomic_int_least32_t>::value), "");
+    static_assert((std::is_same<std::atomic<std::uint_least32_t>, std::atomic_uint_least32_t>::value), "");
+    static_assert((std::is_same<std::atomic< std::int_least64_t>,  std::atomic_int_least64_t>::value), "");
+    static_assert((std::is_same<std::atomic<std::uint_least64_t>, std::atomic_uint_least64_t>::value), "");
 
-    static_assert((cuda::std::is_same<cuda::std::atomic<  cuda::std::int_fast8_t>,   cuda::std::atomic_int_fast8_t>::value), "");
-    static_assert((cuda::std::is_same<cuda::std::atomic< cuda::std::uint_fast8_t>,  cuda::std::atomic_uint_fast8_t>::value), "");
-    static_assert((cuda::std::is_same<cuda::std::atomic< cuda::std::int_fast16_t>,  cuda::std::atomic_int_fast16_t>::value), "");
-    static_assert((cuda::std::is_same<cuda::std::atomic<cuda::std::uint_fast16_t>, cuda::std::atomic_uint_fast16_t>::value), "");
-    static_assert((cuda::std::is_same<cuda::std::atomic< cuda::std::int_fast32_t>,  cuda::std::atomic_int_fast32_t>::value), "");
-    static_assert((cuda::std::is_same<cuda::std::atomic<cuda::std::uint_fast32_t>, cuda::std::atomic_uint_fast32_t>::value), "");
-    static_assert((cuda::std::is_same<cuda::std::atomic< cuda::std::int_fast64_t>,  cuda::std::atomic_int_fast64_t>::value), "");
-    static_assert((cuda::std::is_same<cuda::std::atomic<cuda::std::uint_fast64_t>, cuda::std::atomic_uint_fast64_t>::value), "");
+    static_assert((std::is_same<std::atomic<  std::int_fast8_t>,   std::atomic_int_fast8_t>::value), "");
+    static_assert((std::is_same<std::atomic< std::uint_fast8_t>,  std::atomic_uint_fast8_t>::value), "");
+    static_assert((std::is_same<std::atomic< std::int_fast16_t>,  std::atomic_int_fast16_t>::value), "");
+    static_assert((std::is_same<std::atomic<std::uint_fast16_t>, std::atomic_uint_fast16_t>::value), "");
+    static_assert((std::is_same<std::atomic< std::int_fast32_t>,  std::atomic_int_fast32_t>::value), "");
+    static_assert((std::is_same<std::atomic<std::uint_fast32_t>, std::atomic_uint_fast32_t>::value), "");
+    static_assert((std::is_same<std::atomic< std::int_fast64_t>,  std::atomic_int_fast64_t>::value), "");
+    static_assert((std::is_same<std::atomic<std::uint_fast64_t>, std::atomic_uint_fast64_t>::value), "");
 
-    static_assert((cuda::std::is_same<cuda::std::atomic< cuda::std::intptr_t>,  cuda::std::atomic_intptr_t>::value), "");
-    static_assert((cuda::std::is_same<cuda::std::atomic<cuda::std::uintptr_t>, cuda::std::atomic_uintptr_t>::value), "");
-    static_assert((cuda::std::is_same<cuda::std::atomic<   cuda::std::size_t>,    cuda::std::atomic_size_t>::value), "");
-    static_assert((cuda::std::is_same<cuda::std::atomic<cuda::std::ptrdiff_t>, cuda::std::atomic_ptrdiff_t>::value), "");
-    static_assert((cuda::std::is_same<cuda::std::atomic< cuda::std::intmax_t>,  cuda::std::atomic_intmax_t>::value), "");
-    static_assert((cuda::std::is_same<cuda::std::atomic<cuda::std::uintmax_t>, cuda::std::atomic_uintmax_t>::value), "");
+    static_assert((std::is_same<std::atomic< std::intptr_t>,  std::atomic_intptr_t>::value), "");
+    static_assert((std::is_same<std::atomic<std::uintptr_t>, std::atomic_uintptr_t>::value), "");
+    static_assert((std::is_same<std::atomic<   std::size_t>,    std::atomic_size_t>::value), "");
+    static_assert((std::is_same<std::atomic<std::ptrdiff_t>, std::atomic_ptrdiff_t>::value), "");
+    static_assert((std::is_same<std::atomic< std::intmax_t>,  std::atomic_intmax_t>::value), "");
+    static_assert((std::is_same<std::atomic<std::uintmax_t>, std::atomic_uintmax_t>::value), "");
 
   return 0;
 }

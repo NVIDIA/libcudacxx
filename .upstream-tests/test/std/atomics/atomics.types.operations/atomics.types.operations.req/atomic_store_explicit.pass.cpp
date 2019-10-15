@@ -8,7 +8,7 @@
 //
 // UNSUPPORTED: libcpp-has-no-threads, pre-sm-60
 
-// <cuda/std/atomic>
+// <atomic>
 
 // template <class T>
 //     void
@@ -18,9 +18,9 @@
 //     void
 //     atomic_store_explicit(atomic<T>* obj, T desr, memory_order m);
 
-#include <cuda/std/atomic>
-#include <cuda/std/type_traits>
-#include <cuda/std/cassert>
+#include <atomic>
+#include <type_traits>
+#include <cassert>
 
 #include "atomic_helpers.h"
 
@@ -28,12 +28,12 @@ template <class T, cuda::thread_scope>
 struct TestFn {
   __host__ __device__
   void operator()() const {
-    typedef cuda::std::atomic<T> A;
+    typedef std::atomic<T> A;
     A t;
-    cuda::std::atomic_store_explicit(&t, T(1), cuda::std::memory_order_seq_cst);
+    std::atomic_store_explicit(&t, T(1), std::memory_order_seq_cst);
     assert(t == T(1));
     volatile A vt;
-    cuda::std::atomic_store_explicit(&vt, T(2), cuda::std::memory_order_seq_cst);
+    std::atomic_store_explicit(&vt, T(2), std::memory_order_seq_cst);
     assert(vt == T(2));
   }
 };

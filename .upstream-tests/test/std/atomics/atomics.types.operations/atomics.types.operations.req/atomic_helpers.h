@@ -46,7 +46,7 @@ struct TestEachIntegralType {
         TestFunctor<long long, Scope>()();
         TestFunctor<unsigned long long, Scope>()();
         TestFunctor<wchar_t, Scope>();
-#ifndef _LIBCUDACXX_HAS_NO_UNICODE_CHARS
+#ifndef _LIBCPP_HAS_NO_UNICODE_CHARS
         TestFunctor<char16_t, Scope>()();
         TestFunctor<char32_t, Scope>()();
 #endif

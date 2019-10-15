@@ -12,16 +12,16 @@
 
 // XFAIL: gcc-4.8, gcc-4.9
 
-#include <cuda/std/type_traits>
+#include <type_traits>
 #include "test_macros.h"
 
 template <class T, class U>
 __host__ __device__
 void test_is_trivially_assignable()
 {
-    static_assert(( cuda::std::is_trivially_assignable<T, U>::value), "");
+    static_assert(( std::is_trivially_assignable<T, U>::value), "");
 #if TEST_STD_VER > 14
-    static_assert(( cuda::std::is_trivially_assignable_v<T, U>), "");
+    static_assert(( std::is_trivially_assignable_v<T, U>), "");
 #endif
 }
 
@@ -29,9 +29,9 @@ template <class T, class U>
 __host__ __device__
 void test_is_not_trivially_assignable()
 {
-    static_assert((!cuda::std::is_trivially_assignable<T, U>::value), "");
+    static_assert((!std::is_trivially_assignable<T, U>::value), "");
 #if TEST_STD_VER > 14
-    static_assert((!cuda::std::is_trivially_assignable_v<T, U>), "");
+    static_assert((!std::is_trivially_assignable_v<T, U>), "");
 #endif
 }
 

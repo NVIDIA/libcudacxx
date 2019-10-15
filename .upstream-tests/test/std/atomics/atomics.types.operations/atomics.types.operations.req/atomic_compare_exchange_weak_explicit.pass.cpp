@@ -9,7 +9,7 @@
 // UNSUPPORTED: libcpp-has-no-threads, pre-sm-60
 //  ... assertion fails line 38
 
-// <cuda/std/atomic>
+// <atomic>
 
 // template <class T>
 //     bool
@@ -22,9 +22,9 @@
 //     atomic_compare_exchange_weak_explicit(atomic<T>* obj, T* expc, T desr,
 //                                           memory_order s, memory_order f);
 
-#include <cuda/std/atomic>
-#include <cuda/std/type_traits>
-#include <cuda/std/cassert>
+#include <atomic>
+#include <type_traits>
+#include <cassert>
 
 #include <cmpxchg_loop.h>
 
@@ -35,30 +35,30 @@ struct TestFn {
   __host__ __device__
   void operator()() const {
     {
-        typedef cuda::std::atomic<T> A;
+        typedef std::atomic<T> A;
         A a;
         T t(T(1));
-        cuda::std::atomic_init(&a, t);
+        std::atomic_init(&a, t);
         assert(c_cmpxchg_weak_loop(&a, &t, T(2),
-               cuda::std::memory_order_seq_cst, cuda::std::memory_order_seq_cst) == true);
+               std::memory_order_seq_cst, std::memory_order_seq_cst) == true);
         assert(a == T(2));
         assert(t == T(1));
-        assert(cuda::std::atomic_compare_exchange_weak_explicit(&a, &t, T(3),
-               cuda::std::memory_order_seq_cst, cuda::std::memory_order_seq_cst) == false);
+        assert(std::atomic_compare_exchange_weak_explicit(&a, &t, T(3),
+               std::memory_order_seq_cst, std::memory_order_seq_cst) == false);
         assert(a == T(2));
         assert(t == T(2));
     }
     {
-        typedef cuda::std::atomic<T> A;
+        typedef std::atomic<T> A;
         volatile A a;
         T t(T(1));
-        cuda::std::atomic_init(&a, t);
+        std::atomic_init(&a, t);
         assert(c_cmpxchg_weak_loop(&a, &t, T(2),
-               cuda::std::memory_order_seq_cst, cuda::std::memory_order_seq_cst) == true);
+               std::memory_order_seq_cst, std::memory_order_seq_cst) == true);
         assert(a == T(2));
         assert(t == T(1));
-        assert(cuda::std::atomic_compare_exchange_weak_explicit(&a, &t, T(3),
-               cuda::std::memory_order_seq_cst, cuda::std::memory_order_seq_cst) == false);
+        assert(std::atomic_compare_exchange_weak_explicit(&a, &t, T(3),
+               std::memory_order_seq_cst, std::memory_order_seq_cst) == false);
         assert(a == T(2));
         assert(t == T(2));
     }

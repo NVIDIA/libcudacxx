@@ -9,7 +9,7 @@
 // UNSUPPORTED: libcpp-has-no-threads, pre-sm-60
 //  ... test case crashes clang.
 
-// <cuda/std/atomic>
+// <atomic>
 
 // template <class T>
 // struct atomic<T*>
@@ -67,9 +67,9 @@
 //     T* operator-=(ptrdiff_t op);
 // };
 
-#include <cuda/std/atomic>
-#include <cuda/std/type_traits>
-#include <cuda/std/cassert>
+#include <atomic>
+#include <type_traits>
+#include <cassert>
 
 #include <cmpxchg_loop.h>
 
@@ -83,20 +83,20 @@ __host__ __device__
 void
 do_test()
 {
-    typedef typename cuda::std::remove_pointer<T>::type X;
+    typedef typename std::remove_pointer<T>::type X;
     A obj(T(0));
     bool b0 = obj.is_lock_free();
     ((void)b0); // mark as unused
     assert(obj == T(0));
     obj.store(T(0));
     assert(obj == T(0));
-    obj.store(T(1), cuda::std::memory_order_release);
+    obj.store(T(1), std::memory_order_release);
     assert(obj == T(1));
     assert(obj.load() == T(1));
-    assert(obj.load(cuda::std::memory_order_acquire) == T(1));
+    assert(obj.load(std::memory_order_acquire) == T(1));
     assert(obj.exchange(T(2)) == T(1));
     assert(obj == T(2));
-    assert(obj.exchange(T(3), cuda::std::memory_order_relaxed) == T(2));
+    assert(obj.exchange(T(3), std::memory_order_relaxed) == T(2));
     assert(obj == T(3));
     T x = obj;
     assert(cmpxchg_weak_loop(obj, x, T(2)) == true);
@@ -115,9 +115,9 @@ do_test()
     assert((obj = T(0)) == T(0));
     assert(obj == T(0));
     obj = T(2*sizeof(X));
-    assert((obj += cuda::std::ptrdiff_t(3)) == T(5*sizeof(X)));
+    assert((obj += std::ptrdiff_t(3)) == T(5*sizeof(X)));
     assert(obj == T(5*sizeof(X)));
-    assert((obj -= cuda::std::ptrdiff_t(3)) == T(2*sizeof(X)));
+    assert((obj -= std::ptrdiff_t(3)) == T(2*sizeof(X)));
     assert(obj == T(2*sizeof(X)));
 
     {
@@ -133,9 +133,9 @@ __host__ __device__
 void do_test_std()
 {
     A obj(T(0));
-    cuda::std::atomic_init(&obj, T(1));
+    std::atomic_init(&obj, T(1));
     assert(obj == T(1));
-    cuda::std::atomic_init(&obj, T(2));
+    std::atomic_init(&obj, T(2));
     assert(obj == T(2));
 
     do_test<A, T>();
@@ -160,7 +160,7 @@ void test_std()
 int main(int, char**)
 {
 #if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 600
-    test_std<cuda::std::atomic<int*>, int*>();
+    test_std<std::atomic<int*>, int*>();
     test<cuda::atomic<int*, cuda::thread_scope_system>, int*>();
 #endif
     test<cuda::atomic<int*, cuda::thread_scope_device>, int*>();

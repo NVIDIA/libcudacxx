@@ -13,55 +13,55 @@
 // template<class... B>
 //   constexpr bool disjunction_v = disjunction<B...>::value;         // C++17
 
-#include <cuda/std/type_traits>
-#include <cuda/std/cassert>
+#include <type_traits>
+#include <cassert>
 
 struct True  { static constexpr bool value = true; };
 struct False { static constexpr bool value = false; };
 
 int main(int, char**)
 {
-    static_assert (!cuda::std::disjunction<>::value, "" );
-    static_assert ( cuda::std::disjunction<cuda::std::true_type >::value, "" );
-    static_assert (!cuda::std::disjunction<cuda::std::false_type>::value, "" );
+    static_assert (!std::disjunction<>::value, "" );
+    static_assert ( std::disjunction<std::true_type >::value, "" );
+    static_assert (!std::disjunction<std::false_type>::value, "" );
 
-    static_assert (!cuda::std::disjunction_v<>, "" );
-    static_assert ( cuda::std::disjunction_v<cuda::std::true_type >, "" );
-    static_assert (!cuda::std::disjunction_v<cuda::std::false_type>, "" );
+    static_assert (!std::disjunction_v<>, "" );
+    static_assert ( std::disjunction_v<std::true_type >, "" );
+    static_assert (!std::disjunction_v<std::false_type>, "" );
 
-    static_assert ( cuda::std::disjunction<cuda::std::true_type,  cuda::std::true_type >::value, "" );
-    static_assert ( cuda::std::disjunction<cuda::std::true_type,  cuda::std::false_type>::value, "" );
-    static_assert ( cuda::std::disjunction<cuda::std::false_type, cuda::std::true_type >::value, "" );
-    static_assert (!cuda::std::disjunction<cuda::std::false_type, cuda::std::false_type>::value, "" );
+    static_assert ( std::disjunction<std::true_type,  std::true_type >::value, "" );
+    static_assert ( std::disjunction<std::true_type,  std::false_type>::value, "" );
+    static_assert ( std::disjunction<std::false_type, std::true_type >::value, "" );
+    static_assert (!std::disjunction<std::false_type, std::false_type>::value, "" );
 
-    static_assert ( cuda::std::disjunction_v<cuda::std::true_type,  cuda::std::true_type >, "" );
-    static_assert ( cuda::std::disjunction_v<cuda::std::true_type,  cuda::std::false_type>, "" );
-    static_assert ( cuda::std::disjunction_v<cuda::std::false_type, cuda::std::true_type >, "" );
-    static_assert (!cuda::std::disjunction_v<cuda::std::false_type, cuda::std::false_type>, "" );
+    static_assert ( std::disjunction_v<std::true_type,  std::true_type >, "" );
+    static_assert ( std::disjunction_v<std::true_type,  std::false_type>, "" );
+    static_assert ( std::disjunction_v<std::false_type, std::true_type >, "" );
+    static_assert (!std::disjunction_v<std::false_type, std::false_type>, "" );
 
-    static_assert ( cuda::std::disjunction<cuda::std::true_type,  cuda::std::true_type,  cuda::std::true_type >::value, "" );
-    static_assert ( cuda::std::disjunction<cuda::std::true_type,  cuda::std::false_type, cuda::std::true_type >::value, "" );
-    static_assert ( cuda::std::disjunction<cuda::std::false_type, cuda::std::true_type,  cuda::std::true_type >::value, "" );
-    static_assert ( cuda::std::disjunction<cuda::std::false_type, cuda::std::false_type, cuda::std::true_type >::value, "" );
-    static_assert ( cuda::std::disjunction<cuda::std::true_type,  cuda::std::true_type,  cuda::std::false_type>::value, "" );
-    static_assert ( cuda::std::disjunction<cuda::std::true_type,  cuda::std::false_type, cuda::std::false_type>::value, "" );
-    static_assert ( cuda::std::disjunction<cuda::std::false_type, cuda::std::true_type,  cuda::std::false_type>::value, "" );
-    static_assert (!cuda::std::disjunction<cuda::std::false_type, cuda::std::false_type, cuda::std::false_type>::value, "" );
+    static_assert ( std::disjunction<std::true_type,  std::true_type,  std::true_type >::value, "" );
+    static_assert ( std::disjunction<std::true_type,  std::false_type, std::true_type >::value, "" );
+    static_assert ( std::disjunction<std::false_type, std::true_type,  std::true_type >::value, "" );
+    static_assert ( std::disjunction<std::false_type, std::false_type, std::true_type >::value, "" );
+    static_assert ( std::disjunction<std::true_type,  std::true_type,  std::false_type>::value, "" );
+    static_assert ( std::disjunction<std::true_type,  std::false_type, std::false_type>::value, "" );
+    static_assert ( std::disjunction<std::false_type, std::true_type,  std::false_type>::value, "" );
+    static_assert (!std::disjunction<std::false_type, std::false_type, std::false_type>::value, "" );
 
-    static_assert ( cuda::std::disjunction_v<cuda::std::true_type,  cuda::std::true_type,  cuda::std::true_type >, "" );
-    static_assert ( cuda::std::disjunction_v<cuda::std::true_type,  cuda::std::false_type, cuda::std::true_type >, "" );
-    static_assert ( cuda::std::disjunction_v<cuda::std::false_type, cuda::std::true_type,  cuda::std::true_type >, "" );
-    static_assert ( cuda::std::disjunction_v<cuda::std::false_type, cuda::std::false_type, cuda::std::true_type >, "" );
-    static_assert ( cuda::std::disjunction_v<cuda::std::true_type,  cuda::std::true_type,  cuda::std::false_type>, "" );
-    static_assert ( cuda::std::disjunction_v<cuda::std::true_type,  cuda::std::false_type, cuda::std::false_type>, "" );
-    static_assert ( cuda::std::disjunction_v<cuda::std::false_type, cuda::std::true_type,  cuda::std::false_type>, "" );
-    static_assert (!cuda::std::disjunction_v<cuda::std::false_type, cuda::std::false_type, cuda::std::false_type>, "" );
+    static_assert ( std::disjunction_v<std::true_type,  std::true_type,  std::true_type >, "" );
+    static_assert ( std::disjunction_v<std::true_type,  std::false_type, std::true_type >, "" );
+    static_assert ( std::disjunction_v<std::false_type, std::true_type,  std::true_type >, "" );
+    static_assert ( std::disjunction_v<std::false_type, std::false_type, std::true_type >, "" );
+    static_assert ( std::disjunction_v<std::true_type,  std::true_type,  std::false_type>, "" );
+    static_assert ( std::disjunction_v<std::true_type,  std::false_type, std::false_type>, "" );
+    static_assert ( std::disjunction_v<std::false_type, std::true_type,  std::false_type>, "" );
+    static_assert (!std::disjunction_v<std::false_type, std::false_type, std::false_type>, "" );
 
-    static_assert ( cuda::std::disjunction<True >::value, "" );
-    static_assert (!cuda::std::disjunction<False>::value, "" );
+    static_assert ( std::disjunction<True >::value, "" );
+    static_assert (!std::disjunction<False>::value, "" );
 
-    static_assert ( cuda::std::disjunction_v<True >, "" );
-    static_assert (!cuda::std::disjunction_v<False>, "" );
+    static_assert ( std::disjunction_v<True >, "" );
+    static_assert (!std::disjunction_v<False>, "" );
 
   return 0;
 }

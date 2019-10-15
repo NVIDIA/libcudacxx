@@ -8,7 +8,7 @@
 //
 // UNSUPPORTED: libcpp-has-no-threads, pre-sm-60
 
-// <cuda/std/atomic>
+// <atomic>
 
 // template <class T>
 //     void
@@ -18,9 +18,9 @@
 //     void
 //     atomic_store(atomic<T>* obj, T desr);
 
-#include <cuda/std/atomic>
-#include <cuda/std/type_traits>
-#include <cuda/std/cassert>
+#include <atomic>
+#include <type_traits>
+#include <cassert>
 
 #include "atomic_helpers.h"
 
@@ -28,12 +28,12 @@ template <class T, cuda::thread_scope>
 struct TestFn {
   __host__ __device__
   void operator()() const {
-    typedef cuda::std::atomic<T> A;
+    typedef std::atomic<T> A;
     A t;
-    cuda::std::atomic_store(&t, T(1));
+    std::atomic_store(&t, T(1));
     assert(t == T(1));
     volatile A vt;
-    cuda::std::atomic_store(&vt, T(2));
+    std::atomic_store(&vt, T(2));
     assert(vt == T(2));
   }
 };

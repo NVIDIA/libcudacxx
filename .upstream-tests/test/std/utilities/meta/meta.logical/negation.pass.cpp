@@ -13,28 +13,28 @@
 // template<class B>
 //   constexpr bool negation_v = negation<B>::value;         // C++17
 
-#include <cuda/std/type_traits>
-#include <cuda/std/cassert>
+#include <type_traits>
+#include <cassert>
 
 struct True  { static constexpr bool value = true; };
 struct False { static constexpr bool value = false; };
 
 int main(int, char**)
 {
-    static_assert (!cuda::std::negation<cuda::std::true_type >::value, "" );
-    static_assert ( cuda::std::negation<cuda::std::false_type>::value, "" );
+    static_assert (!std::negation<std::true_type >::value, "" );
+    static_assert ( std::negation<std::false_type>::value, "" );
 
-    static_assert (!cuda::std::negation_v<cuda::std::true_type >, "" );
-    static_assert ( cuda::std::negation_v<cuda::std::false_type>, "" );
+    static_assert (!std::negation_v<std::true_type >, "" );
+    static_assert ( std::negation_v<std::false_type>, "" );
 
-    static_assert (!cuda::std::negation<True >::value, "" );
-    static_assert ( cuda::std::negation<False>::value, "" );
+    static_assert (!std::negation<True >::value, "" );
+    static_assert ( std::negation<False>::value, "" );
 
-    static_assert (!cuda::std::negation_v<True >, "" );
-    static_assert ( cuda::std::negation_v<False>, "" );
+    static_assert (!std::negation_v<True >, "" );
+    static_assert ( std::negation_v<False>, "" );
 
-    static_assert ( cuda::std::negation<cuda::std::negation<cuda::std::true_type >>::value, "" );
-    static_assert (!cuda::std::negation<cuda::std::negation<cuda::std::false_type>>::value, "" );
+    static_assert ( std::negation<std::negation<std::true_type >>::value, "" );
+    static_assert (!std::negation<std::negation<std::false_type>>::value, "" );
 
   return 0;
 }

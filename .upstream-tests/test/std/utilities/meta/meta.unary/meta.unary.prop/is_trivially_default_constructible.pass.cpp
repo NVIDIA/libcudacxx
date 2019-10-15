@@ -10,22 +10,22 @@
 
 // is_trivially_default_constructible
 
-#include <cuda/std/type_traits>
+#include <type_traits>
 #include "test_macros.h"
 
 template <class T>
 __host__ __device__
 void test_is_trivially_default_constructible()
 {
-    static_assert( cuda::std::is_trivially_default_constructible<T>::value, "");
-    static_assert( cuda::std::is_trivially_default_constructible<const T>::value, "");
-    static_assert( cuda::std::is_trivially_default_constructible<volatile T>::value, "");
-    static_assert( cuda::std::is_trivially_default_constructible<const volatile T>::value, "");
+    static_assert( std::is_trivially_default_constructible<T>::value, "");
+    static_assert( std::is_trivially_default_constructible<const T>::value, "");
+    static_assert( std::is_trivially_default_constructible<volatile T>::value, "");
+    static_assert( std::is_trivially_default_constructible<const volatile T>::value, "");
 #if TEST_STD_VER > 14
-    static_assert( cuda::std::is_trivially_default_constructible_v<T>, "");
-    static_assert( cuda::std::is_trivially_default_constructible_v<const T>, "");
-    static_assert( cuda::std::is_trivially_default_constructible_v<volatile T>, "");
-    static_assert( cuda::std::is_trivially_default_constructible_v<const volatile T>, "");
+    static_assert( std::is_trivially_default_constructible_v<T>, "");
+    static_assert( std::is_trivially_default_constructible_v<const T>, "");
+    static_assert( std::is_trivially_default_constructible_v<volatile T>, "");
+    static_assert( std::is_trivially_default_constructible_v<const volatile T>, "");
 #endif
 }
 
@@ -33,15 +33,15 @@ template <class T>
 __host__ __device__
 void test_has_not_trivial_default_constructor()
 {
-    static_assert(!cuda::std::is_trivially_default_constructible<T>::value, "");
-    static_assert(!cuda::std::is_trivially_default_constructible<const T>::value, "");
-    static_assert(!cuda::std::is_trivially_default_constructible<volatile T>::value, "");
-    static_assert(!cuda::std::is_trivially_default_constructible<const volatile T>::value, "");
+    static_assert(!std::is_trivially_default_constructible<T>::value, "");
+    static_assert(!std::is_trivially_default_constructible<const T>::value, "");
+    static_assert(!std::is_trivially_default_constructible<volatile T>::value, "");
+    static_assert(!std::is_trivially_default_constructible<const volatile T>::value, "");
 #if TEST_STD_VER > 14
-    static_assert(!cuda::std::is_trivially_default_constructible_v<T>, "");
-    static_assert(!cuda::std::is_trivially_default_constructible_v<const T>, "");
-    static_assert(!cuda::std::is_trivially_default_constructible_v<volatile T>, "");
-    static_assert(!cuda::std::is_trivially_default_constructible_v<const volatile T>, "");
+    static_assert(!std::is_trivially_default_constructible_v<T>, "");
+    static_assert(!std::is_trivially_default_constructible_v<const T>, "");
+    static_assert(!std::is_trivially_default_constructible_v<volatile T>, "");
+    static_assert(!std::is_trivially_default_constructible_v<const volatile T>, "");
 #endif
 }
 

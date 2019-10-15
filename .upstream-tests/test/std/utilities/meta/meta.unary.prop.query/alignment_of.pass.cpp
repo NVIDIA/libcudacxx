@@ -10,8 +10,8 @@
 
 // alignment_of
 
-#include <cuda/std/type_traits>
-#include <cuda/std/cstdint>
+#include <type_traits>
+#include <cstdint>
 
 #include "test_macros.h"
 
@@ -21,16 +21,16 @@ void test_alignment_of()
 {
     const unsigned AlignofResult = TEST_ALIGNOF(T);
     static_assert( AlignofResult == A, "Golden value does not match result of alignof keyword");
-    static_assert( cuda::std::alignment_of<T>::value == AlignofResult, "");
-    static_assert( cuda::std::alignment_of<T>::value == A, "");
-    static_assert( cuda::std::alignment_of<const T>::value == A, "");
-    static_assert( cuda::std::alignment_of<volatile T>::value == A, "");
-    static_assert( cuda::std::alignment_of<const volatile T>::value == A, "");
+    static_assert( std::alignment_of<T>::value == AlignofResult, "");
+    static_assert( std::alignment_of<T>::value == A, "");
+    static_assert( std::alignment_of<const T>::value == A, "");
+    static_assert( std::alignment_of<volatile T>::value == A, "");
+    static_assert( std::alignment_of<const volatile T>::value == A, "");
 #if TEST_STD_VER > 14
-    static_assert( cuda::std::alignment_of_v<T> == A, "");
-    static_assert( cuda::std::alignment_of_v<const T> == A, "");
-    static_assert( cuda::std::alignment_of_v<volatile T> == A, "");
-    static_assert( cuda::std::alignment_of_v<const volatile T> == A, "");
+    static_assert( std::alignment_of_v<T> == A, "");
+    static_assert( std::alignment_of_v<const T> == A, "");
+    static_assert( std::alignment_of_v<volatile T> == A, "");
+    static_assert( std::alignment_of_v<const volatile T> == A, "");
 #endif
 }
 

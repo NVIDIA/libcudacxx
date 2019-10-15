@@ -8,7 +8,7 @@
 //
 // UNSUPPORTED: libcpp-has-no-threads, pre-sm-60
 
-// <cuda/std/atomic>
+// <atomic>
 
 // #define ATOMIC_BOOL_LOCK_FREE unspecified
 // #define ATOMIC_CHAR_LOCK_FREE unspecified
@@ -21,8 +21,8 @@
 // #define ATOMIC_LLONG_LOCK_FREE unspecified
 // #define ATOMIC_POINTER_LOCK_FREE unspecified
 
-#include <cuda/std/atomic>
-#include <cuda/std/cassert>
+#include <atomic>
+#include <cassert>
 
 int main(int, char**)
 {

@@ -14,16 +14,16 @@
 // If T names a referenceable type then the member typedef type
 //    shall name T&; otherwise, type shall name T.
 
-#include <cuda/std/type_traits>
+#include <type_traits>
 #include "test_macros.h"
 
 template <class T, class U>
 __host__ __device__
 void test_add_lvalue_reference()
 {
-    ASSERT_SAME_TYPE(U, typename cuda::std::add_lvalue_reference<T>::type);
+    ASSERT_SAME_TYPE(U, typename std::add_lvalue_reference<T>::type);
 #if TEST_STD_VER > 11
-    ASSERT_SAME_TYPE(U, cuda::std::add_lvalue_reference_t<T>);
+    ASSERT_SAME_TYPE(U, std::add_lvalue_reference_t<T>);
 #endif
 }
 
@@ -31,9 +31,9 @@ template <class F>
 __host__ __device__
 void test_function0()
 {
-    ASSERT_SAME_TYPE(F&, typename cuda::std::add_lvalue_reference<F>::type);
+    ASSERT_SAME_TYPE(F&, typename std::add_lvalue_reference<F>::type);
 #if TEST_STD_VER > 11
-    ASSERT_SAME_TYPE(F&, cuda::std::add_lvalue_reference_t<F>);
+    ASSERT_SAME_TYPE(F&, std::add_lvalue_reference_t<F>);
 #endif
 }
 
@@ -41,9 +41,9 @@ template <class F>
 __host__ __device__
 void test_function1()
 {
-    ASSERT_SAME_TYPE(F, typename cuda::std::add_lvalue_reference<F>::type);
+    ASSERT_SAME_TYPE(F, typename std::add_lvalue_reference<F>::type);
 #if TEST_STD_VER > 11
-    ASSERT_SAME_TYPE(F, cuda::std::add_lvalue_reference_t<F>);
+    ASSERT_SAME_TYPE(F, std::add_lvalue_reference_t<F>);
 #endif
 }
 

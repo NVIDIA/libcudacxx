@@ -10,16 +10,16 @@
 
 // has_nothrow_move_assign
 
-#include <cuda/std/type_traits>
+#include <type_traits>
 #include "test_macros.h"
 
 template <class T>
 __host__ __device__
 void test_has_nothrow_assign()
 {
-    static_assert( cuda::std::is_nothrow_move_assignable<T>::value, "");
+    static_assert( std::is_nothrow_move_assignable<T>::value, "");
 #if TEST_STD_VER > 14
-    static_assert( cuda::std::is_nothrow_move_assignable_v<T>, "");
+    static_assert( std::is_nothrow_move_assignable_v<T>, "");
 #endif
 }
 
@@ -27,9 +27,9 @@ template <class T>
 __host__ __device__
 void test_has_not_nothrow_assign()
 {
-    static_assert(!cuda::std::is_nothrow_move_assignable<T>::value, "");
+    static_assert(!std::is_nothrow_move_assignable<T>::value, "");
 #if TEST_STD_VER > 14
-    static_assert(!cuda::std::is_nothrow_move_assignable_v<T>, "");
+    static_assert(!std::is_nothrow_move_assignable_v<T>, "");
 #endif
 }
 

@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include <cuda/std/cstddef>
+#include <cstddef>
 #include <test_macros.h>
 
 // UNSUPPORTED: c++98, c++03, c++11, c++14
@@ -17,15 +17,15 @@
 //   is_integral_v<IntegerType> is true.
 
 int main(int, char**) {
-    constexpr cuda::std::byte b1{static_cast<cuda::std::byte>(1)};
-    constexpr cuda::std::byte b3{static_cast<cuda::std::byte>(3)};
+    constexpr std::byte b1{static_cast<std::byte>(1)};
+    constexpr std::byte b3{static_cast<std::byte>(3)};
 
     static_assert(noexcept(b3 << 2), "" );
 
-    static_assert(cuda::std::to_integer<int>(b1 << 1) ==   2, "");
-    static_assert(cuda::std::to_integer<int>(b1 << 2) ==   4, "");
-    static_assert(cuda::std::to_integer<int>(b3 << 4) ==  48, "");
-    static_assert(cuda::std::to_integer<int>(b3 << 6) == 192, "");
+    static_assert(std::to_integer<int>(b1 << 1) ==   2, "");
+    static_assert(std::to_integer<int>(b1 << 2) ==   4, "");
+    static_assert(std::to_integer<int>(b3 << 4) ==  48, "");
+    static_assert(std::to_integer<int>(b3 << 6) == 192, "");
 
   return 0;
 }

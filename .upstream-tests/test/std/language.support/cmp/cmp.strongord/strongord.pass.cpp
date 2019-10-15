@@ -8,28 +8,28 @@
 
 // UNSUPPORTED: c++98, c++03, c++11, c++14, c++17
 
-// <cuda/std/compare>
+// <compare>
 
 // class strong_ordering
 
 
-#include <cuda/std/compare>
-#include <cuda/std/type_traits>
-#include <cuda/std/cassert>
+#include <compare>
+#include <type_traits>
+#include <cassert>
 
 #include "test_macros.h"
 
 const volatile void* volatile sink;
 
 void test_static_members() {
-  DoNotOptimize(&cuda::std::strong_ordering::less);
-  DoNotOptimize(&cuda::std::strong_ordering::equal);
-  DoNotOptimize(&cuda::std::strong_ordering::equivalent);
-  DoNotOptimize(&cuda::std::strong_ordering::greater);
+  DoNotOptimize(&std::strong_ordering::less);
+  DoNotOptimize(&std::strong_ordering::equal);
+  DoNotOptimize(&std::strong_ordering::equivalent);
+  DoNotOptimize(&std::strong_ordering::greater);
 }
 
 void test_signatures() {
-  auto& Eq = cuda::std::strong_ordering::equivalent;
+  auto& Eq = std::strong_ordering::equivalent;
 
   ASSERT_NOEXCEPT(Eq == 0);
   ASSERT_NOEXCEPT(0 == Eq);
@@ -46,95 +46,95 @@ void test_signatures() {
 #ifndef TEST_HAS_NO_SPACESHIP_OPERATOR
   ASSERT_NOEXCEPT(0 <=> Eq);
   ASSERT_NOEXCEPT(Eq <=> 0);
-  ASSERT_SAME_TYPE(decltype(Eq <=> 0), cuda::std::strong_ordering);
-  ASSERT_SAME_TYPE(decltype(0 <=> Eq), cuda::std::strong_ordering);
+  ASSERT_SAME_TYPE(decltype(Eq <=> 0), std::strong_ordering);
+  ASSERT_SAME_TYPE(decltype(0 <=> Eq), std::strong_ordering);
 #endif
 }
 
 constexpr bool test_conversion() {
-  static_assert(cuda::std::is_convertible<const cuda::std::strong_ordering&,
-      cuda::std::weak_equality>::value, "");
+  static_assert(std::is_convertible<const std::strong_ordering&,
+      std::weak_equality>::value, "");
   { // value == 0
-    auto V = cuda::std::strong_ordering::equivalent;
-    cuda::std::weak_equality WV = V;
+    auto V = std::strong_ordering::equivalent;
+    std::weak_equality WV = V;
     assert(WV == 0);
   }
-  cuda::std::strong_ordering WeakTestCases[] = {
-      cuda::std::strong_ordering::less,
-      cuda::std::strong_ordering::greater,
+  std::strong_ordering WeakTestCases[] = {
+      std::strong_ordering::less,
+      std::strong_ordering::greater,
   };
   for (auto V : WeakTestCases)
   { // value != 0
-    cuda::std::weak_equality WV = V;
+    std::weak_equality WV = V;
     assert(WV != 0);
   }
-  static_assert(cuda::std::is_convertible<const cuda::std::strong_ordering&,
-      cuda::std::strong_equality>::value, "");
+  static_assert(std::is_convertible<const std::strong_ordering&,
+      std::strong_equality>::value, "");
   { // value == 0
-    auto V = cuda::std::strong_ordering::equivalent;
-    cuda::std::strong_equality WV = V;
+    auto V = std::strong_ordering::equivalent;
+    std::strong_equality WV = V;
     assert(WV == 0);
   }
   { // value == 0
-    auto V = cuda::std::strong_ordering::equal;
-    cuda::std::strong_equality WV = V;
+    auto V = std::strong_ordering::equal;
+    std::strong_equality WV = V;
     assert(WV == 0);
   }
-  cuda::std::strong_ordering StrongTestCases[] = {
-      cuda::std::strong_ordering::less,
-      cuda::std::strong_ordering::greater,
+  std::strong_ordering StrongTestCases[] = {
+      std::strong_ordering::less,
+      std::strong_ordering::greater,
   };
   for (auto V : StrongTestCases)
   { // value != 0
-    cuda::std::strong_equality WV = V;
+    std::strong_equality WV = V;
     assert(WV != 0);
   }
 
-  static_assert(cuda::std::is_convertible<const cuda::std::strong_ordering&,
-      cuda::std::partial_ordering>::value, "");
+  static_assert(std::is_convertible<const std::strong_ordering&,
+      std::partial_ordering>::value, "");
   { // value == 0
-    auto V = cuda::std::strong_ordering::equivalent;
-    cuda::std::partial_ordering WV = V;
+    auto V = std::strong_ordering::equivalent;
+    std::partial_ordering WV = V;
     assert(WV == 0);
   }
   { // value < 0
-    auto V = cuda::std::strong_ordering::less;
-    cuda::std::partial_ordering WV = V;
+    auto V = std::strong_ordering::less;
+    std::partial_ordering WV = V;
     assert(WV < 0);
   }
   { // value > 0
-    auto V = cuda::std::strong_ordering::greater;
-    cuda::std::partial_ordering WV = V;
+    auto V = std::strong_ordering::greater;
+    std::partial_ordering WV = V;
     assert(WV > 0);
   }
 
-  static_assert(cuda::std::is_convertible<const cuda::std::strong_ordering&,
-      cuda::std::weak_ordering>::value, "");
+  static_assert(std::is_convertible<const std::strong_ordering&,
+      std::weak_ordering>::value, "");
   { // value == 0
-    auto V = cuda::std::strong_ordering::equivalent;
-    cuda::std::weak_ordering WV = V;
+    auto V = std::strong_ordering::equivalent;
+    std::weak_ordering WV = V;
     assert(WV == 0);
   }
   { // value < 0
-    auto V = cuda::std::strong_ordering::less;
-    cuda::std::weak_ordering WV = V;
+    auto V = std::strong_ordering::less;
+    std::weak_ordering WV = V;
     assert(WV < 0);
   }
   { // value > 0
-    auto V = cuda::std::strong_ordering::greater;
-    cuda::std::weak_ordering WV = V;
+    auto V = std::strong_ordering::greater;
+    std::weak_ordering WV = V;
     assert(WV > 0);
   }
   return true;
 }
 
 constexpr bool test_constexpr() {
-  auto& Eq = cuda::std::strong_ordering::equal;
-  auto& Equiv = cuda::std::strong_ordering::equivalent;
-  auto& Less = cuda::std::strong_ordering::less;
-  auto& Greater = cuda::std::strong_ordering::greater;
+  auto& Eq = std::strong_ordering::equal;
+  auto& Equiv = std::strong_ordering::equivalent;
+  auto& Less = std::strong_ordering::less;
+  auto& Greater = std::strong_ordering::greater;
   struct {
-    cuda::std::strong_ordering Value;
+    std::strong_ordering Value;
     bool ExpectEq;
     bool ExpectNeq;
     bool ExpectLess;
@@ -164,7 +164,7 @@ constexpr bool test_constexpr() {
   }
 #ifndef TEST_HAS_NO_SPACESHIP_OPERATOR
   {
-    cuda::std::strong_ordering res = (Eq <=> 0);
+    std::strong_ordering res = (Eq <=> 0);
     ((void)res);
     res = (0 <=> Eq);
     ((void)res);
@@ -175,16 +175,16 @@ constexpr bool test_constexpr() {
     ER_Equiv
   };
   struct {
-    cuda::std::strong_ordering Value;
+    std::strong_ordering Value;
     ExpectRes Expect;
   } SpaceshipTestCases[] = {
-      {cuda::std::strong_ordering::equivalent, ER_Equiv},
-      {cuda::std::strong_ordering::less, ER_Less},
-      {cuda::std::strong_ordering::greater, ER_Greater},
+      {std::strong_ordering::equivalent, ER_Equiv},
+      {std::strong_ordering::less, ER_Less},
+      {std::strong_ordering::greater, ER_Greater},
   };
   for (auto TC : SpaceshipTestCases)
   {
-    cuda::std::strong_ordering Res = (TC.Value <=> 0);
+    std::strong_ordering Res = (TC.Value <=> 0);
     switch (TC.Expect) {
     case ER_Equiv:
       assert(Res == 0);

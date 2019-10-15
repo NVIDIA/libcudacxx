@@ -10,8 +10,8 @@
 
 // underlying_type
 
-#include <cuda/std/type_traits>
-#include <cuda/std/climits>
+#include <type_traits>
+#include <climits>
 
 #include "test_macros.h"
 
@@ -29,24 +29,24 @@ enum F { W = UINT_MAX };
 
 int main(int, char**)
 {
-    ASSERT_SAME_TYPE(int, cuda::std::underlying_type<E>::type);
+    ASSERT_SAME_TYPE(int, std::underlying_type<E>::type);
 #if TEST_UNSIGNED_UNDERLYING_TYPE
-    ASSERT_SAME_TYPE(unsigned, cuda::std::underlying_type<F>::type);
+    ASSERT_SAME_TYPE(unsigned, std::underlying_type<F>::type);
 #endif // TEST_UNSIGNED_UNDERLYING_TYPE
 
 #if TEST_STD_VER > 11
-    ASSERT_SAME_TYPE(int, cuda::std::underlying_type_t<E>);
+    ASSERT_SAME_TYPE(int, std::underlying_type_t<E>);
 #if TEST_UNSIGNED_UNDERLYING_TYPE
-    ASSERT_SAME_TYPE(unsigned, cuda::std::underlying_type_t<F>);
+    ASSERT_SAME_TYPE(unsigned, std::underlying_type_t<F>);
 #endif // TEST_UNSIGNED_UNDERLYING_TYPE
 #endif // TEST_STD_VER > 11
 
 #if TEST_STD_VER >= 11
     enum G : char { };
 
-    ASSERT_SAME_TYPE(char,   cuda::std::underlying_type<G>::type);
+    ASSERT_SAME_TYPE(char,   std::underlying_type<G>::type);
 #if TEST_STD_VER > 11
-    ASSERT_SAME_TYPE(char, cuda::std::underlying_type_t<G>);
+    ASSERT_SAME_TYPE(char, std::underlying_type_t<G>);
 #endif // TEST_STD_VER > 11
 #endif // TEST_STD_VER >= 11
 

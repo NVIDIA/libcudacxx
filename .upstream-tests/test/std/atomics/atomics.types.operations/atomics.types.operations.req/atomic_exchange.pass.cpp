@@ -9,7 +9,7 @@
 // UNSUPPORTED: libcpp-has-no-threads, pre-sm-60
 //  ... fails assertion line 31
 
-// <cuda/std/atomic>
+// <atomic>
 
 // template <class T>
 //     T
@@ -19,9 +19,9 @@
 //     T
 //     atomic_exchange(atomic<T>* obj, T desr);
 
-#include <cuda/std/atomic>
-#include <cuda/std/type_traits>
-#include <cuda/std/cassert>
+#include <atomic>
+#include <type_traits>
+#include <cassert>
 
 #include "atomic_helpers.h"
 
@@ -29,14 +29,14 @@ template <class T, cuda::thread_scope>
 struct TestFn {
   __host__ __device__
   void operator()() const {
-    typedef cuda::std::atomic<T> A;
+    typedef std::atomic<T> A;
     A t;
-    cuda::std::atomic_init(&t, T(1));
-    assert(cuda::std::atomic_exchange(&t, T(2)) == T(1));
+    std::atomic_init(&t, T(1));
+    assert(std::atomic_exchange(&t, T(2)) == T(1));
     assert(t == T(2));
     volatile A vt;
-    cuda::std::atomic_init(&vt, T(3));
-    assert(cuda::std::atomic_exchange(&vt, T(4)) == T(3));
+    std::atomic_init(&vt, T(3));
+    assert(std::atomic_exchange(&vt, T(4)) == T(3));
     assert(vt == T(4));
   }
 };

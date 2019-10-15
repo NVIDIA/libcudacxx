@@ -10,22 +10,22 @@
 
 // is_abstract
 
-#include <cuda/std/type_traits>
+#include <type_traits>
 #include "test_macros.h"
 
 template <class T>
 __host__ __device__
 void test_is_abstract()
 {
-    static_assert( cuda::std::is_abstract<T>::value, "");
-    static_assert( cuda::std::is_abstract<const T>::value, "");
-    static_assert( cuda::std::is_abstract<volatile T>::value, "");
-    static_assert( cuda::std::is_abstract<const volatile T>::value, "");
+    static_assert( std::is_abstract<T>::value, "");
+    static_assert( std::is_abstract<const T>::value, "");
+    static_assert( std::is_abstract<volatile T>::value, "");
+    static_assert( std::is_abstract<const volatile T>::value, "");
 #if TEST_STD_VER > 14
-    static_assert( cuda::std::is_abstract_v<T>, "");
-    static_assert( cuda::std::is_abstract_v<const T>, "");
-    static_assert( cuda::std::is_abstract_v<volatile T>, "");
-    static_assert( cuda::std::is_abstract_v<const volatile T>, "");
+    static_assert( std::is_abstract_v<T>, "");
+    static_assert( std::is_abstract_v<const T>, "");
+    static_assert( std::is_abstract_v<volatile T>, "");
+    static_assert( std::is_abstract_v<const volatile T>, "");
 #endif
 }
 
@@ -33,15 +33,15 @@ template <class T>
 __host__ __device__
 void test_is_not_abstract()
 {
-    static_assert(!cuda::std::is_abstract<T>::value, "");
-    static_assert(!cuda::std::is_abstract<const T>::value, "");
-    static_assert(!cuda::std::is_abstract<volatile T>::value, "");
-    static_assert(!cuda::std::is_abstract<const volatile T>::value, "");
+    static_assert(!std::is_abstract<T>::value, "");
+    static_assert(!std::is_abstract<const T>::value, "");
+    static_assert(!std::is_abstract<volatile T>::value, "");
+    static_assert(!std::is_abstract<const volatile T>::value, "");
 #if TEST_STD_VER > 14
-    static_assert(!cuda::std::is_abstract_v<T>, "");
-    static_assert(!cuda::std::is_abstract_v<const T>, "");
-    static_assert(!cuda::std::is_abstract_v<volatile T>, "");
-    static_assert(!cuda::std::is_abstract_v<const volatile T>, "");
+    static_assert(!std::is_abstract_v<T>, "");
+    static_assert(!std::is_abstract_v<const T>, "");
+    static_assert(!std::is_abstract_v<volatile T>, "");
+    static_assert(!std::is_abstract_v<const volatile T>, "");
 #endif
 }
 

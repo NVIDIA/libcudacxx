@@ -10,7 +10,7 @@
 
 // decay
 
-#include <cuda/std/type_traits>
+#include <type_traits>
 
 #include "test_macros.h"
 
@@ -18,9 +18,9 @@ template <class T, class U>
 __host__ __device__
 void test_decay()
 {
-    ASSERT_SAME_TYPE(U, typename cuda::std::decay<T>::type);
+    ASSERT_SAME_TYPE(U, typename std::decay<T>::type);
 #if TEST_STD_VER > 11
-    ASSERT_SAME_TYPE(U,          cuda::std::decay_t<T>);
+    ASSERT_SAME_TYPE(U,          std::decay_t<T>);
 #endif
 }
 

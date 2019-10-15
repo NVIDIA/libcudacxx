@@ -6,10 +6,10 @@
 //
 //===----------------------------------------------------------------------===//
 
-// <cuda/std/version>
+// <version>
 // UNSUPPORTED: c++98, c++03, c++11, c++14, c++17
 
-#include <cuda/std/version>
+#include <version>
 
 int main(int, char**)
 {

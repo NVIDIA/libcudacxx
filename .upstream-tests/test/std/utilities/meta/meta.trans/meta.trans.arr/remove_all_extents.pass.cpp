@@ -10,7 +10,7 @@
 
 // remove_all_extents
 
-#include <cuda/std/type_traits>
+#include <type_traits>
 
 #include "test_macros.h"
 
@@ -20,9 +20,9 @@ template <class T, class U>
 __host__ __device__
 void test_remove_all_extents()
 {
-    ASSERT_SAME_TYPE(U, typename cuda::std::remove_all_extents<T>::type);
+    ASSERT_SAME_TYPE(U, typename std::remove_all_extents<T>::type);
 #if TEST_STD_VER > 11
-    ASSERT_SAME_TYPE(U,        cuda::std::remove_all_extents_t<T>);
+    ASSERT_SAME_TYPE(U,        std::remove_all_extents_t<T>);
 #endif
 }
 

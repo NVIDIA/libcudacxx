@@ -151,8 +151,8 @@ feature_test_macros = sorted([ add_version_header(x) for x in [
      "c++14": 201402L,
    },
    "headers": ["shared_mutex"],
-   "depends": "!defined(_LIBCUDACXX_HAS_NO_THREADS)",
-   "internal_depends": "!defined(_LIBCUDACXX_HAS_NO_THREADS)",
+   "depends": "!defined(_LIBCPP_HAS_NO_THREADS)",
+   "internal_depends": "!defined(_LIBCPP_HAS_NO_THREADS)",
   },
   # C++17 macros
   {"name": "__cpp_lib_atomic_is_always_lock_free",
@@ -160,8 +160,8 @@ feature_test_macros = sorted([ add_version_header(x) for x in [
      "c++17": 201603L,
    },
    "headers": ["atomic"],
-   "depends": "!defined(_LIBCUDACXX_HAS_NO_THREADS)",
-   "internal_depends": "!defined(_LIBCUDACXX_HAS_NO_THREADS)",
+   "depends": "!defined(_LIBCPP_HAS_NO_THREADS)",
+   "internal_depends": "!defined(_LIBCPP_HAS_NO_THREADS)",
   },
   {"name": "__cpp_lib_filesystem",
    "values": {
@@ -253,7 +253,7 @@ feature_test_macros = sorted([ add_version_header(x) for x in [
    },
    "headers": ["memory"],
    "depends": "TEST_HAS_BUILTIN(__builtin_addressof) || TEST_GCC_VER >= 700",
-   "internal_depends": "!defined(_LIBCUDACXX_HAS_NO_BUILTIN_ADDRESSOF)",
+   "internal_depends": "!defined(_LIBCPP_HAS_NO_BUILTIN_ADDRESSOF)",
    },
   {"name": "__cpp_lib_raw_memory_algorithms",
    "values": {
@@ -336,7 +336,7 @@ feature_test_macros = sorted([ add_version_header(x) for x in [
    },
    "headers": ["type_traits"],
    "depends": "TEST_HAS_BUILTIN_IDENTIFIER(__has_unique_object_representations) || TEST_GCC_VER >= 700",
-   "internal_depends": "defined(_LIBCUDACXX_HAS_UNIQUE_OBJECT_REPRESENTATIONS)",
+   "internal_depends": "defined(_LIBCPP_HAS_UNIQUE_OBJECT_REPRESENTATIONS)",
    },
   {"name": "__cpp_lib_is_aggregate",
    "values": {
@@ -344,7 +344,7 @@ feature_test_macros = sorted([ add_version_header(x) for x in [
    },
    "headers": ["type_traits"],
    "depends": "TEST_HAS_BUILTIN_IDENTIFIER(__is_aggregate) || TEST_GCC_VER_NEW >= 7001",
-   "internal_depends": "!defined(_LIBCUDACXX_HAS_NO_IS_AGGREGATE)",
+   "internal_depends": "!defined(_LIBCPP_HAS_NO_IS_AGGREGATE)",
    },
   {"name": "__cpp_lib_chrono",
    "values": {
@@ -452,8 +452,8 @@ feature_test_macros = sorted([ add_version_header(x) for x in [
      "c++17": 201505L,
    },
    "headers": ["shared_mutex"],
-   "depends": "!defined(_LIBCUDACXX_HAS_NO_THREADS)",
-   "internal_depends": "!defined(_LIBCUDACXX_HAS_NO_THREADS)",
+   "depends": "!defined(_LIBCPP_HAS_NO_THREADS)",
+   "internal_depends": "!defined(_LIBCPP_HAS_NO_THREADS)",
    },
   {"name": "__cpp_lib_scoped_lock",
    "values": {
@@ -469,7 +469,7 @@ feature_test_macros = sorted([ add_version_header(x) for x in [
    "headers": ["atomic", "filesystem", "istream", "limits", "locale", "ostream",
                "string", "string_view"],
    "depends": "defined(__cpp_char8_t)",
-   "internal_depends": "!defined(_LIBCUDACXX_NO_HAS_CHAR8_T)",
+   "internal_depends": "!defined(_LIBCPP_NO_HAS_CHAR8_T)",
    },
   {"name": "__cpp_lib_erase_if",
    "values": {
@@ -561,8 +561,8 @@ feature_test_macros = sorted([ add_version_header(x) for x in [
    },
    "headers": ["atomic"],
    "unimplemented": True,
-   "depends": "!defined(_LIBCUDACXX_HAS_NO_THREADS)",
-   "internal_depends": "!defined(_LIBCUDACXX_HAS_NO_THREADS)",
+   "depends": "!defined(_LIBCPP_HAS_NO_THREADS)",
+   "internal_depends": "!defined(_LIBCPP_HAS_NO_THREADS)",
    },
 ]], key=lambda tc: tc["name"])
 
@@ -692,8 +692,8 @@ def produce_version_header():
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCUDACXX_VERSIONH
-#define _LIBCUDACXX_VERSIONH
+#ifndef _LIBCPP_VERSIONH
+#define _LIBCPP_VERSIONH
 
 /*
   version synopsis
@@ -704,23 +704,23 @@ def produce_version_header():
 
 #include <__config>
 
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
-#if _LIBCUDACXX_STD_VER > 11
+#if _LIBCPP_STD_VER > 11
 {cxx14_macros}
 #endif
 
-#if _LIBCUDACXX_STD_VER > 14
+#if _LIBCPP_STD_VER > 14
 {cxx17_macros}
 #endif
 
-#if _LIBCUDACXX_STD_VER > 17
+#if _LIBCPP_STD_VER > 17
 {cxx2a_macros}
 #endif
 
-#endif // _LIBCUDACXX_VERSIONH
+#endif // _LIBCPP_VERSIONH
 """
   return template.format(
       synopsis=produce_version_synopsis().strip(),
@@ -755,14 +755,14 @@ test_types = {
 """,
 
   "unimplemented": """
-# if !defined(_LIBCUDACXX_VERSION)
+# if !defined(_LIBCPP_VERSION)
 #   ifndef {name}
 #     error "{name} should be defined in {std}"
 #   endif
 #   if {name} != {value}
 #     error "{name} should have the value {value} in {std}"
 #   endif
-# else // _LIBCUDACXX_VERSION
+# else // _LIBCPP_VERSION
 #   ifdef {name}
 #     error "{name} should not be defined because it is unimplemented in libc++!"
 #   endif

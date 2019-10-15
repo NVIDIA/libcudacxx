@@ -12,7 +12,7 @@
 // clang versions. It was fixed right before the llvm 3.5 release. See PR18097.
 // XFAIL: apple-clang-6.0, clang-3.4, clang-3.3
 
-// <cuda/std/atomic>
+// <atomic>
 
 // template <class T>
 // struct atomic
@@ -52,10 +52,10 @@
 //     T operator=(T) noexcept;
 // };
 
-#include <cuda/std/atomic>
-#include <cuda/std/cassert>
-// #include <cuda/std/thread> // for thread_id
-// #include <cuda/std/chrono> // for nanoseconds
+#include <atomic>
+#include <cassert>
+// #include <thread> // for thread_id
+// #include <chrono> // for nanoseconds
 
 struct TriviallyCopyable {
     __host__ __device__
@@ -66,14 +66,14 @@ struct TriviallyCopyable {
 template <class T>
 __host__ __device__
 void test ( T t ) {
-    cuda::std::atomic<T> t0(t);
+    std::atomic<T> t0(t);
     }
 
 int main(int, char**)
 {
     test(TriviallyCopyable(42));
-    // test(cuda::std::this_thread::get_id());
-    // test(cuda::std::chrono::nanoseconds(2));
+    // test(std::this_thread::get_id());
+    // test(std::chrono::nanoseconds(2));
 
   return 0;
 }

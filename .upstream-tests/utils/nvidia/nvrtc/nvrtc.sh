@@ -13,7 +13,7 @@ shift
 original_flags=${@}
 echo "original flags: ${original_flags[@]}" >> ${logdir}/log
 
-original_flags=("${original_flags[@]}" -D__LIBCUDACXX_NVRTC_TEST__=1)
+original_flags=("${original_flags[@]}" -D__LIBCPP_NVRTC_TEST__=1)
 
 declare -a modified_flags
 declare -a gpu_archs

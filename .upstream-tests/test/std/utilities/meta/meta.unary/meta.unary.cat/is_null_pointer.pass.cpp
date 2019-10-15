@@ -12,23 +12,23 @@
 
 // UNSUPPORTED: c++98, c++03, c++11
 
-#include <cuda/std/type_traits>
-#include <cuda/std/cstddef>        // for cuda::std::nullptr_t
+#include <type_traits>
+#include <cstddef>        // for std::nullptr_t
 #include "test_macros.h"
 
 template <class T>
 __host__ __device__
 void test_is_null_pointer()
 {
-    static_assert( cuda::std::is_null_pointer<T>::value, "");
-    static_assert( cuda::std::is_null_pointer<const T>::value, "");
-    static_assert( cuda::std::is_null_pointer<volatile T>::value, "");
-    static_assert( cuda::std::is_null_pointer<const volatile T>::value, "");
+    static_assert( std::is_null_pointer<T>::value, "");
+    static_assert( std::is_null_pointer<const T>::value, "");
+    static_assert( std::is_null_pointer<volatile T>::value, "");
+    static_assert( std::is_null_pointer<const volatile T>::value, "");
 #if TEST_STD_VER > 14
-    static_assert( cuda::std::is_null_pointer_v<T>, "");
-    static_assert( cuda::std::is_null_pointer_v<const T>, "");
-    static_assert( cuda::std::is_null_pointer_v<volatile T>, "");
-    static_assert( cuda::std::is_null_pointer_v<const volatile T>, "");
+    static_assert( std::is_null_pointer_v<T>, "");
+    static_assert( std::is_null_pointer_v<const T>, "");
+    static_assert( std::is_null_pointer_v<volatile T>, "");
+    static_assert( std::is_null_pointer_v<const volatile T>, "");
 #endif
 }
 
@@ -36,15 +36,15 @@ template <class T>
 __host__ __device__
 void test_is_not_null_pointer()
 {
-    static_assert(!cuda::std::is_null_pointer<T>::value, "");
-    static_assert(!cuda::std::is_null_pointer<const T>::value, "");
-    static_assert(!cuda::std::is_null_pointer<volatile T>::value, "");
-    static_assert(!cuda::std::is_null_pointer<const volatile T>::value, "");
+    static_assert(!std::is_null_pointer<T>::value, "");
+    static_assert(!std::is_null_pointer<const T>::value, "");
+    static_assert(!std::is_null_pointer<volatile T>::value, "");
+    static_assert(!std::is_null_pointer<const volatile T>::value, "");
 #if TEST_STD_VER > 14
-    static_assert(!cuda::std::is_null_pointer_v<T>, "");
-    static_assert(!cuda::std::is_null_pointer_v<const T>, "");
-    static_assert(!cuda::std::is_null_pointer_v<volatile T>, "");
-    static_assert(!cuda::std::is_null_pointer_v<const volatile T>, "");
+    static_assert(!std::is_null_pointer_v<T>, "");
+    static_assert(!std::is_null_pointer_v<const T>, "");
+    static_assert(!std::is_null_pointer_v<volatile T>, "");
+    static_assert(!std::is_null_pointer_v<const volatile T>, "");
 #endif
 }
 
@@ -76,7 +76,7 @@ typedef void (*FunctionPtr)();
 
 int main(int, char**)
 {
-    test_is_null_pointer<cuda::std::nullptr_t>();
+    test_is_null_pointer<std::nullptr_t>();
 
     test_is_not_null_pointer<void>();
     test_is_not_null_pointer<int>();

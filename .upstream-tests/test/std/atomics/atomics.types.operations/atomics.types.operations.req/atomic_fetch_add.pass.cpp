@@ -9,7 +9,7 @@
 // UNSUPPORTED: libcpp-has-no-threads, pre-sm-60
 //  ... test crashes clang
 
-// <cuda/std/atomic>
+// <atomic>
 
 // template <class Integral>
 //     Integral
@@ -27,9 +27,9 @@
 //     T*
 //     atomic_fetch_add(atomic<T*>* obj, ptrdiff_t op);
 
-#include <cuda/std/atomic>
-#include <cuda/std/type_traits>
-#include <cuda/std/cassert>
+#include <atomic>
+#include <type_traits>
+#include <cassert>
 
 #include "atomic_helpers.h"
 
@@ -38,17 +38,17 @@ struct TestFn {
   __host__ __device__
   void operator()() const {
     {
-        typedef cuda::std::atomic<T> A;
+        typedef std::atomic<T> A;
         A t;
-        cuda::std::atomic_init(&t, T(1));
-        assert(cuda::std::atomic_fetch_add(&t, T(2)) == T(1));
+        std::atomic_init(&t, T(1));
+        assert(std::atomic_fetch_add(&t, T(2)) == T(1));
         assert(t == T(3));
     }
     {
-        typedef cuda::std::atomic<T> A;
+        typedef std::atomic<T> A;
         volatile A t;
-        cuda::std::atomic_init(&t, T(1));
-        assert(cuda::std::atomic_fetch_add(&t, T(2)) == T(1));
+        std::atomic_init(&t, T(1));
+        assert(std::atomic_fetch_add(&t, T(2)) == T(1));
         assert(t == T(3));
     }
   }
@@ -59,19 +59,19 @@ __host__ __device__
 void testp()
 {
     {
-        typedef cuda::std::atomic<T> A;
-        typedef typename cuda::std::remove_pointer<T>::type X;
+        typedef std::atomic<T> A;
+        typedef typename std::remove_pointer<T>::type X;
         A t;
-        cuda::std::atomic_init(&t, T(1*sizeof(X)));
-        assert(cuda::std::atomic_fetch_add(&t, 2) == T(1*sizeof(X)));
+        std::atomic_init(&t, T(1*sizeof(X)));
+        assert(std::atomic_fetch_add(&t, 2) == T(1*sizeof(X)));
         assert(t == T(3*sizeof(X)));
     }
     {
-        typedef cuda::std::atomic<T> A;
-        typedef typename cuda::std::remove_pointer<T>::type X;
+        typedef std::atomic<T> A;
+        typedef typename std::remove_pointer<T>::type X;
         volatile A t;
-        cuda::std::atomic_init(&t, T(1*sizeof(X)));
-        assert(cuda::std::atomic_fetch_add(&t, 2) == T(1*sizeof(X)));
+        std::atomic_init(&t, T(1*sizeof(X)));
+        assert(std::atomic_fetch_add(&t, 2) == T(1*sizeof(X)));
         assert(t == T(3*sizeof(X)));
     }
 }

@@ -11,16 +11,16 @@
 // template <class T, class... Args>
 //   struct is_nothrow_constructible;
 
-#include <cuda/std/type_traits>
+#include <type_traits>
 #include "test_macros.h"
 
 template <class T>
 __host__ __device__
 void test_is_nothrow_constructible()
 {
-    static_assert(( cuda::std::is_nothrow_constructible<T>::value), "");
+    static_assert(( std::is_nothrow_constructible<T>::value), "");
 #if TEST_STD_VER > 14
-    static_assert(( cuda::std::is_nothrow_constructible_v<T>), "");
+    static_assert(( std::is_nothrow_constructible_v<T>), "");
 #endif
 }
 
@@ -28,9 +28,9 @@ template <class T, class A0>
 __host__ __device__
 void test_is_nothrow_constructible()
 {
-    static_assert(( cuda::std::is_nothrow_constructible<T, A0>::value), "");
+    static_assert(( std::is_nothrow_constructible<T, A0>::value), "");
 #if TEST_STD_VER > 14
-    static_assert(( cuda::std::is_nothrow_constructible_v<T, A0>), "");
+    static_assert(( std::is_nothrow_constructible_v<T, A0>), "");
 #endif
 }
 
@@ -38,9 +38,9 @@ template <class T>
 __host__ __device__
 void test_is_not_nothrow_constructible()
 {
-    static_assert((!cuda::std::is_nothrow_constructible<T>::value), "");
+    static_assert((!std::is_nothrow_constructible<T>::value), "");
 #if TEST_STD_VER > 14
-    static_assert((!cuda::std::is_nothrow_constructible_v<T>), "");
+    static_assert((!std::is_nothrow_constructible_v<T>), "");
 #endif
 }
 
@@ -48,9 +48,9 @@ template <class T, class A0>
 __host__ __device__
 void test_is_not_nothrow_constructible()
 {
-    static_assert((!cuda::std::is_nothrow_constructible<T, A0>::value), "");
+    static_assert((!std::is_nothrow_constructible<T, A0>::value), "");
 #if TEST_STD_VER > 14
-    static_assert((!cuda::std::is_nothrow_constructible_v<T, A0>), "");
+    static_assert((!std::is_nothrow_constructible_v<T, A0>), "");
 #endif
 }
 
@@ -58,9 +58,9 @@ template <class T, class A0, class A1>
 __host__ __device__
 void test_is_not_nothrow_constructible()
 {
-    static_assert((!cuda::std::is_nothrow_constructible<T, A0, A1>::value), "");
+    static_assert((!std::is_nothrow_constructible<T, A0, A1>::value), "");
 #if TEST_STD_VER > 14
-    static_assert((!cuda::std::is_nothrow_constructible_v<T, A0, A1>), "");
+    static_assert((!std::is_nothrow_constructible_v<T, A0, A1>), "");
 #endif
 }
 
@@ -116,7 +116,7 @@ int main(int, char**)
 #if TEST_STD_VER >= 11
     test_is_nothrow_constructible<Tuple &&, Empty> (); // See bug #19616.
 
-    static_assert(!cuda::std::is_constructible<Tuple&, Empty>::value, "");
+    static_assert(!std::is_constructible<Tuple&, Empty>::value, "");
     test_is_not_nothrow_constructible<Tuple &, Empty> (); // See bug #19616.
 #endif
 

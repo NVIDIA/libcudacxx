@@ -20,6 +20,6 @@
 #pragma clang diagnostic ignored "-Wkeyword-compat"
 #endif
 
-#define _LIBCUDACXX_USE_IS_CONVERTIBLE_FALLBACK
+#define _LIBCPP_USE_IS_CONVERTIBLE_FALLBACK
 #include "is_convertible.pass.cpp"
 

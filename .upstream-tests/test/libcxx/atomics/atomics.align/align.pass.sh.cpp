@@ -12,9 +12,9 @@
 // RUN: %run
 //
 // GCC currently fails because it needs -fabi-version=6 to fix mangling of
-// cuda::std::atomic when used with __attribute__((vector(X))).
+// std::atomic when used with __attribute__((vector(X))).
 
-// <cuda/std/atomic>
+// <atomic>
 
 // Verify that the content of atomic<T> is properly aligned if the type is
 // lock-free. This can't be observed through the atomic<T> API. It is
@@ -23,10 +23,10 @@
 // alignment". Supported architectures all require natural alignment for
 // lock-freedom (e.g. load-linked / store-conditional, or cmpxchg).
 
-#include <cuda/std/atomic>
-#include <cuda/std/cassert>
+#include <atomic>
+#include <cassert>
 
-template <typename T> struct atomic_test : public cuda::std::__atomic_base<T> {
+template <typename T> struct atomic_test : public std::__atomic_base<T> {
   atomic_test() {
     if (this->is_lock_free())
       assert(alignof(this->__a_) >= sizeof(this->__a_) &&
@@ -59,7 +59,7 @@ int main(int, char**) {
   CHECK_ALIGNMENT(unsigned long);
   CHECK_ALIGNMENT(long long);
   CHECK_ALIGNMENT(unsigned long long);
-  CHECK_ALIGNMENT(cuda::std::nullptr_t);
+  CHECK_ALIGNMENT(std::nullptr_t);
   CHECK_ALIGNMENT(void *);
   CHECK_ALIGNMENT(float);
   CHECK_ALIGNMENT(double);

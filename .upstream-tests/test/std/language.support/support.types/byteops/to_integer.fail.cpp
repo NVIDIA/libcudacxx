@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include <cuda/std/cstddef>
+#include <cstddef>
 #include <test_macros.h>
 
 // UNSUPPORTED: c++98, c++03, c++11, c++14
@@ -17,8 +17,8 @@
 //   is_integral_v<IntegerType> is true.
 
 int main(int, char**) {
-    constexpr cuda::std::byte b1{static_cast<cuda::std::byte>(1)};
-    auto f = cuda::std::to_integer<float>(b1);
+    constexpr std::byte b1{static_cast<std::byte>(1)};
+    auto f = std::to_integer<float>(b1);
 
   return 0;
 }

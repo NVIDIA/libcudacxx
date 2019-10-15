@@ -8,7 +8,7 @@
 
  // test climits
 
-#include <cuda/std/climits>
+#include <climits>
 
 #ifndef CHAR_BIT
 #error CHAR_BIT not defined

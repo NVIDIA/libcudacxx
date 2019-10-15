@@ -10,8 +10,8 @@
 
 // is_function
 
-#include <cuda/std/type_traits>
-#include <cuda/std/cstddef>        // for cuda::std::nullptr_t
+#include <type_traits>
+#include <cstddef>        // for std::nullptr_t
 
 #include "test_macros.h"
 
@@ -22,29 +22,29 @@
 
 template <class T>
 struct test_is_function {
-    static_assert( cuda::std::is_function<T>::value, "");
-    static_assert( cuda::std::is_function<const T>::value, "");
-    static_assert( cuda::std::is_function<volatile T>::value, "");
-    static_assert( cuda::std::is_function<const volatile T>::value, "");
+    static_assert( std::is_function<T>::value, "");
+    static_assert( std::is_function<const T>::value, "");
+    static_assert( std::is_function<volatile T>::value, "");
+    static_assert( std::is_function<const volatile T>::value, "");
 #if TEST_STD_VER > 14
-    static_assert( cuda::std::is_function_v<T>, "");
-    static_assert( cuda::std::is_function_v<const T>, "");
-    static_assert( cuda::std::is_function_v<volatile T>, "");
-    static_assert( cuda::std::is_function_v<const volatile T>, "");
+    static_assert( std::is_function_v<T>, "");
+    static_assert( std::is_function_v<const T>, "");
+    static_assert( std::is_function_v<volatile T>, "");
+    static_assert( std::is_function_v<const volatile T>, "");
 #endif
 };
 
 template <class T>
 struct test_is_not_function {
-    static_assert(!cuda::std::is_function<T>::value, "");
-    static_assert(!cuda::std::is_function<const T>::value, "");
-    static_assert(!cuda::std::is_function<volatile T>::value, "");
-    static_assert(!cuda::std::is_function<const volatile T>::value, "");
+    static_assert(!std::is_function<T>::value, "");
+    static_assert(!std::is_function<const T>::value, "");
+    static_assert(!std::is_function<volatile T>::value, "");
+    static_assert(!std::is_function<const volatile T>::value, "");
 #if TEST_STD_VER > 14
-    static_assert(!cuda::std::is_function_v<T>, "");
-    static_assert(!cuda::std::is_function_v<const T>, "");
-    static_assert(!cuda::std::is_function_v<volatile T>, "");
-    static_assert(!cuda::std::is_function_v<const volatile T>, "");
+    static_assert(!std::is_function_v<T>, "");
+    static_assert(!std::is_function_v<const T>, "");
+    static_assert(!std::is_function_v<volatile T>, "");
+    static_assert(!std::is_function_v<const volatile T>, "");
 #endif
 };
 
@@ -82,7 +82,7 @@ int main(int, char**)
     test_is_function<int(Abstract *)>();
     test_is_function<void(...)>();
 
-  test_is_not_function<cuda::std::nullptr_t>();
+  test_is_not_function<std::nullptr_t>();
   test_is_not_function<void>();
   test_is_not_function<int>();
   test_is_not_function<int&>();

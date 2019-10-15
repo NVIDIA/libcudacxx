@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include <cuda/std/cstddef>
+#include <cstddef>
 
 #ifndef NULL
 #error NULL not defined

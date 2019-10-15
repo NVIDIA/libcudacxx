@@ -6,12 +6,12 @@
 //
 //===----------------------------------------------------------------------===//
 
-// <cuda/std/version>
+// <version>
 
-#include <cuda/std/version>
+#include <version>
 
-#if !defined(_LIBCUDACXX_VERSION)
-#error "_LIBCUDACXX_VERSION must be defined after including <cuda/std/version>"
+#if !defined(_LIBCPP_VERSION)
+#error "_LIBCPP_VERSION must be defined after including <version>"
 #endif
 
 int main(int, char**)

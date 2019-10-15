@@ -8,17 +8,17 @@
 
 // UNSUPPORTED: c++98, c++03, c++11, c++14
 
-// <cuda/std/type_traits>
+// <type_traits>
 
 // template <class T> struct is_aggregate;
 // template <class T> constexpr bool is_aggregate_v = is_aggregate<T>::value;
 
-#include <cuda/std/type_traits>
+#include <type_traits>
 
 int main(int, char**)
 {
-#ifdef _LIBCUDACXX_HAS_NO_IS_AGGREGATE
-  // This should not compile when _LIBCUDACXX_HAS_NO_IS_AGGREGATE is defined.
+#ifdef _LIBCPP_HAS_NO_IS_AGGREGATE
+  // This should not compile when _LIBCPP_HAS_NO_IS_AGGREGATE is defined.
   bool b = __is_aggregate(void);
   ((void)b);
 #else

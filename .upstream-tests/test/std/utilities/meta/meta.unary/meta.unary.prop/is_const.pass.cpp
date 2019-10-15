@@ -10,22 +10,22 @@
 
 // is_const
 
-#include <cuda/std/type_traits>
+#include <type_traits>
 #include "test_macros.h"
 
 template <class T>
 __host__ __device__
 void test_is_const()
 {
-    static_assert(!cuda::std::is_const<T>::value, "");
-    static_assert( cuda::std::is_const<const T>::value, "");
-    static_assert(!cuda::std::is_const<volatile T>::value, "");
-    static_assert( cuda::std::is_const<const volatile T>::value, "");
+    static_assert(!std::is_const<T>::value, "");
+    static_assert( std::is_const<const T>::value, "");
+    static_assert(!std::is_const<volatile T>::value, "");
+    static_assert( std::is_const<const volatile T>::value, "");
 #if TEST_STD_VER > 14
-    static_assert(!cuda::std::is_const_v<T>, "");
-    static_assert( cuda::std::is_const_v<const T>, "");
-    static_assert(!cuda::std::is_const_v<volatile T>, "");
-    static_assert( cuda::std::is_const_v<const volatile T>, "");
+    static_assert(!std::is_const_v<T>, "");
+    static_assert( std::is_const_v<const T>, "");
+    static_assert(!std::is_const_v<volatile T>, "");
+    static_assert( std::is_const_v<const volatile T>, "");
 #endif
 }
 
@@ -43,8 +43,8 @@ int main(int, char**)
 
     test_is_const<A>();
 
-    static_assert(!cuda::std::is_const<int&>::value, "");
-    static_assert(!cuda::std::is_const<const int&>::value, "");
+    static_assert(!std::is_const<int&>::value, "");
+    static_assert(!std::is_const<const int&>::value, "");
 
   return 0;
 }

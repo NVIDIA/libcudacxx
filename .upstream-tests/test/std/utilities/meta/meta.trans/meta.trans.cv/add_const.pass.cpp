@@ -10,7 +10,7 @@
 
 // add_const
 
-#include <cuda/std/type_traits>
+#include <type_traits>
 
 #include "test_macros.h"
 
@@ -18,9 +18,9 @@ template <class T, class U>
 __host__ __device__
 void test_add_const_imp()
 {
-    ASSERT_SAME_TYPE(const U, typename cuda::std::add_const<T>::type);
+    ASSERT_SAME_TYPE(const U, typename std::add_const<T>::type);
 #if TEST_STD_VER > 11
-    ASSERT_SAME_TYPE(const U,        cuda::std::add_const_t<T>);
+    ASSERT_SAME_TYPE(const U,        std::add_const_t<T>);
 #endif
 }
 
