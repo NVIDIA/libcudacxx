@@ -10,7 +10,7 @@
 
 // add_volatile
 
-#include <type_traits>
+#include <cuda/std/type_traits>
 
 #include "test_macros.h"
 
@@ -18,9 +18,9 @@ template <class T, class U>
 __host__ __device__
 void test_add_volatile_imp()
 {
-    ASSERT_SAME_TYPE(volatile U, typename std::add_volatile<T>::type);
+    ASSERT_SAME_TYPE(volatile U, typename cuda::std::add_volatile<T>::type);
 #if TEST_STD_VER > 11
-    ASSERT_SAME_TYPE(volatile U,        std::add_volatile_t<T>);
+    ASSERT_SAME_TYPE(volatile U,        cuda::std::add_volatile_t<T>);
 #endif
 }
 

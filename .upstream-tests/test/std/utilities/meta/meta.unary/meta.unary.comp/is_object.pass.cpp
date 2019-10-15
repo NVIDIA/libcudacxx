@@ -10,23 +10,23 @@
 
 // is_object
 
-#include <type_traits>
-#include <cstddef>         // for std::nullptr_t
+#include <cuda/std/type_traits>
+#include <cuda/std/cstddef>         // for cuda::std::nullptr_t
 #include "test_macros.h"
 
 template <class T>
 __host__ __device__
 void test_is_object()
 {
-    static_assert( std::is_object<T>::value, "");
-    static_assert( std::is_object<const T>::value, "");
-    static_assert( std::is_object<volatile T>::value, "");
-    static_assert( std::is_object<const volatile T>::value, "");
+    static_assert( cuda::std::is_object<T>::value, "");
+    static_assert( cuda::std::is_object<const T>::value, "");
+    static_assert( cuda::std::is_object<volatile T>::value, "");
+    static_assert( cuda::std::is_object<const volatile T>::value, "");
 #if TEST_STD_VER > 14
-    static_assert( std::is_object_v<T>, "");
-    static_assert( std::is_object_v<const T>, "");
-    static_assert( std::is_object_v<volatile T>, "");
-    static_assert( std::is_object_v<const volatile T>, "");
+    static_assert( cuda::std::is_object_v<T>, "");
+    static_assert( cuda::std::is_object_v<const T>, "");
+    static_assert( cuda::std::is_object_v<volatile T>, "");
+    static_assert( cuda::std::is_object_v<const volatile T>, "");
 #endif
 }
 
@@ -34,15 +34,15 @@ template <class T>
 __host__ __device__
 void test_is_not_object()
 {
-    static_assert(!std::is_object<T>::value, "");
-    static_assert(!std::is_object<const T>::value, "");
-    static_assert(!std::is_object<volatile T>::value, "");
-    static_assert(!std::is_object<const volatile T>::value, "");
+    static_assert(!cuda::std::is_object<T>::value, "");
+    static_assert(!cuda::std::is_object<const T>::value, "");
+    static_assert(!cuda::std::is_object<volatile T>::value, "");
+    static_assert(!cuda::std::is_object<const volatile T>::value, "");
 #if TEST_STD_VER > 14
-    static_assert(!std::is_object_v<T>, "");
-    static_assert(!std::is_object_v<const T>, "");
-    static_assert(!std::is_object_v<volatile T>, "");
-    static_assert(!std::is_object_v<const volatile T>, "");
+    static_assert(!cuda::std::is_object_v<T>, "");
+    static_assert(!cuda::std::is_object_v<const T>, "");
+    static_assert(!cuda::std::is_object_v<volatile T>, "");
+    static_assert(!cuda::std::is_object_v<const volatile T>, "");
 #endif
 }
 
@@ -79,7 +79,7 @@ int main(int, char**)
 // An object type is a (possibly cv-qualified) type that is not a function type,
 // not a reference type, and not a void type.
 
-    test_is_object<std::nullptr_t>();
+    test_is_object<cuda::std::nullptr_t>();
     test_is_object<void *>();
     test_is_object<char[3]>();
     test_is_object<char[]>();

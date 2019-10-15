@@ -8,19 +8,19 @@
 //
 // UNSUPPORTED: libcpp-has-no-threads, pre-sm-60
 
-// <atomic>
+// <cuda/std/atomic>
 
 // template <class T> T kill_dependency(T y);
 
-#include <atomic>
-#include <cassert>
+#include <cuda/std/atomic>
+#include <cuda/std/cassert>
 
 #include "test_macros.h"
 
 int main(int, char**)
 {
-    assert(std::kill_dependency(5) == 5);
-    assert(std::kill_dependency(-5.5) == -5.5);
+    assert(cuda::std::kill_dependency(5) == 5);
+    assert(cuda::std::kill_dependency(-5.5) == -5.5);
 
   return 0;
 }

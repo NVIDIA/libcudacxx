@@ -8,24 +8,24 @@
 
 // UNSUPPORTED: c++98, c++03, c++11, c++14, c++17
 
-// <functional>
+// <cuda/std/functional>
 //
 // reference_wrapper
 //
 // template <class... ArgTypes>
-//  std::invoke_result_t<T&, ArgTypes...>
+//  cuda::std::invoke_result_t<T&, ArgTypes...>
 //      operator()(ArgTypes&&... args) const;
 //
 // Requires T to be a complete type (since C++20).
 
-#include <functional>
+#include <cuda/std/functional>
 
 
 struct Foo;
 Foo& get_foo();
 
 void test() {
-    std::reference_wrapper<Foo> ref = get_foo();
+    cuda::std::reference_wrapper<Foo> ref = get_foo();
     ref(0); // incomplete at the point of call
 }
 

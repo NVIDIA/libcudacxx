@@ -14,14 +14,14 @@
 //
 //  Impl          Compile Time    Object Size
 // -------------------------------------------
-// std::_IsSame:    689.634 ms     356 K
-// std::is_same:  8,129.180 ms     560 K
+// cuda::std::_IsSame:    689.634 ms     356 K
+// cuda::std::is_same:  8,129.180 ms     560 K
 //
 // RUN: %cxx %flags %compile_flags -c %s -o %S/orig.o -ggdb  -ggnu-pubnames -ftemplate-depth=5000 -ftime-trace -std=c++17
 // RUN: %cxx %flags %compile_flags -c %s -o %S/new.o -ggdb  -ggnu-pubnames -ftemplate-depth=5000 -ftime-trace -std=c++17 -DTEST_NEW
 
-#include <type_traits>
-#include <cassert>
+#include <cuda/std/type_traits>
+#include <cuda/std/cassert>
 
 #include "test_macros.h"
 #include "template_cost_testing.h"
@@ -29,9 +29,9 @@
 template <int N> struct Arg { enum { value = 1 }; };
 
 #ifdef TEST_NEW
-#define IS_SAME  std::_IsSame
+#define IS_SAME  cuda::std::_IsSame
 #else
-#define IS_SAME std::is_same
+#define IS_SAME cuda::std::is_same
 #endif
 
 #define TEST_CASE_NOP() IS_SAME < Arg< __COUNTER__ >, Arg < __COUNTER__ > >::value,

@@ -14,11 +14,11 @@
 
 // enable_if
 
-#include <type_traits>
+#include <cuda/std/type_traits>
 
 int main(int, char**)
 {
-    typedef std::enable_if_t<false> A;
+    typedef cuda::std::enable_if_t<false> A;
 
   return 0;
 }

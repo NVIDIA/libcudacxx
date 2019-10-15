@@ -6,9 +6,9 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include <cstddef>
-#include <type_traits>
-#include <cassert>
+#include <cuda/std/cstddef>
+#include <cuda/std/type_traits>
+#include <cuda/std/cassert>
 
 #include "test_macros.h"
 
@@ -16,7 +16,7 @@
 
 struct A
 {
-    A(std::nullptr_t) {}
+    A(cuda::std::nullptr_t) {}
 };
 
 template <class T>
@@ -37,10 +37,10 @@ void test_conversions()
 }
 
 template <class T> struct Voider { typedef void type; };
-template <class T, class = void> struct has_less : std::false_type {};
+template <class T, class = void> struct has_less : cuda::std::false_type {};
 
 template <class T> struct has_less<T,
-    typename Voider<decltype(std::declval<T>() < nullptr)>::type> : std::true_type {};
+    typename Voider<decltype(cuda::std::declval<T>() < nullptr)>::type> : cuda::std::true_type {};
 
 template <class T>
 __host__ __device__
@@ -79,11 +79,11 @@ void test_nullptr_conversions() {
 
 int main(int, char**)
 {
-    static_assert(sizeof(std::nullptr_t) == sizeof(void*),
-                  "sizeof(std::nullptr_t) == sizeof(void*)");
+    static_assert(sizeof(cuda::std::nullptr_t) == sizeof(void*),
+                  "sizeof(cuda::std::nullptr_t) == sizeof(void*)");
 
     {
-        test_conversions<std::nullptr_t>();
+        test_conversions<cuda::std::nullptr_t>();
         test_conversions<void*>();
         test_conversions<A*>();
         test_conversions<void(*)()>();
@@ -91,16 +91,16 @@ int main(int, char**)
         test_conversions<int A::*>();
     }
     {
-#ifdef _LIBCPP_HAS_NO_NULLPTR
-        static_assert(!has_less<std::nullptr_t>::value, "");
+#ifdef _LIBCUDACXX_HAS_NO_NULLPTR
+        static_assert(!has_less<cuda::std::nullptr_t>::value, "");
         // FIXME: our C++03 nullptr emulation still allows for comparisons
         // with other pointer types by way of the conversion operator.
         //static_assert(!has_less<void*>::value, "");
 #else
         // TODO Enable this assertion when all compilers implement core DR 583.
-        // static_assert(!has_less<std::nullptr_t>::value, "");
+        // static_assert(!has_less<cuda::std::nullptr_t>::value, "");
 #endif
-        test_comparisons<std::nullptr_t>();
+        test_comparisons<cuda::std::nullptr_t>();
         test_comparisons<void*>();
         test_comparisons<A*>();
         test_comparisons<void(*)()>();

@@ -34,10 +34,10 @@
 // RUN:    -ggdb  -ggnu-pubnames -ftemplate-depth=5000 -ftime-trace -g \
 // RUN:    -DTEST_NS=variant_impl -o %S/variant.o
 
-#include <type_traits>
-#include <tuple>
-#include <cassert>
-#include <variant>
+#include <cuda/std/type_traits>
+#include <cuda/std/tuple>
+#include <cuda/std/cassert>
+#include <cuda/std/variant>
 
 #include "test_macros.h"
 #include "template_cost_testing.h"
@@ -66,14 +66,14 @@ template <class IdxSeq>
 struct MakeOverloads;
 
 template <size_t ..._Idx>
-struct MakeOverloads<std::__tuple_indices<_Idx...> > {
+struct MakeOverloads<cuda::std::__tuple_indices<_Idx...> > {
   template <class ...Types>
   using Apply = AllOverloads<Overload<Types, _Idx>...>;
 };
 
 template <class ...Types>
 using Overloads = typename MakeOverloads<
-    std::__make_indices_imp<sizeof...(Types), 0> >::template Apply<Types...>;
+    cuda::std::__make_indices_imp<sizeof...(Types), 0> >::template Apply<Types...>;
 
 } // namespace flat_impl
 
@@ -98,7 +98,7 @@ using Overloads = Overload<Types...>;
 
 namespace variant_impl {
   template <class ...Types>
-  using Overloads = std::__variant_detail::_MakeOverloads<Types...>;
+  using Overloads = cuda::std::__variant_detail::_MakeOverloads<Types...>;
 } // naamespace variant_impl
 
 #ifndef TEST_NS
@@ -110,7 +110,7 @@ using T1 = TEST_NS::Overloads<REPEAT_1000(TEST_TYPE) TestType<1>, TestType<1>, i
 static_assert(__COUNTER__ >= 1000, "");
 
 void fn1(T1 x) { DoNotOptimize(&x); }
-void fn2(typename std::invoke_result_t<T1, int, int>::type x) { DoNotOptimize(&x); }
+void fn2(typename cuda::std::invoke_result_t<T1, int, int>::type x) { DoNotOptimize(&x); }
 
 int main() {
   DoNotOptimize(&fn1);

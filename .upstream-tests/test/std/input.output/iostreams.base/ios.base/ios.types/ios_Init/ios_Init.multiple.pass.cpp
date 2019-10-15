@@ -6,8 +6,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include <iostream>
-#include <cassert>
+#include <cuda/std/iostream>
+#include <cuda/std/cassert>
 
 #include "test_macros.h"
 
@@ -29,15 +29,15 @@
 int main(int, char**)
 {
 
-    std::cout << "Hello!";
-    std::ios_base::fmtflags stock_flags = std::cout.flags();
+    cuda::std::cout << "Hello!";
+    cuda::std::ios_base::fmtflags stock_flags = cuda::std::cout.flags();
 
-    std::cout << std::boolalpha << true;
-    std::ios_base::fmtflags ba_flags = std::cout.flags();
+    cuda::std::cout << cuda::std::boolalpha << true;
+    cuda::std::ios_base::fmtflags ba_flags = cuda::std::cout.flags();
     assert(stock_flags != ba_flags);
 
-    std::ios_base::Init init_streams;
-    std::ios_base::fmtflags after_init = std::cout.flags();
+    cuda::std::ios_base::Init init_streams;
+    cuda::std::ios_base::fmtflags after_init = cuda::std::cout.flags();
     assert(after_init == ba_flags);
 
     return 0;

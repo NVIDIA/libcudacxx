@@ -12,11 +12,11 @@
 // };
 // extern const nothrow_t nothrow;
 
-#include <new>
+#include <cuda/std/new>
 
 
 int main(int, char**) {
-  std::nothrow_t x = std::nothrow;
+  cuda::std::nothrow_t x = cuda::std::nothrow;
   (void)x;
 
   return 0;

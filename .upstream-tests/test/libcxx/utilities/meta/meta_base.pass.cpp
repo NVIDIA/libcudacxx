@@ -7,8 +7,8 @@
 //===----------------------------------------------------------------------===//
 //
 
-#include <type_traits>
-#include <cassert>
+#include <cuda/std/type_traits>
+#include <cuda/std/cassert>
 
 #include "test_macros.h"
 
@@ -18,36 +18,36 @@ struct BOOM {
   using Explode = typename T::BOOMBOOM;
 };
 
-using True = std::true_type;
-using False = std::false_type;
+using True = cuda::std::true_type;
+using False = cuda::std::false_type;
 
 void test_if() {
-  ASSERT_SAME_TYPE(std::_If<true, int, long>, int);
-  ASSERT_SAME_TYPE(std::_If<false, int, long>, long);
+  ASSERT_SAME_TYPE(cuda::std::_If<true, int, long>, int);
+  ASSERT_SAME_TYPE(cuda::std::_If<false, int, long>, long);
 }
 
 void test_and() {
-  static_assert(std::_And<True>::value, "");
-  static_assert(!std::_And<False>::value, "");
-  static_assert(std::_And<True, True>::value, "");
-  static_assert(!std::_And<False, BOOM<1> >::value, "");
-  static_assert(!std::_And<True, True, True, False, BOOM<2> >::value, "");
+  static_assert(cuda::std::_And<True>::value, "");
+  static_assert(!cuda::std::_And<False>::value, "");
+  static_assert(cuda::std::_And<True, True>::value, "");
+  static_assert(!cuda::std::_And<False, BOOM<1> >::value, "");
+  static_assert(!cuda::std::_And<True, True, True, False, BOOM<2> >::value, "");
 }
 
 void test_or() {
-  static_assert(std::_Or<True>::value, "");
-  static_assert(!std::_Or<False>::value, "");
-  static_assert(std::_Or<False, True>::value, "");
-  static_assert(std::_Or<True, std::_Not<BOOM<3> > >::value, "");
-  static_assert(!std::_Or<False, False>::value, "");
-  static_assert(std::_Or<True, BOOM<1> >::value, "");
-  static_assert(std::_Or<False, False, False, False, True, BOOM<2> >::value, "");
+  static_assert(cuda::std::_Or<True>::value, "");
+  static_assert(!cuda::std::_Or<False>::value, "");
+  static_assert(cuda::std::_Or<False, True>::value, "");
+  static_assert(cuda::std::_Or<True, cuda::std::_Not<BOOM<3> > >::value, "");
+  static_assert(!cuda::std::_Or<False, False>::value, "");
+  static_assert(cuda::std::_Or<True, BOOM<1> >::value, "");
+  static_assert(cuda::std::_Or<False, False, False, False, True, BOOM<2> >::value, "");
 }
 
 void test_combined() {
-  static_assert(std::_And<True, std::_Or<False, True, BOOM<4> > >::value, "");
-  static_assert(std::_And<True, std::_Or<False, True, BOOM<4> > >::value, "");
-  static_assert(std::_Not<std::_And<True, False, BOOM<5> > >::value, "");
+  static_assert(cuda::std::_And<True, cuda::std::_Or<False, True, BOOM<4> > >::value, "");
+  static_assert(cuda::std::_And<True, cuda::std::_Or<False, True, BOOM<4> > >::value, "");
+  static_assert(cuda::std::_Not<cuda::std::_And<True, False, BOOM<5> > >::value, "");
 }
 
 struct MemberTest {
@@ -66,24 +66,24 @@ template <class T>
 using HasFooType = typename T::foo;
 
 template <class T, class U>
-using FuncCallable = decltype(std::declval<T>().func(std::declval<U>()));
+using FuncCallable = decltype(cuda::std::declval<T>().func(cuda::std::declval<U>()));
 template <class T>
 using BadCheck = typename T::DOES_NOT_EXIST;
 
 void test_is_valid_trait() {
-  static_assert(std::_IsValidExpansion<HasFooData, MemberTest>::value, "");
-  static_assert(!std::_IsValidExpansion<HasFooType, MemberTest>::value, "");
-  static_assert(!std::_IsValidExpansion<HasFooData, MemberTest2>::value, "");
-  static_assert(std::_IsValidExpansion<HasFooType, MemberTest2>::value, "");
-  static_assert(std::_IsValidExpansion<FuncCallable, MemberTest, int>::value, "");
-  static_assert(!std::_IsValidExpansion<FuncCallable, MemberTest, void*>::value, "");
+  static_assert(cuda::std::_IsValidExpansion<HasFooData, MemberTest>::value, "");
+  static_assert(!cuda::std::_IsValidExpansion<HasFooType, MemberTest>::value, "");
+  static_assert(!cuda::std::_IsValidExpansion<HasFooData, MemberTest2>::value, "");
+  static_assert(cuda::std::_IsValidExpansion<HasFooType, MemberTest2>::value, "");
+  static_assert(cuda::std::_IsValidExpansion<FuncCallable, MemberTest, int>::value, "");
+  static_assert(!cuda::std::_IsValidExpansion<FuncCallable, MemberTest, void*>::value, "");
 }
 
 void test_first_and_second_type() {
-  ASSERT_SAME_TYPE(std::_FirstType<int, long, void*>, int);
-  ASSERT_SAME_TYPE(std::_FirstType<char>, char);
-  ASSERT_SAME_TYPE(std::_SecondType<char, long>, long);
-  ASSERT_SAME_TYPE(std::_SecondType<long long, int, void*>, int);
+  ASSERT_SAME_TYPE(cuda::std::_FirstType<int, long, void*>, int);
+  ASSERT_SAME_TYPE(cuda::std::_FirstType<char>, char);
+  ASSERT_SAME_TYPE(cuda::std::_SecondType<char, long>, long);
+  ASSERT_SAME_TYPE(cuda::std::_SecondType<long long, int, void*>, int);
 }
 
 int main(int, char**) {

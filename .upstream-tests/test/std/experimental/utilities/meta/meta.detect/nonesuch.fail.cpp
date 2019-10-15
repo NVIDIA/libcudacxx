@@ -16,11 +16,11 @@
 
 
 #include <experimental/type_traits>
-#include <string>
+#include <cuda/std/string>
 
 #include "test_macros.h"
 
-namespace ex = std::experimental;
+namespace ex = cuda::std::experimental;
 
 void doSomething (const ex::nonesuch &) {}
 

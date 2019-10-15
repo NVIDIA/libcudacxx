@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 // UNSUPPORTED: c++98, c++03, c++11, c++14, c++17
-// <chrono>
+// <cuda/std/chrono>
 
 // template <class Duration>
 // class hh_mm_ss
@@ -21,37 +21,37 @@
 //  If no such value of fractional_width exists, then fractional_width is 6.
 
    
-#include <chrono>
-#include <cassert>
+#include <cuda/std/chrono>
+#include <cuda/std/cassert>
 
 #include "test_macros.h"
 
 template <typename Duration, unsigned width>
 constexpr bool check_width()
 {
-	using HMS = std::chrono::hh_mm_ss<Duration>;
+	using HMS = cuda::std::chrono::hh_mm_ss<Duration>;
 	return HMS::fractional_width == width;
 }
 
 int main(int, char**)
 {
-	using microfortnights = std::chrono::duration<int, std::ratio<756, 625>>;
+	using microfortnights = cuda::std::chrono::duration<int, cuda::std::ratio<756, 625>>;
 
-	static_assert( check_width<std::chrono::hours,                               0>(), "");
-	static_assert( check_width<std::chrono::minutes,                             0>(), "");
-	static_assert( check_width<std::chrono::seconds,                             0>(), "");
-	static_assert( check_width<std::chrono::milliseconds,                        3>(), "");
-	static_assert( check_width<std::chrono::microseconds,                        6>(), "");
-	static_assert( check_width<std::chrono::nanoseconds,                         9>(), "");
-	static_assert( check_width<std::chrono::duration<int, std::ratio<  1,   2>>, 1>(), "");
-	static_assert( check_width<std::chrono::duration<int, std::ratio<  1,   3>>, 6>(), "");
-	static_assert( check_width<std::chrono::duration<int, std::ratio<  1,   4>>, 2>(), "");
-	static_assert( check_width<std::chrono::duration<int, std::ratio<  1,   5>>, 1>(), "");
-	static_assert( check_width<std::chrono::duration<int, std::ratio<  1,   6>>, 6>(), "");
-	static_assert( check_width<std::chrono::duration<int, std::ratio<  1,   7>>, 6>(), "");
-	static_assert( check_width<std::chrono::duration<int, std::ratio<  1,   8>>, 3>(), "");
-	static_assert( check_width<std::chrono::duration<int, std::ratio<  1,   9>>, 6>(), "");
-	static_assert( check_width<std::chrono::duration<int, std::ratio<  1,  10>>, 1>(), "");
+	static_assert( check_width<cuda::std::chrono::hours,                               0>(), "");
+	static_assert( check_width<cuda::std::chrono::minutes,                             0>(), "");
+	static_assert( check_width<cuda::std::chrono::seconds,                             0>(), "");
+	static_assert( check_width<cuda::std::chrono::milliseconds,                        3>(), "");
+	static_assert( check_width<cuda::std::chrono::microseconds,                        6>(), "");
+	static_assert( check_width<cuda::std::chrono::nanoseconds,                         9>(), "");
+	static_assert( check_width<cuda::std::chrono::duration<int, cuda::std::ratio<  1,   2>>, 1>(), "");
+	static_assert( check_width<cuda::std::chrono::duration<int, cuda::std::ratio<  1,   3>>, 6>(), "");
+	static_assert( check_width<cuda::std::chrono::duration<int, cuda::std::ratio<  1,   4>>, 2>(), "");
+	static_assert( check_width<cuda::std::chrono::duration<int, cuda::std::ratio<  1,   5>>, 1>(), "");
+	static_assert( check_width<cuda::std::chrono::duration<int, cuda::std::ratio<  1,   6>>, 6>(), "");
+	static_assert( check_width<cuda::std::chrono::duration<int, cuda::std::ratio<  1,   7>>, 6>(), "");
+	static_assert( check_width<cuda::std::chrono::duration<int, cuda::std::ratio<  1,   8>>, 3>(), "");
+	static_assert( check_width<cuda::std::chrono::duration<int, cuda::std::ratio<  1,   9>>, 6>(), "");
+	static_assert( check_width<cuda::std::chrono::duration<int, cuda::std::ratio<  1,  10>>, 1>(), "");
 	static_assert( check_width<microfortnights,                                  4>(), "");
 
 	return 0;

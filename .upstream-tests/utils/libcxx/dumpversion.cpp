@@ -22,7 +22,7 @@ int main()
     major_version = __CUDACC_VER_MAJOR__;
     minor_version = __CUDACC_VER_MINOR__;
     patch_level   = __CUDACC_VER_BUILD__;
-    #if defined(__LIBCPP_NVRTC_TEST__)
+    #if defined(__LIBCUDACXX_NVRTC_TEST__)
       is_nvrtc = "True";
     #endif
   #elif defined(__PGIC__)

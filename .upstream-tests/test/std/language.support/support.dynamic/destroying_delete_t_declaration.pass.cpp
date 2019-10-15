@@ -20,9 +20,9 @@
 // Other tests will check the language side of things -- but those are
 // limited to newer compilers.
 
-#include <new>
+#include <cuda/std/new>
 
-#include <cassert>
+#include <cuda/std/cassert>
 #include "test_macros.h"
 #include "test_convertible.h"
 
@@ -38,15 +38,15 @@
 # endif
 #endif
 
-constexpr bool test_constexpr(std::destroying_delete_t) {
+constexpr bool test_constexpr(cuda::std::destroying_delete_t) {
   return true;
 }
 
 int main() {
-  static_assert(std::is_default_constructible<std::destroying_delete_t>::value, "");
-  static_assert(!test_convertible<std::destroying_delete_t>(), "");
-  constexpr std::destroying_delete_t dd{};
+  static_assert(cuda::std::is_default_constructible<cuda::std::destroying_delete_t>::value, "");
+  static_assert(!test_convertible<cuda::std::destroying_delete_t>(), "");
+  constexpr cuda::std::destroying_delete_t dd{};
   static_assert((dd, true), "");
-  static_assert(&dd != &std::destroying_delete, "");
-  static_assert(test_constexpr(std::destroying_delete), "");
+  static_assert(&dd != &cuda::std::destroying_delete, "");
+  static_assert(test_constexpr(cuda::std::destroying_delete), "");
 }

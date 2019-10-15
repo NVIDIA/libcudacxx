@@ -8,24 +8,24 @@
 
 // UNSUPPORTED: c++98, c++03, c++11, c++14, c++17
 
-// <compare>
+// <cuda/std/compare>
 
 // class weak_equality
 
 
-#include <compare>
-#include <cassert>
+#include <cuda/std/compare>
+#include <cuda/std/cassert>
 #include "test_macros.h"
 
 const volatile void* volatile sink;
 
 void test_static_members() {
-  DoNotOptimize(&std::weak_equality::equivalent);
-  DoNotOptimize(&std::weak_equality::nonequivalent);
+  DoNotOptimize(&cuda::std::weak_equality::equivalent);
+  DoNotOptimize(&cuda::std::weak_equality::nonequivalent);
 }
 
 void test_signatures() {
-  auto& Eq = std::weak_equality::equivalent;
+  auto& Eq = cuda::std::weak_equality::equivalent;
 
   ASSERT_NOEXCEPT(Eq == 0);
   ASSERT_NOEXCEPT(0 == Eq);
@@ -34,14 +34,14 @@ void test_signatures() {
 #ifndef TEST_HAS_NO_SPACESHIP_OPERATOR
   ASSERT_NOEXCEPT(0 <=> Eq);
   ASSERT_NOEXCEPT(Eq <=> 0);
-  ASSERT_SAME_TYPE(decltype(Eq <=> 0), std::weak_equality);
-  ASSERT_SAME_TYPE(decltype(0 <=> Eq), std::weak_equality);
+  ASSERT_SAME_TYPE(decltype(Eq <=> 0), cuda::std::weak_equality);
+  ASSERT_SAME_TYPE(decltype(0 <=> Eq), cuda::std::weak_equality);
 #endif
 }
 
 constexpr bool test_constexpr() {
-  auto& Eq = std::weak_equality::equivalent;
-  auto& NEq = std::weak_equality::nonequivalent;
+  auto& Eq = cuda::std::weak_equality::equivalent;
+  auto& NEq = cuda::std::weak_equality::nonequivalent;
   assert((Eq == 0) == true);
   assert((0 == Eq) == true);
   assert((NEq == 0) == false);
@@ -53,7 +53,7 @@ constexpr bool test_constexpr() {
   assert((0 != NEq) == true);
 
 #ifndef TEST_HAS_NO_SPACESHIP_OPERATOR
-  std::weak_equality res = (Eq <=> 0);
+  cuda::std::weak_equality res = (Eq <=> 0);
   ((void)res);
   res = (0 <=> Eq);
   ((void)res);

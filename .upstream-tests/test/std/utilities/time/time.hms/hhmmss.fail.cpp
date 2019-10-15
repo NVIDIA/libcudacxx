@@ -7,24 +7,24 @@
 //===----------------------------------------------------------------------===//
 // UNSUPPORTED: c++98, c++03, c++11, c++14, c++17
 // UNSUPPORTED: apple-clang-9
-// <chrono>
+// <cuda/std/chrono>
 
 // template <class Duration> class hh_mm_ss;
 //   If Duration is not an instance of duration, the program is ill-formed.
 
-#include <chrono>
-#include <string>
-#include <cassert>
+#include <cuda/std/chrono>
+#include <cuda/std/string>
+#include <cuda/std/cassert>
 #include "test_macros.h"
 
 struct A {};
 
 int main(int, char**)
 {
-    std::chrono::hh_mm_ss<void> h0;        // expected-error-re@chrono:* {{static_assert failed {{.*}} "template parameter of hh_mm_ss must be a std::chrono::duration"}}
-    std::chrono::hh_mm_ss<int> h1;         // expected-error-re@chrono:* {{static_assert failed {{.*}} "template parameter of hh_mm_ss must be a std::chrono::duration"}}
-    std::chrono::hh_mm_ss<std::string> h2; // expected-error-re@chrono:* {{static_assert failed {{.*}} "template parameter of hh_mm_ss must be a std::chrono::duration"}}
-    std::chrono::hh_mm_ss<A> h3;           // expected-error-re@chrono:* {{static_assert failed {{.*}} "template parameter of hh_mm_ss must be a std::chrono::duration"}}
+    cuda::std::chrono::hh_mm_ss<void> h0;        // expected-error-re@chrono:* {{static_assert failed {{.*}} "template parameter of hh_mm_ss must be a cuda::std::chrono::duration"}}
+    cuda::std::chrono::hh_mm_ss<int> h1;         // expected-error-re@chrono:* {{static_assert failed {{.*}} "template parameter of hh_mm_ss must be a cuda::std::chrono::duration"}}
+    cuda::std::chrono::hh_mm_ss<cuda::std::string> h2; // expected-error-re@chrono:* {{static_assert failed {{.*}} "template parameter of hh_mm_ss must be a cuda::std::chrono::duration"}}
+    cuda::std::chrono::hh_mm_ss<A> h3;           // expected-error-re@chrono:* {{static_assert failed {{.*}} "template parameter of hh_mm_ss must be a cuda::std::chrono::duration"}}
 
     return 0;
 }

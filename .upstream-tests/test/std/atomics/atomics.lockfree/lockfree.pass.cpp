@@ -8,7 +8,7 @@
 //
 // UNSUPPORTED: libcpp-has-no-threads, pre-sm-60
 
-// <atomic>
+// <cuda/std/atomic>
 
 // #define ATOMIC_BOOL_LOCK_FREE unspecified
 // #define ATOMIC_CHAR_LOCK_FREE unspecified
@@ -21,8 +21,8 @@
 // #define ATOMIC_LLONG_LOCK_FREE unspecified
 // #define ATOMIC_POINTER_LOCK_FREE unspecified
 
-#include <atomic>
-#include <cassert>
+#include <cuda/std/atomic>
+#include <cuda/std/cassert>
 
 #include "test_macros.h"
 

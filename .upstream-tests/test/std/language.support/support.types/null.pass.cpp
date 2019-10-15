@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include <cstddef>
+#include <cuda/std/cstddef>
 
 #include "test_macros.h"
 

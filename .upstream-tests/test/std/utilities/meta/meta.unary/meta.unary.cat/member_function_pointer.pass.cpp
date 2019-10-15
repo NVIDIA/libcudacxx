@@ -10,7 +10,7 @@
 
 // member_function_pointer
 
-#include <type_traits>
+#include <cuda/std/type_traits>
 #include "test_macros.h"
 
 // NOTE: On Windows the function `test_is_member_function<void()>` and
@@ -19,22 +19,22 @@
 // structs do not have this problem.
 template <class T>
 struct test_member_function_pointer_imp {
-    static_assert(!std::is_void<T>::value, "");
+    static_assert(!cuda::std::is_void<T>::value, "");
 #if TEST_STD_VER > 11
-    static_assert(!std::is_null_pointer<T>::value, "");
+    static_assert(!cuda::std::is_null_pointer<T>::value, "");
 #endif
-    static_assert(!std::is_integral<T>::value, "");
-    static_assert(!std::is_floating_point<T>::value, "");
-    static_assert(!std::is_array<T>::value, "");
-    static_assert(!std::is_pointer<T>::value, "");
-    static_assert(!std::is_lvalue_reference<T>::value, "");
-    static_assert(!std::is_rvalue_reference<T>::value, "");
-    static_assert(!std::is_member_object_pointer<T>::value, "");
-    static_assert( std::is_member_function_pointer<T>::value, "");
-    static_assert(!std::is_enum<T>::value, "");
-    static_assert(!std::is_union<T>::value, "");
-    static_assert(!std::is_class<T>::value, "");
-    static_assert(!std::is_function<T>::value, "");
+    static_assert(!cuda::std::is_integral<T>::value, "");
+    static_assert(!cuda::std::is_floating_point<T>::value, "");
+    static_assert(!cuda::std::is_array<T>::value, "");
+    static_assert(!cuda::std::is_pointer<T>::value, "");
+    static_assert(!cuda::std::is_lvalue_reference<T>::value, "");
+    static_assert(!cuda::std::is_rvalue_reference<T>::value, "");
+    static_assert(!cuda::std::is_member_object_pointer<T>::value, "");
+    static_assert( cuda::std::is_member_function_pointer<T>::value, "");
+    static_assert(!cuda::std::is_enum<T>::value, "");
+    static_assert(!cuda::std::is_union<T>::value, "");
+    static_assert(!cuda::std::is_class<T>::value, "");
+    static_assert(!cuda::std::is_function<T>::value, "");
 };
 
 template <class T>
@@ -224,7 +224,7 @@ int main(int, char**)
 #endif
 
 //  LWG#2582
-  static_assert(!std::is_member_function_pointer<incomplete_type>::value, "");
+  static_assert(!cuda::std::is_member_function_pointer<incomplete_type>::value, "");
 
   return 0;
 }

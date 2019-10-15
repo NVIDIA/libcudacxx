@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include <cstddef>
+#include <cuda/std/cstddef>
 #include <test_macros.h>
 
 // UNSUPPORTED: c++98, c++03, c++11, c++14
@@ -17,8 +17,8 @@
 //   is_integral_v<IntegerType> is true.
 
 int main(int, char**) {
-    constexpr std::byte b1{static_cast<std::byte>(1)};
-    constexpr std::byte b2 = b1 << 2.0f;
+    constexpr cuda::std::byte b1{static_cast<cuda::std::byte>(1)};
+    constexpr cuda::std::byte b2 = b1 << 2.0f;
 
   return 0;
 }

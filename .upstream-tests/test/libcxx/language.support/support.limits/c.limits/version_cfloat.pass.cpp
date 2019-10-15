@@ -6,14 +6,14 @@
 //
 //===----------------------------------------------------------------------===//
 
-// <cfloat>
+// <cuda/std/cfloat>
 
-#include <cfloat>
+#include <cuda/std/cfloat>
 
 #include "test_macros.h"
 
-#ifndef _LIBCPP_VERSION
-#error _LIBCPP_VERSION not defined
+#ifndef _LIBCUDACXX_VERSION
+#error _LIBCUDACXX_VERSION not defined
 #endif
 
 int main(int, char**)

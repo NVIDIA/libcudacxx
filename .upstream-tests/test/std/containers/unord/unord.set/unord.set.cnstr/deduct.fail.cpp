@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// <unordered_set>
+// <cuda/std/unordered_set>
 // UNSUPPORTED: c++98, c++03, c++11, c++14
 // UNSUPPORTED: libcpp-no-deduction-guides
 // XFAIL: clang-6, apple-clang-9.0, apple-clang-9.1, apple-clang-10.0.0
@@ -48,49 +48,49 @@
 // unordered_set(initializer_list<T>, typename see below::size_type, Hash, Allocator)
 //   -> unordered_set<T, Hash, equal_to<T>, Allocator>;
 
-#include <functional>
-#include <unordered_set>
+#include <cuda/std/functional>
+#include <cuda/std/unordered_set>
 
 int main(int, char**)
 {
     {
         // cannot deduce Key from nothing
-        std::unordered_set s;
+        cuda::std::unordered_set s;
             // expected-error@-1{{no viable constructor or deduction guide for deduction of template arguments of 'unordered_set'}}
     }
     {
         // cannot deduce Key from just (Size)
-        std::unordered_set s(42);
+        cuda::std::unordered_set s(42);
             // expected-error@-1{{no viable constructor or deduction guide for deduction of template arguments of 'unordered_set'}}
     }
     {
         // cannot deduce Key from just (Size, Hash)
-        std::unordered_set s(42, std::hash<int>());
+        cuda::std::unordered_set s(42, cuda::std::hash<int>());
             // expected-error@-1{{no viable constructor or deduction guide for deduction of template arguments of 'unordered_set'}}
     }
     {
         // cannot deduce Key from just (Size, Hash, Pred)
-        std::unordered_set s(42, std::hash<int>(), std::equal_to<>());
+        cuda::std::unordered_set s(42, cuda::std::hash<int>(), cuda::std::equal_to<>());
             // expected-error@-1{{no viable constructor or deduction guide for deduction of template arguments of 'unordered_set'}}
     }
     {
         // cannot deduce Key from just (Size, Hash, Pred, Allocator)
-        std::unordered_set s(42, std::hash<int>(), std::equal_to<>(), std::allocator<int>());
+        cuda::std::unordered_set s(42, cuda::std::hash<int>(), cuda::std::equal_to<>(), cuda::std::allocator<int>());
             // expected-error@-1{{no viable constructor or deduction guide for deduction of template arguments of 'unordered_set'}}
     }
     {
         // cannot deduce Key from just (Allocator)
-        std::unordered_set s(std::allocator<int>{});
+        cuda::std::unordered_set s(cuda::std::allocator<int>{});
             // expected-error@-1{{no viable constructor or deduction guide for deduction of template arguments of 'unordered_set'}}
     }
     {
         // cannot deduce Key from just (Size, Allocator)
-        std::unordered_set s(42, std::allocator<int>());
+        cuda::std::unordered_set s(42, cuda::std::allocator<int>());
             // expected-error@-1{{no viable constructor or deduction guide for deduction of template arguments of 'unordered_set'}}
     }
     {
         // cannot deduce Key from just (Size, Hash, Allocator)
-        std::unordered_set s(42, std::hash<short>(), std::allocator<int>());
+        cuda::std::unordered_set s(42, cuda::std::hash<short>(), cuda::std::allocator<int>());
             // expected-error@-1{{no viable constructor or deduction guide for deduction of template arguments of 'unordered_set'}}
     }
 

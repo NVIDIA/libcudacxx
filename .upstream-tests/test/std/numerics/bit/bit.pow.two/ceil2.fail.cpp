@@ -14,10 +14,10 @@
 // Remarks: This function shall not participate in overload resolution unless
 //	T is an unsigned integer type
 
-#include <bit>
-#include <cstdint>
-#include <limits>
-#include <cassert>
+#include <cuda/std/bit>
+#include <cuda/std/cstdint>
+#include <cuda/std/limits>
+#include <cuda/std/cassert>
 
 #include "test_macros.h"
 
@@ -28,7 +28,7 @@ enum class E2 : unsigned char { red };
 template <typename T>
 constexpr bool toobig()
 {
-	return 0 == std::ceil2(std::numeric_limits<T>::max());
+	return 0 == cuda::std::ceil2(cuda::std::numeric_limits<T>::max());
 }
 
 int main()

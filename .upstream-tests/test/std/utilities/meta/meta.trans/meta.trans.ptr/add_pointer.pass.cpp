@@ -15,16 +15,16 @@
 //    the member typedef type shall name the same type as remove_reference_t<T>*;
 //    otherwise, type shall name T.
 
-#include <type_traits>
+#include <cuda/std/type_traits>
 #include "test_macros.h"
 
 template <class T, class U>
 __host__ __device__
 void test_add_pointer()
 {
-    ASSERT_SAME_TYPE(U, typename std::add_pointer<T>::type);
+    ASSERT_SAME_TYPE(U, typename cuda::std::add_pointer<T>::type);
 #if TEST_STD_VER > 11
-    ASSERT_SAME_TYPE(U, std::add_pointer_t<T>);
+    ASSERT_SAME_TYPE(U, cuda::std::add_pointer_t<T>);
 #endif
 }
 
@@ -32,9 +32,9 @@ template <class F>
 __host__ __device__
 void test_function0()
 {
-    ASSERT_SAME_TYPE(F*, typename std::add_pointer<F>::type);
+    ASSERT_SAME_TYPE(F*, typename cuda::std::add_pointer<F>::type);
 #if TEST_STD_VER > 11
-    ASSERT_SAME_TYPE(F*, std::add_pointer_t<F>);
+    ASSERT_SAME_TYPE(F*, cuda::std::add_pointer_t<F>);
 #endif
 }
 
@@ -42,9 +42,9 @@ template <class F>
 __host__ __device__
 void test_function1()
 {
-    ASSERT_SAME_TYPE(F, typename std::add_pointer<F>::type);
+    ASSERT_SAME_TYPE(F, typename cuda::std::add_pointer<F>::type);
 #if TEST_STD_VER > 11
-    ASSERT_SAME_TYPE(F, std::add_pointer_t<F>);
+    ASSERT_SAME_TYPE(F, cuda::std::add_pointer_t<F>);
 #endif
 }
 

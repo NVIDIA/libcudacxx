@@ -23,26 +23,26 @@
 // RUN: %cxx %flags %compile_flags -c %s -o %S/lazy.o -ggdb  -ggnu-pubnames -ftemplate-depth=5000 -ftime-trace  -std=c++17 -DTEST_LAZY_AND
 // RUN: %cxx %flags %compile_flags -c %s -o %S/std.o -ggdb  -ggnu-pubnames -ftemplate-depth=5000 -ftime-trace   -std=c++17 -DTEST_STD_AND
 
-#include <type_traits>
-#include <cassert>
+#include <cuda/std/type_traits>
+#include <cuda/std/cassert>
 
 #include "test_macros.h"
 #include "template_cost_testing.h"
-using std::true_type;
-using std::false_type;
+using cuda::std::true_type;
+using cuda::std::false_type;
 
-#define FALSE_T() std::false_type,
-#define TRUE_T() std::true_type,
+#define FALSE_T() cuda::std::false_type,
+#define TRUE_T() cuda::std::true_type,
 
 #ifdef TEST_LAZY_AND
-#define TEST_AND std::__lazy_and
-#define TEST_OR std::__lazy_or
+#define TEST_AND cuda::std::__lazy_and
+#define TEST_OR cuda::std::__lazy_or
 #elif defined(TEST_STD_AND)
-#define TEST_AND std::__and_
-#define TEST_OR std::__or_
+#define TEST_AND cuda::std::__and_
+#define TEST_OR cuda::std::__or_
 #else
-#define TEST_AND std::_And
-#define TEST_OR std::_Or
+#define TEST_AND cuda::std::_And
+#define TEST_OR cuda::std::_Or
 #endif
 
 void sink(...);

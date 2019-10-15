@@ -8,7 +8,7 @@
 
 // UNSUPPORTED: c++98, c++03
 
-#include <cstddef>
+#include <cuda/std/cstddef>
 
 #include "test_macros.h"
 

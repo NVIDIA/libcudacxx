@@ -14,9 +14,9 @@
 //
 // See PR41360.
 
-#include <set>
-#include <map>
-#include <functional>
+#include <cuda/std/set>
+#include <cuda/std/map>
+#include <cuda/std/functional>
 
 #include "test_macros.h"
 
@@ -27,7 +27,7 @@ void test_set() {
   struct KeyDerived;  // derives from KeyBase, but incomplete at this point
 
   // Name the type but don't instantiate it.
-  using C = Container<KeyDerived*, std::less<KeyBase*>>;
+  using C = Container<KeyDerived*, cuda::std::less<KeyBase*>>;
 
   // Instantiate it but don't ODR use any members.
   typename C::value_type dummy; (void)dummy;
@@ -43,7 +43,7 @@ void test_map() {
   struct Value { };
   struct KeyBase { };
   struct KeyDerived;
-  using C = Container<KeyDerived*, Value, std::less<KeyBase*>>;
+  using C = Container<KeyDerived*, Value, cuda::std::less<KeyBase*>>;
   typename C::value_type dummy; (void)dummy;
   struct KeyDerived : KeyBase { };
   C c;
@@ -51,10 +51,10 @@ void test_map() {
 
 int main(int, char**) {
   // expected-no-diagnostics
-  test_set<std::set>();
-  test_set<std::multiset>();
-  test_map<std::map>();
-  test_map<std::multimap>();
+  test_set<cuda::std::set>();
+  test_set<cuda::std::multiset>();
+  test_map<cuda::std::map>();
+  test_map<cuda::std::multimap>();
 
   return 0;
 }

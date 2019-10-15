@@ -8,74 +8,74 @@
 //
 // UNSUPPORTED: libcpp-has-no-threads, pre-sm-60
 
-// <atomic>
+// <cuda/std/atomic>
 
 // struct atomic_flag
 
 // void clear(memory_order = memory_order_seq_cst);
 // void clear(memory_order = memory_order_seq_cst) volatile;
 
-#include <atomic>
-#include <cassert>
+#include <cuda/std/atomic>
+#include <cuda/std/cassert>
 
 #include "test_macros.h"
 
 int main(int, char**)
 {
     {
-        std::atomic_flag f; // uninitialized
+        cuda::std::atomic_flag f; // uninitialized
         f.clear();
         assert(f.test_and_set() == 0);
         f.clear();
         assert(f.test_and_set() == 0);
     }
     {
-        std::atomic_flag f;
-        f.clear(std::memory_order_relaxed);
+        cuda::std::atomic_flag f;
+        f.clear(cuda::std::memory_order_relaxed);
         assert(f.test_and_set() == 0);
-        f.clear(std::memory_order_relaxed);
-        assert(f.test_and_set() == 0);
-    }
-    {
-        std::atomic_flag f;
-        f.clear(std::memory_order_release);
-        assert(f.test_and_set() == 0);
-        f.clear(std::memory_order_release);
+        f.clear(cuda::std::memory_order_relaxed);
         assert(f.test_and_set() == 0);
     }
     {
-        std::atomic_flag f;
-        f.clear(std::memory_order_seq_cst);
+        cuda::std::atomic_flag f;
+        f.clear(cuda::std::memory_order_release);
         assert(f.test_and_set() == 0);
-        f.clear(std::memory_order_seq_cst);
+        f.clear(cuda::std::memory_order_release);
         assert(f.test_and_set() == 0);
     }
     {
-        volatile std::atomic_flag f;
+        cuda::std::atomic_flag f;
+        f.clear(cuda::std::memory_order_seq_cst);
+        assert(f.test_and_set() == 0);
+        f.clear(cuda::std::memory_order_seq_cst);
+        assert(f.test_and_set() == 0);
+    }
+    {
+        volatile cuda::std::atomic_flag f;
         f.clear();
         assert(f.test_and_set() == 0);
         f.clear();
         assert(f.test_and_set() == 0);
     }
     {
-        volatile std::atomic_flag f;
-        f.clear(std::memory_order_relaxed);
+        volatile cuda::std::atomic_flag f;
+        f.clear(cuda::std::memory_order_relaxed);
         assert(f.test_and_set() == 0);
-        f.clear(std::memory_order_relaxed);
-        assert(f.test_and_set() == 0);
-    }
-    {
-        volatile std::atomic_flag f;
-        f.clear(std::memory_order_release);
-        assert(f.test_and_set() == 0);
-        f.clear(std::memory_order_release);
+        f.clear(cuda::std::memory_order_relaxed);
         assert(f.test_and_set() == 0);
     }
     {
-        volatile std::atomic_flag f;
-        f.clear(std::memory_order_seq_cst);
+        volatile cuda::std::atomic_flag f;
+        f.clear(cuda::std::memory_order_release);
         assert(f.test_and_set() == 0);
-        f.clear(std::memory_order_seq_cst);
+        f.clear(cuda::std::memory_order_release);
+        assert(f.test_and_set() == 0);
+    }
+    {
+        volatile cuda::std::atomic_flag f;
+        f.clear(cuda::std::memory_order_seq_cst);
+        assert(f.test_and_set() == 0);
+        f.clear(cuda::std::memory_order_seq_cst);
         assert(f.test_and_set() == 0);
     }
 

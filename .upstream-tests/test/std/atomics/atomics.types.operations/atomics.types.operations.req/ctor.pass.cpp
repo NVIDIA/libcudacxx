@@ -13,13 +13,13 @@
 // clang versions. It was fixed right before the llvm 3.5 release. See PR18097.
 // XFAIL: apple-clang-6.0, clang-3.4, clang-3.3
 
-// <atomic>
+// <cuda/std/atomic>
 
 // constexpr atomic<T>::atomic(T value)
 
-#include <atomic>
-#include <type_traits>
-#include <cassert>
+#include <cuda/std/atomic>
+#include <cuda/std/type_traits>
+#include <cuda/std/cassert>
 
 #include "test_macros.h"
 #include "atomic_helpers.h"
@@ -43,7 +43,7 @@ struct TestFunc {
     __host__ __device__
     void operator()() const {
         typedef cuda::atomic<Tp, Scope> Atomic;
-        static_assert(std::is_literal_type<Atomic>::value, "");
+        static_assert(cuda::std::is_literal_type<Atomic>::value, "");
         constexpr Tp t(42);
         {
             constexpr Atomic a(t);

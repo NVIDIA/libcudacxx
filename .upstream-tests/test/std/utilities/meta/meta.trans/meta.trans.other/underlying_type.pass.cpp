@@ -9,11 +9,11 @@
 // type_traits
 
 // underlying_type
-//  As of C++20, std::underlying_type is SFINAE-friendly; if you hand it
+//  As of C++20, cuda::std::underlying_type is SFINAE-friendly; if you hand it
 //  a non-enumeration, it returns an empty struct.
 
-#include <type_traits>
-#include <climits>
+#include <cuda/std/type_traits>
+#include <cuda/std/climits>
 
 #include "test_macros.h"
 
@@ -25,12 +25,12 @@
 
 
 #if TEST_STD_VER > 17
-template <class, class = std::void_t<>>
-struct has_type_member : std::false_type {};
+template <class, class = cuda::std::void_t<>>
+struct has_type_member : cuda::std::false_type {};
 
 template <class T>
 struct has_type_member<T,
-           std::void_t<typename std::underlying_type<T>::type>> : std::true_type {};
+           cuda::std::void_t<typename cuda::std::underlying_type<T>::type>> : cuda::std::true_type {};
 
 struct S {};
 union U { int i; float f;};
@@ -39,9 +39,9 @@ union U { int i; float f;};
 template <typename T, typename Expected>
 void check()
 {
-    ASSERT_SAME_TYPE(Expected, typename std::underlying_type<T>::type);
+    ASSERT_SAME_TYPE(Expected, typename cuda::std::underlying_type<T>::type);
 #if TEST_STD_VER > 11
-    ASSERT_SAME_TYPE(Expected, typename std::underlying_type_t<T>);
+    ASSERT_SAME_TYPE(Expected, typename cuda::std::underlying_type_t<T>);
 #endif  
 }
 
@@ -95,7 +95,7 @@ int main(int, char**)
     static_assert(!has_type_member<int&>::value, "");
     static_assert(!has_type_member<int&&>::value, "");
     static_assert(!has_type_member<int*>::value, "");
-    static_assert(!has_type_member<std::nullptr_t>::value, "");
+    static_assert(!has_type_member<cuda::std::nullptr_t>::value, "");
 #endif
 
   return 0;

@@ -8,10 +8,10 @@
 
 // UNSUPPORTED: c++98, c++03, c++11, c++14, c++17
 
-#include <cassert>
-#include <set>
+#include <cuda/std/cassert>
+#include <cuda/std/set>
 
-// <set>
+// <cuda/std/set>
 
 // bool contains(const key_type& x) const;
 
@@ -31,12 +31,12 @@ struct E { int a = 1; double b = 1; char c = 1; };
 int main(int, char**)
 {
     {
-        test<std::set<int>, int>(14, 10, 11, 12, 13);
-        test<std::set<char>, char>('e', 'a', 'b', 'c', 'd');
+        test<cuda::std::set<int>, int>(14, 10, 11, 12, 13);
+        test<cuda::std::set<char>, char>('e', 'a', 'b', 'c', 'd');
     }
     {
-        test<std::multiset<int>, int>(14, 10, 11, 12, 13);
-        test<std::multiset<char>, char>('e', 'a', 'b', 'c', 'd');
+        test<cuda::std::multiset<int>, int>(14, 10, 11, 12, 13);
+        test<cuda::std::multiset<char>, char>('e', 'a', 'b', 'c', 'd');
     }
 
     return 0;

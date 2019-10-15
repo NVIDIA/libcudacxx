@@ -11,11 +11,11 @@
 // Before GCC 6, this trait fails. See https://stackoverflow.com/q/41799015/627587.
 // UNSUPPORTED: gcc-5
 
-// <type_traits>
+// <cuda/std/type_traits>
 
 // __is_implicitly_default_constructible<Tp>
 
-#include <type_traits>
+#include <cuda/std/type_traits>
 
 
 struct ExplicitlyDefaultConstructible1 {
@@ -68,17 +68,17 @@ private:
     PrivateDefaultConstructibleWithBase() = default;
 };
 
-static_assert(!std::__is_implicitly_default_constructible<ExplicitlyDefaultConstructible1>::value, "");
-static_assert(!std::__is_implicitly_default_constructible<ExplicitlyDefaultConstructible2>::value, "");
-static_assert(std::__is_implicitly_default_constructible<ImplicitlyDefaultConstructible1>::value, "");
-static_assert(std::__is_implicitly_default_constructible<ImplicitlyDefaultConstructible2>::value, "");
-static_assert(!std::__is_implicitly_default_constructible<NonDefaultConstructible1>::value, "");
-static_assert(!std::__is_implicitly_default_constructible<NonDefaultConstructible2>::value, "");
-static_assert(!std::__is_implicitly_default_constructible<NonDefaultConstructible3>::value, "");
-static_assert(!std::__is_implicitly_default_constructible<ProtectedDefaultConstructible>::value, "");
-static_assert(!std::__is_implicitly_default_constructible<PrivateDefaultConstructible>::value, "");
-static_assert(!std::__is_implicitly_default_constructible<ProtectedDefaultConstructibleWithBase>::value, "");
-static_assert(!std::__is_implicitly_default_constructible<PrivateDefaultConstructibleWithBase>::value, "");
+static_assert(!cuda::std::__is_implicitly_default_constructible<ExplicitlyDefaultConstructible1>::value, "");
+static_assert(!cuda::std::__is_implicitly_default_constructible<ExplicitlyDefaultConstructible2>::value, "");
+static_assert(cuda::std::__is_implicitly_default_constructible<ImplicitlyDefaultConstructible1>::value, "");
+static_assert(cuda::std::__is_implicitly_default_constructible<ImplicitlyDefaultConstructible2>::value, "");
+static_assert(!cuda::std::__is_implicitly_default_constructible<NonDefaultConstructible1>::value, "");
+static_assert(!cuda::std::__is_implicitly_default_constructible<NonDefaultConstructible2>::value, "");
+static_assert(!cuda::std::__is_implicitly_default_constructible<NonDefaultConstructible3>::value, "");
+static_assert(!cuda::std::__is_implicitly_default_constructible<ProtectedDefaultConstructible>::value, "");
+static_assert(!cuda::std::__is_implicitly_default_constructible<PrivateDefaultConstructible>::value, "");
+static_assert(!cuda::std::__is_implicitly_default_constructible<ProtectedDefaultConstructibleWithBase>::value, "");
+static_assert(!cuda::std::__is_implicitly_default_constructible<PrivateDefaultConstructibleWithBase>::value, "");
 
 int main(int, char**) {
     return 0;

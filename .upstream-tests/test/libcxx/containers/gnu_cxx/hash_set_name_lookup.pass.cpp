@@ -10,7 +10,7 @@
 #ifdef __clang__
 #pragma clang diagnostic ignored "-W#warnings"
 #endif
-// Poison the std:: names we might use inside __gnu_cxx to ensure they're
+// Poison the cuda::std:: names we might use inside __gnu_cxx to ensure they're
 // properly qualified.
 struct allocator;
 struct pair;

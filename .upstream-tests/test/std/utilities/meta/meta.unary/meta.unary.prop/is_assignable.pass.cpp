@@ -10,7 +10,7 @@
 
 // is_assignable
 
-#include <type_traits>
+#include <cuda/std/type_traits>
 #include "test_macros.h"
 
 struct A
@@ -26,9 +26,9 @@ template <class T, class U>
 __host__ __device__
 void test_is_assignable()
 {
-    static_assert(( std::is_assignable<T, U>::value), "");
+    static_assert(( cuda::std::is_assignable<T, U>::value), "");
 #if TEST_STD_VER > 14
-    static_assert(  std::is_assignable_v<T, U>, "");
+    static_assert(  cuda::std::is_assignable_v<T, U>, "");
 #endif
 }
 
@@ -36,9 +36,9 @@ template <class T, class U>
 __host__ __device__
 void test_is_not_assignable()
 {
-    static_assert((!std::is_assignable<T, U>::value), "");
+    static_assert((!cuda::std::is_assignable<T, U>::value), "");
 #if TEST_STD_VER > 14
-    static_assert( !std::is_assignable_v<T, U>, "");
+    static_assert( !cuda::std::is_assignable_v<T, U>, "");
 #endif
 }
 

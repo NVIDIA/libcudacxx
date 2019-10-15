@@ -8,15 +8,15 @@
 
 // UNSUPPORTED: c++98, c++03, c++11, c++14, c++17
 
-// <functional>
+// <cuda/std/functional>
 //
 // reference_wrapper<T>
 //
 //  where T is an incomplete type (since C++20)
 
 
-#include <functional>
-#include <cassert>
+#include <cuda/std/functional>
+#include <cuda/std/cassert>
 
 #include "test_macros.h"
 
@@ -27,7 +27,7 @@ Foo& get_foo();
 
 void test() {
     Foo& foo = get_foo();
-    std::reference_wrapper<Foo> ref{foo};
+    cuda::std::reference_wrapper<Foo> ref{foo};
     assert(&ref.get() == &foo);
 }
 

@@ -8,17 +8,17 @@
 //
 // UNSUPPORTED: libcpp-has-no-threads, pre-sm-60
 
-// <atomic>
+// <cuda/std/atomic>
 
 // void atomic_thread_fence(memory_order m);
 
-#include <atomic>
+#include <cuda/std/atomic>
 
 #include "test_macros.h"
 
 int main(int, char**)
 {
-  std::atomic_thread_fence(std::memory_order_seq_cst);
+  cuda::std::atomic_thread_fence(cuda::std::memory_order_seq_cst);
 
   return 0;
 }

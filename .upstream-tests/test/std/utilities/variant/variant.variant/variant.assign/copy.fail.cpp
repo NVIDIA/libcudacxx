@@ -9,12 +9,12 @@
 
 // UNSUPPORTED: c++98, c++03, c++11, c++14
 
-// <variant>
+// <cuda/std/variant>
 
 // LWG issue 3024
 
-#include <variant>
-#include <type_traits>
+#include <cuda/std/variant>
+#include <cuda/std/type_traits>
 
 struct NotCopyConstructible
 {
@@ -24,10 +24,10 @@ struct NotCopyConstructible
 
 int main(int, char**)
 {
-    static_assert(!std::is_copy_constructible_v<NotCopyConstructible>);
+    static_assert(!cuda::std::is_copy_constructible_v<NotCopyConstructible>);
 
-    std::variant<NotCopyConstructible> v;
-    std::variant<NotCopyConstructible> v1;
-    std::variant<NotCopyConstructible> v2(v); // expected-error {{call to implicitly-deleted copy constructor of 'std::variant<NotCopyConstructible>'}}
+    cuda::std::variant<NotCopyConstructible> v;
+    cuda::std::variant<NotCopyConstructible> v1;
+    cuda::std::variant<NotCopyConstructible> v2(v); // expected-error {{call to implicitly-deleted copy constructor of 'cuda::std::variant<NotCopyConstructible>'}}
     v1 = v; // expected-error-re {{object of type 'std:{{.*}}:variant<NotCopyConstructible>' cannot be assigned because its copy assignment operator is implicitly deleted}}
 }

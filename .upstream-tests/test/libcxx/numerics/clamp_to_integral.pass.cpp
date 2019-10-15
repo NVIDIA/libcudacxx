@@ -12,15 +12,15 @@
 // closest representable value for the specified integer type, or
 // numeric_limits<IntT>::max()/min() if the value isn't representable.
 
-#include <limits>
-#include <cassert>
-#include <cmath>
+#include <cuda/std/limits>
+#include <cuda/std/cassert>
+#include <cuda/std/cmath>
 
 template <class IntT>
 void test() {
-  typedef std::numeric_limits<IntT> Lim;
+  typedef cuda::std::numeric_limits<IntT> Lim;
   const bool MaxIsRepresentable = sizeof(IntT) < 8;
-  const bool IsSigned = std::is_signed<IntT>::value;
+  const bool IsSigned = cuda::std::is_signed<IntT>::value;
   struct TestCase {
     double Input;
     IntT Expect;
@@ -37,10 +37,10 @@ void test() {
       {nextafter(static_cast<double>(Lim::max()), INFINITY), Lim::max(), false},
   };
   for (TestCase TC : TestCases) {
-    auto res = std::__clamp_to_integral<IntT>(TC.Input);
+    auto res = cuda::std::__clamp_to_integral<IntT>(TC.Input);
     assert(res == TC.Expect);
     if (TC.IsRepresentable) {
-      auto other = static_cast<IntT>(std::trunc(TC.Input));
+      auto other = static_cast<IntT>(cuda::std::trunc(TC.Input));
       assert(res == other);
     } else
       assert(res == Lim::min() || res == Lim::max());
@@ -49,10 +49,10 @@ void test() {
 
 template <class IntT>
 void test_float() {
-  typedef std::numeric_limits<IntT> Lim;
+  typedef cuda::std::numeric_limits<IntT> Lim;
   const bool MaxIsRepresentable = sizeof(IntT) < 4;
   ((void)MaxIsRepresentable);
-  const bool IsSigned = std::is_signed<IntT>::value;
+  const bool IsSigned = cuda::std::is_signed<IntT>::value;
   struct TestCase {
     float Input;
     IntT Expect;
@@ -67,10 +67,10 @@ void test_float() {
        {nextafter(static_cast<float>(Lim::max()), INFINITY), Lim::max(), false},
   };
   for (TestCase TC : TestCases) {
-    auto res = std::__clamp_to_integral<IntT>(TC.Input);
+    auto res = cuda::std::__clamp_to_integral<IntT>(TC.Input);
     assert(res == TC.Expect);
     if (TC.IsRepresentable) {
-      auto other = static_cast<IntT>(std::trunc(TC.Input));
+      auto other = static_cast<IntT>(cuda::std::trunc(TC.Input));
       assert(res == other);
     } else
       assert(res == Lim::min() || res == Lim::max());

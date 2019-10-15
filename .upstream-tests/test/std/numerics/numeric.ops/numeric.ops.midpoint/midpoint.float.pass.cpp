@@ -7,14 +7,14 @@
 //===----------------------------------------------------------------------===//
 //
 // UNSUPPORTED: c++98, c++03, c++11, c++14, c++17
-// <numeric>
+// <cuda/std/numeric>
 
 // template <class _Float>
 // _Tp midpoint(_Float __a, _Float __b) noexcept
 //
 
-#include <numeric>
-#include <cassert>
+#include <cuda/std/numeric>
+#include <cuda/std/cassert>
 
 #include "test_macros.h"
 #include "fp_compare.h"
@@ -36,59 +36,59 @@ constexpr long double fp_error_pct<long double>() { return 1.0e-13l; }
 template <typename T>
 void fp_test()
 {
-    ASSERT_SAME_TYPE(T, decltype(std::midpoint(T(), T())));
-    ASSERT_NOEXCEPT(             std::midpoint(T(), T()));
+    ASSERT_SAME_TYPE(T, decltype(cuda::std::midpoint(T(), T())));
+    ASSERT_NOEXCEPT(             cuda::std::midpoint(T(), T()));
 
-    constexpr T maxV = std::numeric_limits<T>::max();
-    constexpr T minV = std::numeric_limits<T>::min();
+    constexpr T maxV = cuda::std::numeric_limits<T>::max();
+    constexpr T minV = cuda::std::numeric_limits<T>::min();
     
 //  Things that can be compared exactly
-    static_assert((std::midpoint(T(0), T(0))   == T(0)),   "");
-    static_assert((std::midpoint(T(2), T(4))   == T(3)),   "");
-    static_assert((std::midpoint(T(4), T(2))   == T(3)),   "");
-    static_assert((std::midpoint(T(3), T(4))   == T(3.5)), "");
-    static_assert((std::midpoint(T(0), T(0.4)) == T(0.2)), "");
+    static_assert((cuda::std::midpoint(T(0), T(0))   == T(0)),   "");
+    static_assert((cuda::std::midpoint(T(2), T(4))   == T(3)),   "");
+    static_assert((cuda::std::midpoint(T(4), T(2))   == T(3)),   "");
+    static_assert((cuda::std::midpoint(T(3), T(4))   == T(3.5)), "");
+    static_assert((cuda::std::midpoint(T(0), T(0.4)) == T(0.2)), "");
 
 //  Things that can't be compared exactly
     constexpr T pct = fp_error_pct<T>();
-    assert((fptest_close_pct(std::midpoint(T( 1.3), T(11.4)), T( 6.35),    pct)));
-    assert((fptest_close_pct(std::midpoint(T(11.33), T(31.45)), T(21.39),  pct)));
-    assert((fptest_close_pct(std::midpoint(T(-1.3), T(11.4)), T( 5.05),    pct)));
-    assert((fptest_close_pct(std::midpoint(T(11.4), T(-1.3)), T( 5.05),    pct)));
-    assert((fptest_close_pct(std::midpoint(T(0.1),  T(0.4)),  T(0.25),     pct)));
+    assert((fptest_close_pct(cuda::std::midpoint(T( 1.3), T(11.4)), T( 6.35),    pct)));
+    assert((fptest_close_pct(cuda::std::midpoint(T(11.33), T(31.45)), T(21.39),  pct)));
+    assert((fptest_close_pct(cuda::std::midpoint(T(-1.3), T(11.4)), T( 5.05),    pct)));
+    assert((fptest_close_pct(cuda::std::midpoint(T(11.4), T(-1.3)), T( 5.05),    pct)));
+    assert((fptest_close_pct(cuda::std::midpoint(T(0.1),  T(0.4)),  T(0.25),     pct)));
 
-    assert((fptest_close_pct(std::midpoint(T(11.2345), T(14.5432)), T(12.88885),  pct)));
+    assert((fptest_close_pct(cuda::std::midpoint(T(11.2345), T(14.5432)), T(12.88885),  pct)));
     
 //  From e to pi
-    assert((fptest_close_pct(std::midpoint(T(2.71828182845904523536028747135266249775724709369995),
+    assert((fptest_close_pct(cuda::std::midpoint(T(2.71828182845904523536028747135266249775724709369995),
                                       T(3.14159265358979323846264338327950288419716939937510)),
                                       T(2.92993724102441923691146542731608269097720824653752),  pct)));
 
-    assert((fptest_close_pct(std::midpoint(maxV, T(0)), maxV/2, pct)));
-    assert((fptest_close_pct(std::midpoint(T(0), maxV), maxV/2, pct)));
-    assert((fptest_close_pct(std::midpoint(minV, T(0)), minV/2, pct)));
-    assert((fptest_close_pct(std::midpoint(T(0), minV), minV/2, pct)));
-    assert((fptest_close_pct(std::midpoint(maxV, maxV), maxV,   pct)));
-    assert((fptest_close_pct(std::midpoint(minV, minV), minV,   pct)));
-    assert((fptest_close_pct(std::midpoint(maxV, minV), maxV/2, pct)));
-    assert((fptest_close_pct(std::midpoint(minV, maxV), maxV/2, pct)));
+    assert((fptest_close_pct(cuda::std::midpoint(maxV, T(0)), maxV/2, pct)));
+    assert((fptest_close_pct(cuda::std::midpoint(T(0), maxV), maxV/2, pct)));
+    assert((fptest_close_pct(cuda::std::midpoint(minV, T(0)), minV/2, pct)));
+    assert((fptest_close_pct(cuda::std::midpoint(T(0), minV), minV/2, pct)));
+    assert((fptest_close_pct(cuda::std::midpoint(maxV, maxV), maxV,   pct)));
+    assert((fptest_close_pct(cuda::std::midpoint(minV, minV), minV,   pct)));
+    assert((fptest_close_pct(cuda::std::midpoint(maxV, minV), maxV/2, pct)));
+    assert((fptest_close_pct(cuda::std::midpoint(minV, maxV), maxV/2, pct)));
 
 //  Near the min and the max
-    assert((fptest_close_pct(std::midpoint(maxV*T(0.75), maxV*T(0.50)),  maxV*T(0.625), pct)));
-    assert((fptest_close_pct(std::midpoint(maxV*T(0.50), maxV*T(0.75)),  maxV*T(0.625), pct)));
-    assert((fptest_close_pct(std::midpoint(minV*T(2),    minV*T(8)),     minV*T(5),     pct)));
+    assert((fptest_close_pct(cuda::std::midpoint(maxV*T(0.75), maxV*T(0.50)),  maxV*T(0.625), pct)));
+    assert((fptest_close_pct(cuda::std::midpoint(maxV*T(0.50), maxV*T(0.75)),  maxV*T(0.625), pct)));
+    assert((fptest_close_pct(cuda::std::midpoint(minV*T(2),    minV*T(8)),     minV*T(5),     pct)));
 
 //  Big numbers of different signs
-    assert((fptest_close_pct(std::midpoint(maxV*T( 0.75),  maxV*T(-0.5)), maxV*T( 0.125), pct)));
-    assert((fptest_close_pct(std::midpoint(maxV*T(-0.75),  maxV*T( 0.5)), maxV*T(-0.125), pct)));
+    assert((fptest_close_pct(cuda::std::midpoint(maxV*T( 0.75),  maxV*T(-0.5)), maxV*T( 0.125), pct)));
+    assert((fptest_close_pct(cuda::std::midpoint(maxV*T(-0.75),  maxV*T( 0.5)), maxV*T(-0.125), pct)));
 
 //  Denormalized values
 //  TODO
 
 //  Check two values "close to each other"
     T d1 = 3.14;
-    T d0 = std::nextafter(d1, T(2));
-    T d2 = std::nextafter(d1, T(5));
+    T d0 = cuda::std::nextafter(d1, T(2));
+    T d2 = cuda::std::nextafter(d1, T(5));
     assert(d0 < d1);  // sanity checking
     assert(d1 < d2);  // sanity checking
 
@@ -101,20 +101,20 @@ void fp_test()
     {
 	//  Since there's nothing in between, the midpoint has to be one or the other
 		T res;
-		res = std::midpoint(d0, d1);
+		res = cuda::std::midpoint(d0, d1);
 		assert(res == d0 || res == d1);
 		assert(d0 <= res);
 		assert(res <= d1);
-		res = std::midpoint(d1, d0);
+		res = cuda::std::midpoint(d1, d0);
 		assert(res == d0 || res == d1);
 		assert(d0 <= res);
 		assert(res <= d1);
 
-		res = std::midpoint(d1, d2);
+		res = cuda::std::midpoint(d1, d2);
 		assert(res == d1 || res == d2);
 		assert(d1 <= res);
 		assert(res <= d2);
-		res = std::midpoint(d2, d1);
+		res = cuda::std::midpoint(d2, d1);
 		assert(res == d1 || res == d2);
 		assert(d1 <= res);
 		assert(res <= d2);

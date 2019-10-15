@@ -8,21 +8,21 @@
 
 // UNSUPPORTED: c++98, c++03
 
-// <string>
+// <cuda/std/string>
 
-// Test that hash specializations for <string_view> require "char_traits<_CharT>" not just any "_Trait".
+// Test that hash specializations for <cuda/std/string_view> require "char_traits<_CharT>" not just any "_Trait".
 
-#include <string_view>
-#include <string> // for 'mbstate_t'
+#include <cuda/std/string_view>
+#include <cuda/std/string> // for 'mbstate_t'
 
 template <class _CharT>
 struct trait // copied from <__string>
 {
     typedef _CharT         char_type;
     typedef int            int_type;
-    typedef std::streamoff off_type;
-    typedef std::streampos pos_type;
-    typedef std::mbstate_t state_type;
+    typedef cuda::std::streamoff off_type;
+    typedef cuda::std::streampos pos_type;
+    typedef cuda::std::mbstate_t state_type;
 
     static inline void assign(char_type& __c1, const char_type& __c2) {
         __c1 = __c2;
@@ -52,9 +52,9 @@ struct trait // copied from <__string>
 
 template <class CharT>
 void test() {
-    typedef std::basic_string_view<CharT, trait<CharT> > strv_t;
-    std::hash<strv_t>
-        h; // expected-error-re 4 {{{{call to implicitly-deleted default constructor of 'std::hash<strv_t>'|implicit instantiation of undefined template}} {{.+}}}}}}
+    typedef cuda::std::basic_string_view<CharT, trait<CharT> > strv_t;
+    cuda::std::hash<strv_t>
+        h; // expected-error-re 4 {{{{call to implicitly-deleted default constructor of 'cuda::std::hash<strv_t>'|implicit instantiation of undefined template}} {{.+}}}}}}
 }
 
 int main(int, char**) {

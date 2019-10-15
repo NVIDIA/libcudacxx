@@ -6,8 +6,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include <cstddef>
-#include <type_traits>
+#include <cuda/std/cstddef>
+#include <cuda/std/type_traits>
 
 #include "test_macros.h"
 
@@ -19,12 +19,12 @@
 
 int main(int, char**)
 {
-    static_assert(sizeof(std::size_t) == sizeof(void*),
-                  "sizeof(std::size_t) == sizeof(void*)");
-    static_assert(std::is_unsigned<std::size_t>::value,
-                  "std::is_unsigned<std::size_t>::value");
-    static_assert(std::is_integral<std::size_t>::value,
-                  "std::is_integral<std::size_t>::value");
+    static_assert(sizeof(cuda::std::size_t) == sizeof(void*),
+                  "sizeof(cuda::std::size_t) == sizeof(void*)");
+    static_assert(cuda::std::is_unsigned<cuda::std::size_t>::value,
+                  "cuda::std::is_unsigned<cuda::std::size_t>::value");
+    static_assert(cuda::std::is_integral<cuda::std::size_t>::value,
+                  "cuda::std::is_integral<cuda::std::size_t>::value");
 
   return 0;
 }

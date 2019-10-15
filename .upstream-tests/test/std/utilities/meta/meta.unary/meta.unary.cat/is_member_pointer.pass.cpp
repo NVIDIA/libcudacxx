@@ -10,23 +10,23 @@
 
 // is_member_pointer
 
-#include <type_traits>
-#include <cstddef>        // for std::nullptr_t
+#include <cuda/std/type_traits>
+#include <cuda/std/cstddef>        // for cuda::std::nullptr_t
 #include "test_macros.h"
 
 template <class T>
 __host__ __device__
 void test_is_member_pointer()
 {
-    static_assert( std::is_member_pointer<T>::value, "");
-    static_assert( std::is_member_pointer<const T>::value, "");
-    static_assert( std::is_member_pointer<volatile T>::value, "");
-    static_assert( std::is_member_pointer<const volatile T>::value, "");
+    static_assert( cuda::std::is_member_pointer<T>::value, "");
+    static_assert( cuda::std::is_member_pointer<const T>::value, "");
+    static_assert( cuda::std::is_member_pointer<volatile T>::value, "");
+    static_assert( cuda::std::is_member_pointer<const volatile T>::value, "");
 #if TEST_STD_VER > 14
-    static_assert( std::is_member_pointer_v<T>, "");
-    static_assert( std::is_member_pointer_v<const T>, "");
-    static_assert( std::is_member_pointer_v<volatile T>, "");
-    static_assert( std::is_member_pointer_v<const volatile T>, "");
+    static_assert( cuda::std::is_member_pointer_v<T>, "");
+    static_assert( cuda::std::is_member_pointer_v<const T>, "");
+    static_assert( cuda::std::is_member_pointer_v<volatile T>, "");
+    static_assert( cuda::std::is_member_pointer_v<const volatile T>, "");
 #endif
 }
 
@@ -34,15 +34,15 @@ template <class T>
 __host__ __device__
 void test_is_not_member_pointer()
 {
-    static_assert(!std::is_member_pointer<T>::value, "");
-    static_assert(!std::is_member_pointer<const T>::value, "");
-    static_assert(!std::is_member_pointer<volatile T>::value, "");
-    static_assert(!std::is_member_pointer<const volatile T>::value, "");
+    static_assert(!cuda::std::is_member_pointer<T>::value, "");
+    static_assert(!cuda::std::is_member_pointer<const T>::value, "");
+    static_assert(!cuda::std::is_member_pointer<volatile T>::value, "");
+    static_assert(!cuda::std::is_member_pointer<const volatile T>::value, "");
 #if TEST_STD_VER > 14
-    static_assert(!std::is_member_pointer_v<T>, "");
-    static_assert(!std::is_member_pointer_v<const T>, "");
-    static_assert(!std::is_member_pointer_v<volatile T>, "");
-    static_assert(!std::is_member_pointer_v<const volatile T>, "");
+    static_assert(!cuda::std::is_member_pointer_v<T>, "");
+    static_assert(!cuda::std::is_member_pointer_v<const T>, "");
+    static_assert(!cuda::std::is_member_pointer_v<volatile T>, "");
+    static_assert(!cuda::std::is_member_pointer_v<const volatile T>, "");
 #endif
 }
 
@@ -80,7 +80,7 @@ int main(int, char**)
     test_is_member_pointer<FunctionPtr Empty::*>();
     test_is_member_pointer<void (Empty::*)()>();
 
-    test_is_not_member_pointer<std::nullptr_t>();
+    test_is_not_member_pointer<cuda::std::nullptr_t>();
     test_is_not_member_pointer<void>();
     test_is_not_member_pointer<int>();
     test_is_not_member_pointer<int&>();

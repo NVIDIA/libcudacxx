@@ -13,19 +13,19 @@
 // Ensure locale-independence for unicode tests.
 // RUN: %libcxx_gdb -nx -batch -iex "set autoload off" -ex "source %libcxx_src_root/utils/gdb/libcxx/printers.py" -ex "python register_libcxx_printer_loader()" -ex "source %libcxx_src_root/test/pretty_printers/gdb_pretty_printer_test.py" %t.exe
 
-#include <bitset>
-#include <deque>
-#include <list>
-#include <map>
-#include <memory>
-#include <queue>
-#include <set>
-#include <sstream>
-#include <stack>
-#include <string>
-#include <tuple>
-#include <unordered_map>
-#include <unordered_set>
+#include <cuda/std/bitset>
+#include <cuda/std/deque>
+#include <cuda/std/list>
+#include <cuda/std/map>
+#include <cuda/std/memory>
+#include <cuda/std/queue>
+#include <cuda/std/set>
+#include <cuda/std/sstream>
+#include <cuda/std/stack>
+#include <cuda/std/string>
+#include <cuda/std/tuple>
+#include <cuda/std/unordered_map>
+#include <cuda/std/unordered_set>
 
 #include "test_macros.h"
 
@@ -100,13 +100,13 @@ template <typename TypeToPrint> void ComparePrettyPrintToRegex(
 }
 
 void CompareExpressionPrettyPrintToChars(
-    std::string value,
+    cuda::std::string value,
     const char *expectation) {
   StopForDebugger(&value, &expectation);
 }
 
 void CompareExpressionPrettyPrintToRegex(
-    std::string value,
+    cuda::std::string value,
     const char *expectation) {
   StopForDebugger(&value, &expectation);
 }
@@ -137,116 +137,116 @@ void framework_self_test() {
 
 // A simple pass-through allocator to check that we handle CompressedPair
 // correctly.
-template <typename T> class UncompressibleAllocator : public std::allocator<T> {
+template <typename T> class UncompressibleAllocator : public cuda::std::allocator<T> {
  public:
   char X;
 };
 
 void string_test() {
-  std::string short_string("kdjflskdjf");
+  cuda::std::string short_string("kdjflskdjf");
   // The display_hint "string" adds quotes the printed result.
   ComparePrettyPrintToChars(short_string, "\"kdjflskdjf\"");
 
-  std::basic_string<char, std::char_traits<char>, UncompressibleAllocator<char>>
+  cuda::std::basic_string<char, cuda::std::char_traits<char>, UncompressibleAllocator<char>>
       long_string("mehmet bizim dostumuz agzi kirik testimiz");
   ComparePrettyPrintToChars(long_string,
                             "\"mehmet bizim dostumuz agzi kirik testimiz\"");
 }
 
 void u16string_test() {
-  std::u16string test0 = u"Hello World";
+  cuda::std::u16string test0 = u"Hello World";
   ComparePrettyPrintToChars(test0, "u\"Hello World\"");
-  std::u16string test1 = u"\U00010196\u20AC\u00A3\u0024";
+  cuda::std::u16string test1 = u"\U00010196\u20AC\u00A3\u0024";
   ComparePrettyPrintToChars(test1, "u\"\U00010196\u20AC\u00A3\u0024\"");
-  std::u16string test2 = u"\u0024\u0025\u0026\u0027";
+  cuda::std::u16string test2 = u"\u0024\u0025\u0026\u0027";
   ComparePrettyPrintToChars(test2, "u\"\u0024\u0025\u0026\u0027\"");
-  std::u16string test3 = u"mehmet bizim dostumuz agzi kirik testimiz";
+  cuda::std::u16string test3 = u"mehmet bizim dostumuz agzi kirik testimiz";
   ComparePrettyPrintToChars(test3,
                             ("u\"mehmet bizim dostumuz agzi kirik testimiz\""));
 }
 
 void u32string_test() {
-  std::u32string test0 = U"Hello World";
+  cuda::std::u32string test0 = U"Hello World";
   ComparePrettyPrintToChars(test0, "U\"Hello World\"");
-  std::u32string test1 =
+  cuda::std::u32string test1 =
       U"\U0001d552\U0001d553\U0001d554\U0001d555\U0001d556\U0001d557";
   ComparePrettyPrintToChars(
       test1,
       ("U\"\U0001d552\U0001d553\U0001d554\U0001d555\U0001d556\U0001d557\""));
-  std::u32string test2 = U"\U00004f60\U0000597d";
+  cuda::std::u32string test2 = U"\U00004f60\U0000597d";
   ComparePrettyPrintToChars(test2, ("U\"\U00004f60\U0000597d\""));
-  std::u32string test3 = U"mehmet bizim dostumuz agzi kirik testimiz";
+  cuda::std::u32string test3 = U"mehmet bizim dostumuz agzi kirik testimiz";
   ComparePrettyPrintToChars(test3, ("U\"mehmet bizim dostumuz agzi kirik testimiz\""));
 }
 
 void tuple_test() {
-  std::tuple<int, int, int> test0(2, 3, 4);
+  cuda::std::tuple<int, int, int> test0(2, 3, 4);
   ComparePrettyPrintToChars(
       test0,
-      "std::tuple containing = {[1] = 2, [2] = 3, [3] = 4}");
+      "cuda::std::tuple containing = {[1] = 2, [2] = 3, [3] = 4}");
 
-  std::tuple<> test1;
+  cuda::std::tuple<> test1;
   ComparePrettyPrintToChars(
       test1,
-      "empty std::tuple");
+      "empty cuda::std::tuple");
 }
 
 void unique_ptr_test() {
-  std::unique_ptr<std::string> matilda(new std::string("Matilda"));
+  cuda::std::unique_ptr<cuda::std::string> matilda(new cuda::std::string("Matilda"));
   ComparePrettyPrintToRegex(
-      std::move(matilda),
-      R"(std::unique_ptr<std::string> containing = {__ptr_ = 0x[a-f0-9]+})");
-  std::unique_ptr<int> forty_two(new int(42));
-  ComparePrettyPrintToRegex(std::move(forty_two),
-      R"(std::unique_ptr<int> containing = {__ptr_ = 0x[a-f0-9]+})");
+      cuda::std::move(matilda),
+      R"(cuda::std::unique_ptr<cuda::std::string> containing = {__ptr_ = 0x[a-f0-9]+})");
+  cuda::std::unique_ptr<int> forty_two(new int(42));
+  ComparePrettyPrintToRegex(cuda::std::move(forty_two),
+      R"(cuda::std::unique_ptr<int> containing = {__ptr_ = 0x[a-f0-9]+})");
 
-  std::unique_ptr<int> this_is_null;
-  ComparePrettyPrintToChars(std::move(this_is_null),
-      R"(std::unique_ptr is nullptr)");
+  cuda::std::unique_ptr<int> this_is_null;
+  ComparePrettyPrintToChars(cuda::std::move(this_is_null),
+      R"(cuda::std::unique_ptr is nullptr)");
 }
 
 void bitset_test() {
-  std::bitset<258> i_am_empty(0);
-  ComparePrettyPrintToChars(i_am_empty, "std::bitset<258>");
+  cuda::std::bitset<258> i_am_empty(0);
+  ComparePrettyPrintToChars(i_am_empty, "cuda::std::bitset<258>");
 
-  std::bitset<0> very_empty;
-  ComparePrettyPrintToChars(very_empty, "std::bitset<0>");
+  cuda::std::bitset<0> very_empty;
+  ComparePrettyPrintToChars(very_empty, "cuda::std::bitset<0>");
 
-  std::bitset<15> b_000001111111100(1020);
+  cuda::std::bitset<15> b_000001111111100(1020);
   ComparePrettyPrintToChars(b_000001111111100,
-      "std::bitset<15> = {[2] = 1, [3] = 1, [4] = 1, [5] = 1, [6] = 1, "
+      "cuda::std::bitset<15> = {[2] = 1, [3] = 1, [4] = 1, [5] = 1, [6] = 1, "
       "[7] = 1, [8] = 1, [9] = 1}");
 
-  std::bitset<258> b_0_129_132(0);
+  cuda::std::bitset<258> b_0_129_132(0);
   b_0_129_132[0] = true;
   b_0_129_132[129] = true;
   b_0_129_132[132] = true;
   ComparePrettyPrintToChars(b_0_129_132,
-      "std::bitset<258> = {[0] = 1, [129] = 1, [132] = 1}");
+      "cuda::std::bitset<258> = {[0] = 1, [129] = 1, [132] = 1}");
 }
 
 void list_test() {
-  std::list<int> i_am_empty{};
-  ComparePrettyPrintToChars(i_am_empty, "std::list is empty");
+  cuda::std::list<int> i_am_empty{};
+  ComparePrettyPrintToChars(i_am_empty, "cuda::std::list is empty");
 
-  std::list<int> one_two_three {1, 2, 3};
+  cuda::std::list<int> one_two_three {1, 2, 3};
   ComparePrettyPrintToChars(one_two_three,
-      "std::list with 3 elements = {1, 2, 3}");
+      "cuda::std::list with 3 elements = {1, 2, 3}");
 
-  std::list<std::string> colors {"red", "blue", "green"};
+  cuda::std::list<cuda::std::string> colors {"red", "blue", "green"};
   ComparePrettyPrintToChars(colors,
-      R"(std::list with 3 elements = {"red", "blue", "green"})");
+      R"(cuda::std::list with 3 elements = {"red", "blue", "green"})");
 }
 
 void deque_test() {
-  std::deque<int> i_am_empty{};
-  ComparePrettyPrintToChars(i_am_empty, "std::deque is empty");
+  cuda::std::deque<int> i_am_empty{};
+  ComparePrettyPrintToChars(i_am_empty, "cuda::std::deque is empty");
 
-  std::deque<int> one_two_three {1, 2, 3};
+  cuda::std::deque<int> one_two_three {1, 2, 3};
   ComparePrettyPrintToChars(one_two_three,
-      "std::deque with 3 elements = {1, 2, 3}");
+      "cuda::std::deque with 3 elements = {1, 2, 3}");
 
-  std::deque<example::example_struct> bfg;
+  cuda::std::deque<example::example_struct> bfg;
   for (int i = 0; i < 10; ++i) {
     example::example_struct current;
     current.a = i;
@@ -259,7 +259,7 @@ void deque_test() {
     bfg.pop_back();
   }
   ComparePrettyPrintToRegex(bfg,
-      "std::deque with 4 elements = {"
+      "cuda::std::deque with 4 elements = {"
       "{a = 3, arr = {[^}]+}}, "
       "{a = 4, arr = {[^}]+}}, "
       "{a = 5, arr = {[^}]+}}, "
@@ -267,25 +267,25 @@ void deque_test() {
 }
 
 void map_test() {
-  std::map<int, int> i_am_empty{};
-  ComparePrettyPrintToChars(i_am_empty, "std::map is empty");
+  cuda::std::map<int, int> i_am_empty{};
+  ComparePrettyPrintToChars(i_am_empty, "cuda::std::map is empty");
 
-  std::map<int, std::string> one_two_three;
+  cuda::std::map<int, cuda::std::string> one_two_three;
   one_two_three.insert({1, "one"});
   one_two_three.insert({2, "two"});
   one_two_three.insert({3, "three"});
   ComparePrettyPrintToChars(one_two_three,
-      "std::map with 3 elements = "
+      "cuda::std::map with 3 elements = "
       R"({[1] = "one", [2] = "two", [3] = "three"})");
 
-  std::map<int, example::example_struct> bfg;
+  cuda::std::map<int, example::example_struct> bfg;
   for (int i = 0; i < 4; ++i) {
     example::example_struct current;
     current.a = 17 * i;
     bfg.insert({i, current});
   }
   ComparePrettyPrintToRegex(bfg,
-      R"(std::map with 4 elements = {)"
+      R"(cuda::std::map with 4 elements = {)"
       R"(\[0\] = {a = 0, arr = {[^}]+}}, )"
       R"(\[1\] = {a = 17, arr = {[^}]+}}, )"
       R"(\[2\] = {a = 34, arr = {[^}]+}}, )"
@@ -293,10 +293,10 @@ void map_test() {
 }
 
 void multimap_test() {
-  std::multimap<int, int> i_am_empty{};
-  ComparePrettyPrintToChars(i_am_empty, "std::multimap is empty");
+  cuda::std::multimap<int, int> i_am_empty{};
+  ComparePrettyPrintToChars(i_am_empty, "cuda::std::multimap is empty");
 
-  std::multimap<int, std::string> one_two_three;
+  cuda::std::multimap<int, cuda::std::string> one_two_three;
   one_two_three.insert({1, "one"});
   one_two_three.insert({3, "three"});
   one_two_three.insert({1, "ein"});
@@ -305,93 +305,93 @@ void multimap_test() {
   one_two_three.insert({1, "bir"});
 
   ComparePrettyPrintToChars(one_two_three,
-      "std::multimap with 6 elements = "
+      "cuda::std::multimap with 6 elements = "
       R"({[1] = "one", [1] = "ein", [1] = "bir", )"
       R"([2] = "two", [2] = "zwei", [3] = "three"})");
 }
 
 void queue_test() {
-  std::queue<int> i_am_empty;
+  cuda::std::queue<int> i_am_empty;
   ComparePrettyPrintToChars(i_am_empty,
-      "std::queue wrapping = {std::deque is empty}");
+      "cuda::std::queue wrapping = {cuda::std::deque is empty}");
 
-  std::queue<int> one_two_three(std::deque<int>{1, 2, 3});
+  cuda::std::queue<int> one_two_three(cuda::std::deque<int>{1, 2, 3});
     ComparePrettyPrintToChars(one_two_three,
-        "std::queue wrapping = {"
-        "std::deque with 3 elements = {1, 2, 3}}");
+        "cuda::std::queue wrapping = {"
+        "cuda::std::deque with 3 elements = {1, 2, 3}}");
 }
 
 void priority_queue_test() {
-  std::priority_queue<int> i_am_empty;
+  cuda::std::priority_queue<int> i_am_empty;
   ComparePrettyPrintToChars(i_am_empty,
-      "std::priority_queue wrapping = {std::vector of length 0, capacity 0}");
+      "cuda::std::priority_queue wrapping = {cuda::std::vector of length 0, capacity 0}");
 
-  std::priority_queue<int> one_two_three;
+  cuda::std::priority_queue<int> one_two_three;
   one_two_three.push(11111);
   one_two_three.push(22222);
   one_two_three.push(33333);
 
   ComparePrettyPrintToRegex(one_two_three,
-      R"(std::priority_queue wrapping = )"
-      R"({std::vector of length 3, capacity 3 = {33333)");
+      R"(cuda::std::priority_queue wrapping = )"
+      R"({cuda::std::vector of length 3, capacity 3 = {33333)");
 
   ComparePrettyPrintToRegex(one_two_three, ".*11111.*");
   ComparePrettyPrintToRegex(one_two_three, ".*22222.*");
 }
 
 void set_test() {
-  std::set<int> i_am_empty;
-  ComparePrettyPrintToChars(i_am_empty, "std::set is empty");
+  cuda::std::set<int> i_am_empty;
+  ComparePrettyPrintToChars(i_am_empty, "cuda::std::set is empty");
 
-  std::set<int> one_two_three {3, 1, 2};
+  cuda::std::set<int> one_two_three {3, 1, 2};
   ComparePrettyPrintToChars(one_two_three,
-      "std::set with 3 elements = {1, 2, 3}");
+      "cuda::std::set with 3 elements = {1, 2, 3}");
 
-  std::set<std::pair<int, int>> prime_pairs {
-      std::make_pair(3, 5), std::make_pair(5, 7), std::make_pair(3, 5)};
+  cuda::std::set<cuda::std::pair<int, int>> prime_pairs {
+      cuda::std::make_pair(3, 5), cuda::std::make_pair(5, 7), cuda::std::make_pair(3, 5)};
 
   ComparePrettyPrintToChars(prime_pairs,
-      "std::set with 2 elements = {"
+      "cuda::std::set with 2 elements = {"
       "{first = 3, second = 5}, {first = 5, second = 7}}");
 }
 
 void stack_test() {
-  std::stack<int> test0;
+  cuda::std::stack<int> test0;
   ComparePrettyPrintToChars(test0,
-                            "std::stack wrapping = {std::deque is empty}");
+                            "cuda::std::stack wrapping = {cuda::std::deque is empty}");
   test0.push(5);
   test0.push(6);
   ComparePrettyPrintToChars(
-      test0, "std::stack wrapping = {std::deque with 2 elements = {5, 6}}");
-  std::stack<bool> test1;
+      test0, "cuda::std::stack wrapping = {cuda::std::deque with 2 elements = {5, 6}}");
+  cuda::std::stack<bool> test1;
   test1.push(true);
   test1.push(false);
   ComparePrettyPrintToChars(
       test1,
-      "std::stack wrapping = {std::deque with 2 elements = {true, false}}");
+      "cuda::std::stack wrapping = {cuda::std::deque with 2 elements = {true, false}}");
 
-  std::stack<std::string> test2;
+  cuda::std::stack<cuda::std::string> test2;
   test2.push("Hello");
   test2.push("World");
   ComparePrettyPrintToChars(test2,
-                            "std::stack wrapping = {std::deque with 2 elements "
+                            "cuda::std::stack wrapping = {cuda::std::deque with 2 elements "
                             "= {\"Hello\", \"World\"}}");
 }
 
 void multiset_test() {
-  std::multiset<int> i_am_empty;
-  ComparePrettyPrintToChars(i_am_empty, "std::multiset is empty");
+  cuda::std::multiset<int> i_am_empty;
+  ComparePrettyPrintToChars(i_am_empty, "cuda::std::multiset is empty");
 
-  std::multiset<std::string> one_two_three {"1:one", "2:two", "3:three", "1:one"};
+  cuda::std::multiset<cuda::std::string> one_two_three {"1:one", "2:two", "3:three", "1:one"};
   ComparePrettyPrintToChars(one_two_three,
-      "std::multiset with 4 elements = {"
+      "cuda::std::multiset with 4 elements = {"
       R"("1:one", "1:one", "2:two", "3:three"})");
 }
 
 void vector_test() {
-  std::vector<bool> test0 = {true, false};
+  cuda::std::vector<bool> test0 = {true, false};
   ComparePrettyPrintToChars(test0,
-                            "std::vector<bool> of "
+                            "cuda::std::vector<bool> of "
                             "length 2, capacity 64 = {1, 0}");
   for (int i = 0; i < 31; ++i) {
     test0.push_back(true);
@@ -399,132 +399,132 @@ void vector_test() {
   }
   ComparePrettyPrintToRegex(
       test0,
-      "std::vector<bool> of length 64, "
+      "cuda::std::vector<bool> of length 64, "
       "capacity 64 = {1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, "
       "0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, "
       "0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0}");
   test0.push_back(true);
   ComparePrettyPrintToRegex(
       test0,
-      "std::vector<bool> of length 65, "
+      "cuda::std::vector<bool> of length 65, "
       "capacity 128 = {1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, "
       "1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, "
       "1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1}");
 
-  std::vector<int> test1;
-  ComparePrettyPrintToChars(test1, "std::vector of length 0, capacity 0");
+  cuda::std::vector<int> test1;
+  ComparePrettyPrintToChars(test1, "cuda::std::vector of length 0, capacity 0");
 
-  std::vector<int> test2 = {5, 6, 7};
+  cuda::std::vector<int> test2 = {5, 6, 7};
   ComparePrettyPrintToChars(test2,
-                            "std::vector of length "
+                            "cuda::std::vector of length "
                             "3, capacity 3 = {5, 6, 7}");
 
-  std::vector<int, UncompressibleAllocator<int>> test3({7, 8});
-  ComparePrettyPrintToChars(std::move(test3),
-                            "std::vector of length "
+  cuda::std::vector<int, UncompressibleAllocator<int>> test3({7, 8});
+  ComparePrettyPrintToChars(cuda::std::move(test3),
+                            "cuda::std::vector of length "
                             "2, capacity 2 = {7, 8}");
 }
 
 void set_iterator_test() {
-  std::set<int> one_two_three {1111, 2222, 3333};
+  cuda::std::set<int> one_two_three {1111, 2222, 3333};
   auto it = one_two_three.find(2222);
   MarkAsLive(it);
   CompareExpressionPrettyPrintToRegex("it",
-      R"(std::__tree_const_iterator  = {\[0x[a-f0-9]+\] = 2222})");
+      R"(cuda::std::__tree_const_iterator  = {\[0x[a-f0-9]+\] = 2222})");
 
   auto not_found = one_two_three.find(1234);
   MarkAsLive(not_found);
   // Because the end_node is not easily detected, just be sure it doesn't crash.
   CompareExpressionPrettyPrintToRegex("not_found",
-      R"(std::__tree_const_iterator ( = {\[0x[a-f0-9]+\] = .*}|<error reading variable:.*>))");
+      R"(cuda::std::__tree_const_iterator ( = {\[0x[a-f0-9]+\] = .*}|<error reading variable:.*>))");
 }
 
 void map_iterator_test() {
-  std::map<int, std::string> one_two_three;
+  cuda::std::map<int, cuda::std::string> one_two_three;
   one_two_three.insert({1, "one"});
   one_two_three.insert({2, "two"});
   one_two_three.insert({3, "three"});
   auto it = one_two_three.begin();
   MarkAsLive(it);
   CompareExpressionPrettyPrintToRegex("it",
-      R"(std::__map_iterator  = )"
+      R"(cuda::std::__map_iterator  = )"
       R"({\[0x[a-f0-9]+\] = {first = 1, second = "one"}})");
 
   auto not_found = one_two_three.find(7);
   MarkAsLive(not_found);
   CompareExpressionPrettyPrintToRegex("not_found",
-      R"(std::__map_iterator  = {\[0x[a-f0-9]+\] =  end\(\)})");
+      R"(cuda::std::__map_iterator  = {\[0x[a-f0-9]+\] =  end\(\)})");
 }
 
 void unordered_set_test() {
-  std::unordered_set<int> i_am_empty;
-  ComparePrettyPrintToChars(i_am_empty, "std::unordered_set is empty");
+  cuda::std::unordered_set<int> i_am_empty;
+  ComparePrettyPrintToChars(i_am_empty, "cuda::std::unordered_set is empty");
 
-  std::unordered_set<int> numbers {12345, 67890, 222333, 12345};
+  cuda::std::unordered_set<int> numbers {12345, 67890, 222333, 12345};
   numbers.erase(numbers.find(222333));
-  ComparePrettyPrintToRegex(numbers, "std::unordered_set with 2 elements = ");
+  ComparePrettyPrintToRegex(numbers, "cuda::std::unordered_set with 2 elements = ");
   ComparePrettyPrintToRegex(numbers, ".*12345.*");
   ComparePrettyPrintToRegex(numbers, ".*67890.*");
 
-  std::unordered_set<std::string> colors {"red", "blue", "green"};
-  ComparePrettyPrintToRegex(colors, "std::unordered_set with 3 elements = ");
+  cuda::std::unordered_set<cuda::std::string> colors {"red", "blue", "green"};
+  ComparePrettyPrintToRegex(colors, "cuda::std::unordered_set with 3 elements = ");
   ComparePrettyPrintToRegex(colors, R"(.*"red".*)");
   ComparePrettyPrintToRegex(colors, R"(.*"blue".*)");
   ComparePrettyPrintToRegex(colors, R"(.*"green".*)");
 }
 
 void unordered_multiset_test() {
-  std::unordered_multiset<int> i_am_empty;
-  ComparePrettyPrintToChars(i_am_empty, "std::unordered_multiset is empty");
+  cuda::std::unordered_multiset<int> i_am_empty;
+  ComparePrettyPrintToChars(i_am_empty, "cuda::std::unordered_multiset is empty");
 
-  std::unordered_multiset<int> numbers {12345, 67890, 222333, 12345};
+  cuda::std::unordered_multiset<int> numbers {12345, 67890, 222333, 12345};
   ComparePrettyPrintToRegex(numbers,
-                            "std::unordered_multiset with 4 elements = ");
+                            "cuda::std::unordered_multiset with 4 elements = ");
   ComparePrettyPrintToRegex(numbers, ".*12345.*12345.*");
   ComparePrettyPrintToRegex(numbers, ".*67890.*");
   ComparePrettyPrintToRegex(numbers, ".*222333.*");
 
-  std::unordered_multiset<std::string> colors {"red", "blue", "green", "red"};
+  cuda::std::unordered_multiset<cuda::std::string> colors {"red", "blue", "green", "red"};
   ComparePrettyPrintToRegex(colors,
-                            "std::unordered_multiset with 4 elements = ");
+                            "cuda::std::unordered_multiset with 4 elements = ");
   ComparePrettyPrintToRegex(colors, R"(.*"red".*"red".*)");
   ComparePrettyPrintToRegex(colors, R"(.*"blue".*)");
   ComparePrettyPrintToRegex(colors, R"(.*"green".*)");
 }
 
 void unordered_map_test() {
-  std::unordered_map<int, int> i_am_empty;
-  ComparePrettyPrintToChars(i_am_empty, "std::unordered_map is empty");
+  cuda::std::unordered_map<int, int> i_am_empty;
+  ComparePrettyPrintToChars(i_am_empty, "cuda::std::unordered_map is empty");
 
-  std::unordered_map<int, std::string> one_two_three;
+  cuda::std::unordered_map<int, cuda::std::string> one_two_three;
   one_two_three.insert({1, "one"});
   one_two_three.insert({2, "two"});
   one_two_three.insert({3, "three"});
   ComparePrettyPrintToRegex(one_two_three,
-                            "std::unordered_map with 3 elements = ");
+                            "cuda::std::unordered_map with 3 elements = ");
   ComparePrettyPrintToRegex(one_two_three, R"(.*\[1\] = "one".*)");
   ComparePrettyPrintToRegex(one_two_three, R"(.*\[2\] = "two".*)");
   ComparePrettyPrintToRegex(one_two_three, R"(.*\[3\] = "three".*)");
 }
 
 void unordered_multimap_test() {
-  std::unordered_multimap<int, int> i_am_empty;
-  ComparePrettyPrintToChars(i_am_empty, "std::unordered_multimap is empty");
+  cuda::std::unordered_multimap<int, int> i_am_empty;
+  ComparePrettyPrintToChars(i_am_empty, "cuda::std::unordered_multimap is empty");
 
-  std::unordered_multimap<int, std::string> one_two_three;
+  cuda::std::unordered_multimap<int, cuda::std::string> one_two_three;
   one_two_three.insert({1, "one"});
   one_two_three.insert({2, "two"});
   one_two_three.insert({3, "three"});
   one_two_three.insert({2, "two"});
   ComparePrettyPrintToRegex(one_two_three,
-                            "std::unordered_multimap with 4 elements = ");
+                            "cuda::std::unordered_multimap with 4 elements = ");
   ComparePrettyPrintToRegex(one_two_three, R"(.*\[1\] = "one".*)");
   ComparePrettyPrintToRegex(one_two_three, R"(.*\[2\] = "two".*\[2\] = "two")");
   ComparePrettyPrintToRegex(one_two_three, R"(.*\[3\] = "three".*)");
 }
 
 void unordered_map_iterator_test() {
-  std::unordered_map<int, int> ones_to_eights;
+  cuda::std::unordered_map<int, int> ones_to_eights;
   ones_to_eights.insert({1, 8});
   ones_to_eights.insert({11, 88});
   ones_to_eights.insert({111, 888});
@@ -532,16 +532,16 @@ void unordered_map_iterator_test() {
   auto ones_to_eights_begin = ones_to_eights.begin();
   MarkAsLive(ones_to_eights_begin);
   CompareExpressionPrettyPrintToRegex("ones_to_eights_begin",
-      R"(std::__hash_map_iterator  = {\[1+\] = 8+})");
+      R"(cuda::std::__hash_map_iterator  = {\[1+\] = 8+})");
 
   auto not_found = ones_to_eights.find(5);
   MarkAsLive(not_found);
   CompareExpressionPrettyPrintToRegex("not_found",
-      R"(std::__hash_map_iterator = end\(\))");
+      R"(cuda::std::__hash_map_iterator = end\(\))");
 }
 
 void unordered_set_iterator_test() {
-  std::unordered_set<int> ones;
+  cuda::std::unordered_set<int> ones;
   ones.insert(111);
   ones.insert(1111);
   ones.insert(11111);
@@ -549,12 +549,12 @@ void unordered_set_iterator_test() {
   auto ones_begin = ones.begin();
   MarkAsLive(ones_begin);
   CompareExpressionPrettyPrintToRegex("ones_begin",
-      R"(std::__hash_const_iterator  = {1+})");
+      R"(cuda::std::__hash_const_iterator  = {1+})");
 
   auto not_found = ones.find(5);
   MarkAsLive(not_found);
   CompareExpressionPrettyPrintToRegex("not_found",
-      R"(std::__hash_const_iterator = end\(\))");
+      R"(cuda::std::__hash_const_iterator = end\(\))");
 }
 
 // Check that libc++ pretty printers do not handle pointers.
@@ -569,44 +569,44 @@ void shared_ptr_test() {
   // Shared ptr tests while using test framework call another function
   // due to which there is one more count for the pointer. Hence, all the
   // following tests are testing with expected count plus 1.
-  std::shared_ptr<const int> test0 = std::make_shared<const int>(5);
+  cuda::std::shared_ptr<const int> test0 = cuda::std::make_shared<const int>(5);
   ComparePrettyPrintToRegex(
       test0,
-      R"(std::shared_ptr<int> count 2, weak 0 containing = {__ptr_ = 0x[a-f0-9]+})");
+      R"(cuda::std::shared_ptr<int> count 2, weak 0 containing = {__ptr_ = 0x[a-f0-9]+})");
 
-  std::shared_ptr<const int> test1(test0);
+  cuda::std::shared_ptr<const int> test1(test0);
   ComparePrettyPrintToRegex(
       test1,
-      R"(std::shared_ptr<int> count 3, weak 0 containing = {__ptr_ = 0x[a-f0-9]+})");
+      R"(cuda::std::shared_ptr<int> count 3, weak 0 containing = {__ptr_ = 0x[a-f0-9]+})");
 
   {
-    std::weak_ptr<const int> test2 = test1;
+    cuda::std::weak_ptr<const int> test2 = test1;
     ComparePrettyPrintToRegex(
         test0,
-        R"(std::shared_ptr<int> count 3, weak 1 containing = {__ptr_ = 0x[a-f0-9]+})");
+        R"(cuda::std::shared_ptr<int> count 3, weak 1 containing = {__ptr_ = 0x[a-f0-9]+})");
   }
 
   ComparePrettyPrintToRegex(
       test0,
-      R"(std::shared_ptr<int> count 3, weak 0 containing = {__ptr_ = 0x[a-f0-9]+})");
+      R"(cuda::std::shared_ptr<int> count 3, weak 0 containing = {__ptr_ = 0x[a-f0-9]+})");
 
-  std::shared_ptr<const int> test3;
-  ComparePrettyPrintToChars(test3, "std::shared_ptr is nullptr");
+  cuda::std::shared_ptr<const int> test3;
+  ComparePrettyPrintToChars(test3, "cuda::std::shared_ptr is nullptr");
 }
 
 void streampos_test() {
-  std::streampos test0 = 67;
+  cuda::std::streampos test0 = 67;
   ComparePrettyPrintToChars(
-      test0, "std::fpos with stream offset:67 with state: {count:0 value:0}");
-  std::istringstream input("testing the input stream here");
-  std::streampos test1 = input.tellg();
+      test0, "cuda::std::fpos with stream offset:67 with state: {count:0 value:0}");
+  cuda::std::istringstream input("testing the input stream here");
+  cuda::std::streampos test1 = input.tellg();
   ComparePrettyPrintToChars(
-      test1, "std::fpos with stream offset:0 with state: {count:0 value:0}");
-  std::unique_ptr<char[]> buffer(new char[5]);
+      test1, "cuda::std::fpos with stream offset:0 with state: {count:0 value:0}");
+  cuda::std::unique_ptr<char[]> buffer(new char[5]);
   input.read(buffer.get(), 5);
   test1 = input.tellg();
   ComparePrettyPrintToChars(
-      test1, "std::fpos with stream offset:5 with state: {count:0 value:0}");
+      test1, "cuda::std::fpos with stream offset:5 with state: {count:0 value:0}");
 }
 
 int main(int argc, char* argv[]) {

@@ -12,16 +12,16 @@
 // See https://stackoverflow.com/q/41799015/627587.
 // UNSUPPORTED: gcc-5
 
-// <utility>
+// <cuda/std/utility>
 
 // template <class T1, class T2> struct pair
 
 // explicit(see-below) constexpr pair();
 
-// This test checks the conditional explicitness of std::pair's default
+// This test checks the conditional explicitness of cuda::std::pair's default
 // constructor as introduced by the resolution of LWG 2510.
 
-#include <utility>
+#include <cuda/std/utility>
 
 
 struct ImplicitlyDefaultConstructible {
@@ -32,10 +32,10 @@ struct ExplicitlyDefaultConstructible {
     explicit ExplicitlyDefaultConstructible() = default;
 };
 
-std::pair<ImplicitlyDefaultConstructible, ExplicitlyDefaultConstructible> test1() { return {}; } // expected-error 1 {{chosen constructor is explicit in copy-initialization}}
-std::pair<ExplicitlyDefaultConstructible, ImplicitlyDefaultConstructible> test2() { return {}; } // expected-error 1 {{chosen constructor is explicit in copy-initialization}}
-std::pair<ExplicitlyDefaultConstructible, ExplicitlyDefaultConstructible> test3() { return {}; } // expected-error 1 {{chosen constructor is explicit in copy-initialization}}
-std::pair<ImplicitlyDefaultConstructible, ImplicitlyDefaultConstructible> test4() { return {}; }
+cuda::std::pair<ImplicitlyDefaultConstructible, ExplicitlyDefaultConstructible> test1() { return {}; } // expected-error 1 {{chosen constructor is explicit in copy-initialization}}
+cuda::std::pair<ExplicitlyDefaultConstructible, ImplicitlyDefaultConstructible> test2() { return {}; } // expected-error 1 {{chosen constructor is explicit in copy-initialization}}
+cuda::std::pair<ExplicitlyDefaultConstructible, ExplicitlyDefaultConstructible> test3() { return {}; } // expected-error 1 {{chosen constructor is explicit in copy-initialization}}
+cuda::std::pair<ImplicitlyDefaultConstructible, ImplicitlyDefaultConstructible> test4() { return {}; }
 
 int main(int, char**) {
     return 0;

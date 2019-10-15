@@ -10,7 +10,7 @@
 
 // array
 
-#include <type_traits>
+#include <cuda/std/type_traits>
 
 #include "test_macros.h"
 
@@ -18,13 +18,13 @@ template <class T>
 __host__ __device__
 void test_array_imp()
 {
-    static_assert(!std::is_reference<T>::value, "");
-    static_assert(!std::is_arithmetic<T>::value, "");
-    static_assert(!std::is_fundamental<T>::value, "");
-    static_assert( std::is_object<T>::value, "");
-    static_assert(!std::is_scalar<T>::value, "");
-    static_assert( std::is_compound<T>::value, "");
-    static_assert(!std::is_member_pointer<T>::value, "");
+    static_assert(!cuda::std::is_reference<T>::value, "");
+    static_assert(!cuda::std::is_arithmetic<T>::value, "");
+    static_assert(!cuda::std::is_fundamental<T>::value, "");
+    static_assert( cuda::std::is_object<T>::value, "");
+    static_assert(!cuda::std::is_scalar<T>::value, "");
+    static_assert( cuda::std::is_compound<T>::value, "");
+    static_assert(!cuda::std::is_member_pointer<T>::value, "");
 }
 
 template <class T>
@@ -45,7 +45,7 @@ class incomplete_type;
 
 int main(int, char**)
 {
-    test_array<array>();
+    test_array<cuda/std/array>();
     test_array<const_array>();
     test_array<incomplete_array>();
     test_array<incomplete_type[]>();

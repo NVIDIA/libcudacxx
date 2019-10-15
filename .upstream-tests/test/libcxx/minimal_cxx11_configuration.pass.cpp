@@ -25,8 +25,8 @@
 #pragma clang diagnostic ignored "-Wc++11-extensions"
 #endif
 
-#include <type_traits>
-#include <cassert>
+#include <cuda/std/type_traits>
+#include <cuda/std/cassert>
 
 // Equals delete and default are allowed in minimal C++03 mode.
 namespace test_eq_delete_and_default {
@@ -40,7 +40,7 @@ struct T2 {
 namespace alias_templates {
 template <class T>
 using X = T;
-static_assert((std::is_same<X<int>, int>::value), "");
+static_assert((cuda::std::is_same<X<int>, int>::value), "");
 }
 
 namespace variadics_templates {
@@ -82,7 +82,7 @@ void test() {
 namespace rvalue_references_perfect_forwarding {
 template <class Expect, class T>
 void f(T&&) {
-  static_assert((std::is_same<Expect, T&&>::value), "");
+  static_assert((cuda::std::is_same<Expect, T&&>::value), "");
 }
 void test() {
   int x = 42;

@@ -14,7 +14,7 @@
 // See https://stackoverflow.com/q/41799015/627587.
 // UNSUPPORTED: gcc-5
 
-// <mutex>
+// <cuda/std/mutex>
 
 // struct defer_lock_t { explicit defer_lock_t() = default; };
 // struct try_to_lock_t { explicit try_to_lock_t() = default; };
@@ -22,12 +22,12 @@
 
 // This test checks for LWG 2510.
 
-#include <mutex>
+#include <cuda/std/mutex>
 
 
-std::defer_lock_t f1() { return {}; } // expected-error 1 {{chosen constructor is explicit in copy-initialization}}
-std::try_to_lock_t f2() { return {}; } // expected-error 1 {{chosen constructor is explicit in copy-initialization}}
-std::adopt_lock_t f3() { return {}; } // expected-error 1 {{chosen constructor is explicit in copy-initialization}}
+cuda::std::defer_lock_t f1() { return {}; } // expected-error 1 {{chosen constructor is explicit in copy-initialization}}
+cuda::std::try_to_lock_t f2() { return {}; } // expected-error 1 {{chosen constructor is explicit in copy-initialization}}
+cuda::std::adopt_lock_t f3() { return {}; } // expected-error 1 {{chosen constructor is explicit in copy-initialization}}
 
 int main(int, char**) {
     return 0;

@@ -6,14 +6,14 @@
 //
 //===----------------------------------------------------------------------===//
 
-// <version>
+// <cuda/std/version>
 
-#include <version>
+#include <cuda/std/version>
 
 #include "test_macros.h"
 
-#if !defined(_LIBCPP_VERSION)
-#error "_LIBCPP_VERSION must be defined after including <version>"
+#if !defined(_LIBCUDACXX_VERSION)
+#error "_LIBCUDACXX_VERSION must be defined after including <cuda/std/version>"
 #endif
 
 int main(int, char**)

@@ -15,22 +15,22 @@
 #pragma clang diagnostic ignored "-Wdelete-non-virtual-dtor"
 #endif
 
-#include <type_traits>
+#include <cuda/std/type_traits>
 #include "test_macros.h"
 
 template <class T>
 __host__ __device__
 void test_is_nothrow_destructible()
 {
-    static_assert( std::is_nothrow_destructible<T>::value, "");
-    static_assert( std::is_nothrow_destructible<const T>::value, "");
-    static_assert( std::is_nothrow_destructible<volatile T>::value, "");
-    static_assert( std::is_nothrow_destructible<const volatile T>::value, "");
+    static_assert( cuda::std::is_nothrow_destructible<T>::value, "");
+    static_assert( cuda::std::is_nothrow_destructible<const T>::value, "");
+    static_assert( cuda::std::is_nothrow_destructible<volatile T>::value, "");
+    static_assert( cuda::std::is_nothrow_destructible<const volatile T>::value, "");
 #if TEST_STD_VER > 14
-    static_assert( std::is_nothrow_destructible_v<T>, "");
-    static_assert( std::is_nothrow_destructible_v<const T>, "");
-    static_assert( std::is_nothrow_destructible_v<volatile T>, "");
-    static_assert( std::is_nothrow_destructible_v<const volatile T>, "");
+    static_assert( cuda::std::is_nothrow_destructible_v<T>, "");
+    static_assert( cuda::std::is_nothrow_destructible_v<const T>, "");
+    static_assert( cuda::std::is_nothrow_destructible_v<volatile T>, "");
+    static_assert( cuda::std::is_nothrow_destructible_v<const volatile T>, "");
 #endif
 }
 
@@ -38,15 +38,15 @@ template <class T>
 __host__ __device__
 void test_is_not_nothrow_destructible()
 {
-    static_assert(!std::is_nothrow_destructible<T>::value, "");
-    static_assert(!std::is_nothrow_destructible<const T>::value, "");
-    static_assert(!std::is_nothrow_destructible<volatile T>::value, "");
-    static_assert(!std::is_nothrow_destructible<const volatile T>::value, "");
+    static_assert(!cuda::std::is_nothrow_destructible<T>::value, "");
+    static_assert(!cuda::std::is_nothrow_destructible<const T>::value, "");
+    static_assert(!cuda::std::is_nothrow_destructible<volatile T>::value, "");
+    static_assert(!cuda::std::is_nothrow_destructible<const volatile T>::value, "");
 #if TEST_STD_VER > 14
-    static_assert(!std::is_nothrow_destructible_v<T>, "");
-    static_assert(!std::is_nothrow_destructible_v<const T>, "");
-    static_assert(!std::is_nothrow_destructible_v<volatile T>, "");
-    static_assert(!std::is_nothrow_destructible_v<const volatile T>, "");
+    static_assert(!cuda::std::is_nothrow_destructible_v<T>, "");
+    static_assert(!cuda::std::is_nothrow_destructible_v<const T>, "");
+    static_assert(!cuda::std::is_nothrow_destructible_v<volatile T>, "");
+    static_assert(!cuda::std::is_nothrow_destructible_v<const volatile T>, "");
 #endif
 }
 

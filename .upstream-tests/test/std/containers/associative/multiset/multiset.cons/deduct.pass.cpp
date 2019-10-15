@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// <set>
+// <cuda/std/set>
 // UNSUPPORTED: c++98, c++03, c++11, c++14
 // UNSUPPORTED: libcpp-no-deduction-guides
 // UNSUPPORTED: apple-clang-9.1
@@ -29,12 +29,12 @@
 // multiset(initializer_list<Key>, Allocator)
 //   -> multiset<Key, less<Key>, Allocator>;
 
-#include <algorithm> // std::equal
-#include <cassert>
-#include <climits> // INT_MAX
-#include <functional>
-#include <set>
-#include <type_traits>
+#include <cuda/std/algorithm> // cuda::std::equal
+#include <cuda/std/cassert>
+#include <cuda/std/climits> // INT_MAX
+#include <cuda/std/functional>
+#include <cuda/std/set>
+#include <cuda/std/type_traits>
 
 #include "test_allocator.h"
 
@@ -45,145 +45,145 @@ struct NotAnAllocator {
 int main(int, char **) {
   {
     const int arr[] = { 1, 2, 1, INT_MAX, 3 };
-    std::multiset s(std::begin(arr), std::end(arr));
+    cuda::std::multiset s(cuda::std::begin(arr), cuda::std::end(arr));
 
-    ASSERT_SAME_TYPE(decltype(s), std::multiset<int>);
+    ASSERT_SAME_TYPE(decltype(s), cuda::std::multiset<int>);
     const int expected_s[] = { 1, 1, 2, 3, INT_MAX };
-    assert(std::equal(s.begin(), s.end(), std::begin(expected_s),
-                      std::end(expected_s)));
+    assert(cuda::std::equal(s.begin(), s.end(), cuda::std::begin(expected_s),
+                      cuda::std::end(expected_s)));
   }
 
   {
     const int arr[] = { 1, 2, 1, INT_MAX, 3 };
-    std::multiset s(std::begin(arr), std::end(arr), std::greater<int>());
+    cuda::std::multiset s(cuda::std::begin(arr), cuda::std::end(arr), cuda::std::greater<int>());
 
-    ASSERT_SAME_TYPE(decltype(s), std::multiset<int, std::greater<int> >);
+    ASSERT_SAME_TYPE(decltype(s), cuda::std::multiset<int, cuda::std::greater<int> >);
     const int expected_s[] = { INT_MAX, 3, 2, 1, 1 };
-    assert(std::equal(s.begin(), s.end(), std::begin(expected_s),
-                      std::end(expected_s)));
+    assert(cuda::std::equal(s.begin(), s.end(), cuda::std::begin(expected_s),
+                      cuda::std::end(expected_s)));
   }
 
   {
     const int arr[] = { 1, 2, 1, INT_MAX, 3 };
-    std::multiset s(std::begin(arr), std::end(arr), std::greater<int>(),
+    cuda::std::multiset s(cuda::std::begin(arr), cuda::std::end(arr), cuda::std::greater<int>(),
                     test_allocator<int>(0, 42));
 
     ASSERT_SAME_TYPE(
         decltype(s),
-        std::multiset<int, std::greater<int>, test_allocator<int> >);
+        cuda::std::multiset<int, cuda::std::greater<int>, test_allocator<int> >);
     const int expected_s[] = { INT_MAX, 3, 2, 1, 1 };
-    assert(std::equal(s.begin(), s.end(), std::begin(expected_s),
-                      std::end(expected_s)));
+    assert(cuda::std::equal(s.begin(), s.end(), cuda::std::begin(expected_s),
+                      cuda::std::end(expected_s)));
     assert(s.get_allocator().get_id() == 42);
   }
 
   {
-    std::multiset<long> source;
-    std::multiset s(source);
-    ASSERT_SAME_TYPE(decltype(s), std::multiset<long>);
+    cuda::std::multiset<long> source;
+    cuda::std::multiset s(source);
+    ASSERT_SAME_TYPE(decltype(s), cuda::std::multiset<long>);
     assert(s.size() == 0);
   }
 
   {
-    std::multiset<long> source;
-    std::multiset s{ source };  // braces instead of parens
-    ASSERT_SAME_TYPE(decltype(s), std::multiset<long>);
+    cuda::std::multiset<long> source;
+    cuda::std::multiset s{ source };  // braces instead of parens
+    ASSERT_SAME_TYPE(decltype(s), cuda::std::multiset<long>);
     assert(s.size() == 0);
   }
 
   {
-    std::multiset<long> source;
-    std::multiset s(source, std::multiset<long>::allocator_type());
-    ASSERT_SAME_TYPE(decltype(s), std::multiset<long>);
+    cuda::std::multiset<long> source;
+    cuda::std::multiset s(source, cuda::std::multiset<long>::allocator_type());
+    ASSERT_SAME_TYPE(decltype(s), cuda::std::multiset<long>);
     assert(s.size() == 0);
   }
 
   {
-    std::multiset s{ 1, 2, 1, INT_MAX, 3 };
+    cuda::std::multiset s{ 1, 2, 1, INT_MAX, 3 };
 
-    ASSERT_SAME_TYPE(decltype(s), std::multiset<int>);
+    ASSERT_SAME_TYPE(decltype(s), cuda::std::multiset<int>);
     const int expected_s[] = { 1, 1, 2, 3, INT_MAX };
-    assert(std::equal(s.begin(), s.end(), std::begin(expected_s),
-                      std::end(expected_s)));
+    assert(cuda::std::equal(s.begin(), s.end(), cuda::std::begin(expected_s),
+                      cuda::std::end(expected_s)));
   }
 
   {
-    std::multiset s({ 1, 2, 1, INT_MAX, 3 }, std::greater<int>());
+    cuda::std::multiset s({ 1, 2, 1, INT_MAX, 3 }, cuda::std::greater<int>());
 
-    ASSERT_SAME_TYPE(decltype(s), std::multiset<int, std::greater<int> >);
+    ASSERT_SAME_TYPE(decltype(s), cuda::std::multiset<int, cuda::std::greater<int> >);
     const int expected_s[] = { INT_MAX, 3, 2, 1, 1 };
-    assert(std::equal(s.begin(), s.end(), std::begin(expected_s),
-                      std::end(expected_s)));
+    assert(cuda::std::equal(s.begin(), s.end(), cuda::std::begin(expected_s),
+                      cuda::std::end(expected_s)));
   }
 
   {
-    std::multiset s({ 1, 2, 1, INT_MAX, 3 }, std::greater<int>(),
+    cuda::std::multiset s({ 1, 2, 1, INT_MAX, 3 }, cuda::std::greater<int>(),
                     test_allocator<int>(0, 43));
 
     ASSERT_SAME_TYPE(
         decltype(s),
-        std::multiset<int, std::greater<int>, test_allocator<int> >);
+        cuda::std::multiset<int, cuda::std::greater<int>, test_allocator<int> >);
     const int expected_s[] = { INT_MAX, 3, 2, 1, 1 };
-    assert(std::equal(s.begin(), s.end(), std::begin(expected_s),
-                      std::end(expected_s)));
+    assert(cuda::std::equal(s.begin(), s.end(), cuda::std::begin(expected_s),
+                      cuda::std::end(expected_s)));
     assert(s.get_allocator().get_id() == 43);
   }
 
   {
     const int arr[] = { 1, 2, 1, INT_MAX, 3 };
-    std::multiset s(std::begin(arr), std::end(arr), test_allocator<int>(0, 44));
+    cuda::std::multiset s(cuda::std::begin(arr), cuda::std::end(arr), test_allocator<int>(0, 44));
 
     ASSERT_SAME_TYPE(decltype(s),
-                     std::multiset<int, std::less<int>, test_allocator<int> >);
+                     cuda::std::multiset<int, cuda::std::less<int>, test_allocator<int> >);
     const int expected_s[] = { 1, 1, 2, 3, INT_MAX };
-    assert(std::equal(s.begin(), s.end(), std::begin(expected_s),
-                      std::end(expected_s)));
+    assert(cuda::std::equal(s.begin(), s.end(), cuda::std::begin(expected_s),
+                      cuda::std::end(expected_s)));
     assert(s.get_allocator().get_id() == 44);
   }
 
   {
-    std::multiset s({ 1, 2, 1, INT_MAX, 3 }, test_allocator<int>(0, 45));
+    cuda::std::multiset s({ 1, 2, 1, INT_MAX, 3 }, test_allocator<int>(0, 45));
 
     ASSERT_SAME_TYPE(decltype(s),
-                     std::multiset<int, std::less<int>, test_allocator<int> >);
+                     cuda::std::multiset<int, cuda::std::less<int>, test_allocator<int> >);
     const int expected_s[] = { 1, 1, 2, 3, INT_MAX };
-    assert(std::equal(s.begin(), s.end(), std::begin(expected_s),
-                      std::end(expected_s)));
+    assert(cuda::std::equal(s.begin(), s.end(), cuda::std::begin(expected_s),
+                      cuda::std::end(expected_s)));
     assert(s.get_allocator().get_id() == 45);
   }
 
   {
     NotAnAllocator a;
-    std::multiset s{ a }; // multiset(initializer_list<NotAnAllocator>)
-    ASSERT_SAME_TYPE(decltype(s), std::multiset<NotAnAllocator>);
+    cuda::std::multiset s{ a }; // multiset(initializer_list<NotAnAllocator>)
+    ASSERT_SAME_TYPE(decltype(s), cuda::std::multiset<NotAnAllocator>);
     assert(s.size() == 1);
   }
 
   {
-    std::multiset<long> source;
-    std::multiset s{ source, source }; // multiset(initializer_list<multiset<long>>)
-    ASSERT_SAME_TYPE(decltype(s), std::multiset<std::multiset<long> >);
+    cuda::std::multiset<long> source;
+    cuda::std::multiset s{ source, source }; // multiset(initializer_list<multiset<long>>)
+    ASSERT_SAME_TYPE(decltype(s), cuda::std::multiset<cuda::std::multiset<long> >);
     assert(s.size() == 2);
   }
 
   {
     NotAnAllocator a;
-    std::multiset s{ a, a }; // multiset(initializer_list<NotAnAllocator>)
-    ASSERT_SAME_TYPE(decltype(s), std::multiset<NotAnAllocator>);
+    cuda::std::multiset s{ a, a }; // multiset(initializer_list<NotAnAllocator>)
+    ASSERT_SAME_TYPE(decltype(s), cuda::std::multiset<NotAnAllocator>);
     assert(s.size() == 2);
   }
 
   {
     int source[3] = { 3, 4, 5 };
-    std::multiset s(source, source + 3); // multiset(InputIterator, InputIterator)
-    ASSERT_SAME_TYPE(decltype(s), std::multiset<int>);
+    cuda::std::multiset s(source, source + 3); // multiset(InputIterator, InputIterator)
+    ASSERT_SAME_TYPE(decltype(s), cuda::std::multiset<int>);
     assert(s.size() == 3);
   }
 
   {
     int source[3] = { 3, 4, 5 };
-    std::multiset s{ source, source + 3 }; // multiset(initializer_list<int*>)
-    ASSERT_SAME_TYPE(decltype(s), std::multiset<int *>);
+    cuda::std::multiset s{ source, source + 3 }; // multiset(initializer_list<int*>)
+    ASSERT_SAME_TYPE(decltype(s), cuda::std::multiset<int *>);
     assert(s.size() == 2);
   }
 

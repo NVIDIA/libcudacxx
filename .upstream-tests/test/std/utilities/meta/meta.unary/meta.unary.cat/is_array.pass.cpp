@@ -10,23 +10,23 @@
 
 // is_array
 
-#include <type_traits>
-#include <cstddef>        // for std::nullptr_t
+#include <cuda/std/type_traits>
+#include <cuda/std/cstddef>        // for cuda::std::nullptr_t
 #include "test_macros.h"
 
 template <class T>
 __host__ __device__
 void test_is_array()
 {
-    static_assert( std::is_array<T>::value, "");
-    static_assert( std::is_array<const T>::value, "");
-    static_assert( std::is_array<volatile T>::value, "");
-    static_assert( std::is_array<const volatile T>::value, "");
+    static_assert( cuda::std::is_array<T>::value, "");
+    static_assert( cuda::std::is_array<const T>::value, "");
+    static_assert( cuda::std::is_array<volatile T>::value, "");
+    static_assert( cuda::std::is_array<const volatile T>::value, "");
 #if TEST_STD_VER > 14
-    static_assert( std::is_array_v<T>, "");
-    static_assert( std::is_array_v<const T>, "");
-    static_assert( std::is_array_v<volatile T>, "");
-    static_assert( std::is_array_v<const volatile T>, "");
+    static_assert( cuda::std::is_array_v<T>, "");
+    static_assert( cuda::std::is_array_v<const T>, "");
+    static_assert( cuda::std::is_array_v<volatile T>, "");
+    static_assert( cuda::std::is_array_v<const volatile T>, "");
 #endif
 }
 
@@ -34,15 +34,15 @@ template <class T>
 __host__ __device__
 void test_is_not_array()
 {
-    static_assert(!std::is_array<T>::value, "");
-    static_assert(!std::is_array<const T>::value, "");
-    static_assert(!std::is_array<volatile T>::value, "");
-    static_assert(!std::is_array<const volatile T>::value, "");
+    static_assert(!cuda::std::is_array<T>::value, "");
+    static_assert(!cuda::std::is_array<const T>::value, "");
+    static_assert(!cuda::std::is_array<volatile T>::value, "");
+    static_assert(!cuda::std::is_array<const volatile T>::value, "");
 #if TEST_STD_VER > 14
-    static_assert(!std::is_array_v<T>, "");
-    static_assert(!std::is_array_v<const T>, "");
-    static_assert(!std::is_array_v<volatile T>, "");
-    static_assert(!std::is_array_v<const volatile T>, "");
+    static_assert(!cuda::std::is_array_v<T>, "");
+    static_assert(!cuda::std::is_array_v<const T>, "");
+    static_assert(!cuda::std::is_array_v<volatile T>, "");
+    static_assert(!cuda::std::is_array_v<const volatile T>, "");
 #endif
 }
 
@@ -78,7 +78,7 @@ int main(int, char**)
     test_is_array<char[]>();
     test_is_array<Union[]>();
 
-    test_is_not_array<std::nullptr_t>();
+    test_is_not_array<cuda::std::nullptr_t>();
     test_is_not_array<void>();
     test_is_not_array<int&>();
     test_is_not_array<int&&>();

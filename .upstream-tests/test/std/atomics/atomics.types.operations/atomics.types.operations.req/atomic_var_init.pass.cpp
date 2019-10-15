@@ -9,19 +9,19 @@
 // UNSUPPORTED: libcpp-has-no-threads, pre-sm-60
 // XFAIL: c++98, c++03
 
-// <atomic>
+// <cuda/std/atomic>
 
 // #define ATOMIC_VAR_INIT(value)
 
-#include <atomic>
-#include <type_traits>
-#include <cassert>
+#include <cuda/std/atomic>
+#include <cuda/std/type_traits>
+#include <cuda/std/cassert>
 
 #include "test_macros.h"
 
 int main(int, char**)
 {
-    std::atomic<int> v = ATOMIC_VAR_INIT(5);
+    cuda::std::atomic<int> v = ATOMIC_VAR_INIT(5);
     assert(v == 5);
 
   return 0;

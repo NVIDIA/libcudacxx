@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// <unordered_map>
+// <cuda/std/unordered_map>
 // UNSUPPORTED: c++98, c++03, c++11, c++14
 // UNSUPPORTED: libcpp-no-deduction-guides
 
@@ -56,16 +56,16 @@
 //                    Allocator)
 //   -> unordered_multimap<Key, T, Hash, equal_to<Key>, Allocator>;
 
-#include <algorithm> // is_permutation
-#include <cassert>
-#include <climits> // INT_MAX
-#include <type_traits>
-#include <unordered_map>
+#include <cuda/std/algorithm> // is_permutation
+#include <cuda/std/cassert>
+#include <cuda/std/climits> // INT_MAX
+#include <cuda/std/type_traits>
+#include <cuda/std/unordered_map>
 
 #include "test_allocator.h"
 
-using P = std::pair<int, long>;
-using PC = std::pair<const int, long>;
+using P = cuda::std::pair<int, long>;
+using PC = cuda::std::pair<const int, long>;
 
 int main(int, char**)
 {
@@ -73,130 +73,130 @@ int main(int, char**)
 
     {
     const P arr[] = { {1,1}, {2,2}, {1,1}, {INT_MAX,1}, {3,1} };
-    std::unordered_multimap m(std::begin(arr), std::end(arr));
-    ASSERT_SAME_TYPE(decltype(m), std::unordered_multimap<int, long>);
-    assert(std::is_permutation(m.begin(), m.end(), std::begin(expected_m), std::end(expected_m)));
+    cuda::std::unordered_multimap m(cuda::std::begin(arr), cuda::std::end(arr));
+    ASSERT_SAME_TYPE(decltype(m), cuda::std::unordered_multimap<int, long>);
+    assert(cuda::std::is_permutation(m.begin(), m.end(), cuda::std::begin(expected_m), cuda::std::end(expected_m)));
     }
 
     {
     const P arr[] = { {1,1}, {2,2}, {1,1}, {INT_MAX,1}, {3,1} };
-    std::unordered_multimap m(std::begin(arr), std::end(arr), 42);
-    ASSERT_SAME_TYPE(decltype(m), std::unordered_multimap<int, long>);
-    assert(std::is_permutation(m.begin(), m.end(), std::begin(expected_m), std::end(expected_m)));
+    cuda::std::unordered_multimap m(cuda::std::begin(arr), cuda::std::end(arr), 42);
+    ASSERT_SAME_TYPE(decltype(m), cuda::std::unordered_multimap<int, long>);
+    assert(cuda::std::is_permutation(m.begin(), m.end(), cuda::std::begin(expected_m), cuda::std::end(expected_m)));
     }
 
     {
     const P arr[] = { {1,1}, {2,2}, {1,1}, {INT_MAX,1}, {3,1} };
-    std::unordered_multimap m(std::begin(arr), std::end(arr), 42, std::hash<short>());
-    ASSERT_SAME_TYPE(decltype(m), std::unordered_multimap<int, long, std::hash<short>, std::equal_to<int>>);
-    assert(std::is_permutation(m.begin(), m.end(), std::begin(expected_m), std::end(expected_m)));
+    cuda::std::unordered_multimap m(cuda::std::begin(arr), cuda::std::end(arr), 42, cuda::std::hash<short>());
+    ASSERT_SAME_TYPE(decltype(m), cuda::std::unordered_multimap<int, long, cuda::std::hash<short>, cuda::std::equal_to<int>>);
+    assert(cuda::std::is_permutation(m.begin(), m.end(), cuda::std::begin(expected_m), cuda::std::end(expected_m)));
     }
 
     {
     const P arr[] = { {1,1}, {2,2}, {1,1}, {INT_MAX,1}, {3,1} };
-    std::unordered_multimap m(std::begin(arr), std::end(arr), 42, std::hash<short>(), std::equal_to<>());
-    ASSERT_SAME_TYPE(decltype(m), std::unordered_multimap<int, long, std::hash<short>, std::equal_to<>>);
-    assert(std::is_permutation(m.begin(), m.end(), std::begin(expected_m), std::end(expected_m)));
+    cuda::std::unordered_multimap m(cuda::std::begin(arr), cuda::std::end(arr), 42, cuda::std::hash<short>(), cuda::std::equal_to<>());
+    ASSERT_SAME_TYPE(decltype(m), cuda::std::unordered_multimap<int, long, cuda::std::hash<short>, cuda::std::equal_to<>>);
+    assert(cuda::std::is_permutation(m.begin(), m.end(), cuda::std::begin(expected_m), cuda::std::end(expected_m)));
     }
 
     {
     const P arr[] = { {1,1}, {2,2}, {1,1}, {INT_MAX,1}, {3,1} };
-    std::unordered_multimap m(std::begin(arr), std::end(arr), 42, std::hash<short>(), std::equal_to<>(), test_allocator<PC>(0, 41));
-    ASSERT_SAME_TYPE(decltype(m), std::unordered_multimap<int, long, std::hash<short>, std::equal_to<>, test_allocator<PC>>);
-    assert(std::is_permutation(m.begin(), m.end(), std::begin(expected_m), std::end(expected_m)));
+    cuda::std::unordered_multimap m(cuda::std::begin(arr), cuda::std::end(arr), 42, cuda::std::hash<short>(), cuda::std::equal_to<>(), test_allocator<PC>(0, 41));
+    ASSERT_SAME_TYPE(decltype(m), cuda::std::unordered_multimap<int, long, cuda::std::hash<short>, cuda::std::equal_to<>, test_allocator<PC>>);
+    assert(cuda::std::is_permutation(m.begin(), m.end(), cuda::std::begin(expected_m), cuda::std::end(expected_m)));
     assert(m.get_allocator().get_id() == 41);
     }
 
     {
-    std::unordered_multimap<int, long> source;
-    std::unordered_multimap m(source);
+    cuda::std::unordered_multimap<int, long> source;
+    cuda::std::unordered_multimap m(source);
     ASSERT_SAME_TYPE(decltype(m), decltype(source));
     assert(m.size() == 0);
     }
 
     {
-    std::unordered_multimap<int, long> source;
-    std::unordered_multimap m{source};  // braces instead of parens
+    cuda::std::unordered_multimap<int, long> source;
+    cuda::std::unordered_multimap m{source};  // braces instead of parens
     ASSERT_SAME_TYPE(decltype(m), decltype(source));
     assert(m.size() == 0);
     }
 
     {
-    std::unordered_multimap<int, long, std::hash<short>, std::equal_to<>, test_allocator<PC>> source;
+    cuda::std::unordered_multimap<int, long, cuda::std::hash<short>, cuda::std::equal_to<>, test_allocator<PC>> source;
     test_allocator<PC> a(0, 42);
-    std::unordered_multimap m(source, a);
+    cuda::std::unordered_multimap m(source, a);
     ASSERT_SAME_TYPE(decltype(m), decltype(source));
     assert(m.get_allocator().get_id() == 42);
     assert(m.size() == 0);
     }
 
     {
-    std::unordered_multimap<int, long, std::hash<short>, std::equal_to<>, test_allocator<PC>> source;
+    cuda::std::unordered_multimap<int, long, cuda::std::hash<short>, cuda::std::equal_to<>, test_allocator<PC>> source;
     test_allocator<PC> a(0, 43);
-    std::unordered_multimap m{source, a};  // braces instead of parens
+    cuda::std::unordered_multimap m{source, a};  // braces instead of parens
     ASSERT_SAME_TYPE(decltype(m), decltype(source));
     assert(m.get_allocator().get_id() == 43);
     assert(m.size() == 0);
     }
 
     {
-    std::unordered_multimap m { P{1,1L}, P{2,2L}, P{1,1L}, P{INT_MAX,1L}, P{3,1L} };
-    ASSERT_SAME_TYPE(decltype(m), std::unordered_multimap<int, long>);
-    assert(std::is_permutation(m.begin(), m.end(), std::begin(expected_m), std::end(expected_m)));
+    cuda::std::unordered_multimap m { P{1,1L}, P{2,2L}, P{1,1L}, P{INT_MAX,1L}, P{3,1L} };
+    ASSERT_SAME_TYPE(decltype(m), cuda::std::unordered_multimap<int, long>);
+    assert(cuda::std::is_permutation(m.begin(), m.end(), cuda::std::begin(expected_m), cuda::std::end(expected_m)));
     }
 
     {
-    std::unordered_multimap m({ P{1,1L}, P{2,2L}, P{1,1L}, P{INT_MAX,1L}, P{3,1L} }, 42);
-    ASSERT_SAME_TYPE(decltype(m), std::unordered_multimap<int, long>);
-    assert(std::is_permutation(m.begin(), m.end(), std::begin(expected_m), std::end(expected_m)));
+    cuda::std::unordered_multimap m({ P{1,1L}, P{2,2L}, P{1,1L}, P{INT_MAX,1L}, P{3,1L} }, 42);
+    ASSERT_SAME_TYPE(decltype(m), cuda::std::unordered_multimap<int, long>);
+    assert(cuda::std::is_permutation(m.begin(), m.end(), cuda::std::begin(expected_m), cuda::std::end(expected_m)));
     }
 
     {
-    std::unordered_multimap m({ P{1,1L}, P{2,2L}, P{1,1L}, P{INT_MAX,1L}, P{3,1L} }, 42, std::hash<short>());
-    ASSERT_SAME_TYPE(decltype(m), std::unordered_multimap<int, long, std::hash<short>>);
-    assert(std::is_permutation(m.begin(), m.end(), std::begin(expected_m), std::end(expected_m)));
+    cuda::std::unordered_multimap m({ P{1,1L}, P{2,2L}, P{1,1L}, P{INT_MAX,1L}, P{3,1L} }, 42, cuda::std::hash<short>());
+    ASSERT_SAME_TYPE(decltype(m), cuda::std::unordered_multimap<int, long, cuda::std::hash<short>>);
+    assert(cuda::std::is_permutation(m.begin(), m.end(), cuda::std::begin(expected_m), cuda::std::end(expected_m)));
     }
 
     {
-    std::unordered_multimap m({ P{1,1L}, P{2,2L}, P{1,1L}, P{INT_MAX,1L}, P{3,1L} }, 42, std::hash<short>(), std::equal_to<>());
-    ASSERT_SAME_TYPE(decltype(m), std::unordered_multimap<int, long, std::hash<short>, std::equal_to<>>);
-    assert(std::is_permutation(m.begin(), m.end(), std::begin(expected_m), std::end(expected_m)));
+    cuda::std::unordered_multimap m({ P{1,1L}, P{2,2L}, P{1,1L}, P{INT_MAX,1L}, P{3,1L} }, 42, cuda::std::hash<short>(), cuda::std::equal_to<>());
+    ASSERT_SAME_TYPE(decltype(m), cuda::std::unordered_multimap<int, long, cuda::std::hash<short>, cuda::std::equal_to<>>);
+    assert(cuda::std::is_permutation(m.begin(), m.end(), cuda::std::begin(expected_m), cuda::std::end(expected_m)));
     }
 
     {
-    std::unordered_multimap m({ P{1,1L}, P{2,2L}, P{1,1L}, P{INT_MAX,1L}, P{3,1L} }, 42, std::hash<short>(), std::equal_to<>(), test_allocator<PC>(0, 44));
-    ASSERT_SAME_TYPE(decltype(m), std::unordered_multimap<int, long, std::hash<short>, std::equal_to<>, test_allocator<PC>>);
-    assert(std::is_permutation(m.begin(), m.end(), std::begin(expected_m), std::end(expected_m)));
+    cuda::std::unordered_multimap m({ P{1,1L}, P{2,2L}, P{1,1L}, P{INT_MAX,1L}, P{3,1L} }, 42, cuda::std::hash<short>(), cuda::std::equal_to<>(), test_allocator<PC>(0, 44));
+    ASSERT_SAME_TYPE(decltype(m), cuda::std::unordered_multimap<int, long, cuda::std::hash<short>, cuda::std::equal_to<>, test_allocator<PC>>);
+    assert(cuda::std::is_permutation(m.begin(), m.end(), cuda::std::begin(expected_m), cuda::std::end(expected_m)));
     assert(m.get_allocator().get_id() == 44);
     }
 
     {
     const P arr[] = { {1,1}, {2,2}, {1,1}, {INT_MAX,1}, {3,1} };
-    std::unordered_multimap m(std::begin(arr), std::end(arr), 42, test_allocator<PC>(0, 45));
-    ASSERT_SAME_TYPE(decltype(m), std::unordered_multimap<int, long, std::hash<int>, std::equal_to<int>, test_allocator<PC>>);
-    assert(std::is_permutation(m.begin(), m.end(), std::begin(expected_m), std::end(expected_m)));
+    cuda::std::unordered_multimap m(cuda::std::begin(arr), cuda::std::end(arr), 42, test_allocator<PC>(0, 45));
+    ASSERT_SAME_TYPE(decltype(m), cuda::std::unordered_multimap<int, long, cuda::std::hash<int>, cuda::std::equal_to<int>, test_allocator<PC>>);
+    assert(cuda::std::is_permutation(m.begin(), m.end(), cuda::std::begin(expected_m), cuda::std::end(expected_m)));
     assert(m.get_allocator().get_id() == 45);
     }
 
     {
     const P arr[] = { {1,1}, {2,2}, {1,1}, {INT_MAX,1}, {3,1} };
-    std::unordered_multimap m(std::begin(arr), std::end(arr), 42, std::hash<short>(), test_allocator<PC>(0, 46));
-    ASSERT_SAME_TYPE(decltype(m), std::unordered_multimap<int, long, std::hash<short>, std::equal_to<int>, test_allocator<PC>>);
-    assert(std::is_permutation(m.begin(), m.end(), std::begin(expected_m), std::end(expected_m)));
+    cuda::std::unordered_multimap m(cuda::std::begin(arr), cuda::std::end(arr), 42, cuda::std::hash<short>(), test_allocator<PC>(0, 46));
+    ASSERT_SAME_TYPE(decltype(m), cuda::std::unordered_multimap<int, long, cuda::std::hash<short>, cuda::std::equal_to<int>, test_allocator<PC>>);
+    assert(cuda::std::is_permutation(m.begin(), m.end(), cuda::std::begin(expected_m), cuda::std::end(expected_m)));
     assert(m.get_allocator().get_id() == 46);
     }
 
     {
-    std::unordered_multimap m({ P{1,1L}, P{2,2L}, P{1,1L}, P{INT_MAX,1L}, P{3,1L} }, 42, test_allocator<PC>(0, 47));
-    ASSERT_SAME_TYPE(decltype(m), std::unordered_multimap<int, long, std::hash<int>, std::equal_to<int>, test_allocator<PC>>);
-    assert(std::is_permutation(m.begin(), m.end(), std::begin(expected_m), std::end(expected_m)));
+    cuda::std::unordered_multimap m({ P{1,1L}, P{2,2L}, P{1,1L}, P{INT_MAX,1L}, P{3,1L} }, 42, test_allocator<PC>(0, 47));
+    ASSERT_SAME_TYPE(decltype(m), cuda::std::unordered_multimap<int, long, cuda::std::hash<int>, cuda::std::equal_to<int>, test_allocator<PC>>);
+    assert(cuda::std::is_permutation(m.begin(), m.end(), cuda::std::begin(expected_m), cuda::std::end(expected_m)));
     assert(m.get_allocator().get_id() == 47);
     }
 
     {
-    std::unordered_multimap m({ P{1,1L}, P{2,2L}, P{1,1L}, P{INT_MAX,1L}, P{3,1L} }, 42, std::hash<short>(), test_allocator<PC>(0, 48));
-    ASSERT_SAME_TYPE(decltype(m), std::unordered_multimap<int, long, std::hash<short>, std::equal_to<int>, test_allocator<PC>>);
-    assert(std::is_permutation(m.begin(), m.end(), std::begin(expected_m), std::end(expected_m)));
+    cuda::std::unordered_multimap m({ P{1,1L}, P{2,2L}, P{1,1L}, P{INT_MAX,1L}, P{3,1L} }, 42, cuda::std::hash<short>(), test_allocator<PC>(0, 48));
+    ASSERT_SAME_TYPE(decltype(m), cuda::std::unordered_multimap<int, long, cuda::std::hash<short>, cuda::std::equal_to<int>, test_allocator<PC>>);
+    assert(cuda::std::is_permutation(m.begin(), m.end(), cuda::std::begin(expected_m), cuda::std::end(expected_m)));
     assert(m.get_allocator().get_id() == 48);
     }
 

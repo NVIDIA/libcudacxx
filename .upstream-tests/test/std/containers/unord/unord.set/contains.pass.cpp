@@ -8,10 +8,10 @@
 
 // UNSUPPORTED: c++98, c++03, c++11, c++14, c++17
 
-#include <cassert>
-#include <unordered_set>
+#include <cuda/std/cassert>
+#include <cuda/std/unordered_set>
 
-// <unordered_set>
+// <cuda/std/unordered_set>
 
 // bool contains(const key_type& x) const;
 
@@ -31,12 +31,12 @@ struct E { int a = 1; double b = 1; char c = 1; };
 int main(int, char**)
 {
     {
-        test<std::unordered_set<int>, int>(14, 10, 11, 12, 13);
-        test<std::unordered_set<char>, char>('e', 'a', 'b', 'c', 'd');
+        test<cuda::std::unordered_set<int>, int>(14, 10, 11, 12, 13);
+        test<cuda::std::unordered_set<char>, char>('e', 'a', 'b', 'c', 'd');
     }
     {
-        test<std::unordered_multiset<int>, int>(14, 10, 11, 12, 13);
-        test<std::unordered_multiset<char>, char>('e', 'a', 'b', 'c', 'd');
+        test<cuda::std::unordered_multiset<int>, int>(14, 10, 11, 12, 13);
+        test<cuda::std::unordered_multiset<char>, char>('e', 'a', 'b', 'c', 'd');
     }
 
     return 0;

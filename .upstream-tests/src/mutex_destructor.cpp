@@ -14,26 +14,26 @@
 // In order to avoid ODR violations within libc++ itself, we need to ensure
 // that *nothing* sees the non-trivial mutex declaration. For this reason
 // we re-declare the entire class in this file instead of using
-// _LIBCPP_BUILDING_LIBRARY to change the definition in the headers.
+// _LIBCUDACXX_BUILDING_LIBRARY to change the definition in the headers.
 
 #include "__config"
 #include "__threading_support"
 
-#if !defined(_LIBCPP_HAS_NO_THREADS)
-#if _LIBCPP_ABI_VERSION == 1 || !defined(_LIBCPP_HAS_TRIVIAL_MUTEX_DESTRUCTION)
+#if !defined(_LIBCUDACXX_HAS_NO_THREADS)
+#if _LIBCUDACXX_ABI_VERSION == 1 || !defined(_LIBCUDACXX_HAS_TRIVIAL_MUTEX_DESTRUCTION)
 #define NEEDS_MUTEX_DESTRUCTOR
 #endif
 #endif
 
-_LIBCPP_BEGIN_NAMESPACE_STD
+_LIBCUDACXX_BEGIN_NAMESPACE_STD
 
 #ifdef NEEDS_MUTEX_DESTRUCTOR
-class _LIBCPP_TYPE_VIS mutex
+class _LIBCUDACXX_TYPE_VIS mutex
 {
-    __libcpp_mutex_t __m_ = _LIBCPP_MUTEX_INITIALIZER;
+    __libcpp_mutex_t __m_ = _LIBCUDACXX_MUTEX_INITIALIZER;
 
 public:
-    _LIBCPP_ALWAYS_INLINE _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_ALWAYS_INLINE _LIBCUDACXX_INLINE_VISIBILITY
     constexpr mutex() = default;
     mutex(const mutex&) = delete;
     mutex& operator=(const mutex&) = delete;
@@ -46,6 +46,6 @@ mutex::~mutex() _NOEXCEPT
     __libcpp_mutex_destroy(&__m_);
 }
 
-#endif // !_LIBCPP_HAS_NO_THREADS
-_LIBCPP_END_NAMESPACE_STD
+#endif // !_LIBCUDACXX_HAS_NO_THREADS
+_LIBCUDACXX_END_NAMESPACE_STD
 

@@ -7,24 +7,24 @@
 //===----------------------------------------------------------------------===//
 
 // UNSUPPORTED: libcpp-no-exceptions
-// <regex>
+// <cuda/std/regex>
 
 // template <class charT, class traits = regex_traits<charT>> class basic_regex;
 
 // template <class ST, class SA>
 //    basic_regex(const basic_string<charT, ST, SA>& s);
 
-#include <regex>
-#include <cassert>
+#include <cuda/std/regex>
+#include <cuda/std/cassert>
 #include "test_macros.h"
 
 static bool error_range_thrown(const char *pat)
 {
     bool result = false;
     try {
-        std::regex re(pat);
-    } catch (const std::regex_error &ex) {
-        result = (ex.code() == std::regex_constants::error_range);
+        cuda::std::regex re(pat);
+    } catch (const cuda::std::regex_error &ex) {
+        result = (ex.code() == cuda::std::regex_constants::error_range);
     }
     return result;
 }

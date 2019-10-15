@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// <map>
+// <cuda/std/map>
 // UNSUPPORTED: c++98, c++03, c++11, c++14
 // UNSUPPORTED: libcpp-no-deduction-guides
 
@@ -26,80 +26,80 @@
 // multimap(initializer_list<Key>, Allocator)
 //   -> multimap<Key, less<Key>, Allocator>;
 
-#include <algorithm> // std::equal
-#include <cassert>
-#include <climits> // INT_MAX
-#include <functional>
-#include <map>
-#include <type_traits>
+#include <cuda/std/algorithm> // cuda::std::equal
+#include <cuda/std/cassert>
+#include <cuda/std/climits> // INT_MAX
+#include <cuda/std/functional>
+#include <cuda/std/map>
+#include <cuda/std/type_traits>
 
 #include "test_allocator.h"
 
-using P = std::pair<int, long>;
-using PC = std::pair<const int, long>;
-using PCC = std::pair<const int, const long>;
+using P = cuda::std::pair<int, long>;
+using PC = cuda::std::pair<const int, long>;
+using PCC = cuda::std::pair<const int, const long>;
 
 int main(int, char**)
 {
     {
     const PCC arr[] = { {1,1L}, {2,2L}, {1,1L}, {INT_MAX,1L}, {3,1L} };
-    std::multimap m(std::begin(arr), std::end(arr));
+    cuda::std::multimap m(cuda::std::begin(arr), cuda::std::end(arr));
 
-    ASSERT_SAME_TYPE(decltype(m), std::multimap<int, const long>);
+    ASSERT_SAME_TYPE(decltype(m), cuda::std::multimap<int, const long>);
     const PCC expected_m[] = { {1,1L}, {1,1L}, {2,2L}, {3,1L}, {INT_MAX,1L} };
-    assert(std::equal(m.begin(), m.end(), std::begin(expected_m), std::end(expected_m)));
+    assert(cuda::std::equal(m.begin(), m.end(), cuda::std::begin(expected_m), cuda::std::end(expected_m)));
     }
 
     {
     const PCC arr[] = { {1,1L}, {2,2L}, {1,1L}, {INT_MAX,1L}, {3,1L} };
-    std::multimap m(std::begin(arr), std::end(arr), std::greater<int>());
+    cuda::std::multimap m(cuda::std::begin(arr), cuda::std::end(arr), cuda::std::greater<int>());
 
-    ASSERT_SAME_TYPE(decltype(m), std::multimap<int, const long, std::greater<int>>);
+    ASSERT_SAME_TYPE(decltype(m), cuda::std::multimap<int, const long, cuda::std::greater<int>>);
     const PCC expected_m[] = { {INT_MAX,1L}, {3,1L}, {2,2L}, {1,1L}, {1,1L} };
-    assert(std::equal(m.begin(), m.end(), std::begin(expected_m), std::end(expected_m)));
+    assert(cuda::std::equal(m.begin(), m.end(), cuda::std::begin(expected_m), cuda::std::end(expected_m)));
     }
 
     {
     const PCC arr[] = { {1,1L}, {2,2L}, {1,1L}, {INT_MAX,1L}, {3,1L} };
-    std::multimap m(std::begin(arr), std::end(arr), std::greater<int>(), test_allocator<PCC>(0, 42));
+    cuda::std::multimap m(cuda::std::begin(arr), cuda::std::end(arr), cuda::std::greater<int>(), test_allocator<PCC>(0, 42));
 
-    ASSERT_SAME_TYPE(decltype(m), std::multimap<int, const long, std::greater<int>, test_allocator<PCC>>);
+    ASSERT_SAME_TYPE(decltype(m), cuda::std::multimap<int, const long, cuda::std::greater<int>, test_allocator<PCC>>);
     const PCC expected_m[] = { {INT_MAX,1L}, {3,1L}, {2,2L}, {1,1L}, {1,1L} };
-    assert(std::equal(m.begin(), m.end(), std::begin(expected_m), std::end(expected_m)));
+    assert(cuda::std::equal(m.begin(), m.end(), cuda::std::begin(expected_m), cuda::std::end(expected_m)));
     assert(m.get_allocator().get_id() == 42);
     }
 
     {
-    std::multimap m{ PC{1,1L}, PC{2,2L}, PC{1,1L}, PC{INT_MAX,1L}, PC{3,1L} };
+    cuda::std::multimap m{ PC{1,1L}, PC{2,2L}, PC{1,1L}, PC{INT_MAX,1L}, PC{3,1L} };
 
-    ASSERT_SAME_TYPE(decltype(m), std::multimap<int, long>);
+    ASSERT_SAME_TYPE(decltype(m), cuda::std::multimap<int, long>);
     const PC expected_m[] = { {1,1L}, {1,1L}, {2,2L}, {3,1L}, {INT_MAX,1L} };
-    assert(std::equal(m.begin(), m.end(), std::begin(expected_m), std::end(expected_m)));
+    assert(cuda::std::equal(m.begin(), m.end(), cuda::std::begin(expected_m), cuda::std::end(expected_m)));
     }
 
     {
-    std::multimap m({ PC{1,1L}, PC{2,2L}, PC{1,1L}, PC{INT_MAX,1L}, PC{3,1L} }, std::greater<int>());
+    cuda::std::multimap m({ PC{1,1L}, PC{2,2L}, PC{1,1L}, PC{INT_MAX,1L}, PC{3,1L} }, cuda::std::greater<int>());
 
-    ASSERT_SAME_TYPE(decltype(m), std::multimap<int, long, std::greater<int>>);
+    ASSERT_SAME_TYPE(decltype(m), cuda::std::multimap<int, long, cuda::std::greater<int>>);
     const PC expected_m[] = { {INT_MAX,1L}, {3,1L}, {2,2L}, {1,1L}, {1,1L} };
-    assert(std::equal(m.begin(), m.end(), std::begin(expected_m), std::end(expected_m)));
+    assert(cuda::std::equal(m.begin(), m.end(), cuda::std::begin(expected_m), cuda::std::end(expected_m)));
     }
 
     {
-    std::multimap m({ PC{1,1L}, PC{2,2L}, PC{1,1L}, PC{INT_MAX,1L}, PC{3,1L} }, std::greater<int>(), test_allocator<PC>(0, 43));
+    cuda::std::multimap m({ PC{1,1L}, PC{2,2L}, PC{1,1L}, PC{INT_MAX,1L}, PC{3,1L} }, cuda::std::greater<int>(), test_allocator<PC>(0, 43));
 
-    ASSERT_SAME_TYPE(decltype(m), std::multimap<int, long, std::greater<int>, test_allocator<PC>>);
+    ASSERT_SAME_TYPE(decltype(m), cuda::std::multimap<int, long, cuda::std::greater<int>, test_allocator<PC>>);
     const PC expected_m[] = { {INT_MAX,1L}, {3,1L}, {2,2L}, {1,1L}, {1,1L} };
-    assert(std::equal(m.begin(), m.end(), std::begin(expected_m), std::end(expected_m)));
+    assert(cuda::std::equal(m.begin(), m.end(), cuda::std::begin(expected_m), cuda::std::end(expected_m)));
     assert(m.get_allocator().get_id() == 43);
     }
 
     {
-    std::multimap m({ PC{1,1L}, PC{2,2L}, PC{1,1L}, PC{INT_MAX,1L}, PC{3,1L} }, test_allocator<PC>(0, 45));
+    cuda::std::multimap m({ PC{1,1L}, PC{2,2L}, PC{1,1L}, PC{INT_MAX,1L}, PC{3,1L} }, test_allocator<PC>(0, 45));
 
-    ASSERT_SAME_TYPE(decltype(m), std::multimap<int, long, std::less<int>, test_allocator<PC>>);
+    ASSERT_SAME_TYPE(decltype(m), cuda::std::multimap<int, long, cuda::std::less<int>, test_allocator<PC>>);
     const PC expected_m[] = { {1,1L}, {1,1L}, {2,2L}, {3,1L}, {INT_MAX,1L} };
-    assert(std::equal(m.begin(), m.end(), std::begin(expected_m), std::end(expected_m)));
+    assert(cuda::std::equal(m.begin(), m.end(), cuda::std::begin(expected_m), cuda::std::end(expected_m)));
     assert(m.get_allocator().get_id() == 45);
     }
 

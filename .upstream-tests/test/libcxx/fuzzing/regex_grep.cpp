@@ -10,8 +10,8 @@
 // XFAIL
 
 #include "fuzzing.h"
-#include <cassert>
-#include <cstring> // for strlen
+#include <cuda/std/cassert>
+#include <cuda/std/cstring> // for strlen
 
 const char * test_cases[] = {
 	"",
@@ -28,7 +28,7 @@ int main(int, char**)
 {
 	for (size_t i = 0; i < k_num_tests; ++i)
 		{
-		const size_t   size = std::strlen(test_cases[i]);
+		const size_t   size = cuda::std::strlen(test_cases[i]);
 		const uint8_t *data = (const uint8_t *) test_cases[i];
 		assert(0 == fuzzing::regex_grep(data, size));
 		}

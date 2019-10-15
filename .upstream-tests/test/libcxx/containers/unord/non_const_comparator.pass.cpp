@@ -14,9 +14,9 @@
 //
 // See PR41360.
 
-#include <unordered_set>
-#include <unordered_map>
-#include <functional>
+#include <cuda/std/unordered_set>
+#include <cuda/std/unordered_map>
+#include <cuda/std/functional>
 
 #include "test_macros.h"
 
@@ -27,7 +27,7 @@ void test_set() {
   struct KeyDerived;  // derives from KeyBase, but incomplete at this point
 
   // Name the type but don't instantiate it.
-  using C = Container<KeyDerived*, std::hash<KeyBase*>, std::equal_to<KeyBase*>>;
+  using C = Container<KeyDerived*, cuda::std::hash<KeyBase*>, cuda::std::equal_to<KeyBase*>>;
 
   // Instantiate it but don't ODR use any members.
   typename C::value_type dummy; (void)dummy;
@@ -43,7 +43,7 @@ void test_map() {
   struct Value { };
   struct KeyBase { };
   struct KeyDerived;
-  using C = Container<KeyDerived*, Value, std::hash<KeyBase*>, std::equal_to<KeyBase*>>;
+  using C = Container<KeyDerived*, Value, cuda::std::hash<KeyBase*>, cuda::std::equal_to<KeyBase*>>;
   typename C::value_type dummy; (void)dummy;
   struct KeyDerived : KeyBase { };
   C c;
@@ -51,10 +51,10 @@ void test_map() {
 
 int main(int, char**) {
   // expected-no-disagnostics
-  test_set<std::unordered_set>();
-  test_set<std::unordered_multiset>();
-  test_map<std::unordered_map>();
-  test_map<std::unordered_multimap>();
+  test_set<cuda::std::unordered_set>();
+  test_set<cuda::std::unordered_multiset>();
+  test_map<cuda::std::unordered_map>();
+  test_map<cuda::std::unordered_multimap>();
 
   return 0;
 }

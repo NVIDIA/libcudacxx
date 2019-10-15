@@ -8,14 +8,14 @@
 //
 // UNSUPPORTED: libcpp-has-no-threads, pre-sm-60
 
-// <atomic>
+// <cuda/std/atomic>
 
-#include <atomic>
+#include <cuda/std/atomic>
 
 #include "test_macros.h"
 
-#ifndef _LIBCPP_VERSION
-#error _LIBCPP_VERSION not defined
+#ifndef _LIBCUDACXX_VERSION
+#error _LIBCUDACXX_VERSION not defined
 #endif
 
 int main(int, char**)

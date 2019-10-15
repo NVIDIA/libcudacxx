@@ -8,15 +8,15 @@
 
 // UNSUPPORTED: libcpp-has-no-threads, pre-sm-60
 
-// This test ensures that std::memory_order has the same size under all
+// This test ensures that cuda::std::memory_order has the same size under all
 // standard versions to make sure we're not breaking the ABI. This is
-// relevant because std::memory_order is a scoped enumeration in C++20,
+// relevant because cuda::std::memory_order is a scoped enumeration in C++20,
 // but an unscoped enumeration pre-C++20.
 //
 // See PR40977 for details.
 
-#include <atomic>
-#include <type_traits>
+#include <cuda/std/atomic>
+#include <cuda/std/type_traits>
 
 #include "test_macros.h"
 
@@ -26,9 +26,9 @@ enum cpp17_memory_order {
   cpp17_memory_order_release, cpp17_memory_order_acq_rel, cpp17_memory_order_seq_cst
 };
 
-static_assert((std::is_same<std::underlying_type<cpp17_memory_order>::type,
-                            std::underlying_type<std::memory_order>::type>::value),
-  "std::memory_order should have the same underlying type as a corresponding "
+static_assert((cuda::std::is_same<cuda::std::underlying_type<cpp17_memory_order>::type,
+                            cuda::std::underlying_type<cuda::std::memory_order>::type>::value),
+  "cuda::std::memory_order should have the same underlying type as a corresponding "
   "unscoped enumeration would. Otherwise, our ABI changes from C++17 to C++20.");
 
 int main(int, char**) {

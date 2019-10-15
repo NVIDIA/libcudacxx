@@ -8,7 +8,7 @@
 
 // UNSUPPORTED: c++98, c++03
 
-// <tuple>
+// <cuda/std/tuple>
 
 // template <class... Types> class tuple;
 
@@ -18,14 +18,14 @@
 // Make sure we get the explicit-ness of the constructor right.
 // This is LWG 3158.
 
-#include <tuple>
-#include <memory>
+#include <cuda/std/tuple>
+#include <cuda/std/memory>
 
 
 struct ExplicitDefault { explicit ExplicitDefault() { } };
 
-std::tuple<ExplicitDefault> explicit_default_test() {
-    return {std::allocator_arg, std::allocator<int>()}; // expected-error {{chosen constructor is explicit in copy-initialization}}
+cuda::std::tuple<ExplicitDefault> explicit_default_test() {
+    return {cuda::std::allocator_arg, cuda::std::allocator<int>()}; // expected-error {{chosen constructor is explicit in copy-initialization}}
 }
 
 int main(int, char**) {

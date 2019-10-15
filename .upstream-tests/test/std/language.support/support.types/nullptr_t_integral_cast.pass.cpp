@@ -13,14 +13,14 @@
 // typedef decltype(nullptr) nullptr_t;
 
 
-#include <cstddef>
-#include <cassert>
+#include <cuda/std/cstddef>
+#include <cuda/std/cassert>
 
 #include "test_macros.h"
 
 int main(int, char**)
 {
-    std::ptrdiff_t i = reinterpret_cast<std::ptrdiff_t>(nullptr);
+    cuda::std::ptrdiff_t i = reinterpret_cast<cuda::std::ptrdiff_t>(nullptr);
     assert(i == 0);
 
   return 0;

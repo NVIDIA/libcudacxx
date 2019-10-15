@@ -15,7 +15,7 @@
 // template <typename _Tp> struct __has_operator_addressof
 
 
-#include <type_traits>
+#include <cuda/std/type_traits>
 
 #include "test_macros.h"
 
@@ -59,14 +59,14 @@ struct J
 
 int main(int, char**)
 {
-    static_assert(std::__has_operator_addressof<int>::value == false, "");
-    static_assert(std::__has_operator_addressof<A>::value == false, "");
-    static_assert(std::__has_operator_addressof<B>::value == true, "");
-    static_assert(std::__has_operator_addressof<E>::value == true, "");
-    static_assert(std::__has_operator_addressof<F>::value == true, "");
-    static_assert(std::__has_operator_addressof<G>::value == true, "");
-    static_assert(std::__has_operator_addressof<H>::value == true, "");
-    static_assert(std::__has_operator_addressof<J>::value == true, "");
+    static_assert(cuda::std::__has_operator_addressof<int>::value == false, "");
+    static_assert(cuda::std::__has_operator_addressof<A>::value == false, "");
+    static_assert(cuda::std::__has_operator_addressof<B>::value == true, "");
+    static_assert(cuda::std::__has_operator_addressof<E>::value == true, "");
+    static_assert(cuda::std::__has_operator_addressof<F>::value == true, "");
+    static_assert(cuda::std::__has_operator_addressof<G>::value == true, "");
+    static_assert(cuda::std::__has_operator_addressof<H>::value == true, "");
+    static_assert(cuda::std::__has_operator_addressof<J>::value == true, "");
 
   return 0;
 }

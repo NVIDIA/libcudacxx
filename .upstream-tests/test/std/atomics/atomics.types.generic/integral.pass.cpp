@@ -8,7 +8,7 @@
 //
 // UNSUPPORTED: libcpp-has-no-threads, pre-sm-60
 
-// <atomic>
+// <cuda/std/atomic>
 
 // template <>
 // struct atomic<integral>
@@ -85,8 +85,8 @@
 //     integral operator^=(integral op);
 // };
 
-#include <atomic>
-#include <cassert>
+#include <cuda/std/atomic>
+#include <cuda/std/cassert>
 
 #include <cmpxchg_loop.h>
 
@@ -105,13 +105,13 @@ do_test()
     ((void)b0); // mark as unused
     obj.store(T(0));
     assert(obj == T(0));
-    obj.store(T(1), std::memory_order_release);
+    obj.store(T(1), cuda::std::memory_order_release);
     assert(obj == T(1));
     assert(obj.load() == T(1));
-    assert(obj.load(std::memory_order_acquire) == T(1));
+    assert(obj.load(cuda::std::memory_order_acquire) == T(1));
     assert(obj.exchange(T(2)) == T(1));
     assert(obj == T(2));
-    assert(obj.exchange(T(3), std::memory_order_relaxed) == T(2));
+    assert(obj.exchange(T(3), cuda::std::memory_order_relaxed) == T(2));
     assert(obj == T(3));
     T x = obj;
     assert(cmpxchg_weak_loop(obj, x, T(2)) == true);
@@ -180,10 +180,10 @@ void test_for_all_types()
     test<Atomic<unsigned long, Scope>, unsigned long>();
     test<Atomic<long long, Scope>, long long>();
     test<Atomic<unsigned long long, Scope>, unsigned long long>();
-#ifndef _LIBCPP_HAS_NO_UNICODE_CHARS
+#ifndef _LIBCUDACXX_HAS_NO_UNICODE_CHARS
     test<Atomic<char16_t, Scope>, char16_t>();
     test<Atomic<char32_t, Scope>, char32_t>();
-#endif  // _LIBCPP_HAS_NO_UNICODE_CHARS
+#endif  // _LIBCUDACXX_HAS_NO_UNICODE_CHARS
     test<Atomic<wchar_t, Scope>, wchar_t>();
 
     test<Atomic<int8_t, Scope>,    int8_t>();
@@ -197,7 +197,7 @@ void test_for_all_types()
 }
 
 template<typename T, cuda::thread_scope Scope>
-using cuda_std_atomic = std::atomic<T>;
+using cuda_std_atomic = cuda::std::atomic<T>;
 
 template<typename T, cuda::thread_scope Scope>
 using cuda_atomic = cuda::atomic<T, Scope>;

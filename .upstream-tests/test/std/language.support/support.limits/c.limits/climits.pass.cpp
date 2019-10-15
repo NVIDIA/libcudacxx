@@ -8,7 +8,7 @@
 
  // test climits
 
-#include <climits>
+#include <cuda/std/climits>
 
 #include "test_macros.h"
 

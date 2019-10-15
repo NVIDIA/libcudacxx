@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// <set>
+// <cuda/std/set>
 // UNSUPPORTED: c++98, c++03, c++11, c++14
 // UNSUPPORTED: libcpp-no-deduction-guides
 // UNSUPPORTED: apple-clang-9.1
@@ -29,12 +29,12 @@
 // set(initializer_list<Key>, Allocator)
 //   -> set<Key, less<Key>, Allocator>;
 
-#include <algorithm> // std::equal
-#include <cassert>
-#include <climits> // INT_MAX
-#include <functional>
-#include <set>
-#include <type_traits>
+#include <cuda/std/algorithm> // cuda::std::equal
+#include <cuda/std/cassert>
+#include <cuda/std/climits> // INT_MAX
+#include <cuda/std/functional>
+#include <cuda/std/set>
+#include <cuda/std/type_traits>
 
 #include "test_allocator.h"
 
@@ -45,143 +45,143 @@ struct NotAnAllocator {
 int main(int, char **) {
   {
     const int arr[] = { 1, 2, 1, INT_MAX, 3 };
-    std::set s(std::begin(arr), std::end(arr));
+    cuda::std::set s(cuda::std::begin(arr), cuda::std::end(arr));
 
-    ASSERT_SAME_TYPE(decltype(s), std::set<int>);
+    ASSERT_SAME_TYPE(decltype(s), cuda::std::set<int>);
     const int expected_s[] = { 1, 2, 3, INT_MAX };
-    assert(std::equal(s.begin(), s.end(), std::begin(expected_s),
-                      std::end(expected_s)));
+    assert(cuda::std::equal(s.begin(), s.end(), cuda::std::begin(expected_s),
+                      cuda::std::end(expected_s)));
   }
 
   {
     const int arr[] = { 1, 2, 1, INT_MAX, 3 };
-    std::set s(std::begin(arr), std::end(arr), std::greater<int>());
+    cuda::std::set s(cuda::std::begin(arr), cuda::std::end(arr), cuda::std::greater<int>());
 
-    ASSERT_SAME_TYPE(decltype(s), std::set<int, std::greater<int> >);
+    ASSERT_SAME_TYPE(decltype(s), cuda::std::set<int, cuda::std::greater<int> >);
     const int expected_s[] = { INT_MAX, 3, 2, 1 };
-    assert(std::equal(s.begin(), s.end(), std::begin(expected_s),
-                      std::end(expected_s)));
+    assert(cuda::std::equal(s.begin(), s.end(), cuda::std::begin(expected_s),
+                      cuda::std::end(expected_s)));
   }
 
   {
     const int arr[] = { 1, 2, 1, INT_MAX, 3 };
-    std::set s(std::begin(arr), std::end(arr), std::greater<int>(),
+    cuda::std::set s(cuda::std::begin(arr), cuda::std::end(arr), cuda::std::greater<int>(),
                test_allocator<int>(0, 42));
 
     ASSERT_SAME_TYPE(decltype(s),
-                     std::set<int, std::greater<int>, test_allocator<int> >);
+                     cuda::std::set<int, cuda::std::greater<int>, test_allocator<int> >);
     const int expected_s[] = { INT_MAX, 3, 2, 1 };
-    assert(std::equal(s.begin(), s.end(), std::begin(expected_s),
-                      std::end(expected_s)));
+    assert(cuda::std::equal(s.begin(), s.end(), cuda::std::begin(expected_s),
+                      cuda::std::end(expected_s)));
     assert(s.get_allocator().get_id() == 42);
   }
 
   {
-    std::set<long> source;
-    std::set s(source);
-    ASSERT_SAME_TYPE(decltype(s), std::set<long>);
+    cuda::std::set<long> source;
+    cuda::std::set s(source);
+    ASSERT_SAME_TYPE(decltype(s), cuda::std::set<long>);
     assert(s.size() == 0);
   }
 
   {
-    std::set<long> source;
-    std::set s{ source };  // braces instead of parens
-    ASSERT_SAME_TYPE(decltype(s), std::set<long>);
+    cuda::std::set<long> source;
+    cuda::std::set s{ source };  // braces instead of parens
+    ASSERT_SAME_TYPE(decltype(s), cuda::std::set<long>);
     assert(s.size() == 0);
   }
 
   {
-    std::set<long> source;
-    std::set s(source, std::set<long>::allocator_type());
-    ASSERT_SAME_TYPE(decltype(s), std::set<long>);
+    cuda::std::set<long> source;
+    cuda::std::set s(source, cuda::std::set<long>::allocator_type());
+    ASSERT_SAME_TYPE(decltype(s), cuda::std::set<long>);
     assert(s.size() == 0);
   }
 
   {
-    std::set s{ 1, 2, 1, INT_MAX, 3 };
+    cuda::std::set s{ 1, 2, 1, INT_MAX, 3 };
 
-    ASSERT_SAME_TYPE(decltype(s), std::set<int>);
+    ASSERT_SAME_TYPE(decltype(s), cuda::std::set<int>);
     const int expected_s[] = { 1, 2, 3, INT_MAX };
-    assert(std::equal(s.begin(), s.end(), std::begin(expected_s),
-                      std::end(expected_s)));
+    assert(cuda::std::equal(s.begin(), s.end(), cuda::std::begin(expected_s),
+                      cuda::std::end(expected_s)));
   }
 
   {
-    std::set s({ 1, 2, 1, INT_MAX, 3 }, std::greater<int>());
+    cuda::std::set s({ 1, 2, 1, INT_MAX, 3 }, cuda::std::greater<int>());
 
-    ASSERT_SAME_TYPE(decltype(s), std::set<int, std::greater<int> >);
+    ASSERT_SAME_TYPE(decltype(s), cuda::std::set<int, cuda::std::greater<int> >);
     const int expected_s[] = { INT_MAX, 3, 2, 1 };
-    assert(std::equal(s.begin(), s.end(), std::begin(expected_s),
-                      std::end(expected_s)));
+    assert(cuda::std::equal(s.begin(), s.end(), cuda::std::begin(expected_s),
+                      cuda::std::end(expected_s)));
   }
 
   {
-    std::set s({ 1, 2, 1, INT_MAX, 3 }, std::greater<int>(),
+    cuda::std::set s({ 1, 2, 1, INT_MAX, 3 }, cuda::std::greater<int>(),
                test_allocator<int>(0, 43));
 
     ASSERT_SAME_TYPE(decltype(s),
-                     std::set<int, std::greater<int>, test_allocator<int> >);
+                     cuda::std::set<int, cuda::std::greater<int>, test_allocator<int> >);
     const int expected_s[] = { INT_MAX, 3, 2, 1 };
-    assert(std::equal(s.begin(), s.end(), std::begin(expected_s),
-                      std::end(expected_s)));
+    assert(cuda::std::equal(s.begin(), s.end(), cuda::std::begin(expected_s),
+                      cuda::std::end(expected_s)));
     assert(s.get_allocator().get_id() == 43);
   }
 
   {
     const int arr[] = { 1, 2, 1, INT_MAX, 3 };
-    std::set s(std::begin(arr), std::end(arr), test_allocator<int>(0, 44));
+    cuda::std::set s(cuda::std::begin(arr), cuda::std::end(arr), test_allocator<int>(0, 44));
 
     ASSERT_SAME_TYPE(decltype(s),
-                     std::set<int, std::less<int>, test_allocator<int> >);
+                     cuda::std::set<int, cuda::std::less<int>, test_allocator<int> >);
     const int expected_s[] = { 1, 2, 3, INT_MAX };
-    assert(std::equal(s.begin(), s.end(), std::begin(expected_s),
-                      std::end(expected_s)));
+    assert(cuda::std::equal(s.begin(), s.end(), cuda::std::begin(expected_s),
+                      cuda::std::end(expected_s)));
     assert(s.get_allocator().get_id() == 44);
   }
 
   {
-    std::set s({ 1, 2, 1, INT_MAX, 3 }, test_allocator<int>(0, 45));
+    cuda::std::set s({ 1, 2, 1, INT_MAX, 3 }, test_allocator<int>(0, 45));
 
     ASSERT_SAME_TYPE(decltype(s),
-                     std::set<int, std::less<int>, test_allocator<int> >);
+                     cuda::std::set<int, cuda::std::less<int>, test_allocator<int> >);
     const int expected_s[] = { 1, 2, 3, INT_MAX };
-    assert(std::equal(s.begin(), s.end(), std::begin(expected_s),
-                      std::end(expected_s)));
+    assert(cuda::std::equal(s.begin(), s.end(), cuda::std::begin(expected_s),
+                      cuda::std::end(expected_s)));
     assert(s.get_allocator().get_id() == 45);
   }
 
   {
     NotAnAllocator a;
-    std::set s{ a }; // set(initializer_list<NotAnAllocator>)
-    ASSERT_SAME_TYPE(decltype(s), std::set<NotAnAllocator>);
+    cuda::std::set s{ a }; // set(initializer_list<NotAnAllocator>)
+    ASSERT_SAME_TYPE(decltype(s), cuda::std::set<NotAnAllocator>);
     assert(s.size() == 1);
   }
 
   {
-    std::set<long> source;
-    std::set s{ source, source }; // set(initializer_list<set<long>>)
-    ASSERT_SAME_TYPE(decltype(s), std::set<std::set<long> >);
+    cuda::std::set<long> source;
+    cuda::std::set s{ source, source }; // set(initializer_list<set<long>>)
+    ASSERT_SAME_TYPE(decltype(s), cuda::std::set<cuda::std::set<long> >);
     assert(s.size() == 1);
   }
 
   {
     NotAnAllocator a;
-    std::set s{ a, a }; // set(initializer_list<NotAnAllocator>)
-    ASSERT_SAME_TYPE(decltype(s), std::set<NotAnAllocator>);
+    cuda::std::set s{ a, a }; // set(initializer_list<NotAnAllocator>)
+    ASSERT_SAME_TYPE(decltype(s), cuda::std::set<NotAnAllocator>);
     assert(s.size() == 1);
   }
 
   {
     int source[3] = { 3, 4, 5 };
-    std::set s(source, source + 3); // set(InputIterator, InputIterator)
-    ASSERT_SAME_TYPE(decltype(s), std::set<int>);
+    cuda::std::set s(source, source + 3); // set(InputIterator, InputIterator)
+    ASSERT_SAME_TYPE(decltype(s), cuda::std::set<int>);
     assert(s.size() == 3);
   }
 
   {
     int source[3] = { 3, 4, 5 };
-    std::set s{ source, source + 3 }; // set(initializer_list<int*>)
-    ASSERT_SAME_TYPE(decltype(s), std::set<int *>);
+    cuda::std::set s{ source, source + 3 }; // set(initializer_list<int*>)
+    ASSERT_SAME_TYPE(decltype(s), cuda::std::set<int *>);
     assert(s.size() == 2);
   }
 

@@ -12,18 +12,18 @@
 
 // XFAIL: gcc-4.8, gcc-4.9
 
-#include <type_traits>
+#include <cuda/std/type_traits>
 #include "test_macros.h"
 
 template <class T>
 __host__ __device__
 void test_is_trivially_copy_constructible()
 {
-    static_assert( std::is_trivially_copy_constructible<T>::value, "");
-    static_assert( std::is_trivially_copy_constructible<const T>::value, "");
+    static_assert( cuda::std::is_trivially_copy_constructible<T>::value, "");
+    static_assert( cuda::std::is_trivially_copy_constructible<const T>::value, "");
 #if TEST_STD_VER > 14
-    static_assert( std::is_trivially_copy_constructible_v<T>, "");
-    static_assert( std::is_trivially_copy_constructible_v<const T>, "");
+    static_assert( cuda::std::is_trivially_copy_constructible_v<T>, "");
+    static_assert( cuda::std::is_trivially_copy_constructible_v<const T>, "");
 #endif
 }
 
@@ -31,11 +31,11 @@ template <class T>
 __host__ __device__
 void test_has_not_trivial_copy_constructor()
 {
-    static_assert(!std::is_trivially_copy_constructible<T>::value, "");
-    static_assert(!std::is_trivially_copy_constructible<const T>::value, "");
+    static_assert(!cuda::std::is_trivially_copy_constructible<T>::value, "");
+    static_assert(!cuda::std::is_trivially_copy_constructible<const T>::value, "");
 #if TEST_STD_VER > 14
-    static_assert(!std::is_trivially_copy_constructible_v<T>, "");
-    static_assert(!std::is_trivially_copy_constructible_v<const T>, "");
+    static_assert(!cuda::std::is_trivially_copy_constructible_v<T>, "");
+    static_assert(!cuda::std::is_trivially_copy_constructible_v<const T>, "");
 #endif
 }
 

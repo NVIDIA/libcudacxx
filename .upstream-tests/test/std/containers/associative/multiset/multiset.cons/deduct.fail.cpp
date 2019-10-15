@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// <set>
+// <cuda/std/set>
 // UNSUPPORTED: c++98, c++03, c++11, c++14
 // UNSUPPORTED: libcpp-no-deduction-guides
 // XFAIL: clang-6, apple-clang-9.0, apple-clang-9.1, apple-clang-10.0.0
@@ -30,9 +30,9 @@
 // multiset(initializer_list<Key>, Allocator)
 //   -> multiset<Key, less<Key>, Allocator>;
 
-#include <functional>
-#include <set>
-#include <type_traits>
+#include <cuda/std/functional>
+#include <cuda/std/set>
+#include <cuda/std/type_traits>
 
 struct NotAnAllocator {
   friend bool operator<(NotAnAllocator, NotAnAllocator) { return false; }
@@ -41,29 +41,29 @@ struct NotAnAllocator {
 int main(int, char **) {
   {
     // cannot deduce Key from nothing
-    std::multiset s;
+    cuda::std::multiset s;
     // expected-error@-1{{no viable constructor or deduction guide for deduction of template arguments of 'multiset'}}
   }
   {
     // cannot deduce Key from just (Compare)
-    std::multiset s(std::less<int>{});
+    cuda::std::multiset s(cuda::std::less<int>{});
     // expected-error@-1{{no viable constructor or deduction guide for deduction of template arguments of 'multiset'}}
   }
   {
     // cannot deduce Key from just (Compare, Allocator)
-    std::multiset s(std::less<int>{}, std::allocator<int>{});
+    cuda::std::multiset s(cuda::std::less<int>{}, cuda::std::allocator<int>{});
     // expected-error@-1{{no viable constructor or deduction guide for deduction of template arguments of 'multiset'}}
   }
   {
     // cannot deduce Key from multiset(Allocator)
-    std::multiset s(std::allocator<int>{});
+    cuda::std::multiset s(cuda::std::allocator<int>{});
     // expected-error@-1{{no viable constructor or deduction guide for deduction of template arguments of 'multiset'}}
   }
   {
     // since we have parens, not braces, this deliberately does not find the
     // initializer_list constructor
     NotAnAllocator a;
-    std::multiset s(a);
+    cuda::std::multiset s(a);
     // expected-error@-1{{no viable constructor or deduction guide for deduction of template arguments of 'multiset'}}
   }
 

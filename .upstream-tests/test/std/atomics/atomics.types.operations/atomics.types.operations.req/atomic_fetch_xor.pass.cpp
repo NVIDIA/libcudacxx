@@ -8,7 +8,7 @@
 //
 // UNSUPPORTED: libcpp-has-no-threads, pre-sm-60
 
-// <atomic>
+// <cuda/std/atomic>
 
 // template <class Integral>
 //     Integral
@@ -18,9 +18,9 @@
 //     Integral
 //     atomic_fetch_xor(atomic<Integral>* obj, Integral op);
 
-#include <atomic>
-#include <type_traits>
-#include <cassert>
+#include <cuda/std/atomic>
+#include <cuda/std/type_traits>
+#include <cuda/std/cassert>
 
 #include "test_macros.h"
 #include "atomic_helpers.h"
@@ -30,17 +30,17 @@ struct TestFn {
   __host__ __device__
   void operator()() const {
     {
-        typedef std::atomic<T> A;
+        typedef cuda::std::atomic<T> A;
         A t;
-        std::atomic_init(&t, T(1));
-        assert(std::atomic_fetch_xor(&t, T(2)) == T(1));
+        cuda::std::atomic_init(&t, T(1));
+        assert(cuda::std::atomic_fetch_xor(&t, T(2)) == T(1));
         assert(t == T(3));
     }
     {
-        typedef std::atomic<T> A;
+        typedef cuda::std::atomic<T> A;
         volatile A t;
-        std::atomic_init(&t, T(3));
-        assert(std::atomic_fetch_xor(&t, T(2)) == T(3));
+        cuda::std::atomic_init(&t, T(3));
+        assert(cuda::std::atomic_fetch_xor(&t, T(2)) == T(3));
         assert(t == T(1));
     }
   }

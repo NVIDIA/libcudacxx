@@ -7,7 +7,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// <functional>
+// <cuda/std/functional>
 
 // template<class F>
 // function(F) -> function<see-below>;
@@ -15,9 +15,9 @@
 // UNSUPPORTED: c++98, c++03, c++11, c++14
 // UNSUPPORTED: libcpp-no-deduction-guides
 
-#include <functional>
-#include <type_traits>
-#include <utility>
+#include <cuda/std/functional>
+#include <cuda/std/type_traits>
+#include <cuda/std/utility>
 
 #include "test_macros.h"
 
@@ -55,45 +55,45 @@ int main() {
 #define CHECK_FUNCTIONS(N)                                                    \
   do {                                                                        \
     /* implicit */                                                            \
-    std::function g0 = f0_##N{};                                              \
-    ASSERT_SAME_TYPE(decltype(g0), std::function<R()>);                       \
+    cuda::std::function g0 = f0_##N{};                                              \
+    ASSERT_SAME_TYPE(decltype(g0), cuda::std::function<R()>);                       \
                                                                               \
-    std::function g1 = f1_##N{};                                              \
-    ASSERT_SAME_TYPE(decltype(g1), std::function<R(A1)>);                     \
+    cuda::std::function g1 = f1_##N{};                                              \
+    ASSERT_SAME_TYPE(decltype(g1), cuda::std::function<R(A1)>);                     \
                                                                               \
-    std::function g2 = f2_##N{};                                              \
-    ASSERT_SAME_TYPE(decltype(g2), std::function<R(A1, A2)>);                 \
+    cuda::std::function g2 = f2_##N{};                                              \
+    ASSERT_SAME_TYPE(decltype(g2), cuda::std::function<R(A1, A2)>);                 \
                                                                               \
-    std::function g3 = f3_##N{};                                              \
-    ASSERT_SAME_TYPE(decltype(g3), std::function<R(A1, A2, A3)>);             \
+    cuda::std::function g3 = f3_##N{};                                              \
+    ASSERT_SAME_TYPE(decltype(g3), cuda::std::function<R(A1, A2, A3)>);             \
                                                                               \
     /* explicit */                                                            \
-    std::function g4{f0_##N{}};                                               \
-    ASSERT_SAME_TYPE(decltype(g4), std::function<R()>);                       \
+    cuda::std::function g4{f0_##N{}};                                               \
+    ASSERT_SAME_TYPE(decltype(g4), cuda::std::function<R()>);                       \
                                                                               \
-    std::function g5{f1_##N{}};                                               \
-    ASSERT_SAME_TYPE(decltype(g5), std::function<R(A1)>);                     \
+    cuda::std::function g5{f1_##N{}};                                               \
+    ASSERT_SAME_TYPE(decltype(g5), cuda::std::function<R(A1)>);                     \
                                                                               \
-    std::function g6{f2_##N{}};                                               \
-    ASSERT_SAME_TYPE(decltype(g6), std::function<R(A1, A2)>);                 \
+    cuda::std::function g6{f2_##N{}};                                               \
+    ASSERT_SAME_TYPE(decltype(g6), cuda::std::function<R(A1, A2)>);                 \
                                                                               \
-    std::function g7{f3_##N{}};                                               \
-    ASSERT_SAME_TYPE(decltype(g7), std::function<R(A1, A2, A3)>);             \
+    cuda::std::function g7{f3_##N{}};                                               \
+    ASSERT_SAME_TYPE(decltype(g7), cuda::std::function<R(A1, A2, A3)>);             \
                                                                               \
-    /* from std::function */                                                  \
-    std::function<R(A1)> unary;                                               \
-    std::function g8 = unary;                                                 \
-    ASSERT_SAME_TYPE(decltype(g8), std::function<R(A1)>);                     \
+    /* from cuda::std::function */                                                  \
+    cuda::std::function<R(A1)> unary;                                               \
+    cuda::std::function g8 = unary;                                                 \
+    ASSERT_SAME_TYPE(decltype(g8), cuda::std::function<R(A1)>);                     \
                                                                               \
-    std::function g9 = std::move(unary);                                      \
-    ASSERT_SAME_TYPE(decltype(g9), std::function<R(A1)>);                     \
+    cuda::std::function g9 = cuda::std::move(unary);                                      \
+    ASSERT_SAME_TYPE(decltype(g9), cuda::std::function<R(A1)>);                     \
                                                                               \
-    std::function<R(A1&&)> unary_ref;                                         \
-    std::function g10 = unary_ref;                                            \
-    ASSERT_SAME_TYPE(decltype(g10), std::function<R(A1&&)>);                  \
+    cuda::std::function<R(A1&&)> unary_ref;                                         \
+    cuda::std::function g10 = unary_ref;                                            \
+    ASSERT_SAME_TYPE(decltype(g10), cuda::std::function<R(A1&&)>);                  \
                                                                               \
-    std::function g11 = std::move(unary_ref);                                 \
-    ASSERT_SAME_TYPE(decltype(g11), std::function<R(A1&&)>);                  \
+    cuda::std::function g11 = cuda::std::move(unary_ref);                                 \
+    ASSERT_SAME_TYPE(decltype(g11), cuda::std::function<R(A1&&)>);                  \
   } while (false)                                                             \
 /**/
 
@@ -118,7 +118,7 @@ int main() {
 
 // Make sure we fail in a SFINAE-friendly manner when we try to deduce
 // from a type without a valid call operator.
-template <typename F, typename = decltype(std::function{std::declval<F>()})>
+template <typename F, typename = decltype(cuda::std::function{cuda::std::declval<F>()})>
 constexpr bool can_deduce() { return true; }
 template <typename F>
 constexpr bool can_deduce(...) { return false; }

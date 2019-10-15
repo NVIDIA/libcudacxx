@@ -8,17 +8,17 @@
 
 // UNSUPPORTED: c++98, c++03
 
-// <deque>
+// <cuda/std/deque>
 
 // Test how deque manages the spare blocks it keeps. The exact values it tests
 // for are not always important, but are sometimes needed to ensure the container
 // resizes or shrinks at the correct time.
 
-#include <deque>
-#include <iostream>
-#include <memory>
-#include <stack>
-#include <queue>
+#include <cuda/std/deque>
+#include <cuda/std/iostream>
+#include <cuda/std/memory>
+#include <cuda/std/stack>
+#include <cuda/std/queue>
 
 #include "min_allocator.h"
 #include "rapid-cxx-test.h"
@@ -31,7 +31,7 @@ struct ContainerAdaptor : public Adaptor {
 
 template <class Deque>
 static void print(const Deque& d) {
-  std::cout << d.size()
+  cuda::std::cout << d.size()
             << " : __front_spare() == " << d.__front_spare()
             << " : __back_spare() == " << d.__back_spare()
             << " : __capacity() == " << d.__capacity()
@@ -40,10 +40,10 @@ static void print(const Deque& d) {
 }
 
 template <class T>
-using Deque = std::deque<T, malloc_allocator<T> >;
+using Deque = cuda::std::deque<T, malloc_allocator<T> >;
 
 template <class T>
-using BlockSize = std::__deque_block_size<T, std::ptrdiff_t>;
+using BlockSize = cuda::std::__deque_block_size<T, cuda::std::ptrdiff_t>;
 
 struct LargeT {
   LargeT() = default;
@@ -73,7 +73,7 @@ TEST_SUITE(deque_spare_tests)
 
 TEST_CASE(push_back) {
   const auto BS = BlockSize<LargeT>::value;
-  std::unique_ptr<Deque<LargeT>> dp(new Deque<LargeT>);
+  cuda::std::unique_ptr<Deque<LargeT>> dp(new Deque<LargeT>);
   auto& d = *dp;
   PrintOnFailure<Deque<LargeT>> on_fail(d);
 
@@ -135,7 +135,7 @@ TEST_CASE(push_back) {
 }
 
 TEST_CASE(push_front) {
-  std::unique_ptr<Deque<LargeT>> dp(new Deque<LargeT>);
+  cuda::std::unique_ptr<Deque<LargeT>> dp(new Deque<LargeT>);
   auto& d = *dp;
   PrintOnFailure<Deque<LargeT>> on_fail(d);
 
@@ -200,7 +200,7 @@ TEST_CASE(push_front) {
 
 TEST_CASE(std_queue) {
   using D = Deque<LargeT>;
-  using Queue = std::queue<LargeT, D>;
+  using Queue = cuda::std::queue<LargeT, D>;
   ContainerAdaptor<Queue> CA;
   const D& d = CA.GetContainer();
   Queue &q = CA;

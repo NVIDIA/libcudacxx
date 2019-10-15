@@ -9,21 +9,21 @@
 // UNSUPPORTED: c++98, c++03, c++11, c++14
 // UNSUPPORTED: windows
 // UNSUPPORTED: libcpp-has-no-threads
-// MODULES_DEFINES: _LIBCPP_DEBUG=1
+// MODULES_DEFINES: _LIBCUDACXX_DEBUG=1
 
 // Can't test the system lib because this test enables debug mode
 // UNSUPPORTED: with_system_cxx_lib
 
 // test multihtreaded container debugging
 
-#define _LIBCPP_DEBUG 1
+#define _LIBCUDACXX_DEBUG 1
 
-#include <cassert>
-#include <cstddef>
-#include <deque>
-#include <list>
-#include <thread>
-#include <vector>
+#include <cuda/std/cassert>
+#include <cuda/std/cstddef>
+#include <cuda/std/deque>
+#include <cuda/std/list>
+#include <cuda/std/thread>
+#include <cuda/std/vector>
 #include "container_debug_tests.h"
 
 #include "test_macros.h"
@@ -35,7 +35,7 @@ Container makeContainer(int size) {
   typedef typename Container::value_type ValueType;
   for (int i = 0; i < size; ++i)
     c.insert(c.end(), ValueType(i));
-  assert(c.size() == static_cast<std::size_t>(size));
+  assert(c.size() == static_cast<cuda::std::size_t>(size));
   return c;
 }
 
@@ -46,8 +46,8 @@ void ThreadUseIter() {
     void operator()() {
       for (size_t count = 0; count < maxRounds; count++) {
         const size_t containerCount = 11;
-        std::vector<Container> containers;
-        std::vector<typename Container::iterator> iterators;
+        cuda::std::vector<Container> containers;
+        cuda::std::vector<typename Container::iterator> iterators;
         for (size_t containerIndex = 0; containerIndex < containerCount; containerIndex++) {
           containers.push_back(makeContainer<Container>(3));
           Container& c = containers.back();
@@ -60,7 +60,7 @@ void ThreadUseIter() {
 
   TestRunner r;
   const size_t threadCount = 4;
-  std::vector<std::thread> threads;
+  cuda::std::vector<cuda::std::thread> threads;
   for (size_t count = 0; count < threadCount; count++)
     threads.emplace_back(r);
   r();
@@ -69,6 +69,6 @@ void ThreadUseIter() {
 }
 
 int main(int, char**) {
-  ThreadUseIter<std::vector<int> >();
+  ThreadUseIter<cuda::std::vector<int> >();
   return 0;
 }

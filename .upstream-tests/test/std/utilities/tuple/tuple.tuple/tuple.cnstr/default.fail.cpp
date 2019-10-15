@@ -12,13 +12,13 @@
 // See https://stackoverflow.com/q/41799015/627587.
 // UNSUPPORTED: gcc-5
 
-// <tuple>
+// <cuda/std/tuple>
 
 // template <class... Types> class tuple;
 
 // explicit(see-below) constexpr tuple();
 
-#include <tuple>
+#include <cuda/std/tuple>
 
 
 struct Implicit {
@@ -29,24 +29,24 @@ struct Explicit {
     explicit Explicit() = default;
 };
 
-std::tuple<> test1() { return {}; }
+cuda::std::tuple<> test1() { return {}; }
 
-std::tuple<Implicit> test2() { return {}; }
-std::tuple<Explicit> test3() { return {}; } // expected-error 1 {{chosen constructor is explicit in copy-initialization}}
+cuda::std::tuple<Implicit> test2() { return {}; }
+cuda::std::tuple<Explicit> test3() { return {}; } // expected-error 1 {{chosen constructor is explicit in copy-initialization}}
 
-std::tuple<Implicit, Implicit> test4() { return {}; }
-std::tuple<Explicit, Implicit> test5() { return {}; } // expected-error 1 {{chosen constructor is explicit in copy-initialization}}
-std::tuple<Implicit, Explicit> test6() { return {}; } // expected-error 1 {{chosen constructor is explicit in copy-initialization}}
-std::tuple<Explicit, Explicit> test7() { return {}; } // expected-error 1 {{chosen constructor is explicit in copy-initialization}}
+cuda::std::tuple<Implicit, Implicit> test4() { return {}; }
+cuda::std::tuple<Explicit, Implicit> test5() { return {}; } // expected-error 1 {{chosen constructor is explicit in copy-initialization}}
+cuda::std::tuple<Implicit, Explicit> test6() { return {}; } // expected-error 1 {{chosen constructor is explicit in copy-initialization}}
+cuda::std::tuple<Explicit, Explicit> test7() { return {}; } // expected-error 1 {{chosen constructor is explicit in copy-initialization}}
 
-std::tuple<Implicit, Implicit, Implicit> test8() { return {}; }
-std::tuple<Implicit, Implicit, Explicit> test9() { return {}; } // expected-error 1 {{chosen constructor is explicit in copy-initialization}}
-std::tuple<Implicit, Explicit, Implicit> test10() { return {}; } // expected-error 1 {{chosen constructor is explicit in copy-initialization}}
-std::tuple<Implicit, Explicit, Explicit> test11() { return {}; } // expected-error 1 {{chosen constructor is explicit in copy-initialization}}
-std::tuple<Explicit, Implicit, Implicit> test12() { return {}; } // expected-error 1 {{chosen constructor is explicit in copy-initialization}}
-std::tuple<Explicit, Implicit, Explicit> test13() { return {}; } // expected-error 1 {{chosen constructor is explicit in copy-initialization}}
-std::tuple<Explicit, Explicit, Implicit> test14() { return {}; } // expected-error 1 {{chosen constructor is explicit in copy-initialization}}
-std::tuple<Explicit, Explicit, Explicit> test15() { return {}; } // expected-error 1 {{chosen constructor is explicit in copy-initialization}}
+cuda::std::tuple<Implicit, Implicit, Implicit> test8() { return {}; }
+cuda::std::tuple<Implicit, Implicit, Explicit> test9() { return {}; } // expected-error 1 {{chosen constructor is explicit in copy-initialization}}
+cuda::std::tuple<Implicit, Explicit, Implicit> test10() { return {}; } // expected-error 1 {{chosen constructor is explicit in copy-initialization}}
+cuda::std::tuple<Implicit, Explicit, Explicit> test11() { return {}; } // expected-error 1 {{chosen constructor is explicit in copy-initialization}}
+cuda::std::tuple<Explicit, Implicit, Implicit> test12() { return {}; } // expected-error 1 {{chosen constructor is explicit in copy-initialization}}
+cuda::std::tuple<Explicit, Implicit, Explicit> test13() { return {}; } // expected-error 1 {{chosen constructor is explicit in copy-initialization}}
+cuda::std::tuple<Explicit, Explicit, Implicit> test14() { return {}; } // expected-error 1 {{chosen constructor is explicit in copy-initialization}}
+cuda::std::tuple<Explicit, Explicit, Explicit> test15() { return {}; } // expected-error 1 {{chosen constructor is explicit in copy-initialization}}
 
 int main(int, char**) {
     return 0;

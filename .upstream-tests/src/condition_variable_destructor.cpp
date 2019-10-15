@@ -14,21 +14,21 @@
 #include "__config"
 #include "__threading_support"
 
-#if !defined(_LIBCPP_HAS_NO_THREADS)
-# if _LIBCPP_ABI_VERSION == 1 || !defined(_LIBCPP_HAS_TRIVIAL_CONDVAR_DESTRUCTION)
+#if !defined(_LIBCUDACXX_HAS_NO_THREADS)
+# if _LIBCUDACXX_ABI_VERSION == 1 || !defined(_LIBCUDACXX_HAS_TRIVIAL_CONDVAR_DESTRUCTION)
 #   define NEEDS_CONDVAR_DESTRUCTOR
 # endif
 #endif
 
-_LIBCPP_BEGIN_NAMESPACE_STD
+_LIBCUDACXX_BEGIN_NAMESPACE_STD
 
 #ifdef NEEDS_CONDVAR_DESTRUCTOR
 
-class _LIBCPP_TYPE_VIS condition_variable
+class _LIBCUDACXX_TYPE_VIS condition_variable
 {
-    __libcpp_condvar_t __cv_ = _LIBCPP_CONDVAR_INITIALIZER;
+    __libcpp_condvar_t __cv_ = _LIBCUDACXX_CONDVAR_INITIALIZER;
 public:
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     constexpr condition_variable() noexcept = default;
 
     ~condition_variable();
@@ -43,4 +43,4 @@ condition_variable::~condition_variable()
 }
 #endif
 
-_LIBCPP_END_NAMESPACE_STD
+_LIBCUDACXX_END_NAMESPACE_STD

@@ -8,14 +8,14 @@
 //
 // UNSUPPORTED: libcpp-has-no-threads, pre-sm-60
 
-// <atomic>
+// <cuda/std/atomic>
 
 // struct atomic_flag
 
 // atomic_flag() = default;
 
-#include <atomic>
-#include <cassert>
+#include <cuda/std/atomic>
+#include <cuda/std/cassert>
 
 #include "test_macros.h"
 
@@ -25,11 +25,11 @@
 
 int main(int, char**)
 {
-    std::atomic_flag f;
+    cuda::std::atomic_flag f;
     f.clear();
     assert(f.test_and_set() == 0);
     {
-        typedef std::atomic_flag A;
+        typedef cuda::std::atomic_flag A;
         TEST_ALIGNAS_TYPE(A) char storage[sizeof(A)] = {1};
         A& zero = *new (storage) A();
         assert(!zero.test_and_set());

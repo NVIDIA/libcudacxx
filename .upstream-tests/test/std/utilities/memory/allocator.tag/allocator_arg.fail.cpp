@@ -12,17 +12,17 @@
 // See https://stackoverflow.com/q/41799015/627587.
 // UNSUPPORTED: gcc-5
 
-// <memory>
+// <cuda/std/memory>
 
 // struct allocator_arg_t { explicit allocator_arg_t() = default; };
 // const allocator_arg_t allocator_arg = allocator_arg_t();
 
 // This test checks for LWG 2510.
 
-#include <memory>
+#include <cuda/std/memory>
 
 
-std::allocator_arg_t f() { return {}; } // expected-error 1 {{chosen constructor is explicit in copy-initialization}}
+cuda::std::allocator_arg_t f() { return {}; } // expected-error 1 {{chosen constructor is explicit in copy-initialization}}
 
 int main(int, char**) {
     return 0;

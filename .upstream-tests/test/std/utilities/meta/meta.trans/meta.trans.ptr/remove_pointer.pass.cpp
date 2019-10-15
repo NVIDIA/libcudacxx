@@ -10,16 +10,16 @@
 
 // remove_pointer
 
-#include <type_traits>
+#include <cuda/std/type_traits>
 #include "test_macros.h"
 
 template <class T, class U>
 __host__ __device__
 void test_remove_pointer()
 {
-    ASSERT_SAME_TYPE(U, typename std::remove_pointer<T>::type);
+    ASSERT_SAME_TYPE(U, typename cuda::std::remove_pointer<T>::type);
 #if TEST_STD_VER > 11
-    ASSERT_SAME_TYPE(U, std::remove_pointer_t<T>);
+    ASSERT_SAME_TYPE(U, cuda::std::remove_pointer_t<T>);
 #endif
 }
 

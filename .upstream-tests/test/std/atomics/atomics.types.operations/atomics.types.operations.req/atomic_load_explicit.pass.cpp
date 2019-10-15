@@ -9,7 +9,7 @@
 // UNSUPPORTED: libcpp-has-no-threads, pre-sm-60
 //  ... assertion fails line 31
 
-// <atomic>
+// <cuda/std/atomic>
 
 // template <class T>
 //     T
@@ -19,9 +19,9 @@
 //     T
 //     atomic_load_explicit(const atomic<T>* obj, memory_order m);
 
-#include <atomic>
-#include <type_traits>
-#include <cassert>
+#include <cuda/std/atomic>
+#include <cuda/std/type_traits>
+#include <cuda/std/cassert>
 
 #include "test_macros.h"
 #include "atomic_helpers.h"
@@ -30,13 +30,13 @@ template <class T, cuda::thread_scope>
 struct TestFn {
   __host__ __device__
   void operator()() const {
-    typedef std::atomic<T> A;
+    typedef cuda::std::atomic<T> A;
     A t;
-    std::atomic_init(&t, T(1));
-    assert(std::atomic_load_explicit(&t, std::memory_order_seq_cst) == T(1));
+    cuda::std::atomic_init(&t, T(1));
+    assert(cuda::std::atomic_load_explicit(&t, cuda::std::memory_order_seq_cst) == T(1));
     volatile A vt;
-    std::atomic_init(&vt, T(2));
-    assert(std::atomic_load_explicit(&vt, std::memory_order_seq_cst) == T(2));
+    cuda::std::atomic_init(&vt, T(2));
+    assert(cuda::std::atomic_load_explicit(&vt, cuda::std::memory_order_seq_cst) == T(2));
   }
 };
 

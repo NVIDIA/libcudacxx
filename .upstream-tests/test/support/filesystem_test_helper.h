@@ -466,7 +466,7 @@ inline bool ErrorIs(const std::error_code& ec, std::errc First, ErrcT... Rest) {
 // available in single-threaded mode.
 void SleepFor(std::chrono::seconds dur) {
     using namespace std::chrono;
-#if defined(_LIBCPP_HAS_NO_MONOTONIC_CLOCK)
+#if defined(_LIBCUDACXX_HAS_NO_MONOTONIC_CLOCK)
     using Clock = system_clock;
 #else
     using Clock = steady_clock;

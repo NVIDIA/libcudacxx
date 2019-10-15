@@ -6,23 +6,23 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include <cmath>
+#include <cuda/std/cmath>
 
 #include "test_macros.h"
 
 int main(int, char**)
 {
     unsigned int ui = -5;
-    ui = std::abs(ui); // expected-error {{call to 'abs' is ambiguous}}
+    ui = cuda::std::abs(ui); // expected-error {{call to 'abs' is ambiguous}}
 
     unsigned char uc = -5;
-    uc = std::abs(uc); // expected-error {{taking the absolute value of unsigned type 'unsigned char' has no effect}}
+    uc = cuda::std::abs(uc); // expected-error {{taking the absolute value of unsigned type 'unsigned char' has no effect}}
 
     unsigned short us = -5;
-    us = std::abs(us); // expected-error {{taking the absolute value of unsigned type 'unsigned short' has no effect}}
+    us = cuda::std::abs(us); // expected-error {{taking the absolute value of unsigned type 'unsigned short' has no effect}}
 
     unsigned long ul = -5;
-    ul = std::abs(ul); // expected-error {{call to 'abs' is ambiguous}}
+    ul = cuda::std::abs(ul); // expected-error {{call to 'abs' is ambiguous}}
 
     unsigned long long ull = -5;
     ull = ::abs(ull); // expected-error {{call to 'abs' is ambiguous}}

@@ -10,23 +10,23 @@
 
 // is_arithmetic
 
-#include <type_traits>
-#include <cstddef>         // for std::nullptr_t
+#include <cuda/std/type_traits>
+#include <cuda/std/cstddef>         // for cuda::std::nullptr_t
 #include "test_macros.h"
 
 template <class T>
 __host__ __device__
 void test_is_arithmetic()
 {
-    static_assert( std::is_arithmetic<T>::value, "");
-    static_assert( std::is_arithmetic<const T>::value, "");
-    static_assert( std::is_arithmetic<volatile T>::value, "");
-    static_assert( std::is_arithmetic<const volatile T>::value, "");
+    static_assert( cuda::std::is_arithmetic<T>::value, "");
+    static_assert( cuda::std::is_arithmetic<const T>::value, "");
+    static_assert( cuda::std::is_arithmetic<volatile T>::value, "");
+    static_assert( cuda::std::is_arithmetic<const volatile T>::value, "");
 #if TEST_STD_VER > 14
-    static_assert( std::is_arithmetic_v<T>, "");
-    static_assert( std::is_arithmetic_v<const T>, "");
-    static_assert( std::is_arithmetic_v<volatile T>, "");
-    static_assert( std::is_arithmetic_v<const volatile T>, "");
+    static_assert( cuda::std::is_arithmetic_v<T>, "");
+    static_assert( cuda::std::is_arithmetic_v<const T>, "");
+    static_assert( cuda::std::is_arithmetic_v<volatile T>, "");
+    static_assert( cuda::std::is_arithmetic_v<const volatile T>, "");
 #endif
 }
 
@@ -34,15 +34,15 @@ template <class T>
 __host__ __device__
 void test_is_not_arithmetic()
 {
-    static_assert(!std::is_arithmetic<T>::value, "");
-    static_assert(!std::is_arithmetic<const T>::value, "");
-    static_assert(!std::is_arithmetic<volatile T>::value, "");
-    static_assert(!std::is_arithmetic<const volatile T>::value, "");
+    static_assert(!cuda::std::is_arithmetic<T>::value, "");
+    static_assert(!cuda::std::is_arithmetic<const T>::value, "");
+    static_assert(!cuda::std::is_arithmetic<volatile T>::value, "");
+    static_assert(!cuda::std::is_arithmetic<const volatile T>::value, "");
 #if TEST_STD_VER > 14
-    static_assert(!std::is_arithmetic_v<T>, "");
-    static_assert(!std::is_arithmetic_v<const T>, "");
-    static_assert(!std::is_arithmetic_v<volatile T>, "");
-    static_assert(!std::is_arithmetic_v<const volatile T>, "");
+    static_assert(!cuda::std::is_arithmetic_v<T>, "");
+    static_assert(!cuda::std::is_arithmetic_v<const T>, "");
+    static_assert(!cuda::std::is_arithmetic_v<volatile T>, "");
+    static_assert(!cuda::std::is_arithmetic_v<const volatile T>, "");
 #endif
 }
 
@@ -89,7 +89,7 @@ int main(int, char**)
     test_is_arithmetic<wchar_t>();
     test_is_arithmetic<double>();
 
-    test_is_not_arithmetic<std::nullptr_t>();
+    test_is_not_arithmetic<cuda::std::nullptr_t>();
     test_is_not_arithmetic<void>();
     test_is_not_arithmetic<int&>();
     test_is_not_arithmetic<int&&>();

@@ -7,25 +7,25 @@
 //
 //===----------------------------------------------------------------------===//
 
-// Test that _LIBCPP_ALIGNOF acts the same as the C++11 keyword `alignof`, and
+// Test that _LIBCUDACXX_ALIGNOF acts the same as the C++11 keyword `alignof`, and
 // not as the GNU extension `__alignof`. The former returns the minimal required
 // alignment for a type, whereas the latter returns the preferred alignment.
 //
 // See llvm.org/PR39713
 
-#include <type_traits>
+#include <cuda/std/type_traits>
 #include "test_macros.h"
 
 template <class T>
 __host__ __device__
 void test() {
-  static_assert(_LIBCPP_ALIGNOF(T) == std::alignment_of<T>::value, "");
-  static_assert(_LIBCPP_ALIGNOF(T) == TEST_ALIGNOF(T), "");
+  static_assert(_LIBCUDACXX_ALIGNOF(T) == cuda::std::alignment_of<T>::value, "");
+  static_assert(_LIBCUDACXX_ALIGNOF(T) == TEST_ALIGNOF(T), "");
 #if TEST_STD_VER >= 11
-  static_assert(_LIBCPP_ALIGNOF(T) == alignof(T), "");
+  static_assert(_LIBCUDACXX_ALIGNOF(T) == alignof(T), "");
 #endif
 #ifdef TEST_COMPILER_CLANG
-  static_assert(_LIBCPP_ALIGNOF(T) == _Alignof(T), "");
+  static_assert(_LIBCUDACXX_ALIGNOF(T) == _Alignof(T), "");
 #endif
 }
 

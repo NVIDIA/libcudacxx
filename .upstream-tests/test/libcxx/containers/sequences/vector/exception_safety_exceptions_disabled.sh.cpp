@@ -11,14 +11,14 @@
 
 // UNSUPPORTED: c++98, c++03
 
-// <vector>
+// <cuda/std/vector>
 
 // Test that vector always moves elements when exceptions are disabled.
 // vector is allowed to move or copy elements while resizing, so long as
 // it still provides the strong exception safety guarantee.
 
-#include <vector>
-#include <cassert>
+#include <cuda/std/vector>
+#include <cuda/std/cassert>
 
 #include "test_macros.h"
 
@@ -37,7 +37,7 @@ public:
 };
 
 int main(int, char**) {
-  std::vector<A> v;
+  cuda::std::vector<A> v;
 
   // Create a vector containing some number of elements that will
   // have to be moved when it is resized.

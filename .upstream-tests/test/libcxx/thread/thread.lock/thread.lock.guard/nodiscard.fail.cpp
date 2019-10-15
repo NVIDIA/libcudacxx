@@ -16,7 +16,7 @@
 // [[nodiscard]] isn't supported in C++98 and C++03 (not even as an extension)
 // UNSUPPORTED: c++98, c++03
 
-// <mutex>
+// <cuda/std/mutex>
 
 // template <class Mutex> class lock_guard;
 
@@ -26,13 +26,13 @@
 // Test that we properly apply [[nodiscard]] to lock_guard's constructors,
 // which is a libc++ extension.
 
-// MODULES_DEFINES: _LIBCPP_ENABLE_NODISCARD
-#define _LIBCPP_ENABLE_NODISCARD
-#include <mutex>
+// MODULES_DEFINES: _LIBCUDACXX_ENABLE_NODISCARD
+#define _LIBCUDACXX_ENABLE_NODISCARD
+#include <cuda/std/mutex>
 
 int main(int, char**) {
-    std::mutex m;
-    std::lock_guard<std::mutex>{m}; // expected-error{{ignoring temporary created by a constructor declared with 'nodiscard' attribute}}
-    std::lock_guard<std::mutex>{m, std::adopt_lock}; // expected-error{{ignoring temporary created by a constructor declared with 'nodiscard' attribute}}
+    cuda::std::mutex m;
+    cuda::std::lock_guard<cuda::std::mutex>{m}; // expected-error{{ignoring temporary created by a constructor declared with 'nodiscard' attribute}}
+    cuda::std::lock_guard<cuda::std::mutex>{m, cuda::std::adopt_lock}; // expected-error{{ignoring temporary created by a constructor declared with 'nodiscard' attribute}}
     return 0;
 }

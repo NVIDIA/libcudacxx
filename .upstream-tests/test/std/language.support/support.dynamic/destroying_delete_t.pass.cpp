@@ -17,9 +17,9 @@
 // UNSUPPORTED: apple-clang-9, apple-clang-10
 // UNSUPPORTED: clang-6, clang-7
 
-#include <new>
+#include <cuda/std/new>
 
-#include <cassert>
+#include <cuda/std/cassert>
 #include "test_macros.h"
 
 struct A {
@@ -28,7 +28,7 @@ struct A {
   ~A();
 
   static A* New();
-  void operator delete(A*, std::destroying_delete_t);
+  void operator delete(A*, cuda::std::destroying_delete_t);
 };
 
 bool A_constructed = false;
@@ -47,7 +47,7 @@ A* A::New() {
   return new(::operator new(sizeof(A))) A();
 }
 
-void A::operator delete(A* a, std::destroying_delete_t) {
+void A::operator delete(A* a, cuda::std::destroying_delete_t) {
   A_destroying_deleted = true;
   ::operator delete(a);
 }

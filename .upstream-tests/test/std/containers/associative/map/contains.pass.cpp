@@ -8,10 +8,10 @@
 
 // UNSUPPORTED: c++98, c++03, c++11, c++14, c++17
 
-#include <cassert>
-#include <map>
+#include <cuda/std/cassert>
+#include <cuda/std/map>
 
-// <map>
+// <cuda/std/map>
 
 // bool contains(const key_type& x) const;
 
@@ -31,30 +31,30 @@ struct E { int a = 1; double b = 1; char c = 1; };
 int main(int, char**)
 {
     {
-        test<std::map<char, int>, std::pair<char, int> >(
-            'e', std::make_pair('a', 10), std::make_pair('b', 11),
-            std::make_pair('c', 12), std::make_pair('d', 13));
+        test<cuda::std::map<char, int>, cuda::std::pair<char, int> >(
+            'e', cuda::std::make_pair('a', 10), cuda::std::make_pair('b', 11),
+            cuda::std::make_pair('c', 12), cuda::std::make_pair('d', 13));
 
-        test<std::map<char, char>, std::pair<char, char> >(
-            'e', std::make_pair('a', 'a'), std::make_pair('b', 'a'),
-            std::make_pair('c', 'a'), std::make_pair('d', 'b'));
+        test<cuda::std::map<char, char>, cuda::std::pair<char, char> >(
+            'e', cuda::std::make_pair('a', 'a'), cuda::std::make_pair('b', 'a'),
+            cuda::std::make_pair('c', 'a'), cuda::std::make_pair('d', 'b'));
 
-        test<std::map<int, E>, std::pair<int, E> >(
-            -1, std::make_pair(1, E{}), std::make_pair(2, E{}),
-            std::make_pair(3, E{}), std::make_pair(4, E{}));
+        test<cuda::std::map<int, E>, cuda::std::pair<int, E> >(
+            -1, cuda::std::make_pair(1, E{}), cuda::std::make_pair(2, E{}),
+            cuda::std::make_pair(3, E{}), cuda::std::make_pair(4, E{}));
     }
     {
-        test<std::multimap<char, int>, std::pair<char, int> >(
-            'e', std::make_pair('a', 10), std::make_pair('b', 11),
-            std::make_pair('c', 12), std::make_pair('d', 13));
+        test<cuda::std::multimap<char, int>, cuda::std::pair<char, int> >(
+            'e', cuda::std::make_pair('a', 10), cuda::std::make_pair('b', 11),
+            cuda::std::make_pair('c', 12), cuda::std::make_pair('d', 13));
 
-        test<std::multimap<char, char>, std::pair<char, char> >(
-            'e', std::make_pair('a', 'a'), std::make_pair('b', 'a'),
-            std::make_pair('c', 'a'), std::make_pair('d', 'b'));
+        test<cuda::std::multimap<char, char>, cuda::std::pair<char, char> >(
+            'e', cuda::std::make_pair('a', 'a'), cuda::std::make_pair('b', 'a'),
+            cuda::std::make_pair('c', 'a'), cuda::std::make_pair('d', 'b'));
 
-        test<std::multimap<int, E>, std::pair<int, E> >(
-            -1, std::make_pair(1, E{}), std::make_pair(2, E{}),
-            std::make_pair(3, E{}), std::make_pair(4, E{}));
+        test<cuda::std::multimap<int, E>, cuda::std::pair<int, E> >(
+            -1, cuda::std::make_pair(1, E{}), cuda::std::make_pair(2, E{}),
+            cuda::std::make_pair(3, E{}), cuda::std::make_pair(4, E{}));
     }
 
     return 0;

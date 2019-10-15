@@ -35,7 +35,7 @@ template <class T>
 // Return 'true' if 'Type' will be considered a small type by 'any'
 template <class Type>
 bool isSmallType() {
-#if defined(_LIBCPP_VERSION)
+#if defined(_LIBCUDACXX_VERSION)
     return std::experimental::__any_imp::_IsSmallObject<Type>::value;
 #else
     return IsSmallObject<Type>::value;
@@ -54,7 +54,7 @@ void assertEmpty(std::experimental::any const& a) {
 
 // Assert that an 'any' object stores the specified 'Type' and 'value'.
 template <class Type>
-_LIBCPP_AVAILABILITY_THROW_BAD_ANY_CAST
+_LIBCUDACXX_AVAILABILITY_THROW_BAD_ANY_CAST
 void assertContains(std::experimental::any const& a, int value = 1) {
     assert(!a.empty());
     RTTI_ASSERT(a.type() == typeid(Type));
@@ -64,7 +64,7 @@ void assertContains(std::experimental::any const& a, int value = 1) {
 // Modify the value of a "test type" stored within an any to the specified
 // 'value'.
 template <class Type>
-_LIBCPP_AVAILABILITY_THROW_BAD_ANY_CAST
+_LIBCUDACXX_AVAILABILITY_THROW_BAD_ANY_CAST
 void modifyValue(std::experimental::any& a, int value) {
     assert(!a.empty());
     RTTI_ASSERT(a.type() == typeid(Type));

@@ -8,7 +8,7 @@
 //
 // UNSUPPORTED: libcpp-has-no-threads, pre-sm-60
 
-// <atomic>
+// <cuda/std/atomic>
 
 // template <class T>
 //     bool
@@ -18,8 +18,8 @@
 //     bool
 //     atomic_is_lock_free(const atomic<T>* obj);
 
-#include <atomic>
-#include <cassert>
+#include <cuda/std/atomic>
+#include <cuda/std/cassert>
 
 #include "test_macros.h"
 #include "atomic_helpers.h"
@@ -28,11 +28,11 @@ template <class T, cuda::thread_scope>
 struct TestFn {
   __host__ __device__
   void operator()() const {
-    typedef std::atomic<T> A;
+    typedef cuda::std::atomic<T> A;
     A t;
-    bool b1 = std::atomic_is_lock_free(static_cast<const A*>(&t));
+    bool b1 = cuda::std::atomic_is_lock_free(static_cast<const A*>(&t));
     volatile A vt;
-    bool b2 = std::atomic_is_lock_free(static_cast<const volatile A*>(&vt));
+    bool b2 = cuda::std::atomic_is_lock_free(static_cast<const volatile A*>(&vt));
     assert(b1 == b2);
   }
 };

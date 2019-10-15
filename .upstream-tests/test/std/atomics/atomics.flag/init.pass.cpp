@@ -9,20 +9,20 @@
 // UNSUPPORTED: libcpp-has-no-threads, pre-sm-60
 // XFAIL: c++98, c++03
 
-// <atomic>
+// <cuda/std/atomic>
 
 // struct atomic_flag
 
 // atomic_flag() = ATOMIC_FLAG_INIT;
 
-#include <atomic>
-#include <cassert>
+#include <cuda/std/atomic>
+#include <cuda/std/cassert>
 
 #include "test_macros.h"
 
 int main(int, char**)
 {
-    std::atomic_flag f = ATOMIC_FLAG_INIT;
+    cuda::std::atomic_flag f = ATOMIC_FLAG_INIT;
     assert(f.test_and_set() == 0);
 
   return 0;

@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// <unordered_map>
+// <cuda/std/unordered_map>
 // UNSUPPORTED: c++98, c++03, c++11, c++14
 // UNSUPPORTED: libcpp-no-deduction-guides
 // XFAIL: clang-6, apple-clang-9.0, apple-clang-9.1, apple-clang-10.0.0
@@ -57,48 +57,48 @@
 //               Allocator)
 //   -> unordered_multimap<Key, T, Hash, equal_to<Key>, Allocator>;
 
-#include <functional>
-#include <unordered_map>
+#include <cuda/std/functional>
+#include <cuda/std/unordered_map>
 
 int main(int, char**)
 {
-    using P = std::pair<const int, int>;
+    using P = cuda::std::pair<const int, int>;
     {
         // cannot deduce Key from nothing
-        std::unordered_multimap m; // expected-error{{no viable constructor or deduction guide for deduction of template arguments of 'unordered_multimap'}}
+        cuda::std::unordered_multimap m; // expected-error{{no viable constructor or deduction guide for deduction of template arguments of 'unordered_multimap'}}
     }
     {
         // cannot deduce Key from just (Size)
-        std::unordered_multimap m(42); // expected-error{{no viable constructor or deduction guide for deduction of template arguments of 'unordered_multimap'}}
+        cuda::std::unordered_multimap m(42); // expected-error{{no viable constructor or deduction guide for deduction of template arguments of 'unordered_multimap'}}
     }
     {
         // cannot deduce Key from just (Size, Hash)
-        std::unordered_multimap m(42, std::hash<int>());
+        cuda::std::unordered_multimap m(42, cuda::std::hash<int>());
             // expected-error@-1{{no viable constructor or deduction guide for deduction of template arguments of 'unordered_multimap'}}
     }
     {
         // cannot deduce Key from just (Size, Hash, Pred)
-        std::unordered_multimap m(42, std::hash<int>(), std::equal_to<int>());
+        cuda::std::unordered_multimap m(42, cuda::std::hash<int>(), cuda::std::equal_to<int>());
             // expected-error@-1{{no viable constructor or deduction guide for deduction of template arguments of 'unordered_multimap'}}
     }
     {
         // cannot deduce Key from just (Size, Hash, Pred, Allocator)
-        std::unordered_multimap m(42, std::hash<int>(), std::equal_to<int>(), std::allocator<P>());
+        cuda::std::unordered_multimap m(42, cuda::std::hash<int>(), cuda::std::equal_to<int>(), cuda::std::allocator<P>());
             // expected-error@-1{{no viable constructor or deduction guide for deduction of template arguments of 'unordered_multimap'}}
     }
     {
         // cannot deduce Key from just (Allocator)
-        std::unordered_multimap m(std::allocator<P>{});
+        cuda::std::unordered_multimap m(cuda::std::allocator<P>{});
             // expected-error@-1{{no viable constructor or deduction guide for deduction of template arguments of 'unordered_multimap'}}
     }
     {
         // cannot deduce Key from just (Size, Allocator)
-        std::unordered_multimap m(42, std::allocator<P>());
+        cuda::std::unordered_multimap m(42, cuda::std::allocator<P>());
             // expected-error@-1{{no viable constructor or deduction guide for deduction of template arguments of 'unordered_multimap'}}
     }
     {
         // cannot deduce Key from just (Size, Hash, Allocator)
-        std::unordered_multimap m(42, std::hash<int>(), std::allocator<P>());
+        cuda::std::unordered_multimap m(42, cuda::std::hash<int>(), cuda::std::allocator<P>());
             // expected-error@-1{{no viable constructor or deduction guide for deduction of template arguments of 'unordered_multimap'}}
     }
 

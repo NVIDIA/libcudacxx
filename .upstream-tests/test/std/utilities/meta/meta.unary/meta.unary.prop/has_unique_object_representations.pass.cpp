@@ -17,36 +17,36 @@
 
 // has_unique_object_representations
 
-#include <type_traits>
+#include <cuda/std/type_traits>
 
 #include "test_macros.h"
 
 template <class T>
 void test_has_unique_object_representations()
 {
-    static_assert( std::has_unique_object_representations<T>::value, "");
-    static_assert( std::has_unique_object_representations<const T>::value, "");
-    static_assert( std::has_unique_object_representations<volatile T>::value, "");
-    static_assert( std::has_unique_object_representations<const volatile T>::value, "");
+    static_assert( cuda::std::has_unique_object_representations<T>::value, "");
+    static_assert( cuda::std::has_unique_object_representations<const T>::value, "");
+    static_assert( cuda::std::has_unique_object_representations<volatile T>::value, "");
+    static_assert( cuda::std::has_unique_object_representations<const volatile T>::value, "");
 
-    static_assert( std::has_unique_object_representations_v<T>, "");
-    static_assert( std::has_unique_object_representations_v<const T>, "");
-    static_assert( std::has_unique_object_representations_v<volatile T>, "");
-    static_assert( std::has_unique_object_representations_v<const volatile T>, "");
+    static_assert( cuda::std::has_unique_object_representations_v<T>, "");
+    static_assert( cuda::std::has_unique_object_representations_v<const T>, "");
+    static_assert( cuda::std::has_unique_object_representations_v<volatile T>, "");
+    static_assert( cuda::std::has_unique_object_representations_v<const volatile T>, "");
 }
 
 template <class T>
 void test_has_not_has_unique_object_representations()
 {
-    static_assert(!std::has_unique_object_representations<T>::value, "");
-    static_assert(!std::has_unique_object_representations<const T>::value, "");
-    static_assert(!std::has_unique_object_representations<volatile T>::value, "");
-    static_assert(!std::has_unique_object_representations<const volatile T>::value, "");
+    static_assert(!cuda::std::has_unique_object_representations<T>::value, "");
+    static_assert(!cuda::std::has_unique_object_representations<const T>::value, "");
+    static_assert(!cuda::std::has_unique_object_representations<volatile T>::value, "");
+    static_assert(!cuda::std::has_unique_object_representations<const volatile T>::value, "");
 
-    static_assert(!std::has_unique_object_representations_v<T>, "");
-    static_assert(!std::has_unique_object_representations_v<const T>, "");
-    static_assert(!std::has_unique_object_representations_v<volatile T>, "");
-    static_assert(!std::has_unique_object_representations_v<const volatile T>, "");
+    static_assert(!cuda::std::has_unique_object_representations_v<T>, "");
+    static_assert(!cuda::std::has_unique_object_representations_v<const T>, "");
+    static_assert(!cuda::std::has_unique_object_representations_v<volatile T>, "");
+    static_assert(!cuda::std::has_unique_object_representations_v<const volatile T>, "");
 }
 
 class Empty
