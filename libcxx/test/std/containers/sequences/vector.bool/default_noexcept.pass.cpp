@@ -32,7 +32,7 @@ struct some_alloc
 
 int main(int, char**)
 {
-#if defined(_LIBCUDACXX_VERSION)
+#if defined(_LIBCPP_VERSION)
     {
         typedef std::vector<bool> C;
         static_assert(std::is_nothrow_default_constructible<C>::value, "");
@@ -49,7 +49,7 @@ int main(int, char**)
         typedef std::vector<bool, some_alloc<bool>> C;
         static_assert(!std::is_nothrow_default_constructible<C>::value, "");
     }
-#endif // _LIBCUDACXX_VERSION
+#endif // _LIBCPP_VERSION
 
   return 0;
 }

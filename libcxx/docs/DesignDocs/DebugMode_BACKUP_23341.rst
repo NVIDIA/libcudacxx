@@ -12,29 +12,29 @@ Using Debug Mode
 
 Libc++ provides a debug mode that enables assertions meant to detect incorrect
 usage of the standard library. By default these assertions are disabled but
-they can be enabled using the ``_LIBCUDACXX_DEBUG`` macro.
+they can be enabled using the ``_LIBCPP_DEBUG`` macro.
 
-**_LIBCUDACXX_DEBUG** Macro
+**_LIBCPP_DEBUG** Macro
 -----------------------
 
-**_LIBCUDACXX_DEBUG**:
+**_LIBCPP_DEBUG**:
   This macro is used to enable assertions and iterator debugging checks within
   libc++. By default it is undefined.
 
   **Values**: ``0``, ``1``
 
-  Defining ``_LIBCUDACXX_DEBUG`` to ``0`` or greater enables most of libc++'s
-  assertions. Defining ``_LIBCUDACXX_DEBUG`` to ``1`` enables "iterator debugging"
+  Defining ``_LIBCPP_DEBUG`` to ``0`` or greater enables most of libc++'s
+  assertions. Defining ``_LIBCPP_DEBUG`` to ``1`` enables "iterator debugging"
   which provides additional assertions about the validity of iterators used by
   the program.
 
 <<<<<<< HEAD
   Note that this option has no effect on libc++'s ABI
 
-**_LIBCUDACXX_DEBUG_USE_EXCEPTIONS**:
-  When this macro is defined ``_LIBCUDACXX_ASSERT`` failures throw
+**_LIBCPP_DEBUG_USE_EXCEPTIONS**:
+  When this macro is defined ``_LIBCPP_ASSERT`` failures throw
   ``__libcpp_debug_exception`` instead of aborting. Additionally this macro
-  disables exception specifications on functions containing ``_LIBCUDACXX_ASSERT``
+  disables exception specifications on functions containing ``_LIBCPP_ASSERT``
   checks. This allows assertion failures to correctly throw through these
   functions.
 =======
@@ -55,7 +55,7 @@ assertion handler as follows.
 
 .. code-block:: cpp
 
-  #define _LIBCUDACXX_DEBUG 1
+  #define _LIBCPP_DEBUG 1
   #include <string>
   void my_handler(std::__libcpp_debug_info const&);
   int main(int, char**) {
@@ -77,16 +77,16 @@ precondition checks throughout libc++. The second additionally enables
 Basic Checks
 ============
 
-These checks are enabled when ``_LIBCUDACXX_DEBUG`` is defined to either 0 or 1.
+These checks are enabled when ``_LIBCPP_DEBUG`` is defined to either 0 or 1.
 
-The following checks are enabled by ``_LIBCUDACXX_DEBUG``:
+The following checks are enabled by ``_LIBCPP_DEBUG``:
 
   * FIXME: Update this list
 
 Iterator Debugging Checks
 =========================
 
-These checks are enabled when ``_LIBCUDACXX_DEBUG`` is defined to 1.
+These checks are enabled when ``_LIBCPP_DEBUG`` is defined to 1.
 
 The following containers and STL classes support iterator debugging:
 

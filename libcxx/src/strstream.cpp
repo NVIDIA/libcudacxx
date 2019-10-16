@@ -14,7 +14,7 @@
 #include "__debug"
 #include "__undef_macros"
 
-_LIBCUDACXX_BEGIN_NAMESPACE_STD
+_LIBCPP_BEGIN_NAMESPACE_STD
 
 strstreambuf::strstreambuf(streamsize __alsize)
     : __strmode_(__dynamic),
@@ -117,10 +117,10 @@ void
 strstreambuf::swap(strstreambuf& __rhs)
 {
     streambuf::swap(__rhs);
-    _CUDA_VSTD::swap(__strmode_, __rhs.__strmode_);
-    _CUDA_VSTD::swap(__alsize_, __rhs.__alsize_);
-    _CUDA_VSTD::swap(__palloc_, __rhs.__palloc_);
-    _CUDA_VSTD::swap(__pfree_, __rhs.__pfree_);
+    _VSTD::swap(__strmode_, __rhs.__strmode_);
+    _VSTD::swap(__alsize_, __rhs.__alsize_);
+    _VSTD::swap(__palloc_, __rhs.__palloc_);
+    _VSTD::swap(__pfree_, __rhs.__pfree_);
 }
 
 void
@@ -170,7 +170,7 @@ strstreambuf::overflow(int_type __c)
         if (buf == nullptr)
             return int_type(EOF);
         if (old_size != 0) {
-            _LIBCUDACXX_ASSERT(eback(), "overflow copying from NULL");
+            _LIBCPP_ASSERT(eback(), "overflow copying from NULL");
             memcpy(buf, eback(), static_cast<size_t>(old_size));
         }
         ptrdiff_t ninp = gptr()  - eback();
@@ -268,14 +268,14 @@ strstreambuf::seekoff(off_type __off, ios_base::seekdir __way, ios_base::openmod
             newoff = seekhigh - eback();
             break;
         default:
-            _LIBCUDACXX_UNREACHABLE();
+            _LIBCPP_UNREACHABLE();
         }
         newoff += __off;
         if (0 <= newoff && newoff <= seekhigh - eback())
         {
             char* newpos = eback() + newoff;
             if (pos_in)
-                setg(eback(), newpos, _CUDA_VSTD::max(newpos, egptr()));
+                setg(eback(), newpos, _VSTD::max(newpos, egptr()));
             if (pos_out)
             {
                 // min(pbase, newpos), newpos, epptr()
@@ -305,7 +305,7 @@ strstreambuf::seekpos(pos_type __sp, ios_base::openmode __which)
             {
                 char* newpos = eback() + newoff;
                 if (pos_in)
-                    setg(eback(), newpos, _CUDA_VSTD::max(newpos, egptr()));
+                    setg(eback(), newpos, _VSTD::max(newpos, egptr()));
                 if (pos_out)
                 {
                     // min(pbase, newpos), newpos, epptr()
@@ -332,4 +332,4 @@ strstream::~strstream()
 {
 }
 
-_LIBCUDACXX_END_NAMESPACE_STD
+_LIBCPP_END_NAMESPACE_STD

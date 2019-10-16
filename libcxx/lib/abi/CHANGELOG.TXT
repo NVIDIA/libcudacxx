@@ -470,7 +470,7 @@ Version 5.0
 Version 4.0
 -----------
 
-* r290651 - Add _LIBCUDACXX_ASSERT debug handling functions
+* r290651 - Add _LIBCPP_ASSERT debug handling functions
 
   All Platforms
   -------------

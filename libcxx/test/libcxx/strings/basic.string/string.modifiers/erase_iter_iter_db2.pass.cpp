@@ -10,9 +10,9 @@
 
 // Call erase(const_iterator first, const_iterator last); with second iterator from another container
 
-#if _LIBCUDACXX_DEBUG >= 1
+#if _LIBCPP_DEBUG >= 1
 
-#define _LIBCUDACXX_ASSERT(x, m) ((x) ? (void)0 : std::exit(0))
+#define _LIBCPP_ASSERT(x, m) ((x) ? (void)0 : std::exit(0))
 
 #include <string>
 #include <cassert>

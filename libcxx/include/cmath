@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCUDACXX_CMATH
-#define _LIBCUDACXX_CMATH
+#ifndef _LIBCPP_CMATH
+#define _LIBCPP_CMATH
 
 /*
     cmath synopsis
@@ -307,14 +307,14 @@ long double    truncl(long double x);
 #include <type_traits>
 #endif //stdexcept
 
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
-_LIBCUDACXX_PUSH_MACROS
+_LIBCPP_PUSH_MACROS
 #include <__undef_macros>
 
-_LIBCUDACXX_BEGIN_NAMESPACE_STD
+_LIBCPP_BEGIN_NAMESPACE_STD
 
 using ::signbit;
 using ::fpclassify;
@@ -528,13 +528,13 @@ using ::scalbnl;
 using ::tgammal;
 using ::truncl;
 
-#if _LIBCUDACXX_STD_VER > 14
-inline _LIBCUDACXX_INLINE_VISIBILITY float       hypot(       float x,       float y,       float z ) { return sqrt(x*x + y*y + z*z); }
-inline _LIBCUDACXX_INLINE_VISIBILITY double      hypot(      double x,      double y,      double z ) { return sqrt(x*x + y*y + z*z); }
-inline _LIBCUDACXX_INLINE_VISIBILITY long double hypot( long double x, long double y, long double z ) { return sqrt(x*x + y*y + z*z); }
+#if _LIBCPP_STD_VER > 14
+inline _LIBCPP_INLINE_VISIBILITY float       hypot(       float x,       float y,       float z ) { return sqrt(x*x + y*y + z*z); }
+inline _LIBCPP_INLINE_VISIBILITY double      hypot(      double x,      double y,      double z ) { return sqrt(x*x + y*y + z*z); }
+inline _LIBCPP_INLINE_VISIBILITY long double hypot( long double x, long double y, long double z ) { return sqrt(x*x + y*y + z*z); }
 
 template <class _A1, class _A2, class _A3>
-inline _LIBCUDACXX_INLINE_VISIBILITY
+inline _LIBCPP_INLINE_VISIBILITY
 typename _EnableIf
 <
     is_arithmetic<_A1>::value &&
@@ -553,8 +553,8 @@ hypot(_A1 __lcpp_x, _A2 __lcpp_y, _A3 __lcpp_z) _NOEXCEPT
 #endif
 
 template <class _A1>
-_LIBCUDACXX_INLINE_VISIBILITY
-_LIBCUDACXX_CONSTEXPR typename enable_if<is_floating_point<_A1>::value, bool>::type
+_LIBCPP_INLINE_VISIBILITY
+_LIBCPP_CONSTEXPR typename enable_if<is_floating_point<_A1>::value, bool>::type
 __libcpp_isnan_or_builtin(_A1 __lcpp_x) _NOEXCEPT
 {
 #if __has_builtin(__builtin_isnan)
@@ -565,16 +565,16 @@ __libcpp_isnan_or_builtin(_A1 __lcpp_x) _NOEXCEPT
 }
 
 template <class _A1>
-_LIBCUDACXX_INLINE_VISIBILITY
-_LIBCUDACXX_CONSTEXPR typename enable_if<!is_floating_point<_A1>::value, bool>::type
+_LIBCPP_INLINE_VISIBILITY
+_LIBCPP_CONSTEXPR typename enable_if<!is_floating_point<_A1>::value, bool>::type
 __libcpp_isnan_or_builtin(_A1 __lcpp_x) _NOEXCEPT
 {
     return isnan(__lcpp_x);
 }
 
 template <class _A1>
-_LIBCUDACXX_INLINE_VISIBILITY
-_LIBCUDACXX_CONSTEXPR typename enable_if<is_floating_point<_A1>::value, bool>::type
+_LIBCPP_INLINE_VISIBILITY
+_LIBCPP_CONSTEXPR typename enable_if<is_floating_point<_A1>::value, bool>::type
 __libcpp_isinf_or_builtin(_A1 __lcpp_x) _NOEXCEPT
 {
 #if __has_builtin(__builtin_isinf)
@@ -585,16 +585,16 @@ __libcpp_isinf_or_builtin(_A1 __lcpp_x) _NOEXCEPT
 }
 
 template <class _A1>
-_LIBCUDACXX_INLINE_VISIBILITY
-_LIBCUDACXX_CONSTEXPR typename enable_if<!is_floating_point<_A1>::value, bool>::type
+_LIBCPP_INLINE_VISIBILITY
+_LIBCPP_CONSTEXPR typename enable_if<!is_floating_point<_A1>::value, bool>::type
 __libcpp_isinf_or_builtin(_A1 __lcpp_x) _NOEXCEPT
 {
     return isinf(__lcpp_x);
 }
 
 template <class _A1>
-_LIBCUDACXX_INLINE_VISIBILITY
-_LIBCUDACXX_CONSTEXPR typename enable_if<is_floating_point<_A1>::value, bool>::type
+_LIBCPP_INLINE_VISIBILITY
+_LIBCPP_CONSTEXPR typename enable_if<is_floating_point<_A1>::value, bool>::type
 __libcpp_isfinite_or_builtin(_A1 __lcpp_x) _NOEXCEPT
 {
 #if __has_builtin(__builtin_isfinite)
@@ -605,14 +605,14 @@ __libcpp_isfinite_or_builtin(_A1 __lcpp_x) _NOEXCEPT
 }
 
 template <class _A1>
-_LIBCUDACXX_INLINE_VISIBILITY
-_LIBCUDACXX_CONSTEXPR typename enable_if<!is_floating_point<_A1>::value, bool>::type
+_LIBCPP_INLINE_VISIBILITY
+_LIBCPP_CONSTEXPR typename enable_if<!is_floating_point<_A1>::value, bool>::type
 __libcpp_isfinite_or_builtin(_A1 __lcpp_x) _NOEXCEPT
 {
     return isfinite(__lcpp_x);
 }
 
-#if _LIBCUDACXX_STD_VER > 17
+#if _LIBCPP_STD_VER > 17
 template <typename _Fp>
 constexpr
 _Fp __lerp(_Fp __a, _Fp __b, _Fp __t) noexcept {
@@ -636,13 +636,13 @@ lerp(double __a, double __b, double __t)                _NOEXCEPT { return __ler
 constexpr long double
 lerp(long double __a, long double __b, long double __t) _NOEXCEPT { return __lerp(__a, __b, __t); }
 
-#endif // _LIBCUDACXX_STD_VER > 17
+#endif // _LIBCPP_STD_VER > 17
 
 template <class _IntT, class _FloatT,
     bool _FloatBigger = (numeric_limits<_FloatT>::digits > numeric_limits<_IntT>::digits),
     int _Bits = (numeric_limits<_IntT>::digits - numeric_limits<_FloatT>::digits)>
-_LIBCUDACXX_INLINE_VISIBILITY
-_LIBCUDACXX_CONSTEXPR _IntT __max_representable_int_for_float() _NOEXCEPT {
+_LIBCPP_INLINE_VISIBILITY
+_LIBCPP_CONSTEXPR _IntT __max_representable_int_for_float() _NOEXCEPT {
   static_assert(is_floating_point<_FloatT>::value, "must be a floating point type");
   static_assert(is_integral<_IntT>::value, "must be an integral type");
   static_assert(numeric_limits<_FloatT>::radix == 2, "FloatT has incorrect radix");
@@ -656,7 +656,7 @@ _LIBCUDACXX_CONSTEXPR _IntT __max_representable_int_for_float() _NOEXCEPT {
 //
 // The behavior is undefined if `__r` is NaN.
 template <class _IntT, class _RealT>
-_LIBCUDACXX_INLINE_VISIBILITY
+_LIBCPP_INLINE_VISIBILITY
 _IntT __clamp_to_integral(_RealT __r) _NOEXCEPT {
   using _Lim = std::numeric_limits<_IntT>;
   const _IntT _MaxVal = std::__max_representable_int_for_float<_IntT, _RealT>();
@@ -668,8 +668,8 @@ _IntT __clamp_to_integral(_RealT __r) _NOEXCEPT {
   return static_cast<_IntT>(__r);
 }
 
-_LIBCUDACXX_END_NAMESPACE_STD
+_LIBCPP_END_NAMESPACE_STD
 
-_LIBCUDACXX_POP_MACROS
+_LIBCPP_POP_MACROS
 
-#endif  // _LIBCUDACXX_CMATH
+#endif  // _LIBCPP_CMATH

@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCUDACXX_IOSTREAM
-#define _LIBCUDACXX_IOSTREAM
+#ifndef _LIBCPP_IOSTREAM
+#define _LIBCPP_IOSTREAM
 
 /*
     iostream synopsis
@@ -39,25 +39,25 @@ extern wostream wclog;
 #include <istream>
 #include <ostream>
 
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
-_LIBCUDACXX_BEGIN_NAMESPACE_STD
+_LIBCPP_BEGIN_NAMESPACE_STD
 
-#ifndef _LIBCUDACXX_HAS_NO_STDIN
-extern _LIBCUDACXX_FUNC_VIS istream cin;
-extern _LIBCUDACXX_FUNC_VIS wistream wcin;
+#ifndef _LIBCPP_HAS_NO_STDIN
+extern _LIBCPP_FUNC_VIS istream cin;
+extern _LIBCPP_FUNC_VIS wistream wcin;
 #endif
-#ifndef _LIBCUDACXX_HAS_NO_STDOUT
-extern _LIBCUDACXX_FUNC_VIS ostream cout;
-extern _LIBCUDACXX_FUNC_VIS wostream wcout;
+#ifndef _LIBCPP_HAS_NO_STDOUT
+extern _LIBCPP_FUNC_VIS ostream cout;
+extern _LIBCPP_FUNC_VIS wostream wcout;
 #endif
-extern _LIBCUDACXX_FUNC_VIS ostream cerr;
-extern _LIBCUDACXX_FUNC_VIS wostream wcerr;
-extern _LIBCUDACXX_FUNC_VIS ostream clog;
-extern _LIBCUDACXX_FUNC_VIS wostream wclog;
+extern _LIBCPP_FUNC_VIS ostream cerr;
+extern _LIBCPP_FUNC_VIS wostream wcerr;
+extern _LIBCPP_FUNC_VIS ostream clog;
+extern _LIBCPP_FUNC_VIS wostream wclog;
 
-_LIBCUDACXX_END_NAMESPACE_STD
+_LIBCPP_END_NAMESPACE_STD
 
-#endif  // _LIBCUDACXX_IOSTREAM
+#endif  // _LIBCPP_IOSTREAM

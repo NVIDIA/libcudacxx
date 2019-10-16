@@ -17,7 +17,7 @@ void f() {}
 
 int main(int, char**)
 {
-#ifdef _LIBCUDACXX_HAS_QUICK_EXIT
+#ifdef _LIBCPP_HAS_QUICK_EXIT
     std::at_quick_exit(f);
     std::quick_exit(0);
 #endif

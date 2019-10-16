@@ -11,8 +11,8 @@
 
 namespace std {
 
-_LIBCUDACXX_SAFE_STATIC static std::terminate_handler  __terminate_handler;
-_LIBCUDACXX_SAFE_STATIC static std::unexpected_handler __unexpected_handler;
+_LIBCPP_SAFE_STATIC static std::terminate_handler  __terminate_handler;
+_LIBCPP_SAFE_STATIC static std::unexpected_handler __unexpected_handler;
 
 
 // libcxxrt provides implementations of these functions itself.
@@ -29,7 +29,7 @@ get_unexpected() _NOEXCEPT
 
 }
 
-_LIBCUDACXX_NORETURN
+_LIBCPP_NORETURN
 void unexpected()
 {
     (*get_unexpected())();
@@ -50,19 +50,19 @@ get_terminate() _NOEXCEPT
 }
 
 #ifndef __EMSCRIPTEN__ // We provide this in JS
-_LIBCUDACXX_NORETURN
+_LIBCPP_NORETURN
 void
 terminate() _NOEXCEPT
 {
-#ifndef _LIBCUDACXX_NO_EXCEPTIONS
+#ifndef _LIBCPP_NO_EXCEPTIONS
     try
     {
-#endif  // _LIBCUDACXX_NO_EXCEPTIONS
+#endif  // _LIBCPP_NO_EXCEPTIONS
         (*get_terminate())();
         // handler should not return
         fprintf(stderr, "terminate_handler unexpectedly returned\n");
         ::abort();
-#ifndef _LIBCUDACXX_NO_EXCEPTIONS
+#ifndef _LIBCPP_NO_EXCEPTIONS
     }
     catch (...)
     {
@@ -70,7 +70,7 @@ terminate() _NOEXCEPT
         fprintf(stderr, "terminate_handler unexpectedly threw an exception\n");
         ::abort();
     }
-#endif  // _LIBCUDACXX_NO_EXCEPTIONS
+#endif  // _LIBCPP_NO_EXCEPTIONS
 }
 #endif // !__EMSCRIPTEN__
 

@@ -103,7 +103,7 @@ int main()
     static_assert(!std::is_invocable_v<L, char16_t>, "");
     static_assert(!std::is_invocable_v<L, char32_t>, "");
 
-#ifndef _LIBCUDACXX_HAS_NO_INT128
+#ifndef _LIBCPP_HAS_NO_INT128
     static_assert( std::is_invocable_v<L, __uint128_t>, "");
     static_assert(!std::is_invocable_v<L, __int128_t>, "");
 #endif
@@ -127,7 +127,7 @@ int main()
 	static_assert(constexpr_test<uintmax_t>(), "");
 	static_assert(constexpr_test<uintptr_t>(), "");
 
-#ifndef _LIBCUDACXX_HAS_NO_INT128
+#ifndef _LIBCPP_HAS_NO_INT128
 	static_assert(constexpr_test<__uint128_t>(),        "");
 #endif
 
@@ -145,7 +145,7 @@ int main()
 	runtime_test<uintmax_t>();
 	runtime_test<uintptr_t>();
 
-#ifndef _LIBCUDACXX_HAS_NO_INT128
+#ifndef _LIBCPP_HAS_NO_INT128
 	runtime_test<__uint128_t>();
 
 	{

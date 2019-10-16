@@ -13,12 +13,12 @@
 // template <class T, class... Args>
 //   struct is_constructible;
 
-// MODULES_DEFINES: _LIBCUDACXX_TESTING_FALLBACK_IS_CONSTRUCTIBLE
-#define _LIBCUDACXX_TESTING_FALLBACK_IS_CONSTRUCTIBLE
+// MODULES_DEFINES: _LIBCPP_TESTING_FALLBACK_IS_CONSTRUCTIBLE
+#define _LIBCPP_TESTING_FALLBACK_IS_CONSTRUCTIBLE
 #include <type_traits>
 #include "test_macros.h"
 
-#if TEST_STD_VER >= 11 && defined(_LIBCUDACXX_VERSION)
+#if TEST_STD_VER >= 11 && defined(_LIBCPP_VERSION)
 #define LIBCPP11_STATIC_ASSERT(...) static_assert(__VA_ARGS__)
 #else
 #define LIBCPP11_STATIC_ASSERT(...) ((void)0)

@@ -7,82 +7,82 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCUDACXX_THREADING_SUPPORT
-#define _LIBCUDACXX_THREADING_SUPPORT
+#ifndef _LIBCPP_THREADING_SUPPORT
+#define _LIBCPP_THREADING_SUPPORT
 
 #include <__config>
 #include <chrono>
 #include <iosfwd>
 #include <errno.h>
 
-#ifndef _LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER
+#ifndef _LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER
 #pragma GCC system_header
 #endif
 
-#if defined(_LIBCUDACXX_HAS_THREAD_API_EXTERNAL)
+#if defined(_LIBCPP_HAS_THREAD_API_EXTERNAL)
 # include <__external_threading>
-#elif !defined(_LIBCUDACXX_HAS_NO_THREADS)
+#elif !defined(_LIBCPP_HAS_NO_THREADS)
 
-#if defined(_LIBCUDACXX_HAS_THREAD_API_PTHREAD)
+#if defined(_LIBCPP_HAS_THREAD_API_PTHREAD)
 # include <pthread.h>
 # include <sched.h>
 #endif
 
-#if defined(_LIBCUDACXX_HAS_THREAD_LIBRARY_EXTERNAL) || \
-    defined(_LIBCUDACXX_BUILDING_THREAD_LIBRARY_EXTERNAL) || \
-    defined(_LIBCUDACXX_HAS_THREAD_API_WIN32)
-#define _LIBCUDACXX_THREAD_ABI_VISIBILITY _LIBCUDACXX_FUNC_VIS
+#if defined(_LIBCPP_HAS_THREAD_LIBRARY_EXTERNAL) || \
+    defined(_LIBCPP_BUILDING_THREAD_LIBRARY_EXTERNAL) || \
+    defined(_LIBCPP_HAS_THREAD_API_WIN32)
+#define _LIBCPP_THREAD_ABI_VISIBILITY _LIBCPP_FUNC_VIS
 #else
-#define _LIBCUDACXX_THREAD_ABI_VISIBILITY inline _LIBCUDACXX_INLINE_VISIBILITY
+#define _LIBCPP_THREAD_ABI_VISIBILITY inline _LIBCPP_INLINE_VISIBILITY
 #endif
 
 #if defined(__FreeBSD__) && defined(__clang__) && __has_attribute(no_thread_safety_analysis)
-#define _LIBCUDACXX_NO_THREAD_SAFETY_ANALYSIS __attribute__((no_thread_safety_analysis))
+#define _LIBCPP_NO_THREAD_SAFETY_ANALYSIS __attribute__((no_thread_safety_analysis))
 #else
-#define _LIBCUDACXX_NO_THREAD_SAFETY_ANALYSIS
+#define _LIBCPP_NO_THREAD_SAFETY_ANALYSIS
 #endif
 
 typedef ::timespec __libcpp_timespec_t;
-#endif // !defined(_LIBCUDACXX_HAS_NO_THREADS)
+#endif // !defined(_LIBCPP_HAS_NO_THREADS)
 
-_LIBCUDACXX_PUSH_MACROS
+_LIBCPP_PUSH_MACROS
 #include <__undef_macros>
 
-_LIBCUDACXX_BEGIN_NAMESPACE_STD
+_LIBCPP_BEGIN_NAMESPACE_STD
 
-#if !defined(_LIBCUDACXX_HAS_NO_THREADS)
+#if !defined(_LIBCPP_HAS_NO_THREADS)
 
-#if defined(_LIBCUDACXX_HAS_THREAD_API_PTHREAD)
+#if defined(_LIBCPP_HAS_THREAD_API_PTHREAD)
 // Mutex
 typedef pthread_mutex_t __libcpp_mutex_t;
-#define _LIBCUDACXX_MUTEX_INITIALIZER PTHREAD_MUTEX_INITIALIZER
+#define _LIBCPP_MUTEX_INITIALIZER PTHREAD_MUTEX_INITIALIZER
 
 typedef pthread_mutex_t __libcpp_recursive_mutex_t;
 
 // Condition Variable
 typedef pthread_cond_t __libcpp_condvar_t;
-#define _LIBCUDACXX_CONDVAR_INITIALIZER PTHREAD_COND_INITIALIZER
+#define _LIBCPP_CONDVAR_INITIALIZER PTHREAD_COND_INITIALIZER
 
 // Execute once
 typedef pthread_once_t __libcpp_exec_once_flag;
-#define _LIBCUDACXX_EXEC_ONCE_INITIALIZER PTHREAD_ONCE_INIT
+#define _LIBCPP_EXEC_ONCE_INITIALIZER PTHREAD_ONCE_INIT
 
 // Thread id
 typedef pthread_t __libcpp_thread_id;
 
 // Thread
-#define _LIBCUDACXX_NULL_THREAD 0U
+#define _LIBCPP_NULL_THREAD 0U
 
 typedef pthread_t __libcpp_thread_t;
 
 // Thread Local Storage
 typedef pthread_key_t __libcpp_tls_key;
 
-#define _LIBCUDACXX_TLS_DESTRUCTOR_CC
-#elif !defined(_LIBCUDACXX_HAS_THREAD_API_EXTERNAL)
+#define _LIBCPP_TLS_DESTRUCTOR_CC
+#elif !defined(_LIBCPP_HAS_THREAD_API_EXTERNAL)
 // Mutex
 typedef void* __libcpp_mutex_t;
-#define _LIBCUDACXX_MUTEX_INITIALIZER 0
+#define _LIBCPP_MUTEX_INITIALIZER 0
 
 #if defined(_M_IX86) || defined(__i386__) || defined(_M_ARM) || defined(__arm__)
 typedef void* __libcpp_recursive_mutex_t[6];
@@ -94,126 +94,126 @@ typedef void* __libcpp_recursive_mutex_t[5];
 
 // Condition Variable
 typedef void* __libcpp_condvar_t;
-#define _LIBCUDACXX_CONDVAR_INITIALIZER 0
+#define _LIBCPP_CONDVAR_INITIALIZER 0
 
 // Execute Once
 typedef void* __libcpp_exec_once_flag;
-#define _LIBCUDACXX_EXEC_ONCE_INITIALIZER 0
+#define _LIBCPP_EXEC_ONCE_INITIALIZER 0
 
 // Thread ID
 typedef long __libcpp_thread_id;
 
 // Thread
-#define _LIBCUDACXX_NULL_THREAD 0U
+#define _LIBCPP_NULL_THREAD 0U
 
 typedef void* __libcpp_thread_t;
 
 // Thread Local Storage
 typedef long __libcpp_tls_key;
 
-#define _LIBCUDACXX_TLS_DESTRUCTOR_CC __stdcall
-#endif // !defined(_LIBCUDACXX_HAS_THREAD_API_PTHREAD) && !defined(_LIBCUDACXX_HAS_THREAD_API_EXTERNAL)
+#define _LIBCPP_TLS_DESTRUCTOR_CC __stdcall
+#endif // !defined(_LIBCPP_HAS_THREAD_API_PTHREAD) && !defined(_LIBCPP_HAS_THREAD_API_EXTERNAL)
 
-#if !defined(_LIBCUDACXX_HAS_THREAD_API_EXTERNAL)
+#if !defined(_LIBCPP_HAS_THREAD_API_EXTERNAL)
 // Mutex
-_LIBCUDACXX_THREAD_ABI_VISIBILITY
+_LIBCPP_THREAD_ABI_VISIBILITY
 int __libcpp_recursive_mutex_init(__libcpp_recursive_mutex_t *__m);
 
-_LIBCUDACXX_THREAD_ABI_VISIBILITY _LIBCUDACXX_NO_THREAD_SAFETY_ANALYSIS
+_LIBCPP_THREAD_ABI_VISIBILITY _LIBCPP_NO_THREAD_SAFETY_ANALYSIS
 int __libcpp_recursive_mutex_lock(__libcpp_recursive_mutex_t *__m);
 
-_LIBCUDACXX_THREAD_ABI_VISIBILITY _LIBCUDACXX_NO_THREAD_SAFETY_ANALYSIS
+_LIBCPP_THREAD_ABI_VISIBILITY _LIBCPP_NO_THREAD_SAFETY_ANALYSIS
 bool __libcpp_recursive_mutex_trylock(__libcpp_recursive_mutex_t *__m);
 
-_LIBCUDACXX_THREAD_ABI_VISIBILITY _LIBCUDACXX_NO_THREAD_SAFETY_ANALYSIS
+_LIBCPP_THREAD_ABI_VISIBILITY _LIBCPP_NO_THREAD_SAFETY_ANALYSIS
 int __libcpp_recursive_mutex_unlock(__libcpp_recursive_mutex_t *__m);
 
-_LIBCUDACXX_THREAD_ABI_VISIBILITY
+_LIBCPP_THREAD_ABI_VISIBILITY
 int __libcpp_recursive_mutex_destroy(__libcpp_recursive_mutex_t *__m);
 
-_LIBCUDACXX_THREAD_ABI_VISIBILITY _LIBCUDACXX_NO_THREAD_SAFETY_ANALYSIS
+_LIBCPP_THREAD_ABI_VISIBILITY _LIBCPP_NO_THREAD_SAFETY_ANALYSIS
 int __libcpp_mutex_lock(__libcpp_mutex_t *__m);
 
-_LIBCUDACXX_THREAD_ABI_VISIBILITY _LIBCUDACXX_NO_THREAD_SAFETY_ANALYSIS
+_LIBCPP_THREAD_ABI_VISIBILITY _LIBCPP_NO_THREAD_SAFETY_ANALYSIS
 bool __libcpp_mutex_trylock(__libcpp_mutex_t *__m);
 
-_LIBCUDACXX_THREAD_ABI_VISIBILITY _LIBCUDACXX_NO_THREAD_SAFETY_ANALYSIS
+_LIBCPP_THREAD_ABI_VISIBILITY _LIBCPP_NO_THREAD_SAFETY_ANALYSIS
 int __libcpp_mutex_unlock(__libcpp_mutex_t *__m);
 
-_LIBCUDACXX_THREAD_ABI_VISIBILITY
+_LIBCPP_THREAD_ABI_VISIBILITY
 int __libcpp_mutex_destroy(__libcpp_mutex_t *__m);
 
 // Condition variable
-_LIBCUDACXX_THREAD_ABI_VISIBILITY
+_LIBCPP_THREAD_ABI_VISIBILITY
 int __libcpp_condvar_signal(__libcpp_condvar_t* __cv);
 
-_LIBCUDACXX_THREAD_ABI_VISIBILITY
+_LIBCPP_THREAD_ABI_VISIBILITY
 int __libcpp_condvar_broadcast(__libcpp_condvar_t* __cv);
 
-_LIBCUDACXX_THREAD_ABI_VISIBILITY _LIBCUDACXX_NO_THREAD_SAFETY_ANALYSIS
+_LIBCPP_THREAD_ABI_VISIBILITY _LIBCPP_NO_THREAD_SAFETY_ANALYSIS
 int __libcpp_condvar_wait(__libcpp_condvar_t* __cv, __libcpp_mutex_t* __m);
 
-_LIBCUDACXX_THREAD_ABI_VISIBILITY _LIBCUDACXX_NO_THREAD_SAFETY_ANALYSIS
+_LIBCPP_THREAD_ABI_VISIBILITY _LIBCPP_NO_THREAD_SAFETY_ANALYSIS
 int __libcpp_condvar_timedwait(__libcpp_condvar_t *__cv, __libcpp_mutex_t *__m,
                                __libcpp_timespec_t *__ts);
 
-_LIBCUDACXX_THREAD_ABI_VISIBILITY
+_LIBCPP_THREAD_ABI_VISIBILITY
 int __libcpp_condvar_destroy(__libcpp_condvar_t* __cv);
 
 // Execute once
-_LIBCUDACXX_THREAD_ABI_VISIBILITY
+_LIBCPP_THREAD_ABI_VISIBILITY
 int __libcpp_execute_once(__libcpp_exec_once_flag *flag,
                           void (*init_routine)());
 
 // Thread id
-_LIBCUDACXX_THREAD_ABI_VISIBILITY
+_LIBCPP_THREAD_ABI_VISIBILITY
 bool __libcpp_thread_id_equal(__libcpp_thread_id t1, __libcpp_thread_id t2);
 
-_LIBCUDACXX_THREAD_ABI_VISIBILITY
+_LIBCPP_THREAD_ABI_VISIBILITY
 bool __libcpp_thread_id_less(__libcpp_thread_id t1, __libcpp_thread_id t2);
 
 // Thread
-_LIBCUDACXX_THREAD_ABI_VISIBILITY
+_LIBCPP_THREAD_ABI_VISIBILITY
 bool __libcpp_thread_isnull(const __libcpp_thread_t *__t);
 
-_LIBCUDACXX_THREAD_ABI_VISIBILITY
+_LIBCPP_THREAD_ABI_VISIBILITY
 int __libcpp_thread_create(__libcpp_thread_t *__t, void *(*__func)(void *),
                            void *__arg);
 
-_LIBCUDACXX_THREAD_ABI_VISIBILITY
+_LIBCPP_THREAD_ABI_VISIBILITY
 __libcpp_thread_id __libcpp_thread_get_current_id();
 
-_LIBCUDACXX_THREAD_ABI_VISIBILITY
+_LIBCPP_THREAD_ABI_VISIBILITY
 __libcpp_thread_id __libcpp_thread_get_id(const __libcpp_thread_t *__t);
 
-_LIBCUDACXX_THREAD_ABI_VISIBILITY
+_LIBCPP_THREAD_ABI_VISIBILITY
 int __libcpp_thread_join(__libcpp_thread_t *__t);
 
-_LIBCUDACXX_THREAD_ABI_VISIBILITY
+_LIBCPP_THREAD_ABI_VISIBILITY
 int __libcpp_thread_detach(__libcpp_thread_t *__t);
 
-_LIBCUDACXX_THREAD_ABI_VISIBILITY
+_LIBCPP_THREAD_ABI_VISIBILITY
 void __libcpp_thread_yield();
 
-_LIBCUDACXX_THREAD_ABI_VISIBILITY
+_LIBCPP_THREAD_ABI_VISIBILITY
 void __libcpp_thread_sleep_for(const chrono::nanoseconds& __ns);
 
 // Thread local storage
-_LIBCUDACXX_THREAD_ABI_VISIBILITY
+_LIBCPP_THREAD_ABI_VISIBILITY
 int __libcpp_tls_create(__libcpp_tls_key* __key,
-                        void(_LIBCUDACXX_TLS_DESTRUCTOR_CC* __at_exit)(void*));
+                        void(_LIBCPP_TLS_DESTRUCTOR_CC* __at_exit)(void*));
 
-_LIBCUDACXX_THREAD_ABI_VISIBILITY
+_LIBCPP_THREAD_ABI_VISIBILITY
 void *__libcpp_tls_get(__libcpp_tls_key __key);
 
-_LIBCUDACXX_THREAD_ABI_VISIBILITY
+_LIBCPP_THREAD_ABI_VISIBILITY
 int __libcpp_tls_set(__libcpp_tls_key __key, void *__p);
 
-#endif // !defined(_LIBCUDACXX_HAS_THREAD_API_EXTERNAL)
+#endif // !defined(_LIBCPP_HAS_THREAD_API_EXTERNAL)
 
-#if (!defined(_LIBCUDACXX_HAS_THREAD_LIBRARY_EXTERNAL) || \
-     defined(_LIBCUDACXX_BUILDING_THREAD_LIBRARY_EXTERNAL)) && \
-    defined(_LIBCUDACXX_HAS_THREAD_API_PTHREAD)
+#if (!defined(_LIBCPP_HAS_THREAD_LIBRARY_EXTERNAL) || \
+     defined(_LIBCPP_BUILDING_THREAD_LIBRARY_EXTERNAL)) && \
+    defined(_LIBCPP_HAS_THREAD_API_PTHREAD)
 
 int __libcpp_recursive_mutex_init(__libcpp_recursive_mutex_t *__m)
 {
@@ -367,7 +367,7 @@ void __libcpp_thread_sleep_for(const chrono::nanoseconds& __ns)
    seconds __s = duration_cast<seconds>(__ns);
    __libcpp_timespec_t __ts;
    typedef decltype(__ts.tv_sec) ts_sec;
-   _LIBCUDACXX_CONSTEXPR ts_sec __ts_sec_max = numeric_limits<ts_sec>::max();
+   _LIBCPP_CONSTEXPR ts_sec __ts_sec_max = numeric_limits<ts_sec>::max();
 
    if (__s.count() < __ts_sec_max)
    {
@@ -399,21 +399,21 @@ int __libcpp_tls_set(__libcpp_tls_key __key, void *__p)
     return pthread_setspecific(__key, __p);
 }
 
-#endif // !_LIBCUDACXX_HAS_THREAD_LIBRARY_EXTERNAL || _LIBCUDACXX_BUILDING_THREAD_LIBRARY_EXTERNAL
+#endif // !_LIBCPP_HAS_THREAD_LIBRARY_EXTERNAL || _LIBCPP_BUILDING_THREAD_LIBRARY_EXTERNAL
 
-class _LIBCUDACXX_TYPE_VIS thread;
-class _LIBCUDACXX_TYPE_VIS __thread_id;
+class _LIBCPP_TYPE_VIS thread;
+class _LIBCPP_TYPE_VIS __thread_id;
 
 namespace this_thread
 {
 
-_LIBCUDACXX_INLINE_VISIBILITY __thread_id get_id() _NOEXCEPT;
+_LIBCPP_INLINE_VISIBILITY __thread_id get_id() _NOEXCEPT;
 
 }  // this_thread
 
 template<> struct hash<__thread_id>;
 
-class _LIBCUDACXX_TEMPLATE_VIS __thread_id
+class _LIBCPP_TEMPLATE_VIS __thread_id
 {
     // FIXME: pthread_t is a pointer on Darwin but a long on Linux.
     // NULL is the no-thread value on Darwin.  Someone needs to check
@@ -421,58 +421,58 @@ class _LIBCUDACXX_TEMPLATE_VIS __thread_id
     __libcpp_thread_id __id_;
 
 public:
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     __thread_id() _NOEXCEPT : __id_(0) {}
 
-    friend _LIBCUDACXX_INLINE_VISIBILITY
+    friend _LIBCPP_INLINE_VISIBILITY
         bool operator==(__thread_id __x, __thread_id __y) _NOEXCEPT
         { // don't pass id==0 to underlying routines
         if (__x.__id_ == 0) return __y.__id_ == 0;
         if (__y.__id_ == 0) return false;
         return __libcpp_thread_id_equal(__x.__id_, __y.__id_);
         }
-    friend _LIBCUDACXX_INLINE_VISIBILITY
+    friend _LIBCPP_INLINE_VISIBILITY
         bool operator!=(__thread_id __x, __thread_id __y) _NOEXCEPT
         {return !(__x == __y);}
-    friend _LIBCUDACXX_INLINE_VISIBILITY
+    friend _LIBCPP_INLINE_VISIBILITY
         bool operator< (__thread_id __x, __thread_id __y) _NOEXCEPT
         { // id==0 is always less than any other thread_id
         if (__x.__id_ == 0) return __y.__id_ != 0;
         if (__y.__id_ == 0) return false;
         return  __libcpp_thread_id_less(__x.__id_, __y.__id_);
         }
-    friend _LIBCUDACXX_INLINE_VISIBILITY
+    friend _LIBCPP_INLINE_VISIBILITY
         bool operator<=(__thread_id __x, __thread_id __y) _NOEXCEPT
         {return !(__y < __x);}
-    friend _LIBCUDACXX_INLINE_VISIBILITY
+    friend _LIBCPP_INLINE_VISIBILITY
         bool operator> (__thread_id __x, __thread_id __y) _NOEXCEPT
         {return   __y < __x ;}
-    friend _LIBCUDACXX_INLINE_VISIBILITY
+    friend _LIBCPP_INLINE_VISIBILITY
         bool operator>=(__thread_id __x, __thread_id __y) _NOEXCEPT
         {return !(__x < __y);}
 
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     void __reset() { __id_ = 0; }
     
     template<class _CharT, class _Traits>
     friend
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     basic_ostream<_CharT, _Traits>&
     operator<<(basic_ostream<_CharT, _Traits>& __os, __thread_id __id);
 
 private:
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     __thread_id(__libcpp_thread_id __id) : __id_(__id) {}
 
     friend __thread_id this_thread::get_id() _NOEXCEPT;
-    friend class _LIBCUDACXX_TYPE_VIS thread;
-    friend struct _LIBCUDACXX_TEMPLATE_VIS hash<__thread_id>;
+    friend class _LIBCPP_TYPE_VIS thread;
+    friend struct _LIBCPP_TEMPLATE_VIS hash<__thread_id>;
 };
 
 namespace this_thread
 {
 
-inline _LIBCUDACXX_INLINE_VISIBILITY
+inline _LIBCPP_INLINE_VISIBILITY
 __thread_id
 get_id() _NOEXCEPT
 {
@@ -481,10 +481,10 @@ get_id() _NOEXCEPT
 
 }  // this_thread
 
-#endif // !_LIBCUDACXX_HAS_NO_THREADS
+#endif // !_LIBCPP_HAS_NO_THREADS
 
-_LIBCUDACXX_END_NAMESPACE_STD
+_LIBCPP_END_NAMESPACE_STD
 
-_LIBCUDACXX_POP_MACROS
+_LIBCPP_POP_MACROS
 
-#endif // _LIBCUDACXX_THREADING_SUPPORT
+#endif // _LIBCPP_THREADING_SUPPORT

@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCUDACXX_CSTDIO
-#define _LIBCUDACXX_CSTDIO
+#ifndef _LIBCPP_CSTDIO
+#define _LIBCPP_CSTDIO
 
 /*
     cstdio synopsis
@@ -98,11 +98,11 @@ void perror(const char* s);
 #include <__config>
 #include <stdio.h>
 
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
-_LIBCUDACXX_BEGIN_NAMESPACE_STD
+_LIBCPP_BEGIN_NAMESPACE_STD
 
 using ::FILE;
 using ::fpos_t;
@@ -141,7 +141,7 @@ using ::feof;
 using ::ferror;
 using ::perror;
 
-#ifndef _LIBCUDACXX_HAS_NO_GLOBAL_FILESYSTEM_NAMESPACE
+#ifndef _LIBCPP_HAS_NO_GLOBAL_FILESYSTEM_NAMESPACE
 using ::fopen;
 using ::freopen;
 using ::remove;
@@ -150,22 +150,22 @@ using ::tmpfile;
 using ::tmpnam;
 #endif
 
-#ifndef _LIBCUDACXX_HAS_NO_STDIN
+#ifndef _LIBCPP_HAS_NO_STDIN
 using ::getchar;
-#if _LIBCUDACXX_STD_VER <= 11 && !defined(_LIBCUDACXX_C_HAS_NO_GETS)
+#if _LIBCPP_STD_VER <= 11 && !defined(_LIBCPP_C_HAS_NO_GETS)
 using ::gets;
 #endif
 using ::scanf;
 using ::vscanf;
 #endif
 
-#ifndef _LIBCUDACXX_HAS_NO_STDOUT
+#ifndef _LIBCPP_HAS_NO_STDOUT
 using ::printf;
 using ::putchar;
 using ::puts;
 using ::vprintf;
 #endif
 
-_LIBCUDACXX_END_NAMESPACE_STD
+_LIBCPP_END_NAMESPACE_STD
 
-#endif  // _LIBCUDACXX_CSTDIO
+#endif  // _LIBCPP_CSTDIO

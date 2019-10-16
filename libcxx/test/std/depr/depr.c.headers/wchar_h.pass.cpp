@@ -110,7 +110,7 @@ int main(int, char**)
     // These tests fail on systems whose C library doesn't provide a correct overload
     // set for wcschr, wcspbrk, wcsrchr, wcsstr, and wmemchr, unless the compiler is
     // a suitably recent version of Clang.
-#if !defined(__APPLE__) || defined(_LIBCUDACXX_PREFERRED_OVERLOAD)
+#if !defined(__APPLE__) || defined(_LIBCPP_PREFERRED_OVERLOAD)
     static_assert((std::is_same<decltype(wcschr((const wchar_t*)0, L' ')), const wchar_t*>::value), "");
     static_assert((std::is_same<decltype(wcspbrk((const wchar_t*)0, L"")), const wchar_t*>::value), "");
     static_assert((std::is_same<decltype(wcsrchr((const wchar_t*)0, L' ')), const wchar_t*>::value), "");
@@ -118,13 +118,13 @@ int main(int, char**)
     static_assert((std::is_same<decltype(wmemchr((const wchar_t*)0, L' ', s)), const wchar_t*>::value), "");
 #endif
 
-#ifndef _LIBCUDACXX_HAS_NO_STDIN
+#ifndef _LIBCPP_HAS_NO_STDIN
     static_assert((std::is_same<decltype(getwchar()), wint_t>::value), "");
     static_assert((std::is_same<decltype(vwscanf(L"", va)), int>::value), "");
     static_assert((std::is_same<decltype(wscanf(L"")), int>::value), "");
 #endif
 
-#ifndef _LIBCUDACXX_HAS_NO_STDOUT
+#ifndef _LIBCPP_HAS_NO_STDOUT
     static_assert((std::is_same<decltype(putwchar(L' ')), wint_t>::value), "");
     static_assert((std::is_same<decltype(vwprintf(L"", va)), int>::value), "");
     static_assert((std::is_same<decltype(wprintf(L"")), int>::value), "");

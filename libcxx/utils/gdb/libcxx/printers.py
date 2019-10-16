@@ -7,7 +7,7 @@
 #===----------------------------------------------------------------------===##
 """GDB pretty-printers for libc++.
 
-These should work for objects compiled when _LIBCUDACXX_ABI_UNSTABLE is defined
+These should work for objects compiled when _LIBCPP_ABI_UNSTABLE is defined
 and when it is undefined.
 """
 
@@ -192,7 +192,7 @@ class StdStringPrinter(object):
         """Short size depends on both endianness and a compile-time define."""
 
         # If the padding field is present after all this indirection, then string
-        # was compiled with _LIBCUDACXX_ABI_ALTERNATE_STRING_LAYOUT defined.
+        # was compiled with _LIBCPP_ABI_ALTERNATE_STRING_LAYOUT defined.
         field = short_field.type.fields()[1].type.fields()[0]
         libcpp_abi_alternate_string_layout = field.name and "__padding" in field.name
 

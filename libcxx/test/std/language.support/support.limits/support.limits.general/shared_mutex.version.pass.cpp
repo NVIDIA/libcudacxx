@@ -39,7 +39,7 @@
 #   error "__cpp_lib_shared_mutex should not be defined before c++17"
 # endif
 
-# if !defined(_LIBCUDACXX_HAS_NO_THREADS)
+# if !defined(_LIBCPP_HAS_NO_THREADS)
 #   ifndef __cpp_lib_shared_timed_mutex
 #     error "__cpp_lib_shared_timed_mutex should be defined in c++14"
 #   endif
@@ -48,13 +48,13 @@
 #   endif
 # else
 #   ifdef __cpp_lib_shared_timed_mutex
-#     error "__cpp_lib_shared_timed_mutex should not be defined when !defined(_LIBCUDACXX_HAS_NO_THREADS) is not defined!"
+#     error "__cpp_lib_shared_timed_mutex should not be defined when !defined(_LIBCPP_HAS_NO_THREADS) is not defined!"
 #   endif
 # endif
 
 #elif TEST_STD_VER == 17
 
-# if !defined(_LIBCUDACXX_HAS_NO_THREADS)
+# if !defined(_LIBCPP_HAS_NO_THREADS)
 #   ifndef __cpp_lib_shared_mutex
 #     error "__cpp_lib_shared_mutex should be defined in c++17"
 #   endif
@@ -63,11 +63,11 @@
 #   endif
 # else
 #   ifdef __cpp_lib_shared_mutex
-#     error "__cpp_lib_shared_mutex should not be defined when !defined(_LIBCUDACXX_HAS_NO_THREADS) is not defined!"
+#     error "__cpp_lib_shared_mutex should not be defined when !defined(_LIBCPP_HAS_NO_THREADS) is not defined!"
 #   endif
 # endif
 
-# if !defined(_LIBCUDACXX_HAS_NO_THREADS)
+# if !defined(_LIBCPP_HAS_NO_THREADS)
 #   ifndef __cpp_lib_shared_timed_mutex
 #     error "__cpp_lib_shared_timed_mutex should be defined in c++17"
 #   endif
@@ -76,13 +76,13 @@
 #   endif
 # else
 #   ifdef __cpp_lib_shared_timed_mutex
-#     error "__cpp_lib_shared_timed_mutex should not be defined when !defined(_LIBCUDACXX_HAS_NO_THREADS) is not defined!"
+#     error "__cpp_lib_shared_timed_mutex should not be defined when !defined(_LIBCPP_HAS_NO_THREADS) is not defined!"
 #   endif
 # endif
 
 #elif TEST_STD_VER > 17
 
-# if !defined(_LIBCUDACXX_HAS_NO_THREADS)
+# if !defined(_LIBCPP_HAS_NO_THREADS)
 #   ifndef __cpp_lib_shared_mutex
 #     error "__cpp_lib_shared_mutex should be defined in c++2a"
 #   endif
@@ -91,11 +91,11 @@
 #   endif
 # else
 #   ifdef __cpp_lib_shared_mutex
-#     error "__cpp_lib_shared_mutex should not be defined when !defined(_LIBCUDACXX_HAS_NO_THREADS) is not defined!"
+#     error "__cpp_lib_shared_mutex should not be defined when !defined(_LIBCPP_HAS_NO_THREADS) is not defined!"
 #   endif
 # endif
 
-# if !defined(_LIBCUDACXX_HAS_NO_THREADS)
+# if !defined(_LIBCPP_HAS_NO_THREADS)
 #   ifndef __cpp_lib_shared_timed_mutex
 #     error "__cpp_lib_shared_timed_mutex should be defined in c++2a"
 #   endif
@@ -104,7 +104,7 @@
 #   endif
 # else
 #   ifdef __cpp_lib_shared_timed_mutex
-#     error "__cpp_lib_shared_timed_mutex should not be defined when !defined(_LIBCUDACXX_HAS_NO_THREADS) is not defined!"
+#     error "__cpp_lib_shared_timed_mutex should not be defined when !defined(_LIBCPP_HAS_NO_THREADS) is not defined!"
 #   endif
 # endif
 

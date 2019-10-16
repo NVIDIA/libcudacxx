@@ -1,20 +1,20 @@
 // -*- C++ -*-
-#ifndef _LIBCUDACXX_SPLIT_BUFFER
-#define _LIBCUDACXX_SPLIT_BUFFER
+#ifndef _LIBCPP_SPLIT_BUFFER
+#define _LIBCPP_SPLIT_BUFFER
 
 #include <__config>
 #include <type_traits>
 #include <algorithm>
 
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
-_LIBCUDACXX_PUSH_MACROS
+_LIBCPP_PUSH_MACROS
 #include <__undef_macros>
 
 
-_LIBCUDACXX_BEGIN_NAMESPACE_STD
+_LIBCPP_BEGIN_NAMESPACE_STD
 
 template <bool>
 class __split_buffer_common
@@ -53,22 +53,22 @@ public:
     typedef typename add_lvalue_reference<allocator_type>::type __alloc_ref;
     typedef typename add_lvalue_reference<allocator_type>::type __alloc_const_ref;
 
-    _LIBCUDACXX_INLINE_VISIBILITY __alloc_rr&           __alloc() _NOEXCEPT         {return __end_cap_.second();}
-    _LIBCUDACXX_INLINE_VISIBILITY const __alloc_rr&     __alloc() const _NOEXCEPT   {return __end_cap_.second();}
-    _LIBCUDACXX_INLINE_VISIBILITY pointer&              __end_cap() _NOEXCEPT       {return __end_cap_.first();}
-    _LIBCUDACXX_INLINE_VISIBILITY const pointer&        __end_cap() const _NOEXCEPT {return __end_cap_.first();}
+    _LIBCPP_INLINE_VISIBILITY __alloc_rr&           __alloc() _NOEXCEPT         {return __end_cap_.second();}
+    _LIBCPP_INLINE_VISIBILITY const __alloc_rr&     __alloc() const _NOEXCEPT   {return __end_cap_.second();}
+    _LIBCPP_INLINE_VISIBILITY pointer&              __end_cap() _NOEXCEPT       {return __end_cap_.first();}
+    _LIBCPP_INLINE_VISIBILITY const pointer&        __end_cap() const _NOEXCEPT {return __end_cap_.first();}
 
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     __split_buffer()
         _NOEXCEPT_(is_nothrow_default_constructible<allocator_type>::value);
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     explicit __split_buffer(__alloc_rr& __a);
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     explicit __split_buffer(const __alloc_rr& __a);
     __split_buffer(size_type __cap, size_type __start, __alloc_rr& __a);
     ~__split_buffer();
 
-#ifndef _LIBCUDACXX_CXX03_LANG
+#ifndef _LIBCPP_CXX03_LANG
     __split_buffer(__split_buffer&& __c)
         _NOEXCEPT_(is_nothrow_move_constructible<allocator_type>::value);
     __split_buffer(__split_buffer&& __c, const __alloc_rr& __a);
@@ -76,40 +76,40 @@ public:
         _NOEXCEPT_((__alloc_traits::propagate_on_container_move_assignment::value &&
                 is_nothrow_move_assignable<allocator_type>::value) ||
                !__alloc_traits::propagate_on_container_move_assignment::value);
-#endif  // _LIBCUDACXX_CXX03_LANG
+#endif  // _LIBCPP_CXX03_LANG
 
-    _LIBCUDACXX_INLINE_VISIBILITY       iterator begin() _NOEXCEPT       {return __begin_;}
-    _LIBCUDACXX_INLINE_VISIBILITY const_iterator begin() const _NOEXCEPT {return __begin_;}
-    _LIBCUDACXX_INLINE_VISIBILITY       iterator end() _NOEXCEPT         {return __end_;}
-    _LIBCUDACXX_INLINE_VISIBILITY const_iterator end() const _NOEXCEPT   {return __end_;}
+    _LIBCPP_INLINE_VISIBILITY       iterator begin() _NOEXCEPT       {return __begin_;}
+    _LIBCPP_INLINE_VISIBILITY const_iterator begin() const _NOEXCEPT {return __begin_;}
+    _LIBCPP_INLINE_VISIBILITY       iterator end() _NOEXCEPT         {return __end_;}
+    _LIBCPP_INLINE_VISIBILITY const_iterator end() const _NOEXCEPT   {return __end_;}
 
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     void clear() _NOEXCEPT
         {__destruct_at_end(__begin_);}
-    _LIBCUDACXX_INLINE_VISIBILITY size_type size() const {return static_cast<size_type>(__end_ - __begin_);}
-    _LIBCUDACXX_INLINE_VISIBILITY bool empty()     const {return __end_ == __begin_;}
-    _LIBCUDACXX_INLINE_VISIBILITY size_type capacity() const {return static_cast<size_type>(__end_cap() - __first_);}
-    _LIBCUDACXX_INLINE_VISIBILITY size_type __front_spare() const {return static_cast<size_type>(__begin_ - __first_);}
-    _LIBCUDACXX_INLINE_VISIBILITY size_type __back_spare() const {return static_cast<size_type>(__end_cap() - __end_);}
+    _LIBCPP_INLINE_VISIBILITY size_type size() const {return static_cast<size_type>(__end_ - __begin_);}
+    _LIBCPP_INLINE_VISIBILITY bool empty()     const {return __end_ == __begin_;}
+    _LIBCPP_INLINE_VISIBILITY size_type capacity() const {return static_cast<size_type>(__end_cap() - __first_);}
+    _LIBCPP_INLINE_VISIBILITY size_type __front_spare() const {return static_cast<size_type>(__begin_ - __first_);}
+    _LIBCPP_INLINE_VISIBILITY size_type __back_spare() const {return static_cast<size_type>(__end_cap() - __end_);}
 
-    _LIBCUDACXX_INLINE_VISIBILITY       reference front()       {return *__begin_;}
-    _LIBCUDACXX_INLINE_VISIBILITY const_reference front() const {return *__begin_;}
-    _LIBCUDACXX_INLINE_VISIBILITY       reference back()        {return *(__end_ - 1);}
-    _LIBCUDACXX_INLINE_VISIBILITY const_reference back() const  {return *(__end_ - 1);}
+    _LIBCPP_INLINE_VISIBILITY       reference front()       {return *__begin_;}
+    _LIBCPP_INLINE_VISIBILITY const_reference front() const {return *__begin_;}
+    _LIBCPP_INLINE_VISIBILITY       reference back()        {return *(__end_ - 1);}
+    _LIBCPP_INLINE_VISIBILITY const_reference back() const  {return *(__end_ - 1);}
 
     void reserve(size_type __n);
     void shrink_to_fit() _NOEXCEPT;
     void push_front(const_reference __x);
-    _LIBCUDACXX_INLINE_VISIBILITY void push_back(const_reference __x);
-#ifndef _LIBCUDACXX_CXX03_LANG
+    _LIBCPP_INLINE_VISIBILITY void push_back(const_reference __x);
+#ifndef _LIBCPP_CXX03_LANG
     void push_front(value_type&& __x);
     void push_back(value_type&& __x);
     template <class... _Args>
         void emplace_back(_Args&&... __args);
-#endif  // !defined(_LIBCUDACXX_CXX03_LANG)
+#endif  // !defined(_LIBCPP_CXX03_LANG)
 
-    _LIBCUDACXX_INLINE_VISIBILITY void pop_front() {__destruct_at_begin(__begin_+1);}
-    _LIBCUDACXX_INLINE_VISIBILITY void pop_back() {__destruct_at_end(__end_-1);}
+    _LIBCPP_INLINE_VISIBILITY void pop_front() {__destruct_at_begin(__begin_+1);}
+    _LIBCPP_INLINE_VISIBILITY void pop_back() {__destruct_at_end(__end_-1);}
 
     void __construct_at_end(size_type __n);
     void __construct_at_end(size_type __n, const_reference __x);
@@ -129,19 +129,19 @@ public:
         >::type
         __construct_at_end(_ForwardIterator __first, _ForwardIterator __last);
 
-    _LIBCUDACXX_INLINE_VISIBILITY void __destruct_at_begin(pointer __new_begin)
+    _LIBCPP_INLINE_VISIBILITY void __destruct_at_begin(pointer __new_begin)
         {__destruct_at_begin(__new_begin, is_trivially_destructible<value_type>());}
-        _LIBCUDACXX_INLINE_VISIBILITY
+        _LIBCPP_INLINE_VISIBILITY
         void __destruct_at_begin(pointer __new_begin, false_type);
-        _LIBCUDACXX_INLINE_VISIBILITY
+        _LIBCPP_INLINE_VISIBILITY
         void __destruct_at_begin(pointer __new_begin, true_type);
 
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     void __destruct_at_end(pointer __new_last) _NOEXCEPT
         {__destruct_at_end(__new_last, false_type());}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
         void __destruct_at_end(pointer __new_last, false_type) _NOEXCEPT;
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
         void __destruct_at_end(pointer __new_last, true_type) _NOEXCEPT;
 
     void swap(__split_buffer& __x)
@@ -151,14 +151,14 @@ public:
     bool __invariants() const;
 
 private:
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     void __move_assign_alloc(__split_buffer& __c, true_type)
         _NOEXCEPT_(is_nothrow_move_assignable<allocator_type>::value)
         {
-            __alloc() = _CUDA_VSTD::move(__c.__alloc());
+            __alloc() = _VSTD::move(__c.__alloc());
         }
 
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     void __move_assign_alloc(__split_buffer&, false_type) _NOEXCEPT
         {}
 
@@ -212,7 +212,7 @@ __split_buffer<_Tp, _Allocator>::__construct_at_end(size_type __n)
 {
     _ConstructTransaction __tx(&this->__end_, __n);
     for (; __tx.__pos_ != __tx.__end_; ++__tx.__pos_) {
-        __alloc_traits::construct(this->__alloc(), _CUDA_VSTD::__to_raw_pointer(__tx.__pos_));
+        __alloc_traits::construct(this->__alloc(), _VSTD::__to_raw_pointer(__tx.__pos_));
     }
 }
 
@@ -229,7 +229,7 @@ __split_buffer<_Tp, _Allocator>::__construct_at_end(size_type __n, const_referen
     _ConstructTransaction __tx(&this->__end_, __n);
     for (; __tx.__pos_ != __tx.__end_; ++__tx.__pos_) {
         __alloc_traits::construct(this->__alloc(),
-            _CUDA_VSTD::__to_raw_pointer(__tx.__pos_), __x);
+            _VSTD::__to_raw_pointer(__tx.__pos_), __x);
     }
 }
 
@@ -249,14 +249,14 @@ __split_buffer<_Tp, _Allocator>::__construct_at_end(_InputIter __first, _InputIt
         if (__end_ == __end_cap())
         {
             size_type __old_cap = __end_cap() - __first_;
-            size_type __new_cap = _CUDA_VSTD::max<size_type>(2 * __old_cap, 8);
+            size_type __new_cap = _VSTD::max<size_type>(2 * __old_cap, 8);
             __split_buffer __buf(__new_cap, 0, __a);
             for (pointer __p = __begin_; __p != __end_; ++__p, ++__buf.__end_)
                 __alloc_traits::construct(__buf.__alloc(),
-                        _CUDA_VSTD::__to_raw_pointer(__buf.__end_), _CUDA_VSTD::move(*__p));
+                        _VSTD::__to_raw_pointer(__buf.__end_), _VSTD::move(*__p));
             swap(__buf);
         }
-        __alloc_traits::construct(__a, _CUDA_VSTD::__to_raw_pointer(this->__end_), *__first);
+        __alloc_traits::construct(__a, _VSTD::__to_raw_pointer(this->__end_), *__first);
         ++this->__end_;
     }
 }
@@ -273,7 +273,7 @@ __split_buffer<_Tp, _Allocator>::__construct_at_end(_ForwardIterator __first, _F
     _ConstructTransaction __tx(&this->__end_, std::distance(__first, __last));
     for (; __tx.__pos_ != __tx.__end_; ++__tx.__pos_, ++__first) {
         __alloc_traits::construct(this->__alloc(),
-            _CUDA_VSTD::__to_raw_pointer(__tx.__pos_), *__first);
+            _VSTD::__to_raw_pointer(__tx.__pos_), *__first);
     }
 }
 
@@ -295,7 +295,7 @@ __split_buffer<_Tp, _Allocator>::__destruct_at_begin(pointer __new_begin, true_t
 }
 
 template <class _Tp, class _Allocator>
-inline _LIBCUDACXX_INLINE_VISIBILITY
+inline _LIBCPP_INLINE_VISIBILITY
 void
 __split_buffer<_Tp, _Allocator>::__destruct_at_end(pointer __new_last, false_type) _NOEXCEPT
 {
@@ -304,7 +304,7 @@ __split_buffer<_Tp, _Allocator>::__destruct_at_end(pointer __new_last, false_typ
 }
 
 template <class _Tp, class _Allocator>
-inline _LIBCUDACXX_INLINE_VISIBILITY
+inline _LIBCPP_INLINE_VISIBILITY
 void
 __split_buffer<_Tp, _Allocator>::__destruct_at_end(pointer __new_last, true_type) _NOEXCEPT
 {
@@ -350,15 +350,15 @@ __split_buffer<_Tp, _Allocator>::~__split_buffer()
         __alloc_traits::deallocate(__alloc(), __first_, capacity());
 }
 
-#ifndef _LIBCUDACXX_CXX03_LANG
+#ifndef _LIBCPP_CXX03_LANG
 
 template <class _Tp, class _Allocator>
 __split_buffer<_Tp, _Allocator>::__split_buffer(__split_buffer&& __c)
     _NOEXCEPT_(is_nothrow_move_constructible<allocator_type>::value)
-    : __first_(_CUDA_VSTD::move(__c.__first_)),
-      __begin_(_CUDA_VSTD::move(__c.__begin_)),
-      __end_(_CUDA_VSTD::move(__c.__end_)),
-      __end_cap_(_CUDA_VSTD::move(__c.__end_cap_))
+    : __first_(_VSTD::move(__c.__first_)),
+      __begin_(_VSTD::move(__c.__begin_)),
+      __end_(_VSTD::move(__c.__end_)),
+      __end_cap_(_VSTD::move(__c.__end_cap_))
 {
     __c.__first_ = nullptr;
     __c.__begin_ = nullptr;
@@ -412,7 +412,7 @@ __split_buffer<_Tp, _Allocator>::operator=(__split_buffer&& __c)
     return *this;
 }
 
-#endif  // _LIBCUDACXX_CXX03_LANG
+#endif  // _LIBCPP_CXX03_LANG
 
 template <class _Tp, class _Allocator>
 void
@@ -420,10 +420,10 @@ __split_buffer<_Tp, _Allocator>::swap(__split_buffer& __x)
         _NOEXCEPT_(!__alloc_traits::propagate_on_container_swap::value||
                    __is_nothrow_swappable<__alloc_rr>::value)
 {
-    _CUDA_VSTD::swap(__first_, __x.__first_);
-    _CUDA_VSTD::swap(__begin_, __x.__begin_);
-    _CUDA_VSTD::swap(__end_, __x.__end_);
-    _CUDA_VSTD::swap(__end_cap(), __x.__end_cap());
+    _VSTD::swap(__first_, __x.__first_);
+    _VSTD::swap(__begin_, __x.__begin_);
+    _VSTD::swap(__end_, __x.__end_);
+    _VSTD::swap(__end_cap(), __x.__end_cap());
     __swap_allocator(__alloc(), __x.__alloc());
 }
 
@@ -436,10 +436,10 @@ __split_buffer<_Tp, _Allocator>::reserve(size_type __n)
         __split_buffer<value_type, __alloc_rr&> __t(__n, 0, __alloc());
         __t.__construct_at_end(move_iterator<pointer>(__begin_),
                                move_iterator<pointer>(__end_));
-        _CUDA_VSTD::swap(__first_, __t.__first_);
-        _CUDA_VSTD::swap(__begin_, __t.__begin_);
-        _CUDA_VSTD::swap(__end_, __t.__end_);
-        _CUDA_VSTD::swap(__end_cap(), __t.__end_cap());
+        _VSTD::swap(__first_, __t.__first_);
+        _VSTD::swap(__begin_, __t.__begin_);
+        _VSTD::swap(__end_, __t.__end_);
+        _VSTD::swap(__end_cap(), __t.__end_cap());
     }
 }
 
@@ -449,24 +449,24 @@ __split_buffer<_Tp, _Allocator>::shrink_to_fit() _NOEXCEPT
 {
     if (capacity() > size())
     {
-#ifndef _LIBCUDACXX_NO_EXCEPTIONS
+#ifndef _LIBCPP_NO_EXCEPTIONS
         try
         {
-#endif  // _LIBCUDACXX_NO_EXCEPTIONS
+#endif  // _LIBCPP_NO_EXCEPTIONS
             __split_buffer<value_type, __alloc_rr&> __t(size(), 0, __alloc());
             __t.__construct_at_end(move_iterator<pointer>(__begin_),
                                    move_iterator<pointer>(__end_));
             __t.__end_ = __t.__begin_ + (__end_ - __begin_);
-            _CUDA_VSTD::swap(__first_, __t.__first_);
-            _CUDA_VSTD::swap(__begin_, __t.__begin_);
-            _CUDA_VSTD::swap(__end_, __t.__end_);
-            _CUDA_VSTD::swap(__end_cap(), __t.__end_cap());
-#ifndef _LIBCUDACXX_NO_EXCEPTIONS
+            _VSTD::swap(__first_, __t.__first_);
+            _VSTD::swap(__begin_, __t.__begin_);
+            _VSTD::swap(__end_, __t.__end_);
+            _VSTD::swap(__end_cap(), __t.__end_cap());
+#ifndef _LIBCPP_NO_EXCEPTIONS
         }
         catch (...)
         {
         }
-#endif  // _LIBCUDACXX_NO_EXCEPTIONS
+#endif  // _LIBCPP_NO_EXCEPTIONS
     }
 }
 
@@ -480,7 +480,7 @@ __split_buffer<_Tp, _Allocator>::push_front(const_reference __x)
         {
             difference_type __d = __end_cap() - __end_;
             __d = (__d + 1) / 2;
-            __begin_ = _CUDA_VSTD::move_backward(__begin_, __end_, __end_ + __d);
+            __begin_ = _VSTD::move_backward(__begin_, __end_, __end_ + __d);
             __end_ += __d;
         }
         else
@@ -489,17 +489,17 @@ __split_buffer<_Tp, _Allocator>::push_front(const_reference __x)
             __split_buffer<value_type, __alloc_rr&> __t(__c, (__c + 3) / 4, __alloc());
             __t.__construct_at_end(move_iterator<pointer>(__begin_),
                                    move_iterator<pointer>(__end_));
-            _CUDA_VSTD::swap(__first_, __t.__first_);
-            _CUDA_VSTD::swap(__begin_, __t.__begin_);
-            _CUDA_VSTD::swap(__end_, __t.__end_);
-            _CUDA_VSTD::swap(__end_cap(), __t.__end_cap());
+            _VSTD::swap(__first_, __t.__first_);
+            _VSTD::swap(__begin_, __t.__begin_);
+            _VSTD::swap(__end_, __t.__end_);
+            _VSTD::swap(__end_cap(), __t.__end_cap());
         }
     }
-    __alloc_traits::construct(__alloc(), _CUDA_VSTD::__to_raw_pointer(__begin_-1), __x);
+    __alloc_traits::construct(__alloc(), _VSTD::__to_raw_pointer(__begin_-1), __x);
     --__begin_;
 }
 
-#ifndef _LIBCUDACXX_CXX03_LANG
+#ifndef _LIBCPP_CXX03_LANG
 
 template <class _Tp, class _Allocator>
 void
@@ -511,7 +511,7 @@ __split_buffer<_Tp, _Allocator>::push_front(value_type&& __x)
         {
             difference_type __d = __end_cap() - __end_;
             __d = (__d + 1) / 2;
-            __begin_ = _CUDA_VSTD::move_backward(__begin_, __end_, __end_ + __d);
+            __begin_ = _VSTD::move_backward(__begin_, __end_, __end_ + __d);
             __end_ += __d;
         }
         else
@@ -520,21 +520,21 @@ __split_buffer<_Tp, _Allocator>::push_front(value_type&& __x)
             __split_buffer<value_type, __alloc_rr&> __t(__c, (__c + 3) / 4, __alloc());
             __t.__construct_at_end(move_iterator<pointer>(__begin_),
                                    move_iterator<pointer>(__end_));
-            _CUDA_VSTD::swap(__first_, __t.__first_);
-            _CUDA_VSTD::swap(__begin_, __t.__begin_);
-            _CUDA_VSTD::swap(__end_, __t.__end_);
-            _CUDA_VSTD::swap(__end_cap(), __t.__end_cap());
+            _VSTD::swap(__first_, __t.__first_);
+            _VSTD::swap(__begin_, __t.__begin_);
+            _VSTD::swap(__end_, __t.__end_);
+            _VSTD::swap(__end_cap(), __t.__end_cap());
         }
     }
-    __alloc_traits::construct(__alloc(), _CUDA_VSTD::__to_raw_pointer(__begin_-1),
-            _CUDA_VSTD::move(__x));
+    __alloc_traits::construct(__alloc(), _VSTD::__to_raw_pointer(__begin_-1),
+            _VSTD::move(__x));
     --__begin_;
 }
 
-#endif  // _LIBCUDACXX_CXX03_LANG
+#endif  // _LIBCPP_CXX03_LANG
 
 template <class _Tp, class _Allocator>
-inline _LIBCUDACXX_INLINE_VISIBILITY
+inline _LIBCPP_INLINE_VISIBILITY
 void
 __split_buffer<_Tp, _Allocator>::push_back(const_reference __x)
 {
@@ -544,7 +544,7 @@ __split_buffer<_Tp, _Allocator>::push_back(const_reference __x)
         {
             difference_type __d = __begin_ - __first_;
             __d = (__d + 1) / 2;
-            __end_ = _CUDA_VSTD::move(__begin_, __end_, __begin_ - __d);
+            __end_ = _VSTD::move(__begin_, __end_, __begin_ - __d);
             __begin_ -= __d;
         }
         else
@@ -553,17 +553,17 @@ __split_buffer<_Tp, _Allocator>::push_back(const_reference __x)
             __split_buffer<value_type, __alloc_rr&> __t(__c, __c / 4, __alloc());
             __t.__construct_at_end(move_iterator<pointer>(__begin_),
                                    move_iterator<pointer>(__end_));
-            _CUDA_VSTD::swap(__first_, __t.__first_);
-            _CUDA_VSTD::swap(__begin_, __t.__begin_);
-            _CUDA_VSTD::swap(__end_, __t.__end_);
-            _CUDA_VSTD::swap(__end_cap(), __t.__end_cap());
+            _VSTD::swap(__first_, __t.__first_);
+            _VSTD::swap(__begin_, __t.__begin_);
+            _VSTD::swap(__end_, __t.__end_);
+            _VSTD::swap(__end_cap(), __t.__end_cap());
         }
     }
-    __alloc_traits::construct(__alloc(), _CUDA_VSTD::__to_raw_pointer(__end_), __x);
+    __alloc_traits::construct(__alloc(), _VSTD::__to_raw_pointer(__end_), __x);
     ++__end_;
 }
 
-#ifndef _LIBCUDACXX_CXX03_LANG
+#ifndef _LIBCPP_CXX03_LANG
 
 template <class _Tp, class _Allocator>
 void
@@ -575,7 +575,7 @@ __split_buffer<_Tp, _Allocator>::push_back(value_type&& __x)
         {
             difference_type __d = __begin_ - __first_;
             __d = (__d + 1) / 2;
-            __end_ = _CUDA_VSTD::move(__begin_, __end_, __begin_ - __d);
+            __end_ = _VSTD::move(__begin_, __end_, __begin_ - __d);
             __begin_ -= __d;
         }
         else
@@ -584,14 +584,14 @@ __split_buffer<_Tp, _Allocator>::push_back(value_type&& __x)
             __split_buffer<value_type, __alloc_rr&> __t(__c, __c / 4, __alloc());
             __t.__construct_at_end(move_iterator<pointer>(__begin_),
                                    move_iterator<pointer>(__end_));
-            _CUDA_VSTD::swap(__first_, __t.__first_);
-            _CUDA_VSTD::swap(__begin_, __t.__begin_);
-            _CUDA_VSTD::swap(__end_, __t.__end_);
-            _CUDA_VSTD::swap(__end_cap(), __t.__end_cap());
+            _VSTD::swap(__first_, __t.__first_);
+            _VSTD::swap(__begin_, __t.__begin_);
+            _VSTD::swap(__end_, __t.__end_);
+            _VSTD::swap(__end_cap(), __t.__end_cap());
         }
     }
-    __alloc_traits::construct(__alloc(), _CUDA_VSTD::__to_raw_pointer(__end_),
-            _CUDA_VSTD::move(__x));
+    __alloc_traits::construct(__alloc(), _VSTD::__to_raw_pointer(__end_),
+            _VSTD::move(__x));
     ++__end_;
 }
 
@@ -606,7 +606,7 @@ __split_buffer<_Tp, _Allocator>::emplace_back(_Args&&... __args)
         {
             difference_type __d = __begin_ - __first_;
             __d = (__d + 1) / 2;
-            __end_ = _CUDA_VSTD::move(__begin_, __end_, __begin_ - __d);
+            __end_ = _VSTD::move(__begin_, __end_, __begin_ - __d);
             __begin_ -= __d;
         }
         else
@@ -615,21 +615,21 @@ __split_buffer<_Tp, _Allocator>::emplace_back(_Args&&... __args)
             __split_buffer<value_type, __alloc_rr&> __t(__c, __c / 4, __alloc());
             __t.__construct_at_end(move_iterator<pointer>(__begin_),
                                    move_iterator<pointer>(__end_));
-            _CUDA_VSTD::swap(__first_, __t.__first_);
-            _CUDA_VSTD::swap(__begin_, __t.__begin_);
-            _CUDA_VSTD::swap(__end_, __t.__end_);
-            _CUDA_VSTD::swap(__end_cap(), __t.__end_cap());
+            _VSTD::swap(__first_, __t.__first_);
+            _VSTD::swap(__begin_, __t.__begin_);
+            _VSTD::swap(__end_, __t.__end_);
+            _VSTD::swap(__end_cap(), __t.__end_cap());
         }
     }
-    __alloc_traits::construct(__alloc(), _CUDA_VSTD::__to_raw_pointer(__end_),
-                              _CUDA_VSTD::forward<_Args>(__args)...);
+    __alloc_traits::construct(__alloc(), _VSTD::__to_raw_pointer(__end_),
+                              _VSTD::forward<_Args>(__args)...);
     ++__end_;
 }
 
-#endif  // _LIBCUDACXX_CXX03_LANG
+#endif  // _LIBCPP_CXX03_LANG
 
 template <class _Tp, class _Allocator>
-inline _LIBCUDACXX_INLINE_VISIBILITY
+inline _LIBCPP_INLINE_VISIBILITY
 void
 swap(__split_buffer<_Tp, _Allocator>& __x, __split_buffer<_Tp, _Allocator>& __y)
         _NOEXCEPT_(_NOEXCEPT_(__x.swap(__y)))
@@ -637,8 +637,8 @@ swap(__split_buffer<_Tp, _Allocator>& __x, __split_buffer<_Tp, _Allocator>& __y)
     __x.swap(__y);
 }
 
-_LIBCUDACXX_END_NAMESPACE_STD
+_LIBCPP_END_NAMESPACE_STD
 
-_LIBCUDACXX_POP_MACROS
+_LIBCPP_POP_MACROS
 
-#endif  // _LIBCUDACXX_SPLIT_BUFFER
+#endif  // _LIBCPP_SPLIT_BUFFER

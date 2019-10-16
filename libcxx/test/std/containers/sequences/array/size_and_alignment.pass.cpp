@@ -34,7 +34,7 @@ void test() {
   static_assert(sizeof(ArrayT) == sizeof(CArrayT), "");
   static_assert(sizeof(ArrayT) == sizeof(MyArrayT), "");
   static_assert(TEST_ALIGNOF(ArrayT) == TEST_ALIGNOF(MyArrayT), "");
-#if defined(_LIBCUDACXX_VERSION)
+#if defined(_LIBCPP_VERSION)
   ArrayT a;
   ((void)a);
   static_assert(sizeof(ArrayT) == sizeof(a.__elems_), "");

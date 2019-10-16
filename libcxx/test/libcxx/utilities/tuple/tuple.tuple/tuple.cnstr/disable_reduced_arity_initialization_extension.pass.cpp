@@ -25,7 +25,7 @@
 #include "test_convertible.h"
 #include "MoveOnly.h"
 
-#if defined(_LIBCUDACXX_ENABLE_TUPLE_IMPLICIT_REDUCED_ARITY_EXTENSION)
+#if defined(_LIBCPP_ENABLE_TUPLE_IMPLICIT_REDUCED_ARITY_EXTENSION)
 #error This macro should not be defined by default
 #endif
 

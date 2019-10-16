@@ -14,8 +14,8 @@
 
 // iterator insert(const_iterator p, const value_type& x);
 
-#if _LIBCUDACXX_DEBUG >= 1
-#define _LIBCUDACXX_ASSERT(x, m) ((x) ? (void)0 : std::exit(0))
+#if _LIBCPP_DEBUG >= 1
+#define _LIBCPP_ASSERT(x, m) ((x) ? (void)0 : std::exit(0))
 #endif
 
 #include <unordered_map>
@@ -68,7 +68,7 @@ int main(int, char**)
         do_insert_hint_const_lvalue_test<C>();
     }
 #endif
-#if _LIBCUDACXX_DEBUG >= 1
+#if _LIBCPP_DEBUG >= 1
     {
         typedef std::unordered_map<double, int> C;
         typedef C::iterator R;

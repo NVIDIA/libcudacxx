@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCUDACXX_VERSIONH
-#define _LIBCUDACXX_VERSIONH
+#ifndef _LIBCPP_VERSIONH
+#define _LIBCPP_VERSIONH
 
 /*
   version synopsis
@@ -118,11 +118,11 @@ __cpp_lib_void_t                                        201411L <type_traits>
 #include <__config>
 #endif //__cuda_std__
 
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
-#if _LIBCUDACXX_STD_VER > 11
+#if _LIBCPP_STD_VER > 11
 # define __cpp_lib_chrono_udls                          201304L
 # define __cpp_lib_complex_udls                         201309L
 # define __cpp_lib_exchange_function                    201304L
@@ -137,7 +137,7 @@ __cpp_lib_void_t                                        201411L <type_traits>
 # define __cpp_lib_quoted_string_io                     201304L
 # define __cpp_lib_result_of_sfinae                     201210L
 # define __cpp_lib_robust_nonmodifying_seq_ops          201304L
-# if !defined(_LIBCUDACXX_HAS_NO_THREADS)
+# if !defined(_LIBCPP_HAS_NO_THREADS)
 #   define __cpp_lib_shared_timed_mutex                 201402L
 # endif
 # define __cpp_lib_string_udls                          201304L
@@ -147,8 +147,8 @@ __cpp_lib_void_t                                        201411L <type_traits>
 # define __cpp_lib_tuples_by_type                       201304L
 #endif
 
-#if _LIBCUDACXX_STD_VER > 14
-# if !defined(_LIBCUDACXX_HAS_NO_BUILTIN_ADDRESSOF)
+#if _LIBCPP_STD_VER > 14
+# if !defined(_LIBCPP_HAS_NO_BUILTIN_ADDRESSOF)
 #   define __cpp_lib_addressof_constexpr                201603L
 # endif
 # define __cpp_lib_allocator_traits_is_always_equal     201411L
@@ -156,7 +156,7 @@ __cpp_lib_void_t                                        201411L <type_traits>
 # define __cpp_lib_apply                                201603L
 # define __cpp_lib_array_constexpr                      201603L
 # define __cpp_lib_as_const                             201510L
-# if !defined(_LIBCUDACXX_HAS_NO_THREADS)
+# if !defined(_LIBCPP_HAS_NO_THREADS)
 #   define __cpp_lib_atomic_is_always_lock_free         201603L
 # endif
 # define __cpp_lib_bool_constant                        201505L
@@ -169,13 +169,13 @@ __cpp_lib_void_t                                        201411L <type_traits>
 # define __cpp_lib_filesystem                           201703L
 # define __cpp_lib_gcd_lcm                              201606L
 # define __cpp_lib_hardware_interference_size           201703L
-# if defined(_LIBCUDACXX_HAS_UNIQUE_OBJECT_REPRESENTATIONS)
+# if defined(_LIBCPP_HAS_UNIQUE_OBJECT_REPRESENTATIONS)
 #   define __cpp_lib_has_unique_object_representations  201606L
 # endif
 # define __cpp_lib_hypot                                201603L
 # define __cpp_lib_incomplete_container_elements        201505L
 # define __cpp_lib_invoke                               201411L
-# if !defined(_LIBCUDACXX_HAS_NO_IS_AGGREGATE)
+# if !defined(_LIBCPP_HAS_NO_IS_AGGREGATE)
 #   define __cpp_lib_is_aggregate                       201703L
 # endif
 # define __cpp_lib_is_invocable                         201703L
@@ -194,7 +194,7 @@ __cpp_lib_void_t                                        201411L <type_traits>
 # define __cpp_lib_raw_memory_algorithms                201606L
 # define __cpp_lib_sample                               201603L
 # define __cpp_lib_scoped_lock                          201703L
-# if !defined(_LIBCUDACXX_HAS_NO_THREADS)
+# if !defined(_LIBCPP_HAS_NO_THREADS)
 #   define __cpp_lib_shared_mutex                       201505L
 # endif
 // # define __cpp_lib_shared_ptr_arrays                    201611L
@@ -210,25 +210,25 @@ __cpp_lib_void_t                                        201411L <type_traits>
 # define __cpp_lib_void_t                               201411L
 #endif
 
-#if _LIBCUDACXX_STD_VER > 17
-# if !defined(_LIBCUDACXX_HAS_NO_THREADS)
+#if _LIBCPP_STD_VER > 17
+# if !defined(_LIBCPP_HAS_NO_THREADS)
 // #   define __cpp_lib_atomic_ref                         201806L
 # endif
 // # define __cpp_lib_bind_front                           201811L
 // # define __cpp_lib_bit_cast                             201806L
-# if !defined(_LIBCUDACXX_NO_HAS_CHAR8_T)
+# if !defined(_LIBCPP_NO_HAS_CHAR8_T)
 #   define __cpp_lib_char8_t                            201811L
 # endif
 // # define __cpp_lib_concepts                             201806L
 // # define __cpp_lib_constexpr_misc                       201811L
 // # define __cpp_lib_constexpr_swap_algorithms            201806L
-# if _LIBCUDACXX_STD_VER > 17 && defined(__cpp_impl_destroying_delete) && __cpp_impl_destroying_delete >= 201806L
+# if _LIBCPP_STD_VER > 17 && defined(__cpp_impl_destroying_delete) && __cpp_impl_destroying_delete >= 201806L
 #   define __cpp_lib_destroying_delete                  201806L
 # endif
 # define __cpp_lib_erase_if                             201811L
 // # define __cpp_lib_generic_unordered_lookup             201811L
 # define __cpp_lib_interpolate                          201902L
-# if !defined(_LIBCUDACXX_HAS_NO_BUILTIN_IS_CONSTANT_EVALUATED)
+# if !defined(_LIBCPP_HAS_NO_BUILTIN_IS_CONSTANT_EVALUATED)
 #   define __cpp_lib_is_constant_evaluated              201811L
 # endif
 // # define __cpp_lib_list_remove_return_type              201806L
@@ -236,4 +236,4 @@ __cpp_lib_void_t                                        201411L <type_traits>
 // # define __cpp_lib_three_way_comparison                 201711L
 #endif
 
-#endif // _LIBCUDACXX_VERSIONH
+#endif // _LIBCPP_VERSIONH

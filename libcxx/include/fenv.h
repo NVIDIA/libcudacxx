@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCUDACXX_FENV_H
-#define _LIBCUDACXX_FENV_H
+#ifndef _LIBCPP_FENV_H
+#define _LIBCPP_FENV_H
 
 
 /*
@@ -52,7 +52,7 @@ int feupdateenv(const fenv_t* envp);
 
 #include <__config>
 
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
@@ -113,4 +113,4 @@ extern "C++" {
 
 #endif // defined(__cplusplus)
 
-#endif // _LIBCUDACXX_FENV_H
+#endif // _LIBCPP_FENV_H

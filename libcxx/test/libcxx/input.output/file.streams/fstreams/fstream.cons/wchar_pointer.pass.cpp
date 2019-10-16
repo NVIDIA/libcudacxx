@@ -20,7 +20,7 @@
 
 int main(int, char**)
 {
-#ifdef _LIBCUDACXX_HAS_OPEN_WITH_WCHAR
+#ifdef _LIBCPP_HAS_OPEN_WITH_WCHAR
     std::wstring temp = get_wide_temp_file_name();
     {
         std::fstream fs(temp.c_str(), std::ios_base::in | std::ios_base::out

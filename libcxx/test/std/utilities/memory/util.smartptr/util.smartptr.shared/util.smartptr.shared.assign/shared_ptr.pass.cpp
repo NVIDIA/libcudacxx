@@ -12,7 +12,7 @@
 
 // shared_ptr& operator=(const shared_ptr& r);
 
-#define _LIBCUDACXX_DISABLE_DEPRECATION_WARNINGS
+#define _LIBCPP_DISABLE_DEPRECATION_WARNINGS
 
 #include <memory>
 #include <type_traits>

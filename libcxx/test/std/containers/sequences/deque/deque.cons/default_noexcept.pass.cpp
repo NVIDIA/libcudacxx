@@ -31,7 +31,7 @@ struct some_alloc
 
 int main(int, char**)
 {
-#if defined(_LIBCUDACXX_VERSION)
+#if defined(_LIBCPP_VERSION)
     {
         typedef std::deque<MoveOnly> C;
         static_assert(std::is_nothrow_default_constructible<C>::value, "");
@@ -40,7 +40,7 @@ int main(int, char**)
         typedef std::deque<MoveOnly, test_allocator<MoveOnly>> C;
         static_assert(std::is_nothrow_default_constructible<C>::value, "");
     }
-#endif // _LIBCUDACXX_VERSION
+#endif // _LIBCPP_VERSION
     {
         typedef std::deque<MoveOnly, other_allocator<MoveOnly>> C;
         static_assert(!std::is_nothrow_default_constructible<C>::value, "");

@@ -13,7 +13,7 @@
 // ptr_fun(Result (*f)(Arg1, Arg2));
 // UNSUPPORTED: c++98, c++03, c++11, c++14
 
-#define _LIBCUDACXX_DISABLE_DEPRECATION_WARNINGS
+#define _LIBCPP_DISABLE_DEPRECATION_WARNINGS
 
 #include <functional>
 #include <type_traits>

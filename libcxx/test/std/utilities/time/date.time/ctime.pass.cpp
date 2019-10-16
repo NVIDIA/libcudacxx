@@ -53,7 +53,7 @@ int main(int, char**)
 #if TEST_STD_VER > 14 && defined(TEST_HAS_TIMESPEC_GET)
     static_assert((std::is_same<decltype(std::timespec_get(nullptr, 0)), int>::value), "");
 #endif
-#ifndef _LIBCUDACXX_HAS_NO_THREAD_UNSAFE_C_FUNCTIONS
+#ifndef _LIBCPP_HAS_NO_THREAD_UNSAFE_C_FUNCTIONS
     static_assert((std::is_same<decltype(std::asctime(&tm)), char*>::value), "");
     static_assert((std::is_same<decltype(std::ctime(&t)), char*>::value), "");
     static_assert((std::is_same<decltype(std::gmtime(&t)), std::tm*>::value), "");

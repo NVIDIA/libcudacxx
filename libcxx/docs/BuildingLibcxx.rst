@@ -332,7 +332,7 @@ libc++ Feature Options
 
   Pick the default for whether to constrain ABI-unstable symbols to
   each individual translation unit. This setting controls whether
-  `_LIBCUDACXX_HIDE_FROM_ABI_PER_TU_BY_DEFAULT` is defined by default --
+  `_LIBCPP_HIDE_FROM_ABI_PER_TU_BY_DEFAULT` is defined by default --
   see the documentation of that macro for details.
 
 

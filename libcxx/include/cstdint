@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCUDACXX_CSTDINT
-#define _LIBCUDACXX_CSTDINT
+#ifndef _LIBCPP_CSTDINT
+#define _LIBCPP_CSTDINT
 
 /*
     cstdint synopsis
@@ -145,11 +145,11 @@ Types:
 #include <stdint.h>
 #endif //__cuda_std__
 
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
-_LIBCUDACXX_BEGIN_NAMESPACE_STD
+_LIBCPP_BEGIN_NAMESPACE_STD
 
 using::int8_t;
 using::int16_t;
@@ -187,6 +187,6 @@ using::uintptr_t;
 using::intmax_t;
 using::uintmax_t;
 
-_LIBCUDACXX_END_NAMESPACE_STD
+_LIBCPP_END_NAMESPACE_STD
 
-#endif  // _LIBCUDACXX_CSTDINT
+#endif  // _LIBCPP_CSTDINT

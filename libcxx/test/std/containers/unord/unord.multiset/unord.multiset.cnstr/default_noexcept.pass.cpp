@@ -46,7 +46,7 @@ struct some_hash
 
 int main(int, char**)
 {
-#if defined(_LIBCUDACXX_VERSION)
+#if defined(_LIBCPP_VERSION)
     {
         typedef std::unordered_multiset<MoveOnly> C;
         static_assert(std::is_nothrow_default_constructible<C>::value, "");
@@ -56,7 +56,7 @@ int main(int, char**)
                            std::equal_to<MoveOnly>, test_allocator<MoveOnly>> C;
         static_assert(std::is_nothrow_default_constructible<C>::value, "");
     }
-#endif // _LIBCUDACXX_VERSION
+#endif // _LIBCPP_VERSION
     {
         typedef std::unordered_multiset<MoveOnly, std::hash<MoveOnly>,
                           std::equal_to<MoveOnly>, other_allocator<MoveOnly>> C;

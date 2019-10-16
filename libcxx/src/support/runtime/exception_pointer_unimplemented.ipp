@@ -47,7 +47,7 @@ nested_exception::~nested_exception() _NOEXCEPT
 
 #endif
 
-_LIBCUDACXX_NORETURN
+_LIBCPP_NORETURN
 void
 nested_exception::rethrow_nested() const
 {
@@ -68,7 +68,7 @@ exception_ptr current_exception() _NOEXCEPT
   ::abort();
 }
 
-_LIBCUDACXX_NORETURN
+_LIBCPP_NORETURN
 void rethrow_exception(exception_ptr p)
 {
 #  warning exception_ptr not yet implemented

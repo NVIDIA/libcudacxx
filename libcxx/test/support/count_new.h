@@ -383,8 +383,8 @@ void operator delete[](void* p) TEST_NOEXCEPT
 }
 
 #ifndef TEST_HAS_NO_ALIGNED_ALLOCATION
-#if defined(_LIBCUDACXX_MSVCRT_LIKE) || \
-  (!defined(_LIBCUDACXX_VERSION) && defined(_WIN32))
+#if defined(_LIBCPP_MSVCRT_LIKE) || \
+  (!defined(_LIBCPP_VERSION) && defined(_WIN32))
 #define USE_ALIGNED_ALLOC
 #endif
 

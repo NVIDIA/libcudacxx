@@ -70,7 +70,7 @@ int main(int, char**) {
   count = 0;
   {
     // FIXME: Libc++ incorrectly rejects this code.
-#ifndef _LIBCUDACXX_VERSION
+#ifndef _LIBCPP_VERSION
     std::tuple<Implicit> foo = ExplicitDerived<int>{42}; ((void)foo);
     static_assert(std::is_convertible<
         ExplicitDerived<int>, std::tuple<Implicit>>::value,

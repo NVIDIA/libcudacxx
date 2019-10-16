@@ -15,8 +15,8 @@
 // float max_load_factor() const;
 // void max_load_factor(float mlf);
 
-#ifdef _LIBCUDACXX_DEBUG
-#define _LIBCUDACXX_ASSERT(x, m) ((x) ? (void)0 : std::exit(0))
+#ifdef _LIBCPP_DEBUG
+#define _LIBCPP_ASSERT(x, m) ((x) ? (void)0 : std::exit(0))
 #endif
 
 #include <unordered_set>
@@ -55,7 +55,7 @@ int main(int, char**)
         assert(c.max_load_factor() == 2.5);
     }
 #endif
-#if _LIBCUDACXX_DEBUG_LEVEL >= 1
+#if _LIBCPP_DEBUG_LEVEL >= 1
     {
         typedef std::unordered_multiset<int> C;
         C c;

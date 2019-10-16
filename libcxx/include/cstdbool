@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCUDACXX_CSTDBOOL
-#define _LIBCUDACXX_CSTDBOOL
+#ifndef _LIBCPP_CSTDBOOL
+#define _LIBCPP_CSTDBOOL
 
 /*
     cstdbool synopsis
@@ -23,11 +23,11 @@ Macros:
 #include <__config>
 #endif //__cuda_std__
 
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
 #undef __bool_true_false_are_defined
 #define __bool_true_false_are_defined 1
 
-#endif  // _LIBCUDACXX_CSTDBOOL
+#endif  // _LIBCPP_CSTDBOOL

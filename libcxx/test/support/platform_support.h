@@ -99,14 +99,14 @@ std::string get_temp_file_name()
 #endif
 }
 
-#ifdef _LIBCUDACXX_HAS_OPEN_WITH_WCHAR
+#ifdef _LIBCPP_HAS_OPEN_WITH_WCHAR
 inline
 std::wstring get_wide_temp_file_name()
 {
     return std::wstring_convert<std::codecvt_utf8_utf16<wchar_t> >().from_bytes(
         get_temp_file_name());
 }
-#endif // _LIBCUDACXX_HAS_OPEN_WITH_WCHAR
+#endif // _LIBCPP_HAS_OPEN_WITH_WCHAR
 
 #endif // __CloudABI__
 

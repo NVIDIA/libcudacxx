@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCUDACXX_LIMITS_H
-#define _LIBCUDACXX_LIMITS_H
+#ifndef _LIBCPP_LIMITS_H
+#define _LIBCPP_LIMITS_H
 
 /*
     limits.h synopsis
@@ -39,7 +39,7 @@ Macros:
 
 #include <__config>
 
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
@@ -61,4 +61,4 @@ Macros:
 #include_next <limits.h>
 #endif // __GNUC__
 
-#endif  // _LIBCUDACXX_LIMITS_H
+#endif  // _LIBCPP_LIMITS_H

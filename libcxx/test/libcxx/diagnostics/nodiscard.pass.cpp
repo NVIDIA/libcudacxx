@@ -7,14 +7,14 @@
 //
 //===----------------------------------------------------------------------===//
 
-// Test that _LIBCUDACXX_NODISCARD_EXT is not defined to [[nodiscard]] unless
-// explicitly enabled by _LIBCUDACXX_ENABLE_NODISCARD
+// Test that _LIBCPP_NODISCARD_EXT is not defined to [[nodiscard]] unless
+// explicitly enabled by _LIBCPP_ENABLE_NODISCARD
 
 #include <__config>
 
 #include "test_macros.h"
 
-_LIBCUDACXX_NODISCARD_EXT int foo() { return 42; }
+_LIBCPP_NODISCARD_EXT int foo() { return 42; }
 
 int main(int, char**) {
   foo(); // OK.

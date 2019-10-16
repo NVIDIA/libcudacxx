@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCUDACXX_EXPERIMENTAL_SET
-#define _LIBCUDACXX_EXPERIMENTAL_SET
+#ifndef _LIBCPP_EXPERIMENTAL_SET
+#define _LIBCPP_EXPERIMENTAL_SET
 /*
     experimental/set synopsis
 
@@ -37,20 +37,20 @@ namespace pmr {
 #include <set>
 #include <experimental/memory_resource>
 
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
-_LIBCUDACXX_BEGIN_NAMESPACE_LFTS_PMR
+_LIBCPP_BEGIN_NAMESPACE_LFTS_PMR
 
 template <class _Value, class  _Compare = less<_Value>>
-using set = _CUDA_VSTD::set<_Value, _Compare,
+using set = _VSTD::set<_Value, _Compare,
                         polymorphic_allocator<_Value>>;
 
 template <class _Value, class  _Compare = less<_Value>>
-using multiset = _CUDA_VSTD::multiset<_Value, _Compare,
+using multiset = _VSTD::multiset<_Value, _Compare,
                         polymorphic_allocator<_Value>>;
 
-_LIBCUDACXX_END_NAMESPACE_LFTS_PMR
+_LIBCPP_END_NAMESPACE_LFTS_PMR
 
-#endif /* _LIBCUDACXX_EXPERIMENTAL_SET */
+#endif /* _LIBCPP_EXPERIMENTAL_SET */

@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCUDACXX_UTILITY
-#define _LIBCUDACXX_UTILITY
+#ifndef _LIBCPP_UTILITY
+#define _LIBCPP_UTILITY
 
 /*
     utility synopsis
@@ -207,17 +207,17 @@ template <size_t I>
 #include <__debug>
 #endif //__cuda_std__
 
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
-_LIBCUDACXX_BEGIN_NAMESPACE_STD
+_LIBCPP_BEGIN_NAMESPACE_STD
 
 namespace rel_ops
 {
 
 template<class _Tp>
-inline _LIBCUDACXX_INLINE_VISIBILITY
+inline _LIBCPP_INLINE_VISIBILITY
 bool
 operator!=(const _Tp& __x, const _Tp& __y)
 {
@@ -225,7 +225,7 @@ operator!=(const _Tp& __x, const _Tp& __y)
 }
 
 template<class _Tp>
-inline _LIBCUDACXX_INLINE_VISIBILITY
+inline _LIBCPP_INLINE_VISIBILITY
 bool
 operator> (const _Tp& __x, const _Tp& __y)
 {
@@ -233,7 +233,7 @@ operator> (const _Tp& __x, const _Tp& __y)
 }
 
 template<class _Tp>
-inline _LIBCUDACXX_INLINE_VISIBILITY
+inline _LIBCPP_INLINE_VISIBILITY
 bool
 operator<=(const _Tp& __x, const _Tp& __y)
 {
@@ -241,7 +241,7 @@ operator<=(const _Tp& __x, const _Tp& __y)
 }
 
 template<class _Tp>
-inline _LIBCUDACXX_INLINE_VISIBILITY
+inline _LIBCPP_INLINE_VISIBILITY
 bool
 operator>=(const _Tp& __x, const _Tp& __y)
 {
@@ -257,47 +257,47 @@ operator>=(const _Tp& __x, const _Tp& __y)
 // move_if_noexcept
 
 template <class _Tp>
-inline _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
-#ifndef _LIBCUDACXX_CXX03_LANG
+inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
+#ifndef _LIBCPP_CXX03_LANG
 typename conditional
 <
     !is_nothrow_move_constructible<_Tp>::value && is_copy_constructible<_Tp>::value,
     const _Tp&,
     _Tp&&
 >::type
-#else  // _LIBCUDACXX_CXX03_LANG
+#else  // _LIBCPP_CXX03_LANG
 const _Tp&
 #endif
 move_if_noexcept(_Tp& __x) _NOEXCEPT
 {
-    return _CUDA_VSTD::move(__x);
+    return _VSTD::move(__x);
 }
 
-#if _LIBCUDACXX_STD_VER > 14
+#if _LIBCPP_STD_VER > 14
 template <class _Tp> constexpr add_const_t<_Tp>& as_const(_Tp& __t) noexcept { return __t; }
 template <class _Tp>                        void as_const(const _Tp&&) = delete;
 #endif
 
-struct _LIBCUDACXX_TEMPLATE_VIS piecewise_construct_t { explicit piecewise_construct_t() = default; };
-#if defined(_LIBCUDACXX_CXX03_LANG) || defined(_LIBCUDACXX_BUILDING_LIBRARY)
-extern _LIBCUDACXX_EXPORTED_FROM_ABI const piecewise_construct_t piecewise_construct;// = piecewise_construct_t();
+struct _LIBCPP_TEMPLATE_VIS piecewise_construct_t { explicit piecewise_construct_t() = default; };
+#if defined(_LIBCPP_CXX03_LANG) || defined(_LIBCPP_BUILDING_LIBRARY)
+extern _LIBCPP_EXPORTED_FROM_ABI const piecewise_construct_t piecewise_construct;// = piecewise_construct_t();
 #else
-/* _LIBCUDACXX_INLINE_VAR */ constexpr piecewise_construct_t piecewise_construct = piecewise_construct_t();
+/* _LIBCPP_INLINE_VAR */ constexpr piecewise_construct_t piecewise_construct = piecewise_construct_t();
 #endif
 
-#if defined(_LIBCUDACXX_DEPRECATED_ABI_DISABLE_PAIR_TRIVIAL_COPY_CTOR)
+#if defined(_LIBCPP_DEPRECATED_ABI_DISABLE_PAIR_TRIVIAL_COPY_CTOR)
 template <class, class>
 struct __non_trivially_copyable_base {
-  _LIBCUDACXX_CONSTEXPR _LIBCUDACXX_INLINE_VISIBILITY
+  _LIBCPP_CONSTEXPR _LIBCPP_INLINE_VISIBILITY
   __non_trivially_copyable_base() _NOEXCEPT {}
-  _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
+  _LIBCPP_CONSTEXPR_AFTER_CXX11 _LIBCPP_INLINE_VISIBILITY
   __non_trivially_copyable_base(__non_trivially_copyable_base const&) _NOEXCEPT {}
 };
 #endif
 
 template <class _T1, class _T2>
-struct _LIBCUDACXX_TEMPLATE_VIS pair
-#if defined(_LIBCUDACXX_DEPRECATED_ABI_DISABLE_PAIR_TRIVIAL_COPY_CTOR)
+struct _LIBCPP_TEMPLATE_VIS pair
+#if defined(_LIBCPP_DEPRECATED_ABI_DISABLE_PAIR_TRIVIAL_COPY_CTOR)
 : private __non_trivially_copyable_base<_T1, _T2>
 #endif
 {
@@ -307,25 +307,25 @@ struct _LIBCUDACXX_TEMPLATE_VIS pair
     _T1 first;
     _T2 second;
 
-#if !defined(_LIBCUDACXX_CXX03_LANG)
+#if !defined(_LIBCPP_CXX03_LANG)
     pair(pair const&) = default;
     pair(pair&&) = default;
 #else
   // Use the implicitly declared copy constructor in C++03
 #endif
 
-#ifdef _LIBCUDACXX_CXX03_LANG
-    _LIBCUDACXX_INLINE_VISIBILITY
+#ifdef _LIBCPP_CXX03_LANG
+    _LIBCPP_INLINE_VISIBILITY
     pair() : first(), second() {}
 
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     pair(_T1 const& __t1, _T2 const& __t2) : first(__t1), second(__t2) {}
 
     template <class _U1, class _U2>
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     pair(const pair<_U1, _U2>& __p) : first(__p.first), second(__p.second) {}
 
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     pair& operator=(pair const& __p) {
         first = __p.first;
         second = __p.second;
@@ -333,7 +333,7 @@ struct _LIBCUDACXX_TEMPLATE_VIS pair
     }
 #else
     template <bool _Val>
-    using _EnableB _LIBCUDACXX_NODEBUG_TYPE = typename enable_if<_Val, bool>::type;
+    using _EnableB _LIBCPP_NODEBUG_TYPE = typename enable_if<_Val, bool>::type;
 
     struct _CheckArgs {
       template <int&...>
@@ -367,7 +367,7 @@ struct _LIBCUDACXX_TEMPLATE_VIS pair
     };
 
     template <bool _MaybeEnable>
-    using _CheckArgsDep _LIBCUDACXX_NODEBUG_TYPE = typename conditional<
+    using _CheckArgsDep _LIBCPP_NODEBUG_TYPE = typename conditional<
       _MaybeEnable, _CheckArgs, __check_tuple_constructor_fail>::type;
 
     struct _CheckTupleLikeConstructor {
@@ -389,7 +389,7 @@ struct _LIBCUDACXX_TEMPLATE_VIS pair
     };
 
     template <class _Tuple>
-    using _CheckTLC _LIBCUDACXX_NODEBUG_TYPE = typename conditional<
+    using _CheckTLC _LIBCPP_NODEBUG_TYPE = typename conditional<
         __tuple_like_with_size<_Tuple, 2>::value
             && !is_same<typename decay<_Tuple>::type, pair>::value,
         _CheckTupleLikeConstructor,
@@ -399,7 +399,7 @@ struct _LIBCUDACXX_TEMPLATE_VIS pair
     template<bool _Dummy = true, _EnableB<
             _CheckArgsDep<_Dummy>::__enable_explicit_default()
     > = false>
-    explicit _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR
+    explicit _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
     pair() _NOEXCEPT_(is_nothrow_default_constructible<first_type>::value &&
                       is_nothrow_default_constructible<second_type>::value)
         : first(), second() {}
@@ -407,7 +407,7 @@ struct _LIBCUDACXX_TEMPLATE_VIS pair
     template<bool _Dummy = true, _EnableB<
             _CheckArgsDep<_Dummy>::__enable_implicit_default()
     > = false>
-    _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR
+    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR
     pair() _NOEXCEPT_(is_nothrow_default_constructible<first_type>::value &&
                       is_nothrow_default_constructible<second_type>::value)
         : first(), second() {}
@@ -415,7 +415,7 @@ struct _LIBCUDACXX_TEMPLATE_VIS pair
     template <bool _Dummy = true, _EnableB<
              _CheckArgsDep<_Dummy>::template __enable_explicit<_T1 const&, _T2 const&>()
     > = false>
-    _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
+    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
     explicit pair(_T1 const& __t1, _T2 const& __t2)
         _NOEXCEPT_(is_nothrow_copy_constructible<first_type>::value &&
                    is_nothrow_copy_constructible<second_type>::value)
@@ -424,7 +424,7 @@ struct _LIBCUDACXX_TEMPLATE_VIS pair
     template<bool _Dummy = true, _EnableB<
             _CheckArgsDep<_Dummy>::template __enable_implicit<_T1 const&, _T2 const&>()
     > = false>
-    _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
+    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
     pair(_T1 const& __t1, _T2 const& __t2)
         _NOEXCEPT_(is_nothrow_copy_constructible<first_type>::value &&
                    is_nothrow_copy_constructible<second_type>::value)
@@ -433,25 +433,25 @@ struct _LIBCUDACXX_TEMPLATE_VIS pair
     template<class _U1, class _U2, _EnableB<
              _CheckArgs::template __enable_explicit<_U1, _U2>()
     > = false>
-    _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
+    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
     explicit pair(_U1&& __u1, _U2&& __u2)
         _NOEXCEPT_((is_nothrow_constructible<first_type, _U1>::value &&
                     is_nothrow_constructible<second_type, _U2>::value))
-        : first(_CUDA_VSTD::forward<_U1>(__u1)), second(_CUDA_VSTD::forward<_U2>(__u2)) {}
+        : first(_VSTD::forward<_U1>(__u1)), second(_VSTD::forward<_U2>(__u2)) {}
 
     template<class _U1, class _U2, _EnableB<
             _CheckArgs::template __enable_implicit<_U1, _U2>()
     > = false>
-    _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
+    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
     pair(_U1&& __u1, _U2&& __u2)
         _NOEXCEPT_((is_nothrow_constructible<first_type, _U1>::value &&
                     is_nothrow_constructible<second_type, _U2>::value))
-        : first(_CUDA_VSTD::forward<_U1>(__u1)), second(_CUDA_VSTD::forward<_U2>(__u2)) {}
+        : first(_VSTD::forward<_U1>(__u1)), second(_VSTD::forward<_U2>(__u2)) {}
 
     template<class _U1, class _U2, _EnableB<
             _CheckArgs::template __enable_explicit<_U1 const&, _U2 const&>()
     > = false>
-    _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
+    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
     explicit pair(pair<_U1, _U2> const& __p)
         _NOEXCEPT_((is_nothrow_constructible<first_type, _U1 const&>::value &&
                     is_nothrow_constructible<second_type, _U2 const&>::value))
@@ -460,7 +460,7 @@ struct _LIBCUDACXX_TEMPLATE_VIS pair
     template<class _U1, class _U2, _EnableB<
             _CheckArgs::template __enable_implicit<_U1 const&, _U2 const&>()
     > = false>
-    _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
+    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
     pair(pair<_U1, _U2> const& __p)
         _NOEXCEPT_((is_nothrow_constructible<first_type, _U1 const&>::value &&
                     is_nothrow_constructible<second_type, _U2 const&>::value))
@@ -469,39 +469,39 @@ struct _LIBCUDACXX_TEMPLATE_VIS pair
     template<class _U1, class _U2, _EnableB<
             _CheckArgs::template __enable_explicit<_U1, _U2>()
     > = false>
-    _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
+    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
     explicit pair(pair<_U1, _U2>&&__p)
         _NOEXCEPT_((is_nothrow_constructible<first_type, _U1&&>::value &&
                     is_nothrow_constructible<second_type, _U2&&>::value))
-        : first(_CUDA_VSTD::forward<_U1>(__p.first)), second(_CUDA_VSTD::forward<_U2>(__p.second)) {}
+        : first(_VSTD::forward<_U1>(__p.first)), second(_VSTD::forward<_U2>(__p.second)) {}
 
     template<class _U1, class _U2, _EnableB<
             _CheckArgs::template __enable_implicit<_U1, _U2>()
     > = false>
-    _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
+    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
     pair(pair<_U1, _U2>&& __p)
         _NOEXCEPT_((is_nothrow_constructible<first_type, _U1&&>::value &&
                     is_nothrow_constructible<second_type, _U2&&>::value))
-        : first(_CUDA_VSTD::forward<_U1>(__p.first)), second(_CUDA_VSTD::forward<_U2>(__p.second)) {}
+        : first(_VSTD::forward<_U1>(__p.first)), second(_VSTD::forward<_U2>(__p.second)) {}
 
     template<class _Tuple, _EnableB<
             _CheckTLC<_Tuple>::template __enable_explicit<_Tuple>()
     > = false>
-    _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
+    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
     explicit pair(_Tuple&& __p)
-        : first(_CUDA_VSTD::get<0>(_CUDA_VSTD::forward<_Tuple>(__p))),
-          second(_CUDA_VSTD::get<1>(_CUDA_VSTD::forward<_Tuple>(__p))) {}
+        : first(_VSTD::get<0>(_VSTD::forward<_Tuple>(__p))),
+          second(_VSTD::get<1>(_VSTD::forward<_Tuple>(__p))) {}
 
     template<class _Tuple, _EnableB<
             _CheckTLC<_Tuple>::template __enable_implicit<_Tuple>()
     > = false>
-    _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
+    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
     pair(_Tuple&& __p)
-        : first(_CUDA_VSTD::get<0>(_CUDA_VSTD::forward<_Tuple>(__p))),
-          second(_CUDA_VSTD::get<1>(_CUDA_VSTD::forward<_Tuple>(__p))) {}
+        : first(_VSTD::get<0>(_VSTD::forward<_Tuple>(__p))),
+          second(_VSTD::get<1>(_VSTD::forward<_Tuple>(__p))) {}
 
     template <class... _Args1, class... _Args2>
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     pair(piecewise_construct_t __pc,
          tuple<_Args1...> __first_args, tuple<_Args2...> __second_args)
         _NOEXCEPT_((is_nothrow_constructible<first_type, _Args1...>::value &&
@@ -510,7 +510,7 @@ struct _LIBCUDACXX_TEMPLATE_VIS pair
                 typename __make_tuple_indices<sizeof...(_Args1)>::type(),
                 typename __make_tuple_indices<sizeof...(_Args2) >::type()) {}
 
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     pair& operator=(typename conditional<
                         is_copy_assignable<first_type>::value &&
                         is_copy_assignable<second_type>::value,
@@ -523,7 +523,7 @@ struct _LIBCUDACXX_TEMPLATE_VIS pair
         return *this;
     }
 
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     pair& operator=(typename conditional<
                         is_move_assignable<first_type>::value &&
                         is_move_assignable<second_type>::value,
@@ -531,49 +531,49 @@ struct _LIBCUDACXX_TEMPLATE_VIS pair
         _NOEXCEPT_(is_nothrow_move_assignable<first_type>::value &&
                    is_nothrow_move_assignable<second_type>::value)
     {
-        first = _CUDA_VSTD::forward<first_type>(__p.first);
-        second = _CUDA_VSTD::forward<second_type>(__p.second);
+        first = _VSTD::forward<first_type>(__p.first);
+        second = _VSTD::forward<second_type>(__p.second);
         return *this;
     }
 
     template <class _Tuple, _EnableB<
             _CheckTLC<_Tuple>::template __enable_assign<_Tuple>()
      > = false>
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     pair& operator=(_Tuple&& __p) {
-        first = _CUDA_VSTD::get<0>(_CUDA_VSTD::forward<_Tuple>(__p));
-        second = _CUDA_VSTD::get<1>(_CUDA_VSTD::forward<_Tuple>(__p));
+        first = _VSTD::get<0>(_VSTD::forward<_Tuple>(__p));
+        second = _VSTD::get<1>(_VSTD::forward<_Tuple>(__p));
         return *this;
     }
 #endif
 
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     void
     swap(pair& __p) _NOEXCEPT_(__is_nothrow_swappable<first_type>::value &&
                                __is_nothrow_swappable<second_type>::value)
     {
-        using _CUDA_VSTD::swap;
+        using _VSTD::swap;
         swap(first,  __p.first);
         swap(second, __p.second);
     }
 private:
 
-#ifndef _LIBCUDACXX_CXX03_LANG
+#ifndef _LIBCPP_CXX03_LANG
     template <class... _Args1, class... _Args2, size_t... _I1, size_t... _I2>
-        _LIBCUDACXX_INLINE_VISIBILITY
+        _LIBCPP_INLINE_VISIBILITY
         pair(piecewise_construct_t,
              tuple<_Args1...>& __first_args, tuple<_Args2...>& __second_args,
              __tuple_indices<_I1...>, __tuple_indices<_I2...>);
 #endif
 };
 
-#ifndef _LIBCUDACXX_HAS_NO_DEDUCTION_GUIDES
+#ifndef _LIBCPP_HAS_NO_DEDUCTION_GUIDES
 template<class _T1, class _T2>
 pair(_T1, _T2) -> pair<_T1, _T2>;
-#endif // _LIBCUDACXX_HAS_NO_DEDUCTION_GUIDES
+#endif // _LIBCPP_HAS_NO_DEDUCTION_GUIDES
 
 template <class _T1, class _T2>
-inline _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
+inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
 bool
 operator==(const pair<_T1,_T2>& __x, const pair<_T1,_T2>& __y)
 {
@@ -581,7 +581,7 @@ operator==(const pair<_T1,_T2>& __x, const pair<_T1,_T2>& __y)
 }
 
 template <class _T1, class _T2>
-inline _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
+inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
 bool
 operator!=(const pair<_T1,_T2>& __x, const pair<_T1,_T2>& __y)
 {
@@ -589,7 +589,7 @@ operator!=(const pair<_T1,_T2>& __x, const pair<_T1,_T2>& __y)
 }
 
 template <class _T1, class _T2>
-inline _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
+inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
 bool
 operator< (const pair<_T1,_T2>& __x, const pair<_T1,_T2>& __y)
 {
@@ -597,7 +597,7 @@ operator< (const pair<_T1,_T2>& __x, const pair<_T1,_T2>& __y)
 }
 
 template <class _T1, class _T2>
-inline _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
+inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
 bool
 operator> (const pair<_T1,_T2>& __x, const pair<_T1,_T2>& __y)
 {
@@ -605,7 +605,7 @@ operator> (const pair<_T1,_T2>& __x, const pair<_T1,_T2>& __y)
 }
 
 template <class _T1, class _T2>
-inline _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
+inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
 bool
 operator>=(const pair<_T1,_T2>& __x, const pair<_T1,_T2>& __y)
 {
@@ -613,7 +613,7 @@ operator>=(const pair<_T1,_T2>& __x, const pair<_T1,_T2>& __y)
 }
 
 template <class _T1, class _T2>
-inline _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
+inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
 bool
 operator<=(const pair<_T1,_T2>& __x, const pair<_T1,_T2>& __y)
 {
@@ -621,7 +621,7 @@ operator<=(const pair<_T1,_T2>& __x, const pair<_T1,_T2>& __y)
 }
 
 template <class _T1, class _T2>
-inline _LIBCUDACXX_INLINE_VISIBILITY
+inline _LIBCPP_INLINE_VISIBILITY
 typename enable_if
 <
     __is_swappable<_T1>::value &&
@@ -636,12 +636,12 @@ swap(pair<_T1, _T2>& __x, pair<_T1, _T2>& __y)
 }
 
 template <class _Tp>
-struct __unwrap_reference { typedef _LIBCUDACXX_NODEBUG_TYPE _Tp type; };
+struct __unwrap_reference { typedef _LIBCPP_NODEBUG_TYPE _Tp type; };
 
 template <class _Tp>
-struct __unwrap_reference<reference_wrapper<_Tp> > { typedef _LIBCUDACXX_NODEBUG_TYPE _Tp& type; };
+struct __unwrap_reference<reference_wrapper<_Tp> > { typedef _LIBCPP_NODEBUG_TYPE _Tp& type; };
 
-#if _LIBCUDACXX_STD_VER > 17
+#if _LIBCPP_STD_VER > 17
 template <class _Tp>
 struct unwrap_reference : __unwrap_reference<_Tp> { };
 
@@ -651,56 +651,56 @@ struct unwrap_ref_decay : unwrap_reference<typename decay<_Tp>::type> { };
 
 template <class _Tp>
 struct __unwrap_ref_decay
-#if _LIBCUDACXX_STD_VER > 17
+#if _LIBCPP_STD_VER > 17
     : unwrap_ref_decay<_Tp>
 #else
     : __unwrap_reference<typename decay<_Tp>::type>
 #endif
 { };
 
-#ifndef _LIBCUDACXX_CXX03_LANG
+#ifndef _LIBCPP_CXX03_LANG
 
 template <class _T1, class _T2>
-inline _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
+inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
 pair<typename __unwrap_ref_decay<_T1>::type, typename __unwrap_ref_decay<_T2>::type>
 make_pair(_T1&& __t1, _T2&& __t2)
 {
     return pair<typename __unwrap_ref_decay<_T1>::type, typename __unwrap_ref_decay<_T2>::type>
-               (_CUDA_VSTD::forward<_T1>(__t1), _CUDA_VSTD::forward<_T2>(__t2));
+               (_VSTD::forward<_T1>(__t1), _VSTD::forward<_T2>(__t2));
 }
 
-#else  // _LIBCUDACXX_CXX03_LANG
+#else  // _LIBCPP_CXX03_LANG
 
 template <class _T1, class _T2>
-inline _LIBCUDACXX_INLINE_VISIBILITY
+inline _LIBCPP_INLINE_VISIBILITY
 pair<_T1,_T2>
 make_pair(_T1 __x, _T2 __y)
 {
     return pair<_T1, _T2>(__x, __y);
 }
 
-#endif  // _LIBCUDACXX_CXX03_LANG
+#endif  // _LIBCPP_CXX03_LANG
 
 template <class _T1, class _T2>
-  struct _LIBCUDACXX_TEMPLATE_VIS tuple_size<pair<_T1, _T2> >
+  struct _LIBCPP_TEMPLATE_VIS tuple_size<pair<_T1, _T2> >
     : public integral_constant<size_t, 2> {};
 
 template <size_t _Ip, class _T1, class _T2>
-struct _LIBCUDACXX_TEMPLATE_VIS tuple_element<_Ip, pair<_T1, _T2> >
+struct _LIBCPP_TEMPLATE_VIS tuple_element<_Ip, pair<_T1, _T2> >
 {
     static_assert(_Ip < 2, "Index out of bounds in std::tuple_element<std::pair<T1, T2>>");
 };
 
 template <class _T1, class _T2>
-struct _LIBCUDACXX_TEMPLATE_VIS tuple_element<0, pair<_T1, _T2> >
+struct _LIBCPP_TEMPLATE_VIS tuple_element<0, pair<_T1, _T2> >
 {
-    typedef _LIBCUDACXX_NODEBUG_TYPE _T1 type;
+    typedef _LIBCPP_NODEBUG_TYPE _T1 type;
 };
 
 template <class _T1, class _T2>
-struct _LIBCUDACXX_TEMPLATE_VIS tuple_element<1, pair<_T1, _T2> >
+struct _LIBCPP_TEMPLATE_VIS tuple_element<1, pair<_T1, _T2> >
 {
-    typedef _LIBCUDACXX_NODEBUG_TYPE _T2 type;
+    typedef _LIBCPP_NODEBUG_TYPE _T2 type;
 };
 
 template <size_t _Ip> struct __get_pair;
@@ -710,29 +710,29 @@ struct __get_pair<0>
 {
     template <class _T1, class _T2>
     static
-    _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
+    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
     _T1&
     get(pair<_T1, _T2>& __p) _NOEXCEPT {return __p.first;}
 
     template <class _T1, class _T2>
     static
-    _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
+    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
     const _T1&
     get(const pair<_T1, _T2>& __p) _NOEXCEPT {return __p.first;}
 
-#ifndef _LIBCUDACXX_CXX03_LANG
+#ifndef _LIBCPP_CXX03_LANG
     template <class _T1, class _T2>
     static
-    _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
+    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
     _T1&&
-    get(pair<_T1, _T2>&& __p) _NOEXCEPT {return _CUDA_VSTD::forward<_T1>(__p.first);}
+    get(pair<_T1, _T2>&& __p) _NOEXCEPT {return _VSTD::forward<_T1>(__p.first);}
 
     template <class _T1, class _T2>
     static
-    _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
+    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
     const _T1&&
-    get(const pair<_T1, _T2>&& __p) _NOEXCEPT {return _CUDA_VSTD::forward<const _T1>(__p.first);}
-#endif  // _LIBCUDACXX_CXX03_LANG
+    get(const pair<_T1, _T2>&& __p) _NOEXCEPT {return _VSTD::forward<const _T1>(__p.first);}
+#endif  // _LIBCPP_CXX03_LANG
 };
 
 template <>
@@ -740,33 +740,33 @@ struct __get_pair<1>
 {
     template <class _T1, class _T2>
     static
-    _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
+    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
     _T2&
     get(pair<_T1, _T2>& __p) _NOEXCEPT {return __p.second;}
 
     template <class _T1, class _T2>
     static
-    _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
+    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
     const _T2&
     get(const pair<_T1, _T2>& __p) _NOEXCEPT {return __p.second;}
 
-#ifndef _LIBCUDACXX_CXX03_LANG
+#ifndef _LIBCPP_CXX03_LANG
     template <class _T1, class _T2>
     static
-    _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
+    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
     _T2&&
-    get(pair<_T1, _T2>&& __p) _NOEXCEPT {return _CUDA_VSTD::forward<_T2>(__p.second);}
+    get(pair<_T1, _T2>&& __p) _NOEXCEPT {return _VSTD::forward<_T2>(__p.second);}
 
     template <class _T1, class _T2>
     static
-    _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
+    _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
     const _T2&&
-    get(const pair<_T1, _T2>&& __p) _NOEXCEPT {return _CUDA_VSTD::forward<const _T2>(__p.second);}
-#endif  // _LIBCUDACXX_CXX03_LANG
+    get(const pair<_T1, _T2>&& __p) _NOEXCEPT {return _VSTD::forward<const _T2>(__p.second);}
+#endif  // _LIBCPP_CXX03_LANG
 };
 
 template <size_t _Ip, class _T1, class _T2>
-inline _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
+inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
 typename tuple_element<_Ip, pair<_T1, _T2> >::type&
 get(pair<_T1, _T2>& __p) _NOEXCEPT
 {
@@ -774,100 +774,100 @@ get(pair<_T1, _T2>& __p) _NOEXCEPT
 }
 
 template <size_t _Ip, class _T1, class _T2>
-inline _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
+inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
 const typename tuple_element<_Ip, pair<_T1, _T2> >::type&
 get(const pair<_T1, _T2>& __p) _NOEXCEPT
 {
     return __get_pair<_Ip>::get(__p);
 }
 
-#ifndef _LIBCUDACXX_CXX03_LANG
+#ifndef _LIBCPP_CXX03_LANG
 template <size_t _Ip, class _T1, class _T2>
-inline _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
+inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
 typename tuple_element<_Ip, pair<_T1, _T2> >::type&&
 get(pair<_T1, _T2>&& __p) _NOEXCEPT
 {
-    return __get_pair<_Ip>::get(_CUDA_VSTD::move(__p));
+    return __get_pair<_Ip>::get(_VSTD::move(__p));
 }
 
 template <size_t _Ip, class _T1, class _T2>
-inline _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
+inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX11
 const typename tuple_element<_Ip, pair<_T1, _T2> >::type&&
 get(const pair<_T1, _T2>&& __p) _NOEXCEPT
 {
-    return __get_pair<_Ip>::get(_CUDA_VSTD::move(__p));
+    return __get_pair<_Ip>::get(_VSTD::move(__p));
 }
-#endif  // _LIBCUDACXX_CXX03_LANG
+#endif  // _LIBCPP_CXX03_LANG
 
-#if _LIBCUDACXX_STD_VER > 11
+#if _LIBCPP_STD_VER > 11
 template <class _T1, class _T2>
-inline _LIBCUDACXX_INLINE_VISIBILITY
+inline _LIBCPP_INLINE_VISIBILITY
 constexpr _T1 & get(pair<_T1, _T2>& __p) _NOEXCEPT
 {
     return __get_pair<0>::get(__p);
 }
 
 template <class _T1, class _T2>
-inline _LIBCUDACXX_INLINE_VISIBILITY
+inline _LIBCPP_INLINE_VISIBILITY
 constexpr _T1 const & get(pair<_T1, _T2> const& __p) _NOEXCEPT
 {
     return __get_pair<0>::get(__p);
 }
 
 template <class _T1, class _T2>
-inline _LIBCUDACXX_INLINE_VISIBILITY
+inline _LIBCPP_INLINE_VISIBILITY
 constexpr _T1 && get(pair<_T1, _T2>&& __p) _NOEXCEPT
 {
-    return __get_pair<0>::get(_CUDA_VSTD::move(__p));
+    return __get_pair<0>::get(_VSTD::move(__p));
 }
 
 template <class _T1, class _T2>
-inline _LIBCUDACXX_INLINE_VISIBILITY
+inline _LIBCPP_INLINE_VISIBILITY
 constexpr _T1 const && get(pair<_T1, _T2> const&& __p) _NOEXCEPT
 {
-    return __get_pair<0>::get(_CUDA_VSTD::move(__p));
+    return __get_pair<0>::get(_VSTD::move(__p));
 }
 
 template <class _T1, class _T2>
-inline _LIBCUDACXX_INLINE_VISIBILITY
+inline _LIBCPP_INLINE_VISIBILITY
 constexpr _T1 & get(pair<_T2, _T1>& __p) _NOEXCEPT
 {
     return __get_pair<1>::get(__p);
 }
 
 template <class _T1, class _T2>
-inline _LIBCUDACXX_INLINE_VISIBILITY
+inline _LIBCPP_INLINE_VISIBILITY
 constexpr _T1 const & get(pair<_T2, _T1> const& __p) _NOEXCEPT
 {
     return __get_pair<1>::get(__p);
 }
 
 template <class _T1, class _T2>
-inline _LIBCUDACXX_INLINE_VISIBILITY
+inline _LIBCPP_INLINE_VISIBILITY
 constexpr _T1 && get(pair<_T2, _T1>&& __p) _NOEXCEPT
 {
-    return __get_pair<1>::get(_CUDA_VSTD::move(__p));
+    return __get_pair<1>::get(_VSTD::move(__p));
 }
 
 template <class _T1, class _T2>
-inline _LIBCUDACXX_INLINE_VISIBILITY
+inline _LIBCPP_INLINE_VISIBILITY
 constexpr _T1 const && get(pair<_T2, _T1> const&& __p) _NOEXCEPT
 {
-    return __get_pair<1>::get(_CUDA_VSTD::move(__p));
+    return __get_pair<1>::get(_VSTD::move(__p));
 }
 
 #endif
 
-#if _LIBCUDACXX_STD_VER > 11
+#if _LIBCPP_STD_VER > 11
 
 template<class _Tp, _Tp... _Ip>
-struct _LIBCUDACXX_TEMPLATE_VIS integer_sequence
+struct _LIBCPP_TEMPLATE_VIS integer_sequence
 {
     typedef _Tp value_type;
     static_assert( is_integral<_Tp>::value,
                   "std::integer_sequence can only be instantiated with an integral type" );
     static
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     constexpr
     size_t
     size() noexcept { return sizeof...(_Ip); }
@@ -876,14 +876,14 @@ struct _LIBCUDACXX_TEMPLATE_VIS integer_sequence
 template<size_t... _Ip>
     using index_sequence = integer_sequence<size_t, _Ip...>;
 
-#if __has_builtin(__make_integer_seq) && !defined(_LIBCUDACXX_TESTING_FALLBACK_MAKE_INTEGER_SEQUENCE)
+#if __has_builtin(__make_integer_seq) && !defined(_LIBCPP_TESTING_FALLBACK_MAKE_INTEGER_SEQUENCE)
 
 template <class _Tp, _Tp _Ep>
-using __make_integer_sequence _LIBCUDACXX_NODEBUG_TYPE = __make_integer_seq<integer_sequence, _Tp, _Ep>;
+using __make_integer_sequence _LIBCPP_NODEBUG_TYPE = __make_integer_seq<integer_sequence, _Tp, _Ep>;
 
 #else
 
-template<typename _Tp, _Tp _Np> using __make_integer_sequence_unchecked _LIBCUDACXX_NODEBUG_TYPE  =
+template<typename _Tp, _Tp _Np> using __make_integer_sequence_unchecked _LIBCPP_NODEBUG_TYPE  =
   typename __detail::__make<_Np>::type::template __convert<integer_sequence, _Tp>;
 
 template <class _Tp, _Tp _Ep>
@@ -894,11 +894,11 @@ struct __make_integer_sequence_checked
     static_assert(0 <= _Ep, "std::make_integer_sequence must have a non-negative sequence length");
     // Workaround GCC bug by preventing bad installations when 0 <= _Ep
     // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=68929
-    typedef _LIBCUDACXX_NODEBUG_TYPE  __make_integer_sequence_unchecked<_Tp, 0 <= _Ep ? _Ep : 0> type;
+    typedef _LIBCPP_NODEBUG_TYPE  __make_integer_sequence_unchecked<_Tp, 0 <= _Ep ? _Ep : 0> type;
 };
 
 template <class _Tp, _Tp _Ep>
-using __make_integer_sequence _LIBCUDACXX_NODEBUG_TYPE = typename __make_integer_sequence_checked<_Tp, _Ep>::type;
+using __make_integer_sequence _LIBCPP_NODEBUG_TYPE = typename __make_integer_sequence_checked<_Tp, _Ep>::type;
 
 #endif
 
@@ -911,39 +911,39 @@ template<size_t _Np>
 template<class... _Tp>
     using index_sequence_for = make_index_sequence<sizeof...(_Tp)>;
 
-#endif  // _LIBCUDACXX_STD_VER > 11
+#endif  // _LIBCPP_STD_VER > 11
 
-#if _LIBCUDACXX_STD_VER > 11
+#if _LIBCPP_STD_VER > 11
 template<class _T1, class _T2 = _T1>
-inline _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX17
+inline _LIBCPP_INLINE_VISIBILITY _LIBCPP_CONSTEXPR_AFTER_CXX17
 _T1 exchange(_T1& __obj, _T2 && __new_value)
 {
-    _T1 __old_value = _CUDA_VSTD::move(__obj);
-    __obj = _CUDA_VSTD::forward<_T2>(__new_value);
+    _T1 __old_value = _VSTD::move(__obj);
+    __obj = _VSTD::forward<_T2>(__new_value);
     return __old_value;
 }
-#endif  // _LIBCUDACXX_STD_VER > 11
+#endif  // _LIBCPP_STD_VER > 11
 
-#if _LIBCUDACXX_STD_VER > 14
+#if _LIBCPP_STD_VER > 14
 
-struct _LIBCUDACXX_TYPE_VIS in_place_t {
+struct _LIBCPP_TYPE_VIS in_place_t {
     explicit in_place_t() = default;
 };
-_LIBCUDACXX_INLINE_VAR constexpr in_place_t in_place{};
+_LIBCPP_INLINE_VAR constexpr in_place_t in_place{};
 
 template <class _Tp>
-struct _LIBCUDACXX_TEMPLATE_VIS in_place_type_t {
+struct _LIBCPP_TEMPLATE_VIS in_place_type_t {
     explicit in_place_type_t() = default;
 };
 template <class _Tp>
-_LIBCUDACXX_INLINE_VAR constexpr in_place_type_t<_Tp> in_place_type{};
+_LIBCPP_INLINE_VAR constexpr in_place_type_t<_Tp> in_place_type{};
 
 template <size_t _Idx>
-struct _LIBCUDACXX_TYPE_VIS in_place_index_t {
+struct _LIBCPP_TYPE_VIS in_place_index_t {
     explicit in_place_index_t() = default;
 };
 template <size_t _Idx>
-_LIBCUDACXX_INLINE_VAR constexpr in_place_index_t<_Idx> in_place_index{};
+_LIBCPP_INLINE_VAR constexpr in_place_index_t<_Idx> in_place_index{};
 
 template <class _Tp> struct __is_inplace_type_imp : false_type {};
 template <class _Tp> struct __is_inplace_type_imp<in_place_type_t<_Tp>> : true_type {};
@@ -957,17 +957,17 @@ template <size_t _Idx> struct __is_inplace_index_imp<in_place_index_t<_Idx>> : t
 template <class _Tp>
 using __is_inplace_index = __is_inplace_index_imp<__uncvref_t<_Tp>>;
 
-#endif // _LIBCUDACXX_STD_VER > 14
+#endif // _LIBCPP_STD_VER > 14
 
 template <class _Arg, class _Result>
-struct _LIBCUDACXX_TEMPLATE_VIS unary_function
+struct _LIBCPP_TEMPLATE_VIS unary_function
 {
     typedef _Arg    argument_type;
     typedef _Result result_type;
 };
 
 template <class _Size>
-inline _LIBCUDACXX_INLINE_VISIBILITY
+inline _LIBCPP_INLINE_VISIBILITY
 _Size
 __loadword(const void* __p)
 {
@@ -986,7 +986,7 @@ template <class _Size>
 struct __murmur2_or_cityhash<_Size, 32>
 {
     inline _Size operator()(const void* __key, _Size __len)
-         _LIBCUDACXX_DISABLE_UBSAN_UNSIGNED_INTEGER_CHECK;
+         _LIBCPP_DISABLE_UBSAN_UNSIGNED_INTEGER_CHECK;
 };
 
 // murmur2
@@ -1011,10 +1011,10 @@ __murmur2_or_cityhash<_Size, 32>::operator()(const void* __key, _Size __len)
     {
     case 3:
         __h ^= __data[2] << 16;
-        _LIBCUDACXX_FALLTHROUGH();
+        _LIBCPP_FALLTHROUGH();
     case 2:
         __h ^= __data[1] << 8;
-        _LIBCUDACXX_FALLTHROUGH();
+        _LIBCPP_FALLTHROUGH();
     case 1:
         __h ^= __data[0];
         __h *= __m;
@@ -1028,7 +1028,7 @@ __murmur2_or_cityhash<_Size, 32>::operator()(const void* __key, _Size __len)
 template <class _Size>
 struct __murmur2_or_cityhash<_Size, 64>
 {
-    inline _Size operator()(const void* __key, _Size __len)  _LIBCUDACXX_DISABLE_UBSAN_UNSIGNED_INTEGER_CHECK;
+    inline _Size operator()(const void* __key, _Size __len)  _LIBCPP_DISABLE_UBSAN_UNSIGNED_INTEGER_CHECK;
 
  private:
   // Some primes between 2^63 and 2^64.
@@ -1050,7 +1050,7 @@ struct __murmur2_or_cityhash<_Size, 64>
   }
 
   static _Size __hash_len_16(_Size __u, _Size __v)
-     _LIBCUDACXX_DISABLE_UBSAN_UNSIGNED_INTEGER_CHECK
+     _LIBCPP_DISABLE_UBSAN_UNSIGNED_INTEGER_CHECK
   {
     const _Size __mul = 0x9ddfea08eb382d69ULL;
     _Size __a = (__u ^ __v) * __mul;
@@ -1062,7 +1062,7 @@ struct __murmur2_or_cityhash<_Size, 64>
   }
 
   static _Size __hash_len_0_to_16(const char* __s, _Size __len)
-     _LIBCUDACXX_DISABLE_UBSAN_UNSIGNED_INTEGER_CHECK
+     _LIBCPP_DISABLE_UBSAN_UNSIGNED_INTEGER_CHECK
   {
     if (__len > 8) {
       const _Size __a = __loadword<_Size>(__s);
@@ -1087,7 +1087,7 @@ struct __murmur2_or_cityhash<_Size, 64>
   }
 
   static _Size __hash_len_17_to_32(const char *__s, _Size __len)
-     _LIBCUDACXX_DISABLE_UBSAN_UNSIGNED_INTEGER_CHECK
+     _LIBCPP_DISABLE_UBSAN_UNSIGNED_INTEGER_CHECK
   {
     const _Size __a = __loadword<_Size>(__s) * __k1;
     const _Size __b = __loadword<_Size>(__s + 8);
@@ -1101,7 +1101,7 @@ struct __murmur2_or_cityhash<_Size, 64>
   // Callers do best to use "random-looking" values for a and b.
   static pair<_Size, _Size> __weak_hash_len_32_with_seeds(
       _Size __w, _Size __x, _Size __y, _Size __z, _Size __a, _Size __b)
-        _LIBCUDACXX_DISABLE_UBSAN_UNSIGNED_INTEGER_CHECK
+        _LIBCPP_DISABLE_UBSAN_UNSIGNED_INTEGER_CHECK
   {
     __a += __w;
     __b = __rotate(__b + __a + __z, 21);
@@ -1115,7 +1115,7 @@ struct __murmur2_or_cityhash<_Size, 64>
   // Return a 16-byte hash for s[0] ... s[31], a, and b.  Quick and dirty.
   static pair<_Size, _Size> __weak_hash_len_32_with_seeds(
       const char* __s, _Size __a, _Size __b)
-    _LIBCUDACXX_DISABLE_UBSAN_UNSIGNED_INTEGER_CHECK
+    _LIBCPP_DISABLE_UBSAN_UNSIGNED_INTEGER_CHECK
   {
     return __weak_hash_len_32_with_seeds(__loadword<_Size>(__s),
                                          __loadword<_Size>(__s + 8),
@@ -1127,7 +1127,7 @@ struct __murmur2_or_cityhash<_Size, 64>
 
   // Return an 8-byte hash for 33 to 64 bytes.
   static _Size __hash_len_33_to_64(const char *__s, size_t __len)
-    _LIBCUDACXX_DISABLE_UBSAN_UNSIGNED_INTEGER_CHECK
+    _LIBCPP_DISABLE_UBSAN_UNSIGNED_INTEGER_CHECK
   {
     _Size __z = __loadword<_Size>(__s + 24);
     _Size __a = __loadword<_Size>(__s) +
@@ -1207,7 +1207,7 @@ template <class _Tp>
 struct __scalar_hash<_Tp, 0>
     : public unary_function<_Tp, size_t>
 {
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     size_t operator()(_Tp __v) const _NOEXCEPT
     {
         union
@@ -1225,7 +1225,7 @@ template <class _Tp>
 struct __scalar_hash<_Tp, 1>
     : public unary_function<_Tp, size_t>
 {
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     size_t operator()(_Tp __v) const _NOEXCEPT
     {
         union
@@ -1242,7 +1242,7 @@ template <class _Tp>
 struct __scalar_hash<_Tp, 2>
     : public unary_function<_Tp, size_t>
 {
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     size_t operator()(_Tp __v) const _NOEXCEPT
     {
         union
@@ -1263,7 +1263,7 @@ template <class _Tp>
 struct __scalar_hash<_Tp, 3>
     : public unary_function<_Tp, size_t>
 {
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     size_t operator()(_Tp __v) const _NOEXCEPT
     {
         union
@@ -1285,7 +1285,7 @@ template <class _Tp>
 struct __scalar_hash<_Tp, 4>
     : public unary_function<_Tp, size_t>
 {
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     size_t operator()(_Tp __v) const _NOEXCEPT
     {
         union
@@ -1309,7 +1309,7 @@ struct _PairT {
   size_t second;
 };
 
-_LIBCUDACXX_INLINE_VISIBILITY
+_LIBCPP_INLINE_VISIBILITY
 inline size_t __hash_combine(size_t __lhs, size_t __rhs) _NOEXCEPT {
     typedef __scalar_hash<_PairT> _HashT;
     const _PairT __p = {__lhs, __rhs};
@@ -1317,10 +1317,10 @@ inline size_t __hash_combine(size_t __lhs, size_t __rhs) _NOEXCEPT {
 }
 
 template<class _Tp>
-struct _LIBCUDACXX_TEMPLATE_VIS hash<_Tp*>
+struct _LIBCPP_TEMPLATE_VIS hash<_Tp*>
     : public unary_function<_Tp*, size_t>
 {
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     size_t operator()(_Tp* __v) const _NOEXCEPT
     {
         union
@@ -1335,135 +1335,135 @@ struct _LIBCUDACXX_TEMPLATE_VIS hash<_Tp*>
 
 
 template <>
-struct _LIBCUDACXX_TEMPLATE_VIS hash<bool>
+struct _LIBCPP_TEMPLATE_VIS hash<bool>
     : public unary_function<bool, size_t>
 {
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     size_t operator()(bool __v) const _NOEXCEPT {return static_cast<size_t>(__v);}
 };
 
 template <>
-struct _LIBCUDACXX_TEMPLATE_VIS hash<char>
+struct _LIBCPP_TEMPLATE_VIS hash<char>
     : public unary_function<char, size_t>
 {
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     size_t operator()(char __v) const _NOEXCEPT {return static_cast<size_t>(__v);}
 };
 
 template <>
-struct _LIBCUDACXX_TEMPLATE_VIS hash<signed char>
+struct _LIBCPP_TEMPLATE_VIS hash<signed char>
     : public unary_function<signed char, size_t>
 {
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     size_t operator()(signed char __v) const _NOEXCEPT {return static_cast<size_t>(__v);}
 };
 
 template <>
-struct _LIBCUDACXX_TEMPLATE_VIS hash<unsigned char>
+struct _LIBCPP_TEMPLATE_VIS hash<unsigned char>
     : public unary_function<unsigned char, size_t>
 {
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     size_t operator()(unsigned char __v) const _NOEXCEPT {return static_cast<size_t>(__v);}
 };
 
-#ifndef _LIBCUDACXX_HAS_NO_UNICODE_CHARS
+#ifndef _LIBCPP_HAS_NO_UNICODE_CHARS
 
 template <>
-struct _LIBCUDACXX_TEMPLATE_VIS hash<char16_t>
+struct _LIBCPP_TEMPLATE_VIS hash<char16_t>
     : public unary_function<char16_t, size_t>
 {
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     size_t operator()(char16_t __v) const _NOEXCEPT {return static_cast<size_t>(__v);}
 };
 
 template <>
-struct _LIBCUDACXX_TEMPLATE_VIS hash<char32_t>
+struct _LIBCPP_TEMPLATE_VIS hash<char32_t>
     : public unary_function<char32_t, size_t>
 {
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     size_t operator()(char32_t __v) const _NOEXCEPT {return static_cast<size_t>(__v);}
 };
 
-#endif  // _LIBCUDACXX_HAS_NO_UNICODE_CHARS
+#endif  // _LIBCPP_HAS_NO_UNICODE_CHARS
 
 template <>
-struct _LIBCUDACXX_TEMPLATE_VIS hash<wchar_t>
+struct _LIBCPP_TEMPLATE_VIS hash<wchar_t>
     : public unary_function<wchar_t, size_t>
 {
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     size_t operator()(wchar_t __v) const _NOEXCEPT {return static_cast<size_t>(__v);}
 };
 
 template <>
-struct _LIBCUDACXX_TEMPLATE_VIS hash<short>
+struct _LIBCPP_TEMPLATE_VIS hash<short>
     : public unary_function<short, size_t>
 {
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     size_t operator()(short __v) const _NOEXCEPT {return static_cast<size_t>(__v);}
 };
 
 template <>
-struct _LIBCUDACXX_TEMPLATE_VIS hash<unsigned short>
+struct _LIBCPP_TEMPLATE_VIS hash<unsigned short>
     : public unary_function<unsigned short, size_t>
 {
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     size_t operator()(unsigned short __v) const _NOEXCEPT {return static_cast<size_t>(__v);}
 };
 
 template <>
-struct _LIBCUDACXX_TEMPLATE_VIS hash<int>
+struct _LIBCPP_TEMPLATE_VIS hash<int>
     : public unary_function<int, size_t>
 {
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     size_t operator()(int __v) const _NOEXCEPT {return static_cast<size_t>(__v);}
 };
 
 template <>
-struct _LIBCUDACXX_TEMPLATE_VIS hash<unsigned int>
+struct _LIBCPP_TEMPLATE_VIS hash<unsigned int>
     : public unary_function<unsigned int, size_t>
 {
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     size_t operator()(unsigned int __v) const _NOEXCEPT {return static_cast<size_t>(__v);}
 };
 
 template <>
-struct _LIBCUDACXX_TEMPLATE_VIS hash<long>
+struct _LIBCPP_TEMPLATE_VIS hash<long>
     : public unary_function<long, size_t>
 {
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     size_t operator()(long __v) const _NOEXCEPT {return static_cast<size_t>(__v);}
 };
 
 template <>
-struct _LIBCUDACXX_TEMPLATE_VIS hash<unsigned long>
+struct _LIBCPP_TEMPLATE_VIS hash<unsigned long>
     : public unary_function<unsigned long, size_t>
 {
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     size_t operator()(unsigned long __v) const _NOEXCEPT {return static_cast<size_t>(__v);}
 };
 
 template <>
-struct _LIBCUDACXX_TEMPLATE_VIS hash<long long>
+struct _LIBCPP_TEMPLATE_VIS hash<long long>
     : public __scalar_hash<long long>
 {
 };
 
 template <>
-struct _LIBCUDACXX_TEMPLATE_VIS hash<unsigned long long>
+struct _LIBCPP_TEMPLATE_VIS hash<unsigned long long>
     : public __scalar_hash<unsigned long long>
 {
 };
 
-#ifndef _LIBCUDACXX_HAS_NO_INT128
+#ifndef _LIBCPP_HAS_NO_INT128
 
 template <>
-struct _LIBCUDACXX_TEMPLATE_VIS hash<__int128_t>
+struct _LIBCPP_TEMPLATE_VIS hash<__int128_t>
     : public __scalar_hash<__int128_t>
 {
 };
 
 template <>
-struct _LIBCUDACXX_TEMPLATE_VIS hash<__uint128_t>
+struct _LIBCPP_TEMPLATE_VIS hash<__uint128_t>
     : public __scalar_hash<__uint128_t>
 {
 };
@@ -1471,10 +1471,10 @@ struct _LIBCUDACXX_TEMPLATE_VIS hash<__uint128_t>
 #endif
 
 template <>
-struct _LIBCUDACXX_TEMPLATE_VIS hash<float>
+struct _LIBCPP_TEMPLATE_VIS hash<float>
     : public __scalar_hash<float>
 {
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     size_t operator()(float __v) const _NOEXCEPT
     {
         // -0.0 and 0.0 should return same hash
@@ -1485,10 +1485,10 @@ struct _LIBCUDACXX_TEMPLATE_VIS hash<float>
 };
 
 template <>
-struct _LIBCUDACXX_TEMPLATE_VIS hash<double>
+struct _LIBCPP_TEMPLATE_VIS hash<double>
     : public __scalar_hash<double>
 {
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     size_t operator()(double __v) const _NOEXCEPT
     {
         // -0.0 and 0.0 should return same hash
@@ -1499,10 +1499,10 @@ struct _LIBCUDACXX_TEMPLATE_VIS hash<double>
 };
 
 template <>
-struct _LIBCUDACXX_TEMPLATE_VIS hash<long double>
+struct _LIBCPP_TEMPLATE_VIS hash<long double>
     : public __scalar_hash<long double>
 {
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     size_t operator()(long double __v) const _NOEXCEPT
     {
         // -0.0 and 0.0 should return same hash
@@ -1548,13 +1548,13 @@ struct _LIBCUDACXX_TEMPLATE_VIS hash<long double>
     }
 };
 
-#if _LIBCUDACXX_STD_VER > 11
+#if _LIBCPP_STD_VER > 11
 
 template <class _Tp, bool = is_enum<_Tp>::value>
-struct _LIBCUDACXX_TEMPLATE_VIS __enum_hash
+struct _LIBCPP_TEMPLATE_VIS __enum_hash
     : public unary_function<_Tp, size_t>
 {
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     size_t operator()(_Tp __v) const _NOEXCEPT
     {
         typedef typename underlying_type<_Tp>::type type;
@@ -1562,60 +1562,60 @@ struct _LIBCUDACXX_TEMPLATE_VIS __enum_hash
     }
 };
 template <class _Tp>
-struct _LIBCUDACXX_TEMPLATE_VIS __enum_hash<_Tp, false> {
+struct _LIBCPP_TEMPLATE_VIS __enum_hash<_Tp, false> {
     __enum_hash() = delete;
     __enum_hash(__enum_hash const&) = delete;
     __enum_hash& operator=(__enum_hash const&) = delete;
 };
 
 template <class _Tp>
-struct _LIBCUDACXX_TEMPLATE_VIS hash : public __enum_hash<_Tp>
+struct _LIBCPP_TEMPLATE_VIS hash : public __enum_hash<_Tp>
 {
 };
 #endif
 
-#if _LIBCUDACXX_STD_VER > 14
+#if _LIBCPP_STD_VER > 14
 
 template <>
-struct _LIBCUDACXX_TEMPLATE_VIS hash<nullptr_t>
+struct _LIBCPP_TEMPLATE_VIS hash<nullptr_t>
   : public unary_function<nullptr_t, size_t>
 {
-  _LIBCUDACXX_INLINE_VISIBILITY
+  _LIBCPP_INLINE_VISIBILITY
   size_t operator()(nullptr_t) const _NOEXCEPT {
     return 662607004ull;
   }
 };
 #endif
 
-#ifndef _LIBCUDACXX_CXX03_LANG
+#ifndef _LIBCPP_CXX03_LANG
 template <class _Key, class _Hash>
-using __check_hash_requirements _LIBCUDACXX_NODEBUG_TYPE  = integral_constant<bool,
+using __check_hash_requirements _LIBCPP_NODEBUG_TYPE  = integral_constant<bool,
     is_copy_constructible<_Hash>::value &&
     is_move_constructible<_Hash>::value &&
     __invokable_r<size_t, _Hash, _Key const&>::value
 >;
 
 template <class _Key, class _Hash = std::hash<_Key> >
-using __has_enabled_hash _LIBCUDACXX_NODEBUG_TYPE = integral_constant<bool,
+using __has_enabled_hash _LIBCPP_NODEBUG_TYPE = integral_constant<bool,
     __check_hash_requirements<_Key, _Hash>::value &&
     is_default_constructible<_Hash>::value
 >;
 
-#if _LIBCUDACXX_STD_VER > 14
+#if _LIBCPP_STD_VER > 14
 template <class _Type, class>
-using __enable_hash_helper_imp _LIBCUDACXX_NODEBUG_TYPE  = _Type;
+using __enable_hash_helper_imp _LIBCPP_NODEBUG_TYPE  = _Type;
 
 template <class _Type, class ..._Keys>
-using __enable_hash_helper _LIBCUDACXX_NODEBUG_TYPE  = __enable_hash_helper_imp<_Type,
+using __enable_hash_helper _LIBCPP_NODEBUG_TYPE  = __enable_hash_helper_imp<_Type,
   typename enable_if<__all<__has_enabled_hash<_Keys>::value...>::value>::type
 >;
 #else
 template <class _Type, class ...>
-using __enable_hash_helper _LIBCUDACXX_NODEBUG_TYPE = _Type;
+using __enable_hash_helper _LIBCPP_NODEBUG_TYPE = _Type;
 #endif
 
-#endif // !_LIBCUDACXX_CXX03_LANG
+#endif // !_LIBCPP_CXX03_LANG
 
-_LIBCUDACXX_END_NAMESPACE_STD
+_LIBCPP_END_NAMESPACE_STD
 
-#endif  // _LIBCUDACXX_UTILITY
+#endif  // _LIBCPP_UTILITY

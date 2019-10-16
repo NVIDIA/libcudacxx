@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCUDACXX_SUPPORT_IBM_LOCALE_MGMT_AIX_H
-#define _LIBCUDACXX_SUPPORT_IBM_LOCALE_MGMT_AIX_H
+#ifndef _LIBCPP_SUPPORT_IBM_LOCALE_MGMT_AIX_H
+#define _LIBCPP_SUPPORT_IBM_LOCALE_MGMT_AIX_H
 
 #if defined(_AIX)
 #include "cstdlib"
@@ -81,4 +81,4 @@ locale_t uselocale(locale_t newloc)
 }
 #endif
 #endif // defined(_AIX)
-#endif // _LIBCUDACXX_SUPPORT_IBM_LOCALE_MGMT_AIX_H
+#endif // _LIBCPP_SUPPORT_IBM_LOCALE_MGMT_AIX_H

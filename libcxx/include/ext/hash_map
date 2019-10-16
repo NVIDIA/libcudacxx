@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCUDACXX_HASH_MAP
-#define _LIBCUDACXX_HASH_MAP
+#ifndef _LIBCPP_HASH_MAP
+#define _LIBCPP_HASH_MAP
 
 /*
 
@@ -209,14 +209,14 @@ template <class Key, class T, class Hash, class Pred, class Alloc>
 #include <ext/__hash>
 
 #if __DEPRECATED
-#if defined(_LIBCUDACXX_WARNING)
-    _LIBCUDACXX_WARNING("Use of the header <ext/hash_map> is deprecated.  Migrate to <unordered_map>")
+#if defined(_LIBCPP_WARNING)
+    _LIBCPP_WARNING("Use of the header <ext/hash_map> is deprecated.  Migrate to <unordered_map>")
 #else
 #   warning Use of the header <ext/hash_map> is deprecated.  Migrate to <unordered_map>
 #endif
 #endif
 
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
@@ -229,13 +229,13 @@ class __hash_map_hasher
     : private _Hash
 {
 public:
-    _LIBCUDACXX_INLINE_VISIBILITY __hash_map_hasher() : _Hash() {}
-    _LIBCUDACXX_INLINE_VISIBILITY __hash_map_hasher(const _Hash& __h) : _Hash(__h) {}
-    _LIBCUDACXX_INLINE_VISIBILITY const _Hash& hash_function() const {return *this;}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY __hash_map_hasher() : _Hash() {}
+    _LIBCPP_INLINE_VISIBILITY __hash_map_hasher(const _Hash& __h) : _Hash(__h) {}
+    _LIBCPP_INLINE_VISIBILITY const _Hash& hash_function() const {return *this;}
+    _LIBCPP_INLINE_VISIBILITY
     size_t operator()(const _Tp& __x) const
         {return static_cast<const _Hash&>(*this)(__x.first);}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     size_t operator()(const typename _Tp::first_type& __x) const
         {return static_cast<const _Hash&>(*this)(__x);}
 };
@@ -245,13 +245,13 @@ class __hash_map_hasher<_Tp, _Hash, false>
 {
     _Hash __hash_;
 public:
-    _LIBCUDACXX_INLINE_VISIBILITY __hash_map_hasher() : __hash_() {}
-    _LIBCUDACXX_INLINE_VISIBILITY __hash_map_hasher(const _Hash& __h) : __hash_(__h) {}
-    _LIBCUDACXX_INLINE_VISIBILITY const _Hash& hash_function() const {return __hash_;}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY __hash_map_hasher() : __hash_() {}
+    _LIBCPP_INLINE_VISIBILITY __hash_map_hasher(const _Hash& __h) : __hash_(__h) {}
+    _LIBCPP_INLINE_VISIBILITY const _Hash& hash_function() const {return __hash_;}
+    _LIBCPP_INLINE_VISIBILITY
     size_t operator()(const _Tp& __x) const
         {return __hash_(__x.first);}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     size_t operator()(const typename _Tp::first_type& __x) const
         {return __hash_(__x);}
 };
@@ -263,19 +263,19 @@ class __hash_map_equal
     : private _Pred
 {
 public:
-    _LIBCUDACXX_INLINE_VISIBILITY __hash_map_equal() : _Pred() {}
-    _LIBCUDACXX_INLINE_VISIBILITY __hash_map_equal(const _Pred& __p) : _Pred(__p) {}
-    _LIBCUDACXX_INLINE_VISIBILITY const _Pred& key_eq() const {return *this;}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY __hash_map_equal() : _Pred() {}
+    _LIBCPP_INLINE_VISIBILITY __hash_map_equal(const _Pred& __p) : _Pred(__p) {}
+    _LIBCPP_INLINE_VISIBILITY const _Pred& key_eq() const {return *this;}
+    _LIBCPP_INLINE_VISIBILITY
     bool operator()(const _Tp& __x, const _Tp& __y) const
         {return static_cast<const _Pred&>(*this)(__x.first, __y.first);}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     bool operator()(const typename _Tp::first_type& __x, const _Tp& __y) const
         {return static_cast<const _Pred&>(*this)(__x, __y.first);}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     bool operator()(const _Tp& __x, const typename _Tp::first_type& __y) const
         {return static_cast<const _Pred&>(*this)(__x.first, __y);}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     bool operator()(const typename _Tp::first_type& __x,
                     const typename _Tp::first_type& __y) const
         {return static_cast<const _Pred&>(*this)(__x, __y);}
@@ -286,19 +286,19 @@ class __hash_map_equal<_Tp, _Pred, false>
 {
     _Pred __pred_;
 public:
-    _LIBCUDACXX_INLINE_VISIBILITY __hash_map_equal() : __pred_() {}
-    _LIBCUDACXX_INLINE_VISIBILITY __hash_map_equal(const _Pred& __p) : __pred_(__p) {}
-    _LIBCUDACXX_INLINE_VISIBILITY const _Pred& key_eq() const {return __pred_;}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY __hash_map_equal() : __pred_() {}
+    _LIBCPP_INLINE_VISIBILITY __hash_map_equal(const _Pred& __p) : __pred_(__p) {}
+    _LIBCPP_INLINE_VISIBILITY const _Pred& key_eq() const {return __pred_;}
+    _LIBCPP_INLINE_VISIBILITY
     bool operator()(const _Tp& __x, const _Tp& __y) const
         {return __pred_(__x.first, __y.first);}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     bool operator()(const typename _Tp::first_type& __x, const _Tp& __y) const
         {return __pred_(__x, __y.first);}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     bool operator()(const _Tp& __x, const typename _Tp::first_type& __y) const
         {return __pred_(__x.first, __y);}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     bool operator()(const typename _Tp::first_type& __x,
                     const typename _Tp::first_type& __y) const
         {return __pred_(__x, __y);}
@@ -324,15 +324,15 @@ public:
     bool __first_constructed;
     bool __second_constructed;
 
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     explicit __hash_map_node_destructor(allocator_type& __na)
         : __na_(__na),
           __first_constructed(false),
           __second_constructed(false)
         {}
 
-#ifndef _LIBCUDACXX_CXX03_LANG
-    _LIBCUDACXX_INLINE_VISIBILITY
+#ifndef _LIBCPP_CXX03_LANG
+    _LIBCPP_INLINE_VISIBILITY
     __hash_map_node_destructor(std::__hash_node_destructor<allocator_type>&& __x)
         : __na_(__x.__na_),
           __first_constructed(__x.__value_constructed),
@@ -340,8 +340,8 @@ public:
         {
             __x.__value_constructed = false;
         }
-#else  // _LIBCUDACXX_CXX03_LANG
-    _LIBCUDACXX_INLINE_VISIBILITY
+#else  // _LIBCPP_CXX03_LANG
+    _LIBCPP_INLINE_VISIBILITY
     __hash_map_node_destructor(const std::__hash_node_destructor<allocator_type>& __x)
         : __na_(__x.__na_),
           __first_constructed(__x.__value_constructed),
@@ -349,22 +349,22 @@ public:
         {
             const_cast<bool&>(__x.__value_constructed) = false;
         }
-#endif  // _LIBCUDACXX_CXX03_LANG
+#endif  // _LIBCPP_CXX03_LANG
 
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     void operator()(pointer __p)
     {
         if (__second_constructed)
-            __alloc_traits::destroy(__na_, _CUDA_VSTD::addressof(__p->__value_.second));
+            __alloc_traits::destroy(__na_, _VSTD::addressof(__p->__value_.second));
         if (__first_constructed)
-            __alloc_traits::destroy(__na_, _CUDA_VSTD::addressof(__p->__value_.first));
+            __alloc_traits::destroy(__na_, _VSTD::addressof(__p->__value_.first));
         if (__p)
             __alloc_traits::deallocate(__na_, __p, 1);
     }
 };
 
 template <class _HashIterator>
-class _LIBCUDACXX_TEMPLATE_VIS __hash_map_iterator
+class _LIBCPP_TEMPLATE_VIS __hash_map_iterator
 {
     _HashIterator __i_;
 
@@ -378,15 +378,15 @@ public:
     typedef typename std::__rebind_pointer<typename _HashIterator::pointer, value_type>::type
         pointer;
 
-    _LIBCUDACXX_INLINE_VISIBILITY __hash_map_iterator() {}
+    _LIBCPP_INLINE_VISIBILITY __hash_map_iterator() {}
 
-    _LIBCUDACXX_INLINE_VISIBILITY __hash_map_iterator(_HashIterator __i) : __i_(__i) {}
+    _LIBCPP_INLINE_VISIBILITY __hash_map_iterator(_HashIterator __i) : __i_(__i) {}
 
-    _LIBCUDACXX_INLINE_VISIBILITY reference operator*() const {return *operator->();}
-    _LIBCUDACXX_INLINE_VISIBILITY pointer operator->() const {return (pointer)__i_.operator->();}
+    _LIBCPP_INLINE_VISIBILITY reference operator*() const {return *operator->();}
+    _LIBCPP_INLINE_VISIBILITY pointer operator->() const {return (pointer)__i_.operator->();}
 
-    _LIBCUDACXX_INLINE_VISIBILITY __hash_map_iterator& operator++() {++__i_; return *this;}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY __hash_map_iterator& operator++() {++__i_; return *this;}
+    _LIBCPP_INLINE_VISIBILITY
     __hash_map_iterator operator++(int)
     {
         __hash_map_iterator __t(*this);
@@ -394,22 +394,22 @@ public:
         return __t;
     }
 
-    friend _LIBCUDACXX_INLINE_VISIBILITY 
+    friend _LIBCPP_INLINE_VISIBILITY 
     bool operator==(const __hash_map_iterator& __x, const __hash_map_iterator& __y)
         {return __x.__i_ == __y.__i_;}
-    friend _LIBCUDACXX_INLINE_VISIBILITY 
+    friend _LIBCPP_INLINE_VISIBILITY 
     bool operator!=(const __hash_map_iterator& __x, const __hash_map_iterator& __y)
         {return __x.__i_ != __y.__i_;}
 
-    template <class, class, class, class, class> friend class _LIBCUDACXX_TEMPLATE_VIS hash_map;
-    template <class, class, class, class, class> friend class _LIBCUDACXX_TEMPLATE_VIS hash_multimap;
-    template <class> friend class _LIBCUDACXX_TEMPLATE_VIS __hash_const_iterator;
-    template <class> friend class _LIBCUDACXX_TEMPLATE_VIS __hash_const_local_iterator;
-    template <class> friend class _LIBCUDACXX_TEMPLATE_VIS __hash_map_const_iterator;
+    template <class, class, class, class, class> friend class _LIBCPP_TEMPLATE_VIS hash_map;
+    template <class, class, class, class, class> friend class _LIBCPP_TEMPLATE_VIS hash_multimap;
+    template <class> friend class _LIBCPP_TEMPLATE_VIS __hash_const_iterator;
+    template <class> friend class _LIBCPP_TEMPLATE_VIS __hash_const_local_iterator;
+    template <class> friend class _LIBCPP_TEMPLATE_VIS __hash_map_const_iterator;
 };
 
 template <class _HashIterator>
-class _LIBCUDACXX_TEMPLATE_VIS __hash_map_const_iterator
+class _LIBCPP_TEMPLATE_VIS __hash_map_const_iterator
 {
     _HashIterator __i_;
 
@@ -423,23 +423,23 @@ public:
     typedef typename std::__rebind_pointer<typename _HashIterator::pointer, const value_type>::type
         pointer;
 
-    _LIBCUDACXX_INLINE_VISIBILITY __hash_map_const_iterator() {}
+    _LIBCPP_INLINE_VISIBILITY __hash_map_const_iterator() {}
 
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     __hash_map_const_iterator(_HashIterator __i) : __i_(__i) {}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     __hash_map_const_iterator(
             __hash_map_iterator<typename _HashIterator::__non_const_iterator> __i)
                 : __i_(__i.__i_) {}
 
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     reference operator*() const {return *operator->();}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     pointer operator->() const {return (pointer)__i_.operator->();}
 
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     __hash_map_const_iterator& operator++() {++__i_; return *this;}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     __hash_map_const_iterator operator++(int)
     {
         __hash_map_const_iterator __t(*this);
@@ -447,22 +447,22 @@ public:
         return __t;
     }
 
-    friend _LIBCUDACXX_INLINE_VISIBILITY
+    friend _LIBCPP_INLINE_VISIBILITY
     bool operator==(const __hash_map_const_iterator& __x, const __hash_map_const_iterator& __y)
         {return __x.__i_ == __y.__i_;}
-    friend _LIBCUDACXX_INLINE_VISIBILITY
+    friend _LIBCPP_INLINE_VISIBILITY
     bool operator!=(const __hash_map_const_iterator& __x, const __hash_map_const_iterator& __y)
         {return __x.__i_ != __y.__i_;}
 
-    template <class, class, class, class, class> friend class _LIBCUDACXX_TEMPLATE_VIS hash_map;
-    template <class, class, class, class, class> friend class _LIBCUDACXX_TEMPLATE_VIS hash_multimap;
-    template <class> friend class _LIBCUDACXX_TEMPLATE_VIS __hash_const_iterator;
-    template <class> friend class _LIBCUDACXX_TEMPLATE_VIS __hash_const_local_iterator;
+    template <class, class, class, class, class> friend class _LIBCPP_TEMPLATE_VIS hash_map;
+    template <class, class, class, class, class> friend class _LIBCPP_TEMPLATE_VIS hash_multimap;
+    template <class> friend class _LIBCPP_TEMPLATE_VIS __hash_const_iterator;
+    template <class> friend class _LIBCPP_TEMPLATE_VIS __hash_const_local_iterator;
 };
 
 template <class _Key, class _Tp, class _Hash = hash<_Key>, class _Pred = std::equal_to<_Key>,
           class _Alloc = std::allocator<std::pair<const _Key, _Tp> > >
-class _LIBCUDACXX_TEMPLATE_VIS hash_map
+class _LIBCPP_TEMPLATE_VIS hash_map
 {
 public:
     // types
@@ -505,7 +505,7 @@ public:
     typedef __hash_map_iterator<typename __table::iterator>       iterator;
     typedef __hash_map_const_iterator<typename __table::const_iterator> const_iterator;
 
-    _LIBCUDACXX_INLINE_VISIBILITY hash_map() { }
+    _LIBCPP_INLINE_VISIBILITY hash_map() { }
     explicit hash_map(size_type __n, const hasher& __hf = hasher(),
                            const key_equal& __eql = key_equal());
     hash_map(size_type __n, const hasher& __hf,
@@ -524,80 +524,80 @@ public:
                       const allocator_type& __a);
     hash_map(const hash_map& __u);
 
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     allocator_type get_allocator() const
         {return allocator_type(__table_.__node_alloc());}
 
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     bool      empty() const {return __table_.size() == 0;}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     size_type size() const  {return __table_.size();}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     size_type max_size() const {return __table_.max_size();}
 
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     iterator       begin()        {return __table_.begin();}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     iterator       end()          {return __table_.end();}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     const_iterator begin()  const {return __table_.begin();}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     const_iterator end()    const {return __table_.end();}
 
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     std::pair<iterator, bool> insert(const value_type& __x)
         {return __table_.__insert_unique(__x);}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     iterator insert(const_iterator, const value_type& __x) {return insert(__x).first;}
     template <class _InputIterator>
-        _LIBCUDACXX_INLINE_VISIBILITY
+        _LIBCPP_INLINE_VISIBILITY
         void insert(_InputIterator __first, _InputIterator __last);
 
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     void erase(const_iterator __p) {__table_.erase(__p.__i_);}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     size_type erase(const key_type& __k) {return __table_.__erase_unique(__k);}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     void erase(const_iterator __first, const_iterator __last)
         {__table_.erase(__first.__i_, __last.__i_);}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     void clear() {__table_.clear();}
 
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     void swap(hash_map& __u) {__table_.swap(__u.__table_);}
 
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     hasher hash_funct() const
         {return __table_.hash_function().hash_function();}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     key_equal key_eq() const
         {return __table_.key_eq().key_eq();}
 
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     iterator       find(const key_type& __k)       {return __table_.find(__k);}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     const_iterator find(const key_type& __k) const {return __table_.find(__k);}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     size_type count(const key_type& __k) const {return __table_.__count_unique(__k);}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     std::pair<iterator, iterator>             equal_range(const key_type& __k)
         {return __table_.__equal_range_unique(__k);}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     std::pair<const_iterator, const_iterator> equal_range(const key_type& __k) const
         {return __table_.__equal_range_unique(__k);}
 
     mapped_type& operator[](const key_type& __k);
 
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     size_type bucket_count() const {return __table_.bucket_count();}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     size_type max_bucket_count() const {return __table_.max_bucket_count();}
 
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     size_type elems_in_bucket(size_type __n) const
         {return __table_.bucket_size(__n);}
 
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     void resize(size_type __n) {__table_.rehash(__n);}
 
 private:
@@ -666,11 +666,11 @@ hash_map<_Key, _Tp, _Hash, _Pred, _Alloc>::__construct_node(const key_type& __k)
 {
     __node_allocator& __na = __table_.__node_alloc();
     __node_holder __h(__node_traits::allocate(__na, 1), _Dp(__na));
-    __node_traits::construct(__na, _CUDA_VSTD::addressof(__h->__value_.first), __k);
+    __node_traits::construct(__na, _VSTD::addressof(__h->__value_.first), __k);
     __h.get_deleter().__first_constructed = true;
-    __node_traits::construct(__na, _CUDA_VSTD::addressof(__h->__value_.second));
+    __node_traits::construct(__na, _VSTD::addressof(__h->__value_.second));
     __h.get_deleter().__second_constructed = true;
-    return _LIBCUDACXX_EXPLICIT_MOVE(__h);  // explicitly moved for C++03
+    return _LIBCPP_EXPLICIT_MOVE(__h);  // explicitly moved for C++03
 }
 
 template <class _Key, class _Tp, class _Hash, class _Pred, class _Alloc>
@@ -698,7 +698,7 @@ hash_map<_Key, _Tp, _Hash, _Pred, _Alloc>::operator[](const key_type& __k)
 }
 
 template <class _Key, class _Tp, class _Hash, class _Pred, class _Alloc>
-inline _LIBCUDACXX_INLINE_VISIBILITY
+inline _LIBCPP_INLINE_VISIBILITY
 void
 swap(hash_map<_Key, _Tp, _Hash, _Pred, _Alloc>& __x,
      hash_map<_Key, _Tp, _Hash, _Pred, _Alloc>& __y)
@@ -726,7 +726,7 @@ operator==(const hash_map<_Key, _Tp, _Hash, _Pred, _Alloc>& __x,
 }
 
 template <class _Key, class _Tp, class _Hash, class _Pred, class _Alloc>
-inline _LIBCUDACXX_INLINE_VISIBILITY
+inline _LIBCPP_INLINE_VISIBILITY
 bool
 operator!=(const hash_map<_Key, _Tp, _Hash, _Pred, _Alloc>& __x,
            const hash_map<_Key, _Tp, _Hash, _Pred, _Alloc>& __y)
@@ -736,7 +736,7 @@ operator!=(const hash_map<_Key, _Tp, _Hash, _Pred, _Alloc>& __x,
 
 template <class _Key, class _Tp, class _Hash = hash<_Key>, class _Pred = std::equal_to<_Key>,
           class _Alloc = std::allocator<std::pair<const _Key, _Tp> > >
-class _LIBCUDACXX_TEMPLATE_VIS hash_multimap
+class _LIBCPP_TEMPLATE_VIS hash_multimap
 {
 public:
     // types
@@ -776,7 +776,7 @@ public:
     typedef __hash_map_iterator<typename __table::iterator>       iterator;
     typedef __hash_map_const_iterator<typename __table::const_iterator> const_iterator;
 
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     hash_multimap() { }
     explicit hash_multimap(size_type __n, const hasher& __hf = hasher(),
                                 const key_equal& __eql = key_equal());
@@ -796,77 +796,77 @@ public:
                       const allocator_type& __a);
     hash_multimap(const hash_multimap& __u);
 
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     allocator_type get_allocator() const
         {return allocator_type(__table_.__node_alloc());}
 
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     bool      empty() const {return __table_.size() == 0;}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     size_type size() const  {return __table_.size();}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     size_type max_size() const {return __table_.max_size();}
 
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     iterator       begin()        {return __table_.begin();}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     iterator       end()          {return __table_.end();}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     const_iterator begin()  const {return __table_.begin();}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     const_iterator end()    const {return __table_.end();}
 
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     iterator insert(const value_type& __x) {return __table_.__insert_multi(__x);}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     iterator insert(const_iterator, const value_type& __x) {return insert(__x);}
     template <class _InputIterator>
-        _LIBCUDACXX_INLINE_VISIBILITY
+        _LIBCPP_INLINE_VISIBILITY
         void insert(_InputIterator __first, _InputIterator __last);
 
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     void erase(const_iterator __p) {__table_.erase(__p.__i_);}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     size_type erase(const key_type& __k) {return __table_.__erase_multi(__k);}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     void erase(const_iterator __first, const_iterator __last)
         {__table_.erase(__first.__i_, __last.__i_);}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     void clear() {__table_.clear();}
 
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     void swap(hash_multimap& __u) {__table_.swap(__u.__table_);}
 
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     hasher hash_funct() const
         {return __table_.hash_function().hash_function();}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     key_equal key_eq() const
         {return __table_.key_eq().key_eq();}
 
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     iterator       find(const key_type& __k)       {return __table_.find(__k);}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     const_iterator find(const key_type& __k) const {return __table_.find(__k);}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     size_type count(const key_type& __k) const {return __table_.__count_multi(__k);}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     std::pair<iterator, iterator>             equal_range(const key_type& __k)
         {return __table_.__equal_range_multi(__k);}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     std::pair<const_iterator, const_iterator> equal_range(const key_type& __k) const
         {return __table_.__equal_range_multi(__k);}
 
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     size_type bucket_count() const {return __table_.bucket_count();}
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     size_type max_bucket_count() const {return __table_.max_bucket_count();}
 
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     size_type elems_in_bucket(size_type __n) const
         {return __table_.bucket_size(__n);}
 
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCPP_INLINE_VISIBILITY
     void resize(size_type __n) {__table_.rehash(__n);}
 };
 
@@ -938,7 +938,7 @@ hash_multimap<_Key, _Tp, _Hash, _Pred, _Alloc>::insert(_InputIterator __first,
 }
 
 template <class _Key, class _Tp, class _Hash, class _Pred, class _Alloc>
-inline _LIBCUDACXX_INLINE_VISIBILITY
+inline _LIBCPP_INLINE_VISIBILITY
 void
 swap(hash_multimap<_Key, _Tp, _Hash, _Pred, _Alloc>& __x,
      hash_multimap<_Key, _Tp, _Hash, _Pred, _Alloc>& __y)
@@ -960,9 +960,9 @@ operator==(const hash_multimap<_Key, _Tp, _Hash, _Pred, _Alloc>& __x,
     {
         _EqRng __xeq = __x.equal_range(__i->first);
         _EqRng __yeq = __y.equal_range(__i->first);
-        if (_CUDA_VSTD::distance(__xeq.first, __xeq.second) !=
-            _CUDA_VSTD::distance(__yeq.first, __yeq.second) ||
-                  !_CUDA_VSTD::is_permutation(__xeq.first, __xeq.second, __yeq.first))
+        if (_VSTD::distance(__xeq.first, __xeq.second) !=
+            _VSTD::distance(__yeq.first, __yeq.second) ||
+                  !_VSTD::is_permutation(__xeq.first, __xeq.second, __yeq.first))
             return false;
         __i = __xeq.second;
     }
@@ -970,7 +970,7 @@ operator==(const hash_multimap<_Key, _Tp, _Hash, _Pred, _Alloc>& __x,
 }
 
 template <class _Key, class _Tp, class _Hash, class _Pred, class _Alloc>
-inline _LIBCUDACXX_INLINE_VISIBILITY
+inline _LIBCPP_INLINE_VISIBILITY
 bool
 operator!=(const hash_multimap<_Key, _Tp, _Hash, _Pred, _Alloc>& __x,
            const hash_multimap<_Key, _Tp, _Hash, _Pred, _Alloc>& __y)
@@ -980,4 +980,4 @@ operator!=(const hash_multimap<_Key, _Tp, _Hash, _Pred, _Alloc>& __x,
 
 } // __gnu_cxx
 
-#endif  // _LIBCUDACXX_HASH_MAP
+#endif  // _LIBCPP_HASH_MAP

@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCUDACXX_WCTYPE_H
-#define _LIBCUDACXX_WCTYPE_H
+#ifndef _LIBCPP_WCTYPE_H
+#define _LIBCPP_WCTYPE_H
 
 /*
     wctype.h synopsis
@@ -46,7 +46,7 @@ wctrans_t wctrans(const char* property);
 
 #include <__config>
 
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
@@ -75,4 +75,4 @@ wctrans_t wctrans(const char* property);
 
 #endif  // __cplusplus
 
-#endif  // _LIBCUDACXX_WCTYPE_H
+#endif  // _LIBCPP_WCTYPE_H

@@ -8,12 +8,12 @@
 
 #include "valarray"
 
-_LIBCUDACXX_BEGIN_NAMESPACE_STD
+_LIBCPP_BEGIN_NAMESPACE_STD
 
 // These two symbols are part of the v1 ABI but not part of the >=v2 ABI.
-#if _LIBCUDACXX_ABI_VERSION == 1
-template _LIBCUDACXX_FUNC_VIS valarray<size_t>::valarray(size_t);
-template _LIBCUDACXX_FUNC_VIS valarray<size_t>::~valarray();
+#if _LIBCPP_ABI_VERSION == 1
+template _LIBCPP_FUNC_VIS valarray<size_t>::valarray(size_t);
+template _LIBCPP_FUNC_VIS valarray<size_t>::~valarray();
 #endif
 
 template void valarray<size_t>::resize(size_t, size_t);
@@ -54,4 +54,4 @@ gslice::__init(size_t __start)
     }
 }
 
-_LIBCUDACXX_END_NAMESPACE_STD
+_LIBCPP_END_NAMESPACE_STD

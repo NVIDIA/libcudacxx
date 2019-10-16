@@ -138,7 +138,7 @@ int main(int, char**)
         assert(std::get<3>(t) == 3);
     }
 // extensions
-#ifdef _LIBCUDACXX_VERSION
+#ifdef _LIBCPP_VERSION
     {
         std::tuple<int, char*, std::string> t(2);
         assert(std::get<0>(t) == 2);

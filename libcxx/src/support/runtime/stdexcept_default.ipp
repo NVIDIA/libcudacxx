@@ -8,8 +8,8 @@
 
 #include "../../include/refstring.h"
 
-/* For _LIBCUDACXXABI_VERSION */
-#if !defined(_LIBCUDACXX_BUILDING_HAS_NO_ABI_LIBRARY) &&                           \
+/* For _LIBCPPABI_VERSION */
+#if !defined(_LIBCPP_BUILDING_HAS_NO_ABI_LIBRARY) &&                           \
     (defined(LIBCXX_BUILDING_LIBCXXABI) || defined(LIBCXXRT))
 #include <cxxabi.h>
 #endif
@@ -42,7 +42,7 @@ runtime_error& runtime_error::operator=(const runtime_error& re) _NOEXCEPT {
   return *this;
 }
 
-#if !defined(_LIBCUDACXXABI_VERSION) && !defined(LIBSTDCXX)
+#if !defined(_LIBCPPABI_VERSION) && !defined(LIBSTDCXX)
 
 const char* logic_error::what() const _NOEXCEPT { return __imp_.c_str(); }
 

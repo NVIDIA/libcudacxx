@@ -23,18 +23,18 @@ created in include/__config to mark this feature as unavailable for all the
 systems. For example::
 
     // Define availability macros.
-    #if defined(_LIBCUDACXX_USE_AVAILABILITY_APPLE)
-    # define _LIBCUDACXX_AVAILABILITY_BAD_OPTIONAL_ACCESS __attribute__((unavailable))
-    #else  if defined(_LIBCUDACXX_USE_AVAILABILITY_SOME_OTHER_VENDOR)
-    # define _LIBCUDACXX_AVAILABILITY_BAD_OPTIONAL_ACCESS __attribute__((unavailable))
+    #if defined(_LIBCPP_USE_AVAILABILITY_APPLE)
+    # define _LIBCPP_AVAILABILITY_BAD_OPTIONAL_ACCESS __attribute__((unavailable))
+    #else  if defined(_LIBCPP_USE_AVAILABILITY_SOME_OTHER_VENDOR)
+    # define _LIBCPP_AVAILABILITY_BAD_OPTIONAL_ACCESS __attribute__((unavailable))
     #else
-    # define _LIBCUDACXX_AVAILABILITY_BAD_OPTIONAL_ACCESS
+    # define _LIBCPP_AVAILABILITY_BAD_OPTIONAL_ACCESS
     #endif
 
 When the library is updated by the platform vendor, the markup can be updated.
 For example::
 
-    #define _LIBCUDACXX_AVAILABILITY_SHARED_MUTEX                                  \
+    #define _LIBCPP_AVAILABILITY_SHARED_MUTEX                                  \
       __attribute__((availability(macosx,strict,introduced=10.12)))            \
       __attribute__((availability(ios,strict,introduced=10.0)))                \
       __attribute__((availability(tvos,strict,introduced=10.0)))               \
@@ -43,13 +43,13 @@ For example::
 In the source code, the macro can be added on a class if the full class requires
 type info from the library for example::
 
-    _LIBCUDACXX_BEGIN_NAMESPACE_EXPERIMENTAL
-    class _LIBCUDACXX_EXCEPTION_ABI _LIBCUDACXX_AVAILABILITY_BAD_OPTIONAL_ACCESS bad_optional_access
+    _LIBCPP_BEGIN_NAMESPACE_EXPERIMENTAL
+    class _LIBCPP_EXCEPTION_ABI _LIBCPP_AVAILABILITY_BAD_OPTIONAL_ACCESS bad_optional_access
       : public std::logic_error {
 
 or on a particular symbol:
 
-    _LIBCUDACXX_OVERRIDABLE_FUNC_VIS _LIBCUDACXX_AVAILABILITY_SIZED_NEW_DELETE void  operator delete(void* __p, std::size_t __sz) _NOEXCEPT;
+    _LIBCPP_OVERRIDABLE_FUNC_VIS _LIBCPP_AVAILABILITY_SIZED_NEW_DELETE void  operator delete(void* __p, std::size_t __sz) _NOEXCEPT;
 
 Furthermore, a lit feature should be added to match that availability macro,
 so that tests depending on that feature can be marked to XFAIL if the feature

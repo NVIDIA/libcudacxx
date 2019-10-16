@@ -21,7 +21,7 @@
 #include "test_iterators.h"
 #include "test_macros.h"
 
-#ifndef _LIBCUDACXX_HAS_NO_ASAN
+#ifndef _LIBCPP_HAS_NO_ASAN
 extern "C" void __sanitizer_set_death_callback(void (*callback)(void));
 
 void do_exit() {

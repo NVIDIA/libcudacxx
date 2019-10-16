@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCUDACXX_SUPPORT_XLOCALE_NOP_LOCALE_MGMT_H
-#define _LIBCUDACXX_SUPPORT_XLOCALE_NOP_LOCALE_MGMT_H
+#ifndef _LIBCPP_SUPPORT_XLOCALE_NOP_LOCALE_MGMT_H
+#define _LIBCPP_SUPPORT_XLOCALE_NOP_LOCALE_MGMT_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -48,4 +48,4 @@ static inline locale_t uselocale(locale_t) {
 } // extern "C"
 #endif
 
-#endif // _LIBCUDACXX_SUPPORT_XLOCALE_NOP_LOCALE_MGMT_H
+#endif // _LIBCPP_SUPPORT_XLOCALE_NOP_LOCALE_MGMT_H

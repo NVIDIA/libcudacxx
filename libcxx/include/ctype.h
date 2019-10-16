@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCUDACXX_CTYPE_H
-#define _LIBCUDACXX_CTYPE_H
+#ifndef _LIBCPP_CTYPE_H
+#define _LIBCPP_CTYPE_H
 
 /*
     ctype.h synopsis
@@ -31,7 +31,7 @@ int toupper(int c);
 
 #include <__config>
 
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
@@ -56,4 +56,4 @@ int toupper(int c);
 
 #endif
 
-#endif  // _LIBCUDACXX_CTYPE_H
+#endif  // _LIBCPP_CTYPE_H

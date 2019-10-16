@@ -8,14 +8,14 @@
 
 #include "__config"
 
-#ifndef _LIBCUDACXX_HAS_NO_THREADS
+#ifndef _LIBCPP_HAS_NO_THREADS
 
 #include "future"
 #include "string"
 
-_LIBCUDACXX_BEGIN_NAMESPACE_STD
+_LIBCPP_BEGIN_NAMESPACE_STD
 
-class _LIBCUDACXX_HIDDEN __future_error_category
+class _LIBCPP_HIDDEN __future_error_category
     : public __do_message
 {
 public:
@@ -205,12 +205,12 @@ promise<void>::~promise()
 {
     if (__state_)
     {
-#ifndef _LIBCUDACXX_NO_EXCEPTIONS
+#ifndef _LIBCPP_NO_EXCEPTIONS
         if (!__state_->__has_value() && __state_->use_count() > 1)
             __state_->set_exception(make_exception_ptr(
                       future_error(make_error_code(future_errc::broken_promise))
                                                       ));
-#endif // _LIBCUDACXX_NO_EXCEPTIONS
+#endif // _LIBCPP_NO_EXCEPTIONS
         __state_->__release_shared();
     }
 }
@@ -272,6 +272,6 @@ shared_future<void>::operator=(const shared_future& __rhs)
     return *this;
 }
 
-_LIBCUDACXX_END_NAMESPACE_STD
+_LIBCPP_END_NAMESPACE_STD
 
-#endif // !_LIBCUDACXX_HAS_NO_THREADS
+#endif // !_LIBCPP_HAS_NO_THREADS

@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCUDACXX_SUPPORT_ANDROID_LOCALE_BIONIC_H
-#define _LIBCUDACXX_SUPPORT_ANDROID_LOCALE_BIONIC_H
+#ifndef _LIBCPP_SUPPORT_ANDROID_LOCALE_BIONIC_H
+#define _LIBCPP_SUPPORT_ANDROID_LOCALE_BIONIC_H
 
 #if defined(__BIONIC__)
 
@@ -39,17 +39,17 @@ extern "C" {
 extern "C" {
 #endif
 
-inline _LIBCUDACXX_INLINE_VISIBILITY float strtof_l(const char* __nptr, char** __endptr,
+inline _LIBCPP_INLINE_VISIBILITY float strtof_l(const char* __nptr, char** __endptr,
                                                 locale_t) {
   return ::strtof(__nptr, __endptr);
 }
 
-inline _LIBCUDACXX_INLINE_VISIBILITY double strtod_l(const char* __nptr,
+inline _LIBCPP_INLINE_VISIBILITY double strtod_l(const char* __nptr,
                                                  char** __endptr, locale_t) {
   return ::strtod(__nptr, __endptr);
 }
 
-inline _LIBCUDACXX_INLINE_VISIBILITY long strtol_l(const char* __nptr, char** __endptr,
+inline _LIBCPP_INLINE_VISIBILITY long strtol_l(const char* __nptr, char** __endptr,
                                                int __base, locale_t) {
   return ::strtol(__nptr, __endptr, __base);
 }
@@ -64,4 +64,4 @@ inline _LIBCUDACXX_INLINE_VISIBILITY long strtol_l(const char* __nptr, char** __
 #endif // defined(__ANDROID__)
 
 #endif // defined(__BIONIC__)
-#endif // _LIBCUDACXX_SUPPORT_ANDROID_LOCALE_BIONIC_H
+#endif // _LIBCPP_SUPPORT_ANDROID_LOCALE_BIONIC_H

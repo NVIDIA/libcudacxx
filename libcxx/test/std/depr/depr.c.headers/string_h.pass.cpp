@@ -42,7 +42,7 @@ int main(int, char**)
     static_assert((std::is_same<decltype(strrchr(cp, 0)), char*>::value), "");
     static_assert((std::is_same<decltype(strspn(cpc, cpc)), size_t>::value), "");
     static_assert((std::is_same<decltype(strstr(cp, cpc)), char*>::value), "");
-#ifndef _LIBCUDACXX_HAS_NO_THREAD_UNSAFE_C_FUNCTIONS
+#ifndef _LIBCPP_HAS_NO_THREAD_UNSAFE_C_FUNCTIONS
     static_assert((std::is_same<decltype(strtok(cp, cpc)), char*>::value), "");
 #endif
     static_assert((std::is_same<decltype(memset(vp, 0, s)), void*>::value), "");
@@ -52,7 +52,7 @@ int main(int, char**)
     // These tests fail on systems whose C library doesn't provide a correct overload
     // set for strchr, strpbrk, strrchr, strstr, and memchr, unless the compiler is
     // a suitably recent version of Clang.
-#if !defined(__APPLE__) || defined(_LIBCUDACXX_PREFERRED_OVERLOAD)
+#if !defined(__APPLE__) || defined(_LIBCPP_PREFERRED_OVERLOAD)
     static_assert((std::is_same<decltype(strchr(cpc, 0)), const char*>::value), "");
     static_assert((std::is_same<decltype(strpbrk(cpc, cpc)), const char*>::value), "");
     static_assert((std::is_same<decltype(strrchr(cpc, 0)), const char*>::value), "");
