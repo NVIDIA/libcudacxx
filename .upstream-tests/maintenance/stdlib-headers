@@ -2,6 +2,7 @@
 <any>
 <array>
 <atomic>
+<barrier>
 <bit>
 <bitset>
 <cassert>
@@ -48,6 +49,7 @@
 <iostream>
 <istream>
 <iterator>
+<latch>
 <limits>
 <list>
 <locale>
@@ -65,6 +67,7 @@
 <ratio>
 <regex>
 <scoped_allocator>
+<semaphore>
 <set>
 <shared_mutex>
 <span>
