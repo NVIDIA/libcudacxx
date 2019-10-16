@@ -12,7 +12,7 @@
 
 #include "test_macros.h"
 
-#ifndef _LIBCPP_ALGORITHM
+#ifndef _LIBCUDACXX_ALGORITHM
 #  error "<experimental/algorithm> must include <algorithm>"
 #endif
 

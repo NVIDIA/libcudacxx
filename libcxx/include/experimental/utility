@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCPP_EXPERIMENTAL_UTILITY
-#define _LIBCPP_EXPERIMENTAL_UTILITY
+#ifndef _LIBCUDACXX_EXPERIMENTAL_UTILITY
+#define _LIBCUDACXX_EXPERIMENTAL_UTILITY
 
 /*
     experimental/utility synopsis
@@ -33,14 +33,14 @@ inline namespace fundamentals_v1 {
 #include <experimental/__config>
 #include <utility>
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
-_LIBCPP_BEGIN_NAMESPACE_LFTS
+_LIBCUDACXX_BEGIN_NAMESPACE_LFTS
 
-  struct _LIBCPP_TEMPLATE_VIS erased_type { };
+  struct _LIBCUDACXX_TEMPLATE_VIS erased_type { };
 
-_LIBCPP_END_NAMESPACE_LFTS
+_LIBCUDACXX_END_NAMESPACE_LFTS
 
-#endif /* _LIBCPP_EXPERIMENTAL_UTILITY */
+#endif /* _LIBCUDACXX_EXPERIMENTAL_UTILITY */

@@ -7,7 +7,7 @@
 //===----------------------------------------------------------------------===//
 
 // Can't test the system lib because this test enables debug mode
-// MODULES_DEFINES: _LIBCPP_DEBUG=1
+// MODULES_DEFINES: _LIBCUDACXX_DEBUG=1
 // UNSUPPORTED: c++98, c++03
 // UNSUPPORTED: windows
 // UNSUPPORTED: with_system_cxx_lib
@@ -16,7 +16,7 @@
 
 // Call advance(non-bidi iterator, -1)
 
-#define _LIBCPP_DEBUG 0
+#define _LIBCUDACXX_DEBUG 0
 
 #include <iterator>
 #include "test_macros.h"

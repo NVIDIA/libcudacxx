@@ -43,7 +43,7 @@ nested_exception::~nested_exception() _NOEXCEPT
 {
 }
 
-_LIBCPP_NORETURN
+_LIBCUDACXX_NORETURN
 void
 nested_exception::rethrow_nested() const
 {
@@ -62,7 +62,7 @@ exception_ptr current_exception() _NOEXCEPT
     return ptr;
 }
 
-_LIBCPP_NORETURN
+_LIBCUDACXX_NORETURN
 void rethrow_exception(exception_ptr p)
 {
     __cxa_rethrow_primary_exception(p.__ptr_);

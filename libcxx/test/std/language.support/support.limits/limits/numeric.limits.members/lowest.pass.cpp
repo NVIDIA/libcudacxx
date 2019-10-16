@@ -42,10 +42,10 @@ int main(int, char**)
 #if TEST_STD_VER > 17 && defined(__cpp_char8_t)
     test<char8_t>(0);
 #endif
-#ifndef _LIBCPP_HAS_NO_UNICODE_CHARS
+#ifndef _LIBCUDACXX_HAS_NO_UNICODE_CHARS
     test<char16_t>(0);
     test<char32_t>(0);
-#endif  // _LIBCPP_HAS_NO_UNICODE_CHARS
+#endif  // _LIBCUDACXX_HAS_NO_UNICODE_CHARS
     test<short>(SHRT_MIN);
     test<unsigned short>(0);
     test<int>(INT_MIN);
@@ -54,7 +54,7 @@ int main(int, char**)
     test<unsigned long>(0);
     test<long long>(LLONG_MIN);
     test<unsigned long long>(0);
-#ifndef _LIBCPP_HAS_NO_INT128
+#ifndef _LIBCUDACXX_HAS_NO_INT128
     test<__int128_t>(-__int128_t(__uint128_t(-1)/2) - 1);
     test<__uint128_t>(0);
 #endif

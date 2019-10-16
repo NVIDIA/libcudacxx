@@ -33,7 +33,7 @@ template <size_t N>
 using make_variant_t = typename make_variant_imp<std::make_index_sequence<N>>::type;
 
 constexpr bool ExpectEqual =
-#ifdef _LIBCPP_ABI_VARIANT_INDEX_TYPE_OPTIMIZATION
+#ifdef _LIBCUDACXX_ABI_VARIANT_INDEX_TYPE_OPTIMIZATION
   false;
 #else
   true;

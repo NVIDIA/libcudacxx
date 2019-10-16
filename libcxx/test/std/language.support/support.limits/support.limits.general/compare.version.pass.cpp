@@ -40,14 +40,14 @@
 
 #elif TEST_STD_VER > 17
 
-# if !defined(_LIBCPP_VERSION)
+# if !defined(_LIBCUDACXX_VERSION)
 #   ifndef __cpp_lib_three_way_comparison
 #     error "__cpp_lib_three_way_comparison should be defined in c++2a"
 #   endif
 #   if __cpp_lib_three_way_comparison != 201711L
 #     error "__cpp_lib_three_way_comparison should have the value 201711L in c++2a"
 #   endif
-# else // _LIBCPP_VERSION
+# else // _LIBCUDACXX_VERSION
 #   ifdef __cpp_lib_three_way_comparison
 #     error "__cpp_lib_three_way_comparison should not be defined because it is unimplemented in libc++!"
 #   endif

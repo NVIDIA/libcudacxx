@@ -104,7 +104,7 @@ int main(int, char**)
         static_assert(test_constexpr_move(), "");
     }
 #endif
-#if TEST_STD_VER == 11 && defined(_LIBCPP_VERSION)
+#if TEST_STD_VER == 11 && defined(_LIBCUDACXX_VERSION)
     // Test that std::forward is constexpr in C++11. This is an extension
     // provided by both libc++ and libstdc++.
     {

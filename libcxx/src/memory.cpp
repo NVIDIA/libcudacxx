@@ -7,16 +7,16 @@
 //===----------------------------------------------------------------------===//
 
 #include "memory"
-#ifndef _LIBCPP_HAS_NO_THREADS
+#ifndef _LIBCUDACXX_HAS_NO_THREADS
 #include "mutex"
 #include "thread"
-#if defined(__unix__) && !defined(__ANDROID__) && defined(__ELF__) && defined(_LIBCPP_HAS_COMMENT_LIB_PRAGMA)
+#if defined(__unix__) && !defined(__ANDROID__) && defined(__ELF__) && defined(_LIBCUDACXX_HAS_COMMENT_LIB_PRAGMA)
 #pragma comment(lib, "pthread")
 #endif
 #endif
 #include "include/atomic_support.h"
 
-_LIBCPP_BEGIN_NAMESPACE_STD
+_LIBCUDACXX_BEGIN_NAMESPACE_STD
 
 const allocator_arg_t allocator_arg = allocator_arg_t();
 
@@ -36,7 +36,7 @@ __shared_weak_count::~__shared_weak_count()
 {
 }
 
-#if defined(_LIBCPP_DEPRECATED_ABI_LEGACY_LIBRARY_DEFINITIONS_FOR_INLINE_FUNCTIONS)
+#if defined(_LIBCUDACXX_DEPRECATED_ABI_LEGACY_LIBRARY_DEFINITIONS_FOR_INLINE_FUNCTIONS)
 void
 __shared_count::__add_shared() _NOEXCEPT
 {
@@ -73,7 +73,7 @@ __shared_weak_count::__release_shared() _NOEXCEPT
         __release_weak();
 }
 
-#endif // _LIBCPP_DEPRECATED_ABI_LEGACY_LIBRARY_DEFINITIONS_FOR_INLINE_FUNCTIONS
+#endif // _LIBCUDACXX_DEPRECATED_ABI_LEGACY_LIBRARY_DEFINITIONS_FOR_INLINE_FUNCTIONS
 
 void
 __shared_weak_count::__release_weak() _NOEXCEPT
@@ -124,7 +124,7 @@ __shared_weak_count::lock() _NOEXCEPT
     return nullptr;
 }
 
-#if !defined(_LIBCPP_NO_RTTI) || !defined(_LIBCPP_BUILD_STATIC)
+#if !defined(_LIBCUDACXX_NO_RTTI) || !defined(_LIBCUDACXX_BUILD_STATIC)
 
 const void*
 __shared_weak_count::__get_deleter(const type_info&) const _NOEXCEPT
@@ -132,20 +132,20 @@ __shared_weak_count::__get_deleter(const type_info&) const _NOEXCEPT
     return nullptr;
 }
 
-#endif  // _LIBCPP_NO_RTTI
+#endif  // _LIBCUDACXX_NO_RTTI
 
-#if !defined(_LIBCPP_HAS_NO_ATOMIC_HEADER)
+#if !defined(_LIBCUDACXX_HAS_NO_ATOMIC_HEADER)
 
-_LIBCPP_SAFE_STATIC static const std::size_t __sp_mut_count = 16;
-_LIBCPP_SAFE_STATIC static __libcpp_mutex_t mut_back[__sp_mut_count] =
+_LIBCUDACXX_SAFE_STATIC static const std::size_t __sp_mut_count = 16;
+_LIBCUDACXX_SAFE_STATIC static __libcpp_mutex_t mut_back[__sp_mut_count] =
 {
-    _LIBCPP_MUTEX_INITIALIZER, _LIBCPP_MUTEX_INITIALIZER, _LIBCPP_MUTEX_INITIALIZER, _LIBCPP_MUTEX_INITIALIZER,
-    _LIBCPP_MUTEX_INITIALIZER, _LIBCPP_MUTEX_INITIALIZER, _LIBCPP_MUTEX_INITIALIZER, _LIBCPP_MUTEX_INITIALIZER,
-    _LIBCPP_MUTEX_INITIALIZER, _LIBCPP_MUTEX_INITIALIZER, _LIBCPP_MUTEX_INITIALIZER, _LIBCPP_MUTEX_INITIALIZER,
-    _LIBCPP_MUTEX_INITIALIZER, _LIBCPP_MUTEX_INITIALIZER, _LIBCPP_MUTEX_INITIALIZER, _LIBCPP_MUTEX_INITIALIZER
+    _LIBCUDACXX_MUTEX_INITIALIZER, _LIBCUDACXX_MUTEX_INITIALIZER, _LIBCUDACXX_MUTEX_INITIALIZER, _LIBCUDACXX_MUTEX_INITIALIZER,
+    _LIBCUDACXX_MUTEX_INITIALIZER, _LIBCUDACXX_MUTEX_INITIALIZER, _LIBCUDACXX_MUTEX_INITIALIZER, _LIBCUDACXX_MUTEX_INITIALIZER,
+    _LIBCUDACXX_MUTEX_INITIALIZER, _LIBCUDACXX_MUTEX_INITIALIZER, _LIBCUDACXX_MUTEX_INITIALIZER, _LIBCUDACXX_MUTEX_INITIALIZER,
+    _LIBCUDACXX_MUTEX_INITIALIZER, _LIBCUDACXX_MUTEX_INITIALIZER, _LIBCUDACXX_MUTEX_INITIALIZER, _LIBCUDACXX_MUTEX_INITIALIZER
 };
 
-_LIBCPP_CONSTEXPR __sp_mut::__sp_mut(void* p) _NOEXCEPT
+_LIBCUDACXX_CONSTEXPR __sp_mut::__sp_mut(void* p) _NOEXCEPT
    : __lx(p)
 {
 }
@@ -185,7 +185,7 @@ __get_sp_mut(const void* p)
     return muts[hash<const void*>()(p) & (__sp_mut_count-1)];
 }
 
-#endif // !defined(_LIBCPP_HAS_NO_ATOMIC_HEADER)
+#endif // !defined(_LIBCUDACXX_HAS_NO_ATOMIC_HEADER)
 
 void
 declare_reachable(void*)
@@ -202,7 +202,7 @@ undeclare_no_pointers(char*, size_t)
 {
 }
 
-#if !defined(_LIBCPP_ABI_POINTER_SAFETY_ENUM_TYPE)
+#if !defined(_LIBCUDACXX_ABI_POINTER_SAFETY_ENUM_TYPE)
 pointer_safety get_pointer_safety() _NOEXCEPT
 {
     return pointer_safety::relaxed;
@@ -234,4 +234,4 @@ align(size_t alignment, size_t size, void*& ptr, size_t& space)
     return r;
 }
 
-_LIBCPP_END_NAMESPACE_STD
+_LIBCUDACXX_END_NAMESPACE_STD

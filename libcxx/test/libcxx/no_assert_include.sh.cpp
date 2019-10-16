@@ -21,7 +21,7 @@
 #include <algorithm>
 #include <any>
 #include <array>
-#ifndef _LIBCPP_HAS_NO_THREADS
+#ifndef _LIBCUDACXX_HAS_NO_THREADS
 #include <atomic>
 #endif
 #include <bit>
@@ -67,7 +67,7 @@
 #include <forward_list>
 #include <fstream>
 #include <functional>
-#ifndef _LIBCPP_HAS_NO_THREADS
+#ifndef _LIBCUDACXX_HAS_NO_THREADS
 #include <future>
 #endif
 #include <initializer_list>
@@ -86,7 +86,7 @@
 #include <map>
 #include <math.h>
 #include <memory>
-#ifndef _LIBCPP_HAS_NO_THREADS
+#ifndef _LIBCUDACXX_HAS_NO_THREADS
 #include <mutex>
 #endif
 #include <new>
@@ -100,7 +100,7 @@
 #include <scoped_allocator>
 #include <set>
 #include <setjmp.h>
-#ifndef _LIBCPP_HAS_NO_THREADS
+#ifndef _LIBCUDACXX_HAS_NO_THREADS
 #include <shared_mutex>
 #endif
 #include <span>
@@ -119,7 +119,7 @@
 #include <strstream>
 #include <system_error>
 #include <tgmath.h>
-#ifndef _LIBCPP_HAS_NO_THREADS
+#ifndef _LIBCUDACXX_HAS_NO_THREADS
 #include <thread>
 #endif
 #include <tuple>

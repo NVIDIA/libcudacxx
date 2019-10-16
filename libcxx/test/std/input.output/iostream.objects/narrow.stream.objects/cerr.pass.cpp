@@ -20,7 +20,7 @@ int main(int, char**)
 #if 0
     std::cerr << "Hello World!\n";
 #else
-#ifdef _LIBCPP_HAS_NO_STDOUT
+#ifdef _LIBCUDACXX_HAS_NO_STDOUT
     assert(std::cerr.tie() == NULL);
 #else
     assert(std::cerr.tie() == &std::cout);

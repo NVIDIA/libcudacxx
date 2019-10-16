@@ -9,14 +9,14 @@
 
 #if defined(__need_FILE) || defined(__need___FILE)
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
 #include_next <stdio.h>
 
-#elif !defined(_LIBCPP_STDIO_H)
-#define _LIBCPP_STDIO_H
+#elif !defined(_LIBCUDACXX_STDIO_H)
+#define _LIBCUDACXX_STDIO_H
 
 /*
     stdio.h synopsis
@@ -100,7 +100,7 @@ void perror(const char* s);
 
 #include <__config>
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
@@ -116,4 +116,4 @@ void perror(const char* s);
 
 #endif
 
-#endif  // _LIBCPP_STDIO_H
+#endif  // _LIBCUDACXX_STDIO_H

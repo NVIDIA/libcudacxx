@@ -13,7 +13,7 @@
 // pointer_to_binary_function<Arg1,Arg2,Result>
 // ptr_fun(Result (*f)(Arg1, Arg2));
 
-#define _LIBCPP_DISABLE_DEPRECATION_WARNINGS
+#define _LIBCUDACXX_DISABLE_DEPRECATION_WARNINGS
 
 #include <functional>
 #include <type_traits>

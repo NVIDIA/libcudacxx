@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCPP_CWCHAR
-#define _LIBCPP_CWCHAR
+#ifndef _LIBCUDACXX_CWCHAR
+#define _LIBCUDACXX_CWCHAR
 
 /*
     cwchar synopsis
@@ -106,11 +106,11 @@ size_t wcsrtombs(char* restrict dst, const wchar_t** restrict src, size_t len,
 #include <cwctype>
 #include <wchar.h>
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
-_LIBCPP_BEGIN_NAMESPACE_STD
+_LIBCUDACXX_BEGIN_NAMESPACE_STD
 
 using ::mbstate_t;
 using ::size_t;
@@ -137,13 +137,13 @@ using ::wcstod;
 using ::wcstof;
 using ::wcstold;
 using ::wcstol;
-#ifndef _LIBCPP_HAS_NO_LONG_LONG
+#ifndef _LIBCUDACXX_HAS_NO_LONG_LONG
 using ::wcstoll;
-#endif // _LIBCPP_HAS_NO_LONG_LONG
+#endif // _LIBCUDACXX_HAS_NO_LONG_LONG
 using ::wcstoul;
-#ifndef _LIBCPP_HAS_NO_LONG_LONG
+#ifndef _LIBCUDACXX_HAS_NO_LONG_LONG
 using ::wcstoull;
-#endif // _LIBCPP_HAS_NO_LONG_LONG
+#endif // _LIBCUDACXX_HAS_NO_LONG_LONG
 using ::wcscpy;
 using ::wcsncpy;
 using ::wcscat;
@@ -175,18 +175,18 @@ using ::wcrtomb;
 using ::mbsrtowcs;
 using ::wcsrtombs;
 
-#ifndef _LIBCPP_HAS_NO_STDIN
+#ifndef _LIBCUDACXX_HAS_NO_STDIN
 using ::getwchar;
 using ::vwscanf;
 using ::wscanf;
 #endif
 
-#ifndef _LIBCPP_HAS_NO_STDOUT
+#ifndef _LIBCUDACXX_HAS_NO_STDOUT
 using ::putwchar;
 using ::vwprintf;
 using ::wprintf;
 #endif
 
-_LIBCPP_END_NAMESPACE_STD
+_LIBCUDACXX_END_NAMESPACE_STD
 
-#endif  // _LIBCPP_CWCHAR
+#endif  // _LIBCUDACXX_CWCHAR

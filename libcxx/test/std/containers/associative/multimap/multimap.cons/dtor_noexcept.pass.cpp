@@ -42,12 +42,12 @@ int main(int, char**)
         typedef std::multimap<MoveOnly, MoveOnly, std::less<MoveOnly>, other_allocator<V>> C;
         static_assert(std::is_nothrow_destructible<C>::value, "");
     }
-#if defined(_LIBCPP_VERSION)
+#if defined(_LIBCUDACXX_VERSION)
     {
         typedef std::multimap<MoveOnly, MoveOnly, some_comp<MoveOnly>> C;
         static_assert(!std::is_nothrow_destructible<C>::value, "");
     }
-#endif // _LIBCPP_VERSION
+#endif // _LIBCUDACXX_VERSION
 
   return 0;
 }

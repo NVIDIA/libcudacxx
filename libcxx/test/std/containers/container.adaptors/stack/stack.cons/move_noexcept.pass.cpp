@@ -23,7 +23,7 @@
 
 int main(int, char**)
 {
-#if defined(_LIBCPP_VERSION)
+#if defined(_LIBCUDACXX_VERSION)
     {
         typedef std::stack<MoveOnly> C;
         static_assert(std::is_nothrow_move_constructible<C>::value, "");

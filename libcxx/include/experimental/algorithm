@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCPP_EXPERIMENTAL_ALGORITHM
-#define _LIBCPP_EXPERIMENTAL_ALGORITHM
+#ifndef _LIBCUDACXX_EXPERIMENTAL_ALGORITHM
+#define _LIBCUDACXX_EXPERIMENTAL_ALGORITHM
 
 /*
    experimental/algorithm synopsis
@@ -37,23 +37,23 @@ ForwardIterator search(ForwardIterator first, ForwardIterator last,
 
 #include <__debug>
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
-_LIBCPP_PUSH_MACROS
+_LIBCUDACXX_PUSH_MACROS
 #include <__undef_macros>
 
 
-_LIBCPP_BEGIN_NAMESPACE_LFTS
+_LIBCUDACXX_BEGIN_NAMESPACE_LFTS
 
 template <class _ForwardIterator, class _Searcher>
-_LIBCPP_INLINE_VISIBILITY
+_LIBCUDACXX_INLINE_VISIBILITY
 _ForwardIterator search(_ForwardIterator __f, _ForwardIterator __l, const _Searcher &__s)
 { return __s(__f, __l).first; }
 
-_LIBCPP_END_NAMESPACE_LFTS
+_LIBCUDACXX_END_NAMESPACE_LFTS
 
-_LIBCPP_POP_MACROS
+_LIBCUDACXX_POP_MACROS
 
-#endif /* _LIBCPP_EXPERIMENTAL_ALGORITHM */
+#endif /* _LIBCUDACXX_EXPERIMENTAL_ALGORITHM */

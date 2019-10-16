@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCPP_CSETJMP
-#define _LIBCPP_CSETJMP
+#ifndef _LIBCUDACXX_CSETJMP
+#define _LIBCUDACXX_CSETJMP
 
 /*
     csetjmp synopsis
@@ -33,15 +33,15 @@ void longjmp(jmp_buf env, int val);
 #include <__config>
 #include <setjmp.h>
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
-_LIBCPP_BEGIN_NAMESPACE_STD
+_LIBCUDACXX_BEGIN_NAMESPACE_STD
 
 using ::jmp_buf;
 using ::longjmp;
 
-_LIBCPP_END_NAMESPACE_STD
+_LIBCUDACXX_END_NAMESPACE_STD
 
-#endif  // _LIBCPP_CSETJMP
+#endif  // _LIBCUDACXX_CSETJMP

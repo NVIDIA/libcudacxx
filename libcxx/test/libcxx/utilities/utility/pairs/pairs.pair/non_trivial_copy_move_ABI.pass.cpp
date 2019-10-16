@@ -18,10 +18,10 @@
 
 // FreeBSD provides the old ABI. This test checks the new ABI so we need
 // to manually turn it on.
-#undef _LIBCPP_ABI_UNSTABLE
-#undef _LIBCPP_ABI_VERSION
-#define _LIBCPP_ABI_VERSION 1
-#define _LIBCPP_DEPRECATED_ABI_DISABLE_PAIR_TRIVIAL_COPY_CTOR
+#undef _LIBCUDACXX_ABI_UNSTABLE
+#undef _LIBCUDACXX_ABI_VERSION
+#define _LIBCUDACXX_ABI_VERSION 1
+#define _LIBCUDACXX_DEPRECATED_ABI_DISABLE_PAIR_TRIVIAL_COPY_CTOR
 
 #include <utility>
 #include <type_traits>
@@ -31,7 +31,7 @@
 
 #include "test_macros.h"
 
-#if !defined(_LIBCPP_DEPRECATED_ABI_DISABLE_PAIR_TRIVIAL_COPY_CTOR)
+#if !defined(_LIBCUDACXX_DEPRECATED_ABI_DISABLE_PAIR_TRIVIAL_COPY_CTOR)
 #error trivial ctor ABI macro defined
 #endif
 

@@ -7,20 +7,20 @@
 //
 //===----------------------------------------------------------------------===//
 
-#if defined(__need_malloc_and_calloc) || defined(_LIBCPP_STDLIB_INCLUDE_NEXT)
+#if defined(__need_malloc_and_calloc) || defined(_LIBCUDACXX_STDLIB_INCLUDE_NEXT)
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
-#if defined(_LIBCPP_STDLIB_INCLUDE_NEXT)
-#undef _LIBCPP_STDLIB_INCLUDE_NEXT
+#if defined(_LIBCUDACXX_STDLIB_INCLUDE_NEXT)
+#undef _LIBCUDACXX_STDLIB_INCLUDE_NEXT
 #endif
 
 #include_next <stdlib.h>
 
-#elif !defined(_LIBCPP_STDLIB_H)
-#define _LIBCPP_STDLIB_H
+#elif !defined(_LIBCUDACXX_STDLIB_H)
+#define _LIBCUDACXX_STDLIB_H
 
 /*
     stdlib.h synopsis
@@ -90,7 +90,7 @@ void *aligned_alloc(size_t alignment, size_t size);                       // C11
 
 #include <__config>
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
@@ -100,4 +100,4 @@ void *aligned_alloc(size_t alignment, size_t size);                       // C11
 #include <math.h>
 #endif  // __cplusplus
 
-#endif  // _LIBCPP_STDLIB_H
+#endif  // _LIBCUDACXX_STDLIB_H

@@ -90,7 +90,7 @@ void run()
     CHECK_ALWAYS_LOCK_FREE(float);
     CHECK_ALWAYS_LOCK_FREE(double);
     CHECK_ALWAYS_LOCK_FREE(long double);
-#if __has_attribute(vector_size) && defined(_LIBCPP_VERSION)
+#if __has_attribute(vector_size) && defined(_LIBCUDACXX_VERSION)
     CHECK_ALWAYS_LOCK_FREE(int __attribute__((vector_size(1 * sizeof(int)))));
     CHECK_ALWAYS_LOCK_FREE(int __attribute__((vector_size(2 * sizeof(int)))));
     CHECK_ALWAYS_LOCK_FREE(int __attribute__((vector_size(4 * sizeof(int)))));
@@ -106,7 +106,7 @@ void run()
     CHECK_ALWAYS_LOCK_FREE(double __attribute__((vector_size(4 * sizeof(double)))));
     CHECK_ALWAYS_LOCK_FREE(double __attribute__((vector_size(16 * sizeof(double)))));
     CHECK_ALWAYS_LOCK_FREE(double __attribute__((vector_size(32 * sizeof(double)))));
-#endif // __has_attribute(vector_size) && defined(_LIBCPP_VERSION)
+#endif // __has_attribute(vector_size) && defined(_LIBCUDACXX_VERSION)
     CHECK_ALWAYS_LOCK_FREE(struct Empty {});
     CHECK_ALWAYS_LOCK_FREE(struct OneInt { int i; });
     CHECK_ALWAYS_LOCK_FREE(struct IntArr2 { int i[2]; });

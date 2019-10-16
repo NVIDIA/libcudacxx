@@ -108,14 +108,14 @@
 #   error "__cpp_lib_bind_front should not be defined before c++2a"
 # endif
 
-# if !defined(_LIBCPP_VERSION)
+# if !defined(_LIBCUDACXX_VERSION)
 #   ifndef __cpp_lib_boyer_moore_searcher
 #     error "__cpp_lib_boyer_moore_searcher should be defined in c++17"
 #   endif
 #   if __cpp_lib_boyer_moore_searcher != 201603L
 #     error "__cpp_lib_boyer_moore_searcher should have the value 201603L in c++17"
 #   endif
-# else // _LIBCPP_VERSION
+# else // _LIBCUDACXX_VERSION
 #   ifdef __cpp_lib_boyer_moore_searcher
 #     error "__cpp_lib_boyer_moore_searcher should not be defined because it is unimplemented in libc++!"
 #   endif
@@ -159,40 +159,40 @@
 
 #elif TEST_STD_VER > 17
 
-# if !defined(_LIBCPP_VERSION)
+# if !defined(_LIBCUDACXX_VERSION)
 #   ifndef __cpp_lib_bind_front
 #     error "__cpp_lib_bind_front should be defined in c++2a"
 #   endif
 #   if __cpp_lib_bind_front != 201811L
 #     error "__cpp_lib_bind_front should have the value 201811L in c++2a"
 #   endif
-# else // _LIBCPP_VERSION
+# else // _LIBCUDACXX_VERSION
 #   ifdef __cpp_lib_bind_front
 #     error "__cpp_lib_bind_front should not be defined because it is unimplemented in libc++!"
 #   endif
 # endif
 
-# if !defined(_LIBCPP_VERSION)
+# if !defined(_LIBCUDACXX_VERSION)
 #   ifndef __cpp_lib_boyer_moore_searcher
 #     error "__cpp_lib_boyer_moore_searcher should be defined in c++2a"
 #   endif
 #   if __cpp_lib_boyer_moore_searcher != 201603L
 #     error "__cpp_lib_boyer_moore_searcher should have the value 201603L in c++2a"
 #   endif
-# else // _LIBCPP_VERSION
+# else // _LIBCUDACXX_VERSION
 #   ifdef __cpp_lib_boyer_moore_searcher
 #     error "__cpp_lib_boyer_moore_searcher should not be defined because it is unimplemented in libc++!"
 #   endif
 # endif
 
-# if !defined(_LIBCPP_VERSION)
+# if !defined(_LIBCUDACXX_VERSION)
 #   ifndef __cpp_lib_constexpr_misc
 #     error "__cpp_lib_constexpr_misc should be defined in c++2a"
 #   endif
 #   if __cpp_lib_constexpr_misc != 201811L
 #     error "__cpp_lib_constexpr_misc should have the value 201811L in c++2a"
 #   endif
-# else // _LIBCPP_VERSION
+# else // _LIBCUDACXX_VERSION
 #   ifdef __cpp_lib_constexpr_misc
 #     error "__cpp_lib_constexpr_misc should not be defined because it is unimplemented in libc++!"
 #   endif
@@ -212,14 +212,14 @@
 #   error "__cpp_lib_not_fn should have the value 201603L in c++2a"
 # endif
 
-# if !defined(_LIBCPP_VERSION)
+# if !defined(_LIBCUDACXX_VERSION)
 #   ifndef __cpp_lib_ranges
 #     error "__cpp_lib_ranges should be defined in c++2a"
 #   endif
 #   if __cpp_lib_ranges != 201811L
 #     error "__cpp_lib_ranges should have the value 201811L in c++2a"
 #   endif
-# else // _LIBCPP_VERSION
+# else // _LIBCUDACXX_VERSION
 #   ifdef __cpp_lib_ranges
 #     error "__cpp_lib_ranges should not be defined because it is unimplemented in libc++!"
 #   endif

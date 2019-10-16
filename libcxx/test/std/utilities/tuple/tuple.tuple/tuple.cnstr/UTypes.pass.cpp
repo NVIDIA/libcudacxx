@@ -84,7 +84,7 @@ void test_default_constructible_extension_sfinae()
         >::value, "");
     }
     // testing extensions
-#ifdef _LIBCPP_VERSION
+#ifdef _LIBCUDACXX_VERSION
     {
         typedef std::tuple<MoveOnly, int> Tuple;
         typedef std::tuple<MoveOnly, Tuple, MoveOnly, MoveOnly> NestedTuple;
@@ -122,7 +122,7 @@ int main(int, char**)
         assert(std::get<2>(t) == 2);
     }
     // extensions
-#ifdef _LIBCPP_VERSION
+#ifdef _LIBCUDACXX_VERSION
     {
         using E = MoveOnly;
         using Tup = std::tuple<E, E, E>;

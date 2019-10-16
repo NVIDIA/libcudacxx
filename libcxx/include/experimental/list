@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCPP_EXPERIMENTAL_LIST
-#define _LIBCPP_EXPERIMENTAL_LIST
+#ifndef _LIBCUDACXX_EXPERIMENTAL_LIST
+#define _LIBCUDACXX_EXPERIMENTAL_LIST
 /*
     experimental/list synopsis
 
@@ -32,15 +32,15 @@ namespace pmr {
 #include <list>
 #include <experimental/memory_resource>
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
-_LIBCPP_BEGIN_NAMESPACE_LFTS_PMR
+_LIBCUDACXX_BEGIN_NAMESPACE_LFTS_PMR
 
 template <class _ValueT>
-using list = _VSTD::list<_ValueT, polymorphic_allocator<_ValueT>>;
+using list = _CUDA_VSTD::list<_ValueT, polymorphic_allocator<_ValueT>>;
 
-_LIBCPP_END_NAMESPACE_LFTS_PMR
+_LIBCUDACXX_END_NAMESPACE_LFTS_PMR
 
-#endif /* _LIBCPP_EXPERIMENTAL_LIST */
+#endif /* _LIBCUDACXX_EXPERIMENTAL_LIST */

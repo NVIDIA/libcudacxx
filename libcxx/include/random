@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCPP_RANDOM
-#define _LIBCPP_RANDOM
+#ifndef _LIBCUDACXX_RANDOM
+#define _LIBCUDACXX_RANDOM
 
 /*
     random synopsis
@@ -1645,22 +1645,22 @@ class piecewise_linear_distribution
 #include <istream>
 #include <ostream>
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
-_LIBCPP_PUSH_MACROS
+_LIBCUDACXX_PUSH_MACROS
 #include <__undef_macros>
 
 
-_LIBCPP_BEGIN_NAMESPACE_STD
+_LIBCUDACXX_BEGIN_NAMESPACE_STD
 
 // __is_seed_sequence
 
 template <class _Sseq, class _Engine>
 struct __is_seed_sequence
 {
-    static _LIBCPP_CONSTEXPR const bool value =
+    static _LIBCUDACXX_CONSTEXPR const bool value =
               !is_convertible<_Sseq, typename _Engine::result_type>::value &&
               !is_same<typename remove_cv<_Sseq>::type, _Engine>::value;
 };
@@ -1678,7 +1678,7 @@ template <unsigned long long __a, unsigned long long __c, unsigned long long __m
 struct __lce_ta<__a, __c, __m, (unsigned long long)(~0), true>
 {
     typedef unsigned long long result_type;
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     static result_type next(result_type __x)
     {
         // Schrage's algorithm
@@ -1696,7 +1696,7 @@ template <unsigned long long __a, unsigned long long __m>
 struct __lce_ta<__a, 0, __m, (unsigned long long)(~0), true>
 {
     typedef unsigned long long result_type;
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     static result_type next(result_type __x)
     {
         // Schrage's algorithm
@@ -1713,7 +1713,7 @@ template <unsigned long long __a, unsigned long long __c, unsigned long long __m
 struct __lce_ta<__a, __c, __m, (unsigned long long)(~0), false>
 {
     typedef unsigned long long result_type;
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     static result_type next(result_type __x)
     {
         return (__a * __x + __c) % __m;
@@ -1724,7 +1724,7 @@ template <unsigned long long __a, unsigned long long __c>
 struct __lce_ta<__a, __c, 0, (unsigned long long)(~0), false>
 {
     typedef unsigned long long result_type;
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     static result_type next(result_type __x)
     {
         return __a * __x + __c;
@@ -1737,7 +1737,7 @@ template <unsigned long long _Ap, unsigned long long _Cp, unsigned long long _Mp
 struct __lce_ta<_Ap, _Cp, _Mp, unsigned(~0), true>
 {
     typedef unsigned result_type;
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     static result_type next(result_type __x)
     {
         const result_type __a = static_cast<result_type>(_Ap);
@@ -1758,7 +1758,7 @@ template <unsigned long long _Ap, unsigned long long _Mp>
 struct __lce_ta<_Ap, 0, _Mp, unsigned(~0), true>
 {
     typedef unsigned result_type;
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     static result_type next(result_type __x)
     {
         const result_type __a = static_cast<result_type>(_Ap);
@@ -1777,7 +1777,7 @@ template <unsigned long long _Ap, unsigned long long _Cp, unsigned long long _Mp
 struct __lce_ta<_Ap, _Cp, _Mp, unsigned(~0), false>
 {
     typedef unsigned result_type;
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     static result_type next(result_type __x)
     {
         const result_type __a = static_cast<result_type>(_Ap);
@@ -1791,7 +1791,7 @@ template <unsigned long long _Ap, unsigned long long _Cp>
 struct __lce_ta<_Ap, _Cp, 0, unsigned(~0), false>
 {
     typedef unsigned result_type;
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     static result_type next(result_type __x)
     {
         const result_type __a = static_cast<result_type>(_Ap);
@@ -1806,7 +1806,7 @@ template <unsigned long long __a, unsigned long long __c, unsigned long long __m
 struct __lce_ta<__a, __c, __m, (unsigned short)(~0), __b>
 {
     typedef unsigned short result_type;
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     static result_type next(result_type __x)
     {
         return static_cast<result_type>(__lce_ta<__a, __c, __m, unsigned(~0)>::next(__x));
@@ -1814,11 +1814,11 @@ struct __lce_ta<__a, __c, __m, (unsigned short)(~0), __b>
 };
 
 template <class _UIntType, _UIntType __a, _UIntType __c, _UIntType __m>
-class _LIBCPP_TEMPLATE_VIS linear_congruential_engine;
+class _LIBCUDACXX_TEMPLATE_VIS linear_congruential_engine;
 
 template <class _CharT, class _Traits,
           class _Up, _Up _Ap, _Up _Cp, _Up _Np>
-_LIBCPP_INLINE_VISIBILITY
+_LIBCUDACXX_INLINE_VISIBILITY
 basic_ostream<_CharT, _Traits>&
 operator<<(basic_ostream<_CharT, _Traits>& __os,
            const linear_congruential_engine<_Up, _Ap, _Cp, _Np>&);
@@ -1830,7 +1830,7 @@ operator>>(basic_istream<_CharT, _Traits>& __is,
            linear_congruential_engine<_Up, _Ap, _Cp, _Np>& __x);
 
 template <class _UIntType, _UIntType __a, _UIntType __c, _UIntType __m>
-class _LIBCPP_TEMPLATE_VIS linear_congruential_engine
+class _LIBCUDACXX_TEMPLATE_VIS linear_congruential_engine
 {
 public:
     // types
@@ -1839,40 +1839,40 @@ public:
 private:
     result_type __x_;
 
-    static _LIBCPP_CONSTEXPR const result_type _Mp = result_type(~0);
+    static _LIBCUDACXX_CONSTEXPR const result_type _Mp = result_type(~0);
 
     static_assert(__m == 0 || __a < __m, "linear_congruential_engine invalid parameters");
     static_assert(__m == 0 || __c < __m, "linear_congruential_engine invalid parameters");
 public:
-    static _LIBCPP_CONSTEXPR const result_type _Min = __c == 0u ? 1u: 0u;
-    static _LIBCPP_CONSTEXPR const result_type _Max = __m - 1u;
+    static _LIBCUDACXX_CONSTEXPR const result_type _Min = __c == 0u ? 1u: 0u;
+    static _LIBCUDACXX_CONSTEXPR const result_type _Max = __m - 1u;
     static_assert(_Min < _Max,           "linear_congruential_engine invalid parameters");
 
     // engine characteristics
-    static _LIBCPP_CONSTEXPR const result_type multiplier = __a;
-    static _LIBCPP_CONSTEXPR const result_type increment = __c;
-    static _LIBCPP_CONSTEXPR const result_type modulus = __m;
-    _LIBCPP_INLINE_VISIBILITY
-    static _LIBCPP_CONSTEXPR result_type min() {return _Min;}
-    _LIBCPP_INLINE_VISIBILITY
-    static _LIBCPP_CONSTEXPR result_type max() {return _Max;}
-    static _LIBCPP_CONSTEXPR const result_type default_seed = 1u;
+    static _LIBCUDACXX_CONSTEXPR const result_type multiplier = __a;
+    static _LIBCUDACXX_CONSTEXPR const result_type increment = __c;
+    static _LIBCUDACXX_CONSTEXPR const result_type modulus = __m;
+    _LIBCUDACXX_INLINE_VISIBILITY
+    static _LIBCUDACXX_CONSTEXPR result_type min() {return _Min;}
+    _LIBCUDACXX_INLINE_VISIBILITY
+    static _LIBCUDACXX_CONSTEXPR result_type max() {return _Max;}
+    static _LIBCUDACXX_CONSTEXPR const result_type default_seed = 1u;
 
     // constructors and seeding functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit linear_congruential_engine(result_type __s = default_seed)
         {seed(__s);}
     template<class _Sseq>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         explicit linear_congruential_engine(_Sseq& __q,
         typename enable_if<__is_seed_sequence<_Sseq, linear_congruential_engine>::value>::type* = 0)
         {seed(__q);}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void seed(result_type __s = default_seed)
         {seed(integral_constant<bool, __m == 0>(),
               integral_constant<bool, __c == 0>(), __s);}
     template<class _Sseq>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         typename enable_if
         <
             __is_seed_sequence<_Sseq, linear_congruential_engine>::value,
@@ -1884,31 +1884,31 @@ public:
                              :  (__m > 0x100000000ull))>());}
 
     // generating functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type operator()()
         {return __x_ = static_cast<result_type>(__lce_ta<__a, __c, __m, _Mp>::next(__x_));}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void discard(unsigned long long __z) {for (; __z; --__z) operator()();}
 
-    friend _LIBCPP_INLINE_VISIBILITY
+    friend _LIBCUDACXX_INLINE_VISIBILITY
     bool operator==(const linear_congruential_engine& __x,
                     const linear_congruential_engine& __y)
         {return __x.__x_ == __y.__x_;}
-    friend _LIBCPP_INLINE_VISIBILITY
+    friend _LIBCUDACXX_INLINE_VISIBILITY
     bool operator!=(const linear_congruential_engine& __x,
                     const linear_congruential_engine& __y)
         {return !(__x == __y);}
 
 private:
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void seed(true_type, true_type, result_type __s) {__x_ = __s == 0 ? 1 : __s;}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void seed(true_type, false_type, result_type __s) {__x_ = __s;}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void seed(false_type, true_type, result_type __s) {__x_ = __s % __m == 0 ?
                                                                  1 : __s % __m;}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void seed(false_type, false_type, result_type __s) {__x_ = __s % __m;}
 
     template<class _Sseq>
@@ -1932,19 +1932,19 @@ private:
 };
 
 template <class _UIntType, _UIntType __a, _UIntType __c, _UIntType __m>
-    _LIBCPP_CONSTEXPR const typename linear_congruential_engine<_UIntType, __a, __c, __m>::result_type
+    _LIBCUDACXX_CONSTEXPR const typename linear_congruential_engine<_UIntType, __a, __c, __m>::result_type
     linear_congruential_engine<_UIntType, __a, __c, __m>::multiplier;
 
 template <class _UIntType, _UIntType __a, _UIntType __c, _UIntType __m>
-    _LIBCPP_CONSTEXPR const typename linear_congruential_engine<_UIntType, __a, __c, __m>::result_type
+    _LIBCUDACXX_CONSTEXPR const typename linear_congruential_engine<_UIntType, __a, __c, __m>::result_type
     linear_congruential_engine<_UIntType, __a, __c, __m>::increment;
 
 template <class _UIntType, _UIntType __a, _UIntType __c, _UIntType __m>
-    _LIBCPP_CONSTEXPR const typename linear_congruential_engine<_UIntType, __a, __c, __m>::result_type
+    _LIBCUDACXX_CONSTEXPR const typename linear_congruential_engine<_UIntType, __a, __c, __m>::result_type
     linear_congruential_engine<_UIntType, __a, __c, __m>::modulus;
 
 template <class _UIntType, _UIntType __a, _UIntType __c, _UIntType __m>
-    _LIBCPP_CONSTEXPR const typename linear_congruential_engine<_UIntType, __a, __c, __m>::result_type
+    _LIBCUDACXX_CONSTEXPR const typename linear_congruential_engine<_UIntType, __a, __c, __m>::result_type
     linear_congruential_engine<_UIntType, __a, __c, __m>::default_seed;
 
 template <class _UIntType, _UIntType __a, _UIntType __c, _UIntType __m>
@@ -1976,7 +1976,7 @@ linear_congruential_engine<_UIntType, __a, __c, __m>::__seed(_Sseq& __q,
 
 template <class _CharT, class _Traits,
           class _UIntType, _UIntType __a, _UIntType __c, _UIntType __m>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 basic_ostream<_CharT, _Traits>&
 operator<<(basic_ostream<_CharT, _Traits>& __os,
            const linear_congruential_engine<_UIntType, __a, __c, __m>& __x)
@@ -2012,7 +2012,7 @@ typedef minstd_rand                                       default_random_engine;
 template <class _UIntType, size_t __w, size_t __n, size_t __m, size_t __r,
           _UIntType __a, size_t __u, _UIntType __d, size_t __s,
           _UIntType __b, size_t __t, _UIntType __c, size_t __l, _UIntType __f>
-class _LIBCPP_TEMPLATE_VIS mersenne_twister_engine;
+class _LIBCUDACXX_TEMPLATE_VIS mersenne_twister_engine;
 
 template <class _UInt, size_t _Wp, size_t _Np, size_t _Mp, size_t _Rp,
           _UInt _Ap, size_t _Up, _UInt _Dp, size_t _Sp,
@@ -2026,7 +2026,7 @@ operator==(const mersenne_twister_engine<_UInt, _Wp, _Np, _Mp, _Rp, _Ap, _Up, _D
 template <class _UInt, size_t _Wp, size_t _Np, size_t _Mp, size_t _Rp,
           _UInt _Ap, size_t _Up, _UInt _Dp, size_t _Sp,
           _UInt _Bp, size_t _Tp, _UInt _Cp, size_t _Lp, _UInt _Fp>
-_LIBCPP_INLINE_VISIBILITY
+_LIBCUDACXX_INLINE_VISIBILITY
 bool
 operator!=(const mersenne_twister_engine<_UInt, _Wp, _Np, _Mp, _Rp, _Ap, _Up, _Dp, _Sp,
                                          _Bp, _Tp, _Cp, _Lp, _Fp>& __x,
@@ -2054,7 +2054,7 @@ operator>>(basic_istream<_CharT, _Traits>& __is,
 template <class _UIntType, size_t __w, size_t __n, size_t __m, size_t __r,
           _UIntType __a, size_t __u, _UIntType __d, size_t __s,
           _UIntType __b, size_t __t, _UIntType __c, size_t __l, _UIntType __f>
-class _LIBCPP_TEMPLATE_VIS mersenne_twister_engine
+class _LIBCUDACXX_TEMPLATE_VIS mersenne_twister_engine
 {
 public:
     // types
@@ -2066,7 +2066,7 @@ private:
 
     static_assert(  0 <  __m, "mersenne_twister_engine invalid parameters");
     static_assert(__m <= __n, "mersenne_twister_engine invalid parameters");
-    static _LIBCPP_CONSTEXPR const result_type _Dt = numeric_limits<result_type>::digits;
+    static _LIBCUDACXX_CONSTEXPR const result_type _Dt = numeric_limits<result_type>::digits;
     static_assert(__w <= _Dt, "mersenne_twister_engine invalid parameters");
     static_assert(  2 <= __w, "mersenne_twister_engine invalid parameters");
     static_assert(__r <= __w, "mersenne_twister_engine invalid parameters");
@@ -2075,8 +2075,8 @@ private:
     static_assert(__t <= __w, "mersenne_twister_engine invalid parameters");
     static_assert(__l <= __w, "mersenne_twister_engine invalid parameters");
 public:
-    static _LIBCPP_CONSTEXPR const result_type _Min = 0;
-    static _LIBCPP_CONSTEXPR const result_type _Max = __w == _Dt ? result_type(~0) :
+    static _LIBCUDACXX_CONSTEXPR const result_type _Min = 0;
+    static _LIBCUDACXX_CONSTEXPR const result_type _Max = __w == _Dt ? result_type(~0) :
                                                       (result_type(1) << __w) - result_type(1);
     static_assert(_Min < _Max, "mersenne_twister_engine invalid parameters");
     static_assert(__a <= _Max, "mersenne_twister_engine invalid parameters");
@@ -2086,37 +2086,37 @@ public:
     static_assert(__f <= _Max, "mersenne_twister_engine invalid parameters");
 
     // engine characteristics
-    static _LIBCPP_CONSTEXPR const size_t word_size = __w;
-    static _LIBCPP_CONSTEXPR const size_t state_size = __n;
-    static _LIBCPP_CONSTEXPR const size_t shift_size = __m;
-    static _LIBCPP_CONSTEXPR const size_t mask_bits = __r;
-    static _LIBCPP_CONSTEXPR const result_type xor_mask = __a;
-    static _LIBCPP_CONSTEXPR const size_t tempering_u = __u;
-    static _LIBCPP_CONSTEXPR const result_type tempering_d = __d;
-    static _LIBCPP_CONSTEXPR const size_t tempering_s = __s;
-    static _LIBCPP_CONSTEXPR const result_type tempering_b = __b;
-    static _LIBCPP_CONSTEXPR const size_t tempering_t = __t;
-    static _LIBCPP_CONSTEXPR const result_type tempering_c = __c;
-    static _LIBCPP_CONSTEXPR const size_t tempering_l = __l;
-    static _LIBCPP_CONSTEXPR const result_type initialization_multiplier = __f;
-    _LIBCPP_INLINE_VISIBILITY
-    static _LIBCPP_CONSTEXPR result_type min() { return _Min; }
-    _LIBCPP_INLINE_VISIBILITY
-    static _LIBCPP_CONSTEXPR result_type max() { return _Max; }
-    static _LIBCPP_CONSTEXPR const result_type default_seed = 5489u;
+    static _LIBCUDACXX_CONSTEXPR const size_t word_size = __w;
+    static _LIBCUDACXX_CONSTEXPR const size_t state_size = __n;
+    static _LIBCUDACXX_CONSTEXPR const size_t shift_size = __m;
+    static _LIBCUDACXX_CONSTEXPR const size_t mask_bits = __r;
+    static _LIBCUDACXX_CONSTEXPR const result_type xor_mask = __a;
+    static _LIBCUDACXX_CONSTEXPR const size_t tempering_u = __u;
+    static _LIBCUDACXX_CONSTEXPR const result_type tempering_d = __d;
+    static _LIBCUDACXX_CONSTEXPR const size_t tempering_s = __s;
+    static _LIBCUDACXX_CONSTEXPR const result_type tempering_b = __b;
+    static _LIBCUDACXX_CONSTEXPR const size_t tempering_t = __t;
+    static _LIBCUDACXX_CONSTEXPR const result_type tempering_c = __c;
+    static _LIBCUDACXX_CONSTEXPR const size_t tempering_l = __l;
+    static _LIBCUDACXX_CONSTEXPR const result_type initialization_multiplier = __f;
+    _LIBCUDACXX_INLINE_VISIBILITY
+    static _LIBCUDACXX_CONSTEXPR result_type min() { return _Min; }
+    _LIBCUDACXX_INLINE_VISIBILITY
+    static _LIBCUDACXX_CONSTEXPR result_type max() { return _Max; }
+    static _LIBCUDACXX_CONSTEXPR const result_type default_seed = 5489u;
 
     // constructors and seeding functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit mersenne_twister_engine(result_type __sd = default_seed)
         {seed(__sd);}
     template<class _Sseq>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         explicit mersenne_twister_engine(_Sseq& __q,
         typename enable_if<__is_seed_sequence<_Sseq, mersenne_twister_engine>::value>::type* = 0)
         {seed(__q);}
     void seed(result_type __sd = default_seed);
     template<class _Sseq>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         typename enable_if
         <
             __is_seed_sequence<_Sseq, mersenne_twister_engine>::value,
@@ -2127,7 +2127,7 @@ public:
 
     // generating functions
     result_type operator()();
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void discard(unsigned long long __z) {for (; __z; --__z) operator()();}
 
     template <class _UInt, size_t _Wp, size_t _Np, size_t _Mp, size_t _Rp,
@@ -2177,7 +2177,7 @@ private:
         void __seed(_Sseq& __q, integral_constant<unsigned, 2>);
 
     template <size_t __count>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         static
         typename enable_if
         <
@@ -2187,7 +2187,7 @@ private:
         __lshift(result_type __x) {return (__x << __count) & _Max;}
 
     template <size_t __count>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         static
         typename enable_if
         <
@@ -2197,7 +2197,7 @@ private:
         __lshift(result_type) {return result_type(0);}
 
     template <size_t __count>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         static
         typename enable_if
         <
@@ -2207,7 +2207,7 @@ private:
         __rshift(result_type __x) {return __x >> __count;}
 
     template <size_t __count>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         static
         typename enable_if
         <
@@ -2220,85 +2220,85 @@ private:
 template <class _UIntType, size_t __w, size_t __n, size_t __m, size_t __r,
           _UIntType __a, size_t __u, _UIntType __d, size_t __s,
           _UIntType __b, size_t __t, _UIntType __c, size_t __l, _UIntType __f>
-    _LIBCPP_CONSTEXPR const size_t
+    _LIBCUDACXX_CONSTEXPR const size_t
     mersenne_twister_engine<_UIntType, __w, __n, __m, __r, __a, __u, __d, __s, __b, __t, __c, __l, __f>::word_size;
 
 template <class _UIntType, size_t __w, size_t __n, size_t __m, size_t __r,
           _UIntType __a, size_t __u, _UIntType __d, size_t __s,
           _UIntType __b, size_t __t, _UIntType __c, size_t __l, _UIntType __f>
-    _LIBCPP_CONSTEXPR const size_t
+    _LIBCUDACXX_CONSTEXPR const size_t
     mersenne_twister_engine<_UIntType, __w, __n, __m, __r, __a, __u, __d, __s, __b, __t, __c, __l, __f>::state_size;
 
 template <class _UIntType, size_t __w, size_t __n, size_t __m, size_t __r,
           _UIntType __a, size_t __u, _UIntType __d, size_t __s,
           _UIntType __b, size_t __t, _UIntType __c, size_t __l, _UIntType __f>
-    _LIBCPP_CONSTEXPR const size_t
+    _LIBCUDACXX_CONSTEXPR const size_t
     mersenne_twister_engine<_UIntType, __w, __n, __m, __r, __a, __u, __d, __s, __b, __t, __c, __l, __f>::shift_size;
 
 template <class _UIntType, size_t __w, size_t __n, size_t __m, size_t __r,
           _UIntType __a, size_t __u, _UIntType __d, size_t __s,
           _UIntType __b, size_t __t, _UIntType __c, size_t __l, _UIntType __f>
-    _LIBCPP_CONSTEXPR const size_t
+    _LIBCUDACXX_CONSTEXPR const size_t
     mersenne_twister_engine<_UIntType, __w, __n, __m, __r, __a, __u, __d, __s, __b, __t, __c, __l, __f>::mask_bits;
 
 template <class _UIntType, size_t __w, size_t __n, size_t __m, size_t __r,
           _UIntType __a, size_t __u, _UIntType __d, size_t __s,
           _UIntType __b, size_t __t, _UIntType __c, size_t __l, _UIntType __f>
-    _LIBCPP_CONSTEXPR const typename mersenne_twister_engine<_UIntType, __w, __n, __m, __r, __a, __u, __d, __s, __b, __t, __c, __l, __f>::result_type
+    _LIBCUDACXX_CONSTEXPR const typename mersenne_twister_engine<_UIntType, __w, __n, __m, __r, __a, __u, __d, __s, __b, __t, __c, __l, __f>::result_type
     mersenne_twister_engine<_UIntType, __w, __n, __m, __r, __a, __u, __d, __s, __b, __t, __c, __l, __f>::xor_mask;
 
 template <class _UIntType, size_t __w, size_t __n, size_t __m, size_t __r,
           _UIntType __a, size_t __u, _UIntType __d, size_t __s,
           _UIntType __b, size_t __t, _UIntType __c, size_t __l, _UIntType __f>
-    _LIBCPP_CONSTEXPR const size_t
+    _LIBCUDACXX_CONSTEXPR const size_t
     mersenne_twister_engine<_UIntType, __w, __n, __m, __r, __a, __u, __d, __s, __b, __t, __c, __l, __f>::tempering_u;
 
 template <class _UIntType, size_t __w, size_t __n, size_t __m, size_t __r,
           _UIntType __a, size_t __u, _UIntType __d, size_t __s,
           _UIntType __b, size_t __t, _UIntType __c, size_t __l, _UIntType __f>
-    _LIBCPP_CONSTEXPR const typename mersenne_twister_engine<_UIntType, __w, __n, __m, __r, __a, __u, __d, __s, __b, __t, __c, __l, __f>::result_type
+    _LIBCUDACXX_CONSTEXPR const typename mersenne_twister_engine<_UIntType, __w, __n, __m, __r, __a, __u, __d, __s, __b, __t, __c, __l, __f>::result_type
     mersenne_twister_engine<_UIntType, __w, __n, __m, __r, __a, __u, __d, __s, __b, __t, __c, __l, __f>::tempering_d;
 
 template <class _UIntType, size_t __w, size_t __n, size_t __m, size_t __r,
           _UIntType __a, size_t __u, _UIntType __d, size_t __s,
           _UIntType __b, size_t __t, _UIntType __c, size_t __l, _UIntType __f>
-    _LIBCPP_CONSTEXPR const size_t
+    _LIBCUDACXX_CONSTEXPR const size_t
     mersenne_twister_engine<_UIntType, __w, __n, __m, __r, __a, __u, __d, __s, __b, __t, __c, __l, __f>::tempering_s;
 
 template <class _UIntType, size_t __w, size_t __n, size_t __m, size_t __r,
           _UIntType __a, size_t __u, _UIntType __d, size_t __s,
           _UIntType __b, size_t __t, _UIntType __c, size_t __l, _UIntType __f>
-    _LIBCPP_CONSTEXPR const typename mersenne_twister_engine<_UIntType, __w, __n, __m, __r, __a, __u, __d, __s, __b, __t, __c, __l, __f>::result_type
+    _LIBCUDACXX_CONSTEXPR const typename mersenne_twister_engine<_UIntType, __w, __n, __m, __r, __a, __u, __d, __s, __b, __t, __c, __l, __f>::result_type
     mersenne_twister_engine<_UIntType, __w, __n, __m, __r, __a, __u, __d, __s, __b, __t, __c, __l, __f>::tempering_b;
 
 template <class _UIntType, size_t __w, size_t __n, size_t __m, size_t __r,
           _UIntType __a, size_t __u, _UIntType __d, size_t __s,
           _UIntType __b, size_t __t, _UIntType __c, size_t __l, _UIntType __f>
-    _LIBCPP_CONSTEXPR const size_t
+    _LIBCUDACXX_CONSTEXPR const size_t
     mersenne_twister_engine<_UIntType, __w, __n, __m, __r, __a, __u, __d, __s, __b, __t, __c, __l, __f>::tempering_t;
 
 template <class _UIntType, size_t __w, size_t __n, size_t __m, size_t __r,
           _UIntType __a, size_t __u, _UIntType __d, size_t __s,
           _UIntType __b, size_t __t, _UIntType __c, size_t __l, _UIntType __f>
-    _LIBCPP_CONSTEXPR const typename mersenne_twister_engine<_UIntType, __w, __n, __m, __r, __a, __u, __d, __s, __b, __t, __c, __l, __f>::result_type
+    _LIBCUDACXX_CONSTEXPR const typename mersenne_twister_engine<_UIntType, __w, __n, __m, __r, __a, __u, __d, __s, __b, __t, __c, __l, __f>::result_type
     mersenne_twister_engine<_UIntType, __w, __n, __m, __r, __a, __u, __d, __s, __b, __t, __c, __l, __f>::tempering_c;
 
 template <class _UIntType, size_t __w, size_t __n, size_t __m, size_t __r,
           _UIntType __a, size_t __u, _UIntType __d, size_t __s,
           _UIntType __b, size_t __t, _UIntType __c, size_t __l, _UIntType __f>
-    _LIBCPP_CONSTEXPR const size_t
+    _LIBCUDACXX_CONSTEXPR const size_t
     mersenne_twister_engine<_UIntType, __w, __n, __m, __r, __a, __u, __d, __s, __b, __t, __c, __l, __f>::tempering_l;
 
 template <class _UIntType, size_t __w, size_t __n, size_t __m, size_t __r,
           _UIntType __a, size_t __u, _UIntType __d, size_t __s,
           _UIntType __b, size_t __t, _UIntType __c, size_t __l, _UIntType __f>
-    _LIBCPP_CONSTEXPR const typename mersenne_twister_engine<_UIntType, __w, __n, __m, __r, __a, __u, __d, __s, __b, __t, __c, __l, __f>::result_type
+    _LIBCUDACXX_CONSTEXPR const typename mersenne_twister_engine<_UIntType, __w, __n, __m, __r, __a, __u, __d, __s, __b, __t, __c, __l, __f>::result_type
     mersenne_twister_engine<_UIntType, __w, __n, __m, __r, __a, __u, __d, __s, __b, __t, __c, __l, __f>::initialization_multiplier;
 
 template <class _UIntType, size_t __w, size_t __n, size_t __m, size_t __r,
           _UIntType __a, size_t __u, _UIntType __d, size_t __s,
           _UIntType __b, size_t __t, _UIntType __c, size_t __l, _UIntType __f>
-    _LIBCPP_CONSTEXPR const typename mersenne_twister_engine<_UIntType, __w, __n, __m, __r, __a, __u, __d, __s, __b, __t, __c, __l, __f>::result_type
+    _LIBCUDACXX_CONSTEXPR const typename mersenne_twister_engine<_UIntType, __w, __n, __m, __r, __a, __u, __d, __s, __b, __t, __c, __l, __f>::result_type
     mersenne_twister_engine<_UIntType, __w, __n, __m, __r, __a, __u, __d, __s, __b, __t, __c, __l, __f>::default_seed;
 
 template <class _UIntType, size_t __w, size_t __n, size_t __m, size_t __r,
@@ -2307,7 +2307,7 @@ template <class _UIntType, size_t __w, size_t __n, size_t __m, size_t __r,
 void
 mersenne_twister_engine<_UIntType, __w, __n, __m, __r, __a, __u, __d, __s, __b,
     __t, __c, __l, __f>::seed(result_type __sd)
-    _LIBCPP_DISABLE_UBSAN_UNSIGNED_INTEGER_CHECK
+    _LIBCUDACXX_DISABLE_UBSAN_UNSIGNED_INTEGER_CHECK
 {   // __w >= 2
     __x_[0] = __sd & _Max;
     for (size_t __i = 1; __i < __n; ++__i)
@@ -2396,44 +2396,44 @@ operator==(const mersenne_twister_engine<_UInt, _Wp, _Np, _Mp, _Rp, _Ap, _Up, _D
                                          _Bp, _Tp, _Cp, _Lp, _Fp>& __y)
 {
     if (__x.__i_ == __y.__i_)
-        return _VSTD::equal(__x.__x_, __x.__x_ + _Np, __y.__x_);
+        return _CUDA_VSTD::equal(__x.__x_, __x.__x_ + _Np, __y.__x_);
     if (__x.__i_ == 0 || __y.__i_ == 0)
     {
-        size_t __j = _VSTD::min(_Np - __x.__i_, _Np - __y.__i_);
-        if (!_VSTD::equal(__x.__x_ + __x.__i_, __x.__x_ + __x.__i_ + __j,
+        size_t __j = _CUDA_VSTD::min(_Np - __x.__i_, _Np - __y.__i_);
+        if (!_CUDA_VSTD::equal(__x.__x_ + __x.__i_, __x.__x_ + __x.__i_ + __j,
                          __y.__x_ + __y.__i_))
             return false;
         if (__x.__i_ == 0)
-            return _VSTD::equal(__x.__x_ + __j, __x.__x_ + _Np, __y.__x_);
-        return _VSTD::equal(__x.__x_, __x.__x_ + (_Np - __j), __y.__x_ + __j);
+            return _CUDA_VSTD::equal(__x.__x_ + __j, __x.__x_ + _Np, __y.__x_);
+        return _CUDA_VSTD::equal(__x.__x_, __x.__x_ + (_Np - __j), __y.__x_ + __j);
     }
     if (__x.__i_ < __y.__i_)
     {
         size_t __j = _Np - __y.__i_;
-        if (!_VSTD::equal(__x.__x_ + __x.__i_, __x.__x_ + (__x.__i_ + __j),
+        if (!_CUDA_VSTD::equal(__x.__x_ + __x.__i_, __x.__x_ + (__x.__i_ + __j),
                          __y.__x_ + __y.__i_))
             return false;
-        if (!_VSTD::equal(__x.__x_ + (__x.__i_ + __j), __x.__x_ + _Np,
+        if (!_CUDA_VSTD::equal(__x.__x_ + (__x.__i_ + __j), __x.__x_ + _Np,
                          __y.__x_))
             return false;
-        return _VSTD::equal(__x.__x_, __x.__x_ + __x.__i_,
+        return _CUDA_VSTD::equal(__x.__x_, __x.__x_ + __x.__i_,
                            __y.__x_ + (_Np - (__x.__i_ + __j)));
     }
     size_t __j = _Np - __x.__i_;
-    if (!_VSTD::equal(__y.__x_ + __y.__i_, __y.__x_ + (__y.__i_ + __j),
+    if (!_CUDA_VSTD::equal(__y.__x_ + __y.__i_, __y.__x_ + (__y.__i_ + __j),
                      __x.__x_ + __x.__i_))
         return false;
-    if (!_VSTD::equal(__y.__x_ + (__y.__i_ + __j), __y.__x_ + _Np,
+    if (!_CUDA_VSTD::equal(__y.__x_ + (__y.__i_ + __j), __y.__x_ + _Np,
                      __x.__x_))
         return false;
-    return _VSTD::equal(__y.__x_, __y.__x_ + __y.__i_,
+    return _CUDA_VSTD::equal(__y.__x_, __y.__x_ + __y.__i_,
                        __x.__x_ + (_Np - (__y.__i_ + __j)));
 }
 
 template <class _UInt, size_t _Wp, size_t _Np, size_t _Mp, size_t _Rp,
           _UInt _Ap, size_t _Up, _UInt _Dp, size_t _Sp,
           _UInt _Bp, size_t _Tp, _UInt _Cp, size_t _Lp, _UInt _Fp>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 bool
 operator!=(const mersenne_twister_engine<_UInt, _Wp, _Np, _Mp, _Rp, _Ap, _Up, _Dp, _Sp,
                                          _Bp, _Tp, _Cp, _Lp, _Fp>& __x,
@@ -2501,7 +2501,7 @@ typedef mersenne_twister_engine<uint_fast64_t, 64, 312, 156, 31,
 // subtract_with_carry_engine
 
 template<class _UIntType, size_t __w, size_t __s, size_t __r>
-class _LIBCPP_TEMPLATE_VIS subtract_with_carry_engine;
+class _LIBCUDACXX_TEMPLATE_VIS subtract_with_carry_engine;
 
 template<class _UInt, size_t _Wp, size_t _Sp, size_t _Rp>
 bool
@@ -2510,7 +2510,7 @@ operator==(
     const subtract_with_carry_engine<_UInt, _Wp, _Sp, _Rp>& __y);
 
 template<class _UInt, size_t _Wp, size_t _Sp, size_t _Rp>
-_LIBCPP_INLINE_VISIBILITY
+_LIBCUDACXX_INLINE_VISIBILITY
 bool
 operator!=(
     const subtract_with_carry_engine<_UInt, _Wp, _Sp, _Rp>& __x,
@@ -2529,7 +2529,7 @@ operator>>(basic_istream<_CharT, _Traits>& __is,
            subtract_with_carry_engine<_UInt, _Wp, _Sp, _Rp>& __x);
 
 template<class _UIntType, size_t __w, size_t __s, size_t __r>
-class _LIBCPP_TEMPLATE_VIS subtract_with_carry_engine
+class _LIBCUDACXX_TEMPLATE_VIS subtract_with_carry_engine
 {
 public:
     // types
@@ -2540,41 +2540,41 @@ private:
     result_type  __c_;
     size_t      __i_;
 
-    static _LIBCPP_CONSTEXPR const result_type _Dt = numeric_limits<result_type>::digits;
+    static _LIBCUDACXX_CONSTEXPR const result_type _Dt = numeric_limits<result_type>::digits;
     static_assert(  0 <  __w, "subtract_with_carry_engine invalid parameters");
     static_assert(__w <= _Dt, "subtract_with_carry_engine invalid parameters");
     static_assert(  0 <  __s, "subtract_with_carry_engine invalid parameters");
     static_assert(__s <  __r, "subtract_with_carry_engine invalid parameters");
 public:
-    static _LIBCPP_CONSTEXPR const result_type _Min = 0;
-    static _LIBCPP_CONSTEXPR const result_type _Max = __w == _Dt ? result_type(~0) :
+    static _LIBCUDACXX_CONSTEXPR const result_type _Min = 0;
+    static _LIBCUDACXX_CONSTEXPR const result_type _Max = __w == _Dt ? result_type(~0) :
                                                       (result_type(1) << __w) - result_type(1);
     static_assert(_Min < _Max, "subtract_with_carry_engine invalid parameters");
 
     // engine characteristics
-    static _LIBCPP_CONSTEXPR const size_t word_size = __w;
-    static _LIBCPP_CONSTEXPR const size_t short_lag = __s;
-    static _LIBCPP_CONSTEXPR const size_t long_lag = __r;
-    _LIBCPP_INLINE_VISIBILITY
-    static _LIBCPP_CONSTEXPR result_type min() { return _Min; }
-    _LIBCPP_INLINE_VISIBILITY
-    static _LIBCPP_CONSTEXPR result_type max() { return _Max; }
-    static _LIBCPP_CONSTEXPR const result_type default_seed = 19780503u;
+    static _LIBCUDACXX_CONSTEXPR const size_t word_size = __w;
+    static _LIBCUDACXX_CONSTEXPR const size_t short_lag = __s;
+    static _LIBCUDACXX_CONSTEXPR const size_t long_lag = __r;
+    _LIBCUDACXX_INLINE_VISIBILITY
+    static _LIBCUDACXX_CONSTEXPR result_type min() { return _Min; }
+    _LIBCUDACXX_INLINE_VISIBILITY
+    static _LIBCUDACXX_CONSTEXPR result_type max() { return _Max; }
+    static _LIBCUDACXX_CONSTEXPR const result_type default_seed = 19780503u;
 
     // constructors and seeding functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit subtract_with_carry_engine(result_type __sd = default_seed)
         {seed(__sd);}
     template<class _Sseq>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         explicit subtract_with_carry_engine(_Sseq& __q,
         typename enable_if<__is_seed_sequence<_Sseq, subtract_with_carry_engine>::value>::type* = 0)
         {seed(__q);}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void seed(result_type __sd = default_seed)
         {seed(__sd, integral_constant<unsigned, 1 + (__w - 1) / 32>());}
     template<class _Sseq>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         typename enable_if
         <
             __is_seed_sequence<_Sseq, subtract_with_carry_engine>::value,
@@ -2585,7 +2585,7 @@ public:
 
     // generating functions
     result_type operator()();
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void discard(unsigned long long __z) {for (; __z; --__z) operator()();}
 
     template<class _UInt, size_t _Wp, size_t _Sp, size_t _Rp>
@@ -2627,16 +2627,16 @@ private:
 };
 
 template<class _UIntType, size_t __w, size_t __s, size_t __r>
-    _LIBCPP_CONSTEXPR const size_t subtract_with_carry_engine<_UIntType, __w, __s, __r>::word_size;
+    _LIBCUDACXX_CONSTEXPR const size_t subtract_with_carry_engine<_UIntType, __w, __s, __r>::word_size;
 
 template<class _UIntType, size_t __w, size_t __s, size_t __r>
-    _LIBCPP_CONSTEXPR const size_t subtract_with_carry_engine<_UIntType, __w, __s, __r>::short_lag;
+    _LIBCUDACXX_CONSTEXPR const size_t subtract_with_carry_engine<_UIntType, __w, __s, __r>::short_lag;
 
 template<class _UIntType, size_t __w, size_t __s, size_t __r>
-    _LIBCPP_CONSTEXPR const size_t subtract_with_carry_engine<_UIntType, __w, __s, __r>::long_lag;
+    _LIBCUDACXX_CONSTEXPR const size_t subtract_with_carry_engine<_UIntType, __w, __s, __r>::long_lag;
 
 template<class _UIntType, size_t __w, size_t __s, size_t __r>
-    _LIBCPP_CONSTEXPR const typename subtract_with_carry_engine<_UIntType, __w, __s, __r>::result_type
+    _LIBCUDACXX_CONSTEXPR const typename subtract_with_carry_engine<_UIntType, __w, __s, __r>::result_type
     subtract_with_carry_engine<_UIntType, __w, __s, __r>::default_seed;
 
 template<class _UIntType, size_t __w, size_t __s, size_t __r>
@@ -2722,42 +2722,42 @@ operator==(
     if (__x.__c_ != __y.__c_)
         return false;
     if (__x.__i_ == __y.__i_)
-        return _VSTD::equal(__x.__x_, __x.__x_ + _Rp, __y.__x_);
+        return _CUDA_VSTD::equal(__x.__x_, __x.__x_ + _Rp, __y.__x_);
     if (__x.__i_ == 0 || __y.__i_ == 0)
     {
-        size_t __j = _VSTD::min(_Rp - __x.__i_, _Rp - __y.__i_);
-        if (!_VSTD::equal(__x.__x_ + __x.__i_, __x.__x_ + __x.__i_ + __j,
+        size_t __j = _CUDA_VSTD::min(_Rp - __x.__i_, _Rp - __y.__i_);
+        if (!_CUDA_VSTD::equal(__x.__x_ + __x.__i_, __x.__x_ + __x.__i_ + __j,
                          __y.__x_ + __y.__i_))
             return false;
         if (__x.__i_ == 0)
-            return _VSTD::equal(__x.__x_ + __j, __x.__x_ + _Rp, __y.__x_);
-        return _VSTD::equal(__x.__x_, __x.__x_ + (_Rp - __j), __y.__x_ + __j);
+            return _CUDA_VSTD::equal(__x.__x_ + __j, __x.__x_ + _Rp, __y.__x_);
+        return _CUDA_VSTD::equal(__x.__x_, __x.__x_ + (_Rp - __j), __y.__x_ + __j);
     }
     if (__x.__i_ < __y.__i_)
     {
         size_t __j = _Rp - __y.__i_;
-        if (!_VSTD::equal(__x.__x_ + __x.__i_, __x.__x_ + (__x.__i_ + __j),
+        if (!_CUDA_VSTD::equal(__x.__x_ + __x.__i_, __x.__x_ + (__x.__i_ + __j),
                          __y.__x_ + __y.__i_))
             return false;
-        if (!_VSTD::equal(__x.__x_ + (__x.__i_ + __j), __x.__x_ + _Rp,
+        if (!_CUDA_VSTD::equal(__x.__x_ + (__x.__i_ + __j), __x.__x_ + _Rp,
                          __y.__x_))
             return false;
-        return _VSTD::equal(__x.__x_, __x.__x_ + __x.__i_,
+        return _CUDA_VSTD::equal(__x.__x_, __x.__x_ + __x.__i_,
                            __y.__x_ + (_Rp - (__x.__i_ + __j)));
     }
     size_t __j = _Rp - __x.__i_;
-    if (!_VSTD::equal(__y.__x_ + __y.__i_, __y.__x_ + (__y.__i_ + __j),
+    if (!_CUDA_VSTD::equal(__y.__x_ + __y.__i_, __y.__x_ + (__y.__i_ + __j),
                      __x.__x_ + __x.__i_))
         return false;
-    if (!_VSTD::equal(__y.__x_ + (__y.__i_ + __j), __y.__x_ + _Rp,
+    if (!_CUDA_VSTD::equal(__y.__x_ + (__y.__i_ + __j), __y.__x_ + _Rp,
                      __x.__x_))
         return false;
-    return _VSTD::equal(__y.__x_, __y.__x_ + __y.__i_,
+    return _CUDA_VSTD::equal(__y.__x_, __y.__x_ + __y.__i_,
                        __x.__x_ + (_Rp - (__y.__i_ + __j)));
 }
 
 template<class _UInt, size_t _Wp, size_t _Sp, size_t _Rp>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 bool
 operator!=(
     const subtract_with_carry_engine<_UInt, _Wp, _Sp, _Rp>& __x,
@@ -2812,7 +2812,7 @@ typedef subtract_with_carry_engine<uint_fast64_t, 48,  5, 12>     ranlux48_base;
 // discard_block_engine
 
 template<class _Engine, size_t __p, size_t __r>
-class _LIBCPP_TEMPLATE_VIS discard_block_engine
+class _LIBCUDACXX_TEMPLATE_VIS discard_block_engine
 {
     _Engine __e_;
     int     __n_;
@@ -2825,47 +2825,47 @@ public:
     typedef typename _Engine::result_type result_type;
 
     // engine characteristics
-    static _LIBCPP_CONSTEXPR const size_t block_size = __p;
-    static _LIBCPP_CONSTEXPR const size_t used_block = __r;
+    static _LIBCUDACXX_CONSTEXPR const size_t block_size = __p;
+    static _LIBCUDACXX_CONSTEXPR const size_t used_block = __r;
 
-#ifdef _LIBCPP_CXX03_LANG
+#ifdef _LIBCUDACXX_CXX03_LANG
     static const result_type _Min = _Engine::_Min;
     static const result_type _Max = _Engine::_Max;
 #else
-    static _LIBCPP_CONSTEXPR const result_type _Min = _Engine::min();
-    static _LIBCPP_CONSTEXPR const result_type _Max = _Engine::max();
+    static _LIBCUDACXX_CONSTEXPR const result_type _Min = _Engine::min();
+    static _LIBCUDACXX_CONSTEXPR const result_type _Max = _Engine::max();
 #endif
 
-    _LIBCPP_INLINE_VISIBILITY
-    static _LIBCPP_CONSTEXPR result_type min() { return _Engine::min(); }
-    _LIBCPP_INLINE_VISIBILITY
-    static _LIBCPP_CONSTEXPR result_type max() { return _Engine::max(); }
+    _LIBCUDACXX_INLINE_VISIBILITY
+    static _LIBCUDACXX_CONSTEXPR result_type min() { return _Engine::min(); }
+    _LIBCUDACXX_INLINE_VISIBILITY
+    static _LIBCUDACXX_CONSTEXPR result_type max() { return _Engine::max(); }
 
     // constructors and seeding functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     discard_block_engine() : __n_(0) {}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit discard_block_engine(const _Engine& __e)
         : __e_(__e), __n_(0) {}
-#ifndef _LIBCPP_CXX03_LANG
-    _LIBCPP_INLINE_VISIBILITY
+#ifndef _LIBCUDACXX_CXX03_LANG
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit discard_block_engine(_Engine&& __e)
-        : __e_(_VSTD::move(__e)), __n_(0) {}
-#endif  // _LIBCPP_CXX03_LANG
-    _LIBCPP_INLINE_VISIBILITY
+        : __e_(_CUDA_VSTD::move(__e)), __n_(0) {}
+#endif  // _LIBCUDACXX_CXX03_LANG
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit discard_block_engine(result_type __sd) : __e_(__sd), __n_(0) {}
     template<class _Sseq>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         explicit discard_block_engine(_Sseq& __q,
         typename enable_if<__is_seed_sequence<_Sseq, discard_block_engine>::value &&
                            !is_convertible<_Sseq, _Engine>::value>::type* = 0)
         : __e_(__q), __n_(0) {}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void seed() {__e_.seed(); __n_ = 0;}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void seed(result_type __sd) {__e_.seed(__sd); __n_ = 0;}
     template<class _Sseq>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         typename enable_if
         <
             __is_seed_sequence<_Sseq, discard_block_engine>::value,
@@ -2875,11 +2875,11 @@ public:
 
     // generating functions
     result_type operator()();
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void discard(unsigned long long __z) {for (; __z; --__z) operator()();}
 
     // property functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     const _Engine& base() const _NOEXCEPT {return __e_;}
 
     template<class _Eng, size_t _Pp, size_t _Rp>
@@ -2912,10 +2912,10 @@ public:
 };
 
 template<class _Engine, size_t __p, size_t __r>
-    _LIBCPP_CONSTEXPR const size_t discard_block_engine<_Engine, __p, __r>::block_size;
+    _LIBCUDACXX_CONSTEXPR const size_t discard_block_engine<_Engine, __p, __r>::block_size;
 
 template<class _Engine, size_t __p, size_t __r>
-    _LIBCPP_CONSTEXPR const size_t discard_block_engine<_Engine, __p, __r>::used_block;
+    _LIBCUDACXX_CONSTEXPR const size_t discard_block_engine<_Engine, __p, __r>::used_block;
 
 template<class _Engine, size_t __p, size_t __r>
 typename discard_block_engine<_Engine, __p, __r>::result_type
@@ -2931,7 +2931,7 @@ discard_block_engine<_Engine, __p, __r>::operator()()
 }
 
 template<class _Eng, size_t _Pp, size_t _Rp>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 bool
 operator==(const discard_block_engine<_Eng, _Pp, _Rp>& __x,
            const discard_block_engine<_Eng, _Pp, _Rp>& __y)
@@ -2940,7 +2940,7 @@ operator==(const discard_block_engine<_Eng, _Pp, _Rp>& __x,
 }
 
 template<class _Eng, size_t _Pp, size_t _Rp>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 bool
 operator!=(const discard_block_engine<_Eng, _Pp, _Rp>& __x,
            const discard_block_engine<_Eng, _Pp, _Rp>& __y)
@@ -2986,17 +2986,17 @@ typedef discard_block_engine<ranlux48_base, 389, 11> ranlux48;
 // independent_bits_engine
 
 template<class _Engine, size_t __w, class _UIntType>
-class _LIBCPP_TEMPLATE_VIS independent_bits_engine
+class _LIBCUDACXX_TEMPLATE_VIS independent_bits_engine
 {
     template <class _UInt, _UInt _R0, size_t _Wp, size_t _Mp>
     class __get_n
     {
-        static _LIBCPP_CONSTEXPR const size_t _Dt = numeric_limits<_UInt>::digits;
-        static _LIBCPP_CONSTEXPR const size_t _Np = _Wp / _Mp + (_Wp % _Mp != 0);
-        static _LIBCPP_CONSTEXPR const size_t _W0 = _Wp / _Np;
-        static _LIBCPP_CONSTEXPR const _UInt _Y0 = _W0 >= _Dt ? 0 : (_R0 >> _W0) << _W0;
+        static _LIBCUDACXX_CONSTEXPR const size_t _Dt = numeric_limits<_UInt>::digits;
+        static _LIBCUDACXX_CONSTEXPR const size_t _Np = _Wp / _Mp + (_Wp % _Mp != 0);
+        static _LIBCUDACXX_CONSTEXPR const size_t _W0 = _Wp / _Np;
+        static _LIBCUDACXX_CONSTEXPR const _UInt _Y0 = _W0 >= _Dt ? 0 : (_R0 >> _W0) << _W0;
     public:
-        static _LIBCPP_CONSTEXPR const size_t value = _R0 - _Y0 > _Y0 / _Np ? _Np + 1 : _Np;
+        static _LIBCUDACXX_CONSTEXPR const size_t value = _R0 - _Y0 > _Y0 / _Np ? _Np + 1 : _Np;
     };
 public:
     // types
@@ -3005,7 +3005,7 @@ public:
 private:
     _Engine __e_;
 
-    static _LIBCPP_CONSTEXPR const result_type _Dt = numeric_limits<result_type>::digits;
+    static _LIBCUDACXX_CONSTEXPR const result_type _Dt = numeric_limits<result_type>::digits;
     static_assert(  0 <  __w, "independent_bits_engine invalid parameters");
     static_assert(__w <= _Dt, "independent_bits_engine invalid parameters");
 
@@ -3016,66 +3016,66 @@ private:
                 result_type,
                 _Engine_result_type
         >::type _Working_result_type;
-#ifdef _LIBCPP_CXX03_LANG
+#ifdef _LIBCUDACXX_CXX03_LANG
     static const _Working_result_type _Rp = _Engine::_Max - _Engine::_Min
                                           + _Working_result_type(1);
 #else
-    static _LIBCPP_CONSTEXPR const _Working_result_type _Rp = _Engine::max() - _Engine::min()
+    static _LIBCUDACXX_CONSTEXPR const _Working_result_type _Rp = _Engine::max() - _Engine::min()
                                                             + _Working_result_type(1);
 #endif
-    static _LIBCPP_CONSTEXPR const size_t __m = __log2<_Working_result_type, _Rp>::value;
-    static _LIBCPP_CONSTEXPR const size_t __n = __get_n<_Working_result_type, _Rp, __w, __m>::value;
-    static _LIBCPP_CONSTEXPR const size_t __w0 = __w / __n;
-    static _LIBCPP_CONSTEXPR const size_t __n0 = __n - __w % __n;
-    static _LIBCPP_CONSTEXPR const size_t _WDt = numeric_limits<_Working_result_type>::digits;
-    static _LIBCPP_CONSTEXPR const size_t _EDt = numeric_limits<_Engine_result_type>::digits;
-    static _LIBCPP_CONSTEXPR const _Working_result_type __y0 = __w0 >= _WDt ? 0 :
+    static _LIBCUDACXX_CONSTEXPR const size_t __m = __log2<_Working_result_type, _Rp>::value;
+    static _LIBCUDACXX_CONSTEXPR const size_t __n = __get_n<_Working_result_type, _Rp, __w, __m>::value;
+    static _LIBCUDACXX_CONSTEXPR const size_t __w0 = __w / __n;
+    static _LIBCUDACXX_CONSTEXPR const size_t __n0 = __n - __w % __n;
+    static _LIBCUDACXX_CONSTEXPR const size_t _WDt = numeric_limits<_Working_result_type>::digits;
+    static _LIBCUDACXX_CONSTEXPR const size_t _EDt = numeric_limits<_Engine_result_type>::digits;
+    static _LIBCUDACXX_CONSTEXPR const _Working_result_type __y0 = __w0 >= _WDt ? 0 :
                                                                (_Rp >> __w0) << __w0;
-    static _LIBCPP_CONSTEXPR const _Working_result_type __y1 = __w0 >= _WDt - 1 ? 0 :
+    static _LIBCUDACXX_CONSTEXPR const _Working_result_type __y1 = __w0 >= _WDt - 1 ? 0 :
                                                                (_Rp >> (__w0+1)) << (__w0+1);
-    static _LIBCPP_CONSTEXPR const _Engine_result_type __mask0 = __w0 > 0 ?
+    static _LIBCUDACXX_CONSTEXPR const _Engine_result_type __mask0 = __w0 > 0 ?
                                 _Engine_result_type(~0) >> (_EDt - __w0) :
                                 _Engine_result_type(0);
-    static _LIBCPP_CONSTEXPR const _Engine_result_type __mask1 = __w0 < _EDt - 1 ?
+    static _LIBCUDACXX_CONSTEXPR const _Engine_result_type __mask1 = __w0 < _EDt - 1 ?
                                 _Engine_result_type(~0) >> (_EDt - (__w0 + 1)) :
                                 _Engine_result_type(~0);
 public:
-    static _LIBCPP_CONSTEXPR const result_type _Min = 0;
-    static _LIBCPP_CONSTEXPR const result_type _Max = __w == _Dt ? result_type(~0) :
+    static _LIBCUDACXX_CONSTEXPR const result_type _Min = 0;
+    static _LIBCUDACXX_CONSTEXPR const result_type _Max = __w == _Dt ? result_type(~0) :
                                                       (result_type(1) << __w) - result_type(1);
     static_assert(_Min < _Max, "independent_bits_engine invalid parameters");
 
     // engine characteristics
-    _LIBCPP_INLINE_VISIBILITY
-    static _LIBCPP_CONSTEXPR result_type min() { return _Min; }
-    _LIBCPP_INLINE_VISIBILITY
-    static _LIBCPP_CONSTEXPR result_type max() { return _Max; }
+    _LIBCUDACXX_INLINE_VISIBILITY
+    static _LIBCUDACXX_CONSTEXPR result_type min() { return _Min; }
+    _LIBCUDACXX_INLINE_VISIBILITY
+    static _LIBCUDACXX_CONSTEXPR result_type max() { return _Max; }
 
     // constructors and seeding functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     independent_bits_engine() {}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit independent_bits_engine(const _Engine& __e)
         : __e_(__e) {}
-#ifndef _LIBCPP_CXX03_LANG
-    _LIBCPP_INLINE_VISIBILITY
+#ifndef _LIBCUDACXX_CXX03_LANG
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit independent_bits_engine(_Engine&& __e)
-        : __e_(_VSTD::move(__e)) {}
-#endif  // _LIBCPP_CXX03_LANG
-    _LIBCPP_INLINE_VISIBILITY
+        : __e_(_CUDA_VSTD::move(__e)) {}
+#endif  // _LIBCUDACXX_CXX03_LANG
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit independent_bits_engine(result_type __sd) : __e_(__sd) {}
     template<class _Sseq>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         explicit independent_bits_engine(_Sseq& __q,
         typename enable_if<__is_seed_sequence<_Sseq, independent_bits_engine>::value &&
                            !is_convertible<_Sseq, _Engine>::value>::type* = 0)
          : __e_(__q) {}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void seed() {__e_.seed();}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void seed(result_type __sd) {__e_.seed(__sd);}
     template<class _Sseq>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         typename enable_if
         <
             __is_seed_sequence<_Sseq, independent_bits_engine>::value,
@@ -3084,13 +3084,13 @@ public:
         seed(_Sseq& __q) {__e_.seed(__q);}
 
     // generating functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type operator()() {return __eval(integral_constant<bool, _Rp != 0>());}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void discard(unsigned long long __z) {for (; __z; --__z) operator()();}
 
     // property functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     const _Engine& base() const _NOEXCEPT {return __e_;}
 
     template<class _Eng, size_t _Wp, class _UInt>
@@ -3122,12 +3122,12 @@ public:
                independent_bits_engine<_Eng, _Wp, _UInt>& __x);
 
 private:
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type __eval(false_type);
     result_type __eval(true_type);
 
     template <size_t __count>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         static
         typename enable_if
         <
@@ -3137,7 +3137,7 @@ private:
         __lshift(result_type __x) {return __x << __count;}
 
     template <size_t __count>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         static
         typename enable_if
         <
@@ -3182,7 +3182,7 @@ independent_bits_engine<_Engine, __w, _UIntType>::__eval(true_type)
 }
 
 template<class _Eng, size_t _Wp, class _UInt>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 bool
 operator==(
     const independent_bits_engine<_Eng, _Wp, _UInt>& __x,
@@ -3192,7 +3192,7 @@ operator==(
 }
 
 template<class _Eng, size_t _Wp, class _UInt>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 bool
 operator!=(
     const independent_bits_engine<_Eng, _Wp, _UInt>& __x,
@@ -3228,29 +3228,29 @@ operator>>(basic_istream<_CharT, _Traits>& __is,
 template <uint64_t _Xp, uint64_t _Yp>
 struct __ugcd
 {
-    static _LIBCPP_CONSTEXPR const uint64_t value = __ugcd<_Yp, _Xp % _Yp>::value;
+    static _LIBCUDACXX_CONSTEXPR const uint64_t value = __ugcd<_Yp, _Xp % _Yp>::value;
 };
 
 template <uint64_t _Xp>
 struct __ugcd<_Xp, 0>
 {
-    static _LIBCPP_CONSTEXPR const uint64_t value = _Xp;
+    static _LIBCUDACXX_CONSTEXPR const uint64_t value = _Xp;
 };
 
 template <uint64_t _Np, uint64_t _Dp>
 class __uratio
 {
     static_assert(_Dp != 0, "__uratio divide by 0");
-    static _LIBCPP_CONSTEXPR const uint64_t __gcd = __ugcd<_Np, _Dp>::value;
+    static _LIBCUDACXX_CONSTEXPR const uint64_t __gcd = __ugcd<_Np, _Dp>::value;
 public:
-    static _LIBCPP_CONSTEXPR const uint64_t num = _Np / __gcd;
-    static _LIBCPP_CONSTEXPR const uint64_t den = _Dp / __gcd;
+    static _LIBCUDACXX_CONSTEXPR const uint64_t num = _Np / __gcd;
+    static _LIBCUDACXX_CONSTEXPR const uint64_t den = _Dp / __gcd;
 
     typedef __uratio<num, den> type;
 };
 
 template<class _Engine, size_t __k>
-class _LIBCPP_TEMPLATE_VIS shuffle_order_engine
+class _LIBCUDACXX_TEMPLATE_VIS shuffle_order_engine
 {
     static_assert(0 < __k, "shuffle_order_engine invalid parameters");
 public:
@@ -3264,48 +3264,48 @@ private:
 
 public:
     // engine characteristics
-    static _LIBCPP_CONSTEXPR const size_t table_size = __k;
+    static _LIBCUDACXX_CONSTEXPR const size_t table_size = __k;
 
-#ifdef _LIBCPP_CXX03_LANG
+#ifdef _LIBCUDACXX_CXX03_LANG
     static const result_type _Min = _Engine::_Min;
     static const result_type _Max = _Engine::_Max;
 #else
-    static _LIBCPP_CONSTEXPR const result_type _Min = _Engine::min();
-    static _LIBCPP_CONSTEXPR const result_type _Max = _Engine::max();
+    static _LIBCUDACXX_CONSTEXPR const result_type _Min = _Engine::min();
+    static _LIBCUDACXX_CONSTEXPR const result_type _Max = _Engine::max();
 #endif
     static_assert(_Min < _Max, "shuffle_order_engine invalid parameters");
-    _LIBCPP_INLINE_VISIBILITY
-    static _LIBCPP_CONSTEXPR result_type min() { return _Min; }
-    _LIBCPP_INLINE_VISIBILITY
-    static _LIBCPP_CONSTEXPR result_type max() { return _Max; }
+    _LIBCUDACXX_INLINE_VISIBILITY
+    static _LIBCUDACXX_CONSTEXPR result_type min() { return _Min; }
+    _LIBCUDACXX_INLINE_VISIBILITY
+    static _LIBCUDACXX_CONSTEXPR result_type max() { return _Max; }
 
-    static _LIBCPP_CONSTEXPR const unsigned long long _Rp = _Max - _Min + 1ull;
+    static _LIBCUDACXX_CONSTEXPR const unsigned long long _Rp = _Max - _Min + 1ull;
 
     // constructors and seeding functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     shuffle_order_engine() {__init();}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit shuffle_order_engine(const _Engine& __e)
         : __e_(__e) {__init();}
-#ifndef _LIBCPP_CXX03_LANG
-    _LIBCPP_INLINE_VISIBILITY
+#ifndef _LIBCUDACXX_CXX03_LANG
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit shuffle_order_engine(_Engine&& __e)
-        : __e_(_VSTD::move(__e)) {__init();}
-#endif  // _LIBCPP_CXX03_LANG
-    _LIBCPP_INLINE_VISIBILITY
+        : __e_(_CUDA_VSTD::move(__e)) {__init();}
+#endif  // _LIBCUDACXX_CXX03_LANG
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit shuffle_order_engine(result_type __sd) : __e_(__sd) {__init();}
     template<class _Sseq>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         explicit shuffle_order_engine(_Sseq& __q,
         typename enable_if<__is_seed_sequence<_Sseq, shuffle_order_engine>::value &&
                            !is_convertible<_Sseq, _Engine>::value>::type* = 0)
          : __e_(__q) {__init();}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void seed() {__e_.seed(); __init();}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void seed(result_type __sd) {__e_.seed(__sd); __init();}
     template<class _Sseq>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         typename enable_if
         <
             __is_seed_sequence<_Sseq, shuffle_order_engine>::value,
@@ -3314,13 +3314,13 @@ public:
         seed(_Sseq& __q) {__e_.seed(__q); __init();}
 
     // generating functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type operator()() {return __eval(integral_constant<bool, _Rp != 0>());}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void discard(unsigned long long __z) {for (; __z; --__z) operator()();}
 
     // property functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     const _Engine& base() const _NOEXCEPT {return __e_;}
 
 private:
@@ -3352,7 +3352,7 @@ private:
     operator>>(basic_istream<_CharT, _Traits>& __is,
                shuffle_order_engine<_Eng, _Kp>& __x);
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void __init()
     {
         for (size_t __i = 0; __i < __k; ++__i)
@@ -3360,18 +3360,18 @@ private:
         _Y_ = __e_();
     }
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type __eval(false_type) {return __eval2(integral_constant<bool, __k & 1>());}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type __eval(true_type) {return __eval(__uratio<__k, _Rp>());}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type __eval2(false_type) {return __eval(__uratio<__k/2, 0x8000000000000000ull>());}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type __eval2(true_type) {return __evalf<__k, 0>();}
 
     template <uint64_t _Np, uint64_t _Dp>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         typename enable_if
         <
             (__uratio<_Np, _Dp>::num > 0xFFFFFFFFFFFFFFFFull / (_Max - _Min)),
@@ -3381,7 +3381,7 @@ private:
             {return __evalf<__uratio<_Np, _Dp>::num, __uratio<_Np, _Dp>::den>();}
 
     template <uint64_t _Np, uint64_t _Dp>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         typename enable_if
         <
             __uratio<_Np, _Dp>::num <= 0xFFFFFFFFFFFFFFFFull / (_Max - _Min),
@@ -3397,7 +3397,7 @@ private:
         }
 
     template <uint64_t __n, uint64_t __d>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type __evalf()
         {
             const double _Fp = __d == 0 ?
@@ -3411,7 +3411,7 @@ private:
 };
 
 template<class _Engine, size_t __k>
-    _LIBCPP_CONSTEXPR const size_t shuffle_order_engine<_Engine, __k>::table_size;
+    _LIBCUDACXX_CONSTEXPR const size_t shuffle_order_engine<_Engine, __k>::table_size;
 
 template<class _Eng, size_t _Kp>
 bool
@@ -3419,12 +3419,12 @@ operator==(
     const shuffle_order_engine<_Eng, _Kp>& __x,
     const shuffle_order_engine<_Eng, _Kp>& __y)
 {
-    return __x._Y_ == __y._Y_ && _VSTD::equal(__x._V_, __x._V_ + _Kp, __y._V_) &&
+    return __x._Y_ == __y._Y_ && _CUDA_VSTD::equal(__x._V_, __x._V_ + _Kp, __y._V_) &&
            __x.__e_ == __y.__e_;
 }
 
 template<class _Eng, size_t _Kp>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 bool
 operator!=(
     const shuffle_order_engine<_Eng, _Kp>& __x,
@@ -3477,23 +3477,23 @@ typedef shuffle_order_engine<minstd_rand0, 256>                         knuth_b;
 
 // random_device
 
-class _LIBCPP_TYPE_VIS random_device
+class _LIBCUDACXX_TYPE_VIS random_device
 {
-#ifdef _LIBCPP_USING_DEV_RANDOM
+#ifdef _LIBCUDACXX_USING_DEV_RANDOM
     int __f_;
-#endif // defined(_LIBCPP_USING_DEV_RANDOM)
+#endif // defined(_LIBCUDACXX_USING_DEV_RANDOM)
 public:
     // types
     typedef unsigned result_type;
 
     // generator characteristics
-    static _LIBCPP_CONSTEXPR const result_type _Min = 0;
-    static _LIBCPP_CONSTEXPR const result_type _Max = 0xFFFFFFFFu;
+    static _LIBCUDACXX_CONSTEXPR const result_type _Min = 0;
+    static _LIBCUDACXX_CONSTEXPR const result_type _Max = 0xFFFFFFFFu;
 
-    _LIBCPP_INLINE_VISIBILITY
-    static _LIBCPP_CONSTEXPR result_type min() { return _Min;}
-    _LIBCPP_INLINE_VISIBILITY
-    static _LIBCPP_CONSTEXPR result_type max() { return _Max;}
+    _LIBCUDACXX_INLINE_VISIBILITY
+    static _LIBCUDACXX_CONSTEXPR result_type min() { return _Min;}
+    _LIBCUDACXX_INLINE_VISIBILITY
+    static _LIBCUDACXX_CONSTEXPR result_type max() { return _Max;}
 
     // constructors
     explicit random_device(const string& __token = "/dev/urandom");
@@ -3513,7 +3513,7 @@ private:
 
 // seed_seq
 
-class _LIBCPP_TEMPLATE_VIS seed_seq
+class _LIBCUDACXX_TEMPLATE_VIS seed_seq
 {
 public:
     // types
@@ -3526,16 +3526,16 @@ private:
         void init(_InputIterator __first, _InputIterator __last);
 public:
     // constructors
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     seed_seq() _NOEXCEPT {}
-#ifndef _LIBCPP_CXX03_LANG
+#ifndef _LIBCUDACXX_CXX03_LANG
     template<class _Tp>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         seed_seq(initializer_list<_Tp> __il) {init(__il.begin(), __il.end());}
-#endif  // _LIBCPP_CXX03_LANG
+#endif  // _LIBCUDACXX_CXX03_LANG
 
     template<class _InputIterator>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         seed_seq(_InputIterator __first, _InputIterator __last)
              {init(__first, __last);}
 
@@ -3544,19 +3544,19 @@ public:
         void generate(_RandomAccessIterator __first, _RandomAccessIterator __last);
 
     // property functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     size_t size() const _NOEXCEPT {return __v_.size();}
     template<class _OutputIterator>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         void param(_OutputIterator __dest) const
-            {_VSTD::copy(__v_.begin(), __v_.end(), __dest);}
+            {_CUDA_VSTD::copy(__v_.begin(), __v_.end(), __dest);}
 
 private:
     // no copy functions
     seed_seq(const seed_seq&); // = delete;
     void operator=(const seed_seq&); // = delete;
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     static result_type _Tp(result_type __x) {return __x ^ (__x >> 27);}
 };
 
@@ -3574,7 +3574,7 @@ seed_seq::generate(_RandomAccessIterator __first, _RandomAccessIterator __last)
 {
     if (__first != __last)
     {
-        _VSTD::fill(__first, __last, 0x8b8b8b8b);
+        _CUDA_VSTD::fill(__first, __last, 0x8b8b8b8b);
         const size_t __n = static_cast<size_t>(__last - __first);
         const size_t __s = __v_.size();
         const size_t __t = (__n >= 623) ? 11
@@ -3584,7 +3584,7 @@ seed_seq::generate(_RandomAccessIterator __first, _RandomAccessIterator __last)
                          : (__n - 1) / 2;
         const size_t __p = (__n - __t) / 2;
         const size_t __q = __p + __t;
-        const size_t __m = _VSTD::max(__s + 1, __n);
+        const size_t __m = _CUDA_VSTD::max(__s + 1, __n);
         // __k = 0;
         {
             result_type __r = 1664525 * _Tp(__first[0] ^ __first[__p]
@@ -3639,7 +3639,7 @@ generate_canonical(_URNG& __g)
 {
     const size_t _Dt = numeric_limits<_RealType>::digits;
     const size_t __b = _Dt < __bits ? _Dt : __bits;
-#ifdef _LIBCPP_CXX03_LANG
+#ifdef _LIBCUDACXX_CXX03_LANG
     const size_t __logR = __log2<uint64_t, _URNG::_Max - _URNG::_Min + uint64_t(1)>::value;
 #else
     const size_t __logR = __log2<uint64_t, _URNG::max() - _URNG::min() + uint64_t(1)>::value;
@@ -3690,33 +3690,33 @@ operator>>(basic_istream<_CharT, _Traits>& __is,
 // uniform_real_distribution
 
 template<class _RealType = double>
-class _LIBCPP_TEMPLATE_VIS uniform_real_distribution
+class _LIBCUDACXX_TEMPLATE_VIS uniform_real_distribution
 {
 public:
     // types
     typedef _RealType result_type;
 
-    class _LIBCPP_TEMPLATE_VIS param_type
+    class _LIBCUDACXX_TEMPLATE_VIS param_type
     {
         result_type __a_;
         result_type __b_;
     public:
         typedef uniform_real_distribution distribution_type;
 
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         explicit param_type(result_type __a = 0,
                             result_type __b = 1)
             : __a_(__a), __b_(__b) {}
 
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type a() const {return __a_;}
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type b() const {return __b_;}
 
-        friend _LIBCPP_INLINE_VISIBILITY
+        friend _LIBCUDACXX_INLINE_VISIBILITY
         bool operator==(const param_type& __x, const param_type& __y)
             {return __x.__a_ == __y.__a_ && __x.__b_ == __y.__b_;}
-        friend _LIBCPP_INLINE_VISIBILITY
+        friend _LIBCUDACXX_INLINE_VISIBILITY
         bool operator!=(const param_type& __x, const param_type& __y)
             {return !(__x == __y);}
     };
@@ -3726,42 +3726,42 @@ private:
 
 public:
     // constructors and reset functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit uniform_real_distribution(result_type __a = 0, result_type __b = 1)
         : __p_(param_type(__a, __b)) {}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit uniform_real_distribution(const param_type& __p) : __p_(__p) {}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void reset() {}
 
     // generating functions
     template<class _URNG>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type operator()(_URNG& __g)
         {return (*this)(__g, __p_);}
-    template<class _URNG> _LIBCPP_INLINE_VISIBILITY result_type operator()(_URNG& __g, const param_type& __p);
+    template<class _URNG> _LIBCUDACXX_INLINE_VISIBILITY result_type operator()(_URNG& __g, const param_type& __p);
 
     // property functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type a() const {return __p_.a();}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type b() const {return __p_.b();}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     param_type param() const {return __p_;}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void param(const param_type& __p) {__p_ = __p;}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type min() const {return a();}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type max() const {return b();}
 
-    friend _LIBCPP_INLINE_VISIBILITY
+    friend _LIBCUDACXX_INLINE_VISIBILITY
         bool operator==(const uniform_real_distribution& __x,
                         const uniform_real_distribution& __y)
         {return __x.__p_ == __y.__p_;}
-    friend _LIBCPP_INLINE_VISIBILITY
+    friend _LIBCUDACXX_INLINE_VISIBILITY
         bool operator!=(const uniform_real_distribution& __x,
                         const uniform_real_distribution& __y)
         {return !(__x == __y);}
@@ -3774,7 +3774,7 @@ typename uniform_real_distribution<_RealType>::result_type
 uniform_real_distribution<_RealType>::operator()(_URNG& __g, const param_type& __p)
 {
     return (__p.b() - __p.a())
-        * _VSTD::generate_canonical<_RealType, numeric_limits<_RealType>::digits>(__g)
+        * _CUDA_VSTD::generate_canonical<_RealType, numeric_limits<_RealType>::digits>(__g)
         + __p.a();
 }
 
@@ -3811,28 +3811,28 @@ operator>>(basic_istream<_CharT, _Traits>& __is,
 
 // bernoulli_distribution
 
-class _LIBCPP_TEMPLATE_VIS bernoulli_distribution
+class _LIBCUDACXX_TEMPLATE_VIS bernoulli_distribution
 {
 public:
     // types
     typedef bool result_type;
 
-    class _LIBCPP_TEMPLATE_VIS param_type
+    class _LIBCUDACXX_TEMPLATE_VIS param_type
     {
         double __p_;
     public:
         typedef bernoulli_distribution distribution_type;
 
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         explicit param_type(double __p = 0.5) : __p_(__p) {}
 
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         double p() const {return __p_;}
 
-        friend _LIBCPP_INLINE_VISIBILITY
+        friend _LIBCUDACXX_INLINE_VISIBILITY
             bool operator==(const param_type& __x, const param_type& __y)
             {return __x.__p_ == __y.__p_;}
-        friend _LIBCPP_INLINE_VISIBILITY
+        friend _LIBCUDACXX_INLINE_VISIBILITY
             bool operator!=(const param_type& __x, const param_type& __y)
             {return !(__x == __y);}
     };
@@ -3842,40 +3842,40 @@ private:
 
 public:
     // constructors and reset functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit bernoulli_distribution(double __p = 0.5)
         : __p_(param_type(__p)) {}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit bernoulli_distribution(const param_type& __p) : __p_(__p) {}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void reset() {}
 
     // generating functions
     template<class _URNG>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type operator()(_URNG& __g)
         {return (*this)(__g, __p_);}
-    template<class _URNG> _LIBCPP_INLINE_VISIBILITY result_type operator()(_URNG& __g, const param_type& __p);
+    template<class _URNG> _LIBCUDACXX_INLINE_VISIBILITY result_type operator()(_URNG& __g, const param_type& __p);
 
     // property functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     double p() const {return __p_.p();}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     param_type param() const {return __p_;}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void param(const param_type& __p) {__p_ = __p;}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type min() const {return false;}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type max() const {return true;}
 
-    friend _LIBCPP_INLINE_VISIBILITY
+    friend _LIBCUDACXX_INLINE_VISIBILITY
         bool operator==(const bernoulli_distribution& __x,
                         const bernoulli_distribution& __y)
         {return __x.__p_ == __y.__p_;}
-    friend _LIBCPP_INLINE_VISIBILITY
+    friend _LIBCUDACXX_INLINE_VISIBILITY
         bool operator!=(const bernoulli_distribution& __x,
                         const bernoulli_distribution& __y)
         {return !(__x == __y);}
@@ -3920,13 +3920,13 @@ operator>>(basic_istream<_CharT, _Traits>& __is, bernoulli_distribution& __x)
 // binomial_distribution
 
 template<class _IntType = int>
-class _LIBCPP_TEMPLATE_VIS binomial_distribution
+class _LIBCUDACXX_TEMPLATE_VIS binomial_distribution
 {
 public:
     // types
     typedef _IntType result_type;
 
-    class _LIBCPP_TEMPLATE_VIS param_type
+    class _LIBCUDACXX_TEMPLATE_VIS param_type
     {
         result_type __t_;
         double __p_;
@@ -3938,15 +3938,15 @@ public:
 
         explicit param_type(result_type __t = 1, double __p = 0.5);
 
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type t() const {return __t_;}
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         double p() const {return __p_;}
 
-        friend _LIBCPP_INLINE_VISIBILITY
+        friend _LIBCUDACXX_INLINE_VISIBILITY
             bool operator==(const param_type& __x, const param_type& __y)
             {return __x.__t_ == __y.__t_ && __x.__p_ == __y.__p_;}
-        friend _LIBCPP_INLINE_VISIBILITY
+        friend _LIBCUDACXX_INLINE_VISIBILITY
             bool operator!=(const param_type& __x, const param_type& __y)
             {return !(__x == __y);}
 
@@ -3958,53 +3958,53 @@ private:
 
 public:
     // constructors and reset functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit binomial_distribution(result_type __t = 1, double __p = 0.5)
         : __p_(param_type(__t, __p)) {}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit binomial_distribution(const param_type& __p) : __p_(__p) {}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void reset() {}
 
     // generating functions
     template<class _URNG>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type operator()(_URNG& __g)
         {return (*this)(__g, __p_);}
     template<class _URNG> result_type operator()(_URNG& __g, const param_type& __p);
 
     // property functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type t() const {return __p_.t();}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     double p() const {return __p_.p();}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     param_type param() const {return __p_;}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void param(const param_type& __p) {__p_ = __p;}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type min() const {return 0;}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type max() const {return t();}
 
-    friend _LIBCPP_INLINE_VISIBILITY
+    friend _LIBCUDACXX_INLINE_VISIBILITY
         bool operator==(const binomial_distribution& __x,
                         const binomial_distribution& __y)
         {return __x.__p_ == __y.__p_;}
-    friend _LIBCPP_INLINE_VISIBILITY
+    friend _LIBCUDACXX_INLINE_VISIBILITY
         bool operator!=(const binomial_distribution& __x,
                         const binomial_distribution& __y)
         {return !(__x == __y);}
 };
 
-#ifndef _LIBCPP_MSVCRT
+#ifndef _LIBCUDACXX_MSVCRT
 extern "C" double lgamma_r(double, int *);
 #endif
 
-inline _LIBCPP_INLINE_VISIBILITY double __libcpp_lgamma(double __d) {
-#if defined(_LIBCPP_MSVCRT)
+inline _LIBCUDACXX_INLINE_VISIBILITY double __libcpp_lgamma(double __d) {
+#if defined(_LIBCUDACXX_MSVCRT)
   return lgamma(__d);
 #else
   int __sign;
@@ -4019,10 +4019,10 @@ binomial_distribution<_IntType>::param_type::param_type(const result_type __t, c
     if (0 < __p_ && __p_ < 1)
     {
         __r0_ = static_cast<result_type>((__t_ + 1) * __p_);
-        __pr_ = _VSTD::exp(__libcpp_lgamma(__t_ + 1.) -
+        __pr_ = _CUDA_VSTD::exp(__libcpp_lgamma(__t_ + 1.) -
                            __libcpp_lgamma(__r0_ + 1.) -
-                           __libcpp_lgamma(__t_ - __r0_ + 1.) + __r0_ * _VSTD::log(__p_) +
-                           (__t_ - __r0_) * _VSTD::log(1 - __p_));
+                           __libcpp_lgamma(__t_ - __r0_ + 1.) + __r0_ * _CUDA_VSTD::log(__p_) +
+                           (__t_ - __r0_) * _CUDA_VSTD::log(1 - __p_));
         __odds_ratio_ = __p_ / (1 - __p_);
     }
 }
@@ -4102,28 +4102,28 @@ operator>>(basic_istream<_CharT, _Traits>& __is,
 // exponential_distribution
 
 template<class _RealType = double>
-class _LIBCPP_TEMPLATE_VIS exponential_distribution
+class _LIBCUDACXX_TEMPLATE_VIS exponential_distribution
 {
 public:
     // types
     typedef _RealType result_type;
 
-    class _LIBCPP_TEMPLATE_VIS param_type
+    class _LIBCUDACXX_TEMPLATE_VIS param_type
     {
         result_type __lambda_;
     public:
         typedef exponential_distribution distribution_type;
 
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         explicit param_type(result_type __lambda = 1) : __lambda_(__lambda) {}
 
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type lambda() const {return __lambda_;}
 
-        friend _LIBCPP_INLINE_VISIBILITY
+        friend _LIBCUDACXX_INLINE_VISIBILITY
             bool operator==(const param_type& __x, const param_type& __y)
             {return __x.__lambda_ == __y.__lambda_;}
-        friend _LIBCPP_INLINE_VISIBILITY
+        friend _LIBCUDACXX_INLINE_VISIBILITY
             bool operator!=(const param_type& __x, const param_type& __y)
             {return !(__x == __y);}
     };
@@ -4133,40 +4133,40 @@ private:
 
 public:
     // constructors and reset functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit exponential_distribution(result_type __lambda = 1)
         : __p_(param_type(__lambda)) {}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit exponential_distribution(const param_type& __p) : __p_(__p) {}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void reset() {}
 
     // generating functions
     template<class _URNG>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type operator()(_URNG& __g)
         {return (*this)(__g, __p_);}
     template<class _URNG> result_type operator()(_URNG& __g, const param_type& __p);
 
     // property functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type lambda() const {return __p_.lambda();}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     param_type param() const {return __p_;}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void param(const param_type& __p) {__p_ = __p;}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type min() const {return 0;}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type max() const {return numeric_limits<result_type>::infinity();}
 
-    friend _LIBCPP_INLINE_VISIBILITY
+    friend _LIBCUDACXX_INLINE_VISIBILITY
         bool operator==(const exponential_distribution& __x,
                         const exponential_distribution& __y)
         {return __x.__p_ == __y.__p_;}
-    friend _LIBCPP_INLINE_VISIBILITY
+    friend _LIBCUDACXX_INLINE_VISIBILITY
         bool operator!=(const exponential_distribution& __x,
                         const exponential_distribution& __y)
         {return !(__x == __y);}
@@ -4177,10 +4177,10 @@ template<class _URNG>
 _RealType
 exponential_distribution<_RealType>::operator()(_URNG& __g, const param_type& __p)
 {
-    return -_VSTD::log
+    return -_CUDA_VSTD::log
                   (
                       result_type(1) -
-                      _VSTD::generate_canonical<result_type,
+                      _CUDA_VSTD::generate_canonical<result_type,
                                        numeric_limits<result_type>::digits>(__g)
                   )
                   / __p.lambda();
@@ -4217,32 +4217,32 @@ operator>>(basic_istream<_CharT, _Traits>& __is,
 // normal_distribution
 
 template<class _RealType = double>
-class _LIBCPP_TEMPLATE_VIS normal_distribution
+class _LIBCUDACXX_TEMPLATE_VIS normal_distribution
 {
 public:
     // types
     typedef _RealType result_type;
 
-    class _LIBCPP_TEMPLATE_VIS param_type
+    class _LIBCUDACXX_TEMPLATE_VIS param_type
     {
         result_type __mean_;
         result_type __stddev_;
     public:
         typedef normal_distribution distribution_type;
 
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         explicit param_type(result_type __mean = 0, result_type __stddev = 1)
             : __mean_(__mean), __stddev_(__stddev) {}
 
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type mean() const {return __mean_;}
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type stddev() const {return __stddev_;}
 
-        friend _LIBCPP_INLINE_VISIBILITY
+        friend _LIBCUDACXX_INLINE_VISIBILITY
             bool operator==(const param_type& __x, const param_type& __y)
             {return __x.__mean_ == __y.__mean_ && __x.__stddev_ == __y.__stddev_;}
-        friend _LIBCPP_INLINE_VISIBILITY
+        friend _LIBCUDACXX_INLINE_VISIBILITY
             bool operator!=(const param_type& __x, const param_type& __y)
             {return !(__x == __y);}
     };
@@ -4254,44 +4254,44 @@ private:
 
 public:
     // constructors and reset functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit normal_distribution(result_type __mean = 0, result_type __stddev = 1)
         : __p_(param_type(__mean, __stddev)), _V_hot_(false) {}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit normal_distribution(const param_type& __p)
         : __p_(__p), _V_hot_(false) {}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void reset() {_V_hot_ = false;}
 
     // generating functions
     template<class _URNG>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type operator()(_URNG& __g)
         {return (*this)(__g, __p_);}
     template<class _URNG> result_type operator()(_URNG& __g, const param_type& __p);
 
     // property functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type mean() const {return __p_.mean();}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type stddev() const {return __p_.stddev();}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     param_type param() const {return __p_;}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void param(const param_type& __p) {__p_ = __p;}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type min() const {return -numeric_limits<result_type>::infinity();}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type max() const {return numeric_limits<result_type>::infinity();}
 
-    friend _LIBCPP_INLINE_VISIBILITY
+    friend _LIBCUDACXX_INLINE_VISIBILITY
         bool operator==(const normal_distribution& __x,
                         const normal_distribution& __y)
         {return __x.__p_ == __y.__p_ && __x._V_hot_ == __y._V_hot_ &&
                 (!__x._V_hot_ || __x._V_ == __y._V_);}
-    friend _LIBCPP_INLINE_VISIBILITY
+    friend _LIBCUDACXX_INLINE_VISIBILITY
         bool operator!=(const normal_distribution& __x,
                         const normal_distribution& __y)
         {return !(__x == __y);}
@@ -4332,7 +4332,7 @@ normal_distribution<_RealType>::operator()(_URNG& __g, const param_type& __p)
             __v = _Uni(__g);
             __s = __u * __u + __v * __v;
         } while (__s > 1 || __s == 0);
-        result_type _Fp = _VSTD::sqrt(-2 * _VSTD::log(__s) / __s);
+        result_type _Fp = _CUDA_VSTD::sqrt(-2 * _CUDA_VSTD::log(__s) / __s);
         _V_ = __v * _Fp;
         _V_hot_ = true;
         _Up = __u * _Fp;
@@ -4385,31 +4385,31 @@ operator>>(basic_istream<_CharT, _Traits>& __is,
 // lognormal_distribution
 
 template<class _RealType = double>
-class _LIBCPP_TEMPLATE_VIS lognormal_distribution
+class _LIBCUDACXX_TEMPLATE_VIS lognormal_distribution
 {
 public:
     // types
     typedef _RealType result_type;
 
-    class _LIBCPP_TEMPLATE_VIS param_type
+    class _LIBCUDACXX_TEMPLATE_VIS param_type
     {
         normal_distribution<result_type> __nd_;
     public:
         typedef lognormal_distribution distribution_type;
 
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         explicit param_type(result_type __m = 0, result_type __s = 1)
             : __nd_(__m, __s) {}
 
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type m() const {return __nd_.mean();}
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type s() const {return __nd_.stddev();}
 
-        friend _LIBCPP_INLINE_VISIBILITY
+        friend _LIBCUDACXX_INLINE_VISIBILITY
             bool operator==(const param_type& __x, const param_type& __y)
             {return __x.__nd_ == __y.__nd_;}
-        friend _LIBCPP_INLINE_VISIBILITY
+        friend _LIBCUDACXX_INLINE_VISIBILITY
             bool operator!=(const param_type& __x, const param_type& __y)
             {return !(__x == __y);}
         friend class lognormal_distribution;
@@ -4432,46 +4432,46 @@ private:
 
 public:
     // constructor and reset functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit lognormal_distribution(result_type __m = 0, result_type __s = 1)
         : __p_(param_type(__m, __s)) {}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit lognormal_distribution(const param_type& __p)
         : __p_(__p) {}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void reset() {__p_.__nd_.reset();}
 
     // generating functions
     template<class _URNG>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type operator()(_URNG& __g)
         {return (*this)(__g, __p_);}
     template<class _URNG>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type operator()(_URNG& __g, const param_type& __p)
-        {return _VSTD::exp(const_cast<normal_distribution<result_type>&>(__p.__nd_)(__g));}
+        {return _CUDA_VSTD::exp(const_cast<normal_distribution<result_type>&>(__p.__nd_)(__g));}
 
     // property functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type m() const {return __p_.m();}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type s() const {return __p_.s();}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     param_type param() const {return __p_;}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void param(const param_type& __p) {__p_ = __p;}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type min() const {return 0;}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type max() const {return numeric_limits<result_type>::infinity();}
 
-    friend _LIBCPP_INLINE_VISIBILITY
+    friend _LIBCUDACXX_INLINE_VISIBILITY
         bool operator==(const lognormal_distribution& __x,
                         const lognormal_distribution& __y)
         {return __x.__p_ == __y.__p_;}
-    friend _LIBCPP_INLINE_VISIBILITY
+    friend _LIBCUDACXX_INLINE_VISIBILITY
         bool operator!=(const lognormal_distribution& __x,
                         const lognormal_distribution& __y)
         {return !(__x == __y);}
@@ -4490,7 +4490,7 @@ public:
 };
 
 template <class _CharT, class _Traits, class _RT>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 basic_ostream<_CharT, _Traits>&
 operator<<(basic_ostream<_CharT, _Traits>& __os,
            const lognormal_distribution<_RT>& __x)
@@ -4499,7 +4499,7 @@ operator<<(basic_ostream<_CharT, _Traits>& __os,
 }
 
 template <class _CharT, class _Traits, class _RT>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 basic_istream<_CharT, _Traits>&
 operator>>(basic_istream<_CharT, _Traits>& __is,
            lognormal_distribution<_RT>& __x)
@@ -4510,13 +4510,13 @@ operator>>(basic_istream<_CharT, _Traits>& __is,
 // poisson_distribution
 
 template<class _IntType = int>
-class _LIBCPP_TEMPLATE_VIS poisson_distribution
+class _LIBCUDACXX_TEMPLATE_VIS poisson_distribution
 {
 public:
     // types
     typedef _IntType result_type;
 
-    class _LIBCPP_TEMPLATE_VIS param_type
+    class _LIBCUDACXX_TEMPLATE_VIS param_type
     {
         double __mean_;
         double __s_;
@@ -4534,13 +4534,13 @@ public:
 
         explicit param_type(double __mean = 1.0);
 
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         double mean() const {return __mean_;}
 
-        friend _LIBCPP_INLINE_VISIBILITY
+        friend _LIBCUDACXX_INLINE_VISIBILITY
             bool operator==(const param_type& __x, const param_type& __y)
             {return __x.__mean_ == __y.__mean_;}
-        friend _LIBCPP_INLINE_VISIBILITY
+        friend _LIBCUDACXX_INLINE_VISIBILITY
             bool operator!=(const param_type& __x, const param_type& __y)
             {return !(__x == __y);}
 
@@ -4552,39 +4552,39 @@ private:
 
 public:
     // constructors and reset functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit poisson_distribution(double __mean = 1.0) : __p_(__mean) {}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit poisson_distribution(const param_type& __p) : __p_(__p) {}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void reset() {}
 
     // generating functions
     template<class _URNG>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type operator()(_URNG& __g)
         {return (*this)(__g, __p_);}
     template<class _URNG> result_type operator()(_URNG& __g, const param_type& __p);
 
     // property functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     double mean() const {return __p_.mean();}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     param_type param() const {return __p_;}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void param(const param_type& __p) {__p_ = __p;}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type min() const {return 0;}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type max() const {return numeric_limits<result_type>::max();}
 
-    friend _LIBCPP_INLINE_VISIBILITY
+    friend _LIBCUDACXX_INLINE_VISIBILITY
         bool operator==(const poisson_distribution& __x,
                         const poisson_distribution& __y)
         {return __x.__p_ == __y.__p_;}
-    friend _LIBCPP_INLINE_VISIBILITY
+    friend _LIBCUDACXX_INLINE_VISIBILITY
         bool operator!=(const poisson_distribution& __x,
                         const poisson_distribution& __y)
         {return !(__x == __y);}
@@ -4598,7 +4598,7 @@ poisson_distribution<_IntType>::param_type::param_type(double __mean)
     {
         __s_ = 0;
         __d_ = 0;
-        __l_ = _VSTD::exp(-__mean_);
+        __l_ = _CUDA_VSTD::exp(-__mean_);
         __omega_ = 0;
         __c3_ = 0;
         __c2_ = 0;
@@ -4608,7 +4608,7 @@ poisson_distribution<_IntType>::param_type::param_type(double __mean)
     }
     else
     {
-        __s_ = _VSTD::sqrt(__mean_);
+        __s_ = _CUDA_VSTD::sqrt(__mean_);
         __d_ = 6 * __mean_ * __mean_;
         __l_ = static_cast<result_type>(__mean_ - 1.1484);
         __omega_ = .3989423 / __s_;
@@ -4675,20 +4675,20 @@ poisson_distribution<_IntType>::operator()(_URNG& __urng, const param_type& __pr
                 const double __fac[] = {1, 1, 2, 6, 24, 120, 720, 5040,
                                              40320, 362880};
                 __px = -__pr.__mean_;
-                __py = _VSTD::pow(__pr.__mean_, (double)__x) / __fac[__x];
+                __py = _CUDA_VSTD::pow(__pr.__mean_, (double)__x) / __fac[__x];
             }
             else
             {
                 double __del = .8333333E-1 / __x;
                 __del -= 4.8 * __del * __del * __del;
                 double __v = __difmuk / __x;
-                if (_VSTD::abs(__v) > 0.25)
-                    __px = __x * _VSTD::log(1 + __v) - __difmuk - __del;
+                if (_CUDA_VSTD::abs(__v) > 0.25)
+                    __px = __x * _CUDA_VSTD::log(1 + __v) - __difmuk - __del;
                 else
                     __px = __x * __v * __v * (((((((.1250060 * __v + -.1384794) *
                            __v + .1421878) * __v + -.1661269) * __v + .2000118) *
                            __v + -.2500068) * __v + .3333333) * __v + -.5) - __del;
-                __py = .3989423 / _VSTD::sqrt(__x);
+                __py = .3989423 / _CUDA_VSTD::sqrt(__x);
             }
             double __r = (0.5 - __difmuk) / __pr.__s_;
             double __r2 = __r * __r;
@@ -4697,13 +4697,13 @@ poisson_distribution<_IntType>::operator()(_URNG& __urng, const param_type& __pr
                                         __r2 + __pr.__c1_) * __r2 + __pr.__c0_);
             if (__using_exp_dist)
             {
-                if (__pr.__c_ * _VSTD::abs(__u) <= __py * _VSTD::exp(__px + __e) -
-                                                   __fy * _VSTD::exp(__fx + __e))
+                if (__pr.__c_ * _CUDA_VSTD::abs(__u) <= __py * _CUDA_VSTD::exp(__px + __e) -
+                                                   __fy * _CUDA_VSTD::exp(__fx + __e))
                     break;
             }
             else
             {
-                if (__fy - __u * __fy <= __py * _VSTD::exp(__px - __fx))
+                if (__fy - __u * __fy <= __py * _CUDA_VSTD::exp(__px - __fx))
                     break;
             }
         }
@@ -4741,32 +4741,32 @@ operator>>(basic_istream<_CharT, _Traits>& __is,
 // weibull_distribution
 
 template<class _RealType = double>
-class _LIBCPP_TEMPLATE_VIS weibull_distribution
+class _LIBCUDACXX_TEMPLATE_VIS weibull_distribution
 {
 public:
     // types
     typedef _RealType result_type;
 
-    class _LIBCPP_TEMPLATE_VIS param_type
+    class _LIBCUDACXX_TEMPLATE_VIS param_type
     {
         result_type __a_;
         result_type __b_;
     public:
         typedef weibull_distribution distribution_type;
 
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         explicit param_type(result_type __a = 1, result_type __b = 1)
             : __a_(__a), __b_(__b) {}
 
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type a() const {return __a_;}
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type b() const {return __b_;}
 
-        friend _LIBCPP_INLINE_VISIBILITY
+        friend _LIBCUDACXX_INLINE_VISIBILITY
             bool operator==(const param_type& __x, const param_type& __y)
             {return __x.__a_ == __y.__a_ && __x.__b_ == __y.__b_;}
-        friend _LIBCPP_INLINE_VISIBILITY
+        friend _LIBCUDACXX_INLINE_VISIBILITY
             bool operator!=(const param_type& __x, const param_type& __y)
             {return !(__x == __y);}
     };
@@ -4776,47 +4776,47 @@ private:
 
 public:
     // constructor and reset functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit weibull_distribution(result_type __a = 1, result_type __b = 1)
         : __p_(param_type(__a, __b)) {}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit weibull_distribution(const param_type& __p)
         : __p_(__p) {}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void reset() {}
 
     // generating functions
     template<class _URNG>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type operator()(_URNG& __g)
         {return (*this)(__g, __p_);}
     template<class _URNG>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type operator()(_URNG& __g, const param_type& __p)
         {return __p.b() *
-            _VSTD::pow(exponential_distribution<result_type>()(__g), 1/__p.a());}
+            _CUDA_VSTD::pow(exponential_distribution<result_type>()(__g), 1/__p.a());}
 
     // property functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type a() const {return __p_.a();}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type b() const {return __p_.b();}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     param_type param() const {return __p_;}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void param(const param_type& __p) {__p_ = __p;}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type min() const {return 0;}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type max() const {return numeric_limits<result_type>::infinity();}
 
-    friend _LIBCPP_INLINE_VISIBILITY
+    friend _LIBCUDACXX_INLINE_VISIBILITY
         bool operator==(const weibull_distribution& __x,
                         const weibull_distribution& __y)
         {return __x.__p_ == __y.__p_;}
-    friend _LIBCPP_INLINE_VISIBILITY
+    friend _LIBCUDACXX_INLINE_VISIBILITY
         bool operator!=(const weibull_distribution& __x,
                         const weibull_distribution& __y)
         {return !(__x == __y);}
@@ -4855,32 +4855,32 @@ operator>>(basic_istream<_CharT, _Traits>& __is,
 }
 
 template<class _RealType = double>
-class _LIBCPP_TEMPLATE_VIS extreme_value_distribution
+class _LIBCUDACXX_TEMPLATE_VIS extreme_value_distribution
 {
 public:
     // types
     typedef _RealType result_type;
 
-    class _LIBCPP_TEMPLATE_VIS param_type
+    class _LIBCUDACXX_TEMPLATE_VIS param_type
     {
         result_type __a_;
         result_type __b_;
     public:
         typedef extreme_value_distribution distribution_type;
 
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         explicit param_type(result_type __a = 0, result_type __b = 1)
             : __a_(__a), __b_(__b) {}
 
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type a() const {return __a_;}
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type b() const {return __b_;}
 
-        friend _LIBCPP_INLINE_VISIBILITY
+        friend _LIBCUDACXX_INLINE_VISIBILITY
             bool operator==(const param_type& __x, const param_type& __y)
             {return __x.__a_ == __y.__a_ && __x.__b_ == __y.__b_;}
-        friend _LIBCPP_INLINE_VISIBILITY
+        friend _LIBCUDACXX_INLINE_VISIBILITY
             bool operator!=(const param_type& __x, const param_type& __y)
             {return !(__x == __y);}
     };
@@ -4890,43 +4890,43 @@ private:
 
 public:
     // constructor and reset functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit extreme_value_distribution(result_type __a = 0, result_type __b = 1)
         : __p_(param_type(__a, __b)) {}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit extreme_value_distribution(const param_type& __p)
         : __p_(__p) {}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void reset() {}
 
     // generating functions
     template<class _URNG>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type operator()(_URNG& __g)
         {return (*this)(__g, __p_);}
     template<class _URNG> result_type operator()(_URNG& __g, const param_type& __p);
 
     // property functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type a() const {return __p_.a();}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type b() const {return __p_.b();}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     param_type param() const {return __p_;}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void param(const param_type& __p) {__p_ = __p;}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type min() const {return -numeric_limits<result_type>::infinity();}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type max() const {return numeric_limits<result_type>::infinity();}
 
-    friend _LIBCPP_INLINE_VISIBILITY
+    friend _LIBCUDACXX_INLINE_VISIBILITY
         bool operator==(const extreme_value_distribution& __x,
                         const extreme_value_distribution& __y)
         {return __x.__p_ == __y.__p_;}
-    friend _LIBCPP_INLINE_VISIBILITY
+    friend _LIBCUDACXX_INLINE_VISIBILITY
         bool operator!=(const extreme_value_distribution& __x,
                         const extreme_value_distribution& __y)
         {return !(__x == __y);}
@@ -4938,7 +4938,7 @@ _RealType
 extreme_value_distribution<_RealType>::operator()(_URNG& __g, const param_type& __p)
 {
     return __p.a() - __p.b() *
-         _VSTD::log(-_VSTD::log(1-uniform_real_distribution<result_type>()(__g)));
+         _CUDA_VSTD::log(-_CUDA_VSTD::log(1-uniform_real_distribution<result_type>()(__g)));
 }
 
 template <class _CharT, class _Traits, class _RT>
@@ -4976,32 +4976,32 @@ operator>>(basic_istream<_CharT, _Traits>& __is,
 // gamma_distribution
 
 template<class _RealType = double>
-class _LIBCPP_TEMPLATE_VIS gamma_distribution
+class _LIBCUDACXX_TEMPLATE_VIS gamma_distribution
 {
 public:
     // types
     typedef _RealType result_type;
 
-    class _LIBCPP_TEMPLATE_VIS param_type
+    class _LIBCUDACXX_TEMPLATE_VIS param_type
     {
         result_type __alpha_;
         result_type __beta_;
     public:
         typedef gamma_distribution distribution_type;
 
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         explicit param_type(result_type __alpha = 1, result_type __beta = 1)
             : __alpha_(__alpha), __beta_(__beta) {}
 
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type alpha() const {return __alpha_;}
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type beta() const {return __beta_;}
 
-        friend _LIBCPP_INLINE_VISIBILITY
+        friend _LIBCUDACXX_INLINE_VISIBILITY
             bool operator==(const param_type& __x, const param_type& __y)
             {return __x.__alpha_ == __y.__alpha_ && __x.__beta_ == __y.__beta_;}
-        friend _LIBCPP_INLINE_VISIBILITY
+        friend _LIBCUDACXX_INLINE_VISIBILITY
             bool operator!=(const param_type& __x, const param_type& __y)
             {return !(__x == __y);}
     };
@@ -5011,43 +5011,43 @@ private:
 
 public:
     // constructors and reset functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit gamma_distribution(result_type __alpha = 1, result_type __beta = 1)
         : __p_(param_type(__alpha, __beta)) {}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit gamma_distribution(const param_type& __p)
         : __p_(__p) {}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void reset() {}
 
     // generating functions
     template<class _URNG>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type operator()(_URNG& __g)
         {return (*this)(__g, __p_);}
     template<class _URNG> result_type operator()(_URNG& __g, const param_type& __p);
 
     // property functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type alpha() const {return __p_.alpha();}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type beta() const {return __p_.beta();}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     param_type param() const {return __p_;}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void param(const param_type& __p) {__p_ = __p;}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type min() const {return 0;}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type max() const {return numeric_limits<result_type>::infinity();}
 
-    friend _LIBCPP_INLINE_VISIBILITY
+    friend _LIBCUDACXX_INLINE_VISIBILITY
         bool operator==(const gamma_distribution& __x,
                         const gamma_distribution& __y)
         {return __x.__p_ == __y.__p_;}
-    friend _LIBCPP_INLINE_VISIBILITY
+    friend _LIBCUDACXX_INLINE_VISIBILITY
         bool operator!=(const gamma_distribution& __x,
                         const gamma_distribution& __y)
         {return !(__x == __y);}
@@ -5075,7 +5075,7 @@ gamma_distribution<_RealType>::operator()(_URNG& __g, const param_type& __p)
             const result_type __w = __u * (1 - __u);
             if (__w != 0)
             {
-                const result_type __y = _VSTD::sqrt(__c / __w) *
+                const result_type __y = _CUDA_VSTD::sqrt(__c / __w) *
                                         (__u - result_type(0.5));
                 __x = __b + __y;
                 if (__x >= 0)
@@ -5083,7 +5083,7 @@ gamma_distribution<_RealType>::operator()(_URNG& __g, const param_type& __p)
                     const result_type __z = 64 * __w * __w * __w * __v * __v;
                     if (__z <= 1 - 2 * __y * __y / __x)
                         break;
-                    if (_VSTD::log(__z) <= 2 * (__b * _VSTD::log(__x / __b) - __y))
+                    if (_CUDA_VSTD::log(__z) <= 2 * (__b * _CUDA_VSTD::log(__x / __b) - __y))
                         break;
                 }
             }
@@ -5097,14 +5097,14 @@ gamma_distribution<_RealType>::operator()(_URNG& __g, const param_type& __p)
             const result_type __es = __egen(__g);
             if (__u <= 1 - __a)
             {
-                __x = _VSTD::pow(__u, 1 / __a);
+                __x = _CUDA_VSTD::pow(__u, 1 / __a);
                 if (__x <= __es)
                     break;
             }
             else
             {
-                const result_type __e = -_VSTD::log((1-__u)/__a);
-                __x = _VSTD::pow(1 - __a + __a * __e, 1 / __a);
+                const result_type __e = -_CUDA_VSTD::log((1-__u)/__a);
+                __x = _CUDA_VSTD::pow(1 - __a + __a * __e, 1 / __a);
                 if (__x <= __e + __es)
                     break;
             }
@@ -5148,32 +5148,32 @@ operator>>(basic_istream<_CharT, _Traits>& __is,
 // negative_binomial_distribution
 
 template<class _IntType = int>
-class _LIBCPP_TEMPLATE_VIS negative_binomial_distribution
+class _LIBCUDACXX_TEMPLATE_VIS negative_binomial_distribution
 {
 public:
     // types
     typedef _IntType result_type;
 
-    class _LIBCPP_TEMPLATE_VIS param_type
+    class _LIBCUDACXX_TEMPLATE_VIS param_type
     {
         result_type __k_;
         double __p_;
     public:
         typedef negative_binomial_distribution distribution_type;
 
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         explicit param_type(result_type __k = 1, double __p = 0.5)
             : __k_(__k), __p_(__p) {}
 
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type k() const {return __k_;}
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         double p() const {return __p_;}
 
-        friend _LIBCPP_INLINE_VISIBILITY
+        friend _LIBCUDACXX_INLINE_VISIBILITY
             bool operator==(const param_type& __x, const param_type& __y)
             {return __x.__k_ == __y.__k_ && __x.__p_ == __y.__p_;}
-        friend _LIBCPP_INLINE_VISIBILITY
+        friend _LIBCUDACXX_INLINE_VISIBILITY
             bool operator!=(const param_type& __x, const param_type& __y)
             {return !(__x == __y);}
     };
@@ -5183,42 +5183,42 @@ private:
 
 public:
     // constructor and reset functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit negative_binomial_distribution(result_type __k = 1, double __p = 0.5)
         : __p_(__k, __p) {}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit negative_binomial_distribution(const param_type& __p) : __p_(__p) {}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void reset() {}
 
     // generating functions
     template<class _URNG>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type operator()(_URNG& __g)
         {return (*this)(__g, __p_);}
     template<class _URNG> result_type operator()(_URNG& __g, const param_type& __p);
 
     // property functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type k() const {return __p_.k();}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     double p() const {return __p_.p();}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     param_type param() const {return __p_;}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void param(const param_type& __p) {__p_ = __p;}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type min() const {return 0;}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type max() const {return numeric_limits<result_type>::max();}
 
-    friend _LIBCPP_INLINE_VISIBILITY
+    friend _LIBCUDACXX_INLINE_VISIBILITY
         bool operator==(const negative_binomial_distribution& __x,
                         const negative_binomial_distribution& __y)
         {return __x.__p_ == __y.__p_;}
-    friend _LIBCPP_INLINE_VISIBILITY
+    friend _LIBCUDACXX_INLINE_VISIBILITY
         bool operator!=(const negative_binomial_distribution& __x,
                         const negative_binomial_distribution& __y)
         {return !(__x == __y);}
@@ -5283,28 +5283,28 @@ operator>>(basic_istream<_CharT, _Traits>& __is,
 // geometric_distribution
 
 template<class _IntType = int>
-class _LIBCPP_TEMPLATE_VIS geometric_distribution
+class _LIBCUDACXX_TEMPLATE_VIS geometric_distribution
 {
 public:
     // types
     typedef _IntType result_type;
 
-    class _LIBCPP_TEMPLATE_VIS param_type
+    class _LIBCUDACXX_TEMPLATE_VIS param_type
     {
         double __p_;
     public:
         typedef geometric_distribution distribution_type;
 
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         explicit param_type(double __p = 0.5) : __p_(__p) {}
 
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         double p() const {return __p_;}
 
-        friend _LIBCPP_INLINE_VISIBILITY
+        friend _LIBCUDACXX_INLINE_VISIBILITY
             bool operator==(const param_type& __x, const param_type& __y)
             {return __x.__p_ == __y.__p_;}
-        friend _LIBCPP_INLINE_VISIBILITY
+        friend _LIBCUDACXX_INLINE_VISIBILITY
             bool operator!=(const param_type& __x, const param_type& __y)
             {return !(__x == __y);}
     };
@@ -5314,42 +5314,42 @@ private:
 
 public:
     // constructors and reset functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit geometric_distribution(double __p = 0.5) : __p_(__p) {}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit geometric_distribution(const param_type& __p) : __p_(__p) {}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void reset() {}
 
     // generating functions
     template<class _URNG>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type operator()(_URNG& __g)
         {return (*this)(__g, __p_);}
     template<class _URNG>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type operator()(_URNG& __g, const param_type& __p)
         {return negative_binomial_distribution<result_type>(1, __p.p())(__g);}
 
     // property functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     double p() const {return __p_.p();}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     param_type param() const {return __p_;}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void param(const param_type& __p) {__p_ = __p;}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type min() const {return 0;}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type max() const {return numeric_limits<result_type>::max();}
 
-    friend _LIBCPP_INLINE_VISIBILITY
+    friend _LIBCUDACXX_INLINE_VISIBILITY
         bool operator==(const geometric_distribution& __x,
                         const geometric_distribution& __y)
         {return __x.__p_ == __y.__p_;}
-    friend _LIBCPP_INLINE_VISIBILITY
+    friend _LIBCUDACXX_INLINE_VISIBILITY
         bool operator!=(const geometric_distribution& __x,
                         const geometric_distribution& __y)
         {return !(__x == __y);}
@@ -5385,28 +5385,28 @@ operator>>(basic_istream<_CharT, _Traits>& __is,
 // chi_squared_distribution
 
 template<class _RealType = double>
-class _LIBCPP_TEMPLATE_VIS chi_squared_distribution
+class _LIBCUDACXX_TEMPLATE_VIS chi_squared_distribution
 {
 public:
     // types
     typedef _RealType result_type;
 
-    class _LIBCPP_TEMPLATE_VIS param_type
+    class _LIBCUDACXX_TEMPLATE_VIS param_type
     {
         result_type __n_;
     public:
         typedef chi_squared_distribution distribution_type;
 
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         explicit param_type(result_type __n = 1) : __n_(__n) {}
 
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type n() const {return __n_;}
 
-        friend _LIBCPP_INLINE_VISIBILITY
+        friend _LIBCUDACXX_INLINE_VISIBILITY
             bool operator==(const param_type& __x, const param_type& __y)
             {return __x.__n_ == __y.__n_;}
-        friend _LIBCPP_INLINE_VISIBILITY
+        friend _LIBCUDACXX_INLINE_VISIBILITY
             bool operator!=(const param_type& __x, const param_type& __y)
             {return !(__x == __y);}
     };
@@ -5416,44 +5416,44 @@ private:
 
 public:
     // constructor and reset functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit chi_squared_distribution(result_type __n = 1)
         : __p_(param_type(__n)) {}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit chi_squared_distribution(const param_type& __p)
         : __p_(__p) {}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void reset() {}
 
     // generating functions
     template<class _URNG>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type operator()(_URNG& __g)
         {return (*this)(__g, __p_);}
     template<class _URNG>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type operator()(_URNG& __g, const param_type& __p)
         {return gamma_distribution<result_type>(__p.n() / 2, 2)(__g);}
 
     // property functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type n() const {return __p_.n();}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     param_type param() const {return __p_;}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void param(const param_type& __p) {__p_ = __p;}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type min() const {return 0;}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type max() const {return numeric_limits<result_type>::infinity();}
 
-    friend _LIBCPP_INLINE_VISIBILITY
+    friend _LIBCUDACXX_INLINE_VISIBILITY
         bool operator==(const chi_squared_distribution& __x,
                         const chi_squared_distribution& __y)
         {return __x.__p_ == __y.__p_;}
-    friend _LIBCPP_INLINE_VISIBILITY
+    friend _LIBCUDACXX_INLINE_VISIBILITY
         bool operator!=(const chi_squared_distribution& __x,
                         const chi_squared_distribution& __y)
         {return !(__x == __y);}
@@ -5491,32 +5491,32 @@ operator>>(basic_istream<_CharT, _Traits>& __is,
 // cauchy_distribution
 
 template<class _RealType = double>
-class _LIBCPP_TEMPLATE_VIS cauchy_distribution
+class _LIBCUDACXX_TEMPLATE_VIS cauchy_distribution
 {
 public:
     // types
     typedef _RealType result_type;
 
-    class _LIBCPP_TEMPLATE_VIS param_type
+    class _LIBCUDACXX_TEMPLATE_VIS param_type
     {
         result_type __a_;
         result_type __b_;
     public:
         typedef cauchy_distribution distribution_type;
 
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         explicit param_type(result_type __a = 0, result_type __b = 1)
             : __a_(__a), __b_(__b) {}
 
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type a() const {return __a_;}
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type b() const {return __b_;}
 
-        friend _LIBCPP_INLINE_VISIBILITY
+        friend _LIBCUDACXX_INLINE_VISIBILITY
             bool operator==(const param_type& __x, const param_type& __y)
             {return __x.__a_ == __y.__a_ && __x.__b_ == __y.__b_;}
-        friend _LIBCPP_INLINE_VISIBILITY
+        friend _LIBCUDACXX_INLINE_VISIBILITY
             bool operator!=(const param_type& __x, const param_type& __y)
             {return !(__x == __y);}
     };
@@ -5526,43 +5526,43 @@ private:
 
 public:
     // constructor and reset functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit cauchy_distribution(result_type __a = 0, result_type __b = 1)
         : __p_(param_type(__a, __b)) {}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit cauchy_distribution(const param_type& __p)
         : __p_(__p) {}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void reset() {}
 
     // generating functions
     template<class _URNG>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type operator()(_URNG& __g)
         {return (*this)(__g, __p_);}
-    template<class _URNG> _LIBCPP_INLINE_VISIBILITY result_type operator()(_URNG& __g, const param_type& __p);
+    template<class _URNG> _LIBCUDACXX_INLINE_VISIBILITY result_type operator()(_URNG& __g, const param_type& __p);
 
     // property functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type a() const {return __p_.a();}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type b() const {return __p_.b();}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     param_type param() const {return __p_;}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void param(const param_type& __p) {__p_ = __p;}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type min() const {return -numeric_limits<result_type>::infinity();}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type max() const {return numeric_limits<result_type>::infinity();}
 
-    friend _LIBCPP_INLINE_VISIBILITY
+    friend _LIBCUDACXX_INLINE_VISIBILITY
         bool operator==(const cauchy_distribution& __x,
                         const cauchy_distribution& __y)
         {return __x.__p_ == __y.__p_;}
-    friend _LIBCPP_INLINE_VISIBILITY
+    friend _LIBCUDACXX_INLINE_VISIBILITY
         bool operator!=(const cauchy_distribution& __x,
                         const cauchy_distribution& __y)
         {return !(__x == __y);}
@@ -5576,7 +5576,7 @@ cauchy_distribution<_RealType>::operator()(_URNG& __g, const param_type& __p)
 {
     uniform_real_distribution<result_type> __gen;
     // purposefully let tan arg get as close to pi/2 as it wants, tan will return a finite
-    return __p.a() + __p.b() * _VSTD::tan(3.1415926535897932384626433832795 * __gen(__g));
+    return __p.a() + __p.b() * _CUDA_VSTD::tan(3.1415926535897932384626433832795 * __gen(__g));
 }
 
 template <class _CharT, class _Traits, class _RT>
@@ -5614,32 +5614,32 @@ operator>>(basic_istream<_CharT, _Traits>& __is,
 // fisher_f_distribution
 
 template<class _RealType = double>
-class _LIBCPP_TEMPLATE_VIS fisher_f_distribution
+class _LIBCUDACXX_TEMPLATE_VIS fisher_f_distribution
 {
 public:
     // types
     typedef _RealType result_type;
 
-    class _LIBCPP_TEMPLATE_VIS param_type
+    class _LIBCUDACXX_TEMPLATE_VIS param_type
     {
         result_type __m_;
         result_type __n_;
     public:
         typedef fisher_f_distribution distribution_type;
 
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         explicit param_type(result_type __m = 1, result_type __n = 1)
             : __m_(__m), __n_(__n) {}
 
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type m() const {return __m_;}
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type n() const {return __n_;}
 
-        friend _LIBCPP_INLINE_VISIBILITY
+        friend _LIBCUDACXX_INLINE_VISIBILITY
             bool operator==(const param_type& __x, const param_type& __y)
             {return __x.__m_ == __y.__m_ && __x.__n_ == __y.__n_;}
-        friend _LIBCPP_INLINE_VISIBILITY
+        friend _LIBCUDACXX_INLINE_VISIBILITY
             bool operator!=(const param_type& __x, const param_type& __y)
             {return !(__x == __y);}
     };
@@ -5649,43 +5649,43 @@ private:
 
 public:
     // constructor and reset functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit fisher_f_distribution(result_type __m = 1, result_type __n = 1)
         : __p_(param_type(__m, __n)) {}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit fisher_f_distribution(const param_type& __p)
         : __p_(__p) {}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void reset() {}
 
     // generating functions
     template<class _URNG>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type operator()(_URNG& __g)
         {return (*this)(__g, __p_);}
     template<class _URNG> result_type operator()(_URNG& __g, const param_type& __p);
 
     // property functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type m() const {return __p_.m();}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type n() const {return __p_.n();}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     param_type param() const {return __p_;}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void param(const param_type& __p) {__p_ = __p;}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type min() const {return 0;}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type max() const {return numeric_limits<result_type>::infinity();}
 
-    friend _LIBCPP_INLINE_VISIBILITY
+    friend _LIBCUDACXX_INLINE_VISIBILITY
         bool operator==(const fisher_f_distribution& __x,
                         const fisher_f_distribution& __y)
         {return __x.__p_ == __y.__p_;}
-    friend _LIBCPP_INLINE_VISIBILITY
+    friend _LIBCUDACXX_INLINE_VISIBILITY
         bool operator!=(const fisher_f_distribution& __x,
                         const fisher_f_distribution& __y)
         {return !(__x == __y);}
@@ -5736,28 +5736,28 @@ operator>>(basic_istream<_CharT, _Traits>& __is,
 // student_t_distribution
 
 template<class _RealType = double>
-class _LIBCPP_TEMPLATE_VIS student_t_distribution
+class _LIBCUDACXX_TEMPLATE_VIS student_t_distribution
 {
 public:
     // types
     typedef _RealType result_type;
 
-    class _LIBCPP_TEMPLATE_VIS param_type
+    class _LIBCUDACXX_TEMPLATE_VIS param_type
     {
         result_type __n_;
     public:
         typedef student_t_distribution distribution_type;
 
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         explicit param_type(result_type __n = 1) : __n_(__n) {}
 
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type n() const {return __n_;}
 
-        friend _LIBCPP_INLINE_VISIBILITY
+        friend _LIBCUDACXX_INLINE_VISIBILITY
             bool operator==(const param_type& __x, const param_type& __y)
             {return __x.__n_ == __y.__n_;}
-        friend _LIBCPP_INLINE_VISIBILITY
+        friend _LIBCUDACXX_INLINE_VISIBILITY
             bool operator!=(const param_type& __x, const param_type& __y)
             {return !(__x == __y);}
     };
@@ -5768,41 +5768,41 @@ private:
 
 public:
     // constructor and reset functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit student_t_distribution(result_type __n = 1)
         : __p_(param_type(__n)) {}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit student_t_distribution(const param_type& __p)
         : __p_(__p) {}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void reset() {__nd_.reset();}
 
     // generating functions
     template<class _URNG>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type operator()(_URNG& __g)
         {return (*this)(__g, __p_);}
     template<class _URNG> result_type operator()(_URNG& __g, const param_type& __p);
 
     // property functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type n() const {return __p_.n();}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     param_type param() const {return __p_;}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void param(const param_type& __p) {__p_ = __p;}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type min() const {return -numeric_limits<result_type>::infinity();}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type max() const {return numeric_limits<result_type>::infinity();}
 
-    friend _LIBCPP_INLINE_VISIBILITY
+    friend _LIBCUDACXX_INLINE_VISIBILITY
         bool operator==(const student_t_distribution& __x,
                         const student_t_distribution& __y)
         {return __x.__p_ == __y.__p_;}
-    friend _LIBCPP_INLINE_VISIBILITY
+    friend _LIBCUDACXX_INLINE_VISIBILITY
         bool operator!=(const student_t_distribution& __x,
                         const student_t_distribution& __y)
         {return !(__x == __y);}
@@ -5814,7 +5814,7 @@ _RealType
 student_t_distribution<_RealType>::operator()(_URNG& __g, const param_type& __p)
 {
     gamma_distribution<result_type> __gd(__p.n() * .5, 2);
-    return __nd_(__g) * _VSTD::sqrt(__p.n()/__gd(__g));
+    return __nd_(__g) * _CUDA_VSTD::sqrt(__p.n()/__gd(__g));
 }
 
 template <class _CharT, class _Traits, class _RT>
@@ -5849,39 +5849,39 @@ operator>>(basic_istream<_CharT, _Traits>& __is,
 // discrete_distribution
 
 template<class _IntType = int>
-class _LIBCPP_TEMPLATE_VIS discrete_distribution
+class _LIBCUDACXX_TEMPLATE_VIS discrete_distribution
 {
 public:
     // types
     typedef _IntType result_type;
 
-    class _LIBCPP_TEMPLATE_VIS param_type
+    class _LIBCUDACXX_TEMPLATE_VIS param_type
     {
         vector<double> __p_;
     public:
         typedef discrete_distribution distribution_type;
 
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         param_type() {}
         template<class _InputIterator>
-            _LIBCPP_INLINE_VISIBILITY
+            _LIBCUDACXX_INLINE_VISIBILITY
             param_type(_InputIterator __f, _InputIterator __l)
             : __p_(__f, __l) {__init();}
-#ifndef _LIBCPP_CXX03_LANG
-        _LIBCPP_INLINE_VISIBILITY
+#ifndef _LIBCUDACXX_CXX03_LANG
+        _LIBCUDACXX_INLINE_VISIBILITY
         param_type(initializer_list<double> __wl)
             : __p_(__wl.begin(), __wl.end()) {__init();}
-#endif  // _LIBCPP_CXX03_LANG
+#endif  // _LIBCUDACXX_CXX03_LANG
         template<class _UnaryOperation>
             param_type(size_t __nw, double __xmin, double __xmax,
                        _UnaryOperation __fw);
 
         vector<double> probabilities() const;
 
-        friend _LIBCPP_INLINE_VISIBILITY
+        friend _LIBCUDACXX_INLINE_VISIBILITY
             bool operator==(const param_type& __x, const param_type& __y)
             {return __x.__p_ == __y.__p_;}
-        friend _LIBCPP_INLINE_VISIBILITY
+        friend _LIBCUDACXX_INLINE_VISIBILITY
             bool operator!=(const param_type& __x, const param_type& __y)
             {return !(__x == __y);}
 
@@ -5908,54 +5908,54 @@ private:
 
 public:
     // constructor and reset functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     discrete_distribution() {}
     template<class _InputIterator>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         discrete_distribution(_InputIterator __f, _InputIterator __l)
             : __p_(__f, __l) {}
-#ifndef _LIBCPP_CXX03_LANG
-    _LIBCPP_INLINE_VISIBILITY
+#ifndef _LIBCUDACXX_CXX03_LANG
+    _LIBCUDACXX_INLINE_VISIBILITY
     discrete_distribution(initializer_list<double> __wl)
         : __p_(__wl) {}
-#endif  // _LIBCPP_CXX03_LANG
+#endif  // _LIBCUDACXX_CXX03_LANG
     template<class _UnaryOperation>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         discrete_distribution(size_t __nw, double __xmin, double __xmax,
                               _UnaryOperation __fw)
         : __p_(__nw, __xmin, __xmax, __fw) {}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit discrete_distribution(const param_type& __p)
         : __p_(__p) {}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void reset() {}
 
     // generating functions
     template<class _URNG>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type operator()(_URNG& __g)
         {return (*this)(__g, __p_);}
     template<class _URNG> result_type operator()(_URNG& __g, const param_type& __p);
 
     // property functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     vector<double> probabilities() const {return __p_.probabilities();}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     param_type param() const {return __p_;}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void param(const param_type& __p) {__p_ = __p;}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type min() const {return 0;}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type max() const {return __p_.__p_.size();}
 
-    friend _LIBCPP_INLINE_VISIBILITY
+    friend _LIBCUDACXX_INLINE_VISIBILITY
         bool operator==(const discrete_distribution& __x,
                         const discrete_distribution& __y)
         {return __x.__p_ == __y.__p_;}
-    friend _LIBCPP_INLINE_VISIBILITY
+    friend _LIBCUDACXX_INLINE_VISIBILITY
         bool operator!=(const discrete_distribution& __x,
                         const discrete_distribution& __y)
         {return !(__x == __y);}
@@ -5999,12 +5999,12 @@ discrete_distribution<_IntType>::param_type::__init()
     {
         if (__p_.size() > 1)
         {
-            double __s = _VSTD::accumulate(__p_.begin(), __p_.end(), 0.0);
-            for (_VSTD::vector<double>::iterator __i = __p_.begin(), __e = __p_.end();
+            double __s = _CUDA_VSTD::accumulate(__p_.begin(), __p_.end(), 0.0);
+            for (_CUDA_VSTD::vector<double>::iterator __i = __p_.begin(), __e = __p_.end();
                                                                        __i < __e; ++__i)
                 *__i /= __s;
             vector<double> __t(__p_.size() - 1);
-            _VSTD::partial_sum(__p_.begin(), __p_.end() - 1, __t.begin());
+            _CUDA_VSTD::partial_sum(__p_.begin(), __p_.end() - 1, __t.begin());
             swap(__p_, __t);
         }
         else
@@ -6020,8 +6020,8 @@ vector<double>
 discrete_distribution<_IntType>::param_type::probabilities() const
 {
     size_t __n = __p_.size();
-    _VSTD::vector<double> __p(__n+1);
-    _VSTD::adjacent_difference(__p_.begin(), __p_.end(), __p.begin());
+    _CUDA_VSTD::vector<double> __p(__n+1);
+    _CUDA_VSTD::adjacent_difference(__p_.begin(), __p_.end(), __p.begin());
     if (__n > 0)
         __p[__n] = 1 - __p_[__n-1];
     else
@@ -6036,7 +6036,7 @@ discrete_distribution<_IntType>::operator()(_URNG& __g, const param_type& __p)
 {
     uniform_real_distribution<double> __gen;
     return static_cast<_IntType>(
-           _VSTD::upper_bound(__p.__p_.begin(), __p.__p_.end(), __gen(__g)) -
+           _CUDA_VSTD::upper_bound(__p.__p_.begin(), __p.__p_.end(), __gen(__g)) -
                                                               __p.__p_.begin());
 }
 
@@ -6077,13 +6077,13 @@ operator>>(basic_istream<_CharT, _Traits>& __is,
 // piecewise_constant_distribution
 
 template<class _RealType = double>
-class _LIBCPP_TEMPLATE_VIS piecewise_constant_distribution
+class _LIBCUDACXX_TEMPLATE_VIS piecewise_constant_distribution
 {
 public:
     // types
     typedef _RealType result_type;
 
-    class _LIBCPP_TEMPLATE_VIS param_type
+    class _LIBCUDACXX_TEMPLATE_VIS param_type
     {
         vector<result_type> __b_;
         vector<result_type> __densities_;
@@ -6095,24 +6095,24 @@ public:
         template<class _InputIteratorB, class _InputIteratorW>
             param_type(_InputIteratorB __fB, _InputIteratorB __lB,
                        _InputIteratorW __fW);
-#ifndef _LIBCPP_CXX03_LANG
+#ifndef _LIBCUDACXX_CXX03_LANG
         template<class _UnaryOperation>
             param_type(initializer_list<result_type> __bl, _UnaryOperation __fw);
-#endif  // _LIBCPP_CXX03_LANG
+#endif  // _LIBCUDACXX_CXX03_LANG
         template<class _UnaryOperation>
             param_type(size_t __nw, result_type __xmin, result_type __xmax,
                        _UnaryOperation __fw);
         param_type & operator=(const param_type& __rhs);
 
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         vector<result_type> intervals() const {return __b_;}
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         vector<result_type> densities() const {return __densities_;}
 
-        friend _LIBCPP_INLINE_VISIBILITY
+        friend _LIBCUDACXX_INLINE_VISIBILITY
             bool operator==(const param_type& __x, const param_type& __y)
             {return __x.__densities_ == __y.__densities_ && __x.__b_ == __y.__b_;}
-        friend _LIBCPP_INLINE_VISIBILITY
+        friend _LIBCUDACXX_INLINE_VISIBILITY
             bool operator!=(const param_type& __x, const param_type& __y)
             {return !(__x == __y);}
 
@@ -6139,64 +6139,64 @@ private:
 
 public:
     // constructor and reset functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     piecewise_constant_distribution() {}
     template<class _InputIteratorB, class _InputIteratorW>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         piecewise_constant_distribution(_InputIteratorB __fB,
                                         _InputIteratorB __lB,
                                         _InputIteratorW __fW)
         : __p_(__fB, __lB, __fW) {}
 
-#ifndef _LIBCPP_CXX03_LANG
+#ifndef _LIBCUDACXX_CXX03_LANG
     template<class _UnaryOperation>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         piecewise_constant_distribution(initializer_list<result_type> __bl,
                                         _UnaryOperation __fw)
         : __p_(__bl, __fw) {}
-#endif  // _LIBCPP_CXX03_LANG
+#endif  // _LIBCUDACXX_CXX03_LANG
 
     template<class _UnaryOperation>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         piecewise_constant_distribution(size_t __nw, result_type __xmin,
                                         result_type __xmax, _UnaryOperation __fw)
         : __p_(__nw, __xmin, __xmax, __fw) {}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit piecewise_constant_distribution(const param_type& __p)
         : __p_(__p) {}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void reset() {}
 
     // generating functions
     template<class _URNG>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type operator()(_URNG& __g)
         {return (*this)(__g, __p_);}
     template<class _URNG> result_type operator()(_URNG& __g, const param_type& __p);
 
     // property functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     vector<result_type> intervals() const {return __p_.intervals();}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     vector<result_type> densities() const {return __p_.densities();}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     param_type param() const {return __p_;}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void param(const param_type& __p) {__p_ = __p;}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type min() const {return __p_.__b_.front();}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type max() const {return __p_.__b_.back();}
 
-    friend _LIBCPP_INLINE_VISIBILITY
+    friend _LIBCUDACXX_INLINE_VISIBILITY
         bool operator==(const piecewise_constant_distribution& __x,
                         const piecewise_constant_distribution& __y)
         {return __x.__p_ == __y.__p_;}
-    friend _LIBCPP_INLINE_VISIBILITY
+    friend _LIBCUDACXX_INLINE_VISIBILITY
         bool operator!=(const piecewise_constant_distribution& __x,
                            const piecewise_constant_distribution& __y)
         {return !(__x == __y);}
@@ -6236,14 +6236,14 @@ void
 piecewise_constant_distribution<_RealType>::param_type::__init()
 {
     // __densities_ contains non-normalized areas
-    result_type __total_area = _VSTD::accumulate(__densities_.begin(),
+    result_type __total_area = _CUDA_VSTD::accumulate(__densities_.begin(),
                                                 __densities_.end(),
                                                 result_type());
     for (size_t __i = 0; __i < __densities_.size(); ++__i)
         __densities_[__i] /= __total_area;
     // __densities_ contains normalized areas
     __areas_.assign(__densities_.size(), result_type());
-    _VSTD::partial_sum(__densities_.begin(), __densities_.end() - 1,
+    _CUDA_VSTD::partial_sum(__densities_.begin(), __densities_.end() - 1,
                                                           __areas_.begin() + 1);
     // __areas_ contains partial sums of normalized areas: [0, __densities_ - 1]
     __densities_.back() = 1 - __areas_.back();  // correct round off error
@@ -6284,7 +6284,7 @@ piecewise_constant_distribution<_RealType>::param_type::param_type(
     }
 }
 
-#ifndef _LIBCPP_CXX03_LANG
+#ifndef _LIBCUDACXX_CXX03_LANG
 
 template<class _RealType>
 template<class _UnaryOperation>
@@ -6309,7 +6309,7 @@ piecewise_constant_distribution<_RealType>::param_type::param_type(
     }
 }
 
-#endif  // _LIBCPP_CXX03_LANG
+#endif  // _LIBCUDACXX_CXX03_LANG
 
 template<class _RealType>
 template<class _UnaryOperation>
@@ -6336,7 +6336,7 @@ piecewise_constant_distribution<_RealType>::operator()(_URNG& __g, const param_t
 {
     typedef uniform_real_distribution<result_type> _Gen;
     result_type __u = _Gen()(__g);
-    ptrdiff_t __k = _VSTD::upper_bound(__p.__areas_.begin(), __p.__areas_.end(),
+    ptrdiff_t __k = _CUDA_VSTD::upper_bound(__p.__areas_.begin(), __p.__areas_.end(),
                                       __u) - __p.__areas_.begin() - 1;
     return (__u - __p.__areas_[__k]) / __p.__densities_[__k] + __p.__b_[__k];
 }
@@ -6400,13 +6400,13 @@ operator>>(basic_istream<_CharT, _Traits>& __is,
 // piecewise_linear_distribution
 
 template<class _RealType = double>
-class _LIBCPP_TEMPLATE_VIS piecewise_linear_distribution
+class _LIBCUDACXX_TEMPLATE_VIS piecewise_linear_distribution
 {
 public:
     // types
     typedef _RealType result_type;
 
-    class _LIBCPP_TEMPLATE_VIS param_type
+    class _LIBCUDACXX_TEMPLATE_VIS param_type
     {
         vector<result_type> __b_;
         vector<result_type> __densities_;
@@ -6418,24 +6418,24 @@ public:
         template<class _InputIteratorB, class _InputIteratorW>
             param_type(_InputIteratorB __fB, _InputIteratorB __lB,
                        _InputIteratorW __fW);
-#ifndef _LIBCPP_CXX03_LANG
+#ifndef _LIBCUDACXX_CXX03_LANG
         template<class _UnaryOperation>
             param_type(initializer_list<result_type> __bl, _UnaryOperation __fw);
-#endif  // _LIBCPP_CXX03_LANG
+#endif  // _LIBCUDACXX_CXX03_LANG
         template<class _UnaryOperation>
             param_type(size_t __nw, result_type __xmin, result_type __xmax,
                        _UnaryOperation __fw);
         param_type & operator=(const param_type& __rhs);
 
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         vector<result_type> intervals() const {return __b_;}
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         vector<result_type> densities() const {return __densities_;}
 
-        friend _LIBCPP_INLINE_VISIBILITY
+        friend _LIBCUDACXX_INLINE_VISIBILITY
             bool operator==(const param_type& __x, const param_type& __y)
             {return __x.__densities_ == __y.__densities_ && __x.__b_ == __y.__b_;}
-        friend _LIBCPP_INLINE_VISIBILITY
+        friend _LIBCUDACXX_INLINE_VISIBILITY
             bool operator!=(const param_type& __x, const param_type& __y)
             {return !(__x == __y);}
 
@@ -6462,64 +6462,64 @@ private:
 
 public:
     // constructor and reset functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     piecewise_linear_distribution() {}
     template<class _InputIteratorB, class _InputIteratorW>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         piecewise_linear_distribution(_InputIteratorB __fB,
                                       _InputIteratorB __lB,
                                       _InputIteratorW __fW)
         : __p_(__fB, __lB, __fW) {}
 
-#ifndef _LIBCPP_CXX03_LANG
+#ifndef _LIBCUDACXX_CXX03_LANG
     template<class _UnaryOperation>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         piecewise_linear_distribution(initializer_list<result_type> __bl,
                                       _UnaryOperation __fw)
         : __p_(__bl, __fw) {}
-#endif  // _LIBCPP_CXX03_LANG
+#endif  // _LIBCUDACXX_CXX03_LANG
 
     template<class _UnaryOperation>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         piecewise_linear_distribution(size_t __nw, result_type __xmin,
                                       result_type __xmax, _UnaryOperation __fw)
         : __p_(__nw, __xmin, __xmax, __fw) {}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     explicit piecewise_linear_distribution(const param_type& __p)
         : __p_(__p) {}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void reset() {}
 
     // generating functions
     template<class _URNG>
-        _LIBCPP_INLINE_VISIBILITY
+        _LIBCUDACXX_INLINE_VISIBILITY
         result_type operator()(_URNG& __g)
         {return (*this)(__g, __p_);}
     template<class _URNG> result_type operator()(_URNG& __g, const param_type& __p);
 
     // property functions
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     vector<result_type> intervals() const {return __p_.intervals();}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     vector<result_type> densities() const {return __p_.densities();}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     param_type param() const {return __p_;}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     void param(const param_type& __p) {__p_ = __p;}
 
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type min() const {return __p_.__b_.front();}
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     result_type max() const {return __p_.__b_.back();}
 
-    friend _LIBCPP_INLINE_VISIBILITY
+    friend _LIBCUDACXX_INLINE_VISIBILITY
         bool operator==(const piecewise_linear_distribution& __x,
                         const piecewise_linear_distribution& __y)
         {return __x.__p_ == __y.__p_;}
-    friend _LIBCPP_INLINE_VISIBILITY
+    friend _LIBCUDACXX_INLINE_VISIBILITY
         bool operator!=(const piecewise_linear_distribution& __x,
                         const piecewise_linear_distribution& __y)
         {return !(__x == __y);}
@@ -6611,7 +6611,7 @@ piecewise_linear_distribution<_RealType>::param_type::param_type(
     }
 }
 
-#ifndef _LIBCPP_CXX03_LANG
+#ifndef _LIBCUDACXX_CXX03_LANG
 
 template<class _RealType>
 template<class _UnaryOperation>
@@ -6636,7 +6636,7 @@ piecewise_linear_distribution<_RealType>::param_type::param_type(
     }
 }
 
-#endif  // _LIBCPP_CXX03_LANG
+#endif  // _LIBCUDACXX_CXX03_LANG
 
 template<class _RealType>
 template<class _UnaryOperation>
@@ -6664,7 +6664,7 @@ piecewise_linear_distribution<_RealType>::operator()(_URNG& __g, const param_typ
 {
     typedef uniform_real_distribution<result_type> _Gen;
     result_type __u = _Gen()(__g);
-    ptrdiff_t __k = _VSTD::upper_bound(__p.__areas_.begin(), __p.__areas_.end(),
+    ptrdiff_t __k = _CUDA_VSTD::upper_bound(__p.__areas_.begin(), __p.__areas_.end(),
                                       __u) - __p.__areas_.begin() - 1;
     __u -= __p.__areas_[__k];
     const result_type __dk = __p.__densities_[__k];
@@ -6676,7 +6676,7 @@ piecewise_linear_distribution<_RealType>::operator()(_URNG& __g, const param_typ
     const result_type __bk1 = __p.__b_[__k+1];
     const result_type __deltab = __bk1 - __bk;
     return (__bk * __dk1 - __bk1 * __dk +
-        _VSTD::sqrt(__deltab * (__deltab * __dk * __dk + 2 * __deltad * __u))) /
+        _CUDA_VSTD::sqrt(__deltab * (__deltab * __dk * __dk + 2 * __deltad * __u))) /
         __deltad;
 }
 
@@ -6736,8 +6736,8 @@ operator>>(basic_istream<_CharT, _Traits>& __is,
     return __is;
 }
 
-_LIBCPP_END_NAMESPACE_STD
+_LIBCUDACXX_END_NAMESPACE_STD
 
-_LIBCPP_POP_MACROS
+_LIBCUDACXX_POP_MACROS
 
-#endif  // _LIBCPP_RANDOM
+#endif  // _LIBCUDACXX_RANDOM

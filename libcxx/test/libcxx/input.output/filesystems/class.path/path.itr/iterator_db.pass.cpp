@@ -9,13 +9,13 @@
 // UNSUPPORTED: c++98, c++03
 // UNSUPPORTED: windows
 
-// MODULES_DEFINES: _LIBCPP_DEBUG=0
+// MODULES_DEFINES: _LIBCUDACXX_DEBUG=0
 
 // <filesystem>
 
 // class path
 
-#define _LIBCPP_DEBUG 0
+#define _LIBCUDACXX_DEBUG 0
 #include "filesystem_include.h"
 #include <iterator>
 #include <type_traits>

@@ -7,12 +7,12 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCPP_INTTYPES_H
+#ifndef _LIBCUDACXX_INTTYPES_H
 // AIX system headers need inttypes.h to be re-enterable while _STD_TYPES_T
 // is defined until an inclusion of it without _STD_TYPES_T occurs, in which
 // case the header guard macro is defined.
 #if !defined(_AIX) || !defined(_STD_TYPES_T)
-#define _LIBCPP_INTTYPES_H
+#define _LIBCUDACXX_INTTYPES_H
 #endif // _STD_TYPES_T
 
 /*
@@ -237,7 +237,7 @@ uintmax_t wcstoumax(const wchar_t* restrict nptr, wchar_t** restrict endptr, int
 
 #include <__config>
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
@@ -259,4 +259,4 @@ uintmax_t wcstoumax(const wchar_t* restrict nptr, wchar_t** restrict endptr, int
 
 #endif // __cplusplus
 
-#endif  // _LIBCPP_INTTYPES_H
+#endif  // _LIBCUDACXX_INTTYPES_H

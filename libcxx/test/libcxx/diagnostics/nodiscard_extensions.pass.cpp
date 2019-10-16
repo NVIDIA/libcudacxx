@@ -8,7 +8,7 @@
 //===----------------------------------------------------------------------===//
 
 // Test that entities declared [[nodiscard]] as at extension by libc++, are
-// only actually declared such when _LIBCPP_ENABLE_NODISCARD is specified.
+// only actually declared such when _LIBCUDACXX_ENABLE_NODISCARD is specified.
 
 // This test intentionally leaks memory, so it is unsupported under ASAN.
 // UNSUPPORTED: asan

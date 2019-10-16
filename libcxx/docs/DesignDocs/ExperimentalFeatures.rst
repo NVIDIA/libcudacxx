@@ -43,7 +43,7 @@ warning for the corresponding experimental feature warning users to move off
 of it and to the now-standardized feature.
 
 These deprecation warnings are guarded by a macro of the form
-``_LIBCPP_NO_EXPERIMENTAL_DEPRECATION_WARNING_<FEATURE>``, which
+``_LIBCUDACXX_NO_EXPERIMENTAL_DEPRECATION_WARNING_<FEATURE>``, which
 can be defined by users to disable the deprecation warning. Whenever
 possible, deprecation warnings are put on a per-declaration basis
 using the ``[[deprecated]]`` attribute, which also allows disabling

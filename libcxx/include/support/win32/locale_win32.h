@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCPP_SUPPORT_WIN32_LOCALE_WIN32_H
-#define _LIBCPP_SUPPORT_WIN32_LOCALE_WIN32_H
+#ifndef _LIBCUDACXX_SUPPORT_WIN32_LOCALE_WIN32_H
+#define _LIBCUDACXX_SUPPORT_WIN32_LOCALE_WIN32_H
 
 #include <__config>
 #include <stdio.h>
@@ -132,21 +132,21 @@ decltype(MB_CUR_MAX) MB_CUR_MAX_L( locale_t __l );
 #define strtoll_l _strtoi64_l
 #define strtoull_l _strtoui64_l
 #define strtod_l _strtod_l
-#if defined(_LIBCPP_MSVCRT)
+#if defined(_LIBCUDACXX_MSVCRT)
 #define strtof_l _strtof_l
 #define strtold_l _strtold_l
 #else
 float strtof_l(const char*, char**, locale_t);
 long double strtold_l(const char*, char**, locale_t);
 #endif
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 int
 islower_l(int c, _locale_t loc)
 {
  return _islower_l((int)c, loc);
 }
 
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 int
 isupper_l(int c, _locale_t loc)
 {
@@ -181,9 +181,9 @@ isupper_l(int c, _locale_t loc)
 #define sprintf_l( __s, __l, __f, ... ) _sprintf_l( __s, __f, __l, __VA_ARGS__ )
 #define vsprintf_l( __s, __l, __f, ... ) _vsprintf_l( __s, __f, __l, __VA_ARGS__ )
 #define vsnprintf_l( __s, __n, __l, __f, ... ) _vsnprintf_l( __s, __n, __f, __l, __VA_ARGS__ )
-_LIBCPP_FUNC_VIS int snprintf_l(char *ret, size_t n, locale_t loc, const char *format, ...);
-_LIBCPP_FUNC_VIS int asprintf_l( char **ret, locale_t loc, const char *format, ... );
-_LIBCPP_FUNC_VIS int vasprintf_l( char **ret, locale_t loc, const char *format, va_list ap );
+_LIBCUDACXX_FUNC_VIS int snprintf_l(char *ret, size_t n, locale_t loc, const char *format, ...);
+_LIBCUDACXX_FUNC_VIS int asprintf_l( char **ret, locale_t loc, const char *format, ... );
+_LIBCUDACXX_FUNC_VIS int vasprintf_l( char **ret, locale_t loc, const char *format, va_list ap );
 
 // not-so-pressing FIXME: use locale to determine blank characters
 inline int isblank_l( int c, locale_t /*loc*/ )
@@ -195,4 +195,4 @@ inline int iswblank_l( wint_t c, locale_t /*loc*/ )
     return ( c == L' ' || c == L'\t' );
 }
 
-#endif // _LIBCPP_SUPPORT_WIN32_LOCALE_WIN32_H
+#endif // _LIBCUDACXX_SUPPORT_WIN32_LOCALE_WIN32_H

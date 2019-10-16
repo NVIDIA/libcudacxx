@@ -7,20 +7,20 @@
 //
 //===----------------------------------------------------------------------===//
 
-// Test that the __libcpp_version file matches the value of _LIBCPP_VERSION
+// Test that the __libcpp_version file matches the value of _LIBCUDACXX_VERSION
 
 #include <__config>
 
-#ifndef _LIBCPP_VERSION
-#error _LIBCPP_VERSION must be defined
+#ifndef _LIBCUDACXX_VERSION
+#error _LIBCUDACXX_VERSION must be defined
 #endif
 
 static const int libcpp_version =
 #include <__libcpp_version>
 ;
 
-static_assert(_LIBCPP_VERSION == libcpp_version,
-              "_LIBCPP_VERSION doesn't match __libcpp_version");
+static_assert(_LIBCUDACXX_VERSION == libcpp_version,
+              "_LIBCUDACXX_VERSION doesn't match __libcpp_version");
 
 int main(int, char**) {
 

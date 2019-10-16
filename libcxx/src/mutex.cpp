@@ -12,14 +12,14 @@
 #include "include/atomic_support.h"
 #include "__undef_macros"
 
-#ifndef _LIBCPP_HAS_NO_THREADS
-#if defined(__unix__) && !defined(__ANDROID__) && defined(__ELF__) && defined(_LIBCPP_HAS_COMMENT_LIB_PRAGMA)
+#ifndef _LIBCUDACXX_HAS_NO_THREADS
+#if defined(__unix__) && !defined(__ANDROID__) && defined(__ELF__) && defined(_LIBCUDACXX_HAS_COMMENT_LIB_PRAGMA)
 #pragma comment(lib, "pthread")
 #endif
 #endif
 
-_LIBCPP_BEGIN_NAMESPACE_STD
-#ifndef _LIBCPP_HAS_NO_THREADS
+_LIBCUDACXX_BEGIN_NAMESPACE_STD
+#ifndef _LIBCUDACXX_HAS_NO_THREADS
 
 const defer_lock_t  defer_lock{};
 const try_to_lock_t try_to_lock{};
@@ -46,7 +46,7 @@ mutex::unlock() _NOEXCEPT
 {
     int ec = __libcpp_mutex_unlock(&__m_);
     (void)ec;
-    _LIBCPP_ASSERT(ec == 0, "call to mutex::unlock failed");
+    _LIBCUDACXX_ASSERT(ec == 0, "call to mutex::unlock failed");
 }
 
 // recursive_mutex
@@ -62,7 +62,7 @@ recursive_mutex::~recursive_mutex()
 {
     int e = __libcpp_recursive_mutex_destroy(&__m_);
     (void)e;
-    _LIBCPP_ASSERT(e == 0, "call to ~recursive_mutex() failed");
+    _LIBCUDACXX_ASSERT(e == 0, "call to ~recursive_mutex() failed");
 }
 
 void
@@ -78,7 +78,7 @@ recursive_mutex::unlock() _NOEXCEPT
 {
     int e = __libcpp_recursive_mutex_unlock(&__m_);
     (void)e;
-    _LIBCPP_ASSERT(e == 0, "call to recursive_mutex::unlock() failed");
+    _LIBCUDACXX_ASSERT(e == 0, "call to recursive_mutex::unlock() failed");
 }
 
 bool
@@ -187,7 +187,7 @@ recursive_timed_mutex::unlock() _NOEXCEPT
     }
 }
 
-#endif // !_LIBCPP_HAS_NO_THREADS
+#endif // !_LIBCUDACXX_HAS_NO_THREADS
 
 // If dispatch_once_f ever handles C++ exceptions, and if one can get to it
 // without illegal macros (unexpected macros not beginning with _UpperCase or
@@ -195,43 +195,43 @@ recursive_timed_mutex::unlock() _NOEXCEPT
 // call into dispatch_once_f instead of here. Relevant radar this code needs to
 // keep in sync with:  7741191.
 
-#ifndef _LIBCPP_HAS_NO_THREADS
-_LIBCPP_SAFE_STATIC static __libcpp_mutex_t mut = _LIBCPP_MUTEX_INITIALIZER;
-_LIBCPP_SAFE_STATIC static __libcpp_condvar_t cv = _LIBCPP_CONDVAR_INITIALIZER;
+#ifndef _LIBCUDACXX_HAS_NO_THREADS
+_LIBCUDACXX_SAFE_STATIC static __libcpp_mutex_t mut = _LIBCUDACXX_MUTEX_INITIALIZER;
+_LIBCUDACXX_SAFE_STATIC static __libcpp_condvar_t cv = _LIBCUDACXX_CONDVAR_INITIALIZER;
 #endif
 
 void __call_once(volatile once_flag::_State_type& flag, void* arg,
                  void (*func)(void*))
 {
-#if defined(_LIBCPP_HAS_NO_THREADS)
+#if defined(_LIBCUDACXX_HAS_NO_THREADS)
     if (flag == 0)
     {
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         try
         {
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
             flag = 1;
             func(arg);
             flag = ~once_flag::_State_type(0);
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         }
         catch (...)
         {
             flag = 0;
             throw;
         }
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
     }
-#else // !_LIBCPP_HAS_NO_THREADS
+#else // !_LIBCUDACXX_HAS_NO_THREADS
     __libcpp_mutex_lock(&mut);
     while (flag == 1)
         __libcpp_condvar_wait(&cv, &mut);
     if (flag == 0)
     {
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         try
         {
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
             __libcpp_relaxed_store(&flag, once_flag::_State_type(1));
             __libcpp_mutex_unlock(&mut);
             func(arg);
@@ -240,7 +240,7 @@ void __call_once(volatile once_flag::_State_type& flag, void* arg,
                                   _AO_Release);
             __libcpp_mutex_unlock(&mut);
             __libcpp_condvar_broadcast(&cv);
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         }
         catch (...)
         {
@@ -250,11 +250,11 @@ void __call_once(volatile once_flag::_State_type& flag, void* arg,
             __libcpp_condvar_broadcast(&cv);
             throw;
         }
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
     }
     else
         __libcpp_mutex_unlock(&mut);
-#endif // !_LIBCPP_HAS_NO_THREADS
+#endif // !_LIBCUDACXX_HAS_NO_THREADS
 }
 
-_LIBCPP_END_NAMESPACE_STD
+_LIBCUDACXX_END_NAMESPACE_STD

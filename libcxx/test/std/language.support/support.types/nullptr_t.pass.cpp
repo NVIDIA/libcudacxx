@@ -88,7 +88,7 @@ int main(int, char**)
         test_conversions<int A::*>();
     }
     {
-#ifdef _LIBCPP_HAS_NO_NULLPTR
+#ifdef _LIBCUDACXX_HAS_NO_NULLPTR
         static_assert(!has_less<std::nullptr_t>::value, "");
         // FIXME: our C++03 nullptr emulation still allows for comparisons
         // with other pointer types by way of the conversion operator.

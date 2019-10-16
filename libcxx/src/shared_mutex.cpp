@@ -7,14 +7,14 @@
 //===----------------------------------------------------------------------===//
 
 #include "__config"
-#ifndef _LIBCPP_HAS_NO_THREADS
+#ifndef _LIBCUDACXX_HAS_NO_THREADS
 
 #include "shared_mutex"
-#if defined(__unix__) && !defined(__ANDROID__) && defined(__ELF__) && defined(_LIBCPP_HAS_COMMENT_LIB_PRAGMA)
+#if defined(__unix__) && !defined(__ANDROID__) && defined(__ELF__) && defined(_LIBCUDACXX_HAS_COMMENT_LIB_PRAGMA)
 #pragma comment(lib, "pthread")
 #endif
 
-_LIBCPP_BEGIN_NAMESPACE_STD
+_LIBCUDACXX_BEGIN_NAMESPACE_STD
 
 // Shared Mutex Base
 __shared_mutex_base::__shared_mutex_base()
@@ -113,6 +113,6 @@ void shared_timed_mutex::lock_shared() { return __base.lock_shared(); }
 bool shared_timed_mutex::try_lock_shared() { return __base.try_lock_shared(); }
 void shared_timed_mutex::unlock_shared() { return __base.unlock_shared(); }
 
-_LIBCPP_END_NAMESPACE_STD
+_LIBCUDACXX_END_NAMESPACE_STD
 
-#endif // !_LIBCPP_HAS_NO_THREADS
+#endif // !_LIBCUDACXX_HAS_NO_THREADS

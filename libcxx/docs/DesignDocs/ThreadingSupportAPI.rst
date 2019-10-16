@@ -25,7 +25,7 @@ In order to support vendors with custom threading API's libc++ allows the
 entire internal threading interface to be provided by an external,
 vendor provided, header.
 
-When ``_LIBCPP_HAS_THREAD_API_EXTERNAL`` is defined the ``<__threading_support>``
+When ``_LIBCUDACXX_HAS_THREAD_API_EXTERNAL`` is defined the ``<__threading_support>``
 header simply forwards to the ``<__external_threading>`` header (which must exist).
 It is expected that the ``<__external_threading>`` header provide the exact
 interface normally provided by ``<__threading_support>``.
@@ -53,30 +53,30 @@ developers.
 Threading Configuration Macros
 ==============================
 
-**_LIBCPP_HAS_NO_THREADS**
+**_LIBCUDACXX_HAS_NO_THREADS**
   This macro is defined when libc++ is built without threading support. It
   should not be manually defined by the user.
 
-**_LIBCPP_HAS_THREAD_API_EXTERNAL**
+**_LIBCUDACXX_HAS_THREAD_API_EXTERNAL**
   This macro is defined when libc++ should use the ``<__external_threading>``
   header to provide the internal threading API. This macro overrides
-  ``_LIBCPP_HAS_THREAD_API_PTHREAD``.
+  ``_LIBCUDACXX_HAS_THREAD_API_PTHREAD``.
 
-**_LIBCPP_HAS_THREAD_API_PTHREAD**
+**_LIBCUDACXX_HAS_THREAD_API_PTHREAD**
   This macro is defined when libc++ should use POSIX threads to implement the
   internal threading API.
 
-**_LIBCPP_HAS_THREAD_API_WIN32**
+**_LIBCUDACXX_HAS_THREAD_API_WIN32**
   This macro is defined when libc++ should use Win32 threads to implement the
   internal threading API.
 
-**_LIBCPP_HAS_THREAD_LIBRARY_EXTERNAL**
+**_LIBCUDACXX_HAS_THREAD_LIBRARY_EXTERNAL**
   This macro is defined when libc++ expects the definitions of the internal
   threading API to be provided by an external library. When defined
   ``<__threading_support>`` will only provide the forward declarations and
   typedefs for the internal threading API.
 
-**_LIBCPP_BUILDING_THREAD_LIBRARY_EXTERNAL**
+**_LIBCUDACXX_BUILDING_THREAD_LIBRARY_EXTERNAL**
   This macro is used to build an external threading library using the
   ``<__threading_support>``. Specifically it exposes the threading API
   definitions in ``<__threading_support>`` as non-inline definitions meant to

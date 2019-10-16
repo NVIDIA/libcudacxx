@@ -12,7 +12,7 @@
 
 #include "test_macros.h"
 
-#ifndef _LIBCPP_UTILITY
+#ifndef _LIBCUDACXX_UTILITY
 #   error "<experimental/utility> must include <utility>"
 #endif
 

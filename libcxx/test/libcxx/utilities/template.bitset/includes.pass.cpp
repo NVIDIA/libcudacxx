@@ -12,19 +12,19 @@
 
 #include "test_macros.h"
 
-#ifndef _LIBCPP_CSTDDEF
+#ifndef _LIBCUDACXX_CSTDDEF
 #error <cstddef> has not been included
 #endif
 
-#ifndef _LIBCPP_STRING
+#ifndef _LIBCUDACXX_STRING
 #error <string> has not been included
 #endif
 
-#ifndef _LIBCPP_STDEXCEPT
+#ifndef _LIBCUDACXX_STDEXCEPT
 #error <stdexcept> has not been included
 #endif
 
-#ifndef _LIBCPP_IOSFWD
+#ifndef _LIBCUDACXX_IOSFWD
 #error <iosfwd> has not been included
 #endif
 

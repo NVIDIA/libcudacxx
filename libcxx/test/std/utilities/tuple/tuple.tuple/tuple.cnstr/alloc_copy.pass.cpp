@@ -53,7 +53,7 @@ int main(int, char**)
         assert(std::get<0>(t) == 2);
     }
 // testing extensions
-#ifdef _LIBCPP_VERSION
+#ifdef _LIBCUDACXX_VERSION
     {
         typedef std::tuple<alloc_first, alloc_last> T;
         T t0(2, 3);

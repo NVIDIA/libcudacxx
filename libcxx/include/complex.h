@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCPP_COMPLEX_H
-#define _LIBCPP_COMPLEX_H
+#ifndef _LIBCUDACXX_COMPLEX_H
+#define _LIBCUDACXX_COMPLEX_H
 
 /*
     complex.h synopsis
@@ -19,7 +19,7 @@
 
 #include <__config>
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
@@ -33,4 +33,4 @@
 
 #endif  // __cplusplus
 
-#endif  // _LIBCPP_COMPLEX_H
+#endif  // _LIBCUDACXX_COMPLEX_H

@@ -26,7 +26,7 @@ int main(int, char**)
     std::cin >> i;
     std::cout << "The number is : " << i << '\n';
 #else  // 0
-#ifdef _LIBCPP_HAS_NO_STDOUT
+#ifdef _LIBCUDACXX_HAS_NO_STDOUT
     assert(std::cin.tie() == NULL);
 #else
     assert(std::cin.tie() == &std::cout);

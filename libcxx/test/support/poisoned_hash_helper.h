@@ -57,7 +57,7 @@ using LibraryHashTypes = TypeList<
       signed char,
       unsigned char,
       wchar_t,
-#ifndef _LIBCPP_HAS_NO_UNICODE_CHARS
+#ifndef _LIBCUDACXX_HAS_NO_UNICODE_CHARS
       char16_t,
       char32_t,
 #endif
@@ -69,7 +69,7 @@ using LibraryHashTypes = TypeList<
       unsigned long,
       long long,
       unsigned long long,
-#ifndef _LIBCPP_HAS_NO_INT128
+#ifndef _LIBCUDACXX_HAS_NO_INT128
       __int128_t,
       __uint128_t,
 #endif
@@ -141,7 +141,7 @@ void test_hash_enabled(InputKey const& key) {
 
 #if TEST_STD_VER > 14
   static_assert(std::is_swappable<Hash>::value, "");
-#elif defined(_LIBCPP_VERSION)
+#elif defined(_LIBCUDACXX_VERSION)
   static_assert(std::__is_swappable<Hash>::value, "");
 #endif
 

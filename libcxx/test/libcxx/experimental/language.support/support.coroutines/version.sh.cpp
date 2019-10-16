@@ -15,8 +15,8 @@
 
 #include <experimental/coroutine>
 
-#ifndef _LIBCPP_VERSION
-#error _LIBCPP_VERSION must be defined
+#ifndef _LIBCUDACXX_VERSION
+#error _LIBCUDACXX_VERSION must be defined
 #endif
 
 int main(int, char**)

@@ -271,9 +271,9 @@ if (LIBCXX_ENABLE_SHARED)
 
   if (LIBCXX_OSX_REEXPORT_LIBCXXABI_SYMBOLS)
     if ("${CMAKE_OSX_ARCHITECTURES}" MATCHES "^(armv6|armv7|armv7s)$")
-      set(RE_EXPORT_LIST "${CMAKE_CURRENT_SOURCE_DIR}/../lib/libc++sjlj-abi.v${LIBCXX_LIBCPPABI_VERSION}.exp")
+      set(RE_EXPORT_LIST "${CMAKE_CURRENT_SOURCE_DIR}/../lib/libc++sjlj-abi.v${LIBCXX_LIBCUDACXXABI_VERSION}.exp")
     else()
-      set(RE_EXPORT_LIST "${CMAKE_CURRENT_SOURCE_DIR}/../lib/libc++abi.v${LIBCXX_LIBCPPABI_VERSION}.exp")
+      set(RE_EXPORT_LIST "${CMAKE_CURRENT_SOURCE_DIR}/../lib/libc++abi.v${LIBCXX_LIBCUDACXXABI_VERSION}.exp")
     endif()
     target_link_libraries(cxx_shared PRIVATE
       "-Wl,-unexported_symbols_list,${CMAKE_CURRENT_SOURCE_DIR}/../lib/libc++unexp.exp"
@@ -348,7 +348,7 @@ if (LIBCXX_ENABLE_STATIC)
       append_flags_if_supported(CXX_STATIC_LIBRARY_FLAGS -fvisibility-global-new-delete-hidden)
     endif()
     target_compile_options(cxx_static PRIVATE ${CXX_STATIC_LIBRARY_FLAGS})
-    target_compile_definitions(cxx_static PRIVATE _LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS)
+    target_compile_definitions(cxx_static PRIVATE _LIBCUDACXX_DISABLE_VISIBILITY_ANNOTATIONS)
   endif()
 
   list(APPEND LIBCXX_BUILD_TARGETS "cxx_static")

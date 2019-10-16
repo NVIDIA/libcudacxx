@@ -33,8 +33,8 @@ int main(int, char**)
         struct TestConstexpr : public std::any {
           constexpr TestConstexpr() : std::any() {}
         };
-#ifdef _LIBCPP_SAFE_STATIC
-        _LIBCPP_SAFE_STATIC static std::any a;
+#ifdef _LIBCUDACXX_SAFE_STATIC
+        _LIBCUDACXX_SAFE_STATIC static std::any a;
         ((void)a);
 #endif
     }

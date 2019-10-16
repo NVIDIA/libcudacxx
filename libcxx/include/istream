@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCPP_ISTREAM
-#define _LIBCPP_ISTREAM
+#ifndef _LIBCUDACXX_ISTREAM
+#define _LIBCUDACXX_ISTREAM
 
 /*
     istream synopsis
@@ -162,18 +162,18 @@ template <class charT, class traits, class T>
 #include <version>
 #include <ostream>
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
-_LIBCPP_PUSH_MACROS
+_LIBCUDACXX_PUSH_MACROS
 #include <__undef_macros>
 
 
-_LIBCPP_BEGIN_NAMESPACE_STD
+_LIBCUDACXX_BEGIN_NAMESPACE_STD
 
 template <class _CharT, class _Traits>
-class _LIBCPP_TEMPLATE_VIS basic_istream
+class _LIBCUDACXX_TEMPLATE_VIS basic_istream
     : virtual public basic_ios<_CharT, _Traits>
 {
     streamsize __gc_;
@@ -186,46 +186,46 @@ public:
     typedef typename traits_type::off_type off_type;
 
     // 27.7.1.1.1 Constructor/destructor:
-    inline _LIBCPP_HIDE_FROM_ABI_AFTER_V1
+    inline _LIBCUDACXX_HIDE_FROM_ABI_AFTER_V1
     explicit basic_istream(basic_streambuf<char_type, traits_type>* __sb) : __gc_(0)
     { this->init(__sb); }
     virtual ~basic_istream();
 protected:
-#ifndef _LIBCPP_CXX03_LANG
-    inline _LIBCPP_INLINE_VISIBILITY
+#ifndef _LIBCUDACXX_CXX03_LANG
+    inline _LIBCUDACXX_INLINE_VISIBILITY
     basic_istream(basic_istream&& __rhs);
 
     // 27.7.1.1.2 Assign/swap:
-    inline _LIBCPP_INLINE_VISIBILITY
+    inline _LIBCUDACXX_INLINE_VISIBILITY
     basic_istream& operator=(basic_istream&& __rhs);
 #endif
 
-    inline _LIBCPP_HIDE_FROM_ABI_AFTER_V1
+    inline _LIBCUDACXX_HIDE_FROM_ABI_AFTER_V1
     void swap(basic_istream& __rhs) {
-      _VSTD::swap(__gc_, __rhs.__gc_);
+      _CUDA_VSTD::swap(__gc_, __rhs.__gc_);
       basic_ios<char_type, traits_type>::swap(__rhs);
     }
 
-#ifndef _LIBCPP_CXX03_LANG
+#ifndef _LIBCUDACXX_CXX03_LANG
     basic_istream           (const basic_istream& __rhs) = delete;
     basic_istream& operator=(const basic_istream& __rhs) = delete;
 #endif
 public:
 
     // 27.7.1.1.3 Prefix/suffix:
-    class _LIBCPP_TEMPLATE_VIS sentry;
+    class _LIBCUDACXX_TEMPLATE_VIS sentry;
 
     // 27.7.1.2 Formatted input:
-    inline _LIBCPP_HIDE_FROM_ABI_AFTER_V1
+    inline _LIBCUDACXX_HIDE_FROM_ABI_AFTER_V1
     basic_istream& operator>>(basic_istream& (*__pf)(basic_istream&))
     { return __pf(*this); }
 
-    inline _LIBCPP_HIDE_FROM_ABI_AFTER_V1
+    inline _LIBCUDACXX_HIDE_FROM_ABI_AFTER_V1
     basic_istream& operator>>(basic_ios<char_type, traits_type>&
                               (*__pf)(basic_ios<char_type, traits_type>&))
     { __pf(*this); return *this; }
 
-    inline _LIBCPP_HIDE_FROM_ABI_AFTER_V1
+    inline _LIBCUDACXX_HIDE_FROM_ABI_AFTER_V1
     basic_istream& operator>>(ios_base& (*__pf)(ios_base&))
     { __pf(*this); return *this; }
 
@@ -245,11 +245,11 @@ public:
     basic_istream& operator>>(void*& __p);
 
     // 27.7.1.3 Unformatted input:
-    _LIBCPP_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY
     streamsize gcount() const {return __gc_;}
     int_type get();
 
-    inline _LIBCPP_HIDE_FROM_ABI_AFTER_V1
+    inline _LIBCUDACXX_HIDE_FROM_ABI_AFTER_V1
     basic_istream& get(char_type& __c) {
       int_type __ch = get();
       if (__ch != traits_type::eof())
@@ -257,19 +257,19 @@ public:
       return *this;
     }
 
-    inline _LIBCPP_HIDE_FROM_ABI_AFTER_V1
+    inline _LIBCUDACXX_HIDE_FROM_ABI_AFTER_V1
     basic_istream& get(char_type* __s, streamsize __n)
     { return get(__s, __n, this->widen('\n')); }
 
     basic_istream& get(char_type* __s, streamsize __n, char_type __dlm);
 
-    inline _LIBCPP_HIDE_FROM_ABI_AFTER_V1
+    inline _LIBCUDACXX_HIDE_FROM_ABI_AFTER_V1
     basic_istream& get(basic_streambuf<char_type, traits_type>& __sb)
     { return get(__sb, this->widen('\n')); }
 
     basic_istream& get(basic_streambuf<char_type, traits_type>& __sb, char_type __dlm);
 
-    inline _LIBCPP_HIDE_FROM_ABI_AFTER_V1
+    inline _LIBCUDACXX_HIDE_FROM_ABI_AFTER_V1
     basic_istream& getline(char_type* __s, streamsize __n)
     { return getline(__s, __n, this->widen('\n')); }
 
@@ -290,7 +290,7 @@ public:
 };
 
 template <class _CharT, class _Traits>
-class _LIBCPP_TEMPLATE_VIS basic_istream<_CharT, _Traits>::sentry
+class _LIBCUDACXX_TEMPLATE_VIS basic_istream<_CharT, _Traits>::sentry
 {
     bool __ok_;
 
@@ -301,8 +301,8 @@ public:
     explicit sentry(basic_istream<_CharT, _Traits>& __is, bool __noskipws = false);
 //    ~sentry() = default;
 
-    _LIBCPP_INLINE_VISIBILITY
-        _LIBCPP_EXPLICIT
+    _LIBCUDACXX_INLINE_VISIBILITY
+        _LIBCUDACXX_EXPLICIT
         operator bool() const {return __ok_;}
 };
 
@@ -333,7 +333,7 @@ basic_istream<_CharT, _Traits>::sentry::sentry(basic_istream<_CharT, _Traits>& _
         __is.setstate(ios_base::failbit);
 }
 
-#ifndef _LIBCPP_CXX03_LANG
+#ifndef _LIBCUDACXX_CXX03_LANG
 
 template <class _CharT, class _Traits>
 basic_istream<_CharT, _Traits>::basic_istream(basic_istream&& __rhs)
@@ -351,7 +351,7 @@ basic_istream<_CharT, _Traits>::operator=(basic_istream&& __rhs)
     return *this;
 }
 
-#endif  // _LIBCPP_CXX03_LANG
+#endif  // _LIBCUDACXX_CXX03_LANG
 
 template <class _CharT, class _Traits>
 basic_istream<_CharT, _Traits>::~basic_istream()
@@ -359,21 +359,21 @@ basic_istream<_CharT, _Traits>::~basic_istream()
 }
 
 template <class _Tp, class _CharT, class _Traits>
-_LIBCPP_INLINE_VISIBILITY
+_LIBCUDACXX_INLINE_VISIBILITY
 basic_istream<_CharT, _Traits>&
 __input_arithmetic(basic_istream<_CharT, _Traits>& __is, _Tp& __n) {
     ios_base::iostate __state = ios_base::goodbit;
     typename basic_istream<_CharT, _Traits>::sentry __s(__is);
     if (__s)
     {
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         try
         {
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
             typedef istreambuf_iterator<_CharT, _Traits> _Ip;
             typedef num_get<_CharT, _Ip> _Fp;
             use_facet<_Fp>(__is.getloc()).get(_Ip(__is), _Ip(), __is, __state, __n);
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         }
         catch (...)
         {
@@ -394,91 +394,91 @@ template <class _CharT, class _Traits>
 basic_istream<_CharT, _Traits>&
 basic_istream<_CharT, _Traits>::operator>>(unsigned short& __n)
 {
-    return _VSTD::__input_arithmetic<unsigned short>(*this, __n);
+    return _CUDA_VSTD::__input_arithmetic<unsigned short>(*this, __n);
 }
 
 template <class _CharT, class _Traits>
 basic_istream<_CharT, _Traits>&
 basic_istream<_CharT, _Traits>::operator>>(unsigned int& __n)
 {
-    return _VSTD::__input_arithmetic<unsigned int>(*this, __n);
+    return _CUDA_VSTD::__input_arithmetic<unsigned int>(*this, __n);
 }
 
 template <class _CharT, class _Traits>
 basic_istream<_CharT, _Traits>&
 basic_istream<_CharT, _Traits>::operator>>(long& __n)
 {
-    return _VSTD::__input_arithmetic<long>(*this, __n);
+    return _CUDA_VSTD::__input_arithmetic<long>(*this, __n);
 }
 
 template <class _CharT, class _Traits>
 basic_istream<_CharT, _Traits>&
 basic_istream<_CharT, _Traits>::operator>>(unsigned long& __n)
 {
-    return _VSTD::__input_arithmetic<unsigned long>(*this, __n);
+    return _CUDA_VSTD::__input_arithmetic<unsigned long>(*this, __n);
 }
 
 template <class _CharT, class _Traits>
 basic_istream<_CharT, _Traits>&
 basic_istream<_CharT, _Traits>::operator>>(long long& __n)
 {
-    return _VSTD::__input_arithmetic<long long>(*this, __n);
+    return _CUDA_VSTD::__input_arithmetic<long long>(*this, __n);
 }
 
 template <class _CharT, class _Traits>
 basic_istream<_CharT, _Traits>&
 basic_istream<_CharT, _Traits>::operator>>(unsigned long long& __n)
 {
-    return _VSTD::__input_arithmetic<unsigned long long>(*this, __n);
+    return _CUDA_VSTD::__input_arithmetic<unsigned long long>(*this, __n);
 }
 
 template <class _CharT, class _Traits>
 basic_istream<_CharT, _Traits>&
 basic_istream<_CharT, _Traits>::operator>>(float& __n)
 {
-    return _VSTD::__input_arithmetic<float>(*this, __n);
+    return _CUDA_VSTD::__input_arithmetic<float>(*this, __n);
 }
 
 template <class _CharT, class _Traits>
 basic_istream<_CharT, _Traits>&
 basic_istream<_CharT, _Traits>::operator>>(double& __n)
 {
-    return _VSTD::__input_arithmetic<double>(*this, __n);
+    return _CUDA_VSTD::__input_arithmetic<double>(*this, __n);
 }
 
 template <class _CharT, class _Traits>
 basic_istream<_CharT, _Traits>&
 basic_istream<_CharT, _Traits>::operator>>(long double& __n)
 {
-    return _VSTD::__input_arithmetic<long double>(*this, __n);
+    return _CUDA_VSTD::__input_arithmetic<long double>(*this, __n);
 }
 
 template <class _CharT, class _Traits>
 basic_istream<_CharT, _Traits>&
 basic_istream<_CharT, _Traits>::operator>>(bool& __n)
 {
-    return _VSTD::__input_arithmetic<bool>(*this, __n);
+    return _CUDA_VSTD::__input_arithmetic<bool>(*this, __n);
 }
 
 template <class _CharT, class _Traits>
 basic_istream<_CharT, _Traits>&
 basic_istream<_CharT, _Traits>::operator>>(void*& __n)
 {
-    return _VSTD::__input_arithmetic<void*>(*this, __n);
+    return _CUDA_VSTD::__input_arithmetic<void*>(*this, __n);
 }
 
 template <class _Tp, class _CharT, class _Traits>
-_LIBCPP_INLINE_VISIBILITY
+_LIBCUDACXX_INLINE_VISIBILITY
 basic_istream<_CharT, _Traits>&
 __input_arithmetic_with_numeric_limits(basic_istream<_CharT, _Traits>& __is, _Tp& __n) {
     ios_base::iostate __state = ios_base::goodbit;
     typename basic_istream<_CharT, _Traits>::sentry __s(__is);
     if (__s)
     {
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         try
         {
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
             typedef istreambuf_iterator<_CharT, _Traits> _Ip;
             typedef num_get<_CharT, _Ip> _Fp;
             long __temp;
@@ -497,7 +497,7 @@ __input_arithmetic_with_numeric_limits(basic_istream<_CharT, _Traits>& __is, _Tp
             {
                 __n = static_cast<_Tp>(__temp);
             }
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         }
         catch (...)
         {
@@ -508,7 +508,7 @@ __input_arithmetic_with_numeric_limits(basic_istream<_CharT, _Traits>& __is, _Tp
                 throw;
             }
         }
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
         __is.setstate(__state);
     }
     return __is;
@@ -518,18 +518,18 @@ template <class _CharT, class _Traits>
 basic_istream<_CharT, _Traits>&
 basic_istream<_CharT, _Traits>::operator>>(short& __n)
 {
-    return _VSTD::__input_arithmetic_with_numeric_limits<short>(*this, __n);
+    return _CUDA_VSTD::__input_arithmetic_with_numeric_limits<short>(*this, __n);
 }
 
 template <class _CharT, class _Traits>
 basic_istream<_CharT, _Traits>&
 basic_istream<_CharT, _Traits>::operator>>(int& __n)
 {
-    return _VSTD::__input_arithmetic_with_numeric_limits<int>(*this, __n);
+    return _CUDA_VSTD::__input_arithmetic_with_numeric_limits<int>(*this, __n);
 }
 
 template<class _CharT, class _Traits>
-_LIBCPP_INLINE_VISIBILITY
+_LIBCUDACXX_INLINE_VISIBILITY
 basic_istream<_CharT, _Traits>&
 __input_c_string(basic_istream<_CharT, _Traits>& __is, _CharT* __p, size_t __n)
 {
@@ -537,7 +537,7 @@ __input_c_string(basic_istream<_CharT, _Traits>& __is, _CharT* __p, size_t __n)
     typename basic_istream<_CharT, _Traits>::sentry __sen(__is);
     if (__sen)
     {
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         try
         {
 #endif
@@ -561,7 +561,7 @@ __input_c_string(basic_istream<_CharT, _Traits>& __is, _CharT* __p, size_t __n)
             __is.width(0);
             if (__s == __p)
                __state |= ios_base::failbit;
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         }
         catch (...)
         {
@@ -578,21 +578,21 @@ __input_c_string(basic_istream<_CharT, _Traits>& __is, _CharT* __p, size_t __n)
     return __is;
 }
 
-#if _LIBCPP_STD_VER > 17
+#if _LIBCUDACXX_STD_VER > 17
 
 template<class _CharT, class _Traits, size_t _Np>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 basic_istream<_CharT, _Traits>&
 operator>>(basic_istream<_CharT, _Traits>& __is, _CharT (&__buf)[_Np])
 {
     size_t __n = _Np;
     if (__is.width() > 0)
-        __n = _VSTD::min(size_t(__is.width()), _Np);
-    return _VSTD::__input_c_string(__is, __buf, __n);
+        __n = _CUDA_VSTD::min(size_t(__is.width()), _Np);
+    return _CUDA_VSTD::__input_c_string(__is, __buf, __n);
 }
 
 template<class _Traits, size_t _Np>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 basic_istream<char, _Traits>&
 operator>>(basic_istream<char, _Traits>& __is, unsigned char (&__buf)[_Np])
 {
@@ -600,7 +600,7 @@ operator>>(basic_istream<char, _Traits>& __is, unsigned char (&__buf)[_Np])
 }
 
 template<class _Traits, size_t _Np>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 basic_istream<char, _Traits>&
 operator>>(basic_istream<char, _Traits>& __is, signed char (&__buf)[_Np])
 {
@@ -610,18 +610,18 @@ operator>>(basic_istream<char, _Traits>& __is, signed char (&__buf)[_Np])
 #else
 
 template<class _CharT, class _Traits>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 basic_istream<_CharT, _Traits>&
 operator>>(basic_istream<_CharT, _Traits>& __is, _CharT* __s)
 {
     streamsize __n = __is.width();
     if (__n <= 0)
         __n = numeric_limits<streamsize>::max() / sizeof(_CharT) - 1;
-    return _VSTD::__input_c_string(__is, __s, size_t(__n));
+    return _CUDA_VSTD::__input_c_string(__is, __s, size_t(__n));
 }
 
 template<class _Traits>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 basic_istream<char, _Traits>&
 operator>>(basic_istream<char, _Traits>& __is, unsigned char* __s)
 {
@@ -629,14 +629,14 @@ operator>>(basic_istream<char, _Traits>& __is, unsigned char* __s)
 }
 
 template<class _Traits>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 basic_istream<char, _Traits>&
 operator>>(basic_istream<char, _Traits>& __is, signed char* __s)
 {
     return __is >> (char*)__s;
 }
 
-#endif  // _LIBCPP_STD_VER > 17
+#endif  // _LIBCUDACXX_STD_VER > 17
 
 template<class _CharT, class _Traits>
 basic_istream<_CharT, _Traits>&
@@ -646,7 +646,7 @@ operator>>(basic_istream<_CharT, _Traits>& __is, _CharT& __c)
     typename basic_istream<_CharT, _Traits>::sentry __sen(__is);
     if (__sen)
     {
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         try
         {
 #endif
@@ -655,7 +655,7 @@ operator>>(basic_istream<_CharT, _Traits>& __is, _CharT& __c)
                 __state |= ios_base::eofbit | ios_base::failbit;
             else
                 __c = _Traits::to_char_type(__i);
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         }
         catch (...)
         {
@@ -673,7 +673,7 @@ operator>>(basic_istream<_CharT, _Traits>& __is, _CharT& __c)
 }
 
 template<class _Traits>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 basic_istream<char, _Traits>&
 operator>>(basic_istream<char, _Traits>& __is, unsigned char& __c)
 {
@@ -681,7 +681,7 @@ operator>>(basic_istream<char, _Traits>& __is, unsigned char& __c)
 }
 
 template<class _Traits>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 basic_istream<char, _Traits>&
 operator>>(basic_istream<char, _Traits>& __is, signed char& __c)
 {
@@ -699,10 +699,10 @@ basic_istream<_CharT, _Traits>::operator>>(basic_streambuf<char_type, traits_typ
     {
         if (__sb)
         {
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
             try
             {
-#endif // _LIBCPP_NO_EXCEPTIONS
+#endif // _LIBCUDACXX_NO_EXCEPTIONS
                 while (true)
                 {
                     typename traits_type::int_type __i = this->rdbuf()->sgetc();
@@ -720,7 +720,7 @@ basic_istream<_CharT, _Traits>::operator>>(basic_streambuf<char_type, traits_typ
                 }
                 if (__gc_ == 0)
                    __state |= ios_base::failbit;
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
             }
             catch (...)
             {
@@ -734,7 +734,7 @@ basic_istream<_CharT, _Traits>::operator>>(basic_streambuf<char_type, traits_typ
                     throw;
                 }
             }
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
         }
         else
         {
@@ -755,7 +755,7 @@ basic_istream<_CharT, _Traits>::get()
     sentry __s(*this, true);
     if (__s)
     {
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         try
         {
 #endif
@@ -764,7 +764,7 @@ basic_istream<_CharT, _Traits>::get()
                __state |= ios_base::failbit | ios_base::eofbit;
             else
                 __gc_ = 1;
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         }
         catch (...)
         {
@@ -791,7 +791,7 @@ basic_istream<_CharT, _Traits>::get(char_type* __s, streamsize __n, char_type __
     {
         if (__n > 0)
         {
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
             try
             {
 #endif
@@ -812,7 +812,7 @@ basic_istream<_CharT, _Traits>::get(char_type* __s, streamsize __n, char_type __
                 }
                 if (__gc_ == 0)
                    __state |= ios_base::failbit;
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
             }
             catch (...)
             {
@@ -851,10 +851,10 @@ basic_istream<_CharT, _Traits>::get(basic_streambuf<char_type, traits_type>& __s
     sentry __sen(*this, true);
     if (__sen)
     {
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         try
         {
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
             while (true)
             {
                 typename traits_type::int_type __i = this->rdbuf()->sgetc();
@@ -871,14 +871,14 @@ basic_istream<_CharT, _Traits>::get(basic_streambuf<char_type, traits_type>& __s
                 ++__gc_;
                 this->rdbuf()->sbumpc();
             }
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         }
         catch (...)
         {
             __state |= ios_base::badbit;
             // according to the spec, exceptions here are caught but not rethrown
         }
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
         if (__gc_ == 0)
            __state |= ios_base::failbit;
         this->setstate(__state);
@@ -895,10 +895,10 @@ basic_istream<_CharT, _Traits>::getline(char_type* __s, streamsize __n, char_typ
     sentry __sen(*this, true);
     if (__sen)
     {
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         try
         {
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
             while (true)
             {
                 typename traits_type::int_type __i = this->rdbuf()->sgetc();
@@ -923,7 +923,7 @@ basic_istream<_CharT, _Traits>::getline(char_type* __s, streamsize __n, char_typ
                 this->rdbuf()->sbumpc();
                 ++__gc_;
             }
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         }
         catch (...)
         {
@@ -938,7 +938,7 @@ basic_istream<_CharT, _Traits>::getline(char_type* __s, streamsize __n, char_typ
                 throw;
             }
         }
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
     }
     if (__n > 0)
         *__s = char_type();
@@ -957,10 +957,10 @@ basic_istream<_CharT, _Traits>::ignore(streamsize __n, int_type __dlm)
     sentry __sen(*this, true);
     if (__sen)
     {
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         try
         {
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
             if (__n == numeric_limits<streamsize>::max())
             {
                 while (true)
@@ -991,7 +991,7 @@ basic_istream<_CharT, _Traits>::ignore(streamsize __n, int_type __dlm)
                         break;
                 }
             }
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         }
         catch (...)
         {
@@ -1002,7 +1002,7 @@ basic_istream<_CharT, _Traits>::ignore(streamsize __n, int_type __dlm)
                 throw;
             }
         }
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
         this->setstate(__state);
     }
     return *this;
@@ -1018,14 +1018,14 @@ basic_istream<_CharT, _Traits>::peek()
     sentry __sen(*this, true);
     if (__sen)
     {
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         try
         {
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
             __r = this->rdbuf()->sgetc();
             if (traits_type::eq_int_type(__r, traits_type::eof()))
                 __state |= ios_base::eofbit;
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         }
         catch (...)
         {
@@ -1036,7 +1036,7 @@ basic_istream<_CharT, _Traits>::peek()
                 throw;
             }
         }
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
         this->setstate(__state);
     }
     return __r;
@@ -1051,14 +1051,14 @@ basic_istream<_CharT, _Traits>::read(char_type* __s, streamsize __n)
     sentry __sen(*this, true);
     if (__sen)
     {
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         try
         {
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
             __gc_ = this->rdbuf()->sgetn(__s, __n);
             if (__gc_ != __n)
                 __state |= ios_base::failbit | ios_base::eofbit;
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         }
         catch (...)
         {
@@ -1069,7 +1069,7 @@ basic_istream<_CharT, _Traits>::read(char_type* __s, streamsize __n)
                 throw;
             }
         }
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
     }
     else
     {
@@ -1088,10 +1088,10 @@ basic_istream<_CharT, _Traits>::readsome(char_type* __s, streamsize __n)
     sentry __sen(*this, true);
     if (__sen)
     {
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         try
         {
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
             streamsize __c = this->rdbuf()->in_avail();
             switch (__c)
             {
@@ -1101,13 +1101,13 @@ basic_istream<_CharT, _Traits>::readsome(char_type* __s, streamsize __n)
             case 0:
                 break;
             default:
-                __n = _VSTD::min(__c, __n);
+                __n = _CUDA_VSTD::min(__c, __n);
                 __gc_ = this->rdbuf()->sgetn(__s, __n);
                 if (__gc_ != __n)
                     __state |= ios_base::failbit | ios_base::eofbit;
                 break;
             }
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         }
         catch (...)
         {
@@ -1118,7 +1118,7 @@ basic_istream<_CharT, _Traits>::readsome(char_type* __s, streamsize __n)
                 throw;
             }
         }
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
     }
     else
     {
@@ -1138,13 +1138,13 @@ basic_istream<_CharT, _Traits>::putback(char_type __c)
     sentry __sen(*this, true);
     if (__sen)
     {
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         try
         {
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
             if (this->rdbuf() == 0 || this->rdbuf()->sputbackc(__c) == traits_type::eof())
                 __state |= ios_base::badbit;
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         }
         catch (...)
         {
@@ -1155,7 +1155,7 @@ basic_istream<_CharT, _Traits>::putback(char_type __c)
                 throw;
             }
         }
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
     }
     else
     {
@@ -1175,13 +1175,13 @@ basic_istream<_CharT, _Traits>::unget()
     sentry __sen(*this, true);
     if (__sen)
     {
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         try
         {
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
             if (this->rdbuf() == 0 || this->rdbuf()->sungetc() == traits_type::eof())
                 __state |= ios_base::badbit;
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         }
         catch (...)
         {
@@ -1192,7 +1192,7 @@ basic_istream<_CharT, _Traits>::unget()
                 throw;
             }
         }
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
     }
     else
     {
@@ -1211,10 +1211,10 @@ basic_istream<_CharT, _Traits>::sync()
     sentry __sen(*this, true);
     if (__sen)
     {
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         try
         {
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
             if (this->rdbuf() == 0)
                 return -1;
             if (this->rdbuf()->pubsync() == -1)
@@ -1222,7 +1222,7 @@ basic_istream<_CharT, _Traits>::sync()
                 __state |= ios_base::badbit;
                 return -1;
             }
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         }
         catch (...)
         {
@@ -1233,7 +1233,7 @@ basic_istream<_CharT, _Traits>::sync()
                 throw;
             }
         }
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
         this->setstate(__state);
     }
     return __r;
@@ -1248,12 +1248,12 @@ basic_istream<_CharT, _Traits>::tellg()
     sentry __sen(*this, true);
     if (__sen)
     {
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         try
         {
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
         __r = this->rdbuf()->pubseekoff(0, ios_base::cur, ios_base::in);
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         }
         catch (...)
         {
@@ -1264,7 +1264,7 @@ basic_istream<_CharT, _Traits>::tellg()
                 throw;
             }
         }
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
         this->setstate(__state);
     }
     return __r;
@@ -1279,13 +1279,13 @@ basic_istream<_CharT, _Traits>::seekg(pos_type __pos)
     sentry __sen(*this, true);
     if (__sen)
     {
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         try
         {
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
             if (this->rdbuf()->pubseekpos(__pos, ios_base::in) == pos_type(-1))
                 __state |= ios_base::failbit;
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         }
         catch (...)
         {
@@ -1296,7 +1296,7 @@ basic_istream<_CharT, _Traits>::seekg(pos_type __pos)
                 throw;
             }
         }
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
         this->setstate(__state);
     }
     return *this;
@@ -1311,13 +1311,13 @@ basic_istream<_CharT, _Traits>::seekg(off_type __off, ios_base::seekdir __dir)
     sentry __sen(*this, true);
     if (__sen)
     {
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         try
         {
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
             if (this->rdbuf()->pubseekoff(__off, __dir, ios_base::in) == pos_type(-1))
                 __state |= ios_base::failbit;
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         }
         catch (...)
         {
@@ -1328,7 +1328,7 @@ basic_istream<_CharT, _Traits>::seekg(off_type __off, ios_base::seekdir __dir)
                 throw;
             }
         }
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
         this->setstate(__state);
     }
     return *this;
@@ -1342,10 +1342,10 @@ ws(basic_istream<_CharT, _Traits>& __is)
     typename basic_istream<_CharT, _Traits>::sentry __sen(__is, true);
     if (__sen)
     {
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         try
         {
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
             const ctype<_CharT>& __ct = use_facet<ctype<_CharT> >(__is.getloc());
             while (true)
             {
@@ -1359,7 +1359,7 @@ ws(basic_istream<_CharT, _Traits>& __is)
                     break;
                 __is.rdbuf()->sbumpc();
             }
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         }
         catch (...)
         {
@@ -1370,27 +1370,27 @@ ws(basic_istream<_CharT, _Traits>& __is)
                 throw;
             }
         }
-#endif  // _LIBCPP_NO_EXCEPTIONS
+#endif  // _LIBCUDACXX_NO_EXCEPTIONS
         __is.setstate(__state);
     }
     return __is;
 }
 
-#ifndef _LIBCPP_CXX03_LANG
+#ifndef _LIBCUDACXX_CXX03_LANG
 
 template <class _CharT, class _Traits, class _Tp>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 basic_istream<_CharT, _Traits>&
 operator>>(basic_istream<_CharT, _Traits>&& __is, _Tp&& __x)
 {
-    __is >> _VSTD::forward<_Tp>(__x);
+    __is >> _CUDA_VSTD::forward<_Tp>(__x);
     return __is;
 }
 
-#endif  // _LIBCPP_CXX03_LANG
+#endif  // _LIBCUDACXX_CXX03_LANG
 
 template <class _CharT, class _Traits>
-class _LIBCPP_TEMPLATE_VIS basic_iostream
+class _LIBCUDACXX_TEMPLATE_VIS basic_iostream
     : public basic_istream<_CharT, _Traits>,
       public basic_ostream<_CharT, _Traits>
 {
@@ -1403,31 +1403,31 @@ public:
     typedef typename traits_type::off_type off_type;
 
     // constructor/destructor
-    inline _LIBCPP_HIDE_FROM_ABI_AFTER_V1
+    inline _LIBCUDACXX_HIDE_FROM_ABI_AFTER_V1
     explicit basic_iostream(basic_streambuf<char_type, traits_type>* __sb)
       : basic_istream<_CharT, _Traits>(__sb)
     {}
 
     virtual ~basic_iostream();
 protected:
-#ifndef _LIBCPP_CXX03_LANG
-    inline _LIBCPP_INLINE_VISIBILITY
+#ifndef _LIBCUDACXX_CXX03_LANG
+    inline _LIBCUDACXX_INLINE_VISIBILITY
     basic_iostream(basic_iostream&& __rhs);
 
     // assign/swap
-    inline _LIBCPP_INLINE_VISIBILITY
+    inline _LIBCUDACXX_INLINE_VISIBILITY
     basic_iostream& operator=(basic_iostream&& __rhs);
 #endif
-    inline _LIBCPP_HIDE_FROM_ABI_AFTER_V1
+    inline _LIBCUDACXX_HIDE_FROM_ABI_AFTER_V1
     void swap(basic_iostream& __rhs)
     { basic_istream<char_type, traits_type>::swap(__rhs); }
 };
 
-#ifndef _LIBCPP_CXX03_LANG
+#ifndef _LIBCUDACXX_CXX03_LANG
 
 template <class _CharT, class _Traits>
 basic_iostream<_CharT, _Traits>::basic_iostream(basic_iostream&& __rhs)
-    : basic_istream<_CharT, _Traits>(_VSTD::move(__rhs))
+    : basic_istream<_CharT, _Traits>(_CUDA_VSTD::move(__rhs))
 {
 }
 
@@ -1439,7 +1439,7 @@ basic_iostream<_CharT, _Traits>::operator=(basic_iostream&& __rhs)
     return *this;
 }
 
-#endif  // _LIBCPP_CXX03_LANG
+#endif  // _LIBCUDACXX_CXX03_LANG
 
 template <class _CharT, class _Traits>
 basic_iostream<_CharT, _Traits>::~basic_iostream()
@@ -1455,7 +1455,7 @@ operator>>(basic_istream<_CharT, _Traits>& __is,
     typename basic_istream<_CharT, _Traits>::sentry __sen(__is);
     if (__sen)
     {
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         try
         {
 #endif
@@ -1485,7 +1485,7 @@ operator>>(basic_istream<_CharT, _Traits>& __is,
             __is.width(0);
             if (__c == 0)
                __state |= ios_base::failbit;
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         }
         catch (...)
         {
@@ -1511,7 +1511,7 @@ getline(basic_istream<_CharT, _Traits>& __is,
     typename basic_istream<_CharT, _Traits>::sentry __sen(__is, true);
     if (__sen)
     {
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         try
         {
 #endif
@@ -1538,7 +1538,7 @@ getline(basic_istream<_CharT, _Traits>& __is,
             }
             if (__extr == 0)
                __state |= ios_base::failbit;
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         }
         catch (...)
         {
@@ -1556,7 +1556,7 @@ getline(basic_istream<_CharT, _Traits>& __is,
 }
 
 template<class _CharT, class _Traits, class _Allocator>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 basic_istream<_CharT, _Traits>&
 getline(basic_istream<_CharT, _Traits>& __is,
         basic_string<_CharT, _Traits, _Allocator>& __str)
@@ -1564,10 +1564,10 @@ getline(basic_istream<_CharT, _Traits>& __is,
     return getline(__is, __str, __is.widen('\n'));
 }
 
-#ifndef _LIBCPP_CXX03_LANG
+#ifndef _LIBCUDACXX_CXX03_LANG
 
 template<class _CharT, class _Traits, class _Allocator>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 basic_istream<_CharT, _Traits>&
 getline(basic_istream<_CharT, _Traits>&& __is,
         basic_string<_CharT, _Traits, _Allocator>& __str, _CharT __dlm)
@@ -1576,7 +1576,7 @@ getline(basic_istream<_CharT, _Traits>&& __is,
 }
 
 template<class _CharT, class _Traits, class _Allocator>
-inline _LIBCPP_INLINE_VISIBILITY
+inline _LIBCUDACXX_INLINE_VISIBILITY
 basic_istream<_CharT, _Traits>&
 getline(basic_istream<_CharT, _Traits>&& __is,
         basic_string<_CharT, _Traits, _Allocator>& __str)
@@ -1584,7 +1584,7 @@ getline(basic_istream<_CharT, _Traits>&& __is,
     return getline(__is, __str, __is.widen('\n'));
 }
 
-#endif  // _LIBCPP_CXX03_LANG
+#endif  // _LIBCUDACXX_CXX03_LANG
 
 template <class _CharT, class _Traits, size_t _Size>
 basic_istream<_CharT, _Traits>&
@@ -1594,7 +1594,7 @@ operator>>(basic_istream<_CharT, _Traits>& __is, bitset<_Size>& __x)
     typename basic_istream<_CharT, _Traits>::sentry __sen(__is);
     if (__sen)
     {
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         try
         {
 #endif
@@ -1621,7 +1621,7 @@ operator>>(basic_istream<_CharT, _Traits>& __is, bitset<_Size>& __x)
             __x = bitset<_Size>(__str);
             if (_Size > 0 && __c == 0)
                __state |= ios_base::failbit;
-#ifndef _LIBCPP_NO_EXCEPTIONS
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
         }
         catch (...)
         {
@@ -1638,14 +1638,14 @@ operator>>(basic_istream<_CharT, _Traits>& __is, bitset<_Size>& __x)
     return __is;
 }
 
-#ifndef _LIBCPP_DO_NOT_ASSUME_STREAMS_EXPLICIT_INSTANTIATION_IN_DYLIB
-_LIBCPP_EXTERN_TEMPLATE(class _LIBCPP_EXTERN_TEMPLATE_TYPE_VIS basic_istream<char>)
-_LIBCPP_EXTERN_TEMPLATE(class _LIBCPP_EXTERN_TEMPLATE_TYPE_VIS basic_istream<wchar_t>)
-_LIBCPP_EXTERN_TEMPLATE(class _LIBCPP_EXTERN_TEMPLATE_TYPE_VIS basic_iostream<char>)
+#ifndef _LIBCUDACXX_DO_NOT_ASSUME_STREAMS_EXPLICIT_INSTANTIATION_IN_DYLIB
+_LIBCUDACXX_EXTERN_TEMPLATE(class _LIBCUDACXX_EXTERN_TEMPLATE_TYPE_VIS basic_istream<char>)
+_LIBCUDACXX_EXTERN_TEMPLATE(class _LIBCUDACXX_EXTERN_TEMPLATE_TYPE_VIS basic_istream<wchar_t>)
+_LIBCUDACXX_EXTERN_TEMPLATE(class _LIBCUDACXX_EXTERN_TEMPLATE_TYPE_VIS basic_iostream<char>)
 #endif
 
-_LIBCPP_END_NAMESPACE_STD
+_LIBCUDACXX_END_NAMESPACE_STD
 
-_LIBCPP_POP_MACROS
+_LIBCUDACXX_POP_MACROS
 
-#endif  // _LIBCPP_ISTREAM
+#endif  // _LIBCUDACXX_ISTREAM

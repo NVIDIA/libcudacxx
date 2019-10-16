@@ -8,18 +8,18 @@
 
 #include "__config"
 
-#ifndef _LIBCPP_HAS_NO_THREADS
+#ifndef _LIBCUDACXX_HAS_NO_THREADS
 
 #include "condition_variable"
 #include "thread"
 #include "system_error"
 #include "__undef_macros"
 
-#if defined(__unix__) && !defined(__ANDROID__) && defined(__ELF__) && defined(_LIBCPP_HAS_COMMENT_LIB_PRAGMA)
+#if defined(__unix__) && !defined(__ANDROID__) && defined(__ELF__) && defined(_LIBCUDACXX_HAS_COMMENT_LIB_PRAGMA)
 #pragma comment(lib, "pthread")
 #endif
 
-_LIBCPP_BEGIN_NAMESPACE_STD
+_LIBCUDACXX_BEGIN_NAMESPACE_STD
 
 // ~condition_variable is defined elsewhere.
 
@@ -60,7 +60,7 @@ condition_variable::__do_timed_wait(unique_lock<mutex>& lk,
     __libcpp_timespec_t ts;
     seconds s = duration_cast<seconds>(d);
     typedef decltype(ts.tv_sec) ts_sec;
-    _LIBCPP_CONSTEXPR ts_sec ts_sec_max = numeric_limits<ts_sec>::max();
+    _LIBCUDACXX_CONSTEXPR ts_sec ts_sec_max = numeric_limits<ts_sec>::max();
     if (s.count() < ts_sec_max)
     {
         ts.tv_sec = static_cast<ts_sec>(s.count());
@@ -88,6 +88,6 @@ notify_all_at_thread_exit(condition_variable& cond, unique_lock<mutex> lk)
     __thread_local_data()->notify_all_at_thread_exit(&cond, lk.release());
 }
 
-_LIBCPP_END_NAMESPACE_STD
+_LIBCUDACXX_END_NAMESPACE_STD
 
-#endif // !_LIBCPP_HAS_NO_THREADS
+#endif // !_LIBCUDACXX_HAS_NO_THREADS

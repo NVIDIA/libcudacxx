@@ -7,7 +7,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCPPABI_VERSION
+#ifndef _LIBCUDACXXABI_VERSION
 #error this header can only be used with libc++abi
 #endif
 
@@ -17,7 +17,7 @@ bool uncaught_exception() _NOEXCEPT { return uncaught_exceptions() > 0; }
 
 int uncaught_exceptions() _NOEXCEPT
 {
-# if _LIBCPPABI_VERSION > 1001
+# if _LIBCUDACXXABI_VERSION > 1001
     return __cxa_uncaught_exceptions();
 # else
     return __cxa_uncaught_exception() ? 1 : 0;

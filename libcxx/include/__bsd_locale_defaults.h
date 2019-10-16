@@ -11,10 +11,10 @@
 // we will define the mapping from an internal macro to the real BSD symbol.
 //===----------------------------------------------------------------------===//
 
-#ifndef _LIBCPP_BSD_LOCALE_DEFAULTS_H
-#define _LIBCPP_BSD_LOCALE_DEFAULTS_H
+#ifndef _LIBCUDACXX_BSD_LOCALE_DEFAULTS_H
+#define _LIBCUDACXX_BSD_LOCALE_DEFAULTS_H
 
-#if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
@@ -33,4 +33,4 @@
 #define __libcpp_asprintf_l(...)                            asprintf_l(__VA_ARGS__)
 #define __libcpp_sscanf_l(...)                              sscanf_l(__VA_ARGS__)
 
-#endif // _LIBCPP_BSD_LOCALE_DEFAULTS_H
+#endif // _LIBCUDACXX_BSD_LOCALE_DEFAULTS_H
