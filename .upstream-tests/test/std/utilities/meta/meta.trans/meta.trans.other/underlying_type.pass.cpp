@@ -37,12 +37,13 @@ union U { int i; float f;};
 #endif
 
 template <typename T, typename Expected>
+__host__ __device__
 void check()
 {
     ASSERT_SAME_TYPE(Expected, typename cuda::std::underlying_type<T>::type);
 #if TEST_STD_VER > 11
     ASSERT_SAME_TYPE(Expected, typename cuda::std::underlying_type_t<T>);
-#endif  
+#endif
 }
 
 enum E { V = INT_MIN };

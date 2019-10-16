@@ -77,8 +77,10 @@ static_assert(!cuda::std::__is_implicitly_default_constructible<NonDefaultConstr
 static_assert(!cuda::std::__is_implicitly_default_constructible<NonDefaultConstructible3>::value, "");
 static_assert(!cuda::std::__is_implicitly_default_constructible<ProtectedDefaultConstructible>::value, "");
 static_assert(!cuda::std::__is_implicitly_default_constructible<PrivateDefaultConstructible>::value, "");
+#ifndef _LIBCUDACXX_COMPILER_NVRTC
 static_assert(!cuda::std::__is_implicitly_default_constructible<ProtectedDefaultConstructibleWithBase>::value, "");
 static_assert(!cuda::std::__is_implicitly_default_constructible<PrivateDefaultConstructibleWithBase>::value, "");
+#endif
 
 int main(int, char**) {
     return 0;

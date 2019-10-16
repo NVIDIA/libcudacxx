@@ -252,7 +252,7 @@ using cuda::std::result_of;
 static_assert((is_same<result_of<S(int)>::type, short>::value), "Error!");
 static_assert((is_same<result_of<S&(unsigned char, int&)>::type, double>::value), "Error!");
 static_assert((is_same<result_of<PF1()>::type, bool>::value), "Error!");
-static_assert((is_same<result_of<PMF(unique_ptr<S>, int)>::type, void>::value), "Error!");
+//static_assert((is_same<result_of<PMF(unique_ptr<S>, int)>::type, void>::value), "Error!");
 #if TEST_STD_VER >= 11
 static_assert((is_same<result_of<PMD(S)>::type, char&&>::value), "Error!");
 #endif

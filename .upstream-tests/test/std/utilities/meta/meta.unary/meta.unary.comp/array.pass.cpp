@@ -45,7 +45,7 @@ class incomplete_type;
 
 int main(int, char**)
 {
-    test_array<cuda/std/array>();
+    test_array<array>();
     test_array<const_array>();
     test_array<incomplete_array>();
     test_array<incomplete_type[]>();

@@ -291,10 +291,12 @@ int main(int, char**)
     // But the rvalue to lvalue reference binding isn't allowed according to
     // [over.match.ref] despite Clang accepting it.
     test_is_constructible<int&, ExplicitTo<int&>>();
-#ifndef TEST_COMPILER_GCC
+#if !defined(TEST_COMPILER_GCC) && !defined(TEST_COMPILER_NVRTC)
     test_is_constructible<const int&, ExplicitTo<int&&>>();
 #endif
 
+    // TODO add nvbug tracking
+#if !defined(TEST_COMPILER_NVCC) && !defined(TEST_COMPILER_NVRTC)
     static_assert(cuda::std::is_constructible<int&&, ExplicitTo<int&&>>::value, "");
 #endif
 

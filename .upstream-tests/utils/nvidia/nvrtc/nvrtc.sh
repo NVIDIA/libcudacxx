@@ -91,7 +91,7 @@ finish() {
 trap finish EXIT
 
 gpu_archs=($(printf "%s\n" "${gpu_archs[@]}" | sort -u | tr '\n' ' '))
-if "${#gpu_archs[@]}" -ne 1
+if [[ "${#gpu_archs[@]}" -ne 1 ]]
 then
     echo "Multiple GPU architectures specified: ${gpu_archs[@]}, exiting." >&2
     exit 1
