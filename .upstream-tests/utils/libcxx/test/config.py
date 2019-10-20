@@ -882,7 +882,8 @@ class Configuration(object):
             if 'pgi' in self.config.available_features:
                 pass
             elif not self.cxx.is_nvrtc:
-                self.cxx.link_flags += ['-nodefaultlibs']
+                pass
+                #self.cxx.link_flags += ['-nodefaultlibs']
             # FIXME: Handle MSVCRT as part of the ABI library handling.
             if self.is_windows and 'msvc' not in self.config.available_features:
                 self.cxx.link_flags += ['-nostdlib']

@@ -40,6 +40,8 @@ void list_devices()
 __host__ __device__
 int fake_main(int, char**);
 
+int cuda_thread_count = 1;
+
 __global__
 void fake_main_kernel(int * ret)
 {
@@ -51,7 +53,7 @@ void fake_main_kernel(int * ret)
         err = __VA_ARGS__; \
         if (err != cudaSuccess) \
         { \
-            printf("CUDA ERROR: %s: %s\n", \
+            printf("CUDA ERROR, line %d: %s: %s\n", __LINE__,\
                    cudaGetErrorName(err), cudaGetErrorString(err)); \
             return err; \
         } \
@@ -74,7 +76,7 @@ int main(int argc, char** argv)
     int * cuda_ret = nullptr;
     CUDA_CALL(err, cudaMalloc(&cuda_ret, sizeof(int)));
 
-    fake_main_kernel<<<1, 1>>>(cuda_ret);
+    fake_main_kernel<<<1, cuda_thread_count>>>(cuda_ret);
     CUDA_CALL(err, cudaGetLastError());
     CUDA_CALL(err, cudaDeviceSynchronize());
     CUDA_CALL(err, cudaMemcpy(&ret, cuda_ret, sizeof(int), cudaMemcpyDeviceToHost));

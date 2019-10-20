@@ -12,21 +12,35 @@
 // <cuda/std/barrier>
 
 #include <cuda/std/barrier>
-#include <cuda/std/thread>
 
 #include "test_macros.h"
+#include "concurrent_agents.h"
 
 int main(int, char**)
 {
-  cuda::std::barrier b(2);
+#ifndef __CUDA_ARCH__
+    cuda_thread_count = 2;
+#endif
 
-  cuda::std::thread t([&](){
+#ifdef __CUDA_ARCH__
+  __shared__
+#endif
+  cuda::std::barrier<> * b;
+#ifdef __CUDA_ARCH__
+  if (threadIdx.x == 0) {
+#endif
+  b = new cuda::std::barrier<>(2);
+#ifdef __CUDA_ARCH__
+  }
+  __syncthreads();
+#endif
+
+  auto worker = [=] __host__ __device__ (){
     for(int i = 0; i < 10; ++i)
-      b.arrive_and_wait();
-  });
-  for(int i = 0; i < 10; ++i)
-    b.arrive_and_wait();
-  t.join();
+      b->arrive_and_wait();
+  };
+
+  concurrent_agents_launch(worker, worker);
 
   return 0;
 }

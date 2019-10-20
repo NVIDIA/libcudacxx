@@ -68,7 +68,7 @@ struct TestFn {
 
 int main(int, char**)
 {
-    TestEachAtomicType<TestFn, cuda::thread_scope_system>()();
+    TestEachAtomicType<TestFn>()();
 
   return 0;
 }

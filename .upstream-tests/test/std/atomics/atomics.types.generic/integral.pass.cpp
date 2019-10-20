@@ -204,10 +204,8 @@ using cuda_atomic = cuda::atomic<T, Scope>;
 
 int main(int, char**)
 {
-#if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 600
     test_for_all_types<cuda_std_atomic, cuda::thread_scope_system>();
     test_for_all_types<cuda_atomic, cuda::thread_scope_system>();
-#endif
     test_for_all_types<cuda_atomic, cuda::thread_scope_device>();
     test_for_all_types<cuda_atomic, cuda::thread_scope_block>();
 

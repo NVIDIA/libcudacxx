@@ -12,7 +12,6 @@
 // <cuda/std/semaphore>
 
 #include <cuda/std/semaphore>
-#include <cuda/std/thread>
 
 #include "test_macros.h"
 

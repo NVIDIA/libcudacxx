@@ -10,7 +10,7 @@
 #define PLACEMENT_NEW_HPP
 
 // CUDA always defines placement new/delete for device code.
-#if !defined(__CUDA_ARCH__)
+#if !defined(__CUDACC__)
 
 #include <stddef.h> // Avoid depending on the C++ standard library.
 #include "test_macros.h"
@@ -20,7 +20,7 @@ void* operator new[](size_t, void* p) TEST_THROW_SPEC() { return p; }
 void operator delete(void*, void*) TEST_THROW_SPEC() { }
 void operator delete[](void*, void*) TEST_THROW_SPEC() { }
 
-#endif // !defined(__CUDA_ARCH__)
+#endif // !defined(__CUDACC__)
 
 #endif // PLACEMENT_NEW_HPP
 

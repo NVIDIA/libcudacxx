@@ -12,23 +12,61 @@
 // <cuda/std/semaphore>
 
 #include <cuda/std/semaphore>
-#include <cuda/std/thread>
 
 #include "test_macros.h"
+#include "concurrent_agents.h"
 
 int main(int, char**)
 {
-  cuda::std::counting_semaphore s(1);
+#ifndef __CUDA_ARCH__
+    cuda_thread_count = 2;
+#endif
 
-  assert(s.try_acquire());
-  s.release();
-  assert(s.try_acquire());
-  s.release(2);
-  cuda::std::thread t([&](){
-    assert(s.try_acquire());
+#ifdef __CUDA_ARCH__
+  __shared__
+#endif
+  cuda::std::counting_semaphore<> * s;
+#ifdef __CUDA_ARCH__
+  if (threadIdx.x == 0) {
+#endif
+  s = new cuda::std::counting_semaphore<>(2);
+#ifdef __CUDA_ARCH__
+  }
+  __syncthreads();
+#endif
+
+#ifdef __CUDA_ARCH__
+  if (threadIdx.x == 0) {
+#endif
+  assert(s->try_acquire());
+  s->release();
+  assert(s->try_acquire());
+  s->release(2);
+#ifdef __CUDA_ARCH__
+  }
+#endif
+
+#ifdef __CUDA_ARCH__
+  if (threadIdx.x == 1) {
+#else
+  std::thread t([&](){
+#endif
+    assert(s->try_acquire());
+#ifdef __CUDA_ARCH__
+  }
+  __syncthreads();
+#else
   });
   t.join();
-  assert(s.try_acquire());
+#endif
+
+#ifdef __CUDA_ARCH__
+  if (threadIdx.x == 0) {
+#endif
+  assert(s->try_acquire());
+#ifdef __CUDA_ARCH__
+  }
+#endif
 
   return 0;
 }

@@ -12,23 +12,54 @@
 // <cuda/std/semaphore>
 
 #include <cuda/std/semaphore>
-#include <cuda/std/thread>
 
 #include "test_macros.h"
+#include "concurrent_agents.h"
 
 int main(int, char**)
 {
-  cuda::std::counting_semaphore s(0);
+#ifndef __CUDA_ARCH__
+    cuda_thread_count = 2;
+#endif
 
-  s.release();
-  s.acquire();
+#ifdef __CUDA_ARCH__
+  __shared__
+#endif
+  cuda::std::counting_semaphore<> * s;
+#ifdef __CUDA_ARCH__
+  if (threadIdx.x == 0) {
+#endif
+  s = new cuda::std::counting_semaphore<>(2);
+#ifdef __CUDA_ARCH__
+  }
+  __syncthreads();
+#endif
 
-  cuda::std::thread t([&](){
-    s.acquire();
-  });
-  s.release(2);
-  t.join();
-  s.acquire();
+#ifdef __CUDA_ARCH__
+  if (threadIdx.x == 0) {
+#endif
+  s->release();
+  s->acquire();
+#ifdef __CUDA_ARCH__
+  }
+#endif
+
+  auto acquirer = [=] __host__ __device__ (){
+    s->acquire();
+  };
+  auto releaser = [=] __host__ __device__ (){
+    s->release(2);
+  };
+
+  concurrent_agents_launch(acquirer, releaser);
+
+#ifdef __CUDA_ARCH__
+  if (threadIdx.x == 0) {
+#endif
+  s->acquire();
+#ifdef __CUDA_ARCH__
+  }
+#endif
 
   return 0;
 }

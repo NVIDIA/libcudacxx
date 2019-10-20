@@ -12,19 +12,34 @@
 // <cuda/std/latch>
 
 #include <cuda/std/latch>
-#include <cuda/std/thread>
 
 #include "test_macros.h"
+#include "concurrent_agents.h"
 
 int main(int, char**)
 {
-  cuda::std::latch l(2);
+#ifndef __CUDA_ARCH__
+    cuda_thread_count = 2;
+#endif
 
-  cuda::std::thread t([&](){
-      l.arrive_and_wait();
-  });
-  l.arrive_and_wait();
-  t.join();
+#ifdef __CUDA_ARCH__
+  __shared__
+#endif
+  cuda::std::latch * l;
+#ifdef __CUDA_ARCH__
+  if (threadIdx.x == 0) {
+#endif
+  l = new cuda::std::latch(2);
+#ifdef __CUDA_ARCH__
+  }
+  __syncthreads();
+#endif
+
+  auto worker = [=] __host__ __device__ (){
+      l->arrive_and_wait();
+  };
+
+  concurrent_agents_launch(worker, worker);
 
   return 0;
 }
