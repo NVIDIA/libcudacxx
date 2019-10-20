@@ -515,12 +515,18 @@ void __libcpp_thread_yield_processor()
 void __libcpp_thread_sleep_for(const chrono::nanoseconds& __ns)
 {
 #ifdef __CUDA_ARCH__
-   auto const step = __ns.count();
-   assert(step < numeric_limits<unsigned>::max());
-   asm volatile("nanosleep.u32 %0;"::"r"((unsigned)step):);
+
+#if __CUDA_ARCH__ >= 700
+    auto const step = __ns.count();
+    assert(step < numeric_limits<unsigned>::max());
+    asm volatile("nanosleep.u32 %0;"::"r"((unsigned)step):);
 #else
-   __libcpp_timespec_t __ts = __libcpp_to_timespec(__ns);
-   while (nanosleep(&__ts, &__ts) == -1 && errno == EINTR);
+    ;
+#endif
+
+#else
+    __libcpp_timespec_t __ts = __libcpp_to_timespec(__ns);
+    while (nanosleep(&__ts, &__ts) == -1 && errno == EINTR);
 #endif
 }
 

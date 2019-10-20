@@ -396,14 +396,12 @@ if (LIBCXX_ENABLE_EXPERIMENTAL_LIBRARY)
     target_link_libraries(cxx_experimental cxx_static)
   endif()
 
-  set(experimental_flags "${LIBCXX_COMPILE_FLAGS}")
-  check_flag_supported(-std=c++14)
-  if (NOT MSVC AND LIBCXX_SUPPORTS_STD_EQ_CXX14_FLAG)
-    string(REPLACE "-std=c++11" "-std=c++14" experimental_flags "${LIBCXX_COMPILE_FLAGS}")
-  endif()
+  cxx_add_basic_build_flags(cxx_experimental)
+  cxx_set_common_defines(cxx_experimental)
+  cxx_add_warning_flags(cxx_experimental)
+  cxx_add_windows_flags(cxx_experimental)
   set_target_properties(cxx_experimental
     PROPERTIES
-      COMPILE_FLAGS "${experimental_flags}"
       OUTPUT_NAME   "c++experimental"
   )
 endif()
