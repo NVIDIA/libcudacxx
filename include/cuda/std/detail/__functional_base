@@ -6,8 +6,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _CUDA___THREADING_SUPPORT
-#define _CUDA___THREADING_SUPPORT
+#ifndef _CUDA___FUNCTIONAL_BASE
+#define _CUDA___FUNCTIONAL_BASE
 
 #include <errno.h>
 
@@ -16,7 +16,7 @@
 
 #include "__config"
 
-#include "libcxx/include/__threading_support"
+#include "libcxx/include/__functional_base"
 
-#endif //_CUDA___THREADING_SUPPORT
+#endif //_CUDA___FUNCTIONAL_BASE
 

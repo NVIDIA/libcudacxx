@@ -22,26 +22,26 @@ THE SOFTWARE.
 
 */
 
-#ifndef _SIMT_BARRIER
-#define _SIMT_BARRIER
+#ifndef _CUDA_BARRIER
+#define _CUDA_BARRIER
 
 #include "atomic"
 
-#include "../details/__config"
+#include "detail/__config"
 
-#include "../../libcxx/include/barrier"
+#include "detail/libcxx/include/barrier"
 
-namespace simt {
+_LIBCUDACXX_BEGIN_NAMESPACE_CUDA
 
-template<thread_scope _Sco, class CompletionF = std::EmptyCompletionF>
-class barrier : public std::__barrier_base<CompletionF, _Sco> {
+template<thread_scope _Sco, class _CompletionF = std::__empty_completion>
+class barrier : public std::__barrier_base<_CompletionF, _Sco> {
 public:
-    _LIBCPP_INLINE_VISIBILITY
-    barrier(std::ptrdiff_t count, CompletionF completion = CompletionF()) 
-        : std::__barrier_base<CompletionF, _Sco>(count, completion) { 
+    _LIBCUDACXX_INLINE_VISIBILITY
+    barrier(std::ptrdiff_t __count, _CompletionF __completion = _CompletionF())
+        : std::__barrier_base<_CompletionF, _Sco>(__count, __completion) {
     }
 };
 
-}
+_LIBCUDACXX_END_NAMESPACE_CUDA
 
-#endif //_SIMT_BARRIER
+#endif //_CUDA_BARRIER

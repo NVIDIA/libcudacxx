@@ -6,26 +6,16 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _CUDA_LATCH
-#define _CUDA_LATCH
+#ifndef _CUDA_UTILITY
+#define _CUDA_UTILITY
 
-#include "atomic"
+#include "type_traits"
+#include "version"
 
 #include "detail/__config"
 
-#include "detail/libcxx/include/latch"
+#include "detail/libcxx/include/utility"
 
-_LIBCUDACXX_BEGIN_NAMESPACE_CUDA
+#endif //_CUDA_UTILITY
 
-template<thread_scope _Sco>
-class latch : public std::__latch_base<_Sco> {
-public:
-    _LIBCUDACXX_INLINE_VISIBILITY
-    latch(std::ptrdiff_t __count)
-        : std::__latch_base<_Sco>(__count) {
-    }
-};
 
-_LIBCUDACXX_END_NAMESPACE_CUDA
-
-#endif //_CUDA_LATCH
