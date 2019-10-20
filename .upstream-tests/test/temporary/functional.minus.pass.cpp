@@ -13,7 +13,10 @@
 
 int main(int, char **)
 {
+    assert(cuda::std::minus<int>()(2, 1) == 1);
+#if __cplusplus >= 201402LL
     assert(cuda::std::minus<>()(2, 1) == 1);
+#endif
 
     return 0;
 }
