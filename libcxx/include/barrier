@@ -227,7 +227,7 @@ public:
             __completion();
             arrived.store(new_expected, memory_order_relaxed);
             __phase.store(!__old_phase, memory_order_release);
-            atomic_notify_all(&__phase);
+            __cxx_atomic_notify_all(&__phase.__a_);
         }
         return __old_phase;
     }

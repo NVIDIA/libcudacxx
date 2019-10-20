@@ -213,6 +213,11 @@ template <size_t I>
 
 _LIBCUDACXX_BEGIN_NAMESPACE_STD
 
+// This header is not currently supported. It exists to allow for the use of
+// `unary_function`, needed by `<cuda/std/functional>`, which happens to be defined here.
+
+#ifndef __cuda_std__
+
 namespace rel_ops
 {
 
@@ -959,12 +964,16 @@ using __is_inplace_index = __is_inplace_index_imp<__uncvref_t<_Tp>>;
 
 #endif // _LIBCUDACXX_STD_VER > 14
 
+#endif // __cuda_std__
+
 template <class _Arg, class _Result>
 struct _LIBCUDACXX_TEMPLATE_VIS unary_function
 {
     typedef _Arg    argument_type;
     typedef _Result result_type;
 };
+
+#ifndef __cuda_std__
 
 template <class _Size>
 inline _LIBCUDACXX_INLINE_VISIBILITY
@@ -1615,6 +1624,8 @@ using __enable_hash_helper _LIBCUDACXX_NODEBUG_TYPE = _Type;
 #endif
 
 #endif // !_LIBCUDACXX_CXX03_LANG
+
+#endif // __cuda_std__
 
 _LIBCUDACXX_END_NAMESPACE_STD
 

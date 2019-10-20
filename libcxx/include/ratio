@@ -77,17 +77,21 @@ typedef ratio<1000000000000000000000000, 1> yotta;  // not supported
 }
 */
 
+#ifndef __cuda_std__
 #include <__config>
 #include <cstdint>
 #include <climits>
 #include <type_traits>
+#endif
 
 #if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
 _LIBCUDACXX_PUSH_MACROS
+#ifndef __cuda_std__
 #include <__undef_macros>
+#endif
 
 
 _LIBCUDACXX_BEGIN_NAMESPACE_STD

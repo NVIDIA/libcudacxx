@@ -635,7 +635,11 @@ typedef enum memory_order {
 
 template <typename _Tp> _LIBCUDACXX_INLINE_VISIBILITY
 bool __cxx_nonatomic_compare_equal(_Tp const& __lhs, _Tp const& __rhs) {
+#ifdef _LIBCUDACXX_COMPILER_NVCC
+    return __lhs == __rhs;
+#else
     return memcmp(&__lhs, &__rhs, sizeof(_Tp)) == 0;
+#endif
 }
 
 static_assert((is_same<underlying_type<memory_order>::type, __memory_order_underlying_t>::value),
@@ -1229,7 +1233,7 @@ bool __cxx_atomic_compare_exchange_strong(volatile __cxx_atomic_lock_impl<_Tp, _
   __a->__lock();
   _Tp __temp;
   __cxx_atomic_assign_volatile(__temp, __a->__a_value);
-  bool __ret = temp == *__expected;
+  bool __ret = __temp == *__expected;
   if(__ret)
     __cxx_atomic_assign_volatile(__a->__a_value, __value);
   else
@@ -1258,7 +1262,7 @@ bool __cxx_atomic_compare_exchange_weak(volatile __cxx_atomic_lock_impl<_Tp, _Sc
   __a->__lock();
   _Tp __temp;
   __cxx_atomic_assign_volatile(__temp, __a->__a_value);
-  bool __ret = temp == *__expected;
+  bool __ret = __temp == *__expected;
   if(__ret)
     __cxx_atomic_assign_volatile(__a->__a_value, __value);
   else
@@ -1456,7 +1460,7 @@ __cxx_atomic_impl<_Tp, _Sco>* __cxx_atomic_rebind(_Tp* __inst) {
 template <class _Tp, int _Sco>
 _LIBCUDACXX_INLINE_VISIBILITY void __cxx_atomic_try_wait_slow_fallback(__cxx_atomic_impl<_Tp, _Sco> const volatile* __a, _Tp __val, memory_order __order) {
     __libcpp_thread_poll_with_backoff([=] _LIBCUDACXX_INLINE_VISIBILITY () -> bool {
-        return __cxx_atomic_load(__a, __order) != __val;
+        return !(__cxx_atomic_load(__a, __order) == __val);
     });
 }
 

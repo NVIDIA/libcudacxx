@@ -497,6 +497,7 @@ POLICY:  For non-variadic implementations, the number of arguments is limited
 
 */
 
+#ifndef __cuda_std__
 #include <__config>
 #include <type_traits>
 #include <typeinfo>
@@ -507,6 +508,7 @@ POLICY:  For non-variadic implementations, the number of arguments is limited
 #include <version>
 
 #include <__functional_base>
+#endif
 
 #if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
 #pragma GCC system_header
@@ -1406,6 +1408,10 @@ mem_fn(_Rp _Tp::* __pm) _NOEXCEPT
 {
     return __mem_fn<_Rp _Tp::*>(__pm);
 }
+
+// `cuda::std::function` is not supported at this time.
+
+#ifndef __cuda_std__
 
 ////////////////////////////////////////////////////////////////////////////////
 //                                FUNCTION
@@ -2532,9 +2538,15 @@ swap(function<_Rp(_ArgTypes...)>& __x, function<_Rp(_ArgTypes...)>& __y) _NOEXCE
 
 #endif
 
+#endif // __cuda_std__
+
 ////////////////////////////////////////////////////////////////////////////////
 //                                  BIND
 //==============================================================================
+
+// `cuda::std::bind` is not currently supported.
+
+#ifndef __cuda_std__
 
 template<class _Tp> struct __is_bind_expression : public false_type {};
 template<class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_bind_expression
@@ -2892,6 +2904,8 @@ bind(_Fp&& __f, _BoundArgs&&... __bound_args)
 
 #endif  // _LIBCUDACXX_CXX03_LANG
 
+#endif // __cuda_std__
+
 #if _LIBCUDACXX_STD_VER > 14
 
 template <class _Fn, class ..._Args>
@@ -2959,6 +2973,10 @@ __not_fn_imp<decay_t<_RawFunc>> not_fn(_RawFunc&& __fn) {
 #endif
 
 // struct hash<T*> in <memory>
+
+// Searchers are not currently supported.
+
+#ifndef __cuda_std__
 
 template <class _BinaryPredicate, class _ForwardIterator1, class _ForwardIterator2>
 pair<_ForwardIterator1, _ForwardIterator1> _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
@@ -3071,6 +3089,8 @@ private:
 
 #endif // _LIBCUDACXX_STD_VER > 14
 
+#endif // __cuda_std__
+
 #if _LIBCUDACXX_STD_VER > 17
 template <class _Tp>
 using unwrap_reference_t = typename unwrap_reference<_Tp>::type;
@@ -3078,6 +3098,8 @@ using unwrap_reference_t = typename unwrap_reference<_Tp>::type;
 template <class _Tp>
 using unwrap_ref_decay_t = typename unwrap_ref_decay<_Tp>::type;
 #endif // > C++17
+
+#ifndef __cuda_std__
 
 template <class _Container, class _Predicate>
 inline void __libcpp_erase_if_container( _Container& __c, _Predicate __pred)
@@ -3090,6 +3112,8 @@ inline void __libcpp_erase_if_container( _Container& __c, _Predicate __pred)
 			++__iter;
 	}
 }
+
+#endif
 
 _LIBCUDACXX_END_NAMESPACE_STD
 
