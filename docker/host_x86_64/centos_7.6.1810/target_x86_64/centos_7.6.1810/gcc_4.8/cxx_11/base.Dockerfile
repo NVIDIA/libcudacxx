@@ -69,7 +69,7 @@ RUN set -o pipefail; cd /sw/gpgpu/libcudacxx/build\
 
 # Build tests if requested.
 # NOTE: libc++ tests are disabled until we can setup libc++abi.
-RUN cd /sw/gpgpu/libcudacxx\
+RUN set -o pipefail; cd /sw/gpgpu/libcudacxx\
  && LIBCUDACXX_COMPUTE_ARCHS=$LIBCUDACXX_COMPUTE_ARCHS\
  LIBCUDACXX_SKIP_BASE_TESTS_BUILD=$LIBCUDACXX_SKIP_BASE_TESTS_BUILD\
  /sw/gpgpu/libcudacxx/utils/nvidia/linux/perform_tests.bash\
@@ -78,7 +78,7 @@ RUN cd /sw/gpgpu/libcudacxx\
  2>&1 | tee /sw/gpgpu/libcudacxx/build/lit.log
 
 # Build tests for sm6x and up if requested.
-RUN cd /sw/gpgpu/libcudacxx\
+RUN set -o pipefail; cd /sw/gpgpu/libcudacxx\
  && LIBCUDACXX_COMPUTE_ARCHS="60 61 62 70 72 75"\
  LIBCUDACXX_SKIP_BASE_TESTS_BUILD=$LIBCUDACXX_SKIP_BASE_TESTS_BUILD\
  /sw/gpgpu/libcudacxx/utils/nvidia/linux/perform_tests.bash\

@@ -3,6 +3,7 @@
 FROM ubuntu:16.04
 
 MAINTAINER Bryce Adelstein Lelbach <blelbach@nvidia.com>
+SHELL ["/usr/bin/env", "bash", "-c"]
 
 ARG LIBCUDACXX_SKIP_BASE_TESTS_BUILD
 ARG LIBCUDACXX_COMPUTE_ARCHS
@@ -44,7 +45,7 @@ ADD opencl/import/cl_rel/CL/*.h* /sw/gpgpu/opencl/import/cl_rel/CL/
 ADD libcudacxx /sw/gpgpu/libcudacxx
 
 # Build libc++ and configure libc++ tests.
-RUN cd /sw/gpgpu/libcudacxx/libcxx/build\
+RUN set -o pipefail; cd /sw/gpgpu/libcudacxx/libcxx/build\
  && cmake ..\
  -DLIBCXX_INCLUDE_TESTS=ON\
  -DLIBCXX_INCLUDE_BENCHMARKS=OFF\
@@ -58,7 +59,7 @@ RUN cd /sw/gpgpu/libcudacxx/libcxx/build\
  2>&1 | tee /sw/gpgpu/libcudacxx/libcxx/build/cmake_libcxx.log
 
 # Configure libcu++ tests.
-RUN cd /sw/gpgpu/libcudacxx/build\
+RUN set -o pipefail; cd /sw/gpgpu/libcudacxx/build\
  && cmake ..\
  -DLIBCXX_TEST_STANDARD_VER=c++14\
  -DLLVM_CONFIG_PATH=$(which llvm-config-5.0)\
@@ -67,7 +68,7 @@ RUN cd /sw/gpgpu/libcudacxx/build\
  2>&1 | tee /sw/gpgpu/libcudacxx/build/cmake_libcudacxx.log
 
 # Build tests if requested.
-RUN cd /sw/gpgpu/libcudacxx\
+RUN set -o pipefail; cd /sw/gpgpu/libcudacxx\
  && LIBCUDACXX_COMPUTE_ARCHS=$LIBCUDACXX_COMPUTE_ARCHS\
  LIBCUDACXX_SKIP_BASE_TESTS_BUILD=$LIBCUDACXX_SKIP_BASE_TESTS_BUILD\
  /sw/gpgpu/libcudacxx/utils/nvidia/linux/perform_tests.bash\
@@ -75,7 +76,7 @@ RUN cd /sw/gpgpu/libcudacxx\
  2>&1 | tee /sw/gpgpu/libcudacxx/build/lit.log
 
 # Build tests for sm6x and up if requested.
-RUN cd /sw/gpgpu/libcudacxx\
+RUN set -o pipefail; cd /sw/gpgpu/libcudacxx\
  && LIBCUDACXX_COMPUTE_ARCHS="60 61 62 70 72 75"\
  LIBCUDACXX_SKIP_BASE_TESTS_BUILD=$LIBCUDACXX_SKIP_BASE_TESTS_BUILD\
  /sw/gpgpu/libcudacxx/utils/nvidia/linux/perform_tests.bash\
