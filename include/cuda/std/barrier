@@ -1,26 +1,10 @@
-/*
-
-Copyright (c) 2019, NVIDIA Corporation
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-
-*/
+//===----------------------------------------------------------------------===//
+//
+// Part of the CUDA Toolkit, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+//
+//===----------------------------------------------------------------------===//
 
 #ifndef _CUDA_BARRIER
 #define _CUDA_BARRIER
@@ -36,9 +20,155 @@ _LIBCUDACXX_BEGIN_NAMESPACE_CUDA
 template<thread_scope _Sco, class _CompletionF = std::__empty_completion>
 class barrier : public std::__barrier_base<_CompletionF, _Sco> {
 public:
+    barrier() = default;
+
+    barrier(const barrier &) = delete;
+    barrier & operator=(const barrier &) = delete;
+
     _LIBCUDACXX_INLINE_VISIBILITY
-    barrier(std::ptrdiff_t __count, _CompletionF __completion = _CompletionF())
-        : std::__barrier_base<_CompletionF, _Sco>(__count, __completion) {
+    barrier(std::ptrdiff_t __expected, _CompletionF __completion = _CompletionF())
+        : std::__barrier_base<_CompletionF, _Sco>(__expected, __completion) {
+    }
+
+    _LIBCUDACXX_INLINE_VISIBILITY
+    void init(std::ptrdiff_t __expected, _CompletionF __completion = _CompletionF()) {
+        new (this) barrier(__expected, __completion);
+    }
+};
+
+template<class _Tp>
+_LIBCUDACXX_INLINE_VISIBILITY
+__forceinline__
+int __is_shared(_Tp * __ptr) {
+#ifndef __CUDA_ARCH__
+    return 0;
+#else
+    int __res;
+    asm volatile ("{\n\t"
+            ".reg .pred p;\n\t"
+            "isspacep.shared p, %1;\n\t"
+            "selp.b32 %0, 1, 0, p;\n\t"
+            "}"
+        : "=r"(__res)
+        : "l"(__ptr));
+    return __res;
+#endif
+}
+
+template<>
+class barrier<thread_scope_block, std::__empty_completion> {
+    using __barrier_base = std::__barrier_base<std::__empty_completion, (int)thread_scope_block>;
+    __barrier_base __barrier;
+
+public:
+    using arrival_token = typename __barrier_base::arrival_token;
+
+    barrier() = default;
+
+    barrier(const barrier &) = delete;
+    barrier & operator=(const barrier &) = delete;
+
+    _LIBCUDACXX_INLINE_VISIBILITY
+    barrier(std::ptrdiff_t __expected, std::__empty_completion __completion = std::__empty_completion()) {
+        init(__expected, __completion);
+    }
+
+    _LIBCUDACXX_INLINE_VISIBILITY
+    void init(std::ptrdiff_t __expected, std::__empty_completion __completion = std::__empty_completion()) {
+#if __CUDA_ARCH__ >= 800
+        if (__is_shared(&__barrier)) {
+            asm volatile ("mbarrier.init.b64 [%0], %1;"
+                :: "l"(&__barrier), "r"(static_cast<std::uint32_t>(__expected))
+                : "memory");
+        }
+        else
+#endif
+        {
+            new (&__barrier) __barrier_base(__expected);
+        }
+    }
+
+    [[nodiscard]] _LIBCUDACXX_INLINE_VISIBILITY
+    arrival_token arrive(std::ptrdiff_t __update = 1)
+    {
+#if __CUDA_ARCH__ >= 800
+        if (__is_shared(&__barrier)) {
+            arrival_token __token;
+            if (__update > 1) {
+                asm volatile ("mbarrier.arrive.serial.b64 %0, [%1], %2;"
+                    : "=l"(__token)
+                    : "l"(&__barrier), "r"(static_cast<std::uint32_t>(__update))
+                    : "memory");
+            }
+            else {
+                asm volatile ("mbarrier.arrive.b64 %0, [%1];"
+                    : "=l"(__token)
+                    : "l"(&__barrier)
+                    : "memory");
+            }
+            return __token;
+        }
+        else
+#endif
+        {
+            return __barrier.arrive(__update);
+        }
+    }
+
+    _LIBCUDACXX_INLINE_VISIBILITY
+    void wait(arrival_token && __phase) const
+    {
+#if __CUDA_ARCH__ >= 800
+        if (__is_shared(&__barrier)) {
+            unsigned __sleep_timer_ns = 1;
+
+            while (true) {
+                int __wait_complete = 0;
+                asm volatile ("{\n\t"
+                        ".reg .pred p;\n\t"
+                        "mbarrier.test_wait.b64 p, [%1], %2;\n\t"
+                        "selp.b32 %0, 1, 0, p;\n\t"
+                        "}"
+                    : "=r"(__wait_complete)
+                    : "l"(&__barrier), "l"(__phase)
+                    : "memory");
+                if (__wait_complete) { break; }
+
+                asm volatile ("nanosleep.u32 %0;"
+                    :: "r"((unsigned)__sleep_timer_ns));
+
+                if (__sleep_timer_ns < 1048576) { // 2^20
+                    __sleep_timer_ns *= 2;
+                }
+            }
+        }
+        else
+#endif
+        {
+            __barrier.wait(std::move(__phase));
+        }
+    }
+
+    inline _LIBCUDACXX_INLINE_VISIBILITY
+    void arrive_and_wait()
+    {
+        wait(arrive());
+    }
+
+    _LIBCUDACXX_INLINE_VISIBILITY
+    void arrive_and_drop()
+    {
+#if __CUDA_ARCH__ >= 800
+        if (__is_shared(&__barrier)) {
+            asm volatile ("mbarrier.arrive_drop.b64 _, [%0];"
+                :: "l"(&__barrier)
+                : "memory");
+        }
+        else
+#endif
+        {
+            __barrier.arrive_and_drop();
+        }
     }
 };
 
