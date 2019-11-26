@@ -517,9 +517,9 @@ void __libcpp_thread_sleep_for(const chrono::nanoseconds& __ns)
 #ifdef __CUDA_ARCH__
 
 #if __CUDA_ARCH__ >= 700
-    auto const step = __ns.count();
-    assert(step < numeric_limits<unsigned>::max());
-    asm volatile("nanosleep.u32 %0;"::"r"((unsigned)step):);
+    auto const __step = __ns.count();
+    assert(__step < numeric_limits<unsigned>::max());
+    asm volatile("nanosleep.u32 %0;"::"r"((unsigned)__step):);
 #else
     ;
 #endif

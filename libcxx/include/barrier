@@ -199,15 +199,17 @@ public:
 template<class _CompletionF, int _Sco = 0>
 class __barrier_base {
 
-    alignas(64) __atomic_base<ptrdiff_t, _Sco> __expected, arrived;
+    alignas(64) __atomic_base<ptrdiff_t, _Sco> __expected, __arrived;
     alignas(64) _CompletionF                   __completion;
     alignas(64) __atomic_base<bool, _Sco>      __phase;
 public:
     using arrival_token = bool;
 
+    __barrier_base() = default;
+
     _LIBCUDACXX_INLINE_VISIBILITY
     __barrier_base(ptrdiff_t __expected, _CompletionF __completion = _CompletionF())
-        : __phase(false), __expected(__expected), arrived(__expected), __completion(__completion)
+        : __phase(false), __expected(__expected), __arrived(__expected), __completion(__completion)
     {
     }
 
@@ -217,15 +219,15 @@ public:
     __barrier_base& operator=(__barrier_base const&) = delete;
 
     [[nodiscard]] _LIBCUDACXX_INLINE_VISIBILITY
-    arrival_token arrive(ptrdiff_t update = 1)
+    arrival_token arrive(ptrdiff_t __update = 1)
     {
         auto const __old_phase = __phase.load(memory_order_relaxed);
-        auto const __result = arrived.fetch_sub(update, memory_order_acq_rel) - update;
+        auto const __result = __arrived.fetch_sub(__update, memory_order_acq_rel) - __update;
         assert(__result >= 0);
-        auto const new_expected = __expected.load(memory_order_relaxed);
+        auto const __new_expected = __expected.load(memory_order_relaxed);
         if(0 == __result) {
             __completion();
-            arrived.store(new_expected, memory_order_relaxed);
+            __arrived.store(__new_expected, memory_order_relaxed);
             __phase.store(!__old_phase, memory_order_release);
             __cxx_atomic_notify_all(&__phase.__a_);
         }
@@ -270,6 +272,8 @@ class __barrier_base<__empty_completion, _Sco> {
 public:
     using arrival_token = uint64_t;
 
+    __barrier_base() = default;
+
     _LIBCUDACXX_INLINE_VISIBILITY
     __barrier_base(ptrdiff_t __count, __empty_completion = __empty_completion())
         : __phase_arrived_expected(__init(__count)) {
@@ -281,9 +285,9 @@ public:
     __barrier_base& operator=(__barrier_base const&) = delete;
 
     [[nodiscard]] inline _LIBCUDACXX_INLINE_VISIBILITY
-    arrival_token arrive(ptrdiff_t update = 1)
+    arrival_token arrive(ptrdiff_t __update = 1)
     {
-        auto const __inc = __arrived_unit * update;
+        auto const __inc = __arrived_unit * __update;
         auto const __old = __phase_arrived_expected.fetch_add(__inc, memory_order_acq_rel);
         if((__old ^ (__old + __inc)) & __phase_bit) {
             __phase_arrived_expected.fetch_add((__old & __expected_mask) << 32, memory_order_relaxed);
