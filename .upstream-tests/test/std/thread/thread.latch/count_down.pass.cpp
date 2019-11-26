@@ -15,25 +15,17 @@
 
 #include "test_macros.h"
 #include "concurrent_agents.h"
+#include "cuda_space_selector.h"
 
-int main(int, char**)
+template<typename Latch,
+    template<typename, typename> typename Selector,
+    typename Initializer = constructor_initializer>
+__host__ __device__
+void test()
 {
-#ifndef __CUDA_ARCH__
-    cuda_thread_count = 2;
-#endif
-
-#ifdef __CUDA_ARCH__
-  __shared__
-#endif
-  cuda::std::latch * l;
-#ifdef __CUDA_ARCH__
-  if (threadIdx.x == 0) {
-#endif
-  l = new cuda::std::latch(2);
-#ifdef __CUDA_ARCH__
-  }
-  __syncthreads();
-#endif
+  Selector<Latch, Initializer> sel;
+  SHARED Latch * l;
+  l = sel.construct(2);
 
 #ifdef __CUDA_ARCH__
   if (threadIdx.x == 0) {
@@ -52,6 +44,28 @@ int main(int, char**)
   };
 
   concurrent_agents_launch(awaiter, count_downer);
+}
+
+int main(int, char**)
+{
+#ifndef __CUDA_ARCH__
+  cuda_thread_count = 2;
+
+  test<cuda::std::latch, local_memory_selector>();
+  test<cuda::latch<cuda::thread_scope_block>, local_memory_selector>();
+  test<cuda::latch<cuda::thread_scope_device>, local_memory_selector>();
+  test<cuda::latch<cuda::thread_scope_system>, local_memory_selector>();
+#else
+  test<cuda::std::latch, shared_memory_selector>();
+  test<cuda::latch<cuda::thread_scope_block>, shared_memory_selector>();
+  test<cuda::latch<cuda::thread_scope_device>, shared_memory_selector>();
+  test<cuda::latch<cuda::thread_scope_system>, shared_memory_selector>();
+
+  test<cuda::std::latch, global_memory_selector>();
+  test<cuda::latch<cuda::thread_scope_block>, global_memory_selector>();
+  test<cuda::latch<cuda::thread_scope_device>, global_memory_selector>();
+  test<cuda::latch<cuda::thread_scope_system>, global_memory_selector>();
+#endif
 
   return 0;
 }

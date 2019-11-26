@@ -12,7 +12,7 @@
 
 template<typename... Fs>
 __host__ __device__
-void concurrent_agents_launch(Fs... fs)
+void concurrent_agents_launch(Fs ...fs)
 {
 #ifdef __CUDA_ARCH__
 
@@ -21,8 +21,6 @@ void concurrent_agents_launch(Fs... fs)
     #endif
 
     assert(blockDim.x == sizeof...(Fs));
-
-    __syncthreads();
 
     using fptr = void (*)(void *);
 
@@ -35,6 +33,8 @@ void concurrent_agents_launch(Fs... fs)
     void * device_thread_data[] = {
         reinterpret_cast<void *>(&fs)...
     };
+
+    __syncthreads();
 
     device_threads[threadIdx.x](device_thread_data[threadIdx.x]);
 

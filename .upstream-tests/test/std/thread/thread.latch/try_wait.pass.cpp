@@ -15,14 +15,40 @@
 #include <cuda/std/cassert>
 
 #include "test_macros.h"
+#include "cuda_space_selector.h"
+
+template<typename Latch,
+    template<typename, typename> typename Selector,
+    typename Initializer = constructor_initializer>
+__host__ __device__
+void test()
+{
+  Selector<Latch, Initializer> sel;
+  SHARED Latch * l;
+  l = sel.construct(1);
+
+  l->count_down();
+  bool const b = l->try_wait();
+  assert(b);
+}
 
 int main(int, char**)
 {
-  cuda::std::latch l(1);
+#ifndef __CUDA_ARCH__
+  test<cuda::std::latch, local_memory_selector>();
+  test<cuda::latch<cuda::thread_scope_block>, local_memory_selector>();
+  test<cuda::latch<cuda::thread_scope_device>, local_memory_selector>();
+  test<cuda::latch<cuda::thread_scope_system>, local_memory_selector>();
+#else
+  test<cuda::std::latch, shared_memory_selector>();
+  test<cuda::latch<cuda::thread_scope_block>, shared_memory_selector>();
+  test<cuda::latch<cuda::thread_scope_device>, shared_memory_selector>();
+  test<cuda::latch<cuda::thread_scope_system>, shared_memory_selector>();
 
-  l.count_down();
-  bool const b = l.try_wait();
-  assert(b);
-
+  test<cuda::std::latch, global_memory_selector>();
+  test<cuda::latch<cuda::thread_scope_block>, global_memory_selector>();
+  test<cuda::latch<cuda::thread_scope_device>, global_memory_selector>();
+  test<cuda::latch<cuda::thread_scope_system>, global_memory_selector>();
+#endif
   return 0;
 }

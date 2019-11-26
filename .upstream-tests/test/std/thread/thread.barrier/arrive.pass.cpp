@@ -16,38 +16,31 @@
 #include "test_macros.h"
 #include "concurrent_agents.h"
 
-int main(int, char**)
+#include "cuda_space_selector.h"
+
+template<typename Barrier,
+    template<typename, typename> typename Selector,
+    typename Initializer = constructor_initializer>
+__host__ __device__
+void test()
 {
-#ifndef __CUDA_ARCH__
-    cuda_thread_count = 2;
-#endif
+  Selector<Barrier, Initializer> sel;
+  SHARED Barrier * b;
+  b = sel.construct(2);
 
 #ifdef __CUDA_ARCH__
-  __shared__
-#endif
-  cuda::std::barrier<> * b;
-#ifdef __CUDA_ARCH__
-  if (threadIdx.x == 0) {
-#endif
-  b = new cuda::std::barrier<>(2);
-#ifdef __CUDA_ARCH__
-  }
-  __syncthreads();
-#endif
-
-#ifdef __CUDA_ARCH__
-  auto * tok = threadIdx.x == 1 ? new auto(b->arrive()) : nullptr;
+  auto * tok = threadIdx.x == 0 ? new auto(b->arrive()) : nullptr;
 #else
   auto * tok = new auto(b->arrive());
 #endif
-  auto arriver = [=] __host__ __device__ (){
-    (void)b->arrive();
-  };
   auto awaiter = [=] __host__ __device__ (){
     b->wait(cuda::std::move(*tok));
   };
+  auto arriver = [=] __host__ __device__ (){
+    (void)b->arrive();
+  };
 
-  concurrent_agents_launch(arriver, awaiter);
+  concurrent_agents_launch(awaiter, arriver);
 
 #ifdef __CUDA_ARCH__
   if (threadIdx.x == 0) {
@@ -57,6 +50,28 @@ int main(int, char**)
 #ifdef __CUDA_ARCH__
   }
   __syncthreads();
+#endif
+}
+
+int main(int, char**)
+{
+#ifndef __CUDA_ARCH__
+  cuda_thread_count = 2;
+
+  test<cuda::std::barrier<>, local_memory_selector>();
+  test<cuda::barrier<cuda::thread_scope_block>, local_memory_selector>();
+  test<cuda::barrier<cuda::thread_scope_device>, local_memory_selector>();
+  test<cuda::barrier<cuda::thread_scope_system>, local_memory_selector>();
+#else
+  test<cuda::std::barrier<>, shared_memory_selector>();
+  test<cuda::barrier<cuda::thread_scope_block>, shared_memory_selector>();
+  test<cuda::barrier<cuda::thread_scope_device>, shared_memory_selector>();
+  test<cuda::barrier<cuda::thread_scope_system>, shared_memory_selector>();
+
+  test<cuda::std::barrier<>, global_memory_selector>();
+  test<cuda::barrier<cuda::thread_scope_block>, global_memory_selector>();
+  test<cuda::barrier<cuda::thread_scope_device>, global_memory_selector>();
+  test<cuda::barrier<cuda::thread_scope_system>, global_memory_selector>();
 #endif
 
   return 0;

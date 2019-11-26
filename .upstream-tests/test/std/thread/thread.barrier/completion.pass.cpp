@@ -15,41 +15,23 @@
 
 #include "test_macros.h"
 #include "concurrent_agents.h"
+#include "cuda_space_selector.h"
 
-int main(int, char**)
+template<template<typename> typename Barrier,
+    template<typename, typename> typename Selector,
+    typename Initializer = constructor_initializer>
+__host__ __device__
+void test()
 {
-#ifndef __CUDA_ARCH__
-    cuda_thread_count = 2;
-#endif
-
-#ifdef __CUDA_ARCH__
-  __shared__
-#endif
-  int * x;
-#ifdef __CUDA_ARCH__
-  if (threadIdx.x == 0) {
-#endif
-  x = (int *)malloc(sizeof(int));
-  *x = 0;
-#ifdef __CUDA_ARCH__
-  }
-  __syncthreads();
-#endif
+  global_memory_selector<int> int_sel;
+  SHARED int * x;
+  x = int_sel.construct(0);
 
   auto comp = [=] __host__ __device__ () { *x += 1; };
 
-#ifdef __CUDA_ARCH__
-  __shared__
-#endif
-  cuda::std::barrier<decltype(comp)> * b;
-#ifdef __CUDA_ARCH__
-  if (threadIdx.x == 0) {
-#endif
-  b = new cuda::std::barrier<decltype(comp)>(2, comp);
-#ifdef __CUDA_ARCH__
-  }
-  __syncthreads();
-#endif
+  Selector<Barrier<decltype(comp)>, Initializer> sel;
+  SHARED Barrier<decltype(comp)> * b;
+  b = sel.construct(2, comp);
 
   auto worker = [=] __host__ __device__ () {
       for(int i = 0; i < 10; ++i)
@@ -60,5 +42,37 @@ int main(int, char**)
   concurrent_agents_launch(worker, worker);
 
   assert(*x == 10);
+}
+
+template<typename Comp>
+using std_barrier = cuda::std::barrier<Comp>;
+template<typename Comp>
+using block_barrier = cuda::barrier<cuda::thread_scope_block, Comp>;
+template<typename Comp>
+using device_barrier = cuda::barrier<cuda::thread_scope_device, Comp>;
+template<typename Comp>
+using system_barrier = cuda::barrier<cuda::thread_scope_system, Comp>;
+
+int main(int, char**)
+{
+#ifndef __CUDA_ARCH__
+  cuda_thread_count = 2;
+
+  test<std_barrier, local_memory_selector>();
+  test<block_barrier, local_memory_selector>();
+  test<device_barrier, local_memory_selector>();
+  test<system_barrier, local_memory_selector>();
+#else
+  test<std_barrier, shared_memory_selector>();
+  test<block_barrier, shared_memory_selector>();
+  test<device_barrier, shared_memory_selector>();
+  test<system_barrier, shared_memory_selector>();
+
+  test<std_barrier, global_memory_selector>();
+  test<block_barrier, global_memory_selector>();
+  test<device_barrier, global_memory_selector>();
+  test<system_barrier, global_memory_selector>();
+#endif
+
   return 0;
 }
