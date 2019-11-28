@@ -13,7 +13,6 @@
 
 #include <cuda/std/semaphore>
 #include <cuda/std/chrono>
-#include <thread>
 
 #include "test_macros.h"
 #include "concurrent_agents.h"

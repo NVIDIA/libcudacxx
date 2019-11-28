@@ -17,11 +17,16 @@ public:
     typedef Arg argument_type;
     typedef bool result_type;
 
+    __host__ __device__
     unary_counting_predicate(Predicate p) : p_(p), count_(0) {}
+    __host__ __device__
     ~unary_counting_predicate() {}
 
+    __host__ __device__
     bool operator () (const Arg &a) const { ++count_; return p_(a); }
+    __host__ __device__
     size_t count() const { return count_; }
+    __host__ __device__
     void reset() { count_ = 0; }
 
 private:
@@ -37,11 +42,16 @@ public:
     typedef Arg2 second_argument_type;
     typedef bool result_type;
 
+    __host__ __device__
     binary_counting_predicate ( Predicate p ) : p_(p), count_(0) {}
+    __host__ __device__
     ~binary_counting_predicate() {}
 
+    __host__ __device__
     bool operator () (const Arg1 &a1, const Arg2 &a2) const { ++count_; return p_(a1, a2); }
+    __host__ __device__
     size_t count() const { return count_; }
+    __host__ __device__
     void reset() { count_ = 0; }
 
 private:
