@@ -96,7 +96,7 @@
 #endif
 
 template <class A, class T>
-__host__ __device__
+__host__ __device__ __noinline__
 void
 do_test()
 {
@@ -158,7 +158,7 @@ do_test()
 }
 
 template <class A, class T>
-__host__ __device__
+__host__ __device__ __noinline__
 void test()
 {
     do_test<A, T>();
