@@ -43,6 +43,7 @@
 #include <cuda/std/cassert>
 
 struct NonCopyable {
+    __host__ __device__
     NonCopyable() {}
 private:
     NonCopyable(NonCopyable const&) = delete;
@@ -50,16 +51,25 @@ private:
 };
 
 struct TestClass {
+    __host__ __device__
     explicit TestClass(int x) : data(x) {}
 
+    __host__ __device__
     int& operator()(NonCopyable&&) & { return data; }
+    __host__ __device__
     int const& operator()(NonCopyable&&) const & { return data; }
+    __host__ __device__
     int volatile& operator()(NonCopyable&&) volatile & { return data; }
+    __host__ __device__
     int const volatile& operator()(NonCopyable&&) const volatile & { return data; }
 
+    __host__ __device__
     int&& operator()(NonCopyable&&) && { return cuda::std::move(data); }
+    __host__ __device__
     int const&& operator()(NonCopyable&&) const && { return cuda::std::move(data); }
+    __host__ __device__
     int volatile&& operator()(NonCopyable&&) volatile && { return cuda::std::move(data); }
+    __host__ __device__
     int const volatile&& operator()(NonCopyable&&) const volatile && { return cuda::std::move(data); }
 
     int data;
@@ -69,15 +79,18 @@ private:
 };
 
 struct DerivedFromTestClass : public TestClass {
+    __host__ __device__
     explicit DerivedFromTestClass(int x) : TestClass(x) {}
 };
 
+__host__ __device__
 int& foo(NonCopyable&&) {
     static int data = 42;
     return data;
 }
 
 template <class Signature,  class Expect, class Functor>
+__host__ __device__
 void test_b12(Functor&& f) {
     // Create the callable object.
     typedef Signature TestClass::*ClassFunc;
@@ -104,6 +117,7 @@ void test_b12(Functor&& f) {
 }
 
 template <class Expect, class Functor>
+__host__ __device__
 void test_b34(Functor&& f) {
     // Create the callable object.
     typedef int TestClass::*ClassFunc;
@@ -127,6 +141,7 @@ void test_b34(Functor&& f) {
 }
 
 template <class Expect, class Functor>
+__host__ __device__
 void test_b5(Functor&& f) {
     NonCopyable arg;
 
@@ -146,6 +161,7 @@ void test_b5(Functor&& f) {
     assert(ret == 42);
 }
 
+__host__ __device__
 void bullet_one_two_tests() {
     {
         TestClass cl(42);
@@ -215,6 +231,7 @@ void bullet_one_two_tests() {
     }
 }
 
+__host__ __device__
 void bullet_three_four_tests() {
     {
         typedef TestClass Fn;
@@ -278,6 +295,7 @@ void bullet_three_four_tests() {
     }
 }
 
+__host__ __device__
 void bullet_five_tests() {
     using FooType = int&(NonCopyable&&);
     {
@@ -304,17 +322,23 @@ void bullet_five_tests() {
 }
 
 struct CopyThrows {
+  __host__ __device__
   CopyThrows() {}
+  __host__ __device__
   CopyThrows(CopyThrows const&) {}
+  __host__ __device__
   CopyThrows(CopyThrows&&) noexcept {}
 };
 
 struct NoThrowCallable {
+  __host__ __device__
   void operator()() noexcept {}
+  __host__ __device__
   void operator()(CopyThrows) noexcept {}
 };
 
 struct ThrowsCallable {
+  __host__ __device__
   void operator()() {}
 };
 
@@ -322,6 +346,7 @@ struct MemberObj {
   int x;
 };
 
+__host__ __device__
 void noexcept_test() {
     {
         NoThrowCallable obj; ((void)obj); // suppress unused warning

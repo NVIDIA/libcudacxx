@@ -21,6 +21,7 @@
 #include <cuda/std/cassert>
 
 template <class ToDuration, class FromDuration>
+__host__ __device__
 void
 test(const FromDuration& f, const ToDuration& d)
 {

@@ -17,6 +17,7 @@
 #include "test_macros.h"
 
 template <class T>
+__host__ __device__
 void test_true()
 {
 #if !defined(_LIBCUDACXX_HAS_NO_IS_AGGREGATE)
@@ -32,6 +33,7 @@ void test_true()
 }
 
 template <class T>
+__host__ __device__
 void test_false()
 {
 #if !defined(_LIBCUDACXX_HAS_NO_IS_AGGREGATE)

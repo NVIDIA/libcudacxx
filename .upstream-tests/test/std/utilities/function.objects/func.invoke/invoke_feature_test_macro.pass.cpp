@@ -29,6 +29,7 @@
 # endif
 #endif
 
+__host__ __device__
 int foo(int) { return 42; }
 
 int main(int, char**) {

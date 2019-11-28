@@ -20,6 +20,7 @@
 #include <cuda/std/cassert>
 
 template <class Duration>
+__host__ __device__
 void
 test(const Duration& f, const Duration& d)
 {

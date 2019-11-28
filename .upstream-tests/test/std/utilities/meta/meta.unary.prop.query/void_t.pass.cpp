@@ -19,6 +19,7 @@
 #include "test_macros.h"
 
 template <class T>
+__host__ __device__
 void test1()
 {
     ASSERT_SAME_TYPE(void, cuda::std::void_t<T>);
@@ -28,6 +29,7 @@ void test1()
 }
 
 template <class T, class U>
+__host__ __device__
 void test2()
 {
     ASSERT_SAME_TYPE(void, cuda::std::void_t<T, U>);
