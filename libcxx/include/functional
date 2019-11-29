@@ -2909,6 +2909,7 @@ bind(_Fp&& __f, _BoundArgs&&... __bound_args)
 #if _LIBCUDACXX_STD_VER > 14
 
 template <class _Fn, class ..._Args>
+_LIBCUDACXX_INLINE_VISIBILITY
 invoke_result_t<_Fn, _Args...>
 invoke(_Fn&& __f, _Args&&... __args)
     noexcept(is_nothrow_invocable_v<_Fn, _Args...>)

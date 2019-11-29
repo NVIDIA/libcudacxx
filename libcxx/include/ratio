@@ -294,7 +294,7 @@ typedef ratio<1000000000000000000LL, 1LL> exa;
 template <class _R1, class _R2>
 struct __ratio_multiply
 {
-private:
+//private:
     static const intmax_t __gcd_n1_d2 = __static_gcd<_R1::num, _R2::den>::value;
     static const intmax_t __gcd_d1_n2 = __static_gcd<_R1::den, _R2::num>::value;
 public:
@@ -321,7 +321,7 @@ struct _LIBCUDACXX_TEMPLATE_VIS ratio_multiply
 template <class _R1, class _R2>
 struct __ratio_divide
 {
-private:
+//private:
     static const intmax_t __gcd_n1_n2 = __static_gcd<_R1::num, _R2::num>::value;
     static const intmax_t __gcd_d1_d2 = __static_gcd<_R1::den, _R2::den>::value;
 public:
@@ -348,7 +348,7 @@ struct _LIBCUDACXX_TEMPLATE_VIS ratio_divide
 template <class _R1, class _R2>
 struct __ratio_add
 {
-private:
+//private:
     static const intmax_t __gcd_n1_n2 = __static_gcd<_R1::num, _R2::num>::value;
     static const intmax_t __gcd_d1_d2 = __static_gcd<_R1::den, _R2::den>::value;
 public:
@@ -383,7 +383,7 @@ struct _LIBCUDACXX_TEMPLATE_VIS ratio_add
 template <class _R1, class _R2>
 struct __ratio_subtract
 {
-private:
+//private:
     static const intmax_t __gcd_n1_n2 = __static_gcd<_R1::num, _R2::num>::value;
     static const intmax_t __gcd_d1_d2 = __static_gcd<_R1::den, _R2::den>::value;
 public:
