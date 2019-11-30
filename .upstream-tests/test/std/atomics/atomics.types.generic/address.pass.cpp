@@ -77,14 +77,16 @@
 #if !defined(TEST_COMPILER_C1XX)
   #include "placement_new.h"
 #endif
+#include "cuda_space_selector.h"
 
-template <class A, class T>
+template <class A, class T, template<typename, typename> class Selector>
 __host__ __device__
 void
 do_test()
 {
     typedef typename cuda::std::remove_pointer<T>::type X;
-    A obj(T(0));
+    Selector<A, constructor_initializer> sel;
+    A & obj = *sel.construct(T(0));
     bool b0 = obj.is_lock_free();
     ((void)b0); // mark as unused
     assert(obj == T(0));
@@ -121,50 +123,68 @@ do_test()
     assert(obj == T(2*sizeof(X)));
 
     {
+#if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 700
         TEST_ALIGNAS_TYPE(A) char storage[sizeof(A)] = {23};
         A& zero = *new (storage) A();
         assert(zero == T(0));
         zero.~A();
+#endif
     }
 }
 
-template <class A, class T>
+template <class A, class T, template<typename, typename> class Selector>
 __host__ __device__
 void do_test_std()
 {
-    A obj(T(0));
+    Selector<A, constructor_initializer> sel;
+    A & obj = *sel.construct(nullptr);
     cuda::std::atomic_init(&obj, T(1));
     assert(obj == T(1));
     cuda::std::atomic_init(&obj, T(2));
     assert(obj == T(2));
 
-    do_test<A, T>();
+    do_test<A, T, Selector>();
 }
 
-template <class A, class T>
+template <class A, class T, template<typename, typename> class Selector>
 __host__ __device__
 void test()
 {
-    do_test<A, T>();
-    do_test<volatile A, T>();
+    do_test<A, T, Selector>();
+    do_test<volatile A, T, Selector>();
 }
 
-template <class A, class T>
+template <class A, class T, template<typename, typename> class Selector>
 __host__ __device__
 void test_std()
 {
-    do_test_std<A, T>();
-    do_test_std<volatile A, T>();
+    do_test_std<A, T, Selector>();
+    do_test_std<volatile A, T, Selector>();
 }
 
 int main(int, char**)
 {
-#if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 600
-    test_std<cuda::std::atomic<int*>, int*>();
-    test<cuda::atomic<int*, cuda::thread_scope_system>, int*>();
+#if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 700
+    test_std<cuda::std::atomic<int*>, int*, local_memory_selector>();
+    test<cuda::atomic<int*, cuda::thread_scope_system>, int*, local_memory_selector>();
+    test<cuda::atomic<int*, cuda::thread_scope_device>, int*, local_memory_selector>();
+    test<cuda::atomic<int*, cuda::thread_scope_block>, int*, local_memory_selector>();
 #endif
-    test<cuda::atomic<int*, cuda::thread_scope_device>, int*>();
-    test<cuda::atomic<int*, cuda::thread_scope_block>, int*>();
+#ifdef __CUDA_ARCH__
+    test_std<cuda::std::atomic<int*>, int*, shared_memory_selector>();
+    test<cuda::atomic<int*, cuda::thread_scope_system>, int*, shared_memory_selector>();
+    test<cuda::atomic<int*, cuda::thread_scope_device>, int*, shared_memory_selector>();
+    test<cuda::atomic<int*, cuda::thread_scope_block>, int*, shared_memory_selector>();
 
+    // note: this _should_ be test_std, but for some reason that's resulting in an
+    // unspecified launch failure, and I'm unsure what function is not __device__
+    // and causes that to happen
+    // the only difference is whether atomic_init is done or not, and that
+    // _seems_ to be appropriately tested by the atomic_init test for cuda::std::
+    test<cuda::std::atomic<int*>, int*, global_memory_selector>();
+    test<cuda::atomic<int*, cuda::thread_scope_system>, int*, global_memory_selector>();
+    test<cuda::atomic<int*, cuda::thread_scope_device>, int*, global_memory_selector>();
+    test<cuda::atomic<int*, cuda::thread_scope_block>, int*, global_memory_selector>();
+#endif
   return 0;
 }

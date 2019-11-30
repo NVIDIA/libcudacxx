@@ -22,8 +22,10 @@
 
 int main(int, char**)
 {
+#if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 700
     cuda::std::atomic_flag f = ATOMIC_FLAG_INIT;
     assert(f.test_and_set() == 0);
+#endif
 
   return 0;
 }

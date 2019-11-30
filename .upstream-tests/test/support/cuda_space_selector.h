@@ -53,7 +53,7 @@ public:
 #ifdef __CUDA_ARCH__
         if (threadIdx.x == 0) {
 #endif
-        free(get_pointer());
+        free((void*)get_pointer());
 #ifdef __CUDA_ARCH__
         }
         __syncthreads();
@@ -92,7 +92,15 @@ struct constructor_initializer {
     template<typename T, typename ...Ts>
     __host__ __device__
     static void construct(T & t, Ts && ...ts) {
-        new (&t) T(std::forward<Ts>(ts)...);
+        new ((void*)&t) T(std::forward<Ts>(ts)...);
+    }
+};
+
+struct default_initializer {
+    template<typename T>
+    __host__ __device__
+    static void construct(T & t) {
+        new ((void*)&t) T;
     }
 };
 

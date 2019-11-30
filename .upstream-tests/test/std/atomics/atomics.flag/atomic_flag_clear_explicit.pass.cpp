@@ -19,51 +19,71 @@
 #include <cuda/std/cassert>
 
 #include "test_macros.h"
+#include "cuda_space_selector.h"
+
+template<template<typename, typename> class Selector>
+__host__ __device__
+void test()
+{
+    {
+        Selector<cuda::std::atomic_flag, default_initializer> sel;
+        cuda::std::atomic_flag & f = *sel.construct();
+        atomic_flag_clear_explicit(&f, cuda::std::memory_order_relaxed);
+        assert(f.test_and_set() == 0);
+        atomic_flag_clear_explicit(&f, cuda::std::memory_order_relaxed);
+        assert(f.test_and_set() == 0);
+    }
+    {
+        Selector<cuda::std::atomic_flag, default_initializer> sel;
+        cuda::std::atomic_flag & f = *sel.construct();
+        atomic_flag_clear_explicit(&f, cuda::std::memory_order_release);
+        assert(f.test_and_set() == 0);
+        atomic_flag_clear_explicit(&f, cuda::std::memory_order_release);
+        assert(f.test_and_set() == 0);
+    }
+    {
+        Selector<cuda::std::atomic_flag, default_initializer> sel;
+        cuda::std::atomic_flag & f = *sel.construct();
+        atomic_flag_clear_explicit(&f, cuda::std::memory_order_seq_cst);
+        assert(f.test_and_set() == 0);
+        atomic_flag_clear_explicit(&f, cuda::std::memory_order_seq_cst);
+        assert(f.test_and_set() == 0);
+    }
+    {
+        Selector<volatile cuda::std::atomic_flag, default_initializer> sel;
+        volatile cuda::std::atomic_flag & f = *sel.construct();
+        atomic_flag_clear_explicit(&f, cuda::std::memory_order_relaxed);
+        assert(f.test_and_set() == 0);
+        atomic_flag_clear_explicit(&f, cuda::std::memory_order_relaxed);
+        assert(f.test_and_set() == 0);
+    }
+    {
+        Selector<volatile cuda::std::atomic_flag, default_initializer> sel;
+        volatile cuda::std::atomic_flag & f = *sel.construct();
+        atomic_flag_clear_explicit(&f, cuda::std::memory_order_release);
+        assert(f.test_and_set() == 0);
+        atomic_flag_clear_explicit(&f, cuda::std::memory_order_release);
+        assert(f.test_and_set() == 0);
+    }
+    {
+        Selector<volatile cuda::std::atomic_flag, default_initializer> sel;
+        volatile cuda::std::atomic_flag & f = *sel.construct();
+        atomic_flag_clear_explicit(&f, cuda::std::memory_order_seq_cst);
+        assert(f.test_and_set() == 0);
+        atomic_flag_clear_explicit(&f, cuda::std::memory_order_seq_cst);
+        assert(f.test_and_set() == 0);
+    }
+}
 
 int main(int, char**)
 {
-    {
-        cuda::std::atomic_flag f; // uninitialized first
-        atomic_flag_clear_explicit(&f, cuda::std::memory_order_relaxed);
-        assert(f.test_and_set() == 0);
-        atomic_flag_clear_explicit(&f, cuda::std::memory_order_relaxed);
-        assert(f.test_and_set() == 0);
-    }
-    {
-        cuda::std::atomic_flag f;
-        atomic_flag_clear_explicit(&f, cuda::std::memory_order_release);
-        assert(f.test_and_set() == 0);
-        atomic_flag_clear_explicit(&f, cuda::std::memory_order_release);
-        assert(f.test_and_set() == 0);
-    }
-    {
-        cuda::std::atomic_flag f;
-        atomic_flag_clear_explicit(&f, cuda::std::memory_order_seq_cst);
-        assert(f.test_and_set() == 0);
-        atomic_flag_clear_explicit(&f, cuda::std::memory_order_seq_cst);
-        assert(f.test_and_set() == 0);
-    }
-    {
-        volatile cuda::std::atomic_flag f;
-        atomic_flag_clear_explicit(&f, cuda::std::memory_order_relaxed);
-        assert(f.test_and_set() == 0);
-        atomic_flag_clear_explicit(&f, cuda::std::memory_order_relaxed);
-        assert(f.test_and_set() == 0);
-    }
-    {
-        volatile cuda::std::atomic_flag f;
-        atomic_flag_clear_explicit(&f, cuda::std::memory_order_release);
-        assert(f.test_and_set() == 0);
-        atomic_flag_clear_explicit(&f, cuda::std::memory_order_release);
-        assert(f.test_and_set() == 0);
-    }
-    {
-        volatile cuda::std::atomic_flag f;
-        atomic_flag_clear_explicit(&f, cuda::std::memory_order_seq_cst);
-        assert(f.test_and_set() == 0);
-        atomic_flag_clear_explicit(&f, cuda::std::memory_order_seq_cst);
-        assert(f.test_and_set() == 0);
-    }
+#if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 700
+    test<local_memory_selector>();
+#endif
+#ifdef __CUDA_ARCH__
+    test<shared_memory_selector>();
+    test<global_memory_selector>();
+#endif
 
   return 0;
 }

@@ -19,23 +19,39 @@
 #include <cuda/std/cassert>
 
 #include "test_macros.h"
+#include "cuda_space_selector.h"
+
+template<template<typename, typename> class Selector>
+__host__ __device__
+void test()
+{
+    {
+        Selector<cuda::std::atomic_flag, default_initializer> sel;
+        cuda::std::atomic_flag & f = *sel.construct();
+        f.clear();
+        f.test_and_set();
+        atomic_flag_clear(&f);
+        assert(f.test_and_set() == 0);
+    }
+    {
+        Selector<volatile cuda::std::atomic_flag, default_initializer> sel;
+        volatile cuda::std::atomic_flag & f = *sel.construct();
+        f.clear();
+        f.test_and_set();
+        atomic_flag_clear(&f);
+        assert(f.test_and_set() == 0);
+    }
+}
 
 int main(int, char**)
 {
-    {
-        cuda::std::atomic_flag f;
-        f.clear();
-        f.test_and_set();
-        atomic_flag_clear(&f);
-        assert(f.test_and_set() == 0);
-    }
-    {
-        volatile cuda::std::atomic_flag f;
-        f.clear();
-        f.test_and_set();
-        atomic_flag_clear(&f);
-        assert(f.test_and_set() == 0);
-    }
+#if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 700
+    test<local_memory_selector>();
+#endif
+#ifdef __CUDA_ARCH__
+    test<shared_memory_selector>();
+    test<global_memory_selector>();
+#endif
 
   return 0;
 }

@@ -24,10 +24,17 @@
 #include <cuda/std/atomic>
 
 #include "test_macros.h"
+#include "cuda_space_selector.h"
 
-int main(int, char**) {
-    cuda::std::atomic<int> i;
-    volatile cuda::std::atomic<int> v;
+template<template<typename, typename> class Selector>
+__host__ __device__
+void test()
+{
+    Selector<cuda::std::atomic<int>, default_initializer> sel;
+    Selector<volatile cuda::std::atomic<int>, default_initializer> vsel;
+
+    cuda::std::atomic<int> & i = *sel.construct();
+    volatile cuda::std::atomic<int> & v = *vsel.construct();
     int exp = 0;
 
     (void) i.compare_exchange_weak(exp, 0, cuda::std::memory_order_acq_rel);
@@ -39,6 +46,17 @@ int main(int, char**) {
     (void) v.compare_exchange_weak(exp, 0, cuda::std::memory_order_release);
     v.compare_exchange_strong(exp, 0, cuda::std::memory_order_acq_rel);
     v.compare_exchange_strong(exp, 0, cuda::std::memory_order_release);
+}
 
-    return 0;
+int main(int, char**)
+{
+#if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 700
+    test<local_memory_selector>();
+#endif
+#ifdef __CUDA_ARCH__
+    test<shared_memory_selector>();
+    test<global_memory_selector>();
+#endif
+
+  return 0;
 }

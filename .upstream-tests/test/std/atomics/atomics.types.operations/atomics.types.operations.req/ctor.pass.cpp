@@ -23,6 +23,7 @@
 
 #include "test_macros.h"
 #include "atomic_helpers.h"
+#include "cuda_space_selector.h"
 
 struct UserType {
     int i;
@@ -38,7 +39,7 @@ struct UserType {
     }
 };
 
-template <class Tp, cuda::thread_scope Scope>
+template <class Tp, template<typename, typename> class, cuda::thread_scope Scope>
 struct TestFunc {
     __host__ __device__
     void operator()() const {
@@ -67,13 +68,13 @@ struct TestFunc {
 int main(int, char**)
 {
 #if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 600
-    TestFunc<UserType, cuda::thread_scope_system>()();
-    TestEachIntegralType<TestFunc, cuda::thread_scope_system>()();
+    TestFunc<UserType, local_memory_selector, cuda::thread_scope_system>()();
+    TestEachIntegralType<TestFunc, local_memory_selector, cuda::thread_scope_system>()();
 #endif
-    TestFunc<UserType, cuda::thread_scope_device>()();
-    TestEachIntegralType<TestFunc, cuda::thread_scope_device>()();
-    TestFunc<UserType, cuda::thread_scope_block>()();
-    TestEachIntegralType<TestFunc, cuda::thread_scope_block>()();
+    TestFunc<UserType, local_memory_selector, cuda::thread_scope_device>()();
+    TestEachIntegralType<TestFunc, local_memory_selector, cuda::thread_scope_device>()();
+    TestFunc<UserType, local_memory_selector, cuda::thread_scope_block>()();
+    TestEachIntegralType<TestFunc, local_memory_selector, cuda::thread_scope_block>()();
 
   return 0;
 }

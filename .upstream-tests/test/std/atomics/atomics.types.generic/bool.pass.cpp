@@ -59,13 +59,15 @@
 #if !defined(TEST_COMPILER_C1XX)
   #include "placement_new.h"
 #endif
+#include "cuda_space_selector.h"
 
-template<template<cuda::thread_scope> typename Atomic, cuda::thread_scope Scope>
+template<template<cuda::thread_scope> typename Atomic, cuda::thread_scope Scope, template<typename, typename> class Selector>
 __host__ __device__
 void do_test()
 {
     {
-        volatile Atomic<Scope> obj(true);
+        Selector<volatile Atomic<Scope>, constructor_initializer> sel;
+        volatile Atomic<Scope> & obj = *sel.construct(true);
         assert(obj == true);
         bool b0 = obj.is_lock_free();
         (void)b0; // to placate scan-build
@@ -116,7 +118,8 @@ void do_test()
         assert(obj == true);
     }
     {
-        Atomic<Scope> obj(true);
+        Selector<Atomic<Scope>, constructor_initializer> sel;
+        Atomic<Scope> & obj = *sel.construct(true);
         assert(obj == true);
         bool b0 = obj.is_lock_free();
         (void)b0; // to placate scan-build
@@ -167,7 +170,8 @@ void do_test()
         assert(obj == true);
     }
     {
-        Atomic<Scope> obj(true);
+        Selector<Atomic<Scope>, constructor_initializer> sel;
+        Atomic<Scope> & obj = *sel.construct(true);
         assert(obj == true);
         bool b0 = obj.is_lock_free();
         (void)b0; // to placate scan-build
@@ -218,11 +222,13 @@ void do_test()
         assert(obj == true);
     }
     {
+#if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 700
         typedef Atomic<Scope> A;
         TEST_ALIGNAS_TYPE(A) char storage[sizeof(A)] = {1};
         A& zero = *new (storage) A();
         assert(zero == false);
         zero.~A();
+#endif
     }
 }
 
@@ -235,12 +241,23 @@ using cuda_atomic = cuda::atomic<bool, Scope>;
 
 int main(int, char**)
 {
-#if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 600
-    do_test<cuda_std_atomic, cuda::thread_scope_system>();
-    do_test<cuda_atomic, cuda::thread_scope_system>();
+#if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 700
+    do_test<cuda_std_atomic, cuda::thread_scope_system, local_memory_selector>();
+    do_test<cuda_atomic, cuda::thread_scope_system, local_memory_selector>();
+    do_test<cuda_atomic, cuda::thread_scope_device, local_memory_selector>();
+    do_test<cuda_atomic, cuda::thread_scope_block, local_memory_selector>();
 #endif
-    do_test<cuda_atomic, cuda::thread_scope_device>();
-    do_test<cuda_atomic, cuda::thread_scope_block>();
+#ifdef __CUDA_ARCH__
+    do_test<cuda_std_atomic, cuda::thread_scope_system, shared_memory_selector>();
+    do_test<cuda_atomic, cuda::thread_scope_system, shared_memory_selector>();
+    do_test<cuda_atomic, cuda::thread_scope_device, shared_memory_selector>();
+    do_test<cuda_atomic, cuda::thread_scope_block, shared_memory_selector>();
+
+    do_test<cuda_std_atomic, cuda::thread_scope_system, global_memory_selector>();
+    do_test<cuda_atomic, cuda::thread_scope_system, global_memory_selector>();
+    do_test<cuda_atomic, cuda::thread_scope_device, global_memory_selector>();
+    do_test<cuda_atomic, cuda::thread_scope_block, global_memory_selector>();
+#endif
 
   return 0;
 }

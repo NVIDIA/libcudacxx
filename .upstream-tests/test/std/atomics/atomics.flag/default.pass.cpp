@@ -22,19 +22,36 @@
 #if !defined(TEST_COMPILER_C1XX)
   #include "placement_new.h"
 #endif
+#include "cuda_space_selector.h"
 
-int main(int, char**)
+template<template<typename, typename> class Selector>
+__host__ __device__
+void test()
 {
-    cuda::std::atomic_flag f;
+    Selector<cuda::std::atomic_flag, default_initializer> sel;
+    cuda::std::atomic_flag & f = *sel.construct();
     f.clear();
     assert(f.test_and_set() == 0);
     {
+#if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 700
         typedef cuda::std::atomic_flag A;
         TEST_ALIGNAS_TYPE(A) char storage[sizeof(A)] = {1};
         A& zero = *new (storage) A();
         assert(!zero.test_and_set());
         zero.~A();
+#endif
     }
+}
+
+int main(int, char**)
+{
+#if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 700
+    test<local_memory_selector>();
+#endif
+#ifdef __CUDA_ARCH__
+    test<shared_memory_selector>();
+    test<global_memory_selector>();
+#endif
 
   return 0;
 }

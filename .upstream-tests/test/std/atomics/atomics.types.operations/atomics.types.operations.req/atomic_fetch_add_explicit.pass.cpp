@@ -33,14 +33,16 @@
 
 #include "test_macros.h"
 #include "atomic_helpers.h"
+#include "cuda_space_selector.h"
 
-template <class T, cuda::thread_scope>
+template <class T, template<typename, typename> typename Selector, cuda::thread_scope>
 struct TestFn {
   __host__ __device__
   void operator()() const {
     {
         typedef cuda::std::atomic<T> A;
-        A t;
+        Selector<A, constructor_initializer> sel;
+        A & t = *sel.construct();
         cuda::std::atomic_init(&t, T(1));
         assert(cuda::std::atomic_fetch_add_explicit(&t, T(2),
                                             cuda::std::memory_order_seq_cst) == T(1));
@@ -48,7 +50,8 @@ struct TestFn {
     }
     {
         typedef cuda::std::atomic<T> A;
-        volatile A t;
+        Selector<volatile A, constructor_initializer> sel;
+        volatile A & t = *sel.construct();
         cuda::std::atomic_init(&t, T(1));
         assert(cuda::std::atomic_fetch_add_explicit(&t, T(2),
                                             cuda::std::memory_order_seq_cst) == T(1));
@@ -57,7 +60,7 @@ struct TestFn {
   }
 };
 
-template <class T>
+template <class T, template<typename, typename> typename Selector>
 __host__ __device__
 void
 testp()
@@ -65,7 +68,8 @@ testp()
     {
         typedef cuda::std::atomic<T> A;
         typedef typename cuda::std::remove_pointer<T>::type X;
-        A t;
+        Selector<A, constructor_initializer> sel;
+        A & t = *sel.construct();
         cuda::std::atomic_init(&t, T(1*sizeof(X)));
         assert(cuda::std::atomic_fetch_add_explicit(&t, 2,
                                   cuda::std::memory_order_seq_cst) == T(1*sizeof(X)));
@@ -74,7 +78,8 @@ testp()
     {
         typedef cuda::std::atomic<T> A;
         typedef typename cuda::std::remove_pointer<T>::type X;
-        volatile A t;
+        Selector<volatile A, constructor_initializer> sel;
+        volatile A & t = *sel.construct();
         cuda::std::atomic_init(&t, T(1*sizeof(X)));
         assert(cuda::std::atomic_fetch_add_explicit(&t, 2,
                                   cuda::std::memory_order_seq_cst) == T(1*sizeof(X)));
@@ -84,9 +89,19 @@ testp()
 
 int main(int, char**)
 {
-    TestEachIntegralType<TestFn>()();
-    testp<int*>();
-    testp<const int*>();
+#if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 700
+    TestEachIntegralType<TestFn, local_memory_selector>()();
+    testp<int*, local_memory_selector>();
+    testp<const int*, local_memory_selector>();
+#endif
+#ifdef __CUDA_ARCH__
+    TestEachIntegralType<TestFn, shared_memory_selector>()();
+    testp<int*, shared_memory_selector>();
+    testp<const int*, shared_memory_selector>();
+    TestEachIntegralType<TestFn, global_memory_selector>()();
+    testp<int*, global_memory_selector>();
+    testp<const int*, global_memory_selector>();
+#endif
 
   return 0;
 }

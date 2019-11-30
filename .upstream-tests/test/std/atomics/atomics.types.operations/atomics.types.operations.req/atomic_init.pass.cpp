@@ -25,16 +25,19 @@
 
 #include "test_macros.h"
 #include "atomic_helpers.h"
+#include "cuda_space_selector.h"
 
-template <class T, cuda::thread_scope>
+template <class T, template<typename, typename> typename Selector, cuda::thread_scope>
 struct TestFn {
   __host__ __device__
   void operator()() const {
     typedef cuda::std::atomic<T> A;
-    A t;
+    Selector<A, constructor_initializer> sel;
+    A & t = *sel.construct();
     cuda::std::atomic_init(&t, T(1));
     assert(t == T(1));
-    volatile A vt;
+    Selector<volatile A, constructor_initializer> vsel;
+    volatile A & vt = *vsel.construct();
     cuda::std::atomic_init(&vt, T(2));
     assert(vt == T(2));
   }
@@ -42,7 +45,13 @@ struct TestFn {
 
 int main(int, char**)
 {
-    TestEachAtomicType<TestFn>()();
+#if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 700
+    TestEachAtomicType<TestFn, local_memory_selector>()();
+#endif
+#ifdef __CUDA_ARCH__
+    TestEachAtomicType<TestFn, shared_memory_selector>()();
+    TestEachAtomicType<TestFn, global_memory_selector>()();
+#endif
 
   return 0;
 }

@@ -19,8 +19,9 @@
 #include "test_macros.h"
 #include "../atomics.types.operations.req/atomic_helpers.h"
 #include "concurrent_agents.h"
+#include "cuda_space_selector.h"
 
-template <class T, cuda::thread_scope Scope>
+template <class T, template<typename, typename> typename Selector, cuda::thread_scope Scope>
 struct TestFn {
   __host__ __device__
   void operator()() const {
@@ -87,7 +88,7 @@ int main(int, char**)
     cuda_thread_count = 2;
 #endif
 
-    TestEachAtomicType<TestFn>()();
+    TestEachAtomicType<TestFn, shared_memory_selector>()();
 
   return 0;
 }

@@ -94,13 +94,15 @@
 #if !defined(TEST_COMPILER_C1XX)
   #include "placement_new.h"
 #endif
+#include "cuda_space_selector.h"
 
-template <class A, class T>
+template <class A, class T, template<typename, typename> class Selector>
 __host__ __device__ __noinline__
 void
 do_test()
 {
-    A obj(T(0));
+    Selector<A, constructor_initializer> sel;
+    A & obj = *sel.construct(T(0));
     bool b0 = obj.is_lock_free();
     ((void)b0); // mark as unused
     obj.store(T(0));
@@ -150,50 +152,52 @@ do_test()
     assert(obj == T(8));
 
     {
+#if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 700
         TEST_ALIGNAS_TYPE(A) char storage[sizeof(A)] = {23};
         A& zero = *new (storage) A();
         assert(zero == 0);
         zero.~A();
+#endif
     }
 }
 
-template <class A, class T>
+template <class A, class T, template<typename, typename> class Selector>
 __host__ __device__ __noinline__
 void test()
 {
-    do_test<A, T>();
-    do_test<volatile A, T>();
+    do_test<A, T, Selector>();
+    do_test<volatile A, T, Selector>();
 }
 
-template<template<typename, cuda::thread_scope> typename Atomic, cuda::thread_scope Scope>
+template<template<typename, cuda::thread_scope> typename Atomic, cuda::thread_scope Scope, template<typename, typename> class Selector>
 __host__ __device__
 void test_for_all_types()
 {
-    test<Atomic<char, Scope>, char>();
-    test<Atomic<signed char, Scope>, signed char>();
-    test<Atomic<unsigned char, Scope>, unsigned char>();
-    test<Atomic<short, Scope>, short>();
-    test<Atomic<unsigned short, Scope>, unsigned short>();
-    test<Atomic<int, Scope>, int>();
-    test<Atomic<unsigned int, Scope>, unsigned int>();
-    test<Atomic<long, Scope>, long>();
-    test<Atomic<unsigned long, Scope>, unsigned long>();
-    test<Atomic<long long, Scope>, long long>();
-    test<Atomic<unsigned long long, Scope>, unsigned long long>();
+    test<Atomic<char, Scope>, char, Selector>();
+    test<Atomic<signed char, Scope>, signed char, Selector>();
+    test<Atomic<unsigned char, Scope>, unsigned char, Selector>();
+    test<Atomic<short, Scope>, short, Selector>();
+    test<Atomic<unsigned short, Scope>, unsigned short, Selector>();
+    test<Atomic<int, Scope>, int, Selector>();
+    test<Atomic<unsigned int, Scope>, unsigned int, Selector>();
+    test<Atomic<long, Scope>, long, Selector>();
+    test<Atomic<unsigned long, Scope>, unsigned long, Selector>();
+    test<Atomic<long long, Scope>, long long, Selector>();
+    test<Atomic<unsigned long long, Scope>, unsigned long long, Selector>();
 #ifndef _LIBCUDACXX_HAS_NO_UNICODE_CHARS
-    test<Atomic<char16_t, Scope>, char16_t>();
-    test<Atomic<char32_t, Scope>, char32_t>();
+    test<Atomic<char16_t, Scope>, char16_t, Selector>();
+    test<Atomic<char32_t, Scope>, char32_t, Selector>();
 #endif  // _LIBCUDACXX_HAS_NO_UNICODE_CHARS
-    test<Atomic<wchar_t, Scope>, wchar_t>();
+    test<Atomic<wchar_t, Scope>, wchar_t, Selector>();
 
-    test<Atomic<int8_t, Scope>,    int8_t>();
-    test<Atomic<uint8_t, Scope>,  uint8_t>();
-    test<Atomic<int16_t, Scope>,   int16_t>();
-    test<Atomic<uint16_t, Scope>, uint16_t>();
-    test<Atomic<int32_t, Scope>,   int32_t>();
-    test<Atomic<uint32_t, Scope>, uint32_t>();
-    test<Atomic<int64_t, Scope>,   int64_t>();
-    test<Atomic<uint64_t, Scope>, uint64_t>();
+    test<Atomic<int8_t, Scope>,    int8_t, Selector>();
+    test<Atomic<uint8_t, Scope>,  uint8_t, Selector>();
+    test<Atomic<int16_t, Scope>,   int16_t, Selector>();
+    test<Atomic<uint16_t, Scope>, uint16_t, Selector>();
+    test<Atomic<int32_t, Scope>,   int32_t, Selector>();
+    test<Atomic<uint32_t, Scope>, uint32_t, Selector>();
+    test<Atomic<int64_t, Scope>,   int64_t, Selector>();
+    test<Atomic<uint64_t, Scope>, uint64_t, Selector>();
 }
 
 template<typename T, cuda::thread_scope Scope>
@@ -204,10 +208,26 @@ using cuda_atomic = cuda::atomic<T, Scope>;
 
 int main(int, char**)
 {
-    test_for_all_types<cuda_std_atomic, cuda::thread_scope_system>();
-    test_for_all_types<cuda_atomic, cuda::thread_scope_system>();
-    test_for_all_types<cuda_atomic, cuda::thread_scope_device>();
-    test_for_all_types<cuda_atomic, cuda::thread_scope_block>();
+    // this test would instantiate more cases than just the ones below
+    // but ptxas already consumes 5 GB of RAM while translating these
+    // so in the interest of not eating all memory, it's limited to the current set
+    //
+    // the per-function tests *should* cover the other codegen aspects of the
+    // code, and the cross between scopes and memory locations below should provide
+    // a *reasonable* subset of all the possible combinations to provide enough
+    // confidence that this all actually works
+
+#if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 700
+    test_for_all_types<cuda_std_atomic, cuda::thread_scope_system, local_memory_selector>();
+    test_for_all_types<cuda_atomic, cuda::thread_scope_system, local_memory_selector>();
+#endif
+#ifdef __CUDA_ARCH__
+    test_for_all_types<cuda_std_atomic, cuda::thread_scope_system, shared_memory_selector>();
+    test_for_all_types<cuda_atomic, cuda::thread_scope_block, shared_memory_selector>();
+
+    test_for_all_types<cuda_std_atomic, cuda::thread_scope_system, global_memory_selector>();
+    test_for_all_types<cuda_atomic, cuda::thread_scope_device, global_memory_selector>();
+#endif
 
   return 0;
 }

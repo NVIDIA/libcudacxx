@@ -26,7 +26,8 @@ struct UserAtomicType
     { return x.i == y.i; }
 };
 
-template < template <class TestArg, cuda::thread_scope> class TestFunctor, cuda::thread_scope Scope
+template < template <class, template<typename, typename> class, cuda::thread_scope> class TestFunctor,
+    template<typename, typename> class Selector, cuda::thread_scope Scope
 #if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 600
     = cuda::thread_scope_system
 #endif
@@ -34,34 +35,35 @@ template < template <class TestArg, cuda::thread_scope> class TestFunctor, cuda:
 struct TestEachIntegralType {
     __host__ __device__
     void operator()() const {
-        TestFunctor<char, Scope>()();
-        TestFunctor<signed char, Scope>()();
-        TestFunctor<unsigned char, Scope>()();
-        TestFunctor<short, Scope>()();
-        TestFunctor<unsigned short, Scope>()();
-        TestFunctor<int, Scope>()();
-        TestFunctor<unsigned int, Scope>()();
-        TestFunctor<long, Scope>()();
-        TestFunctor<unsigned long, Scope>()();
-        TestFunctor<long long, Scope>()();
-        TestFunctor<unsigned long long, Scope>()();
-        TestFunctor<wchar_t, Scope>();
+        TestFunctor<char, Selector, Scope>()();
+        TestFunctor<signed char, Selector, Scope>()();
+        TestFunctor<unsigned char, Selector, Scope>()();
+        TestFunctor<short, Selector, Scope>()();
+        TestFunctor<unsigned short, Selector, Scope>()();
+        TestFunctor<int, Selector, Scope>()();
+        TestFunctor<unsigned int, Selector, Scope>()();
+        TestFunctor<long, Selector, Scope>()();
+        TestFunctor<unsigned long, Selector, Scope>()();
+        TestFunctor<long long, Selector, Scope>()();
+        TestFunctor<unsigned long long, Selector, Scope>()();
+        TestFunctor<wchar_t, Selector, Scope>();
 #ifndef _LIBCUDACXX_HAS_NO_UNICODE_CHARS
-        TestFunctor<char16_t, Scope>()();
-        TestFunctor<char32_t, Scope>()();
+        TestFunctor<char16_t, Selector, Scope>()();
+        TestFunctor<char32_t, Selector, Scope>()();
 #endif
-        TestFunctor<  int8_t, Scope>()();
-        TestFunctor< uint8_t, Scope>()();
-        TestFunctor< int16_t, Scope>()();
-        TestFunctor<uint16_t, Scope>()();
-        TestFunctor< int32_t, Scope>()();
-        TestFunctor<uint32_t, Scope>()();
-        TestFunctor< int64_t, Scope>()();
-        TestFunctor<uint64_t, Scope>()();
+        TestFunctor<  int8_t, Selector, Scope>()();
+        TestFunctor< uint8_t, Selector, Scope>()();
+        TestFunctor< int16_t, Selector, Scope>()();
+        TestFunctor<uint16_t, Selector, Scope>()();
+        TestFunctor< int32_t, Selector, Scope>()();
+        TestFunctor<uint32_t, Selector, Scope>()();
+        TestFunctor< int64_t, Selector, Scope>()();
+        TestFunctor<uint64_t, Selector, Scope>()();
     }
 };
 
-template < template <class TestArg, cuda::thread_scope> class TestFunctor, cuda::thread_scope Scope
+template < template <class, template<typename, typename> class, cuda::thread_scope> class TestFunctor,
+    template<typename, typename> class Selector, cuda::thread_scope Scope
 #if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 600
     = cuda::thread_scope_system
 #endif
@@ -69,10 +71,10 @@ template < template <class TestArg, cuda::thread_scope> class TestFunctor, cuda:
 struct TestEachAtomicType {
     __host__ __device__
     void operator()() const {
-        TestEachIntegralType<TestFunctor, Scope>()();
-        TestFunctor<UserAtomicType, Scope>()();
-        TestFunctor<int*, Scope>()();
-        TestFunctor<const int*, Scope>()();
+        TestEachIntegralType<TestFunctor, Selector, Scope>()();
+        TestFunctor<UserAtomicType, Selector, Scope>()();
+        TestFunctor<int*, Selector, Scope>()();
+        TestFunctor<const int*, Selector, Scope>()();
     }
 };
 
