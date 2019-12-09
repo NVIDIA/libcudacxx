@@ -239,7 +239,7 @@ void __libcpp_thread_yield()
   SwitchToThread();
 }
 
-void __libcpp_thread_sleep_for(const chrono::nanoseconds& __ns)
+void __libcpp_thread_sleep_for(chrono::nanoseconds __ns)
 {
   using namespace chrono;
   // round-up to the nearest milisecond
