@@ -22,19 +22,19 @@ THE SOFTWARE.
 
 */
 
-#include <simt/cstddef>
-#include <simt/cstdint>
-#include <simt/atomic>
+#include <cuda/std/cstddef>
+#include <cuda/std/cstdint>
+#include <cuda/std/atomic>
 
 template<class T> static constexpr T minimum(T a, T b) { return a < b ? a : b; }
 
 struct trie {
     struct ref {
-        simt::atomic<trie*, simt::thread_scope_device> ptr = ATOMIC_VAR_INIT(nullptr);
+        cuda::atomic<trie*, cuda::thread_scope_device> ptr = ATOMIC_VAR_INIT(nullptr);
         // the flag will protect against multiple pointer updates
-        simt::std::atomic_flag flag = ATOMIC_FLAG_INIT;
+        cuda::std::atomic_flag flag = ATOMIC_FLAG_INIT;
     } next[26];
-    simt::std::atomic<short> count = ATOMIC_VAR_INIT(0);
+    cuda::std::atomic<short> count = ATOMIC_VAR_INIT(0);
 };
 __host__ __device__
 int index_of(char c) {
@@ -44,7 +44,7 @@ int index_of(char c) {
 };
 __host__ __device__
 void make_trie(/* trie to insert word counts into */ trie& root,
-               /* bump allocator to get new nodes*/ simt::std::atomic<trie*>& bump,
+               /* bump allocator to get new nodes*/ cuda::std::atomic<trie*>& bump,
                /* input */ const char* begin, const char* end,
                /* thread this invocation is for */ unsigned index, 
                /* how many threads there are */ unsigned domain) {
@@ -63,7 +63,7 @@ void make_trie(/* trie to insert word counts into */ trie& root,
         auto const index = off >= size ? -1 : index_of(c);
         if(index == -1) {
             if(n != &root) {
-                n->count.fetch_add(1, simt::std::memory_order_relaxed);
+                n->count.fetch_add(1, cuda::std::memory_order_relaxed);
                 n = &root;
             }
             //end of last word?
@@ -72,21 +72,21 @@ void make_trie(/* trie to insert word counts into */ trie& root,
             else
                 continue;
         }
-        if(n->next[index].ptr.load(simt::memory_order_acquire) == nullptr) {
-            if(n->next[index].flag.test_and_set(simt::std::memory_order_relaxed))
-		n->next[index].ptr.wait(nullptr, simt::std::memory_order_acquire);
+        if(n->next[index].ptr.load(cuda::memory_order_acquire) == nullptr) {
+            if(n->next[index].flag.test_and_set(cuda::std::memory_order_relaxed))
+		n->next[index].ptr.wait(nullptr, cuda::std::memory_order_acquire);
             else {
-                auto next = bump.fetch_add(1, simt::std::memory_order_relaxed);
-                n->next[index].ptr.store(next, simt::std::memory_order_release);
+                auto next = bump.fetch_add(1, cuda::std::memory_order_relaxed);
+                n->next[index].ptr.store(next, cuda::std::memory_order_release);
 		n->next[index].ptr.notify_all();
             } 
         } 
-        n = n->next[index].ptr.load(simt::std::memory_order_relaxed);
+        n = n->next[index].ptr.load(cuda::std::memory_order_relaxed);
     }
 }
 
 __global__ // __launch_bounds__(1024, 1) 
-void call_make_trie(trie* t, simt::std::atomic<trie*>* bump, const char* begin, const char* end) {
+void call_make_trie(trie* t, cuda::std::atomic<trie*>* bump, const char* begin, const char* end) {
     
     auto const index = blockDim.x * blockIdx.x + threadIdx.x;
     auto const domain = gridDim.x * blockDim.x;
@@ -115,8 +115,8 @@ inline void assert_(cudaError_t code, const char *file, int line) {
 
 template <class T>
 struct managed_allocator {
-  typedef simt::std::size_t size_type;
-  typedef simt::std::ptrdiff_t difference_type;
+  typedef cuda::std::size_t size_type;
+  typedef cuda::std::ptrdiff_t difference_type;
 
   typedef T value_type;
   typedef T* pointer;// (deprecated in C++17)(removed in C++20) T*
@@ -143,17 +143,17 @@ T* make_(Args &&... args) {
 }
 
 template<class String>
-void do_trie(String const& input, bool use_simt, int blocks, int threads) {
+void do_trie(String const& input, bool use_cuda, int blocks, int threads) {
     
     std::vector<trie, managed_allocator<trie>> nodes(1<<17);
-    if(use_simt) check(cudaMemset(nodes.data(), 0, nodes.size()*sizeof(trie)));
+    if(use_cuda) check(cudaMemset(nodes.data(), 0, nodes.size()*sizeof(trie)));
  
     auto t = nodes.data();
-    auto b = make_<simt::std::atomic<trie*>>(nodes.data()+1);
+    auto b = make_<cuda::std::atomic<trie*>>(nodes.data()+1);
 
     auto const begin = std::chrono::steady_clock::now();
     std::atomic_signal_fence(std::memory_order_seq_cst);
-    if(use_simt) {
+    if(use_cuda) {
         call_make_trie<<<blocks,threads>>>(t, b, input.data(), input.data() + input.size());
         check(cudaDeviceSynchronize());
     }
@@ -171,7 +171,7 @@ void do_trie(String const& input, bool use_simt, int blocks, int threads) {
     auto const end = std::chrono::steady_clock::now();
     auto const time = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
     auto const count = b->load() - nodes.data();
-    std::cout << "Assembled " << count << " nodes on " << blocks << "x" << threads << " " << (use_simt ? "simt" : "cpu") << " threads in " << time << "ms." << std::endl;
+    std::cout << "Assembled " << count << " nodes on " << blocks << "x" << threads << " " << (use_cuda ? "cuda" : "cpu") << " threads in " << time << "ms." << std::endl;
 }
 
 int main() {

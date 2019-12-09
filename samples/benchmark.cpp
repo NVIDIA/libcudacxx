@@ -33,18 +33,19 @@ THE SOFTWARE.
 #include <tuple>
 #include <set>
 #include <chrono>
+#include <algorithm>
 
-#include <simt/cstdint>
-#include <simt/cstddef>
-#include <simt/climits>
-#include <simt/ratio>
-#include <simt/chrono>
-#include <simt/limits>
-#include <simt/type_traits>
-#include <simt/atomic>
-#include <simt/barrier>
-#include <simt/latch>
-#include <simt/semaphore>
+#include <cuda/std/cstdint>
+#include <cuda/std/cstddef>
+#include <cuda/std/climits>
+#include <cuda/std/ratio>
+#include <cuda/std/chrono>
+#include <cuda/std/limits>
+#include <cuda/std/type_traits>
+#include <cuda/std/atomic>
+#include <cuda/std/barrier>
+#include <cuda/std/latch>
+#include <cuda/std/semaphore>
 
 #ifdef __CUDACC__
 # define _ABI __host__ __device__
@@ -61,8 +62,8 @@ inline void assert_(cudaError_t code, const char *file, int line) {
 
 template <class T>
 struct managed_allocator {
-  typedef simt::std::size_t size_type;
-  typedef simt::std::ptrdiff_t difference_type;
+  typedef cuda::std::size_t size_type;
+  typedef cuda::std::ptrdiff_t difference_type;
 
   typedef T value_type;
   typedef T* pointer;// (deprecated in C++17)(removed in C++20)	T*
@@ -125,41 +126,41 @@ struct null_mutex {
 
 struct mutex {
 	_ABI void lock() noexcept {
-		while (1 == l.exchange(1, simt::std::memory_order_acquire))
+		while (1 == l.exchange(1, cuda::std::memory_order_acquire))
 #ifndef __NO_WAIT
-			l.wait(1, simt::std::memory_order_relaxed)
+			l.wait(1, cuda::std::memory_order_relaxed)
 #endif
             ;
 	}
 	_ABI void unlock() noexcept {
-		l.store(0, simt::std::memory_order_release);
+		l.store(0, cuda::std::memory_order_release);
 #ifndef __NO_WAIT
 		l.notify_one();
 #endif
 	}
-	alignas(64) simt::atomic<int, simt::thread_scope_device> l = ATOMIC_VAR_INIT(0);
+	alignas(64) cuda::atomic<int, cuda::thread_scope_device> l = ATOMIC_VAR_INIT(0);
 };
 
 struct ticket_mutex {
 	_ABI void lock() noexcept {
-        auto const my = in.fetch_add(1, simt::std::memory_order_acquire);
+        auto const my = in.fetch_add(1, cuda::std::memory_order_acquire);
         while(1) {
-            auto const now = out.load(simt::std::memory_order_acquire);
+            auto const now = out.load(cuda::std::memory_order_acquire);
             if(now == my)
                 return;
 #ifndef __NO_WAIT
-            out.wait(now, simt::std::memory_order_relaxed);
+            out.wait(now, cuda::std::memory_order_relaxed);
 #endif
         }
 	}
 	_ABI void unlock() noexcept {
-		out.fetch_add(1, simt::std::memory_order_release);
+		out.fetch_add(1, cuda::std::memory_order_release);
 #ifndef __NO_WAIT
 		out.notify_all();
 #endif
 	}
-	alignas(64) simt::atomic<int, simt::thread_scope_device> in = ATOMIC_VAR_INIT(0);
-    alignas(64) simt::atomic<int, simt::thread_scope_device> out = ATOMIC_VAR_INIT(0);
+	alignas(64) cuda::atomic<int, cuda::thread_scope_device> in = ATOMIC_VAR_INIT(0);
+    alignas(64) cuda::atomic<int, cuda::thread_scope_device> out = ATOMIC_VAR_INIT(0);
 };
 
 struct sem_mutex {
@@ -170,7 +171,7 @@ struct sem_mutex {
         c.release();
 	}
     sem_mutex() : c(1) { }
-	simt::binary_semaphore<simt::thread_scope_device> c;
+	cuda::binary_semaphore<cuda::thread_scope_device> c;
 };
 
 static constexpr int sections = 1 << 18;
@@ -262,13 +263,13 @@ sum_mean_dev_t test_omp_body(int threads, F && f) {
 }
 
 template <class F>
-void test(std::string const& name, int threads, F && f, simt::std::atomic<bool>& keep_going, bool use_omp, bool rate_per_thread) {
+void test(std::string const& name, int threads, F && f, cuda::std::atomic<bool>& keep_going, bool use_omp, bool rate_per_thread) {
 
     std::cout << name << " : " << std::flush;
 
     std::thread test_helper([&]() {
         std::this_thread::sleep_for(std::chrono::seconds(1));
-        keep_going.store(false, simt::std::memory_order_relaxed);
+        keep_going.store(false, cuda::std::memory_order_relaxed);
     });
 
     auto const t1 = std::chrono::steady_clock::now();
@@ -319,10 +320,10 @@ template<class M>
 void test_mutex_contended(std::string const& name, bool use_omp = false) {
     test_loop([&](std::pair<int, std::string> c) {
         M* m = make_<M>();
-        simt::std::atomic<bool> *keep_going = make_<simt::std::atomic<bool>>(true);
+        cuda::std::atomic<bool> *keep_going = make_<cuda::std::atomic<bool>>(true);
         auto f = [=] _ABI (int, int) -> int {
             int i = 0;
-            while(keep_going->load(simt::std::memory_order_relaxed)) {
+            while(keep_going->load(cuda::std::memory_order_relaxed)) {
                 m->lock();
                 ++i;
                 m->unlock();
@@ -340,10 +341,10 @@ void test_mutex_uncontended(std::string const& name, bool use_omp = false) {
     test_loop([&](std::pair<int, std::string> c) {
         std::vector<M, managed_allocator<M>> ms(c.first);
         M* ms_ = &ms[0];
-        simt::std::atomic<bool> *keep_going = make_<simt::std::atomic<bool>>(true);
+        cuda::std::atomic<bool> *keep_going = make_<cuda::std::atomic<bool>>(true);
         auto f = [=] _ABI (int, int id) -> int {
             int i = 0;
-            while(keep_going->load(simt::std::memory_order_relaxed)) {
+            while(keep_going->load(cuda::std::memory_order_relaxed)) {
                 ms_[id].lock();
                 ++i;
                 ms_[id].unlock();
@@ -366,7 +367,7 @@ void test_barrier(std::string const& name, bool use_omp = false) {
 
     test_loop([&](std::pair<int, std::string> c) {
         B* b = make_<B>(c.first);
-        simt::std::atomic<bool> *keep_going = make_<simt::std::atomic<bool>>(true);
+        cuda::std::atomic<bool> *keep_going = make_<cuda::std::atomic<bool>>(true);
         auto f = [=] _ABI (int n, int)  -> int {
             for (int i = 0; i < n; ++i)
                 b->arrive_and_wait();
@@ -390,7 +391,7 @@ void test_latch(std::string const& name, bool use_omp = false) {
         for(size_t i = 0; i < n; ++i)
             new (ls + i) L(c.first);
 
-        simt::std::atomic<bool> *keep_going = make_<simt::std::atomic<bool>>(true);
+        cuda::std::atomic<bool> *keep_going = make_<cuda::std::atomic<bool>>(true);
         auto f = [=] _ABI (int, int)  -> int {
             for (int i = 0; i < n; ++i)
                 ls[i].arrive_and_wait();
@@ -419,8 +420,8 @@ int main() {
 #endif
 */
 #ifndef __NO_BARRIER
-//    test_latch<simt::latch<simt::thread_scope_device>>("Latch");
-    test_barrier<simt::barrier<simt::thread_scope_device>>("Barrier");
+//    test_latch<cuda::latch<cuda::thread_scope_device>>("Latch");
+    test_barrier<cuda::barrier<cuda::thread_scope_device>>("Barrier");
 #endif
 
 #ifdef _OPENMP
@@ -451,12 +452,3 @@ int main() {
 
 	return 0;
 }
-
-
-#if !defined(_LIBCPP_HAS_NO_TREE_BARRIER) && !defined(_LIBCPP_HAS_NO_THREAD_FAVORITE_HASH)
-_LIBCPP_BEGIN_NAMESPACE_STD
-thread_local ptrdiff_t __libcpp_thread_favorite_hash = 0;
-//    hash<__thread_id>()(this_thread::get_id());
-_LIBCPP_END_NAMESPACE_STD
-#endif
-
