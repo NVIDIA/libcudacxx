@@ -298,13 +298,36 @@ void validate_managed(tester_list<Testers...>)
 #endif
 }
 
+#define HELPERS_CUDA_CALL(err, ...) \
+    do { \
+        err = __VA_ARGS__; \
+        if (err != cudaSuccess) \
+        { \
+            printf("CUDA ERROR, line %d: %s: %s\n", __LINE__,\
+                   cudaGetErrorName(err), cudaGetErrorString(err)); \
+            exit(err); \
+        } \
+    } while (false)
+
+bool check_managed_memory_support()
+{
+    int current_device, property_value;
+    cudaError_t err;
+    HELPERS_CUDA_CALL(err, cudaGetDevice(&current_device));
+    HELPERS_CUDA_CALL(err, cudaDeviceGetAttribute(&property_value, cudaDevAttrManagedMemory, current_device));
+    return property_value == 1;
+}
+
 template<typename T, typename TesterList>
 void validate_not_movable()
 {
     TesterList list;
 
     validate_device_dynamic<T>(list);
-    validate_managed<T>(list);
+    if (check_managed_memory_support())
+    {
+        validate_managed<T>(list);
+    }
 }
 
 #endif
