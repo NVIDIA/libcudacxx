@@ -635,7 +635,7 @@ typedef enum memory_order {
 
 template <typename _Tp> _LIBCUDACXX_INLINE_VISIBILITY
 bool __cxx_nonatomic_compare_equal(_Tp const& __lhs, _Tp const& __rhs) {
-#ifdef _LIBCUDACXX_COMPILER_NVCC
+#if defined(_LIBCUDACXX_COMPILER_NVCC) || defined(_LIBCUDACXX_COMPILER_NVRTC)
     return __lhs == __rhs;
 #else
     return memcmp(&__lhs, &__rhs, sizeof(_Tp)) == 0;
@@ -1418,6 +1418,10 @@ _Tp __cxx_atomic_fetch_xor(__cxx_atomic_lock_impl<_Tp, _Sco>* __a,
 
 #ifdef __cpp_lib_atomic_is_always_lock_free
 
+#ifdef __CUDACC_RTC__
+#define __atomic_always_lock_free(size, ptr) (size <= 8)
+#endif
+
 template<typename _Tp> struct __cxx_is_always_lock_free {
     enum { __value = __atomic_always_lock_free(sizeof(_Tp), 0) }; };
 
@@ -1449,6 +1453,7 @@ struct __cxx_atomic_impl : public _Base {
 };
 
 template<int _Sco, typename _Tp = int>
+_LIBCUDACXX_INLINE_VISIBILITY
 __cxx_atomic_impl<_Tp, _Sco>* __cxx_atomic_rebind(_Tp* __inst) {
     static_assert(sizeof(__cxx_atomic_impl<_Tp, _Sco>) == sizeof(_Tp),"");
     static_assert(alignof(__cxx_atomic_impl<_Tp, _Sco>) == alignof(_Tp),"");
@@ -1459,7 +1464,11 @@ __cxx_atomic_impl<_Tp, _Sco>* __cxx_atomic_rebind(_Tp* __inst) {
 
 template <class _Tp, int _Sco>
 _LIBCUDACXX_INLINE_VISIBILITY void __cxx_atomic_try_wait_slow_fallback(__cxx_atomic_impl<_Tp, _Sco> const volatile* __a, _Tp __val, memory_order __order) {
+#if defined(__CUDACC__) && !defined(__CUDACC_RTC__)
     __libcpp_thread_poll_with_backoff([=] _LIBCUDACXX_INLINE_VISIBILITY () -> bool {
+#else
+    __libcpp_thread_poll_with_backoff([=]() -> bool {
+#endif
         return !(__cxx_atomic_load(__a, __order) == __val);
     });
 }
@@ -1722,8 +1731,11 @@ struct __atomic_base  // false
     __atomic_base& operator=(const __atomic_base&) volatile = delete;
 #else
 private:
+    _LIBCUDACXX_INLINE_VISIBILITY
     __atomic_base(const __atomic_base&);
+    _LIBCUDACXX_INLINE_VISIBILITY
     __atomic_base& operator=(const __atomic_base&);
+    _LIBCUDACXX_INLINE_VISIBILITY
     __atomic_base& operator=(const __atomic_base&) volatile;
 #endif
 };
@@ -2580,8 +2592,11 @@ typedef struct atomic_flag
     atomic_flag& operator=(const atomic_flag&) volatile = delete;
 #else
 private:
+    _LIBCUDACXX_INLINE_VISIBILITY
     atomic_flag(const atomic_flag&);
+    _LIBCUDACXX_INLINE_VISIBILITY
     atomic_flag& operator=(const atomic_flag&);
+    _LIBCUDACXX_INLINE_VISIBILITY
     atomic_flag& operator=(const atomic_flag&) volatile;
 #endif
 } atomic_flag;

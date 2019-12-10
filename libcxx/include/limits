@@ -333,9 +333,15 @@ protected:
     static _LIBCUDACXX_CONSTEXPR const bool has_signaling_NaN = true;
     static _LIBCUDACXX_CONSTEXPR const float_denorm_style has_denorm = denorm_present;
     static _LIBCUDACXX_CONSTEXPR const bool has_denorm_loss = false;
+#ifdef __CUDACC_RTC__
+    _LIBCUDACXX_INLINE_VISIBILITY static type infinity() _NOEXCEPT {return __builtin_huge_valf();}
+    _LIBCUDACXX_INLINE_VISIBILITY static type quiet_NaN() _NOEXCEPT {return __builtin_nanf("");}
+    _LIBCUDACXX_INLINE_VISIBILITY static type signaling_NaN() _NOEXCEPT {return __builtin_nansf("");}
+#else
     _LIBCUDACXX_INLINE_VISIBILITY static _LIBCUDACXX_CONSTEXPR type infinity() _NOEXCEPT {return __builtin_huge_valf();}
     _LIBCUDACXX_INLINE_VISIBILITY static _LIBCUDACXX_CONSTEXPR type quiet_NaN() _NOEXCEPT {return __builtin_nanf("");}
     _LIBCUDACXX_INLINE_VISIBILITY static _LIBCUDACXX_CONSTEXPR type signaling_NaN() _NOEXCEPT {return __builtin_nansf("");}
+#endif
     _LIBCUDACXX_INLINE_VISIBILITY static _LIBCUDACXX_CONSTEXPR type denorm_min() _NOEXCEPT {return __FLT_DENORM_MIN__;}
 
     static _LIBCUDACXX_CONSTEXPR const bool is_iec559 = true;
@@ -379,9 +385,15 @@ protected:
     static _LIBCUDACXX_CONSTEXPR const bool has_signaling_NaN = true;
     static _LIBCUDACXX_CONSTEXPR const float_denorm_style has_denorm = denorm_present;
     static _LIBCUDACXX_CONSTEXPR const bool has_denorm_loss = false;
+#ifdef __CUDACC_RTC__
+    _LIBCUDACXX_INLINE_VISIBILITY static type infinity() _NOEXCEPT {return __builtin_huge_val();}
+    _LIBCUDACXX_INLINE_VISIBILITY static type quiet_NaN() _NOEXCEPT {return __builtin_nan("");}
+    _LIBCUDACXX_INLINE_VISIBILITY static type signaling_NaN() _NOEXCEPT {return __builtin_nans("");}
+#else
     _LIBCUDACXX_INLINE_VISIBILITY static _LIBCUDACXX_CONSTEXPR type infinity() _NOEXCEPT {return __builtin_huge_val();}
     _LIBCUDACXX_INLINE_VISIBILITY static _LIBCUDACXX_CONSTEXPR type quiet_NaN() _NOEXCEPT {return __builtin_nan("");}
     _LIBCUDACXX_INLINE_VISIBILITY static _LIBCUDACXX_CONSTEXPR type signaling_NaN() _NOEXCEPT {return __builtin_nans("");}
+#endif
     _LIBCUDACXX_INLINE_VISIBILITY static _LIBCUDACXX_CONSTEXPR type denorm_min() _NOEXCEPT {return __DBL_DENORM_MIN__;}
 
     static _LIBCUDACXX_CONSTEXPR const bool is_iec559 = true;
@@ -425,9 +437,15 @@ protected:
     static _LIBCUDACXX_CONSTEXPR const bool has_signaling_NaN = true;
     static _LIBCUDACXX_CONSTEXPR const float_denorm_style has_denorm = denorm_present;
     static _LIBCUDACXX_CONSTEXPR const bool has_denorm_loss = false;
+#ifdef __CUDACC_RTC__
+    _LIBCUDACXX_INLINE_VISIBILITY static type infinity() _NOEXCEPT { assert(!"long double is not supported in device code"); return 0.0l; }
+    _LIBCUDACXX_INLINE_VISIBILITY static type quiet_NaN() _NOEXCEPT { assert(!"long double is not supported in device code"); return 0.0l; }
+    _LIBCUDACXX_INLINE_VISIBILITY static type signaling_NaN() _NOEXCEPT { assert(!"long double is not supported in device code"); return 0.0l; }
+#else
     _LIBCUDACXX_INLINE_VISIBILITY static _LIBCUDACXX_CONSTEXPR type infinity() _NOEXCEPT {return __builtin_huge_vall();}
     _LIBCUDACXX_INLINE_VISIBILITY static _LIBCUDACXX_CONSTEXPR type quiet_NaN() _NOEXCEPT {return __builtin_nanl("");}
     _LIBCUDACXX_INLINE_VISIBILITY static _LIBCUDACXX_CONSTEXPR type signaling_NaN() _NOEXCEPT {return __builtin_nansl("");}
+#endif
     _LIBCUDACXX_INLINE_VISIBILITY static _LIBCUDACXX_CONSTEXPR type denorm_min() _NOEXCEPT {return __LDBL_DENORM_MIN__;}
 
 #if (defined(__ppc__) || defined(__ppc64__))

@@ -112,6 +112,7 @@ class __atomic_semaphore_base
     __atomic_base<ptrdiff_t, _Sco> __count;
 
 public:
+    _LIBCUDACXX_INLINE_VISIBILITY
     static constexpr ptrdiff_t max() noexcept
     {
         return numeric_limits<ptrdiff_t>::max();
@@ -185,6 +186,7 @@ class __atomic_semaphore_base<_Sco, 1> {
     __atomic_base<int, _Sco> __available;
 
 public:
+    _LIBCUDACXX_INLINE_VISIBILITY
     static constexpr ptrdiff_t max() noexcept { return 1; }
 
     _LIBCUDACXX_INLINE_VISIBILITY

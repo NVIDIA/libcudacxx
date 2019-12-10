@@ -76,6 +76,7 @@ namespace std  // purposefully not versioned
 #endif //_LIBCUDACXX_BEGIN_NAMESPACE_STD_NOVERSION
 enum class byte : unsigned char {};
 
+_LIBCUDACXX_INLINE_VISIBILITY
 constexpr byte  operator| (byte  __lhs, byte __rhs) noexcept
 {
     return static_cast<byte>(
@@ -84,9 +85,11 @@ constexpr byte  operator| (byte  __lhs, byte __rhs) noexcept
     ));
 }
 
+_LIBCUDACXX_INLINE_VISIBILITY
 constexpr byte& operator|=(byte& __lhs, byte __rhs) noexcept
 { return __lhs = __lhs | __rhs; }
 
+_LIBCUDACXX_INLINE_VISIBILITY
 constexpr byte  operator& (byte  __lhs, byte __rhs) noexcept
 {
     return static_cast<byte>(
@@ -95,9 +98,11 @@ constexpr byte  operator& (byte  __lhs, byte __rhs) noexcept
     ));
 }
 
+_LIBCUDACXX_INLINE_VISIBILITY
 constexpr byte& operator&=(byte& __lhs, byte __rhs) noexcept
 { return __lhs = __lhs & __rhs; }
 
+_LIBCUDACXX_INLINE_VISIBILITY
 constexpr byte  operator^ (byte  __lhs, byte __rhs) noexcept
 {
     return static_cast<byte>(
@@ -106,9 +111,11 @@ constexpr byte  operator^ (byte  __lhs, byte __rhs) noexcept
     ));
 }
 
+_LIBCUDACXX_INLINE_VISIBILITY
 constexpr byte& operator^=(byte& __lhs, byte __rhs) noexcept
 { return __lhs = __lhs ^ __rhs; }
 
+_LIBCUDACXX_INLINE_VISIBILITY
 constexpr byte  operator~ (byte __b) noexcept
 {
     return static_cast<byte>(
@@ -123,7 +130,9 @@ _LIBCUDACXX_END_NAMESPACE_STD_NOVERSION
 }
 #endif //_LIBCUDACXX_END_NAMESPACE_STD_NOVERSION
 
+#ifndef __cuda_std__
 #include <type_traits>  // rest of byte
+#endif
 #endif
 
 #endif  // _LIBCUDACXX_CSTDDEF

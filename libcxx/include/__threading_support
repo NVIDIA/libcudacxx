@@ -29,7 +29,11 @@
 #endif
 
 #if defined(_LIBCUDACXX_HAS_THREAD_API_EXTERNAL)
-# include <__external_threading>
+# ifndef __cuda_std__
+#  include <__external_threading>
+# else
+#  define _LIBCUDACXX_THREAD_ABI_VISIBILITY inline _LIBCUDACXX_INLINE_VISIBILITY
+# endif
 #elif !defined(_LIBCUDACXX_HAS_NO_THREADS)
 
 #if defined(_LIBCUDACXX_HAS_THREAD_API_PTHREAD)
@@ -84,6 +88,16 @@ inline void __libcpp_thread_yield_processor()
   ;
 #endif
 }
+
+_LIBCUDACXX_THREAD_ABI_VISIBILITY
+void __libcpp_thread_yield();
+
+_LIBCUDACXX_THREAD_ABI_VISIBILITY
+void __libcpp_thread_sleep_for(chrono::nanoseconds __ns);
+
+template<class _Fn>
+_LIBCUDACXX_THREAD_ABI_VISIBILITY
+bool __libcpp_thread_poll_with_backoff(_Fn && __f, chrono::nanoseconds __max = chrono::nanoseconds::zero());
 
 #if defined(_LIBCUDACXX_HAS_THREAD_API_PTHREAD)
 // Mutex
@@ -210,7 +224,7 @@ _LIBCUDACXX_THREAD_ABI_VISIBILITY
 int __libcpp_condvar_destroy(__libcpp_condvar_t* __cv);
 
 // Semaphore
-_LIBCUDACXX_THREAD_ABI_VISIBILITY 
+_LIBCUDACXX_THREAD_ABI_VISIBILITY
 bool __libcpp_semaphore_init(__libcpp_semaphore_t* __sem, int __init);
 
 _LIBCUDACXX_THREAD_ABI_VISIBILITY
@@ -256,16 +270,6 @@ int __libcpp_thread_join(__libcpp_thread_t *__t);
 
 _LIBCUDACXX_THREAD_ABI_VISIBILITY
 int __libcpp_thread_detach(__libcpp_thread_t *__t);
-
-_LIBCUDACXX_THREAD_ABI_VISIBILITY
-void __libcpp_thread_yield();
-
-_LIBCUDACXX_THREAD_ABI_VISIBILITY
-void __libcpp_thread_sleep_for(chrono::nanoseconds __ns);
-
-template<class _Fn>
-_LIBCUDACXX_THREAD_ABI_VISIBILITY
-bool __libcpp_thread_poll_with_backoff(_Fn && __f, chrono::nanoseconds __max = chrono::nanoseconds::zero());
 
 // Thread local storage
 _LIBCUDACXX_THREAD_ABI_VISIBILITY
@@ -399,56 +403,56 @@ int __libcpp_condvar_destroy(__libcpp_condvar_t *__cv)
 // Semaphore
 #if defined(__APPLE__)
 
-bool __libcpp_semaphore_init(__libcpp_semaphore_t* __sem, int __init) 
+bool __libcpp_semaphore_init(__libcpp_semaphore_t* __sem, int __init)
 {
     return (*__sem = dispatch_semaphore_create(__init)) != NULL;
 }
 
-bool __libcpp_semaphore_destroy(__libcpp_semaphore_t* __sem) 
+bool __libcpp_semaphore_destroy(__libcpp_semaphore_t* __sem)
 {
     dispatch_release(*__sem);
     return true;
 }
 
-bool __libcpp_semaphore_post(__libcpp_semaphore_t* __sem) 
+bool __libcpp_semaphore_post(__libcpp_semaphore_t* __sem)
 {
     dispatch_semaphore_signal(*__sem);
     return true;
 }
 
-bool __libcpp_semaphore_wait(__libcpp_semaphore_t* __sem) 
+bool __libcpp_semaphore_wait(__libcpp_semaphore_t* __sem)
 {
     return dispatch_semaphore_wait(*__sem, DISPATCH_TIME_FOREVER) == 0;
 }
 
-bool __libcpp_semaphore_wait_timed(__libcpp_semaphore_t* __sem, chrono::nanoseconds const& __ns) 
+bool __libcpp_semaphore_wait_timed(__libcpp_semaphore_t* __sem, chrono::nanoseconds const& __ns)
 {
     return dispatch_semaphore_wait(*__sem, dispatch_time(DISPATCH_TIME_NOW, __ns.count())) == 0;
 }
 
 #else
 
-bool __libcpp_semaphore_init(__libcpp_semaphore_t* __sem, int __init) 
+bool __libcpp_semaphore_init(__libcpp_semaphore_t* __sem, int __init)
 {
     return sem_init(__sem, 0, __init) == 0;
 }
 
-bool __libcpp_semaphore_destroy(__libcpp_semaphore_t* __sem) 
+bool __libcpp_semaphore_destroy(__libcpp_semaphore_t* __sem)
 {
     return sem_destroy(__sem) == 0;
 }
 
-bool __libcpp_semaphore_post(__libcpp_semaphore_t* __sem) 
+bool __libcpp_semaphore_post(__libcpp_semaphore_t* __sem)
 {
     return sem_post(__sem) == 0;
 }
 
-bool __libcpp_semaphore_wait(__libcpp_semaphore_t* __sem) 
+bool __libcpp_semaphore_wait(__libcpp_semaphore_t* __sem)
 {
     return sem_wait(__sem) == 0;
 }
 
-bool __libcpp_semaphore_wait_timed(__libcpp_semaphore_t* __sem, chrono::nanoseconds const& __ns) 
+bool __libcpp_semaphore_wait_timed(__libcpp_semaphore_t* __sem, chrono::nanoseconds const& __ns)
 {
     __libcpp_timespec_t __ts = __libcpp_to_timespec(__ns);
     return sem_timedwait(__sem, &__ts) == 0;
@@ -506,6 +510,24 @@ int __libcpp_thread_detach(__libcpp_thread_t *__t)
   return pthread_detach(*__t);
 }
 
+// Thread local storage
+int __libcpp_tls_create(__libcpp_tls_key *__key, void (*__at_exit)(void *))
+{
+  return pthread_key_create(__key, __at_exit);
+}
+
+void *__libcpp_tls_get(__libcpp_tls_key __key)
+{
+  return pthread_getspecific(__key);
+}
+
+int __libcpp_tls_set(__libcpp_tls_key __key, void *__p)
+{
+    return pthread_setspecific(__key, __p);
+}
+
+#endif // !_LIBCUDACXX_HAS_THREAD_LIBRARY_EXTERNAL || _LIBCUDACXX_BUILDING_THREAD_LIBRARY_EXTERNAL
+
 void __libcpp_thread_yield()
 {
 #ifdef __CUDA_ARCH__
@@ -560,24 +582,6 @@ bool __libcpp_thread_poll_with_backoff(_Fn && __f, chrono::nanoseconds __max)
     }
 }
 
-// Thread local storage
-int __libcpp_tls_create(__libcpp_tls_key *__key, void (*__at_exit)(void *))
-{
-  return pthread_key_create(__key, __at_exit);
-}
-
-void *__libcpp_tls_get(__libcpp_tls_key __key)
-{
-  return pthread_getspecific(__key);
-}
-
-int __libcpp_tls_set(__libcpp_tls_key __key, void *__p)
-{
-    return pthread_setspecific(__key, __p);
-}
-
-#endif // !_LIBCUDACXX_HAS_THREAD_LIBRARY_EXTERNAL || _LIBCUDACXX_BUILDING_THREAD_LIBRARY_EXTERNAL
-
 #if defined(__linux__) && !defined(_LIBCUDACXX_HAS_NO_PLATFORM_WAIT)
 
 #define _LIBCUDACXX_HAS_PLATFORM_WAIT
@@ -629,6 +633,8 @@ _LIBCUDACXX_EXPORTED_FROM_ABI
 extern thread_local ptrdiff_t __libcpp_thread_favorite_barrier_index;
 
 #endif
+
+#ifndef __cuda_std__
 
 class _LIBCUDACXX_TYPE_VIS thread;
 class _LIBCUDACXX_TYPE_VIS __thread_id;
@@ -711,6 +717,8 @@ get_id() _NOEXCEPT
 }
 
 }  // this_thread
+
+#endif // __cuda_std__
 
 #endif // !_LIBCUDACXX_HAS_NO_THREADS
 

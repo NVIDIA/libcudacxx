@@ -38,8 +38,8 @@ struct __has_result_type
 {
 private:
     struct __two {char __lx; char __lxx;};
-    template <class _Up> static __two __test(...);
-    template <class _Up> static char __test(typename _Up::result_type* = 0);
+    template <class _Up> _LIBCUDACXX_INLINE_VISIBILITY static __two __test(...);
+    template <class _Up> _LIBCUDACXX_INLINE_VISIBILITY static char __test(typename _Up::result_type* = 0);
 public:
     static const bool value = sizeof(__test<_Tp>(0)) == 1;
 };
@@ -77,8 +77,10 @@ struct __derives_from_unary_function
 {
 private:
     struct __two {char __lx; char __lxx;};
+    _LIBCUDACXX_INLINE_VISIBILITY
     static __two __test(...);
     template <class _Ap, class _Rp>
+        _LIBCUDACXX_INLINE_VISIBILITY
         static unary_function<_Ap, _Rp>
         __test(const volatile unary_function<_Ap, _Rp>*);
 public:
@@ -91,8 +93,10 @@ struct __derives_from_binary_function
 {
 private:
     struct __two {char __lx; char __lxx;};
+    _LIBCUDACXX_INLINE_VISIBILITY
     static __two __test(...);
     template <class _A1, class _A2, class _Rp>
+        _LIBCUDACXX_INLINE_VISIBILITY
         static binary_function<_A1, _A2, _Rp>
         __test(const volatile binary_function<_A1, _A2, _Rp>*);
 public:
@@ -315,26 +319,31 @@ struct __invoke_void_return_wrapper
 {
 #ifndef _LIBCUDACXX_CXX03_LANG
     template <class ..._Args>
+    _LIBCUDACXX_INLINE_VISIBILITY
     static _Ret __call(_Args&&... __args) {
         return __invoke(_CUDA_VSTD::forward<_Args>(__args)...);
     }
 #else
     template <class _Fn>
+    _LIBCUDACXX_INLINE_VISIBILITY
     static _Ret __call(_Fn __f) {
         return __invoke(__f);
     }
 
     template <class _Fn, class _A0>
+    _LIBCUDACXX_INLINE_VISIBILITY
     static _Ret __call(_Fn __f, _A0& __a0) {
         return __invoke(__f, __a0);
     }
 
     template <class _Fn, class _A0, class _A1>
+    _LIBCUDACXX_INLINE_VISIBILITY
     static _Ret __call(_Fn __f, _A0& __a0, _A1& __a1) {
         return __invoke(__f, __a0, __a1);
     }
 
     template <class _Fn, class _A0, class _A1, class _A2>
+    _LIBCUDACXX_INLINE_VISIBILITY
     static _Ret __call(_Fn __f, _A0& __a0, _A1& __a1, _A2& __a2){
         return __invoke(__f, __a0, __a1, __a2);
     }
@@ -346,26 +355,31 @@ struct __invoke_void_return_wrapper<void>
 {
 #ifndef _LIBCUDACXX_CXX03_LANG
     template <class ..._Args>
+    _LIBCUDACXX_INLINE_VISIBILITY
     static void __call(_Args&&... __args) {
         __invoke(_CUDA_VSTD::forward<_Args>(__args)...);
     }
 #else
     template <class _Fn>
+    _LIBCUDACXX_INLINE_VISIBILITY
     static void __call(_Fn __f) {
         __invoke(__f);
     }
 
     template <class _Fn, class _A0>
+    _LIBCUDACXX_INLINE_VISIBILITY
     static void __call(_Fn __f, _A0& __a0) {
         __invoke(__f, __a0);
     }
 
     template <class _Fn, class _A0, class _A1>
+    _LIBCUDACXX_INLINE_VISIBILITY
     static void __call(_Fn __f, _A0& __a0, _A1& __a1) {
         __invoke(__f, __a0, __a1);
     }
 
     template <class _Fn, class _A0, class _A1, class _A2>
+    _LIBCUDACXX_INLINE_VISIBILITY
     static void __call(_Fn __f, _A0& __a0, _A1& __a1, _A2& __a2) {
         __invoke(__f, __a0, __a1, __a2);
     }
@@ -387,7 +401,7 @@ public:
     _LIBCUDACXX_INLINE_VISIBILITY reference_wrapper(type& __f) _NOEXCEPT
         : __f_(_CUDA_VSTD::addressof(__f)) {}
 #ifndef _LIBCUDACXX_CXX03_LANG
-    private: reference_wrapper(type&&); public: // = delete; // do not bind to temps
+    private: _LIBCUDACXX_INLINE_VISIBILITY reference_wrapper(type&&); public: // = delete; // do not bind to temps
 #endif
 
     // access
@@ -575,8 +589,8 @@ struct __has_allocator_type
 {
 private:
     struct __two {char __lx; char __lxx;};
-    template <class _Up> static __two __test(...);
-    template <class _Up> static char __test(typename _Up::allocator_type* = 0);
+    template <class _Up> _LIBCUDACXX_INLINE_VISIBILITY static __two __test(...);
+    template <class _Up> _LIBCUDACXX_INLINE_VISIBILITY static char __test(typename _Up::allocator_type* = 0);
 public:
     static const bool value = sizeof(__test<_Tp>(0)) == 1;
 };

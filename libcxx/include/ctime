@@ -18,7 +18,7 @@ Macros:
     NULL
     CLOCKS_PER_SEC
     TIME_UTC // C++17
-    
+
 namespace std
 {
 
@@ -29,7 +29,7 @@ Types:
     time_t
     tm
     timespec // C++17
-    
+
 clock_t clock();
 double difftime(time_t time1, time_t time0);
 time_t mktime(tm* timeptr);
@@ -59,6 +59,9 @@ _LIBCUDACXX_BEGIN_NAMESPACE_STD
 using ::clock_t;
 using ::size_t;
 using ::time_t;
+
+#ifndef __CUDACC_RTC__
+
 using ::tm;
 #if _LIBCUDACXX_STD_VER > 14 && defined(_LIBCUDACXX_HAS_C11_FEATURES)
 using ::timespec;
@@ -76,6 +79,9 @@ using ::localtime;
 using ::strftime;
 #if _LIBCUDACXX_STD_VER > 14 && defined(_LIBCUDACXX_HAS_TIMESPEC_GET)
 using ::timespec_get;
+
+#endif
+
 #endif
 
 _LIBCUDACXX_END_NAMESPACE_STD

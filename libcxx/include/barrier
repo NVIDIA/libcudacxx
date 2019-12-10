@@ -298,7 +298,7 @@ public:
     inline _LIBCUDACXX_INLINE_VISIBILITY
     void wait(arrival_token&& __phase) const
     {
-#if defined(__CUDACC__)
+#if defined(__CUDACC__) && !defined(__CUDACC_RTC__)
         __libcpp_thread_poll_with_backoff([=] _LIBCUDACXX_INLINE_VISIBILITY () -> bool
 #else
         __libcpp_thread_poll_with_backoff([=]() -> bool

@@ -1066,7 +1066,7 @@ private:
 public:
 
     _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR
-#if !defined(_LIBCUDACXX_CXX03_LANG) && !defined(__NVCC__)
+#if !defined(_LIBCUDACXX_CXX03_LANG)
         duration() = default;
 #else
         duration() {}
@@ -2846,77 +2846,91 @@ inline namespace literals
   inline namespace chrono_literals
   {
 
+    _LIBCUDACXX_INLINE_VISIBILITY
     constexpr chrono::hours operator""h(unsigned long long __h)
     {
         return chrono::hours(static_cast<chrono::hours::rep>(__h));
     }
 
+    _LIBCUDACXX_INLINE_VISIBILITY
     constexpr chrono::duration<long double, ratio<3600,1>> operator""h(long double __h)
     {
         return chrono::duration<long double, ratio<3600,1>>(__h);
     }
 
 
+    _LIBCUDACXX_INLINE_VISIBILITY
     constexpr chrono::minutes operator""min(unsigned long long __m)
     {
         return chrono::minutes(static_cast<chrono::minutes::rep>(__m));
     }
 
+    _LIBCUDACXX_INLINE_VISIBILITY
     constexpr chrono::duration<long double, ratio<60,1>> operator""min(long double __m)
     {
         return chrono::duration<long double, ratio<60,1>> (__m);
     }
 
 
+    _LIBCUDACXX_INLINE_VISIBILITY
     constexpr chrono::seconds operator""s(unsigned long long __s)
     {
         return chrono::seconds(static_cast<chrono::seconds::rep>(__s));
     }
 
+    _LIBCUDACXX_INLINE_VISIBILITY
     constexpr chrono::duration<long double> operator""s(long double __s)
     {
         return chrono::duration<long double> (__s);
     }
 
 
+    _LIBCUDACXX_INLINE_VISIBILITY
     constexpr chrono::milliseconds operator""ms(unsigned long long __ms)
     {
         return chrono::milliseconds(static_cast<chrono::milliseconds::rep>(__ms));
     }
 
+    _LIBCUDACXX_INLINE_VISIBILITY
     constexpr chrono::duration<long double, milli> operator""ms(long double __ms)
     {
         return chrono::duration<long double, milli>(__ms);
     }
 
 
+    _LIBCUDACXX_INLINE_VISIBILITY
     constexpr chrono::microseconds operator""us(unsigned long long __us)
     {
         return chrono::microseconds(static_cast<chrono::microseconds::rep>(__us));
     }
 
+    _LIBCUDACXX_INLINE_VISIBILITY
     constexpr chrono::duration<long double, micro> operator""us(long double __us)
     {
         return chrono::duration<long double, micro> (__us);
     }
 
 
+    _LIBCUDACXX_INLINE_VISIBILITY
     constexpr chrono::nanoseconds operator""ns(unsigned long long __ns)
     {
         return chrono::nanoseconds(static_cast<chrono::nanoseconds::rep>(__ns));
     }
 
+    _LIBCUDACXX_INLINE_VISIBILITY
     constexpr chrono::duration<long double, nano> operator""ns(long double __ns)
     {
         return chrono::duration<long double, nano> (__ns);
     }
 
 #if _LIBCUDACXX_STD_VER > 17 && !defined(_LIBCUDACXX_HAS_NO_CXX20_CHRONO_LITERALS)
+    _LIBCUDACXX_INLINE_VISIBILITY
     constexpr chrono::day operator ""d(unsigned long long __d) noexcept
     {
         return chrono::day(static_cast<unsigned>(__d));
     }
 
+    _LIBCUDACXX_INLINE_VISIBILITY
     constexpr chrono::year operator ""y(unsigned long long __y) noexcept
     {
         return chrono::year(static_cast<int>(__y));
@@ -2931,6 +2945,8 @@ namespace chrono { // hoist the literals into namespace std::chrono
 #endif
 
 _LIBCUDACXX_END_NAMESPACE_STD
+
+#ifndef __cuda_std__
 
 #ifndef _LIBCUDACXX_CXX03_LANG
 _LIBCUDACXX_BEGIN_NAMESPACE_FILESYSTEM
@@ -2966,6 +2982,8 @@ struct _FilesystemClock {
 };
 _LIBCUDACXX_END_NAMESPACE_FILESYSTEM
 #endif // !_LIBCUDACXX_CXX03_LANG
+
+#endif
 
 _LIBCUDACXX_POP_MACROS
 
