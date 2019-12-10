@@ -27,11 +27,11 @@ void test()
   SHARED Barrier * b;
   b = sel.construct(2);
 
-  auto dropper = [=] __host__ __device__ (){
+  auto dropper = LAMBDA (){
     b->arrive_and_drop();
   };
 
-  auto arriver = [=] __host__ __device__ (){
+  auto arriver = LAMBDA (){
     b->arrive_and_wait();
     b->arrive_and_wait();
   };

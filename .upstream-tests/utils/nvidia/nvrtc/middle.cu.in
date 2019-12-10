@@ -12,7 +12,6 @@ int main() {
 
     const char * opts[] = {
         "-rdc=true",
-        "-default-device",
 
 #if __cplusplus < 201103L
         "-std=c++98",

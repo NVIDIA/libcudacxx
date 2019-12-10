@@ -22,7 +22,9 @@
 
 struct wat
 {
+    __host__ __device__
     wat& operator*() { return *this; }
+    __host__ __device__
     void foo();
 };
 

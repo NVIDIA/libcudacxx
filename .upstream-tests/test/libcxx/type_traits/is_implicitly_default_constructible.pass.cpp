@@ -23,10 +23,12 @@ struct ExplicitlyDefaultConstructible1 {
 };
 
 struct ExplicitlyDefaultConstructible2 {
+    __host__ __device__
     explicit ExplicitlyDefaultConstructible2() { }
 };
 
 struct ImplicitlyDefaultConstructible1 {
+    __host__ __device__
     ImplicitlyDefaultConstructible1() { }
 };
 
@@ -43,6 +45,7 @@ struct NonDefaultConstructible2 {
 };
 
 struct NonDefaultConstructible3 {
+    __host__ __device__
     NonDefaultConstructible3(NonDefaultConstructible3&&) { }
 };
 

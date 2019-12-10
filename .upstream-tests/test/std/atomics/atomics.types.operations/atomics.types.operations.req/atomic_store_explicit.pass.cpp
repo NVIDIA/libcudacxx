@@ -36,7 +36,7 @@ struct TestFn {
     cuda::std::atomic_store_explicit(&t, T(1), cuda::std::memory_order_seq_cst);
     assert(t == T(1));
     Selector<volatile A, constructor_initializer> vsel;
-    volatile A & vt = *sel.construct();
+    volatile A & vt = *vsel.construct();
     cuda::std::atomic_store_explicit(&vt, T(2), cuda::std::memory_order_seq_cst);
     assert(vt == T(2));
   }

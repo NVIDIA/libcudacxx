@@ -9,7 +9,9 @@
 #ifndef _CUDA___FUNCTIONAL_BASE
 #define _CUDA___FUNCTIONAL_BASE
 
-#include <errno.h>
+#ifndef __CUDACC_RTC__
+    #include <errno.h>
+#endif
 
 #include "../chrono"
 #include "../climits"

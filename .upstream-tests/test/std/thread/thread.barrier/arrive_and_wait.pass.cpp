@@ -27,7 +27,7 @@ void test()
   SHARED Barrier * b;
   b = sel.construct(2);
 
-  auto worker = [=] __host__ __device__ (){
+  auto worker = LAMBDA (){
     for(int i = 0; i < 10; ++i)
       b->arrive_and_wait();
   };

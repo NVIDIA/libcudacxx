@@ -33,6 +33,7 @@ void test_rank()
 class Class
 {
 public:
+    __host__ __device__
     ~Class();
 };
 

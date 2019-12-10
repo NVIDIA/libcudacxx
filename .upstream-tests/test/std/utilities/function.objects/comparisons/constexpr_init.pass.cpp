@@ -17,11 +17,15 @@
 // Test that these types can be constructed w/o an initializer in a constexpr
 // context. This is specifically testing gcc.gnu.org/PR83921
 
+// XFAIL: nvrtc
+// the NVRTC frontend appears to have the same bug GCC has
+
 
 #include <cuda/std/functional>
 #include "test_macros.h"
 
 template <class T>
+__host__ __device__
 constexpr bool test_constexpr_context() {
   cuda::std::equal_to<T> eq;
   ((void)eq);

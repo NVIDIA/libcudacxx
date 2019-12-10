@@ -35,12 +35,3 @@
     CUDA_SAFE_CALL(cuModuleGetFunction(&kernel, module, "main_kernel"));
     CUDA_SAFE_CALL(cuLaunchKernel(kernel,
         1, 1, 1,
-        1, 1, 1,
-        0, NULL,
-        NULL, 0));
-
-    CUDA_API_CALL(cudaGetLastError());
-    CUDA_API_CALL(cudaDeviceSynchronize());
-
-    return 0;
-}

@@ -25,17 +25,23 @@
 #if TEST_STD_VER >= 11
 class MoveOnly
 {
+    __host__ __device__
     MoveOnly(const MoveOnly&);
+    __host__ __device__
     MoveOnly& operator=(const MoveOnly&);
 
     int data_;
 public:
+    __host__ __device__
     MoveOnly(int data = 1) : data_(data) {}
+    __host__ __device__
     MoveOnly(MoveOnly&& x)
         : data_(x.data_) {x.data_ = 0;}
+    __host__ __device__
     MoveOnly& operator=(MoveOnly&& x)
         {data_ = x.data_; x.data_ = 0; return *this;}
 
+    __host__ __device__
     int get() const {return data_;}
 };
 #endif

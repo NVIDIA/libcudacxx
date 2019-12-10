@@ -45,19 +45,11 @@
 #include "detail/__atomic"
 #include "detail/__threading_support"
 
-#undef _LIBCUDACXX_CXX03_LANG
-#undef _LIBCUDACXX_DEFAULT
-#define _LIBCUDACXX_CXX03_LANG
-#define _LIBCUDACXX_DEFAULT { }
 
 #undef _LIBCUDACXX_HAS_GCC_ATOMIC_IMP
 #undef _LIBCUDACXX_HAS_C_ATOMIC_IMP
 
 #include "detail/libcxx/include/atomic"
-
-#undef _LIBCUDACXX_CXX03_LANG
-#undef _LIBCUDACXX_DEFAULT
-#define _LIBCUDACXX_DEFAULT = default;
 
 #ifdef _MSC_VER
     #pragma warning(push)

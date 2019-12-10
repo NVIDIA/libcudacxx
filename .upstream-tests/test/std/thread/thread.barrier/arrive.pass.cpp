@@ -33,10 +33,10 @@ void test()
 #else
   auto * tok = new auto(b->arrive());
 #endif
-  auto awaiter = [=] __host__ __device__ (){
+  auto awaiter = LAMBDA (){
     b->wait(cuda::std::move(*tok));
   };
-  auto arriver = [=] __host__ __device__ (){
+  auto arriver = LAMBDA (){
     (void)b->arrive();
   };
 

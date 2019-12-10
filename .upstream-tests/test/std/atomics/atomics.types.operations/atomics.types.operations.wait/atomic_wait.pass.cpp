@@ -43,12 +43,12 @@ struct TestFn {
     __syncthreads();
 #endif
 
-    auto agent_notify = [=] __host__ __device__ (){
+    auto agent_notify = LAMBDA (){
       cuda::std::atomic_store(t, T(3));
       cuda::std::atomic_notify_one(t);
     };
 
-    auto agent_wait = [=] __host__ __device__ (){
+    auto agent_wait = LAMBDA (){
       cuda::std::atomic_wait(t, T(1));
     };
 
@@ -70,11 +70,11 @@ struct TestFn {
     __syncthreads();
 #endif
 
-    auto agent_notify_v = [=] __host__ __device__ (){
+    auto agent_notify_v = LAMBDA (){
       cuda::std::atomic_store(vt, T(4));
       cuda::std::atomic_notify_one(vt);
     };
-    auto agent_wait_v = [=] __host__ __device__ (){
+    auto agent_wait_v = LAMBDA (){
       cuda::std::atomic_wait(vt, T(2));
     };
 

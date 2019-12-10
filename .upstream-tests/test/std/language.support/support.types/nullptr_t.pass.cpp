@@ -16,6 +16,7 @@
 
 struct A
 {
+    __host__ __device__
     A(cuda::std::nullptr_t) {}
 };
 

@@ -37,7 +37,7 @@ struct TestFn {
     cuda::std::atomic_init(&t, T(1));
     assert(cuda::std::atomic_load_explicit(&t, cuda::std::memory_order_seq_cst) == T(1));
     Selector<volatile A, constructor_initializer> vsel;
-    volatile A & vt = *sel.construct();
+    volatile A & vt = *vsel.construct();
     cuda::std::atomic_init(&vt, T(2));
     assert(cuda::std::atomic_load_explicit(&vt, cuda::std::memory_order_seq_cst) == T(2));
   }

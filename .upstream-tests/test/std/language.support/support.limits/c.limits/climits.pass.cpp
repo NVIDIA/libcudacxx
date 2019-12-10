@@ -36,9 +36,9 @@
 #error CHAR_MAX not defined
 #endif
 
-#ifndef MB_LEN_MAX
-#error MB_LEN_MAX not defined
-#endif
+// #ifndef MB_LEN_MAX
+// #error MB_LEN_MAX not defined
+// #endif
 
 #ifndef SHRT_MIN
 #error SHRT_MIN not defined
@@ -86,6 +86,13 @@
 
 #ifndef ULLONG_MAX
 #error ULLONG_MAX not defined
+#endif
+
+// test if __CHAR_UNSIGNED__ detection for NVRTC works correctly
+// if not, go take a look at cuda/std/climits
+#ifdef __CUDACC_RTC__
+#include <cuda/std/type_traits>
+static_assert(__CHAR_UNSIGNED__ == cuda::std::is_unsigned<char>::value, "");
 #endif
 
 int main(int, char**)

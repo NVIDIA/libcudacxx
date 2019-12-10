@@ -55,6 +55,7 @@ class Empty {};
 
 class NotEmpty
 {
+    __host__ __device__
     virtual ~NotEmpty();
 };
 
@@ -67,35 +68,36 @@ struct bit_zero
 
 struct A
 {
+    __host__ __device__
     ~A();
 };
 
 typedef void (Function) ();
 
-struct PublicAbstract                    { public:    virtual void foo() = 0; };
-struct ProtectedAbstract                 { protected: virtual void foo() = 0; };
-struct PrivateAbstract                   { private:   virtual void foo() = 0; };
+struct PublicAbstract                    { public:    __host__ __device__ virtual void foo() = 0; };
+struct ProtectedAbstract                 { protected: __host__ __device__ virtual void foo() = 0; };
+struct PrivateAbstract                   { private:   __host__ __device__ virtual void foo() = 0; };
 
-struct PublicDestructor                  { public:    ~PublicDestructor() {}};
-struct ProtectedDestructor               { protected: ~ProtectedDestructor() {}};
-struct PrivateDestructor                 { private:   ~PrivateDestructor() {}};
+struct PublicDestructor                  { public:    __host__ __device__ ~PublicDestructor() {}};
+struct ProtectedDestructor               { protected: __host__ __device__ ~ProtectedDestructor() {}};
+struct PrivateDestructor                 { private:   __host__ __device__ ~PrivateDestructor() {}};
 
-struct VirtualPublicDestructor           { public:    virtual ~VirtualPublicDestructor() {}};
-struct VirtualProtectedDestructor        { protected: virtual ~VirtualProtectedDestructor() {}};
-struct VirtualPrivateDestructor          { private:   virtual ~VirtualPrivateDestructor() {}};
+struct VirtualPublicDestructor           { public:    __host__ __device__ virtual ~VirtualPublicDestructor() {}};
+struct VirtualProtectedDestructor        { protected: __host__ __device__ virtual ~VirtualProtectedDestructor() {}};
+struct VirtualPrivateDestructor          { private:   __host__ __device__ virtual ~VirtualPrivateDestructor() {}};
 
-struct PurePublicDestructor              { public:    virtual ~PurePublicDestructor() = 0; };
-struct PureProtectedDestructor           { protected: virtual ~PureProtectedDestructor() = 0; };
-struct PurePrivateDestructor             { private:   virtual ~PurePrivateDestructor() = 0; };
+struct PurePublicDestructor              { public:    __host__ __device__ virtual ~PurePublicDestructor() = 0; };
+struct PureProtectedDestructor           { protected: __host__ __device__ virtual ~PureProtectedDestructor() = 0; };
+struct PurePrivateDestructor             { private:   __host__ __device__ virtual ~PurePrivateDestructor() = 0; };
 
 #if TEST_STD_VER >= 11
-struct DeletedPublicDestructor           { public:    ~DeletedPublicDestructor() = delete; };
-struct DeletedProtectedDestructor        { protected: ~DeletedProtectedDestructor() = delete; };
-struct DeletedPrivateDestructor          { private:   ~DeletedPrivateDestructor() = delete; };
+struct DeletedPublicDestructor           { public:    __host__ __device__ ~DeletedPublicDestructor() = delete; };
+struct DeletedProtectedDestructor        { protected: __host__ __device__ ~DeletedProtectedDestructor() = delete; };
+struct DeletedPrivateDestructor          { private:   __host__ __device__ ~DeletedPrivateDestructor() = delete; };
 
-struct DeletedVirtualPublicDestructor    { public:    virtual ~DeletedVirtualPublicDestructor() = delete; };
-struct DeletedVirtualProtectedDestructor { protected: virtual ~DeletedVirtualProtectedDestructor() = delete; };
-struct DeletedVirtualPrivateDestructor   { private:   virtual ~DeletedVirtualPrivateDestructor() = delete; };
+struct DeletedVirtualPublicDestructor    { public:    __host__ __device__ virtual ~DeletedVirtualPublicDestructor() = delete; };
+struct DeletedVirtualProtectedDestructor { protected: __host__ __device__ virtual ~DeletedVirtualProtectedDestructor() = delete; };
+struct DeletedVirtualPrivateDestructor   { private:   __host__ __device__ virtual ~DeletedVirtualPrivateDestructor() = delete; };
 #endif
 
 

@@ -51,12 +51,14 @@ class Empty
 
 class NoDefaultConstructor
 {
+    __host__ __device__
     NoDefaultConstructor(int) {}
 };
 
 class NotEmpty
 {
 public:
+    __host__ __device__
     virtual ~NotEmpty();
 };
 
@@ -70,16 +72,19 @@ struct bit_zero
 class Abstract
 {
 public:
+    __host__ __device__
     virtual ~Abstract() = 0;
 };
 
 struct A
 {
+    __host__ __device__
     A();
 };
 
 class B
 {
+    __host__ __device__
     B();
 };
 

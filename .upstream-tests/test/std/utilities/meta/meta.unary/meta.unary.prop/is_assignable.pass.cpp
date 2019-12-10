@@ -19,6 +19,7 @@ struct A
 
 struct B
 {
+    __host__ __device__
     void operator=(A);
 };
 
@@ -48,11 +49,13 @@ struct D;
 struct C
 {
     template <class U>
+    __host__ __device__
     D operator,(U&&);
 };
 
 struct E
 {
+    __host__ __device__
     C operator=(int);
 };
 #endif

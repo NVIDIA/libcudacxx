@@ -40,6 +40,7 @@ class Empty
 class NotEmpty
 {
 public:
+    __host__ __device__
     virtual ~NotEmpty();
 };
 
@@ -52,16 +53,19 @@ struct bit_zero
 
 struct A
 {
+    __host__ __device__
     A();
 };
 
 class B
 {
+    __host__ __device__
     B& operator=(const B&);
 };
 
 struct C
 {
+    __host__ __device__
     void operator=(C&);  // not const
 };
 

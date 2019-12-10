@@ -27,7 +27,7 @@ void test()
   SHARED Latch * l;
   l = sel.construct(2);
 
-  auto worker = [=] __host__ __device__ (){
+  auto worker = LAMBDA (){
       l->arrive_and_wait();
   };
 

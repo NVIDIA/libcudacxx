@@ -56,6 +56,7 @@ void test_is_not_same()
 class Class
 {
 public:
+    __host__ __device__
     ~Class();
 };
 

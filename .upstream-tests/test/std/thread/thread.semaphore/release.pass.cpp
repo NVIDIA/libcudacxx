@@ -36,10 +36,10 @@ void test()
   }
 #endif
 
-  auto acquirer = [=] __host__ __device__ (){
+  auto acquirer = LAMBDA (){
     s->acquire();
   };
-  auto releaser = [=] __host__ __device__ (){
+  auto releaser = LAMBDA (){
     s->release(2);
   };
 

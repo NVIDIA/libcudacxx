@@ -9,7 +9,9 @@
 #ifndef TEST_SUPPORT_COUNTING_PREDICATES_H
 #define TEST_SUPPORT_COUNTING_PREDICATES_H
 
+#ifndef __CUDACC_RTC__
 #include <cstddef>
+#endif
 
 template <typename Predicate, typename Arg>
 struct unary_counting_predicate {

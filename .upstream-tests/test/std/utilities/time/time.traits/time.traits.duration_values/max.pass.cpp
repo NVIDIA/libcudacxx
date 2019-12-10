@@ -17,6 +17,11 @@
 #include "test_macros.h"
 #include "../../rep.h"
 
+#include <cuda/std/cstdint>
+#ifndef __device__
+#error whomp whomp
+#endif
+
 int main(int, char**)
 {
     assert(cuda::std::chrono::duration_values<int>::max() ==

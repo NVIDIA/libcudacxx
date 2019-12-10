@@ -11,9 +11,9 @@
 
 #ifndef __CUDACC_RTC__
     #include <thread>
+    #include <errno.h>
 #endif
 
-#include <errno.h>
 
 #include "../chrono"
 #include "../climits"
@@ -38,16 +38,16 @@ void __libcpp_thread_yield()
 void __libcpp_thread_sleep_for(chrono::nanoseconds __ns)
 {
 #ifdef __CUDA_ARCH__
-   auto const step = __ns.count();
-   assert(step < numeric_limits<unsigned>::max());
-   asm volatile("nanosleep.u32 %0;"::"r"((unsigned)step):);
+   auto const __step = __ns.count();
+   assert(__step < numeric_limits<unsigned>::max());
+   asm volatile ("nanosleep.u32 %0;"::"r"((unsigned)__step):);
 #else
    ::std::this_thread::sleep_for(::std::chrono::nanoseconds(__ns.count()));
 #endif
 }
 
 template<class _Fn>
-bool __libcpp_thread_poll_with_backoff(_Fn && __f, chrono::nanoseconds __max) 
+bool __libcpp_thread_poll_with_backoff(_Fn && __f, chrono::nanoseconds __max)
 {
     chrono::high_resolution_clock::time_point const __start = chrono::high_resolution_clock::now();
     for(int __count = 0;;) {

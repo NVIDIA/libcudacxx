@@ -66,7 +66,9 @@ void test_is_not_trivially_constructible()
 
 struct A
 {
+    __host__ __device__
     explicit A(int);
+    __host__ __device__
     A(int, double);
 };
 

@@ -54,6 +54,7 @@ struct bit_zero
 
 struct A
 {
+    __host__ __device__
     A(const A&);
 };
 

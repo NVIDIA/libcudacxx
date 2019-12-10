@@ -19,10 +19,10 @@
 struct E {};
 
 template <class T>
-struct X { explicit X(T const&){} };
+struct X { __host__ __device__ explicit X(T const&){} };
 
 template <class T>
-struct S { explicit S(T const&){} };
+struct S { __host__ __device__ explicit S(T const&){} };
 
 _LIBCUDACXX_BEGIN_NAMESPACE_STD
 
@@ -76,11 +76,13 @@ struct always_bool_imp { using type = bool; };
 template <class Tp> using always_bool = typename always_bool_imp<Tp>::type;
 
 template <class ...Args>
+__host__ __device__
 constexpr auto no_common_type_imp(int)
 -> always_bool<typename cuda::std::common_type<Args...>::type>
 { return false; }
 
 template <class ...Args>
+__host__ __device__
 constexpr bool no_common_type_imp(long) { return true; }
 
 template <class ...Args>
@@ -236,8 +238,11 @@ typedef bool (&PF1)();
 typedef short (*PF2)(long);
 
 struct S {
+  __host__ __device__
   operator PF2() const;
+  __host__ __device__
   double operator()(char, int&);
+  __host__ __device__
   void fn(long) const;
   char data;
 };

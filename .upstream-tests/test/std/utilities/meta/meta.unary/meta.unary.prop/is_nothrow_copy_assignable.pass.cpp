@@ -39,6 +39,7 @@ class Empty
 
 struct NotEmpty
 {
+    __host__ __device__
     virtual ~NotEmpty();
 };
 
@@ -51,6 +52,7 @@ struct bit_zero
 
 struct A
 {
+    __host__ __device__
     A& operator=(const A&);
 };
 

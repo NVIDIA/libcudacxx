@@ -10,6 +10,8 @@ logdir=${FAUX_NVRTC_LOG_DIR:-.}
 nvcc=$(echo $1 | sed 's/^[[:space:]]*//')
 shift
 
+echo "${nvcc}" >> ${logdir}/log
+
 original_flags=${@}
 echo "original flags: ${original_flags[@]}" >> ${logdir}/log
 
@@ -46,7 +48,7 @@ do
 
         -gencode=*)
             # head -n1 to handle "compute_70,compute_70"
-            gpu_archs=("${gpu_archs[@]}" "$(echo $1 | egrep -o 'compute_[0-9]+' | head -n1)")
+            gpu_archs=("${gpu_archs[@]}" "$(echo $1 | egrep -o 'compute_[0-9]+' | egrep -o '[0-9]+' | head -n1)")
             modified_flags=("${modified_flags[@]}" "$1")
             ;;
 
@@ -90,12 +92,9 @@ finish() {
 }
 trap finish EXIT
 
-gpu_archs=($(printf "%s\n" "${gpu_archs[@]}" | sort -u | tr '\n' ' '))
-if [[ "${#gpu_archs[@]}" -ne 1 ]]
-then
-    echo "Multiple GPU architectures specified: ${gpu_archs[@]}, exiting." >&2
-    exit 1
-fi
+thread_count=$(cat "${input}" | egrep 'cuda_thread_count = [0-9]+' | egrep -o '[0-9]+' || echo 1)
+
+gpu_archs=($(printf "%s\n" "${gpu_archs[@]}" | sort -un | tr '\n' ' '))
 
 cat "${nvrtcdir}/head.cu.in" >> "${tempfile}"
 cat "${input}" >> "${tempfile}"
@@ -103,9 +102,14 @@ cat "${nvrtcdir}/middle.cu.in" >> "${tempfile}"
 echo '        // BEGIN SCRIPT GENERATED OPTIONS' >> "${tempfile}"
 echo '        "-I'"${libcudacxxdir}/include"'",' >> "${tempfile}"
 echo '        "-I'"${libcudacxxdir}/test/support"'",' >> "${tempfile}"
-echo '        "--gpu-architecture='"${gpu_archs}"'",' >> "${tempfile}"
+# The line below intentionally only uses the first element of ${gpu_archs[@]}.
+# They are sorted numerically above, and this selects the lowest of the requested
+# values.
+echo '        "--gpu-architecture='compute_"${gpu_archs}"'",' >> "${tempfile}"
 echo '        // END SCRIPT GENERATED OPTIONS' >> "${tempfile}"
 cat "${nvrtcdir}/tail.cu.in" >> "${tempfile}"
+echo '        '"${thread_count}" >> "${tempfile}"
+cat "${nvrtcdir}/post_tail.cu.in" >> "${tempfile}"
 
 cat "${tempfile}" > ${logdir}/generated_file
 

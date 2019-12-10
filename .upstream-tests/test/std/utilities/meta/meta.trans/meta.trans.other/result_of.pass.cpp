@@ -18,10 +18,15 @@
 struct S
 {
     typedef short (*FreeFunc)(long);
+    __host__ __device__
     operator FreeFunc() const;
+    __host__ __device__
     double operator()(char, int&);
+    __host__ __device__
     double const& operator()(char, int&) const;
+    __host__ __device__
     double volatile& operator()(char, int&) volatile;
+    __host__ __device__
     double const volatile& operator()(char, int&) const volatile;
 };
 
@@ -70,12 +75,12 @@ void test_result_of()
 
 #if TEST_STD_VER > 14
 template <typename T>
-__host__ __device__
 struct test_invoke_no_result;
 
 template <typename Fn, typename ...Args>
 struct test_invoke_no_result<Fn(Args...)>
 {
+    __host__ __device__
     static void call()
     {
         static_assert(cuda::std::is_invocable<Fn, Args...>::value == false, "");

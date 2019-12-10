@@ -54,12 +54,14 @@ struct A
 struct B
 {
     int i_;
+    __host__ __device__
     ~B() {assert(i_ == 0);}
 };
 
 class C
 {
 public:
+    __host__ __device__
     C();
 };
 

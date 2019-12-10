@@ -49,8 +49,10 @@ const int NextInt<Value>::value;
 template <class Type>
 struct HasTypeImp {
     template <class Up, class = typename Up::type>
+    __host__ __device__
     static TrueT test(int);
     template <class>
+    __host__ __device__
     static FalseT test(...);
 
     typedef decltype(test<Type>(0)) type;

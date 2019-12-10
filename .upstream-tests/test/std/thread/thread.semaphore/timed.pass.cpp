@@ -40,14 +40,14 @@ void test()
   __syncthreads();
 #endif
 
-  auto releaser = [=] __host__ __device__ (){
+  auto releaser = LAMBDA (){
     //cuda::std::this_thread::sleep_for(cuda::std::chrono::milliseconds(250));
     s->release();
     //cuda::std::this_thread::sleep_for(cuda::std::chrono::milliseconds(250));
     s->release();
   };
 
-  auto acquirer = [=] __host__ __device__ (){
+  auto acquirer = LAMBDA (){
     assert(s->try_acquire_until(start + cuda::std::chrono::seconds(2)));
     assert(s->try_acquire_for(cuda::std::chrono::seconds(2)));
   };

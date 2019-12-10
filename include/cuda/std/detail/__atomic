@@ -306,7 +306,7 @@ __host__ __device__ inline _Tp __cxx_atomic_fetch_xor(__cxx_atomic_base_impl_def
 template <typename _Tp, int _Sco>
 struct __cxx_atomic_base_impl_small {
 
-  __host__ __device__ __cxx_atomic_base_impl_small() : __a_value() {
+  __host__ __device__ __cxx_atomic_base_impl_small() noexcept : __a_value() {
   }
   __host__ __device__ constexpr explicit __cxx_atomic_base_impl_small(_Tp __value) : __a_value(__value) {
   }

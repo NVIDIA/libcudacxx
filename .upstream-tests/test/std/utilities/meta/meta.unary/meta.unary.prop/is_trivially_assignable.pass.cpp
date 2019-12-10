@@ -41,11 +41,13 @@ struct A
 
 struct B
 {
+    __host__ __device__
     void operator=(A);
 };
 
 struct C
 {
+    __host__ __device__
     void operator=(C&);  // not const
 };
 

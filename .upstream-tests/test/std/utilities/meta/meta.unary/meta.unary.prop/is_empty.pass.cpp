@@ -58,6 +58,7 @@ struct NotEmpty { int foo; };
 
 class VirtualFn
 {
+    __host__ __device__
     virtual ~VirtualFn();
 };
 
@@ -67,7 +68,7 @@ struct EmptyBase    : public Empty {};
 struct VirtualBase  : virtual Empty {};
 struct NotEmptyBase : public NotEmpty {};
 
-struct StaticMember    { static int foo; };
+struct StaticMember    { static const int foo; };
 struct NonStaticMember {        int foo; };
 
 struct bit_zero

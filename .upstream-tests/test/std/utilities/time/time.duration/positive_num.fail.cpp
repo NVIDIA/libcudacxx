@@ -12,6 +12,9 @@
 
 // Period::num shall be positive, diagnostic required.
 
+// .fail. expects compilation to fail, but this would only fail at runtime with NVRTC
+// UNSUPPORTED: nvrtc
+
 #include <cuda/std/chrono>
 
 int main(int, char**)

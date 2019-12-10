@@ -8,6 +8,9 @@
 // UNSUPPORTED: c++98, c++03, c++11, C++14, c++17
 // type_traits
 
+// .fail. expects compilation to fail, but this would only fail at runtime with NVRTC
+// UNSUPPORTED: nvrtc
+
 // underlying_type
 // Mandates: enum must not be an incomplete enumeration type.
 

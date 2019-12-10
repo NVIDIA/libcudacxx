@@ -15,8 +15,10 @@
 #error NULL not defined
 #endif
 
+#ifndef __CUDACC_RTC__
 #ifndef CLOCKS_PER_SEC
 #error CLOCKS_PER_SEC not defined
+#endif
 #endif
 
 #if TEST_STD_VER > 14 && defined(TEST_HAS_C11_FEATURES)
@@ -34,11 +36,12 @@ int main(int, char**)
     cuda::std::clock_t c = 0;
     cuda::std::size_t s = 0;
     cuda::std::time_t t = 0;
-    cuda::std::tm tm = {};
-    char str[3];
     ((void)c); // Prevent unused warning
     ((void)s); // Prevent unused warning
     ((void)t); // Prevent unused warning
+#ifndef __CUDACC_RTC__
+    cuda::std::tm tm = {};
+    char str[3];
     ((void)tm); // Prevent unused warning
     ((void)str); // Prevent unused warning
 #if TEST_STD_VER > 14 && defined(TEST_HAS_C11_FEATURES)
@@ -60,6 +63,7 @@ int main(int, char**)
     static_assert((cuda::std::is_same<decltype(cuda::std::localtime(&t)), cuda::std::tm*>::value), "");
 #endif
     static_assert((cuda::std::is_same<decltype(cuda::std::strftime(str,s,"",&tm)), cuda::std::size_t>::value), "");
+#endif
 
   return 0;
 }

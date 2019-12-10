@@ -21,11 +21,13 @@ struct BOOM {
 using True = cuda::std::true_type;
 using False = cuda::std::false_type;
 
+__host__ __device__
 void test_if() {
   ASSERT_SAME_TYPE(cuda::std::_If<true, int, long>, int);
   ASSERT_SAME_TYPE(cuda::std::_If<false, int, long>, long);
 }
 
+__host__ __device__
 void test_and() {
   static_assert(cuda::std::_And<True>::value, "");
   static_assert(!cuda::std::_And<False>::value, "");
@@ -34,6 +36,7 @@ void test_and() {
   static_assert(!cuda::std::_And<True, True, True, False, BOOM<2> >::value, "");
 }
 
+__host__ __device__
 void test_or() {
   static_assert(cuda::std::_Or<True>::value, "");
   static_assert(!cuda::std::_Or<False>::value, "");
@@ -44,6 +47,7 @@ void test_or() {
   static_assert(cuda::std::_Or<False, False, False, False, True, BOOM<2> >::value, "");
 }
 
+__host__ __device__
 void test_combined() {
   static_assert(cuda::std::_And<True, cuda::std::_Or<False, True, BOOM<4> > >::value, "");
   static_assert(cuda::std::_And<True, cuda::std::_Or<False, True, BOOM<4> > >::value, "");
@@ -51,9 +55,10 @@ void test_combined() {
 }
 
 struct MemberTest {
-  static int foo;
+  static const int foo;
   using type = long;
 
+  __host__ __device__
   void func(int);
 };
 struct Empty {};
@@ -70,6 +75,7 @@ using FuncCallable = decltype(cuda::std::declval<T>().func(cuda::std::declval<U>
 template <class T>
 using BadCheck = typename T::DOES_NOT_EXIST;
 
+__host__ __device__
 void test_is_valid_trait() {
   static_assert(cuda::std::_IsValidExpansion<HasFooData, MemberTest>::value, "");
   static_assert(!cuda::std::_IsValidExpansion<HasFooType, MemberTest>::value, "");
@@ -79,6 +85,7 @@ void test_is_valid_trait() {
   static_assert(!cuda::std::_IsValidExpansion<FuncCallable, MemberTest, void*>::value, "");
 }
 
+__host__ __device__
 void test_first_and_second_type() {
   ASSERT_SAME_TYPE(cuda::std::_FirstType<int, long, void*>, int);
   ASSERT_SAME_TYPE(cuda::std::_FirstType<char>, char);

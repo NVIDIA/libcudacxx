@@ -48,7 +48,7 @@ void checkLongLongTypes() {
 
 // Used to make the calls to __atomic_always_lock_free dependent on a template
 // parameter.
-template <class T> constexpr size_t getSizeOf() { return sizeof(T); }
+template <class T> __host__ __device__ constexpr size_t getSizeOf() { return sizeof(T); }
 
 template <bool Enable = NeedWorkaroundForPR31864,
   cuda::std::enable_if_t<Enable>* = nullptr,

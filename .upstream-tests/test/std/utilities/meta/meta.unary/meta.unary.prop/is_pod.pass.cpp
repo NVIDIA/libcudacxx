@@ -48,6 +48,7 @@ void test_is_not_pod()
 class Class
 {
 public:
+    __host__ __device__
     ~Class();
 };
 

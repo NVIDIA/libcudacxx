@@ -11,8 +11,8 @@
 
 #include "type_traits"
 #include "version"
-#include "memory"
-#include "tuple"
+// #include "memory"
+// #include "tuple"
 #include "utility"
 
 #include "detail/__config"

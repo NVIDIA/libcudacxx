@@ -27,12 +27,16 @@
 
 struct A
 {
+    __host__ __device__
     explicit A(int);
+    __host__ __device__
     A(int, double);
+    __host__ __device__
     A(int, long, double);
 #if TEST_STD_VER >= 11
 private:
 #endif
+    __host__ __device__
     A(char);
 };
 
@@ -41,22 +45,27 @@ struct Derived : public Base {};
 
 class Abstract
 {
+    __host__ __device__
     virtual void foo() = 0;
 };
 
 class AbstractDestructor
 {
+    __host__ __device__
     virtual ~AbstractDestructor() = 0;
 };
 
 struct PrivateDtor {
+    __host__ __device__
   PrivateDtor(int) {}
 private:
+    __host__ __device__
   ~PrivateDtor() {}
 };
 
 struct S {
    template <class T>
+    __host__ __device__
 #if TEST_STD_VER >= 11
    explicit
 #endif
@@ -65,12 +74,14 @@ struct S {
 
 template <class To>
 struct ImplicitTo {
+    __host__ __device__
   operator To();
 };
 
 #if TEST_STD_VER >= 11
 template <class To>
 struct ExplicitTo {
+    __host__ __device__
    explicit operator To ();
 };
 #endif
@@ -309,7 +320,7 @@ int main(int, char**)
             clang_disallows_valid_static_cast_bug !=
             cuda::std::__libcpp_is_constructible<int&&, ExplicitTo<int&&>>::value, "");
         ((void)clang_disallows_valid_static_cast_bug); // Prevent unused warning
-    #elif
+    #else
         static_assert(clang_disallows_valid_static_cast_bug == false, "");
         LIBCPP_STATIC_ASSERT(cuda::std::__libcpp_is_constructible<
             int&&, ExplicitTo<int&&>>::value, "");

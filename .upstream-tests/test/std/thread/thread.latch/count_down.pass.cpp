@@ -35,11 +35,11 @@ void test()
   }
   __syncthreads();
 #endif
-  auto count_downer = [=] __host__ __device__ (){
+  auto count_downer = LAMBDA (){
     l->count_down();
   };
 
-  auto awaiter = [=] __host__ __device__ (){
+  auto awaiter = LAMBDA (){
     l->wait();
   };
 

@@ -15,7 +15,9 @@
 #include <cuda/std/cassert>
 
 #include "test_macros.h"
+#ifndef __CUDACC_RTC__
 #include "pointer_comparison_test_helper.hpp"
+#endif
 
 int main(int, char**)
 {

@@ -11,6 +11,9 @@
 
 // UNSUPPORTED: c++98, c++03, c++11, c++14
 
+// .fail. expects compilation to fail, but this would only fail at runtime with NVRTC
+// UNSUPPORTED: nvrtc
+
 // template <class IntegerType>
 //    constexpr IntegerType to_integer(byte b) noexcept;
 // This function shall not participate in overload resolution unless

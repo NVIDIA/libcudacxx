@@ -70,6 +70,7 @@ class Empty
 
 class NotEmpty
 {
+    __host__ __device__
     virtual ~NotEmpty();
 };
 
@@ -82,22 +83,27 @@ struct bit_zero
 
 class Abstract
 {
+    __host__ __device__
     virtual ~Abstract() = 0;
 };
 
 struct A
 {
+    __host__ __device__
     A(const A&);
 };
 
 struct C
 {
+    __host__ __device__
     C(C&);  // not const
+    __host__ __device__
     void operator=(C&);  // not const
 };
 
 #if TEST_STD_VER >= 11
 struct Tuple {
+    __host__ __device__
     Tuple(Empty&&) noexcept {}
 };
 #endif

@@ -38,7 +38,7 @@ struct TestFn {
     assert(cuda::std::atomic_exchange(&t, T(2)) == T(1));
     assert(t == T(2));
     Selector<volatile A, constructor_initializer> vsel;
-    volatile A & vt = *sel.construct();
+    volatile A & vt = *vsel.construct();
     cuda::std::atomic_init(&vt, T(3));
     assert(cuda::std::atomic_exchange(&vt, T(4)) == T(3));
     assert(vt == T(4));

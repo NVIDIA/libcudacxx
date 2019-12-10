@@ -8,6 +8,9 @@
 
 // test ratio_divide
 
+// .fail. expects compilation to fail, but this would only fail at runtime with NVRTC
+// UNSUPPORTED: nvrtc
+
 #include <cuda/std/ratio>
 
 int main(int, char**)

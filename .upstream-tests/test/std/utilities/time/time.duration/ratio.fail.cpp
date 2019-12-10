@@ -12,6 +12,9 @@
 
 // Period shall be a specialization of ratio, diagnostic required.
 
+// .fail. expects compilation to fail, but this would only fail at runtime with NVRTC
+// UNSUPPORTED: nvrtc
+
 #include <cuda/std/chrono>
 
 template <int N, int D = 1>

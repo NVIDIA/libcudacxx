@@ -49,8 +49,9 @@ void test_false()
 }
 
 struct Aggregate {};
-struct HasCons { HasCons(int); };
+struct HasCons { __host__ __device__ HasCons(int); };
 struct HasPriv {
+  __host__ __device__
   void PreventUnusedPrivateMemberWarning();
 private:
   int x;

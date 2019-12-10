@@ -58,13 +58,16 @@ struct bit_zero
 
 struct A
 {
+    __host__ __device__
     A();
 };
 
 #if TEST_STD_VER >= 11
 struct DThrows
 {
+    __host__ __device__
     DThrows()  noexcept(true) {}
+    __host__ __device__
     ~DThrows() noexcept(false) {}
 };
 #endif

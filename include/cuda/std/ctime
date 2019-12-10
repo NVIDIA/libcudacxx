@@ -9,7 +9,11 @@
 #ifndef _CUDA_CTIME
 #define _CUDA_CTIME
 
-#include <time.h>
+#ifndef __CUDACC_RTC__
+    #include <time.h>
+#else
+    typedef long long int time_t;
+#endif
 
 #include "detail/__config"
 

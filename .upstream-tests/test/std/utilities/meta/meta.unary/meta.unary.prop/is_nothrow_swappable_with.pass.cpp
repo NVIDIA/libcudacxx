@@ -32,16 +32,22 @@ struct B {
 struct C {};
 struct D {};
 
+__host__ __device__
 void swap(A&, A&) {}
 
+__host__ __device__
 void swap(A&, B&) noexcept {}
+__host__ __device__
 void swap(B&, A&) noexcept {}
 
+__host__ __device__
 void swap(A&, C&) noexcept {}
+__host__ __device__
 void swap(C&, A&) {}
 
 struct M {};
 
+__host__ __device__
 void swap(M&&, M&&) noexcept {}
 
 } // namespace MyNS

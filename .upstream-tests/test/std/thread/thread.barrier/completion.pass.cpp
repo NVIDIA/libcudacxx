@@ -27,13 +27,13 @@ void test()
   SHARED int * x;
   x = int_sel.construct(0);
 
-  auto comp = [=] __host__ __device__ () { *x += 1; };
+  auto comp = LAMBDA () { *x += 1; };
 
   Selector<Barrier<decltype(comp)>, Initializer> sel;
   SHARED Barrier<decltype(comp)> * b;
   b = sel.construct(2, comp);
 
-  auto worker = [=] __host__ __device__ () {
+  auto worker = LAMBDA () {
       for(int i = 0; i < 10; ++i)
         b->arrive_and_wait();
       assert(*x == 10);

@@ -40,6 +40,7 @@ class Empty
 class NotEmpty
 {
 public:
+    __host__ __device__
     virtual ~NotEmpty();
 };
 
@@ -52,6 +53,7 @@ struct bit_zero
 
 struct A
 {
+    __host__ __device__
     A();
 };
 

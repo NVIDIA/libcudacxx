@@ -13,6 +13,9 @@
 // template <class T> struct is_aggregate;
 // template <class T> constexpr bool is_aggregate_v = is_aggregate<T>::value;
 
+// .fail. expects compilation to fail, but this would only fail at runtime with NVRTC
+// UNSUPPORTED: nvrtc
+
 #include <cuda/std/type_traits>
 
 int main(int, char**)

@@ -13,6 +13,9 @@
 // If a program instantiates duration with a duration type for the template
 // argument Rep a diagnostic is required.
 
+// .fail. expects compilation to fail, but this would only fail at runtime with NVRTC
+// UNSUPPORTED: nvrtc
+
 #include <cuda/std/chrono>
 
 int main(int, char**)

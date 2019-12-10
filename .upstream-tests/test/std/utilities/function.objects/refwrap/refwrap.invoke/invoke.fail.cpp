@@ -15,6 +15,9 @@
 //   Callable<T, ArgTypes&&...>::result_type
 //   operator()(ArgTypes&&... args) const;
 
+// .fail. expects compilation to fail, but this would only fail at runtime with NVRTC
+// UNSUPPORTED: nvrtc
+
 #include <cuda/std/functional>
 #include <cuda/std/cassert>
 

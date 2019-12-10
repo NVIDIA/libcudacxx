@@ -49,6 +49,7 @@ void test_extent1()
 class Class
 {
 public:
+    __host__ __device__
     ~Class();
 };
 

@@ -12,7 +12,11 @@
 #define __exec_check_disable__
 #endif
 
+#ifdef __CUDACC_RTC__
+#define LAMBDA [=]
+#else
 #define LAMBDA [=] __host__ __device__
+#endif
 
 #ifdef __CUDA_ARCH__
 #define SHARED __shared__
@@ -113,7 +117,9 @@ class memory_selector
     T * ptr;
 
 public:
+#ifndef __CUDACC_RTC__
     __exec_check_disable__
+#endif
     template<typename ...Ts>
     __host__ __device__
     T * construct(Ts && ...ts) {
@@ -130,7 +136,9 @@ public:
         return ptr;
     }
 
+#ifndef __CUDACC_RTC__
     __exec_check_disable__
+#endif
     __host__ __device__
     ~memory_selector() {
 #ifdef __CUDA_ARCH__

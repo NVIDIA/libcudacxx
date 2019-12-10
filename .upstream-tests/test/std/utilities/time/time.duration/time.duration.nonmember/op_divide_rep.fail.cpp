@@ -14,6 +14,9 @@
 //   duration<typename common_type<Rep1, Rep2>::type, Period>
 //   operator/(const duration<Rep1, Period>& d, const Rep2& s);
 
+// .fail. expects compilation to fail, but this would only fail at runtime with NVRTC
+// UNSUPPORTED: nvrtc
+
 #include <cuda/std/chrono>
 
 #include "../../rep.h"

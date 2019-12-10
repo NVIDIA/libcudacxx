@@ -51,17 +51,17 @@ void test_is_not_nothrow_destructible()
 }
 
 
-struct PublicDestructor           { public:     ~PublicDestructor() {}};
-struct ProtectedDestructor        { protected:  ~ProtectedDestructor() {}};
-struct PrivateDestructor          { private:    ~PrivateDestructor() {}};
+struct PublicDestructor           { public:     __host__ __device__ ~PublicDestructor() {}};
+struct ProtectedDestructor        { protected:  __host__ __device__ ~ProtectedDestructor() {}};
+struct PrivateDestructor          { private:    __host__ __device__ ~PrivateDestructor() {}};
 
-struct VirtualPublicDestructor           { public:    virtual ~VirtualPublicDestructor() {}};
-struct VirtualProtectedDestructor        { protected: virtual ~VirtualProtectedDestructor() {}};
-struct VirtualPrivateDestructor          { private:   virtual ~VirtualPrivateDestructor() {}};
+struct VirtualPublicDestructor           { public:    __host__ __device__ virtual ~VirtualPublicDestructor() {}};
+struct VirtualProtectedDestructor        { protected: __host__ __device__ virtual ~VirtualProtectedDestructor() {}};
+struct VirtualPrivateDestructor          { private:   __host__ __device__ virtual ~VirtualPrivateDestructor() {}};
 
-struct PurePublicDestructor              { public:    virtual ~PurePublicDestructor() = 0; };
-struct PureProtectedDestructor           { protected: virtual ~PureProtectedDestructor() = 0; };
-struct PurePrivateDestructor             { private:   virtual ~PurePrivateDestructor() = 0; };
+struct PurePublicDestructor              { public:    __host__ __device__ virtual ~PurePublicDestructor() = 0; };
+struct PureProtectedDestructor           { protected: __host__ __device__ virtual ~PureProtectedDestructor() = 0; };
+struct PurePrivateDestructor             { private:   __host__ __device__ virtual ~PurePrivateDestructor() = 0; };
 
 class Empty
 {
@@ -77,6 +77,7 @@ struct bit_zero
 
 class Abstract
 {
+    __host__ __device__
     virtual void foo() = 0;
 };
 

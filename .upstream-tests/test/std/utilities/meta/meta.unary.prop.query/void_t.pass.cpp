@@ -51,6 +51,7 @@ void test2()
 class Class
 {
 public:
+    __host__ __device__
     ~Class();
 };
 

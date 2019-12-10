@@ -50,6 +50,7 @@ struct A {};
 class B
 {
 public:
+    __host__ __device__
     B();
 };
 

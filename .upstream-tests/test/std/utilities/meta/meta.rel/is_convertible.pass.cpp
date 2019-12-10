@@ -50,10 +50,12 @@ typedef void ConstFunction() const;
 typedef char Array[1];
 
 struct StringType {
+  __host__ __device__
   StringType(const char*) {}
 };
 
 class NonCopyable {
+  __host__ __device__
   NonCopyable(NonCopyable&);
 };
 

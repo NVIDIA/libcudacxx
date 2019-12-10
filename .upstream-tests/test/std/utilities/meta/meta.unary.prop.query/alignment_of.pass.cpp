@@ -37,6 +37,7 @@ void test_alignment_of()
 class Class
 {
 public:
+    __host__ __device__
     ~Class();
 };
 

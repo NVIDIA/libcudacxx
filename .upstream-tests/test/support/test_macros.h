@@ -227,6 +227,10 @@
 #define TEST_HAS_NO_EXCEPTIONS
 #endif
 
+#ifdef __CUDACC_RTC__
+#define TEST_HAS_NO_EXCEPTIONS
+#endif
+
 #if TEST_HAS_FEATURE(address_sanitizer) || TEST_HAS_FEATURE(memory_sanitizer) || \
     TEST_HAS_FEATURE(thread_sanitizer)
 #define TEST_HAS_SANITIZERS
@@ -300,6 +304,8 @@ struct is_same<T, T> { enum {value = 1}; };
 #else
 #if defined(__GNUC__)
 #define TEST_THROW(...) __builtin_abort()
+#elif defined(__CUDACC_RTC__)
+#define TEST_THROW(...) assert(#__VA_ARGS__)
 #else
 #include <stdlib.h>
 #define TEST_THROW(...) ::abort()
@@ -308,13 +314,14 @@ struct is_same<T, T> { enum {value = 1}; };
 
 #if defined(__GNUC__) || defined(__clang__) || defined(__CUDACC_RTC__)
 template <class Tp>
-inline
+inline _LIBCUDACXX_INLINE_VISIBILITY
 void DoNotOptimize(Tp const& value) {
     asm volatile("" : : "r,m"(value) : "memory");
 }
 
 template <class Tp>
-inline void DoNotOptimize(Tp& value) {
+inline _LIBCUDACXX_INLINE_VISIBILITY
+void DoNotOptimize(Tp& value) {
 #if defined(__clang__)
   asm volatile("" : "+r,m"(value) : : "memory");
 #else
