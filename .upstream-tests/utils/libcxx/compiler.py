@@ -281,7 +281,12 @@ class CXXCompiler(object):
         parsed_macros = {}
         lines = [l.strip() for l in out.split('\n') if l.strip()]
         for l in lines:
-            assert l.startswith('#define ')
+            # PGI also outputs the file contents from -E -dM for some reason; handle that
+            if not l.startswith('#define '):
+                if '__PGIC__' not in parsed_macros.keys():
+                    assert False, "a line not starting with '#define' encountered in predefined macro dump"
+                else:
+                    continue
             l = l[len('#define '):]
             macro, _, value = l.partition(' ')
             parsed_macros[macro] = value
