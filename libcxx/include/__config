@@ -1514,6 +1514,10 @@ _LIBCUDACXX_FUNC_VIS extern "C" void __sanitizer_annotate_contiguous_container(
 #define _LIBCUDACXX_HAS_NO_BUILTIN_IS_CONSTANT_EVALUATED
 #endif
 
+#if defined(__PGIC__)
+#define _LIBCUDACXX_HAS_NO_BUILTIN_IS_CONSTANT_EVALUATED
+#endif
+
 #if !defined(_LIBCUDACXX_HAS_NO_OFF_T_FUNCTIONS)
 #  if defined(_LIBCUDACXX_MSVCRT) || defined(_NEWLIB_VERSION)
 #    define _LIBCUDACXX_HAS_NO_OFF_T_FUNCTIONS
