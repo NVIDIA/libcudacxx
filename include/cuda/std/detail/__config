@@ -19,7 +19,15 @@
         #define _Float16 __half
     #endif
 #else
-    #include <cuda_runtime_api.h>
+    #ifndef __host__
+        #define __host__
+    #endif
+    #ifndef __device__
+        #define __device__
+    #endif
+    #ifndef __forceinline__
+        #define __forceinline__
+    #endif
 #endif
 
 #ifdef _MSC_VER

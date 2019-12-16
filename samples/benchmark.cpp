@@ -53,7 +53,7 @@ THE SOFTWARE.
 inline void assert_(cudaError_t code, const char *file, int line) {
   if (code == cudaSuccess)
     return;
-  std::cerr << "check failed: " << cudaGetErrorString(code) << " : " << file << '@' << line << std::endl;
+  std::cerr << "check failed: " << cudaGetErrorString(code) << ": " << file << ':' << line << std::endl;
   abort();
 }
 #else
@@ -66,10 +66,10 @@ struct managed_allocator {
   typedef cuda::std::ptrdiff_t difference_type;
 
   typedef T value_type;
-  typedef T* pointer;// (deprecated in C++17)(removed in C++20)	T*
-  typedef const T* const_pointer;// (deprecated in C++17)(removed in C++20)	const T*
-  typedef T& reference;// (deprecated in C++17)(removed in C++20)	T&
-  typedef const T& const_reference;// (deprecated in C++17)(removed in C++20)	const T&
+  typedef T* pointer;// (deprecated in C++17)(removed in C++20)    T*
+  typedef const T* const_pointer;// (deprecated in C++17)(removed in C++20)    const T*
+  typedef T& reference;// (deprecated in C++17)(removed in C++20)    T&
+  typedef const T& const_reference;// (deprecated in C++17)(removed in C++20)    const T&
 
   template< class U > struct rebind { typedef managed_allocator<U> other; };
   managed_allocator() = default;
@@ -90,7 +90,7 @@ struct managed_allocator {
 #endif
     return static_cast<T*>(out);
   }
-  void deallocate(T* p, std::size_t) noexcept { 
+  void deallocate(T* p, std::size_t) noexcept {
 #ifdef __CUDACC__
 # ifdef __aarch64__
     check(cudaFreeHost(p));
@@ -125,24 +125,24 @@ struct null_mutex {
 };
 
 struct mutex {
-	_ABI void lock() noexcept {
-		while (1 == l.exchange(1, cuda::std::memory_order_acquire))
+    _ABI void lock() noexcept {
+        while (1 == l.exchange(1, cuda::std::memory_order_acquire))
 #ifndef __NO_WAIT
-			l.wait(1, cuda::std::memory_order_relaxed)
+            l.wait(1, cuda::std::memory_order_relaxed)
 #endif
             ;
-	}
-	_ABI void unlock() noexcept {
-		l.store(0, cuda::std::memory_order_release);
+    }
+    _ABI void unlock() noexcept {
+        l.store(0, cuda::std::memory_order_release);
 #ifndef __NO_WAIT
-		l.notify_one();
+        l.notify_one();
 #endif
-	}
-	alignas(64) cuda::atomic<int, cuda::thread_scope_device> l = ATOMIC_VAR_INIT(0);
+    }
+    alignas(64) cuda::atomic<int, cuda::thread_scope_device> l = ATOMIC_VAR_INIT(0);
 };
 
 struct ticket_mutex {
-	_ABI void lock() noexcept {
+    _ABI void lock() noexcept {
         auto const my = in.fetch_add(1, cuda::std::memory_order_acquire);
         while(1) {
             auto const now = out.load(cuda::std::memory_order_acquire);
@@ -152,26 +152,26 @@ struct ticket_mutex {
             out.wait(now, cuda::std::memory_order_relaxed);
 #endif
         }
-	}
-	_ABI void unlock() noexcept {
-		out.fetch_add(1, cuda::std::memory_order_release);
+    }
+    _ABI void unlock() noexcept {
+        out.fetch_add(1, cuda::std::memory_order_release);
 #ifndef __NO_WAIT
-		out.notify_all();
+        out.notify_all();
 #endif
-	}
-	alignas(64) cuda::atomic<int, cuda::thread_scope_device> in = ATOMIC_VAR_INIT(0);
+    }
+    alignas(64) cuda::atomic<int, cuda::thread_scope_device> in = ATOMIC_VAR_INIT(0);
     alignas(64) cuda::atomic<int, cuda::thread_scope_device> out = ATOMIC_VAR_INIT(0);
 };
 
 struct sem_mutex {
-	void lock() noexcept {
+    void lock() noexcept {
         c.acquire();
-	}
-	void unlock() noexcept {
+    }
+    void unlock() noexcept {
         c.release();
-	}
+    }
     sem_mutex() : c(1) { }
-	cuda::binary_semaphore<cuda::thread_scope_device> c;
+    cuda::binary_semaphore<cuda::thread_scope_device> c;
 };
 
 static constexpr int sections = 1 << 18;
@@ -203,7 +203,7 @@ __global__ void launcher(F f, int t, int s_per_t, int* p) {
 }
 #endif
 
-int get_max_threads() {
+int get_max_threads(cuda::thread_scope scope) {
 
 #ifndef __CUDACC__
     return std::thread::hardware_concurrency();
@@ -211,13 +211,14 @@ int get_max_threads() {
     cudaDeviceProp deviceProp;
     check(cudaGetDeviceProperties(&deviceProp, 0));
     assert(deviceProp.major >= 7);
-    return deviceProp.multiProcessorCount * 
-           deviceProp.maxThreadsPerMultiProcessor;
-#endif    
+    return scope == cuda::thread_scope_block
+        ? deviceProp.maxThreadsPerBlock
+        : deviceProp.multiProcessorCount * deviceProp.maxThreadsPerMultiProcessor;
+#endif
 }
 
 template <class F>
-sum_mean_dev_t test_body(int threads, F f) {
+sum_mean_dev_t test_body(int threads, F f, cuda::thread_scope scope) {
 
     std::vector<int, managed_allocator<int>> progress(threads, 0);
 
@@ -229,20 +230,21 @@ sum_mean_dev_t test_body(int threads, F f) {
 # endif
     auto f_ = make_<F>(f);
     cudaDeviceSynchronize();
-    int const max_blocks = get_max_threads() / 1024;
+    int const max_blocks = scope == cuda::thread_scope_block ? 1 : get_max_threads(scope) / 1024;
     int const blocks = (std::min)(threads, max_blocks);
     int const threads_per_block = (threads / blocks) + (threads % blocks ? 1 : 0);
     launcher<<<blocks, threads_per_block>>>(f_, threads, sections / threads, p_);
-    cudaDeviceSynchronize();
+    check(cudaDeviceSynchronize());
+    check(cudaGetLastError());
     unmake_(f_);
 #else
-	std::vector<std::thread> ts(threads);
-	for (int i = 0; i < threads; ++i)
-		ts[i] = std::thread([&, i]() {
+    std::vector<std::thread> ts(threads);
+    for (int i = 0; i < threads; ++i)
+        ts[i] = std::thread([&, i]() {
             progress[i] = f(sections / threads, i);
         });
-	for (auto& t : ts)
-		t.join();
+    for (auto& t : ts)
+        t.join();
 #endif
 
     return sum_mean_dev(progress);
@@ -258,14 +260,14 @@ sum_mean_dev_t test_omp_body(int threads, F && f) {
     return sum_mean_dev(progress);
 #else
     assert(0); // build with -fopenmp
-	return sum_mean_dev_t();
+    return sum_mean_dev_t();
 #endif
 }
 
 template <class F>
-void test(std::string const& name, int threads, F && f, cuda::std::atomic<bool>& keep_going, bool use_omp, bool rate_per_thread) {
+void test(std::string const& name, int threads, F && f, cuda::std::atomic<bool>& keep_going, bool use_omp, bool rate_per_thread, cuda::thread_scope scope) {
 
-    std::cout << name << " : " << std::flush;
+    std::cout << name << ": " << std::flush;
 
     std::thread test_helper([&]() {
         std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -274,36 +276,39 @@ void test(std::string const& name, int threads, F && f, cuda::std::atomic<bool>&
 
     auto const t1 = std::chrono::steady_clock::now();
     auto const smd = use_omp ? test_omp_body(threads, f)
-                             : test_body(threads, f);
+                             : test_body(threads, f, scope);
     auto const t2 = std::chrono::steady_clock::now();
 
     test_helper.join();
 
-	auto r = std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count() / std::get<0>(smd);
+    auto r = std::chrono::duration_cast<std::chrono::nanoseconds>(t2 - t1).count() / std::get<0>(smd);
     if(rate_per_thread)
         r *= threads;
     std::cout << std::setprecision(2) << std::fixed;
-	std::cout << r << "ns per step, fairness metric = " 
-              << 100 * (1.0 - std::min(1.0, std::get<2>(smd) / std::get<1>(smd))) << "%." 
+    std::cout << r << "ns per step, fairness metric = "
+              << 100 * (1.0 - std::min(1.0, std::get<2>(smd) / std::get<1>(smd))) << "%."
               << std::endl << std::flush;
 }
 
 template<class F>
-void test_loop(F && f) {
-    static int const max = get_max_threads();
-    static std::vector<std::pair<int, std::string>> const counts = 
-        { { 1, "single-threaded" }, 
+void test_loop(cuda::thread_scope scope, F && f) {
+    std::cout << "============================" << std::endl;
+    static int const max = get_max_threads(scope);
+    static std::vector<std::pair<int, std::string>> const counts =
+        { { 1, "single-threaded" },
           { 2, "2 threads" },
           { 3, "3 threads" },
           { 4, "4 threads" },
           { 5, "5 threads" },
+          { 8, "8 threads" },
           { 16, "16 threads" },
+          { 32, "32 threads" },
           { 64, "64 threads" },
           { 512, "512 threads" },
           { 4096, "4096 threads" },
           { max, "maximum occupancy" },
 //#if !defined(__NO_SPIN) || !defined(__NO_WAIT)
-//          { max * 2, "200% occupancy" } 
+//          { max * 2, "200% occupancy" }
 //#endif
         };
     std::set<int> done{0};
@@ -362,10 +367,58 @@ void test_mutex(std::string const& name, bool use_omp = false) {
     test_mutex_contended<M>(name + " contended", use_omp);
 }
 
+template<typename Barrier>
+struct scope_of_barrier
+{
+    static const constexpr auto scope = cuda::thread_scope_system;
+};
+
+template<cuda::thread_scope Scope, typename F>
+struct scope_of_barrier<cuda::barrier<Scope, F>>
+{
+    static const constexpr auto scope = Scope;
+};
+
+#ifdef __CUDACC__
+template<class B>
+void test_barrier_shared(std::string const& name) {
+
+    constexpr auto scope = scope_of_barrier<B>::scope;
+    assert(scope == cuda::thread_scope_block);
+    (void)scope;
+
+    test_loop(cuda::thread_scope_block, [&](std::pair<int, std::string> c) {
+        int count = c.first;
+        cuda::std::atomic<bool> *keep_going = make_<cuda::std::atomic<bool>>(true);
+        auto f = [=] __device__ (int n, int)  -> int {
+            __shared__ B b;
+            if (threadIdx.x == 0) {
+                b.init(count);
+            }
+            __syncthreads();
+            for (int i = 0; i < n; ++i)
+                b.arrive_and_wait();
+            return n;
+        };
+        test(name + ": " + c.second, c.first, f, *keep_going, false, true, cuda::thread_scope_block);
+        unmake_(keep_going);
+    });
+};
+#endif
+
 template<class B>
 void test_barrier(std::string const& name, bool use_omp = false) {
 
-    test_loop([&](std::pair<int, std::string> c) {
+    constexpr auto scope = scope_of_barrier<B>::scope;
+    (void)scope;
+
+#ifdef __CUDACC__
+    if (scope == cuda::thread_scope_block) {
+        test_barrier_shared<B>(name + " __shared__");
+    }
+#endif
+
+    test_loop(scope_of_barrier<B>::scope, [&](std::pair<int, std::string> c) {
         B* b = make_<B>(c.first);
         cuda::std::atomic<bool> *keep_going = make_<cuda::std::atomic<bool>>(true);
         auto f = [=] _ABI (int n, int)  -> int {
@@ -373,16 +426,31 @@ void test_barrier(std::string const& name, bool use_omp = false) {
                 b->arrive_and_wait();
             return n;
         };
-        test(name + ": " + c.second, c.first, f, *keep_going, use_omp, true);
+        test(name + ": " + c.second, c.first, f, *keep_going, use_omp, true, scope_of_barrier<B>::scope);
         unmake_(b);
         unmake_(keep_going);
     });
 };
 
+template<typename Latch>
+struct scope_of_latch
+{
+    static const constexpr auto scope = cuda::thread_scope_system;
+};
+
+template<cuda::thread_scope Scope>
+struct scope_of_latch<cuda::latch<Scope>>
+{
+    static const constexpr auto scope = Scope;
+};
+
 template<class L>
 void test_latch(std::string const& name, bool use_omp = false) {
 
-    test_loop([&](std::pair<int, std::string> c) {
+    constexpr auto scope = scope_of_latch<L>::scope;
+    (void)scope;
+
+    test_loop(scope, [&](std::pair<int, std::string> c) {
 
         managed_allocator<L> ma;
 
@@ -397,7 +465,7 @@ void test_latch(std::string const& name, bool use_omp = false) {
                 ls[i].arrive_and_wait();
             return n;
         };
-        test(name + ": " + c.second, c.first, f, *keep_going, use_omp, true);
+        test(name + ": " + c.second, c.first, f, *keep_going, use_omp, true, scope);
 
         ma.deallocate(ls, n);
         unmake_(keep_going);
@@ -406,8 +474,12 @@ void test_latch(std::string const& name, bool use_omp = false) {
 
 int main() {
 
-    int const max = get_max_threads();
+    int const max = get_max_threads(cuda::thread_scope_system);
     std::cout << "System has " << max << " hardware threads." << std::endl;
+#ifdef __CUDACC__
+    int const block_max = get_max_threads(cuda::thread_scope_block);
+    std::cout << "System has " << block_max << " hardware threads in a single block." << std::endl;
+#endif
 /*
 #ifndef __NO_MUTEX
     test_mutex<sem_mutex>("Semlock");
@@ -420,8 +492,16 @@ int main() {
 #endif
 */
 #ifndef __NO_BARRIER
-//    test_latch<cuda::latch<cuda::thread_scope_device>>("Latch");
-    test_barrier<cuda::barrier<cuda::thread_scope_device>>("Barrier");
+#ifdef __CUDACC__
+    test_latch<cuda::latch<cuda::thread_scope_block>>("cuda::latch<block>");
+    test_latch<cuda::latch<cuda::thread_scope_device>>("cuda::latch<device>");
+#endif
+    test_latch<cuda::latch<cuda::thread_scope_system>>("cuda::latch<system>");
+#ifdef __CUDACC__
+    test_barrier<cuda::barrier<cuda::thread_scope_block>>("cuda::barrier<block>");
+    test_barrier<cuda::barrier<cuda::thread_scope_device>>("cuda::barrier<device>");
+#endif
+    test_barrier<cuda::barrier<cuda::thread_scope_system>>("cuda::barrier<system>");
 #endif
 
 #ifdef _OPENMP
@@ -431,7 +511,7 @@ int main() {
             #pragma omp barrier
         }
     };
-    test_barrier<omp_barrier>("OMP", true);
+    test_barrier<omp_barrier>("omp_barrier", true);
 #endif
 
 #if !defined(__CUDACC__) && defined(_POSIX_THREADS) && !defined(__APPLE__)
@@ -447,8 +527,8 @@ int main() {
         }
         pthread_barrier_t pb;
     };
-    test_barrier<posix_barrier>("Pthread");
+    test_barrier<posix_barrier>("pthread_barrier");
 #endif
 
-	return 0;
+    return 0;
 }

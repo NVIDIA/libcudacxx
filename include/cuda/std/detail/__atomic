@@ -178,8 +178,7 @@ __host__ __device__ auto __cxx_atomic_alignment_unwrap(_Tp __value)
 
 template <typename _Tp, int _Sco>
 struct __cxx_atomic_base_impl_default {
-  __host__ __device__ constexpr __cxx_atomic_base_impl_default() noexcept : __a_value() {
-  }
+  constexpr __cxx_atomic_base_impl_default() noexcept = default;
   __host__ __device__ constexpr explicit __cxx_atomic_base_impl_default(_Tp __value) noexcept : __a_value(__value) {
   }
 #ifdef __CUDA_ARCH__
@@ -306,8 +305,7 @@ __host__ __device__ inline _Tp __cxx_atomic_fetch_xor(__cxx_atomic_base_impl_def
 template <typename _Tp, int _Sco>
 struct __cxx_atomic_base_impl_small {
 
-  __host__ __device__ __cxx_atomic_base_impl_small() noexcept : __a_value() {
-  }
+  __cxx_atomic_base_impl_small() noexcept = default;
   __host__ __device__ constexpr explicit __cxx_atomic_base_impl_small(_Tp __value) : __a_value(__value) {
   }
 
