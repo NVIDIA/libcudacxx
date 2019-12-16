@@ -1447,7 +1447,10 @@ struct __cxx_atomic_impl : public _Base {
       "std::atomic<Tp> requires that 'Tp' be a trivially copyable type");
 #endif
 
-  _LIBCUDACXX_INLINE_VISIBILITY __cxx_atomic_impl() _NOEXCEPT _LIBCUDACXX_DEFAULT
+#ifdef _LIBCUDACXX_CXX03_LANG
+  _LIBCUDACXX_INLINE_VISIBILITY
+#endif
+  __cxx_atomic_impl() _NOEXCEPT _LIBCUDACXX_DEFAULT
   _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR explicit __cxx_atomic_impl(_Tp value) _NOEXCEPT
     : _Base(value) {}
 };
@@ -1719,7 +1722,9 @@ struct __atomic_base  // false
     _LIBCUDACXX_INLINE_VISIBILITY void notify_all() _NOEXCEPT
         {__cxx_atomic_notify_all(&__a_);}
 
+#ifdef _LIBCUDACXX_CXX03_LANG
     _LIBCUDACXX_INLINE_VISIBILITY
+#endif
     __atomic_base() _NOEXCEPT _LIBCUDACXX_DEFAULT
 
     _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR
@@ -1752,7 +1757,9 @@ struct __atomic_base<_Tp, _Sco, true>
     : public __atomic_base<_Tp, _Sco, false>
 {
     typedef __atomic_base<_Tp, _Sco, false> __base;
+#ifdef _LIBCUDACXX_CXX03_LANG
     _LIBCUDACXX_INLINE_VISIBILITY
+#endif
     __atomic_base() _NOEXCEPT _LIBCUDACXX_DEFAULT
     _LIBCUDACXX_INLINE_VISIBILITY
     _LIBCUDACXX_CONSTEXPR __atomic_base(_Tp __d) _NOEXCEPT : __base(__d) {}
@@ -1834,7 +1841,9 @@ struct atomic
 {
     typedef __atomic_base<_Tp> __base;
     using value_type = _Tp;
+#ifdef _LIBCUDACXX_CXX03_LANG
     _LIBCUDACXX_INLINE_VISIBILITY
+#endif
     atomic() _NOEXCEPT _LIBCUDACXX_DEFAULT
     _LIBCUDACXX_INLINE_VISIBILITY
     _LIBCUDACXX_CONSTEXPR atomic(_Tp __d) _NOEXCEPT : __base(__d) {}
@@ -1855,7 +1864,9 @@ struct atomic<_Tp*>
 {
     typedef __atomic_base<_Tp*> __base;
     using value_type = _Tp*;
+#ifdef _LIBCUDACXX_CXX03_LANG
     _LIBCUDACXX_INLINE_VISIBILITY
+#endif
     atomic() _NOEXCEPT _LIBCUDACXX_DEFAULT
     _LIBCUDACXX_INLINE_VISIBILITY
     _LIBCUDACXX_CONSTEXPR atomic(_Tp* __d) _NOEXCEPT : __base(__d) {}
@@ -2580,7 +2591,9 @@ typedef struct atomic_flag
     void notify_all() _NOEXCEPT
         {__cxx_atomic_notify_all(&__a_);}
 
+#ifdef _LIBCUDACXX_CXX03_LANG
     _LIBCUDACXX_INLINE_VISIBILITY
+#endif
     atomic_flag() _NOEXCEPT _LIBCUDACXX_DEFAULT
 
     _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR

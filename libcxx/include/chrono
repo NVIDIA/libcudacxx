@@ -1065,10 +1065,11 @@ private:
     rep __rep_;
 public:
 
-    _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR
 #if !defined(_LIBCUDACXX_CXX03_LANG)
+    _LIBCUDACXX_CONSTEXPR
         duration() = default;
 #else
+    _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR
         duration() {}
 #endif
 
