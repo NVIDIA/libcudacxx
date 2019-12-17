@@ -38,7 +38,11 @@ void test()
         TEST_ALIGNAS_TYPE(A) char storage[sizeof(A)] = {1};
         A& zero = *new (storage) A();
         assert(!zero.test_and_set());
+        // cudafe crashes on trying to interpret the line below when compiling with Clang
+        // TODO: file a compiler bug
+#if !(defined(__clang__) && defined(__CUDACC__))
         zero.~A();
+#endif
 #endif
     }
 }

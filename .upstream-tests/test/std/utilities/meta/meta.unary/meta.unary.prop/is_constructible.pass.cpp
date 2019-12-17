@@ -302,7 +302,10 @@ int main(int, char**)
     // But the rvalue to lvalue reference binding isn't allowed according to
     // [over.match.ref] despite Clang accepting it.
     test_is_constructible<int&, ExplicitTo<int&>>();
-#if !defined(TEST_COMPILER_GCC) && !defined(TEST_COMPILER_NVRTC)
+#if defined(TEST_COMPILER_GCC) || defined(TEST_COMPILER_NVRTC)
+#elif defined(TEST_CLANG_VER) && defined(TEST_COMPILER_NVCC)
+#else
+    // This fails almost everywhere.
     test_is_constructible<const int&, ExplicitTo<int&&>>();
 #endif
 
@@ -311,7 +314,7 @@ int main(int, char**)
     static_assert(cuda::std::is_constructible<int&&, ExplicitTo<int&&>>::value, "");
 #endif
 
-#if defined(TEST_CLANG_VER)
+#if defined(TEST_CLANG_VER) && !defined(TEST_COMPILER_NVCC)
     #if TEST_CLANG_VER < 400
         static_assert(clang_disallows_valid_static_cast_bug, "bug still exists");
         // FIXME Clang disallows this construction because it thinks that
@@ -328,7 +331,7 @@ int main(int, char**)
 #endif
 
 // FIXME Compilers disagree about the validity of these tests.
-#if defined(TEST_CLANG_VER)
+#if defined(TEST_CLANG_VER) && !defined(TEST_COMPILER_NVCC)
     test_is_constructible<const int&, ExplicitTo<int>>();
     LIBCPP_STATIC_ASSERT(
         clang_disallows_valid_static_cast_bug !=
@@ -337,6 +340,8 @@ int main(int, char**)
 #elif defined(TEST_COMPILER_C1XX) && defined(TEST_COMPILER_NVCC)
     // FIXME NVCC and MSVC disagree about the validity of these tests, and give
     //       different answers in host and device code, which is just wonderful.
+#elif defined(TEST_CLANG_VER) && defined(TEST_COMPILER_NVCC)
+    // FIXME NVCC fails the assertion below when used with clang.
 #elif defined(TEST_COMPILER_NVRTC)
     // FIXME NVRTC also doesn't like these tests.
 #else // GCC and others.

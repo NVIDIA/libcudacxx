@@ -193,13 +193,6 @@ struct manual_object
 
 template<typename T>
 __managed__ manual_object<T> managed_variable;
-
-template<typename T>
-__host__ __device__
-manual_object<T> & get_managed()
-{
-    return managed_variable<T>;
-}
 #endif
 
 template<typename T, std::size_t N>
@@ -268,23 +261,25 @@ void validate_managed(tester_list<Testers...>)
     validate_in_managed_memory_helper<T>(device_constructor, device_destructor, host_init_device_check);
     validate_in_managed_memory_helper<T>(device_constructor, device_destructor, device_init_host_check);
 
-#if __cplusplus >= 201402L
+#if __cplusplus >= 201402L && !defined(__clang__)
+    // The managed variable template part of this test is disabled under clang, pending nvbug 2790305 being fixed.
+
     auto host_variable_constructor = []() -> T & {
-        get_managed<T>().construct();
-        return get_managed<T>().get();
+        managed_variable<T>.construct();
+        return managed_variable<T>.get();
     };
 
     auto device_variable_constructor = []() -> T & {
-        get_managed<T>().device_construct();
-        return get_managed<T>().get();
+        managed_variable<T>.device_construct();
+        return managed_variable<T>.get();
     };
 
     auto host_variable_destructor = [](T &){
-        get_managed<T>().destroy();
+        managed_variable<T>.destroy();
     };
 
     auto device_variable_destructor = [](T &){
-        get_managed<T>().device_destroy();
+        managed_variable<T>.device_destroy();
     };
 
     validate_in_managed_memory_helper<T>(host_variable_constructor, host_variable_destructor, host_init_device_check);

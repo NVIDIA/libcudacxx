@@ -62,7 +62,7 @@ __host__ __device__
 void test_nullptr_conversions() {
 // GCC does not accept this due to CWG Defect #1423
 // http://www.open-std.org/jtc1/sc22/wg21/docs/cwg_defects.html#1423
-#if defined(__clang__)
+#if defined(__clang__) && !defined(TEST_COMPILER_NVCC)
     {
         bool b = nullptr;
         assert(!b);
