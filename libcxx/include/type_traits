@@ -892,7 +892,7 @@ _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_class_v
 
 template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_function
     : public _BoolConstant<
-#ifdef __clang__
+#if defined(__clang__) && !defined(_LIBCUDACXX_COMPILER_NVCC)
     __is_function(_Tp)
 #else
  !(is_reference<_Tp>::value || is_const<const _Tp>::value)
@@ -2205,13 +2205,13 @@ template <class _Tp, class _Arg>
 struct is_assignable
     : public __is_assignable_imp<_Tp, _Arg> {};
 
+#endif // defined(_LIBCUDACXX_IS_ASSIGNABLE) && !defined(_LIBCUDACXX_USE_IS_ASSIGNABLE_FALLBACK)
+
 #if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp, class _Arg>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_assignable_v
     = is_assignable<_Tp, _Arg>::value;
 #endif
-
-#endif // defined(_LIBCUDACXX_IS_ASSIGNABLE) && !defined(_LIBCUDACXX_USE_IS_ASSIGNABLE_FALLBACK)
 
 // is_copy_assignable
 
