@@ -16,14 +16,14 @@ docker pull ${OS_IMAGE} \
 || docker pull ${OS_IMAGE}
 
 # Copy the .dockerignore file from //sw/gpgpu/libcudacxx to //sw/gpgpu.
-cp ${SW_PATH}/gpgpu/libcudacxx/docker/.dockerignore ${SW_PATH}/gpgpu
+cp ${TK_PATH}/libcudacxx/docker/.dockerignore ${TK_PATH}
 
 LIBCUDACXX_COMPUTE_ARCHS="${@}" docker -D build \
   --build-arg LIBCUDACXX_SKIP_BASE_TESTS_BUILD \
   --build-arg LIBCUDACXX_COMPUTE_ARCHS \
   -t ${BASE_IMAGE} \
   -f ${BASE_DOCKERFILE} \
-  ${SW_PATH}/gpgpu \
+  ${TK_PATH} \
   | while read line; do echo "$(date --rfc-3339=seconds)| $line"; done
 if [ "${?}" != "0" ]; then exit 1; fi
 
@@ -38,5 +38,5 @@ docker cp ${TMP_CONTAINER}:/sw/gpgpu/libcudacxx/build/lit_sm6x_plus.log .
 docker container rm ${TMP_CONTAINER} > /dev/null
 
 # Remove the .dockerignore from //sw/gpgpu.
-rm -f ${SW_PATH}/gpgpu/.dockerignore
+rm -f ${TK_PATH}/.dockerignore
 

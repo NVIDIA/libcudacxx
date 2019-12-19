@@ -5,7 +5,7 @@ set -e
 SCRIPT_PATH=$(cd $(dirname ${0}); pwd -P)
 source ${SCRIPT_PATH}/variant_configuration.bash
 
-SW_PATH=$(realpath ${SCRIPT_PATH}/../../../../../../../../..)
+TK_PATH=$(realpath ${SCRIPT_PATH}/../../../../../../../..)
 
 HOST_OS=${HOST_OS_KIND}_${HOST_OS_VERSION}
 
@@ -13,7 +13,7 @@ TARGET_OS=${TARGET_OS_KIND}_${TARGET_OS_VERSION}
 
 COMPILER=${COMPILER_KIND}_${COMPILER_VERSION}_cxx_${COMPILER_CXX_DIALECT}
 
-VARIANT_PATH=${SW_PATH}/gpgpu/libcudacxx/docker/host_${HOST_ARCH}/${HOST_OS}/target_${TARGET_ARCH}/${TARGET_OS}/${COMPILER_KIND}_${COMPILER_VERSION}/cxx_${COMPILER_CXX_DIALECT}
+VARIANT_PATH=${TK_PATH}/libcudacxx/docker/host_${HOST_ARCH}/${HOST_OS}/target_${TARGET_ARCH}/${TARGET_OS}/${COMPILER_KIND}_${COMPILER_VERSION}/cxx_${COMPILER_CXX_DIALECT}
 
 OS_IMAGE=${TARGET_OS_KIND}:${TARGET_OS_VERSION}
 
@@ -26,7 +26,7 @@ FINAL_IMAGE=libcudacxx:host_${HOST_ARCH}_${HOST_OS}__target_${TARGET_ARCH}_${TAR
 FINAL_DOCKERFILE=${VARIANT_PATH}/final.Dockerfile
 
 echo "SCRIPT_PATH=${SCRIPT_PATH}"
-echo "SW_PATH=${SW_PATH}"
+echo "TK_PATH=${TK_PATH}"
 echo "VARIANT_PATH=${VARIANT_PATH}"
 echo
 echo "HOST_ARCH=${HOST_ARCH}"
