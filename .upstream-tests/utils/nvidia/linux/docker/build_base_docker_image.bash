@@ -23,7 +23,8 @@ LIBCUDACXX_COMPUTE_ARCHS="${@}" docker -D build \
   --build-arg LIBCUDACXX_COMPUTE_ARCHS \
   -t ${BASE_IMAGE} \
   -f ${BASE_DOCKERFILE} \
-  ${SW_PATH}/gpgpu
+  ${SW_PATH}/gpgpu \
+  | while read line; do echo "$(date --rfc-3339=seconds)| $line"; done
 if [ "${?}" != "0" ]; then exit 1; fi
 
 # Create a temporary container so we can extract the log files.

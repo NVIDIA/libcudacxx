@@ -13,6 +13,7 @@ then
   COMPUTE_ARCHS_FLAG="-eLIBCUDACXX_COMPUTE_ARCHS=\"${@}\""
 fi
 
-docker run -t ${COMPUTE_ARCHS_FLAG} --privileged ${FINAL_IMAGE}
+docker run -t ${COMPUTE_ARCHS_FLAG} --privileged ${FINAL_IMAGE} \
+  | while read line; do echo "$(date --rfc-3339=seconds)| $line"; done
 if [ "${?}" != "0" ]; then exit 1; fi
 
