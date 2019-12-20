@@ -82,5 +82,9 @@ RUN set -o pipefail; cd /sw/gpgpu/libcudacxx\
  --skip-libcxx-tests\
  2>&1 | tee /sw/gpgpu/libcudacxx/build/lit_sm6x_plus.log
 
+# Create a user and make it the owner of everything.
+RUN useradd -ms /bin/bash libcudacxx && chown -R libcudacxx:libcudacxx /sw
+USER libcudacxx
+
 WORKDIR /sw/gpgpu/libcudacxx
 
