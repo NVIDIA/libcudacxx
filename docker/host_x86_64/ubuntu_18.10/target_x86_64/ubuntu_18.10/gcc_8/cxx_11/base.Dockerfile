@@ -39,6 +39,9 @@ ADD opencl/import/cl_rel/CL/*.h* /sw/gpgpu/opencl/import/cl_rel/CL/
 # Copy libcu++ sources from the source tree.
 ADD libcudacxx /sw/gpgpu/libcudacxx
 
+# List out everything in /sw before the build.
+RUN echo "Contents of /sw:" && cd /sw/ && find
+
 # Build libc++ and configure libc++ tests.
 RUN set -o pipefail; cd /sw/gpgpu/libcudacxx/libcxx/build\
  && cmake ..\
