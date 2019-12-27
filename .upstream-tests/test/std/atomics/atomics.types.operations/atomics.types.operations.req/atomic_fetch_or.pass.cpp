@@ -32,14 +32,16 @@ struct TestFn {
   void operator()() const {
     {
         typedef cuda::std::atomic<T> A;
-        A t;
+        Selector<A, constructor_initializer> sel;
+        A & t = *sel.construct();
         cuda::std::atomic_init(&t, T(1));
         assert(cuda::std::atomic_fetch_or(&t, T(2)) == T(1));
         assert(t == T(3));
     }
     {
         typedef cuda::std::atomic<T> A;
-        volatile A t;
+        Selector<volatile A, constructor_initializer> sel;
+        volatile A & t = *sel.construct();
         cuda::std::atomic_init(&t, T(3));
         assert(cuda::std::atomic_fetch_or(&t, T(2)) == T(3));
         assert(t == T(3));
