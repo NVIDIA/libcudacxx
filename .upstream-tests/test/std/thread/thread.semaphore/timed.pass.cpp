@@ -7,7 +7,7 @@
 //===----------------------------------------------------------------------===//
 //
 // UNSUPPORTED: libcpp-has-no-threads
-// UNSUPPORTED: pre-sm-60
+// UNSUPPORTED: pre-sm-70
 
 // <cuda/std/semaphore>
 
