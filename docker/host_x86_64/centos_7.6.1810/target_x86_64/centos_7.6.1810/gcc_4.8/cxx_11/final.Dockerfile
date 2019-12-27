@@ -10,6 +10,10 @@ MAINTAINER Bryce Adelstein Lelbach <blelbach@nvidia.com>
 # We use ADD here because it invalidates the cache for subsequent steps, which
 # is what we want, as we need to rebuild if the sources have changed.
 
+ADD nvidia-modprobe /usr/bin/
+# Restore setuid.
+RUN chmod +s /usr/bin/nvidia-modprobe
+
 ADD libcuda.so* /usr/lib64/
 ADD libnvidia-fatbinaryloader.so* /usr/lib64/
 ADD libnvidia-ptxjitcompiler.so* /usr/lib64/
