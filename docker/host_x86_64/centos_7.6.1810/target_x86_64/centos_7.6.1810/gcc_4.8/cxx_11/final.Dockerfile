@@ -21,6 +21,9 @@ ADD libnvidia-ptxjitcompiler.so* /usr/lib64/
 ###############################################################################
 # CMD: The following is invoked when the image is run.
 
+RUN useradd -ms /bin/bash libcudacxx && chown -R libcudacxx:libcudacxx /sw/gpgpu/libcudacxx
+USER libcudacxx
+
 WORKDIR /sw/gpgpu/libcudacxx
 
 CMD /sw/gpgpu/libcudacxx/utils/nvidia/linux/perform_tests.bash --skip-libcxx-tests

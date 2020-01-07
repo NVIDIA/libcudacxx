@@ -16,10 +16,13 @@ RUN chmod +s /usr/bin/nvidia-modprobe
 
 ADD libcuda.so* /usr/lib/x86_64-linux-gnu/
 ADD libnvidia-fatbinaryloader.so* /usr/lib/x86_64-linux-gnu/
-ADD libnvidia-ptxjitcompiler.so* /usr/lib/x86_64-linux-gnu
+ADD libnvidia-ptxjitcompiler.so* /usr/lib/x86_64-linux-gnu/
 
 ###############################################################################
 # CMD: The following is invoked when the image is run.
+
+RUN useradd -ms /bin/bash libcudacxx && chown -R libcudacxx:libcudacxx /sw/gpgpu/libcudacxx
+USER libcudacxx
 
 WORKDIR /sw/gpgpu/libcudacxx
 
