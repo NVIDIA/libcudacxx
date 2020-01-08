@@ -1576,17 +1576,29 @@ _LIBCUDACXX_INLINE_VISIBILITY void __cxx_atomic_try_wait_slow(__cxx_atomic_impl<
 
 #else
 
+template<typename T>
+struct __atomic_wait_and_notify_supported
+#if defined(__CUDA_ARCH__) && __CUDA_ARCH__ < 700
+    : false_type
+#else
+    : true_type
+#endif
+{};
+
 template <class _Tp, int _Sco>
 _LIBCUDACXX_INLINE_VISIBILITY void __cxx_atomic_try_wait_slow(__cxx_atomic_impl<_Tp, _Sco> const volatile* __a, _Tp __val, memory_order __order) {
+    static_assert(__atomic_wait_and_notify_supported<_Tp>::value, "atomic wait operations are unsupported on Pascal");
     __cxx_atomic_try_wait_slow_fallback(__a, __val, __order);
 }
 
 template <class _Tp, int _Sco>
 _LIBCUDACXX_INLINE_VISIBILITY void __cxx_atomic_notify_one(__cxx_atomic_impl<_Tp, _Sco> const volatile*) {
+    static_assert(__atomic_wait_and_notify_supported<_Tp>::value, "atomic notify-one operations are unsupported on Pascal");
 }
 
 template <class _Tp, int _Sco>
 _LIBCUDACXX_INLINE_VISIBILITY void __cxx_atomic_notify_all(__cxx_atomic_impl<_Tp, _Sco> const volatile*) {
+    static_assert(__atomic_wait_and_notify_supported<_Tp>::value, "atomic notify-all operations are unsupported on Pascal");
 }
 
 #endif // _LIBCUDACXX_HAS_PLATFORM_WAIT || !defined(_LIBCUDACXX_HAS_NO_THREAD_CONTENTION_TABLE)
@@ -2572,6 +2584,7 @@ typedef struct atomic_flag
     void clear(memory_order __m = memory_order_seq_cst) _NOEXCEPT
         {__cxx_atomic_store(&__a_, _LIBCUDACXX_ATOMIC_FLAG_TYPE(false), __m);}
 
+#if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 700
     _LIBCUDACXX_INLINE_VISIBILITY
     void wait(bool __v, memory_order __m = memory_order_seq_cst) const volatile _NOEXCEPT
         {__cxx_atomic_wait(&__a_, _LIBCUDACXX_ATOMIC_FLAG_TYPE(__v), __m);}
@@ -2590,6 +2603,7 @@ typedef struct atomic_flag
     _LIBCUDACXX_INLINE_VISIBILITY
     void notify_all() _NOEXCEPT
         {__cxx_atomic_notify_all(&__a_);}
+#endif
 
 #ifdef _LIBCUDACXX_CXX03_LANG
     _LIBCUDACXX_INLINE_VISIBILITY
@@ -2699,6 +2713,7 @@ atomic_flag_clear_explicit(atomic_flag* __o, memory_order __m) _NOEXCEPT
     __o->clear(__m);
 }
 
+#if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 700
 
 inline _LIBCUDACXX_INLINE_VISIBILITY
 void
@@ -2757,6 +2772,8 @@ atomic_flag_notify_all(atomic_flag* __o) _NOEXCEPT
 {
     __o->notify_all();
 }
+
+#endif
 
 // fences
 
