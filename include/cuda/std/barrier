@@ -6,6 +6,10 @@
 //
 //===----------------------------------------------------------------------===//
 
+#if defined(__CUDA_ARCH__) && __CUDA_ARCH__ < 700
+#  error "CUDA synchronization primitives are only supported for sm_70 and up."
+#endif
+
 #ifndef _CUDA_BARRIER
 #define _CUDA_BARRIER
 
