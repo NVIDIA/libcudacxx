@@ -8,7 +8,7 @@ source ${SCRIPT_PATH}/configuration.bash
 # If invoked with an argument, the argument is the name of the tar.bz2 to import.
 if [ "" == "${1}" ]
 then
-  TARBZ2=${BASE_NAME}.tar.bz2
+  TARBZ2="${BASE_NAME}.tar.bz2"
 else
   TARBZ2="${1}"
 fi

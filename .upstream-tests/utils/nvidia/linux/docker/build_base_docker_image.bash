@@ -24,8 +24,10 @@ LIBCUDACXX_COMPUTE_ARCHS="${@}" docker -D build \
   -t ${BASE_IMAGE} \
   -f ${BASE_DOCKERFILE} \
   ${TK_PATH} 2>&1 \
-  | while read line; do echo "$(date --rfc-3339=seconds)| $line"; done
-if [ "${?}" != "0" ]; then exit 1; fi
+  | while read l; do \
+      echo "${LIBCUDACXX_DOCKER_OUTPUT_PREFIX}$(date --rfc-3339=seconds)| $l"; \
+    done
+if [ "${PIPESTATUS[0]}" != "0" ]; then exit 1; fi
 
 # Create a temporary container so we can extract the log files.
 TMP_CONTAINER=$(docker create ${BASE_IMAGE})

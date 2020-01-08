@@ -15,10 +15,9 @@ then
   COMPUTE_ARCHS_FLAG="-eLIBCUDACXX_COMPUTE_ARCHS=\"${@}\""
 fi
 
-# Ensure nvidia-uvm is loaded.
-${NVIDIAMODPROBE} -u
-
 docker run -t ${COMPUTE_ARCHS_FLAG} --privileged ${FINAL_IMAGE} 2>&1 \
-  | while read line; do echo "$(date --rfc-3339=seconds)| $line"; done
-if [ "${?}" != "0" ]; then exit 1; fi
+  | while read l; do \
+      echo "${LIBCUDACXX_DOCKER_OUTPUT_PREFIX}$(date --rfc-3339=seconds)| $l"; \
+    done
+if [ "${PIPESTATUS[0]}" != "0" ]; then exit 1; fi
 
