@@ -353,7 +353,7 @@ __host__ __device__ inline _Tp __cxx_atomic_exchange(__cxx_atomic_base_impl_smal
     return __cxx_small_from_32<_Tp>(__cxx_atomic_exchange(&__a->__a_value, __cxx_small_to_32(__value), __order));
 }
 __host__ __device__
-int __cuda_memcmp(void const * __lhs, void const * __rhs, size_t __count) {
+inline int __cuda_memcmp(void const * __lhs, void const * __rhs, size_t __count) {
 #ifdef __CUDA_ARCH__
     auto __lhs_c = reinterpret_cast<unsigned char const *>(__lhs);
     auto __rhs_c = reinterpret_cast<unsigned char const *>(__rhs);

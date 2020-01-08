@@ -95,17 +95,15 @@ public:
         if (__is_shared(&__barrier)) {
             arrival_token __token;
             if (__update > 1) {
-                asm volatile ("mbarrier.arrive.serial.b64 %0, [%1], %2;"
+                asm volatile ("mbarrier.arrive.noComplete.b64 %0, [%1], %2;"
                     : "=l"(__token)
-                    : "l"(&__barrier), "r"(static_cast<std::uint32_t>(__update))
+                    : "l"(&__barrier), "r"(static_cast<std::uint32_t>(__update - 1))
                     : "memory");
             }
-            else {
-                asm volatile ("mbarrier.arrive.b64 %0, [%1];"
-                    : "=l"(__token)
-                    : "l"(&__barrier)
-                    : "memory");
-            }
+            asm volatile ("mbarrier.arrive.b64 %0, [%1];"
+                : "=l"(__token)
+                : "l"(&__barrier)
+                : "memory");
             return __token;
         }
         else
