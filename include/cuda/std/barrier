@@ -95,9 +95,10 @@ public:
     [[nodiscard]] _LIBCUDACXX_INLINE_VISIBILITY
     arrival_token arrive(std::ptrdiff_t __update = 1)
     {
-#if __CUDA_ARCH__ >= 800
+#if __CUDA_ARCH__
         if (__is_shared(&__barrier)) {
             arrival_token __token;
+#if __CUDA_ARCH__ >= 800
             if (__update > 1) {
                 asm volatile ("mbarrier.arrive.noComplete.b64 %0, [%1], %2;"
                     : "=l"(__token)
@@ -108,6 +109,22 @@ public:
                 : "=l"(__token)
                 : "l"(&__barrier)
                 : "memory");
+#else
+            unsigned int __activeA = __match_any_sync(__activemask(), __update);
+            unsigned int __activeB = __match_any_sync(__activemask(), reinterpret_cast<std::uintptr_t>(&__barrier));
+            unsigned int __active = __activeA & __activeB;
+            int __inc = __popc(__active) * __update;
+
+            unsigned __laneid;
+            asm volatile ("mov.u32 %0, %laneid;" : "=r"(__laneid));
+            int __leader = __ffs(__active) - 1;
+
+            if(__leader == __laneid)
+            {
+                __token = __barrier.arrive(__inc);
+            }
+            __token = __shfl_sync(__active, __token, __leader);
+#endif
             return __token;
         }
         else
