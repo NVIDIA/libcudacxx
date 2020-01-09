@@ -48,6 +48,10 @@ THE SOFTWARE.
 #include <cuda/std/semaphore>
 
 #ifdef __CUDACC__
+#  include <cuda_awbarrier.h>
+#endif
+
+#ifdef __CUDACC__
 # define _ABI __host__ __device__
 # define check(ans) { assert_((ans), __FILE__, __LINE__); }
 inline void assert_(cudaError_t code, const char *file, int line) {
@@ -380,6 +384,13 @@ struct scope_of_barrier<cuda::barrier<Scope, F>>
 };
 
 #ifdef __CUDACC__
+template<cuda::thread_scope Scope>
+__device__
+void init(cuda::barrier<Scope> * b, cuda::std::ptrdiff_t count)
+{
+    b->init(count);
+}
+
 template<class B>
 void test_barrier_shared(std::string const& name) {
 
@@ -393,7 +404,7 @@ void test_barrier_shared(std::string const& name) {
         auto f = [=] __device__ (int n, int)  -> int {
             __shared__ B b;
             if (threadIdx.x == 0) {
-                b.init(count);
+                init(&b, count);
             }
             __syncthreads();
             for (int i = 0; i < n; ++i)
@@ -502,6 +513,9 @@ int main() {
     test_barrier<cuda::barrier<cuda::thread_scope_device>>("cuda::barrier<device>");
 #endif
     test_barrier<cuda::barrier<cuda::thread_scope_system>>("cuda::barrier<system>");
+#ifdef __CUDACC__
+    test_barrier_shared<nvcuda::experimental::awbarrier>("nvcuda::exp::awbarrier __shared__");
+#endif
 #endif
 
 #ifdef _OPENMP
