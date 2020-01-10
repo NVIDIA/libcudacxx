@@ -5,6 +5,8 @@ set -e
 SCRIPT_PATH=$(cd $(dirname ${0}); pwd -P)
 source ${SCRIPT_PATH}/configuration.bash
 
+NVIDIAMODPROBE=$(which nvidia-modprobe)
+
 # Arguments are a list of SM architectures to target; if there are no arguments,
 # all known SM architectures are targeted.
 COMPUTE_ARCHS_FLAG=""
@@ -13,7 +15,10 @@ then
   COMPUTE_ARCHS_FLAG="-eLIBCUDACXX_COMPUTE_ARCHS=\"${@}\""
 fi
 
-docker run -t ${COMPUTE_ARCHS_FLAG} --privileged ${FINAL_IMAGE} \
+# Ensure nvidia-uvm is loaded.
+${NVIDIAMODPROBE} -u
+
+docker run -t ${COMPUTE_ARCHS_FLAG} --privileged ${FINAL_IMAGE} 2>&1 \
   | while read line; do echo "$(date --rfc-3339=seconds)| $line"; done
 if [ "${?}" != "0" ]; then exit 1; fi
 

@@ -25,13 +25,16 @@ do
   echo "  ${library}"
 done
 
+# Ensure nvidia-uvm is loaded.
+${NVIDIAMODPROBE} -u
+
 cp ${NVIDIAMODPROBE} ${LIBCUDA} ${LIBNVIDIAFATBINARYLOADER} ${LIBNVIDIAPTXJITCOMPILER} ${TMP_PATH}
 if [ "${?}" != "0" ]; then exit 1; fi
 
 chmod -R 755 ${TMP_PATH}
 if [ "${?}" != "0" ]; then exit 1; fi
 
-docker -D build -t ${FINAL_IMAGE} -f ${FINAL_DOCKERFILE} ${TMP_PATH} \
+docker -D build -t ${FINAL_IMAGE} -f ${FINAL_DOCKERFILE} ${TMP_PATH} 2>&1 \
   | while read line; do echo "$(date --rfc-3339=seconds)| $line"; done
 if [ "${?}" != "0" ]; then exit 1; fi
 

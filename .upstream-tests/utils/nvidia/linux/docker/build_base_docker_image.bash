@@ -23,17 +23,17 @@ LIBCUDACXX_COMPUTE_ARCHS="${@}" docker -D build \
   --build-arg LIBCUDACXX_COMPUTE_ARCHS \
   -t ${BASE_IMAGE} \
   -f ${BASE_DOCKERFILE} \
-  ${TK_PATH} \
+  ${TK_PATH} 2>&1 \
   | while read line; do echo "$(date --rfc-3339=seconds)| $line"; done
 if [ "${?}" != "0" ]; then exit 1; fi
 
 # Create a temporary container so we can extract the log files.
 TMP_CONTAINER=$(docker create ${BASE_IMAGE})
 
-docker cp ${TMP_CONTAINER}:/sw/gpgpu/libcudacxx/libcxx/build/cmake_libcxx.log .
-docker cp ${TMP_CONTAINER}:/sw/gpgpu/libcudacxx/build/cmake_libcudacxx.log .
-docker cp ${TMP_CONTAINER}:/sw/gpgpu/libcudacxx/build/lit.log .
-docker cp ${TMP_CONTAINER}:/sw/gpgpu/libcudacxx/build/lit_sm6x_plus.log .
+docker cp ${TMP_CONTAINER}:/sw/gpgpu/libcudacxx/build/logs.tar .
+
+tar -xf logs.tar
+rm logs.tar
 
 docker container rm ${TMP_CONTAINER} > /dev/null
 
