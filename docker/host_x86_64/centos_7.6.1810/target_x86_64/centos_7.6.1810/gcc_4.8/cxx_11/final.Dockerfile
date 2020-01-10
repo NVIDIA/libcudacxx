@@ -21,7 +21,7 @@ ADD libnvidia-ptxjitcompiler.so* /usr/lib64/
 ###############################################################################
 # CMD: The following is invoked when the image is run.
 
-RUN useradd -ms /bin/bash libcudacxx && chown -R libcudacxx:libcudacxx /sw/gpgpu/libcudacxx
+RUN useradd -ms /bin/bash libcudacxx && chown -R libcudacxx:libcudacxx /sw
 USER libcudacxx
 
 WORKDIR /sw/gpgpu/libcudacxx

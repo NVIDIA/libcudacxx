@@ -54,7 +54,7 @@ RUN set -o pipefail; cd /sw/gpgpu/libcudacxx/libcxx/build\
  -DCMAKE_C_COMPILER=gcc-7\
  -DCMAKE_CXX_COMPILER=g++-7\
  && make -j\
- 2>&1 | tee /sw/gpgpu/libcudacxx/libcxx/build/cmake_libcxx.log
+ 2>&1 | tee /sw/gpgpu/libcudacxx/build/cmake_libcxx.log
 
 # Configure libcu++ tests.
 RUN set -o pipefail; cd /sw/gpgpu/libcudacxx/build\
@@ -71,16 +71,39 @@ RUN set -o pipefail; cd /sw/gpgpu/libcudacxx\
  LIBCUDACXX_SKIP_BASE_TESTS_BUILD=$LIBCUDACXX_SKIP_BASE_TESTS_BUILD\
  /sw/gpgpu/libcudacxx/utils/nvidia/linux/perform_tests.bash\
  --skip-tests-runs\
- 2>&1 | tee /sw/gpgpu/libcudacxx/build/lit.log
+ 2>&1 | tee /sw/gpgpu/libcudacxx/build/build_lit_all.log
 
-# Build tests for sm6x and up if requested.
+# Build tests for sm6x if requested.
 RUN set -o pipefail; cd /sw/gpgpu/libcudacxx\
- && LIBCUDACXX_COMPUTE_ARCHS="60 61 62 70 72 75"\
+ && LIBCUDACXX_COMPUTE_ARCHS="60 61 62"\
  LIBCUDACXX_SKIP_BASE_TESTS_BUILD=$LIBCUDACXX_SKIP_BASE_TESTS_BUILD\
  /sw/gpgpu/libcudacxx/utils/nvidia/linux/perform_tests.bash\
  --skip-tests-runs\
  --skip-libcxx-tests\
- 2>&1 | tee /sw/gpgpu/libcudacxx/build/lit_sm6x_plus.log
+ 2>&1 | tee /sw/gpgpu/libcudacxx/build/build_lit_sm6x.log
+
+# Build tests for sm7x if requested.
+RUN set -o pipefail; cd /sw/gpgpu/libcudacxx\
+ && LIBCUDACXX_COMPUTE_ARCHS="70 72 75"\
+ LIBCUDACXX_SKIP_BASE_TESTS_BUILD=$LIBCUDACXX_SKIP_BASE_TESTS_BUILD\
+ /sw/gpgpu/libcudacxx/utils/nvidia/linux/perform_tests.bash\
+ --skip-tests-runs\
+ --skip-libcxx-tests\
+ 2>&1 | tee /sw/gpgpu/libcudacxx/build/build_lit_sm7x.log
+
+# Build tests for sm8x if requested.
+RUN set -o pipefail; cd /sw/gpgpu/libcudacxx\
+ && LIBCUDACXX_COMPUTE_ARCHS="80"\
+ LIBCUDACXX_SKIP_BASE_TESTS_BUILD=$LIBCUDACXX_SKIP_BASE_TESTS_BUILD\
+ /sw/gpgpu/libcudacxx/utils/nvidia/linux/perform_tests.bash\
+ --skip-tests-runs\
+ --skip-libcxx-tests\
+ 2>&1 | tee /sw/gpgpu/libcudacxx/build/build_lit_sm8x.log
+
+# Package the logs up, because `docker container cp` doesn't support wildcards,
+# and I want to limit the number of places we have to make changes when we ship
+# new architectures.
+RUN cd /sw/gpgpu/libcudacxx/build && tar -cvf logs.tar *.log
 
 WORKDIR /sw/gpgpu/libcudacxx
 
