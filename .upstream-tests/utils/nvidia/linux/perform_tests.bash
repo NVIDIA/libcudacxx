@@ -21,6 +21,14 @@ function usage {
   echo "                                 : for tests runs."
   echo "                                 : Overrides \${LIBCUDACXX_SKIP_ARCH_DETECTION}."
   echo
+  echo "--compute-archs                  : Space-separated list of SM architectures"
+  echo "                                   (specified as integers) to target. If empty,"
+  echo "                                   either the architecture is automatically"
+  echo "                                   detected (for tests runs if detection isn't"
+  echo "                                   disabled) or all known SM architectures are"
+  echo "                                   targeted."
+  echo "                                 : Overrides \${LIBCUDACXX_COMPUTE_ARCHS}."
+  echo
   echo "--libcxx-lit-site-config <file>     : Use <file> as the libc++ lit site config"
   echo "                                    : (default: \${LIBCUDACXX_PATH}/libcxx/build/test/lit.site.cfg)."
   echo "--libcudacxx-lit-site-config <file> : Use <file> as the libcu++ lit site config"
@@ -147,6 +155,10 @@ do
   --skip-libcxx-tests)        LIBCUDACXX_SKIP_LIBCXX_TESTS=1 ;;
   --skip-libcudacxx-tests)    LIBCUDACXX_SKIP_LIBCUDACXX_TESTS=1 ;;
   --skip-arch-detection)      LIBCUDACXX_SKIP_ARCH_DETECTION=1 ;;
+  --compute-archs)
+    shift # The next argument is the list of archs.
+    LIBCUDACXX_COMPUTE_ARCHS=${1}
+    ;;
   --libcxx-lit-site-config)
     shift # The next argument is the file.
     LIBCXX_LIT_SITE_CONFIG=${1}

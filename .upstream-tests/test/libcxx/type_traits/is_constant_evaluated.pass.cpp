@@ -31,4 +31,4 @@ int main (int, char**) {
     assert(!p);
 
     return 0;
-    }
+}
