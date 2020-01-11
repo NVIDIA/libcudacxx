@@ -182,7 +182,9 @@
 #define __has_include(...) 0
 #endif
 
-#if defined(__clang__)
+#if defined(__PGIC__)
+#  define _LIBCUDACXX_COMPILER_PGI
+#elif defined(__clang__)
 #  define _LIBCUDACXX_COMPILER_CLANG
 #  ifndef __apple_build_version__
 #    define _LIBCUDACXX_CLANG_VER (__clang_major__ * 100 + __clang_minor__)
@@ -500,18 +502,29 @@ typedef __char32_t char32_t;
 #define _LIBCUDACXX_IS_CONSTRUCTIBLE(...) __is_constructible(__VA_ARGS__)
 #endif
 
+#if __has_feature(is_trivially_constructible)
+#define _LIBCUDACXX_IS_TRIVIALLY_CONSTRUCTIBLE(...) __is_trivially_constructible(__VA_ARGS__)
+#endif
+
 // FIXME: __has_feature(is_nothrow_constructible) returns false, seems to be a bug.
+// https://bugs.llvm.org/show_bug.cgi?id=44517
+// https://godbolt.org/z/CNw-zz
 #if __has_keyword(__is_nothrow_constructible)
 #define _LIBCUDACXX_IS_NOTHROW_CONSTRUCTIBLE(...) __is_nothrow_constructible(__VA_ARGS__)
 #endif
 
 // FIXME: __has_feature(is_assignable) returns false, seems to be a bug.
+// https://bugs.llvm.org/show_bug.cgi?id=44517
+// https://godbolt.org/z/CNw-zz
 #if __has_keyword(__is_assignable)
 #define _LIBCUDACXX_IS_ASSIGNABLE(...) __is_assignable(__VA_ARGS__)
 #endif
 
-#if __has_feature(is_trivially_constructible)
-#define _LIBCUDACXX_IS_TRIVIALLY_CONSTRUCTIBLE(...) __is_trivially_constructible(__VA_ARGS__)
+// FIXME: __has_feature(is_same) returns false, seems to be a bug.
+// https://bugs.llvm.org/show_bug.cgi?id=44517
+// https://godbolt.org/z/CNw-zz
+#if __has_keyword(__is_same) && !defined(_LIBCUDACXX_COMPILER_NVCC)
+#define _LIBCUDACXX_IS_SAME(...) __is_same(__VA_ARGS__)
 #endif
 
 #if __has_feature(has_trivial_constructor)
@@ -548,6 +561,13 @@ typedef __char32_t char32_t;
 
 #if __has_feature(is_convertible_to)
 #define _LIBCUDACXX_IS_CONVERTIBLE_TO(...) __is_convertible_to(__VA_ARGS__)
+#endif
+
+// FIXME: __has_feature(is_function) returns false, seems to be a bug.
+// https://bugs.llvm.org/show_bug.cgi?id=44517
+// https://godbolt.org/z/CNw-zz
+#if __has_keyword(__is_function) && !defined(_LIBCUDACXX_COMPILER_NVCC)
+#define _LIBCUDACXX_IS_FUNCTION(...) __is_function(__VA_ARGS__)
 #endif
 
 #if __has_feature(is_union)
@@ -670,6 +690,10 @@ typedef __char32_t char32_t;
 //#if _GNUC_VER >= 800
 //#define _LIBCUDACXX_IS_ASSIGNABLE(...) __is_assignable(__VA_ARGS__)
 //#endif
+
+#if _GNUC_VER >= 1000
+#define _LIBCUDACXX_IS_SAME(...) __is_same(__VA_ARGS__)
+#endif
 
 #if !__EXCEPTIONS && !defined(_LIBCUDACXX_NO_EXCEPTIONS)
 #define _LIBCUDACXX_NO_EXCEPTIONS
@@ -1514,7 +1538,7 @@ _LIBCUDACXX_FUNC_VIS extern "C" void __sanitizer_annotate_contiguous_container(
 #define _LIBCUDACXX_HAS_NO_BUILTIN_IS_CONSTANT_EVALUATED
 #endif
 
-#if defined(__PGIC__)
+#if defined(_LIBCUDACXX_COMPILER_PGI) || defined(_LIBCUDACXX_COMPILER_NVCC)
 #define _LIBCUDACXX_HAS_NO_BUILTIN_IS_CONSTANT_EVALUATED
 #endif
 

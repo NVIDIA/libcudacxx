@@ -559,21 +559,22 @@ _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_same_v
 
 template <class _Tp, class _Up>
 using _IsSame = _BoolConstant<
-#ifdef __clang__
-    __is_same(_Tp, _Up)
+#if defined(_LIBCUDACXX_IS_SAME) && !defined(_LIBCUDACXX_USE_IS_SAME_FALLBACK)
+    _LIBCUDACXX_IS_SAME(_Tp, _Up)
 #else
     _CUDA_VSTD::is_same<_Tp, _Up>::value
-#endif
+#endif // defined(_LIBCUDACXX_IS_SAME) && !defined(_LIBCUDACXX_USE_IS_SAME_FALLBACK)
 >;
 
 template <class _Tp, class _Up>
 using _IsNotSame = _BoolConstant<
-#ifdef __clang__
-    !__is_same(_Tp, _Up)
+#if defined(_LIBCUDACXX_IS_SAME) && !defined(_LIBCUDACXX_USE_IS_SAME_FALLBACK)
+    !_LIBCUDACXX_IS_SAME(_Tp, _Up)
 #else
     !_CUDA_VSTD::is_same<_Tp, _Up>::value
-#endif
+#endif // defined(_LIBCUDACXX_IS_SAME) && !defined(_LIBCUDACXX_USE_IS_SAME_FALLBACK)
 >;
+
 // addressof
 #ifndef _LIBCUDACXX_HAS_NO_BUILTIN_ADDRESSOF
 
@@ -892,11 +893,11 @@ _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_class_v
 
 template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_function
     : public _BoolConstant<
-#if defined(__clang__) && !defined(_LIBCUDACXX_COMPILER_NVCC)
-    __is_function(_Tp)
+#if defined(_LIBCUDACXX_IS_FUNCTION) && !defined(_LIBCUDACXX_USE_IS_FUNCTION_FALLBACK)
+    _LIBCUDACXX_IS_FUNCTION(_Tp)
 #else
- !(is_reference<_Tp>::value || is_const<const _Tp>::value)
-#endif
+    !(is_reference<_Tp>::value || is_const<const _Tp>::value)
+#endif // defined(_LIBCUDACXX_IS_FUNCTION) && !defined(_LIBCUDACXX_USE_IS_FUNCTION_FALLBACK)
     > {};
 
 
