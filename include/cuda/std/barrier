@@ -40,25 +40,6 @@ public:
     }
 };
 
-template<class _Tp>
-_LIBCUDACXX_INLINE_VISIBILITY
-__forceinline__
-int __is_shared(_Tp * __ptr) {
-#ifndef __CUDA_ARCH__
-    return 0;
-#else
-    int __res;
-    asm volatile ("{\n\t"
-            ".reg .pred p;\n\t"
-            "isspacep.shared p, %1;\n\t"
-            "selp.b32 %0, 1, 0, p;\n\t"
-            "}"
-        : "=r"(__res)
-        : "l"(__ptr));
-    return __res;
-#endif
-}
-
 template<>
 class barrier<thread_scope_block, std::__empty_completion> {
     using __barrier_base = std::__barrier_base<std::__empty_completion, (int)thread_scope_block>;
@@ -80,9 +61,9 @@ public:
     _LIBCUDACXX_INLINE_VISIBILITY
     void init(std::ptrdiff_t __expected, std::__empty_completion __completion = std::__empty_completion()) {
 #if __CUDA_ARCH__ >= 800
-        if (__is_shared(&__barrier)) {
-            asm volatile ("mbarrier.init.b64 [%0], %1;"
-                :: "l"(&__barrier), "r"(static_cast<std::uint32_t>(__expected))
+        if (__isShared(&__barrier)) {
+            asm volatile ("mbarrier.init.shared.b64 [%0], %1;"
+                :: "r"(static_cast<std::uint32_t>(__cvta_generic_to_shared(&__barrier))), "r"(static_cast<std::uint32_t>(__expected))
                 : "memory");
         }
         else
@@ -96,18 +77,18 @@ public:
     arrival_token arrive(std::ptrdiff_t __update = 1)
     {
 #if __CUDA_ARCH__
-        if (__is_shared(&__barrier)) {
+        if (__isShared(&__barrier)) {
             arrival_token __token;
 #if __CUDA_ARCH__ >= 800
             if (__update > 1) {
-                asm volatile ("mbarrier.arrive.noComplete.b64 %0, [%1], %2;"
+                asm volatile ("mbarrier.arrive.noComplete.shared.b64 %0, [%1], %2;"
                     : "=l"(__token)
-                    : "l"(&__barrier), "r"(static_cast<std::uint32_t>(__update - 1))
+                    : "r"(static_cast<std::uint32_t>(__cvta_generic_to_shared(&__barrier))), "r"(static_cast<std::uint32_t>(__update - 1))
                     : "memory");
             }
-            asm volatile ("mbarrier.arrive.b64 %0, [%1];"
+            asm volatile ("mbarrier.arrive.shared.b64 %0, [%1];"
                 : "=l"(__token)
-                : "l"(&__barrier)
+                : "r"(static_cast<std::uint32_t>(__cvta_generic_to_shared(&__barrier)))
                 : "memory");
 #else
             unsigned int __activeA = __match_any_sync(__activemask(), __update);
@@ -138,18 +119,18 @@ public:
     void wait(arrival_token && __phase) const
     {
 #if __CUDA_ARCH__ >= 800
-        if (__is_shared(&__barrier)) {
+        if (__isShared(&__barrier)) {
             unsigned __sleep_timer_ns = 1;
 
             while (true) {
                 int __wait_complete = 0;
                 asm volatile ("{\n\t"
                         ".reg .pred p;\n\t"
-                        "mbarrier.test_wait.b64 p, [%1], %2;\n\t"
+                        "mbarrier.test_wait.shared.b64 p, [%1], %2;\n\t"
                         "selp.b32 %0, 1, 0, p;\n\t"
                         "}"
                     : "=r"(__wait_complete)
-                    : "l"(&__barrier), "l"(__phase)
+                    : "r"(static_cast<std::uint32_t>(__cvta_generic_to_shared(&__barrier))), "l"(__phase)
                     : "memory");
                 if (__wait_complete) { break; }
 
@@ -178,9 +159,9 @@ public:
     void arrive_and_drop()
     {
 #if __CUDA_ARCH__ >= 800
-        if (__is_shared(&__barrier)) {
-            asm volatile ("mbarrier.arrive_drop.b64 _, [%0];"
-                :: "l"(&__barrier)
+        if (__isShared(&__barrier)) {
+            asm volatile ("mbarrier.arrive_drop.shared.b64 _, [%0];"
+                :: "r"(static_cast<std::uint32_t>(__cvta_generic_to_shared(&__barrier)))
                 : "memory");
         }
         else
