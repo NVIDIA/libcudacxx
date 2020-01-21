@@ -67,6 +67,12 @@
 
 #include "libcxx/include/__config"
 
+#if defined(__CUDA_ARCH__)
+    #define _LIBCUDACXX_HAS_THREAD_API_CUDA
+#elif defined(_LIBCUDACXX_COMPILER_MSVC)
+    #define _LIBCUDACXX_HAS_THREAD_API_WIN32
+#endif
+
 #if _GNUC_VER <= 409
     #define _LIBCUDACXX_CUDA_HAS_NO_HOST_STD_ATOMIC_INIT
 #endif
