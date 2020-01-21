@@ -302,12 +302,9 @@ int main(int, char**)
     // But the rvalue to lvalue reference binding isn't allowed according to
     // [over.match.ref] despite Clang accepting it.
     test_is_constructible<int&, ExplicitTo<int&>>();
-#if defined(TEST_COMPILER_GCC) || defined(TEST_COMPILER_NVRTC)
-#elif defined(TEST_CLANG_VER) && defined(TEST_COMPILER_NVCC)
-#else
+
     // This fails almost everywhere.
-    test_is_constructible<const int&, ExplicitTo<int&&>>();
-#endif
+    //test_is_constructible<const int&, ExplicitTo<int&&>>();
 
     // TODO add nvbug tracking
 #if !defined(TEST_COMPILER_NVCC) && !defined(TEST_COMPILER_NVRTC)

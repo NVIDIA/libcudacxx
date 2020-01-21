@@ -9,6 +9,10 @@
 // UNSUPPORTED: c++98, c++03, c++11
 
 // XFAIL: gcc-7
+// GCC 5: Fails for C++11, passes for C++14.
+// GCC 6: Fails for C++11, passes for C++14.
+// GCC 7: Fails for C++11, fails for C++14.
+// GCC 8: Fails for C++11, passes for C++14.
 
 // <cuda/std/functional>
 
@@ -16,10 +20,6 @@
 
 // Test that these types can be constructed w/o an initializer in a constexpr
 // context. This is specifically testing gcc.gnu.org/PR83921
-
-// XFAIL: nvrtc
-// the NVRTC frontend appears to have the same bug GCC has
-
 
 #include <cuda/std/functional>
 #include "test_macros.h"
@@ -44,7 +44,6 @@ constexpr bool test_constexpr_context() {
 
 static_assert(test_constexpr_context<int>(), "");
 static_assert(test_constexpr_context<void>(), "");
-
 
 int main(int, char**) {
 

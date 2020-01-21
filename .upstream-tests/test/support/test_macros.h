@@ -62,7 +62,9 @@
 #define TEST_HAS_BUILTIN_IDENTIFIER(X) 0
 #endif
 
-#if defined(__clang__)
+#if defined(__PGIC__)
+# define TEST_COMPILER_PGI
+#elif defined(__clang__)
 # define TEST_COMPILER_CLANG
 # if defined(__apple_build_version__)
 #  define TEST_COMPILER_APPLE_CLANG
@@ -192,11 +194,6 @@
 #      define TEST_HAS_C11_FEATURES
 #      define TEST_HAS_TIMESPEC_GET
 #    endif
-#  elif defined(_WIN32)
-#    if defined(TEST_COMPILER_C1XX) && !defined(__MINGW32__)
-#      define TEST_HAS_C11_FEATURES // Using Microsoft's C Runtime library
-#      define TEST_HAS_TIMESPEC_GET
-#    endif
 #  endif
 #endif
 
@@ -227,7 +224,7 @@
 #define TEST_HAS_NO_EXCEPTIONS
 #endif
 
-#ifdef __CUDACC_RTC__
+#ifdef TEST_COMPILER_NVCC
 #define TEST_HAS_NO_EXCEPTIONS
 #endif
 

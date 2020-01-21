@@ -8,8 +8,8 @@
 
 // UNSUPPORTED: c++98, c++03
 
-// Before GCC 6, this trait fails. See https://stackoverflow.com/q/41799015/627587.
 // UNSUPPORTED: gcc-5
+// Before GCC 6, this trait fails. See https://stackoverflow.com/q/41799015/627587.
 
 // <cuda/std/type_traits>
 
@@ -17,6 +17,7 @@
 
 #include <cuda/std/type_traits>
 
+#include "test_macros.h"
 
 struct ExplicitlyDefaultConstructible1 {
     explicit ExplicitlyDefaultConstructible1() = default;
@@ -80,10 +81,8 @@ static_assert(!cuda::std::__is_implicitly_default_constructible<NonDefaultConstr
 static_assert(!cuda::std::__is_implicitly_default_constructible<NonDefaultConstructible3>::value, "");
 static_assert(!cuda::std::__is_implicitly_default_constructible<ProtectedDefaultConstructible>::value, "");
 static_assert(!cuda::std::__is_implicitly_default_constructible<PrivateDefaultConstructible>::value, "");
-#ifndef _LIBCUDACXX_COMPILER_NVRTC
 static_assert(!cuda::std::__is_implicitly_default_constructible<ProtectedDefaultConstructibleWithBase>::value, "");
 static_assert(!cuda::std::__is_implicitly_default_constructible<PrivateDefaultConstructibleWithBase>::value, "");
-#endif
 
 int main(int, char**) {
     return 0;

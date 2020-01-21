@@ -253,7 +253,7 @@ feature_test_macros = sorted([ add_version_header(x) for x in [
    },
    "headers": ["memory"],
    "depends": "TEST_HAS_BUILTIN(__builtin_addressof) || TEST_GCC_VER >= 700",
-   "internal_depends": "!defined(_LIBCUDACXX_HAS_NO_BUILTIN_ADDRESSOF)",
+   "internal_depends": "defined(_LIBCUDACXX_ADDRESSOF)",
    },
   {"name": "__cpp_lib_raw_memory_algorithms",
    "values": {
@@ -533,7 +533,7 @@ feature_test_macros = sorted([ add_version_header(x) for x in [
    },
    "headers": ["type_traits"],
    "depends": "TEST_HAS_BUILTIN(__builtin_is_constant_evaluated) || TEST_GCC_VER >= 900",
-   "internal_depends": "!defined(_LIBCUDACXX_HAS_NO_BUILTIN_IS_CONSTANT_EVALUATED)",
+   "internal_depends": "defined(_LIBCUDACXX_IS_CONSTANT_EVALUATED)",
    },
   {"name": "__cpp_lib_list_remove_return_type",
    "values": {
@@ -969,7 +969,7 @@ Status
 .. table:: Current Status
      :name: feature-status-table
      :widths: auto
-     
+
 {status_tables}
 
 """.format(status_tables=create_table(get_status_table(), 4))

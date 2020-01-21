@@ -25,7 +25,7 @@ void concurrent_agents_launch(Fs ...fs)
     using fptr = void (*)(void *);
 
     fptr device_threads[] = {
-        +[](void * data) {
+        [](void * data) {
             (*reinterpret_cast<Fs *>(data))();
         }...
     };
