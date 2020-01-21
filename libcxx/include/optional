@@ -877,7 +877,7 @@ public:
     operator->() const
     {
         _LIBCUDACXX_ASSERT(this->has_value(), "optional operator-> called for disengaged value");
-#ifndef _LIBCUDACXX_HAS_NO_BUILTIN_ADDRESSOF
+#if defined(_LIBCUDACXX_ADDRESSOF)
         return _CUDA_VSTD::addressof(this->__get());
 #else
         return __operator_arrow(__has_operator_addressof<value_type>{}, this->__get());
@@ -890,7 +890,7 @@ public:
     operator->()
     {
         _LIBCUDACXX_ASSERT(this->has_value(), "optional operator-> called for disengaged value");
-#ifndef _LIBCUDACXX_HAS_NO_BUILTIN_ADDRESSOF
+#if defined(_LIBCUDACXX_ADDRESSOF)
         return _CUDA_VSTD::addressof(this->__get());
 #else
         return __operator_arrow(__has_operator_addressof<value_type>{}, this->__get());

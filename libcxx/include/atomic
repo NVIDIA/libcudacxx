@@ -1092,7 +1092,7 @@ _Tp __cxx_atomic_fetch_xor(__cxx_atomic_base_impl<_Tp> * __a, _Tp __pattern, mem
     return __c11_atomic_fetch_xor(&__a->__a_value, __pattern, static_cast<__memory_order_underlying_t>(__order));
 }
 
-#endif // _LIBCUDACXX_HAS_GCC_ATOMIC_IMP, _LIBCUDACXX_HAS_C_ATOMIC_IMP 
+#endif // _LIBCUDACXX_HAS_GCC_ATOMIC_IMP, _LIBCUDACXX_HAS_C_ATOMIC_IMP
 
 template <class _Tp>
 _LIBCUDACXX_INLINE_VISIBILITY
@@ -1416,21 +1416,17 @@ _Tp __cxx_atomic_fetch_xor(__cxx_atomic_lock_impl<_Tp, _Sco>* __a,
   return __old;
 }
 
-#ifdef __cpp_lib_atomic_is_always_lock_free
-
-#ifdef __CUDACC_RTC__
-#define __atomic_always_lock_free(size, ptr) (size <= 8)
-#endif
+#if defined(_LIBCUDACXX_ATOMIC_ALWAYS_LOCK_FREE)
 
 template<typename _Tp> struct __cxx_is_always_lock_free {
-    enum { __value = __atomic_always_lock_free(sizeof(_Tp), 0) }; };
+    enum { __value = _LIBCUDACXX_ATOMIC_ALWAYS_LOCK_FREE(sizeof(_Tp), 0) }; };
 
 #else
 
 template<typename _Tp> struct __cxx_is_always_lock_free {
     enum { __value = sizeof(_Tp) <= 8 }; };
 
-#endif //__cpp_lib_atomic_is_always_lock_free
+#endif // defined(_LIBCUDACXX_ATOMIC_ALWAYS_LOCK_FREE)
 
 template <typename _Tp, int _Sco,
           typename _Base = typename conditional<__cxx_is_always_lock_free<_Tp>::__value,
@@ -1624,9 +1620,9 @@ struct __atomic_base  // false
 {
     mutable __cxx_atomic_impl<_Tp, _Sco> __a_;
 
-#if defined(__cpp_lib_atomic_is_always_lock_free)
-  static _LIBCUDACXX_CONSTEXPR bool is_always_lock_free = __atomic_always_lock_free(sizeof(__a_), 0);
-#endif
+#if defined(_LIBCUDACXX_ATOMIC_ALWAYS_LOCK_FREE)
+    static _LIBCUDACXX_CONSTEXPR bool is_always_lock_free = _LIBCUDACXX_ATOMIC_ALWAYS_LOCK_FREE(sizeof(decltype(__a_)), 0);
+#endif // defined(_LIBCUDACXX_ATOMIC_ALWAYS_LOCK_FREE)
 
     _LIBCUDACXX_INLINE_VISIBILITY
     bool is_lock_free() const volatile _NOEXCEPT
@@ -2731,7 +2727,7 @@ atomic_flag_wait(const atomic_flag* __o, bool __v) _NOEXCEPT
 
 inline _LIBCUDACXX_INLINE_VISIBILITY
 void
-atomic_flag_wait_explicit(const volatile atomic_flag* __o, 
+atomic_flag_wait_explicit(const volatile atomic_flag* __o,
                           bool __v, memory_order __m) _NOEXCEPT
 {
     __o->wait(__v, __m);
@@ -2739,7 +2735,7 @@ atomic_flag_wait_explicit(const volatile atomic_flag* __o,
 
 inline _LIBCUDACXX_INLINE_VISIBILITY
 void
-atomic_flag_wait_explicit(const atomic_flag* __o, 
+atomic_flag_wait_explicit(const atomic_flag* __o,
                           bool __v, memory_order __m) _NOEXCEPT
 {
     __o->wait(__v, __m);

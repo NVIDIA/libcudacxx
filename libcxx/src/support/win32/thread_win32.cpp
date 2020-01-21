@@ -234,21 +234,6 @@ int __libcpp_thread_detach(__libcpp_thread_t *__t)
   return 0;
 }
 
-void __libcpp_thread_yield()
-{
-  SwitchToThread();
-}
-
-void __libcpp_thread_sleep_for(chrono::nanoseconds __ns)
-{
-  using namespace chrono;
-  // round-up to the nearest milisecond
-  milliseconds __ms =
-      duration_cast<milliseconds>(__ns + chrono::nanoseconds(999999));
-  // FIXME(compnerd) this should be an alertable sleep (WFSO or SleepEx)
-  Sleep(__ms.count());
-}
-
 // Thread Local Storage
 int __libcpp_tls_create(__libcpp_tls_key* __key,
                         void(_LIBCUDACXX_TLS_DESTRUCTOR_CC* __at_exit)(void*))

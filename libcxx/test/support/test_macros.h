@@ -20,7 +20,9 @@
 # endif
 #endif
 #ifndef TEST_IMP_INCLUDED_HEADER
+#ifndef __CUDACC_RTC__
 #include <ciso646>
+#endif // __CUDACC_RTC__
 #endif
 
 #if defined(__GNUC__)
@@ -60,17 +62,29 @@
 #define TEST_HAS_BUILTIN_IDENTIFIER(X) 0
 #endif
 
-#if defined(__EDG__)
-# define TEST_COMPILER_EDG
+#if defined(__PGIC__)
+# define TEST_COMPILER_PGI
 #elif defined(__clang__)
 # define TEST_COMPILER_CLANG
 # if defined(__apple_build_version__)
 #  define TEST_COMPILER_APPLE_CLANG
 # endif
-#elif defined(_MSC_VER)
-# define TEST_COMPILER_C1XX
 #elif defined(__GNUC__)
 # define TEST_COMPILER_GCC
+#elif defined(_MSC_VER)
+# define TEST_COMPILER_C1XX
+#elif defined(__IBMCPP__)
+# define TEST_COMPILER_IBM
+#elif defined(__CUDACC_RTC__)
+# define TEST_COMPILER_NVRTC
+#elif defined(__EDG__)
+# define TEST_COMPILER_EDG
+#endif
+
+#if defined(__NVCC__)
+// This is not mutually exclusive with other compilers, as NVCC uses a host
+// compiler.
+# define TEST_COMPILER_NVCC
 #endif
 
 #if defined(__apple_build_version__)
@@ -84,19 +98,34 @@
 
 /* Make a nice name for the standard version */
 #ifndef TEST_STD_VER
-#if  __cplusplus <= 199711L
-# define TEST_STD_VER 3
-#elif __cplusplus <= 201103L
-# define TEST_STD_VER 11
-#elif __cplusplus <= 201402L
-# define TEST_STD_VER 14
-#elif __cplusplus <= 201703L
-# define TEST_STD_VER 17
-#else
-# define TEST_STD_VER 99    // greater than current standard
-// This is deliberately different than _LIBCUDACXX_STD_VER to discourage matching them up.
-#endif
-#endif
+#  if defined(TEST_COMPILER_C1XX)
+#    if   !defined(_MSVC_LANG)
+#      define TEST_STD_VER 3
+#    elif _MSVC_LANG <= 201103L
+#      define TEST_STD_VER 11
+#    elif _MSVC_LANG <= 201402L
+#      define TEST_STD_VER 14
+#    elif _MSVC_LANG <= 201703L
+#      define TEST_STD_VER 17
+#    else
+#      define TEST_STD_VER 99  // Greater than current standard.
+       // This is deliberately different than _LIBCUDACXX_STD_VER to discourage matching them up.
+#    endif
+#  else
+#    if   __cplusplus <= 199711L
+#      define TEST_STD_VER 3
+#    elif __cplusplus <= 201103L
+#      define TEST_STD_VER 11
+#    elif __cplusplus <= 201402L
+#      define TEST_STD_VER 14
+#    elif __cplusplus <= 201703L
+#      define TEST_STD_VER 17
+#    else
+#      define TEST_STD_VER 99  // Greater than current standard.
+       // This is deliberately different than _LIBCUDACXX_STD_VER to discourage matching them up.
+#    endif
+#  endif
+#endif  // TEST_STD_VER
 
 // Attempt to deduce the GLIBC version
 #if (defined(__has_include) && __has_include(<features.h>)) || \
@@ -165,11 +194,6 @@
 #      define TEST_HAS_C11_FEATURES
 #      define TEST_HAS_TIMESPEC_GET
 #    endif
-#  elif defined(_WIN32)
-#    if defined(_MSC_VER) && !defined(__MINGW32__)
-#      define TEST_HAS_C11_FEATURES // Using Microsoft's C Runtime library
-#      define TEST_HAS_TIMESPEC_GET
-#    endif
 #  endif
 #endif
 
@@ -200,6 +224,10 @@
 #define TEST_HAS_NO_EXCEPTIONS
 #endif
 
+#ifdef TEST_COMPILER_NVCC
+#define TEST_HAS_NO_EXCEPTIONS
+#endif
+
 #if TEST_HAS_FEATURE(address_sanitizer) || TEST_HAS_FEATURE(memory_sanitizer) || \
     TEST_HAS_FEATURE(thread_sanitizer)
 #define TEST_HAS_SANITIZERS
@@ -225,7 +253,7 @@
 
 // FIXME: Fix this feature check when either (A) a compiler provides a complete
 // implementation, or (b) a feature check macro is specified
-#if !defined(_MSC_VER) || defined(__clang__) || _MSC_VER < 1920 || _MSVC_LANG <= 201703L
+#if defined(TEST_COMPILER_CLANG) || !defined(TEST_COMPILER_C1XX) || _MSC_VER < 1920 || _MSVC_LANG <= 201703L
 #define TEST_HAS_NO_SPACESHIP_OPERATOR
 #endif
 
@@ -273,21 +301,24 @@ struct is_same<T, T> { enum {value = 1}; };
 #else
 #if defined(__GNUC__)
 #define TEST_THROW(...) __builtin_abort()
+#elif defined(__CUDACC_RTC__)
+#define TEST_THROW(...) assert(#__VA_ARGS__)
 #else
 #include <stdlib.h>
 #define TEST_THROW(...) ::abort()
 #endif
 #endif
 
-#if defined(__GNUC__) || defined(__clang__)
+#if defined(__GNUC__) || defined(__clang__) || defined(__CUDACC_RTC__)
 template <class Tp>
-inline
+inline _LIBCUDACXX_INLINE_VISIBILITY
 void DoNotOptimize(Tp const& value) {
     asm volatile("" : : "r,m"(value) : "memory");
 }
 
 template <class Tp>
-inline void DoNotOptimize(Tp& value) {
+inline _LIBCUDACXX_INLINE_VISIBILITY
+void DoNotOptimize(Tp& value) {
 #if defined(__clang__)
   asm volatile("" : "+r,m"(value) : : "memory");
 #else

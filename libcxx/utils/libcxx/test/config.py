@@ -250,7 +250,6 @@ class Configuration(object):
                              self.cxx.default_dialect))
         self.lit_config.note("detected cxx.is_nvrtc as: {}".format(
                              self.cxx.is_nvrtc))
-
         self.cxx.compile_env = dict(os.environ)
         # 'CCACHE_CPP2' prevents ccache from stripping comments while
         # preprocessing. This is required to prevent stripping of '-verify'
@@ -614,34 +613,49 @@ class Configuration(object):
                 if maj_v <= 6:
                     possible_stds.remove('c++14')
             for s in possible_stds:
-                # NVCC always supports the GCC-style flag, even when MSVC
-                # is the host compiler, so we just have to worry about unwrapped
-                # MSVC here.
-                if self.cxx.type == 'msvc':
-                    if self.cxx.hasCompileFlag('/std:%s' % s):
-                        std = s
-                        self.lit_config.note(
-                            'inferred language dialect as: %s' % std)
-                        break
+                cxx = self.cxx
+                success = True
+
+                if self.cxx.type == 'nvcc':
+                    # NVCC warns, but doesn't error, if the host compiler
+                    # doesn't support the dialect. It's also possible that the
+                    # host compiler supports the dialect, but NVCC doesn't.
+
+                    # So, first we need to check if NVCC supports the dialect...
+                    if not self.cxx.hasCompileFlag('-std=%s' % s):
+                        # If it doesn't, give up on this dialect.
+                        success = False
+
+                    # ... then we need to check if host compiler supports the
+                    # dialect.
+                    cxx = self.host_cxx
+
+                if cxx.type == 'msvc':
+                    if not cxx.hasCompileFlag('/std:%s' % s):
+                        success = False
                 else:
-                    if self.cxx.hasCompileFlag('-std=%s' % s):
-                        std = s
-                        self.lit_config.note(
-                            'inferred language dialect as: %s' % std)
-                        break
-            if not std and \
-               (self.cxx.type == 'nvcc' and self.host_cxx.type == 'msvc'):
-                # TODO: Replace this with proper version checks.
-                std = 'c++14'
-            if not std:
-                self.lit_config.fatal(
-                    'Failed to infer a supported language dialect from one of %r'
-                    % possible_stds)
-        if self.cxx.type == 'msvc':
-            self.cxx.compile_flags += ['/std:{0}'.format(std)]
-        elif self.cxx.is_nvrtc \
-                or not (self.cxx.type == 'nvcc' and self.host_cxx.type == 'msvc'):
-            self.cxx.compile_flags += ['-std={0}'.format(std)]
+                    if not cxx.hasCompileFlag('-std=%s' % s):
+                        success = False
+
+                if success:
+                    std = s
+                    self.lit_config.note('inferred language dialect as: %s' % std)
+                    break
+
+        if std:
+            # We found a dialect flag.
+            if self.cxx.type == 'msvc':
+                self.cxx.compile_flags += ['/std:{0}'.format(std)]
+            else:
+                self.cxx.compile_flags += ['-std={0}'.format(std)]
+        if not std:
+            # There is no dialect flag. This happens with older MSVC.
+            if self.cxx.type == 'nvcc':
+                std = self.host_cxx.default_dialect
+            else:
+                std = self.cxx.default_dialect
+            self.lit_config.note('using default language dialect: %s' % std)
+
         std_feature = std.replace('gnu++', 'c++')
         std_feature = std.replace('1z', '17')
         std_feature = std.replace('2a', '20')
@@ -878,15 +892,17 @@ class Configuration(object):
 
         # Configure libraries
         if self.cxx_stdlib_under_test == 'libc++':
-            if self.cxx.type == 'nvcc':
-                self.cxx.link_flags += ['-Xcompiler']
-            if 'pgi' in self.config.available_features:
-                pass
-            elif not self.cxx.is_nvrtc:
-                self.cxx.link_flags += ['-nodefaultlibs']
-            # FIXME: Handle MSVCRT as part of the ABI library handling.
-            if self.is_windows and 'msvc' not in self.config.available_features:
-                self.cxx.link_flags += ['-nostdlib']
+            if self.get_lit_conf('name') != 'libcu++':
+                if 'pgi' not in self.config.available_features or not self.cxx.is_nvrtc:
+                    if self.cxx.type == 'nvcc':
+                        self.cxx.link_flags += ['-Xcompiler']
+                    self.cxx.link_flags += ['-nodefaultlibs']
+
+                    # FIXME: Handle MSVCRT as part of the ABI library handling.
+                    if self.is_windows and 'msvc' not in self.config.available_features:
+                        if self.cxx.type == 'nvcc':
+                            self.cxx.link_flags += ['-Xcompiler']
+                        self.cxx.link_flags += ['-nostdlib']
             self.configure_link_flags_cxx_library()
             self.configure_link_flags_abi_library()
             self.configure_extra_library_flags()
@@ -945,7 +961,7 @@ class Configuration(object):
                     self.cxx.link_flags += ['-Xcompiler',
                         '"-Wl,-rpath,' + self.cxx_runtime_root + '"']
                 else:
-                    self.cxx.link_flags += ['-Wl,-rpath,' + 
+                    self.cxx.link_flags += ['-Wl,-rpath,' +
                                             self.abi_library_root]
             else:
                 self.add_path(self.exec_env, self.abi_library_root)
