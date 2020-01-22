@@ -22,6 +22,10 @@ THE SOFTWARE.
 
 */
 
+#ifdef NDEBUG
+#undef NDEBUG
+#endif
+
 #include <cmath>
 #include <mutex>
 #include <thread>
@@ -376,6 +380,14 @@ struct scope_of_barrier
 {
     static const constexpr auto scope = cuda::thread_scope_system;
 };
+
+#ifdef __CUDACC__
+template<>
+struct scope_of_barrier<nvcuda::experimental::awbarrier>
+{
+    static const constexpr auto scope = cuda::thread_scope_block;
+};
+#endif
 
 template<cuda::thread_scope Scope, typename F>
 struct scope_of_barrier<cuda::barrier<Scope, F>>
