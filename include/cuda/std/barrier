@@ -35,8 +35,8 @@ public:
     }
 
     _LIBCUDACXX_INLINE_VISIBILITY
-    void init(std::ptrdiff_t __expected, _CompletionF __completion = _CompletionF()) {
-        new (this) barrier(__expected, __completion);
+    friend void init(barrier * __b, std::ptrdiff_t __expected, _CompletionF __completion = _CompletionF()) {
+        new (__b) barrier(__expected, __completion);
     }
 };
 
@@ -55,21 +55,22 @@ public:
 
     _LIBCUDACXX_INLINE_VISIBILITY
     barrier(std::ptrdiff_t __expected, std::__empty_completion __completion = std::__empty_completion()) {
-        init(__expected, __completion);
+        init(this, __expected, __completion);
     }
 
     _LIBCUDACXX_INLINE_VISIBILITY
-    void init(std::ptrdiff_t __expected, std::__empty_completion __completion = std::__empty_completion()) {
+    friend void init(barrier * __b, std::ptrdiff_t __expected, std::__empty_completion __completion = std::__empty_completion()) {
 #if __CUDA_ARCH__ >= 800
-        if (__isShared(&__barrier)) {
+        if (__isShared(&__b->__barrier)) {
             asm volatile ("mbarrier.init.shared.b64 [%0], %1;"
-                :: "r"(static_cast<std::uint32_t>(__cvta_generic_to_shared(&__barrier))), "r"(static_cast<std::uint32_t>(__expected))
+                :: "r"(static_cast<std::uint32_t>(__cvta_generic_to_shared(&__b->__barrier))),
+                    "r"(static_cast<std::uint32_t>(__expected))
                 : "memory");
         }
         else
 #endif
         {
-            new (&__barrier) __barrier_base(__expected);
+            new (&__b->__barrier) __barrier_base(__expected);
         }
     }
 
@@ -83,7 +84,8 @@ public:
             if (__update > 1) {
                 asm volatile ("mbarrier.arrive.noComplete.shared.b64 %0, [%1], %2;"
                     : "=l"(__token)
-                    : "r"(static_cast<std::uint32_t>(__cvta_generic_to_shared(&__barrier))), "r"(static_cast<std::uint32_t>(__update - 1))
+                    : "r"(static_cast<std::uint32_t>(__cvta_generic_to_shared(&__barrier))),
+                        "r"(static_cast<std::uint32_t>(__update - 1))
                     : "memory");
             }
             asm volatile ("mbarrier.arrive.shared.b64 %0, [%1];"

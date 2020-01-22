@@ -384,13 +384,6 @@ struct scope_of_barrier<cuda::barrier<Scope, F>>
 };
 
 #ifdef __CUDACC__
-template<cuda::thread_scope Scope>
-__device__
-void init(cuda::barrier<Scope> * b, cuda::std::ptrdiff_t count)
-{
-    b->init(count);
-}
-
 template<class B>
 void test_barrier_shared(std::string const& name) {
 
