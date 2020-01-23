@@ -1573,19 +1573,26 @@ operator-(const time_point<_Clock, _Duration1>& __lhs, const time_point<_Clock, 
 /////////////////////// clocks ///////////////////////////
 //////////////////////////////////////////////////////////
 
-#ifndef _LIBCUDACXX_HAS_CLOCK_API_EXTERNAL
+#ifdef __cuda_std__
+#define _LIBCUDACXX_CLOCK_API __host__ __device__
+#else
+#define _LIBCUDACXX_CLOCK_API
+#endif
 
 class _LIBCUDACXX_TYPE_VIS system_clock
 {
 public:
-    typedef microseconds                     duration;
+    typedef _LIBCUDACXX_SYS_CLOCK_DURATION   duration;
     typedef duration::rep                    rep;
     typedef duration::period                 period;
     typedef chrono::time_point<system_clock> time_point;
     static _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 const bool is_steady = false;
 
+    _LIBCUDACXX_CLOCK_API
     static time_point now() _NOEXCEPT;
+    _LIBCUDACXX_CLOCK_API
     static time_t     to_time_t  (const time_point& __t) _NOEXCEPT;
+    _LIBCUDACXX_CLOCK_API
     static time_point from_time_t(time_t __t) _NOEXCEPT;
 };
 
@@ -1607,11 +1614,9 @@ typedef steady_clock high_resolution_clock;
 typedef system_clock high_resolution_clock;
 #endif
 
-#endif // _LIBCUDACXX_HAS_CLOCK_API_EXTERNAL
+#undef _LIBCUDACXX_CLOCK_API
 
 #if _LIBCUDACXX_STD_VER > 17
-
-#ifndef _LIBCUDACXX_HAS_CLOCK_API_EXTERNAL
 
 // [time.clock.file], type file_clock
 using file_clock = _CUDA_VSTD_FS::_FilesystemClock;
@@ -1630,8 +1635,6 @@ template<class Duration>
 using local_time  = time_point<local_t, Duration>;
 using local_seconds = local_time<seconds>;
 using local_days    = local_time<days>;
-
-#endif // _LIBCUDACXX_HAS_CLOCK_API_EXTERNAL
 
 struct last_spec { explicit last_spec() = default; };
 
