@@ -28,7 +28,7 @@ void test()
   SHARED Semaphore * s;
   s = sel.construct(0);
 
-  auto const start = cuda::std::chrono::steady_clock::now();
+  auto const start = cuda::std::chrono::high_resolution_clock::now();
 
 #ifdef __CUDA_ARCH__
   if (threadIdx.x == 0) {
@@ -57,7 +57,7 @@ void test()
 #ifdef __CUDA_ARCH__
   if (threadIdx.x == 0) {
 #endif
-  auto const end = cuda::std::chrono::steady_clock::now();
+  auto const end = cuda::std::chrono::high_resolution_clock::now();
   assert(end - start < cuda::std::chrono::seconds(10));
 #ifdef __CUDA_ARCH__
   }
