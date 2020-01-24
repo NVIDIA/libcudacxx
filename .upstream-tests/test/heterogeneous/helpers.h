@@ -6,13 +6,13 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef INTEROP_HELPERS_H
-#define INTEROP_HELPERS_H
+#ifndef HETEROGENEOUS_HELPERS_H
+#define HETEROGENEOUS_HELPERS_H
 
 #include <new>
 #include <stdlib.h>
 
-#define INTEROP_SAFE_CALL(...) \
+#define HETEROGENEOUS_SAFE_CALL(...) \
     do { \
         cudaError_t err = __VA_ARGS__; \
         if (err != cudaSuccess) \
@@ -68,11 +68,11 @@ void validate(T & object)
     validate_impl<Tester>(object);
 }
 
-template<typename T>
+template<typename T, typename ...Args>
 __global__
-void construct_kernel(void * address)
+void construct_kernel(void * address, Args ...args)
 {
-    new (address) T;
+    new (address) T(args...);
 }
 
 template<typename T>
@@ -96,12 +96,12 @@ void validation_kernel(T & object)
     validate<Tester>(object);
 }
 
-template<typename T>
-T * device_default_initialize(void * address)
+template<typename T, typename ...Args>
+T * device_construct(void * address, Args... args)
 {
-    construct_kernel<T><<<1, 1>>>(address);
-    INTEROP_SAFE_CALL(cudaGetLastError());
-    INTEROP_SAFE_CALL(cudaDeviceSynchronize());
+    construct_kernel<T><<<1, 1>>>(address, args...);
+    HETEROGENEOUS_SAFE_CALL(cudaGetLastError());
+    HETEROGENEOUS_SAFE_CALL(cudaDeviceSynchronize());
     return reinterpret_cast<T *>(address);
 }
 
@@ -109,28 +109,28 @@ template<typename T>
 void device_destroy(T * object)
 {
     destroy_kernel<<<1, 1>>>(object);
-    INTEROP_SAFE_CALL(cudaGetLastError());
-    INTEROP_SAFE_CALL(cudaDeviceSynchronize());
+    HETEROGENEOUS_SAFE_CALL(cudaGetLastError());
+    HETEROGENEOUS_SAFE_CALL(cudaDeviceSynchronize());
 }
 
 template<typename Tester, typename T>
 void device_initialize(T & object)
 {
     initialization_kernel<Tester><<<1, 1>>>(object);
-    INTEROP_SAFE_CALL(cudaGetLastError());
-    INTEROP_SAFE_CALL(cudaDeviceSynchronize());
+    HETEROGENEOUS_SAFE_CALL(cudaGetLastError());
+    HETEROGENEOUS_SAFE_CALL(cudaDeviceSynchronize());
 }
 
 template<typename Tester, typename T>
 void device_validate(T & object)
 {
     validation_kernel<Tester><<<1, 1>>>(object);
-    INTEROP_SAFE_CALL(cudaGetLastError());
-    INTEROP_SAFE_CALL(cudaDeviceSynchronize());
+    HETEROGENEOUS_SAFE_CALL(cudaGetLastError());
+    HETEROGENEOUS_SAFE_CALL(cudaDeviceSynchronize());
 }
 
-template<typename T>
-using creator = T & (*)();
+template<typename T, typename ...Args>
+using creator = T & (*)(Args...);
 
 template<typename T>
 using performer = void (*)(T &);
@@ -142,13 +142,13 @@ struct initializer_validator
     performer<T> validator;
 };
 
-template<typename T, typename ...Testers>
-void validate_device_dynamic(tester_list<Testers...>)
+template<typename T, typename ...Testers, typename ...Args>
+void validate_device_dynamic(tester_list<Testers...>, Args ...args)
 {
     void * pointer;
-    INTEROP_SAFE_CALL(cudaMalloc(&pointer, sizeof(T)));
+    HETEROGENEOUS_SAFE_CALL(cudaMalloc(&pointer, sizeof(T)));
 
-    T & object = *device_default_initialize<T>(pointer);
+    T & object = *device_construct<T>(pointer, args...);
 
     initializer_validator<T> performers[] = {
         {
@@ -164,15 +164,17 @@ void validate_device_dynamic(tester_list<Testers...>)
     }
 
     device_destroy(&object);
-    INTEROP_SAFE_CALL(cudaFree(pointer));
+    HETEROGENEOUS_SAFE_CALL(cudaFree(pointer));
 }
 
 #if __cplusplus >= 201402L
 template<typename T>
 struct manual_object
 {
-    void construct() { new (static_cast<void *>(&data.object)) T; }
-    void device_construct() { device_default_initialize<T>(&data.object); }
+    template<typename ...Args>
+    void construct(Args ...args) { new (static_cast<void *>(&data.object)) T(args...); }
+    template<typename ...Args>
+    void device_construct(Args ...args) { ::device_construct<T>(&data.object, args...); }
 
     void destroy() { data.object.~T(); }
     void device_destroy() { ::device_destroy(&data.object); }
@@ -195,14 +197,15 @@ template<typename T>
 __managed__ manual_object<T> managed_variable;
 #endif
 
-template<typename T, std::size_t N>
+template<typename T, std::size_t N, typename ...Args>
 void validate_in_managed_memory_helper(
-    creator<T> creator_,
+    creator<T, Args...> creator_,
     performer<T> destroyer,
-    initializer_validator<T> (&performers)[N]
+    initializer_validator<T> (&performers)[N],
+    Args ...args
 )
 {
-    T & object = creator_();
+    T & object = creator_(args...);
 
     for (auto && performer : performers)
     {
@@ -213,8 +216,8 @@ void validate_in_managed_memory_helper(
     destroyer(object);
 }
 
-template<typename T, typename ...Testers>
-void validate_managed(tester_list<Testers...>)
+template<typename T, typename ...Testers, typename ...Args>
+void validate_managed(tester_list<Testers...>, Args ...args)
 {
     initializer_validator<T> host_init_device_check[] = {
         {
@@ -230,66 +233,66 @@ void validate_managed(tester_list<Testers...>)
         }...
     };
 
-    auto host_constructor = []() -> T & {
+    creator<T, Args...> host_constructor = [](Args ...args) -> T & {
         void * pointer;
-        INTEROP_SAFE_CALL(cudaMallocManaged(&pointer, sizeof(T)));
-        return *new (pointer) T;
+        HETEROGENEOUS_SAFE_CALL(cudaMallocManaged(&pointer, sizeof(T)));
+        return *new (pointer) T(args...);
     };
 
-    auto device_constructor = []() -> T & {
+    creator<T, Args...> device_constructor = [](Args ...args) -> T & {
         void * pointer;
-        INTEROP_SAFE_CALL(cudaMallocManaged(&pointer, sizeof(T)));
-        return *device_default_initialize<T>(pointer);
+        HETEROGENEOUS_SAFE_CALL(cudaMallocManaged(&pointer, sizeof(T)));
+        return *device_construct<T>(pointer, args...);
     };
 
-    auto host_destructor = [](T & object){
+    performer<T> host_destructor = [](T & object){
         object.~T();
-        INTEROP_SAFE_CALL(cudaFree(&object));
+        HETEROGENEOUS_SAFE_CALL(cudaFree(&object));
     };
 
-    auto device_destructor = [](T & object){
+    performer<T> device_destructor = [](T & object){
         device_destroy(&object);
-        INTEROP_SAFE_CALL(cudaFree(&object));
+        HETEROGENEOUS_SAFE_CALL(cudaFree(&object));
     };
 
-    validate_in_managed_memory_helper<T>(host_constructor, host_destructor, host_init_device_check);
-    validate_in_managed_memory_helper<T>(host_constructor, host_destructor, device_init_host_check);
-    validate_in_managed_memory_helper<T>(host_constructor, device_destructor, host_init_device_check);
-    validate_in_managed_memory_helper<T>(host_constructor, device_destructor, device_init_host_check);
-    validate_in_managed_memory_helper<T>(device_constructor, host_destructor, host_init_device_check);
-    validate_in_managed_memory_helper<T>(device_constructor, host_destructor, device_init_host_check);
-    validate_in_managed_memory_helper<T>(device_constructor, device_destructor, host_init_device_check);
-    validate_in_managed_memory_helper<T>(device_constructor, device_destructor, device_init_host_check);
+    validate_in_managed_memory_helper<T>(host_constructor, host_destructor, host_init_device_check, args...);
+    validate_in_managed_memory_helper<T>(host_constructor, host_destructor, device_init_host_check, args...);
+    validate_in_managed_memory_helper<T>(host_constructor, device_destructor, host_init_device_check, args...);
+    validate_in_managed_memory_helper<T>(host_constructor, device_destructor, device_init_host_check, args...);
+    validate_in_managed_memory_helper<T>(device_constructor, host_destructor, host_init_device_check, args...);
+    validate_in_managed_memory_helper<T>(device_constructor, host_destructor, device_init_host_check, args...);
+    validate_in_managed_memory_helper<T>(device_constructor, device_destructor, host_init_device_check, args...);
+    validate_in_managed_memory_helper<T>(device_constructor, device_destructor, device_init_host_check, args...);
 
 #if __cplusplus >= 201402L && !defined(__clang__)
     // The managed variable template part of this test is disabled under clang, pending nvbug 2790305 being fixed.
 
-    auto host_variable_constructor = []() -> T & {
-        managed_variable<T>.construct();
+    creator<T, Args...> host_variable_constructor = [](Args ...args) -> T & {
+        managed_variable<T>.construct(args...);
         return managed_variable<T>.get();
     };
 
-    auto device_variable_constructor = []() -> T & {
-        managed_variable<T>.device_construct();
+    creator<T, Args...> device_variable_constructor = [](Args ...args) -> T & {
+        managed_variable<T>.device_construct(args...);
         return managed_variable<T>.get();
     };
 
-    auto host_variable_destructor = [](T &){
+    performer<T> host_variable_destructor = [](T &){
         managed_variable<T>.destroy();
     };
 
-    auto device_variable_destructor = [](T &){
+    performer<T> device_variable_destructor = [](T &){
         managed_variable<T>.device_destroy();
     };
 
-    validate_in_managed_memory_helper<T>(host_variable_constructor, host_variable_destructor, host_init_device_check);
-    validate_in_managed_memory_helper<T>(host_variable_constructor, host_variable_destructor, device_init_host_check);
-    validate_in_managed_memory_helper<T>(host_variable_constructor, device_variable_destructor, host_init_device_check);
-    validate_in_managed_memory_helper<T>(host_variable_constructor, device_variable_destructor, device_init_host_check);
-    validate_in_managed_memory_helper<T>(device_variable_constructor, host_variable_destructor, host_init_device_check);
-    validate_in_managed_memory_helper<T>(device_variable_constructor, host_variable_destructor, device_init_host_check);
-    validate_in_managed_memory_helper<T>(device_variable_constructor, device_variable_destructor, host_init_device_check);
-    validate_in_managed_memory_helper<T>(device_variable_constructor, device_variable_destructor, device_init_host_check);
+    validate_in_managed_memory_helper<T>(host_variable_constructor, host_variable_destructor, host_init_device_check, args...);
+    validate_in_managed_memory_helper<T>(host_variable_constructor, host_variable_destructor, device_init_host_check, args...);
+    validate_in_managed_memory_helper<T>(host_variable_constructor, device_variable_destructor, host_init_device_check, args...);
+    validate_in_managed_memory_helper<T>(host_variable_constructor, device_variable_destructor, device_init_host_check, args...);
+    validate_in_managed_memory_helper<T>(device_variable_constructor, host_variable_destructor, host_init_device_check, args...);
+    validate_in_managed_memory_helper<T>(device_variable_constructor, host_variable_destructor, device_init_host_check, args...);
+    validate_in_managed_memory_helper<T>(device_variable_constructor, device_variable_destructor, host_init_device_check, args...);
+    validate_in_managed_memory_helper<T>(device_variable_constructor, device_variable_destructor, device_init_host_check, args...);
 #endif
 }
 
@@ -313,15 +316,38 @@ bool check_managed_memory_support()
     return property_value == 1;
 }
 
-template<typename T, typename TesterList>
-void validate_not_movable()
+struct dummy_tester
 {
-    TesterList list;
+    template<typename ...Ts>
+    __host__ __device__
+    static void initialize(Ts &&...) {}
 
-    validate_device_dynamic<T>(list);
+    template<typename ...Ts>
+    __host__ __device__
+    static void validate(Ts &&...) {}
+};
+
+template<typename List>
+struct validate_list
+{
+    using type = List;
+};
+
+template<>
+struct validate_list<tester_list<>>
+{
+    using type = tester_list<dummy_tester>;
+};
+
+template<typename T, typename TesterList, typename ...Args>
+void validate_not_movable(Args ...args)
+{
+    typename validate_list<TesterList>::type list;
+
+    validate_device_dynamic<T>(list, args...);
     if (check_managed_memory_support())
     {
-        validate_managed<T>(list);
+        validate_managed<T>(list, args...);
     }
 }
 
