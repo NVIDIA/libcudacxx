@@ -8,7 +8,6 @@ source ${SCRIPT_PATH}/configuration.bash
 TMP_PATH=$(mktemp -d --suffix=-${FINAL_NAME})
 NVIDIAMODPROBE=$(which nvidia-modprobe)
 LIBCUDA=$(ldconfig -p | grep libcuda.so | tr ' ' '\n' | grep / | tr '\n' ' ' | sed 's/ *$//')
-LIBNVIDIAFATBINARYLOADER=$(ldconfig -p | grep libnvidia-fatbinaryloader.so | tr ' ' '\n' | grep / | tr '\n' ' ' | sed 's/ *$//')
 LIBNVIDIAPTXJITCOMPILER=$(ldconfig -p | grep libnvidia-ptxjitcompiler.so | tr ' ' '\n' | grep / | tr '\n' ' ' | sed 's/ *$//')
 
 echo "CUDA driver utilities found:"
@@ -20,7 +19,7 @@ done
 
 echo "CUDA driver libraries found:"
 
-for library in ${LIBCUDA} ${LIBNVIDIAFATBINARYLOADER} ${LIBNVIDIAPTXJITCOMPILER}
+for library in ${LIBCUDA} ${LIBNVIDIAPTXJITCOMPILER}
 do
   echo "  ${library}"
 done
@@ -28,7 +27,7 @@ done
 # Ensure nvidia-uvm is loaded.
 ${NVIDIAMODPROBE} -u
 
-cp ${NVIDIAMODPROBE} ${LIBCUDA} ${LIBNVIDIAFATBINARYLOADER} ${LIBNVIDIAPTXJITCOMPILER} ${TMP_PATH}
+cp ${NVIDIAMODPROBE} ${LIBCUDA} ${LIBNVIDIAPTXJITCOMPILER} ${TMP_PATH}
 if [ "${?}" != "0" ]; then exit 1; fi
 
 chmod -R 755 ${TMP_PATH}
