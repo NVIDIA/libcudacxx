@@ -9,8 +9,34 @@
 #ifndef HETEROGENEOUS_HELPERS_H
 #define HETEROGENEOUS_HELPERS_H
 
+#include <cuda/std/type_traits>
+
 #include <new>
+#include <thread>
+#include <vector>
 #include <stdlib.h>
+
+#define DEFINE_ASYNC_TRAIT(suffix) \
+    template<typename T, typename = cuda::std::true_type> \
+    struct async ## suffix ## _trait_impl \
+    { \
+        using type = cuda::std::false_type; \
+    }; \
+    \
+    template<typename T> \
+    struct async ## suffix ## _trait_impl<T, typename T::async ## suffix> \
+    { \
+        using type = cuda::std::true_type; \
+    }; \
+    \
+    template<typename T> \
+    using async ## suffix ## _trait = typename async ## suffix ## _trait_impl<T>::type;
+
+DEFINE_ASYNC_TRAIT()
+DEFINE_ASYNC_TRAIT(_initialize)
+DEFINE_ASYNC_TRAIT(_validate)
+
+#undef DEFINE_ASYNC_TRAIT
 
 #define HETEROGENEOUS_SAFE_CALL(...) \
     do { \
@@ -22,6 +48,59 @@
             abort(); \
         } \
     } while (false)
+
+inline std::vector<std::thread> & tracked_threads()
+{
+    static std::vector<std::thread> threads;
+    return threads;
+}
+
+inline void sync_tracked_threads()
+{
+    for (auto && thread : tracked_threads())
+    {
+        thread.join();
+    }
+    tracked_threads().clear();
+}
+
+inline std::vector<cudaStream_t> & tracked_streams()
+{
+    static std::vector<cudaStream_t> streams;
+    return streams;
+}
+
+inline void sync_tracked_streams()
+{
+    for (auto && stream : tracked_streams())
+    {
+        HETEROGENEOUS_SAFE_CALL(cudaStreamSynchronize(stream));
+        HETEROGENEOUS_SAFE_CALL(cudaStreamDestroy(stream));
+    }
+
+    tracked_streams().clear();
+}
+
+struct async_barrier
+{
+    template<typename T>
+    __host__ __device__
+    static void initialize(T &)
+    {
+    }
+
+    template<typename T>
+    __host__ __device__
+    static void validate(T &)
+    {
+    }
+
+    template<typename T>
+    __host__ __device__
+    static void perform(T &)
+    {
+    }
+};
 
 template<typename ...Testers>
 struct tester_list
@@ -116,17 +195,83 @@ void device_destroy(T * object)
 template<typename Tester, typename T>
 void device_initialize(T & object)
 {
-    initialization_kernel<Tester><<<1, 1>>>(object);
+#ifdef DEBUG_TESTERS
+    printf("%s\n", __PRETTY_FUNCTION__);
+    fflush(stdout);
+#endif
+
+    cudaStream_t s;
+    cudaStreamCreate(&s);
+    initialization_kernel<Tester><<<1, 1, 0, s>>>(object);
     HETEROGENEOUS_SAFE_CALL(cudaGetLastError());
-    HETEROGENEOUS_SAFE_CALL(cudaDeviceSynchronize());
+    tracked_streams().push_back(s);
+
+    if (!async_initialize_trait<Tester>::value)
+    {
+        HETEROGENEOUS_SAFE_CALL(cudaDeviceSynchronize());
+        sync_tracked_streams();
+    }
 }
 
 template<typename Tester, typename T>
 void device_validate(T & object)
 {
-    validation_kernel<Tester><<<1, 1>>>(object);
+#ifdef DEBUG_TESTERS
+    printf("%s\n", __PRETTY_FUNCTION__);
+    fflush(stdout);
+#endif
+
+    cudaStream_t s;
+    cudaStreamCreate(&s);
+    validation_kernel<Tester><<<1, 1, 0, s>>>(object);
     HETEROGENEOUS_SAFE_CALL(cudaGetLastError());
-    HETEROGENEOUS_SAFE_CALL(cudaDeviceSynchronize());
+    tracked_streams().push_back(s);
+
+    if (!async_validate_trait<Tester>::value)
+    {
+        HETEROGENEOUS_SAFE_CALL(cudaDeviceSynchronize());
+        sync_tracked_streams();
+    }
+}
+
+template<typename Tester, typename T>
+void host_initialize(T & object)
+{
+#ifdef DEBUG_TESTERS
+    printf("%s\n", __PRETTY_FUNCTION__);
+    fflush(stdout);
+#endif
+
+    if (async_initialize_trait<Tester>::value)
+    {
+        tracked_threads().emplace_back([&]{ initialize<Tester>(object); });
+    }
+
+    else
+    {
+        initialize<Tester>(object);
+        sync_tracked_threads();
+    }
+}
+
+template<typename Tester, typename T>
+void host_validate(T & object)
+{
+#ifdef DEBUG_TESTERS
+    printf("%s\n", __PRETTY_FUNCTION__);
+    fflush(stdout);
+#endif
+
+    if (async_validate_trait<Tester>::value)
+    {
+        tracked_threads().emplace_back([&]{ validate<Tester>(object); });
+    }
+
+    else
+    {
+        validate<Tester>(object);
+        sync_tracked_threads();
+    }
 }
 
 template<typename T, typename ...Args>
@@ -162,6 +307,9 @@ void validate_device_dynamic(tester_list<Testers...>, Args ...args)
         performer.initializer(object);
         performer.validator(object);
     }
+
+    HETEROGENEOUS_SAFE_CALL(cudaGetLastError());
+    HETEROGENEOUS_SAFE_CALL(cudaDeviceSynchronize());
 
     device_destroy(&object);
     HETEROGENEOUS_SAFE_CALL(cudaFree(pointer));
@@ -213,6 +361,11 @@ void validate_in_managed_memory_helper(
         performer.validator(object);
     }
 
+    HETEROGENEOUS_SAFE_CALL(cudaGetLastError());
+    HETEROGENEOUS_SAFE_CALL(cudaDeviceSynchronize());
+
+    sync_tracked_threads();
+
     destroyer(object);
 }
 
@@ -221,7 +374,7 @@ void validate_managed(tester_list<Testers...>, Args ...args)
 {
     initializer_validator<T> host_init_device_check[] = {
         {
-            initialize<Testers>,
+            host_initialize<Testers>,
             device_validate<Testers>
         }...
     };
@@ -229,7 +382,7 @@ void validate_managed(tester_list<Testers...>, Args ...args)
     initializer_validator<T> device_init_host_check[] = {
         {
             device_initialize<Testers>,
-            validate<Testers>
+            host_validate<Testers>
         }...
     };
 
@@ -296,23 +449,11 @@ void validate_managed(tester_list<Testers...>, Args ...args)
 #endif
 }
 
-#define HELPERS_CUDA_CALL(err, ...) \
-    do { \
-        err = __VA_ARGS__; \
-        if (err != cudaSuccess) \
-        { \
-            printf("CUDA ERROR, line %d: %s: %s\n", __LINE__,\
-                   cudaGetErrorName(err), cudaGetErrorString(err)); \
-            exit(err); \
-        } \
-    } while (false)
-
 bool check_managed_memory_support()
 {
     int current_device, property_value;
-    cudaError_t err;
-    HELPERS_CUDA_CALL(err, cudaGetDevice(&current_device));
-    HELPERS_CUDA_CALL(err, cudaDeviceGetAttribute(&property_value, cudaDevAttrManagedMemory, current_device));
+    HETEROGENEOUS_SAFE_CALL(cudaGetDevice(&current_device));
+    HETEROGENEOUS_SAFE_CALL(cudaDeviceGetAttribute(&property_value, cudaDevAttrManagedMemory, current_device));
     return property_value == 1;
 }
 
@@ -327,14 +468,14 @@ struct dummy_tester
     static void validate(Ts &&...) {}
 };
 
-template<typename List>
+template<bool PerformerCombinations, typename List>
 struct validate_list
 {
     using type = List;
 };
 
-template<>
-struct validate_list<tester_list<>>
+template<bool PerformerCombinations>
+struct validate_list<PerformerCombinations, tester_list<>>
 {
     using type = tester_list<dummy_tester>;
 };
@@ -342,13 +483,146 @@ struct validate_list<tester_list<>>
 template<typename T, typename TesterList, typename ...Args>
 void validate_not_movable(Args ...args)
 {
-    typename validate_list<TesterList>::type list;
-
+    typename validate_list<false, TesterList>::type list;
     validate_device_dynamic<T>(list, args...);
+
     if (check_managed_memory_support())
     {
+        typename validate_list<true, TesterList>::type list;
         validate_managed<T>(list, args...);
     }
 }
+
+enum class performer_side
+{
+    initialize,
+    validate
+};
+
+template<typename Performer, performer_side>
+struct performer_adapter;
+
+template<typename Performer>
+struct performer_adapter<Performer, performer_side::initialize>
+{
+    using async_initialize = async_trait<Performer>;
+    using async_validate = async_trait<Performer>;
+
+    template<typename T>
+    __host__ __device__
+    static void initialize(T & t)
+    {
+        Performer::perform(t);
+    }
+};
+
+template<typename Performer>
+struct performer_adapter<Performer, performer_side::validate>
+{
+    using async_initialize = async_trait<Performer>;
+    using async_validate = async_trait<Performer>;
+
+    template<typename T>
+    __host__ __device__
+    static void initialize(T &)
+    {
+    }
+
+    template<typename T>
+    __host__ __device__
+    static void validate(T & t)
+    {
+        Performer::perform(t);
+    }
+};
+
+template<typename ...Ts>
+struct performer_list
+{
+};
+
+template<typename ...Lists>
+struct cat_tester_lists_t;
+
+template<typename ...Only>
+struct cat_tester_lists_t<
+    tester_list<Only...>
+>
+{
+    using type = tester_list<Only...>;
+};
+
+template<typename ...First, typename ...Second, typename ...Tail>
+struct cat_tester_lists_t<
+    tester_list<First...>,
+    tester_list<Second...>,
+    Tail...
+>
+{
+    using type = typename cat_tester_lists_t<
+        tester_list<First..., Second...>,
+        Tail...
+    >::type;
+};
+
+template<typename ...Lists>
+using cat_tester_lists = typename cat_tester_lists_t<Lists...>::type;
+
+template<typename Front, typename ...Performers>
+struct generate_variants_t;
+
+template<typename ...Fronts>
+struct generate_variants_t<tester_list<Fronts...>>
+{
+    using type = tester_list<Fronts..., async_barrier>;
+};
+
+template<typename ...Fronts, typename First, typename ...Performers>
+struct generate_variants_t<tester_list<Fronts...>, First, Performers...>
+{
+    using type = cat_tester_lists<
+        typename generate_variants_t<
+            tester_list<
+                Fronts...,
+                performer_adapter<First, performer_side::initialize>
+            >,
+            Performers...
+        >::type,
+        typename generate_variants_t<
+            tester_list<
+                Fronts...,
+                performer_adapter<First, performer_side::validate>
+            >,
+            Performers...
+        >::type
+    >;
+};
+
+template<typename Front, typename ...Performers>
+using generate_variants = typename generate_variants_t<Front, Performers...>::type;
+
+template<typename First, typename ...Rest>
+struct validate_list<true, performer_list<First, Rest...>>
+{
+    using type = generate_variants<
+        // Lock the first performer to initialize only.
+        // Otherwise, here's what would get generated (for 2 performers):
+        //
+        // ii, iv, vi, vv (i - initialize, v - validate)
+        //
+        // but because the testing process itself is symmetrical, that means that
+        // testing for `ii` also covers `vv`, and testing for `iv` also covers `vi`.
+        // Therefore, only the first half of the generated sequence is actually
+        // meaningfully useful.
+        tester_list<performer_adapter<First, performer_side::initialize>>,
+        Rest...
+    >;
+};
+
+template<typename ...All>
+struct validate_list<false, performer_list<All...>>
+{
+    using type = tester_list<performer_adapter<All, performer_side::initialize>...>;
+};
 
 #endif
