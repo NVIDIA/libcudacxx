@@ -15,7 +15,6 @@ ADD nvidia-modprobe /usr/bin/
 RUN chmod +s /usr/bin/nvidia-modprobe
 
 ADD libcuda.so* /usr/lib64/
-ADD libnvidia-fatbinaryloader.so* /usr/lib64/
 ADD libnvidia-ptxjitcompiler.so* /usr/lib64/
 
 ###############################################################################
