@@ -49,39 +49,45 @@ DEFINE_ASYNC_TRAIT(_validate)
         } \
     } while (false)
 
-inline std::vector<std::thread> & tracked_threads()
+inline std::vector<std::thread> & host_threads()
 {
     static std::vector<std::thread> threads;
     return threads;
 }
 
-inline void sync_tracked_threads()
+inline void sync_host_threads()
 {
-    for (auto && thread : tracked_threads())
+    for (auto && thread : host_threads())
     {
         thread.join();
     }
-    tracked_threads().clear();
+    host_threads().clear();
 }
 
-inline std::vector<cudaStream_t> & tracked_streams()
+inline std::vector<cudaStream_t> & device_streams()
 {
     static std::vector<cudaStream_t> streams;
     return streams;
 }
 
-inline void sync_tracked_streams()
+inline void sync_device_streams()
 {
-    for (auto && stream : tracked_streams())
+    for (auto && stream : device_streams())
     {
         HETEROGENEOUS_SAFE_CALL(cudaStreamSynchronize(stream));
         HETEROGENEOUS_SAFE_CALL(cudaStreamDestroy(stream));
     }
 
-    tracked_streams().clear();
+    device_streams().clear();
 }
 
-struct async_barrier
+void sync_all()
+{
+    sync_host_threads();
+    sync_device_streams();
+}
+
+struct async_tester_fence
 {
     template<typename T>
     __host__ __device__
@@ -201,15 +207,15 @@ void device_initialize(T & object)
 #endif
 
     cudaStream_t s;
-    cudaStreamCreate(&s);
+    HETEROGENEOUS_SAFE_CALL(cudaStreamCreate(&s));
     initialization_kernel<Tester><<<1, 1, 0, s>>>(object);
     HETEROGENEOUS_SAFE_CALL(cudaGetLastError());
-    tracked_streams().push_back(s);
+    device_streams().push_back(s);
 
     if (!async_initialize_trait<Tester>::value)
     {
         HETEROGENEOUS_SAFE_CALL(cudaDeviceSynchronize());
-        sync_tracked_streams();
+        sync_all();
     }
 }
 
@@ -222,15 +228,15 @@ void device_validate(T & object)
 #endif
 
     cudaStream_t s;
-    cudaStreamCreate(&s);
+    HETEROGENEOUS_SAFE_CALL(cudaStreamCreate(&s));
     validation_kernel<Tester><<<1, 1, 0, s>>>(object);
     HETEROGENEOUS_SAFE_CALL(cudaGetLastError());
-    tracked_streams().push_back(s);
+    device_streams().push_back(s);
 
     if (!async_validate_trait<Tester>::value)
     {
         HETEROGENEOUS_SAFE_CALL(cudaDeviceSynchronize());
-        sync_tracked_streams();
+        sync_all();
     }
 }
 
@@ -244,13 +250,13 @@ void host_initialize(T & object)
 
     if (async_initialize_trait<Tester>::value)
     {
-        tracked_threads().emplace_back([&]{ initialize<Tester>(object); });
+        host_threads().emplace_back([&]{ initialize<Tester>(object); });
     }
 
     else
     {
         initialize<Tester>(object);
-        sync_tracked_threads();
+        sync_all();
     }
 }
 
@@ -264,13 +270,13 @@ void host_validate(T & object)
 
     if (async_validate_trait<Tester>::value)
     {
-        tracked_threads().emplace_back([&]{ validate<Tester>(object); });
+        host_threads().emplace_back([&]{ validate<Tester>(object); });
     }
 
     else
     {
         validate<Tester>(object);
-        sync_tracked_threads();
+        sync_all();
     }
 }
 
@@ -310,6 +316,8 @@ void validate_device_dynamic(tester_list<Testers...>, Args ...args)
 
     HETEROGENEOUS_SAFE_CALL(cudaGetLastError());
     HETEROGENEOUS_SAFE_CALL(cudaDeviceSynchronize());
+
+    sync_all();
 
     device_destroy(&object);
     HETEROGENEOUS_SAFE_CALL(cudaFree(pointer));
@@ -364,7 +372,7 @@ void validate_in_managed_memory_helper(
     HETEROGENEOUS_SAFE_CALL(cudaGetLastError());
     HETEROGENEOUS_SAFE_CALL(cudaDeviceSynchronize());
 
-    sync_tracked_threads();
+    sync_all();
 
     destroyer(object);
 }
@@ -574,7 +582,7 @@ struct generate_variants_t;
 template<typename ...Fronts>
 struct generate_variants_t<tester_list<Fronts...>>
 {
-    using type = tester_list<Fronts..., async_barrier>;
+    using type = tester_list<Fronts..., async_tester_fence>;
 };
 
 template<typename ...Fronts, typename First, typename ...Performers>

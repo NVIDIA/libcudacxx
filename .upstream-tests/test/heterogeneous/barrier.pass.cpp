@@ -80,8 +80,8 @@ struct barrier_arrive
     __host__ __device__
     static void perform(Data & data)
     {
-        data.token = data.barrier.arrive();
-        data.token_set = true;
+        data.token.store(data.barrier.arrive(), cuda::std::memory_order_release);
+        data.token_set.store(true, cuda::std::memory_order_release);
         data.token_set.notify_all();
     }
 };
@@ -94,7 +94,7 @@ struct barrier_wait
     __host__ __device__
     static void perform(Data & data)
     {
-        while (data.token_set == false)
+        while (data.token_set.load(cuda::std::memory_order_acquire) == false)
         {
             data.token_set.wait(false);
         }
@@ -120,8 +120,8 @@ struct validate_completion_result
     __host__ __device__
     static void perform(Data & data)
     {
-        assert(data.completed.load() == true);
-        data.completed.store(false);
+        assert(data.completed.load(cuda::std::memory_order_acquire) == true);
+        data.completed.store(false, cuda::std::memory_order_release);
     }
 };
 
@@ -131,7 +131,7 @@ struct clear_token
     __host__ __device__
     static void perform(Data & data)
     {
-        data.token_set = false;
+        data.token_set.store(false, cuda::std::memory_order_release);
     }
 };
 
@@ -139,7 +139,7 @@ using a_aw_w = performer_list<
     barrier_arrive,
     barrier_arrive_and_wait,
     barrier_wait,
-    async_barrier,
+    async_tester_fence,
     clear_token
 >;
 
@@ -152,7 +152,7 @@ using a_w_aw = performer_list<
     barrier_arrive,
     barrier_wait,
     barrier_arrive_and_wait,
-    async_barrier,
+    async_tester_fence,
     clear_token
 >;
 
@@ -161,7 +161,7 @@ using a_w_a_w = performer_list<
     barrier_wait,
     barrier_arrive,
     barrier_wait,
-    async_barrier,
+    async_tester_fence,
     clear_token
 >;
 
@@ -169,7 +169,7 @@ using completion_performers_a = performer_list<
     clear_token,
     barrier_arrive,
     barrier_arrive_and_wait,
-    async_barrier,
+    async_tester_fence,
     validate_completion_result,
     barrier_wait
 >;
@@ -178,7 +178,7 @@ using completion_performers_b = performer_list<
     clear_token,
     barrier_arrive,
     barrier_arrive_and_wait,
-    async_barrier,
+    async_tester_fence,
     validate_completion_result
 >;
 
