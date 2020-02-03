@@ -165,18 +165,20 @@ using a_w_a_w = performer_list<
     clear_token
 >;
 
-using completion_performers = performer_list<
+using completion_performers_a = performer_list<
+    clear_token,
     barrier_arrive,
     barrier_arrive_and_wait,
     async_barrier,
     validate_completion_result,
-    barrier_wait,
-    async_barrier,
+    barrier_wait
+>;
+
+using completion_performers_b = performer_list<
     clear_token,
     barrier_arrive,
     barrier_arrive_and_wait,
     async_barrier,
-    clear_token,
     validate_completion_result
 >;
 
@@ -215,24 +217,17 @@ void kernel_invoker()
 
     validate_not_movable<
         barrier_and_token_with_completion<cuda::std::barrier>,
-        completion_performers>(2);
+        completion_performers_a>(2);
     validate_not_movable<
         barrier_and_token_with_completion<cuda_barrier_system>,
-        completion_performers>(2);
-}
+        completion_performers_a>(2);
 
-__device__ cuda::barrier<cuda::thread_scope_system> bar;
-
-__global__
-void init()
-{
-    bar.init(2);
-}
-
-__global__
-void kernel()
-{
-    bar.arrive_and_wait();
+    validate_not_movable<
+        barrier_and_token_with_completion<cuda::std::barrier>,
+        completion_performers_b>(2);
+    validate_not_movable<
+        barrier_and_token_with_completion<cuda_barrier_system>,
+        completion_performers_b>(2);
 }
 
 int main(int arg, char ** argv)
