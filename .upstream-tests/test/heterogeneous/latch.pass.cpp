@@ -41,7 +41,11 @@ struct arrive_and_wait
     }
 };
 
-struct wait
+// This one is named `latch_wait` because otherwise you get this on older systems:
+// .../latch.pass.cpp(44): error: invalid redeclaration of type name "wait"
+// /usr/include/bits/waitstatus.h(66): here
+// Isn't software great?
+struct latch_wait
 {
     using async = cuda::std::true_type;
 
@@ -66,14 +70,14 @@ struct reset
 
 using r0_w = performer_list<
     reset<0>,
-    wait
+    latch_wait
 >;
 
 using r5_cd1_aw2_w_cd2 = performer_list<
     reset<5>,
     count_down<1>,
     arrive_and_wait<2>,
-    wait,
+    latch_wait,
     count_down<2>
 >;
 
