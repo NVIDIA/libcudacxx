@@ -331,7 +331,7 @@ void test_loop(cuda::thread_scope scope, F && f) {
 
 template<class M>
 void test_mutex_contended(std::string const& name, bool use_omp = false) {
-    test_loop([&](std::pair<int, std::string> c) {
+    test_loop(cuda::thread_scope_system, [&](std::pair<int, std::string> c) {
         M* m = make_<M>();
         cuda::std::atomic<bool> *keep_going = make_<cuda::std::atomic<bool>>(true);
         auto f = [=] _ABI (int, int) -> int {
@@ -343,7 +343,7 @@ void test_mutex_contended(std::string const& name, bool use_omp = false) {
             }
             return i;
         };
-        test(name + ", " + c.second, c.first, f, *keep_going, use_omp, false);
+        test(name + ", " + c.second, c.first, f, *keep_going, use_omp, false, cuda::thread_scope_system);
         unmake_(m);
         unmake_(keep_going);
     });
@@ -351,7 +351,7 @@ void test_mutex_contended(std::string const& name, bool use_omp = false) {
 
 template<class M>
 void test_mutex_uncontended(std::string const& name, bool use_omp = false) {
-    test_loop([&](std::pair<int, std::string> c) {
+    test_loop(cuda::thread_scope_system, [&](std::pair<int, std::string> c) {
         std::vector<M, managed_allocator<M>> ms(c.first);
         M* ms_ = &ms[0];
         cuda::std::atomic<bool> *keep_going = make_<cuda::std::atomic<bool>>(true);
@@ -364,14 +364,14 @@ void test_mutex_uncontended(std::string const& name, bool use_omp = false) {
             }
             return i;
         };
-        test(name + ": " + c.second, c.first, f, *keep_going, use_omp, true);
+        test(name + ": " + c.second, c.first, f, *keep_going, use_omp, true, cuda::thread_scope_system);
         unmake_(keep_going);
     });
 };
 
 template<class M>
 void test_mutex(std::string const& name, bool use_omp = false) {
-//  test_mutex_uncontended<M>(name + " uncontended", use_omp);
+    test_mutex_uncontended<M>(name + " uncontended", use_omp);
     test_mutex_contended<M>(name + " contended", use_omp);
 }
 
@@ -496,17 +496,17 @@ int main() {
     int const block_max = get_max_threads(cuda::thread_scope_block);
     std::cout << "System has " << block_max << " hardware threads in a single block." << std::endl;
 #endif
-/*
+
 #ifndef __NO_MUTEX
-    test_mutex<sem_mutex>("Semlock");
+    test_mutex<sem_mutex>("sem_mutex");
 //  test_mutex<null_mutex>("Null");
-    test_mutex<mutex>("Spinlock");
-    test_mutex<ticket_mutex>("Ticket");
+    test_mutex<mutex>("spinlock_mutex");
+    test_mutex<ticket_mutex>("ticket_mutex");
 #ifndef __CUDACC__
     test_mutex<std::mutex>("std::mutex");
 #endif
 #endif
-*/
+
 #ifndef __NO_BARRIER
 #ifdef __CUDACC__
     test_latch<cuda::latch<cuda::thread_scope_block>>("cuda::latch<block>");
