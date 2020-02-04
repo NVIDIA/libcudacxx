@@ -221,6 +221,7 @@ void do_test()
         assert((obj = true) == true);
         assert(obj == true);
     }
+#if __cplusplus > 201703L
     {
 #if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 700
         typedef Atomic<Scope> A;
@@ -230,6 +231,7 @@ void do_test()
         zero.~A();
 #endif
     }
+#endif
 }
 
 template<cuda::thread_scope Scope>

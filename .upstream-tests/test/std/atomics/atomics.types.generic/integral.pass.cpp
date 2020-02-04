@@ -151,6 +151,7 @@ do_test()
     assert((obj ^= T(0xF)) == T(8));
     assert(obj == T(8));
 
+#if __cplusplus > 201703L
     {
 #if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 700
         TEST_ALIGNAS_TYPE(A) char storage[sizeof(A)] = {23};
@@ -159,6 +160,7 @@ do_test()
         zero.~A();
 #endif
     }
+#endif
 }
 
 template <class A, class T, template<typename, typename> class Selector>

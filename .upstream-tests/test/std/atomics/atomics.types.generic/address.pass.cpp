@@ -121,7 +121,7 @@ do_test()
     assert(obj == T(5*sizeof(X)));
     assert((obj -= cuda::std::ptrdiff_t(3)) == T(2*sizeof(X)));
     assert(obj == T(2*sizeof(X)));
-
+#if __cplusplus > 201703L
     {
 #if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 700
         TEST_ALIGNAS_TYPE(A) char storage[sizeof(A)] = {23};
@@ -130,6 +130,7 @@ do_test()
         zero.~A();
 #endif
     }
+#endif
 }
 
 template <class A, class T, template<typename, typename> class Selector>
