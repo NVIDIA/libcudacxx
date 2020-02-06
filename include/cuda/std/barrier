@@ -177,6 +177,12 @@ public:
             __barrier.arrive_and_drop();
         }
     }
+
+    _LIBCUDACXX_INLINE_VISIBILITY
+    static constexpr ptrdiff_t max() noexcept
+    {
+        return (1 << 20) - 1;
+    }
 };
 
 _LIBCUDACXX_END_NAMESPACE_CUDA
