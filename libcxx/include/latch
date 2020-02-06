@@ -103,6 +103,12 @@ public:
         count_down(__update);
         wait();
     }
+
+    _LIBCUDACXX_INLINE_VISIBILITY
+    static constexpr ptrdiff_t max() noexcept
+    {
+        return numeric_limits<ptrdiff_t>::max();
+    }
 };
 
 using latch = __latch_base<>;

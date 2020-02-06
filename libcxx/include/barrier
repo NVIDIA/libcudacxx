@@ -249,6 +249,12 @@ public:
         __expected.fetch_sub(1, memory_order_relaxed);
         (void)arrive();
     }
+
+    _LIBCUDACXX_INLINE_VISIBILITY
+    static constexpr ptrdiff_t max() noexcept
+    {
+        return numeric_limits<ptrdiff_t>::max();
+    }
 };
 
 template<int _Sco>
@@ -318,6 +324,12 @@ public:
     {
         __phase_arrived_expected.fetch_add(__expected_unit, memory_order_relaxed);
         (void)arrive();
+    }
+
+    _LIBCUDACXX_INLINE_VISIBILITY
+    static constexpr ptrdiff_t max() noexcept
+    {
+        return numeric_limits<int32_t>::max();
     }
 };
 
