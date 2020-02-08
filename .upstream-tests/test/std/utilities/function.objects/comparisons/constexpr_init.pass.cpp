@@ -14,6 +14,8 @@
 // GCC 7: Fails for C++11, fails for C++14.
 // GCC 8: Fails for C++11, passes for C++14.
 
+// XFAIL: msvc
+
 // <cuda/std/functional>
 
 // equal_to, not_equal_to, less, et al.
