@@ -855,7 +855,7 @@ typedef __char32_t char32_t;
 
 #define _LIBCUDACXX_HAS_NO_VECTOR_EXTENSION
 
-#elif defined(_LIBCUDACXX_COMPILER_NVRTC)
+#elif defined(_LIBCUDACXX_COMPILER_NVRTC) || defined(_LIBCUDACXX_COMPILER_PGI)
 
 #if !defined(__cpp_constexpr) || __cpp_constexpr < 201304L
 #define _LIBCUDACXX_HAS_NO_CXX14_CONSTEXPR
