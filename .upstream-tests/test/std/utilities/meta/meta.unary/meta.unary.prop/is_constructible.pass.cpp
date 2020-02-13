@@ -339,8 +339,9 @@ int main(int, char**)
     //       different answers in host and device code, which is just wonderful.
 #elif defined(TEST_CLANG_VER) && defined(TEST_COMPILER_NVCC)
     // FIXME NVCC fails the assertion below when used with clang.
-#elif defined(TEST_COMPILER_NVRTC)
+#elif defined(TEST_COMPILER_NVRTC) || defined(TEST_COMPILER_PGI)
     // FIXME NVRTC also doesn't like these tests.
+    // FIXME neither does NVCC+PGI.
 #else // GCC and others.
     test_is_not_constructible<const int&, ExplicitTo<int>>();
     test_is_not_constructible<int&&, ExplicitTo<int>>();

@@ -224,7 +224,7 @@
 #define TEST_HAS_NO_EXCEPTIONS
 #endif
 
-#ifdef TEST_COMPILER_NVCC
+#if defined(TEST_COMPILER_NVCC) || defined(TEST_COMPILER_NVRTC)
 #define TEST_HAS_NO_EXCEPTIONS
 #endif
 

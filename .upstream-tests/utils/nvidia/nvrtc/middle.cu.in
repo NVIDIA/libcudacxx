@@ -25,13 +25,3 @@ int main() {
         #error "Unknown C++ standard!"
 #endif
 
-#if defined(__x86_64__)
-        "-D__x86_64__",
-#elif defined(__powerpc64__)
-        "-D__powerpc64__",
-#elif defined(__aarch64__)
-        "-D__aarch64__",
-#else
-        #error "unsupported host environment architecture!"
-#endif
-

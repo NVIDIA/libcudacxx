@@ -8,6 +8,11 @@
 
 // UNSUPPORTED: c++98, c++03, c++11, c++14
 
+// XFAIL: pgi
+// TODO: there's multiple failures that appear to be all about overload resolution and SFINAE,
+// and they will require further debugging to pinpoint the root cause of (almost certainly a
+// compiler bug)
+
 // template <class F> unspecified not_fn(F&& f);
 
 #include <cuda/std/functional>
