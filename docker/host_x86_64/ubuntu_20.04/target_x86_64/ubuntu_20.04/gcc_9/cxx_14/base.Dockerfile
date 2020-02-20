@@ -1,6 +1,6 @@
-# Dockerfile for libcudacxx_base:host_x86_64_ubuntu_18.04__target_x86_64_ubuntu_18.04__clang_9_cxx_17
+# Dockerfile for libcudacxx_base:host_x86_64_ubuntu_20.04__target_x86_64_ubuntu_20.04__gcc_9_cxx_14
 
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 MAINTAINER Bryce Adelstein Lelbach <blelbach@nvidia.com>
 
@@ -13,7 +13,7 @@ ARG LIBCUDACXX_COMPUTE_ARCHS
 SHELL ["/usr/bin/env", "bash", "-c"]
 
 RUN apt-get -y update\
- && apt-get -y install clang-9 python python-pip cmake\
+ && apt-get -y install g++-9 clang-6.0 python-pip cmake\
  && pip install lit\
  && mkdir -p /sw/gpgpu/libcudacxx/build\
  && mkdir -p /sw/gpgpu/libcudacxx/libcxx/build
@@ -49,21 +49,21 @@ RUN set -o pipefail; cd /sw/gpgpu/libcudacxx/libcxx/build\
  -DLIBCXX_INCLUDE_TESTS=ON\
  -DLIBCXX_INCLUDE_BENCHMARKS=OFF\
  -DLIBCXX_CXX_ABI=libsupc++\
- -DLIBCXX_TEST_STANDARD_VER=c++17\
+ -DLIBCXX_TEST_STANDARD_VER=c++14\
  -DLIBCXX_ABI_UNSTABLE=ON\
- -DLLVM_CONFIG_PATH=$(which llvm-config-9)\
- -DCMAKE_C_COMPILER=clang-9\
- -DCMAKE_CXX_COMPILER=clang++-9\
+ -DLLVM_CONFIG_PATH=$(which llvm-config-6.0)\
+ -DCMAKE_C_COMPILER=gcc-9\
+ -DCMAKE_CXX_COMPILER=g++-9\
  && make -j\
  2>&1 | tee /sw/gpgpu/libcudacxx/build/cmake_libcxx.log
 
 # Configure libcu++ tests.
 RUN set -o pipefail; cd /sw/gpgpu/libcudacxx/build\
  && cmake ..\
- -DLIBCXX_TEST_STANDARD_VER=c++17\
- -DLLVM_CONFIG_PATH=$(which llvm-config-9)\
+ -DLIBCXX_TEST_STANDARD_VER=c++14\
+ -DLLVM_CONFIG_PATH=$(which llvm-config-6.0)\
  -DCMAKE_CXX_COMPILER=/sw/gpgpu/bin/x86_64_Linux_release/nvcc\
- -DLIBCXX_NVCC_HOST_COMPILER=clang++-9\
+ -DLIBCXX_NVCC_HOST_COMPILER=g++-9\
  2>&1 | tee /sw/gpgpu/libcudacxx/build/cmake_libcudacxx.log
 
 # Build tests if requested.

@@ -1,6 +1,6 @@
-# Dockerfile for libcudacxx_base:host_x86_64_ubuntu_18.04__target_x86_64_ubuntu_18.04__gcc_9_cxx_11
+# Dockerfile for libcudacxx_base:host_x86_64_ubuntu_20.04__target_x86_64_ubuntu_20.04__gcc_9_cxx_11
 
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 MAINTAINER Bryce Adelstein Lelbach <blelbach@nvidia.com>
 
@@ -13,7 +13,7 @@ ARG LIBCUDACXX_COMPUTE_ARCHS
 SHELL ["/usr/bin/env", "bash", "-c"]
 
 RUN apt-get -y update\
- && apt-get -y install g++-9 clang-6.0 python python-pip cmake\
+ && apt-get -y install g++-9 clang-6.0 python-pip cmake\
  && pip install lit\
  && mkdir -p /sw/gpgpu/libcudacxx/build\
  && mkdir -p /sw/gpgpu/libcudacxx/libcxx/build
