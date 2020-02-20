@@ -14,7 +14,7 @@
 // GCC 7: Fails for C++11, fails for C++14.
 // GCC 8: Fails for C++11, passes for C++14.
 
-// XFAIL: msvc
+// XFAIL: msvc-19.0
 
 // <cuda/std/functional>
 

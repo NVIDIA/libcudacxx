@@ -561,6 +561,10 @@ class Configuration(object):
             # and so that those tests don't have to be changed to tolerate
             # this insanity.
             self.cxx.compile_flags += ['-DNOMINMAX']
+            if 'msvc' in self.config.available_features:
+                if self.cxx.type == 'nvcc':
+                    self.cxx.compile_flags += ['-Xcompiler']
+                self.cxx.compile_flags += ['/bigobj']
         additional_flags = self.get_lit_conf('test_compiler_flags')
         if additional_flags:
             self.cxx.compile_flags += shlex.split(additional_flags)
