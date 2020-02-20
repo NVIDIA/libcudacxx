@@ -235,7 +235,10 @@ int main(int arg, char ** argv)
 #ifndef __CUDA_ARCH__
     kernel_invoker();
 
-    assert(completed_from_host);
+    if (check_managed_memory_support(true))
+    {
+        assert(completed_from_host);
+    }
     assert(completed_from_device);
 #endif
 

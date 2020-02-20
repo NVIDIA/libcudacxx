@@ -457,11 +457,13 @@ void validate_managed(tester_list<Testers...>, Args ...args)
 #endif
 }
 
-bool check_managed_memory_support()
+bool check_managed_memory_support(bool is_async)
 {
     int current_device, property_value;
     HETEROGENEOUS_SAFE_CALL(cudaGetDevice(&current_device));
-    HETEROGENEOUS_SAFE_CALL(cudaDeviceGetAttribute(&property_value, cudaDevAttrManagedMemory, current_device));
+    HETEROGENEOUS_SAFE_CALL(cudaDeviceGetAttribute(&property_value,
+        is_async ? cudaDevAttrConcurrentManagedAccess : cudaDevAttrManagedMemory,
+        current_device));
     return property_value == 1;
 }
 
@@ -488,13 +490,35 @@ struct validate_list<PerformerCombinations, tester_list<>>
     using type = tester_list<dummy_tester>;
 };
 
+template<bool ...Values>
+struct any_of;
+
+template<bool ...Tail>
+struct any_of<true, Tail...> : cuda::std::true_type {};
+
+template<bool ...Tail>
+struct any_of<false, Tail...> : any_of<Tail...> {};
+
+template<>
+struct any_of<> : cuda::std::false_type {};
+
+template<typename TesterList>
+struct is_tester_list_async;
+
+template<typename ...Testers>
+struct is_tester_list_async<tester_list<Testers...>>
+    : any_of<async_initialize_trait<Testers>::value..., async_validate_trait<Testers>::value...>
+{
+};
+
 template<typename T, typename TesterList, typename ...Args>
 void validate_not_movable(Args ...args)
 {
-    typename validate_list<false, TesterList>::type list;
+    using list_t = typename validate_list<false, TesterList>::type;
+    list_t list;
     validate_device_dynamic<T>(list, args...);
 
-    if (check_managed_memory_support())
+    if (check_managed_memory_support(is_tester_list_async<list_t>::value))
     {
         typename validate_list<true, TesterList>::type list;
         validate_managed<T>(list, args...);
