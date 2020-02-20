@@ -512,6 +512,11 @@ typedef __char32_t char32_t;
 #endif
 
 // https://bugs.llvm.org/show_bug.cgi?id=44517
+#if __has_keyword(__is_nothrow_assignable)
+#define _LIBCUDACXX_IS_NOTHROW_ASSIGNABLE(...) __is_nothrow_assignable(__VA_ARGS__)
+#endif
+
+// https://bugs.llvm.org/show_bug.cgi?id=44517
 #if __has_keyword(__is_assignable)
 #define _LIBCUDACXX_IS_ASSIGNABLE(...) __is_assignable(__VA_ARGS__)
 #endif
@@ -781,8 +786,9 @@ typedef __char32_t char32_t;
 #endif
 
 #if _MSC_VER < 1920
-#define _LIBCUDACXX_HAS_NOEXCEPT_SFINAE
+#define _LIBCUDACXX_HAS_NO_NOEXCEPT_SFINAE
 #define _LIBCUDACXX_HAS_NO_PRAGMA_PUSH_POP_MACRO // This is conservative but correct.
+#define _LIBCUDACXX_HAS_NO_LOGICAL_METAFUNCTION_ALIASES
 #endif
 
 #define _LIBCUDACXX_UNDERLYING_TYPE(...) __underlying_type(__VA_ARGS__)
@@ -793,8 +799,10 @@ typedef __char32_t char32_t;
 #define _LIBCUDACXX_HAS_NOTHROW_CONSTRUCTOR(...) __has_nothrow_constructor(__VA_ARGS__)
 #define _LIBCUDACXX_HAS_NOTHROW_COPY(...) __has_nothrow_copy(__VA_ARGS__)
 #define _LIBCUDACXX_HAS_NOTHROW_ASSIGN(...) __has_nothrow_assign(__VA_ARGS__)
+#define _LIBCUDACXX_IS_NOTHROW_ASSIGNABLE(...) __is_nothrow_assignable(__VA_ARGS__)
 #define _LIBCUDACXX_HAS_TRIVIAL_DESTRUCTOR(...) __has_trivial_destructor(__VA_ARGS__)
 #define _LIBCUDACXX_IS_NOTHROW_DESTRUCTIBLE(...) __is_nothrow_destructible(__VA_ARGS__)
+#define _LIBCUDACXX_IS_TRIVIALLY_DESTRUCTIBLE(...) __is_trivially_destructible(__VA_ARGS__)
 #define _LIBCUDACXX_IS_TRIVIALLY_ASSIGNABLE(...) __is_trivially_assignable(__VA_ARGS__)
 #define _LIBCUDACXX_IS_TRIVIALLY_COPYABLE(...) __is_trivially_copyable(__VA_ARGS__)
 #define _LIBCUDACXX_IS_TRIVIAL(...) __is_trivial(__VA_ARGS__)
@@ -872,11 +880,14 @@ typedef __char32_t char32_t;
 #define _LIBCUDACXX_IS_CONSTRUCTIBLE(...) __is_constructible(__VA_ARGS__)
 #define _LIBCUDACXX_IS_TRIVIALLY_CONSTRUCTIBLE(...) __is_trivially_constructible(__VA_ARGS__)
 #define _LIBCUDACXX_HAS_TRIVIAL_CONSTRUCTOR(...) __has_trivial_constructor(__VA_ARGS__)
+#define _LIBCUDACXX_IS_NOTHROW_CONSTRUCTIBLE(...) __is_nothrow_constructible(__VA_ARGS__)
 #define _LIBCUDACXX_HAS_NOTHROW_CONSTRUCTOR(...) __has_nothrow_constructor(__VA_ARGS__)
 #define _LIBCUDACXX_HAS_NOTHROW_COPY(...) __has_nothrow_copy(__VA_ARGS__)
 #define _LIBCUDACXX_HAS_NOTHROW_ASSIGN(...) __has_nothrow_assign(__VA_ARGS__)
+#define _LIBCUDACXX_IS_NOTHROW_ASSIGNABLE(...) __is_nothrow_assignable(__VA_ARGS__)
 #define _LIBCUDACXX_HAS_TRIVIAL_DESTRUCTOR(...) __has_trivial_destructor(__VA_ARGS__)
 #define _LIBCUDACXX_IS_NOTHROW_DESTRUCTIBLE(...) __is_nothrow_destructible(__VA_ARGS__)
+#define _LIBCUDACXX_IS_TRIVIALLY_DESTRUCTIBLE(...) __is_trivially_destructible(__VA_ARGS__)
 #define _LIBCUDACXX_IS_TRIVIALLY_ASSIGNABLE(...) __is_trivially_assignable(__VA_ARGS__)
 #define _LIBCUDACXX_IS_TRIVIALLY_COPYABLE(...) __is_trivially_copyable(__VA_ARGS__)
 #define _LIBCUDACXX_IS_TRIVIAL(...) __is_trivial(__VA_ARGS__)
@@ -1322,7 +1333,7 @@ typedef unsigned int   char32_t;
 
 // The _LIBCUDACXX_NODISCARD_ATTRIBUTE should only be used to define other
 // NODISCARD macros to the correct attribute.
-#if __has_cpp_attribute(nodiscard) || defined(_LIBCUDACXX_COMPILER_MSVC)
+#if __has_cpp_attribute(nodiscard) || (defined(_LIBCUDACXX_COMPILER_MSVC) && _LIBCUDACXX_STD_VER > 14)
 #  define _LIBCUDACXX_NODISCARD_ATTRIBUTE [[nodiscard]]
 #elif defined(_LIBCUDACXX_COMPILER_CLANG) && !defined(_LIBCUDACXX_CXX03_LANG)
 #  define _LIBCUDACXX_NODISCARD_ATTRIBUTE [[clang::warn_unused_result]]

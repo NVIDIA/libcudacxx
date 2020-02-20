@@ -3633,11 +3633,10 @@ _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_trivially_move_assignable_v
 
 // is_trivially_destructible
 
-// TODO: turn this into a _LIBCUDACXX macro?
-#if __has_keyword(__is_trivially_destructible)
+#if defined(_LIBCUDACXX_IS_TRIVIALLY_DESTRUCTIBLE) && !defined(_LIBCUDACXX_USE_IS_TRIVIALLY_DESTRUCTIBLE_FALLBACK)
 
 template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_trivially_destructible
-    : public integral_constant<bool, __is_trivially_destructible(_Tp)> {};
+    : public integral_constant<bool, _LIBCUDACXX_IS_TRIVIALLY_DESTRUCTIBLE(_Tp)> {};
 
 #elif defined(_LIBCUDACXX_HAS_TRIVIAL_DESTRUCTOR) && !defined(_LIBCUDACXX_USE_HAS_TRIVIAL_DESTRUCTOR_FALLBACK)
 
@@ -3656,7 +3655,6 @@ template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_trivially_destructible
 template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_trivially_destructible<_Tp[]>
     : public false_type {};
 
-// TODO: fix the comment below
 #endif // defined(_LIBCUDACXX_HAS_TRIVIAL_DESTRUCTOR) && !defined(_LIBCUDACXX_USE_HAS_TRIVIAL_DESTRUCTOR_FALLBACK)
 
 #if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
@@ -3872,14 +3870,13 @@ _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_nothrow_move_constructible_
 
 // is_nothrow_assignable
 
-// TODO: turn this into a _LIBCUDACXX macro maybe?
-#if __has_keyword(__is_nothrow_assignable)
+#if defined(_LIBCUDACXX_IS_NOTHROW_ASSIGNABLE) && !defined(_LIBCUDACXX_USE_IS_NOTHROW_ASSIGNABLE_FALLBACK)
 
 template <class _Tp, class _Arg>
 struct _LIBCUDACXX_TEMPLATE_VIS is_nothrow_assignable
-    : public integral_constant<bool, __is_nothrow_assignable(_Tp, _Arg)> {};
+    : public integral_constant<bool, _LIBCUDACXX_IS_NOTHROW_ASSIGNABLE(_Tp, _Arg)> {};
 
-#elif !defined(_LIBCUDACXX_HAS_NO_NOEXCEPT) && !defined(_LIBCUDACXX_HAS_NOEXCEPT_SFINAE)
+#elif !defined(_LIBCUDACXX_HAS_NO_NOEXCEPT) && !defined(_LIBCUDACXX_HAS_NO_NOEXCEPT_SFINAE)
 
 template <bool, class _Tp, class _Arg> struct __libcpp_is_nothrow_assignable;
 
@@ -4762,13 +4759,25 @@ struct __has_operator_addressof
 template <class...> using void_t = void;
 
 template <class... _Args>
-struct conjunction : _And<_Args...> {};
+struct conjunction 
+#if defined(_LIBCUDACXX_HAS_NO_LOGICAL_METAFUNCTION_ALIASES)
+    : _MetaBase< sizeof...(_Args) != 0 >::template _AndImpl<true_type, _Args...>
+#else
+    : _And<_Args...>
+#endif
+    {};
 template<class... _Args>
 _LIBCUDACXX_INLINE_VAR constexpr bool conjunction_v
     = conjunction<_Args...>::value;
 
 template <class... _Args>
-struct disjunction : _Or<_Args...> {};
+struct disjunction
+#if defined(_LIBCUDACXX_HAS_NO_LOGICAL_METAFUNCTION_ALIASES)
+    : _MetaBase< sizeof...(_Args) != 0 >::template _OrImpl<false_type, _Args...>
+#else
+    : _Or<_Args...>
+#endif
+    {};
 template<class... _Args>
 _LIBCUDACXX_INLINE_VAR constexpr bool disjunction_v
     = disjunction<_Args...>::value;
