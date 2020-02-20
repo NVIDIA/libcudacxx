@@ -1,6 +1,6 @@
-# Dockerfile for libcudacxx:host_x86_64_ubuntu_18.10__target_x86_64_ubuntu_18.10__gcc_8
+# Dockerfile for libcudacxx:host_x86_64_ubuntu_18.04__target_x86_64_ubuntu_18.04__gcc_7_cxx_17
 
-FROM libcudacxx_base:host_x86_64_ubuntu_18.10__target_x86_64_ubuntu_18.10__gcc_8_cxx_14
+FROM libcudacxx_base:host_x86_64_ubuntu_18.04__target_x86_64_ubuntu_18.04__gcc_7_cxx_17
 
 MAINTAINER Bryce Adelstein Lelbach <blelbach@nvidia.com>
 

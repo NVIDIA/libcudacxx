@@ -10,6 +10,8 @@ ARG LIBCUDACXX_COMPUTE_ARCHS
 ###############################################################################
 # BUILD: The following is invoked when the image is built.
 
+SHELL ["/usr/bin/env", "bash", "-c"]
+
 RUN yum -y --enablerepo=extras install epel-release\
  && yum -y updateinfo\
  && yum -y install which make gcc-c++ libstdc++-static llvm-devel clang python python-pip\

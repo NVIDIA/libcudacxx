@@ -1,4 +1,4 @@
-# Dockerfile for libcudacxx:host_x86_64_ubuntu_18.04__target_x86_64_ubuntu_18.04__gcc_7
+# Dockerfile for libcudacxx:host_x86_64_ubuntu_18.04__target_x86_64_ubuntu_18.04__gcc_7_cxx_14
 
 FROM libcudacxx_base:host_x86_64_ubuntu_18.04__target_x86_64_ubuntu_18.04__gcc_7_cxx_14
 

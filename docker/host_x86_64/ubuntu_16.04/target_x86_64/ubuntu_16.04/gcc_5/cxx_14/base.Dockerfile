@@ -3,13 +3,14 @@
 FROM ubuntu:16.04
 
 MAINTAINER Bryce Adelstein Lelbach <blelbach@nvidia.com>
-SHELL ["/usr/bin/env", "bash", "-c"]
 
 ARG LIBCUDACXX_SKIP_BASE_TESTS_BUILD
 ARG LIBCUDACXX_COMPUTE_ARCHS
 
 ###############################################################################
 # BUILD: The following is invoked when the image is built.
+
+SHELL ["/usr/bin/env", "bash", "-c"]
 
 RUN apt-get -y update\
  && apt-get -y install g++-5 clang-5.0 python python-pip\

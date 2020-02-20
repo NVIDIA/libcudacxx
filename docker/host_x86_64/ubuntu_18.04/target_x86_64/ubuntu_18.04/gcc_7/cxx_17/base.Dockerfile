@@ -1,6 +1,6 @@
-# Dockerfile for libcudacxx_base:host_x86_64_ubuntu_16.04__target_x86_64_ubuntu_16.04__gcc_5_cxx_11
+# Dockerfile for libcudacxx_base:host_x86_64_ubuntu_18.04__target_x86_64_ubuntu_18.04__gcc_7_cxx_17
 
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 
 MAINTAINER Bryce Adelstein Lelbach <blelbach@nvidia.com>
 
@@ -13,15 +13,10 @@ ARG LIBCUDACXX_COMPUTE_ARCHS
 SHELL ["/usr/bin/env", "bash", "-c"]
 
 RUN apt-get -y update\
- && apt-get -y install g++-5 clang-5.0 python python-pip\
+ && apt-get -y install g++-7 clang-6.0 python python-pip cmake\
  && pip install lit\
  && mkdir -p /sw/gpgpu/libcudacxx/build\
  && mkdir -p /sw/gpgpu/libcudacxx/libcxx/build
-
-# The distro doesn't have CMake 3.8 in its repositories, so we need to install
-# it ourselves.
-ADD https://github.com/Kitware/CMake/releases/download/v3.8.2/cmake-3.8.2-Linux-x86_64.sh /tmp/cmake.sh
-RUN sh /tmp/cmake.sh --skip-license --prefix=/usr
 
 # For debugging.
 #RUN apt-get -y install gdb strace vim
@@ -54,21 +49,21 @@ RUN set -o pipefail; cd /sw/gpgpu/libcudacxx/libcxx/build\
  -DLIBCXX_INCLUDE_TESTS=ON\
  -DLIBCXX_INCLUDE_BENCHMARKS=OFF\
  -DLIBCXX_CXX_ABI=libsupc++\
- -DLIBCXX_TEST_STANDARD_VER=c++11\
+ -DLIBCXX_TEST_STANDARD_VER=c++17\
  -DLIBCXX_ABI_UNSTABLE=ON\
- -DLLVM_CONFIG_PATH=$(which llvm-config-5.0)\
- -DCMAKE_C_COMPILER=gcc-5\
- -DCMAKE_CXX_COMPILER=g++-5\
+ -DLLVM_CONFIG_PATH=$(which llvm-config-6.0)\
+ -DCMAKE_C_COMPILER=gcc-7\
+ -DCMAKE_CXX_COMPILER=g++-7\
  && make -j\
  2>&1 | tee /sw/gpgpu/libcudacxx/build/cmake_libcxx.log
 
 # Configure libcu++ tests.
 RUN set -o pipefail; cd /sw/gpgpu/libcudacxx/build\
  && cmake ..\
- -DLIBCXX_TEST_STANDARD_VER=c++11\
- -DLLVM_CONFIG_PATH=$(which llvm-config-5.0)\
+ -DLIBCXX_TEST_STANDARD_VER=c++17\
+ -DLLVM_CONFIG_PATH=$(which llvm-config-6.0)\
  -DCMAKE_CXX_COMPILER=/sw/gpgpu/bin/x86_64_Linux_release/nvcc\
- -DLIBCXX_NVCC_HOST_COMPILER=g++-5\
+ -DLIBCXX_NVCC_HOST_COMPILER=g++-7\
  2>&1 | tee /sw/gpgpu/libcudacxx/build/cmake_libcudacxx.log
 
 # Build tests if requested.

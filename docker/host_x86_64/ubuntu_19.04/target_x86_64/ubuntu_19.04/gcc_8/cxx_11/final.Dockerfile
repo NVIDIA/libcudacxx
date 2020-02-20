@@ -1,6 +1,6 @@
-# Dockerfile for libcudacxx:host_x86_64_centos_7.6.1810__target_x86_64_centos_7.6.1810__gcc_4.8_cxx_11
+# Dockerfile for libcudacxx:host_x86_64_ubuntu_19.04__target_x86_64_ubuntu_19.04__gcc_8_cxx_11
 
-FROM libcudacxx_base:host_x86_64_centos_7.6.1810__target_x86_64_centos_7.6.1810__gcc_4.8_cxx_11
+FROM libcudacxx_base:host_x86_64_ubuntu_19.04__target_x86_64_ubuntu_19.04__gcc_8_cxx_11
 
 MAINTAINER Bryce Adelstein Lelbach <blelbach@nvidia.com>
 
@@ -14,8 +14,8 @@ ADD nvidia-modprobe /usr/bin/
 # Restore setuid.
 RUN chmod +s /usr/bin/nvidia-modprobe
 
-ADD libcuda.so* /usr/lib64/
-ADD libnvidia-ptxjitcompiler.so* /usr/lib64/
+ADD libcuda.so* /usr/lib/x86_64-linux-gnu/
+ADD libnvidia-ptxjitcompiler.so* /usr/lib/x86_64-linux-gnu/
 
 ###############################################################################
 # CMD: The following is invoked when the image is run.
@@ -25,5 +25,5 @@ USER libcudacxx
 
 WORKDIR /sw/gpgpu/libcudacxx
 
-CMD /sw/gpgpu/libcudacxx/utils/nvidia/linux/perform_tests.bash --skip-libcxx-tests
+CMD /sw/gpgpu/libcudacxx/utils/nvidia/linux/perform_tests.bash
 

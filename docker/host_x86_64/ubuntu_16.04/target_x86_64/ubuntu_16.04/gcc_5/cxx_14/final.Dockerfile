@@ -1,4 +1,4 @@
-# Dockerfile for libcudacxx:host_x86_64_ubuntu_16.04__target_x86_64_ubuntu_16.04__gcc_5
+# Dockerfile for libcudacxx:host_x86_64_ubuntu_16.04__target_x86_64_ubuntu_16.04__gcc_5_cxx_14
 
 FROM libcudacxx_base:host_x86_64_ubuntu_16.04__target_x86_64_ubuntu_16.04__gcc_5_cxx_14
 
