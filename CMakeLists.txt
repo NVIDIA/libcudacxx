@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.8)
 project(libcudacxx CXX)
 
 set(PACKAGE_NAME libcudacxx)
-set(PACKAGE_VERSION 10.3)
+set(PACKAGE_VERSION 11.0)
 set(PACKAGE_STRING "${PACKAGE_NAME} ${PACKAGE_VERSION}")
 
 if (NOT CMAKE_C_COMPILER)
