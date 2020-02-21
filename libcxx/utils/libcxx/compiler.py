@@ -181,8 +181,6 @@ class CXXCompiler(object):
                 cmd += self.warning_flags
         if mode != self.CM_PreProcess and mode != self.CM_Compile:
             cmd += self.link_flags
-        if self.type == 'nvcc':
-            cmd += ['--extended-lambda']
         cmd += flags
         return cmd
 

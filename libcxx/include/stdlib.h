@@ -9,7 +9,7 @@
 
 #if defined(__need_malloc_and_calloc) || defined(_LIBCUDACXX_STDLIB_INCLUDE_NEXT)
 
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if defined(_LIBCUDACXX_USE_PRAGMA_GCC_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
@@ -90,7 +90,7 @@ void *aligned_alloc(size_t alignment, size_t size);                       // C11
 
 #include <__config>
 
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if defined(_LIBCUDACXX_USE_PRAGMA_GCC_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 

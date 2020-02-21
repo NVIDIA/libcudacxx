@@ -582,7 +582,7 @@ endfunction()
 
 # Warning flags ===============================================================
 function(cxx_add_warning_flags target)
-  target_compile_definitions(${target} PUBLIC -D_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
+  target_compile_definitions(${target} PUBLIC -D_LIBCUDACXX_DISABLE_PRAGMA_GCC_SYSTEM_HEADER)
   target_add_compile_flags_if_supported(${target} PRIVATE -Wall -Wextra -W -Wwrite-strings
                                                           -Wno-unused-parameter -Wno-long-long
                                                           -Werror=return-type -Wextra-semi)

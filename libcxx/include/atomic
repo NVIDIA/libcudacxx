@@ -554,9 +554,10 @@ void atomic_signal_fence(memory_order m) noexcept;
 #include <cstring>
 #include <type_traits>
 #include <version>
+#include <__pragma_push>
 #endif //__cuda_std__
 
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if defined(_LIBCUDACXX_USE_PRAGMA_GCC_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
@@ -1462,14 +1463,25 @@ __cxx_atomic_impl<_Tp, _Sco>* __cxx_atomic_rebind(_Tp* __inst) {
 #ifdef _LIBCUDACXX_HAS_NO_THREAD_CONTENTION_TABLE
 
 template <class _Tp, int _Sco>
+struct __cxx_atomic_poll_tester {
+    __cxx_atomic_impl<_Tp, _Sco> const volatile* __a;
+    _Tp __val;
+    memory_order __order;
+
+    _LIBCUDACXX_INLINE_VISIBILITY __cxx_atomic_poll_tester(__cxx_atomic_impl<_Tp, _Sco> const volatile* __a_, _Tp __val_, memory_order __order_)
+      : __a(__a_)
+      , __val(__val_)
+      , __order(__order_)
+    {}
+
+    _LIBCUDACXX_INLINE_VISIBILITY bool operator()() const {
+      return !(__cxx_atomic_load(__a, __order) == __val);
+    }
+};
+
+template <class _Tp, int _Sco>
 _LIBCUDACXX_INLINE_VISIBILITY void __cxx_atomic_try_wait_slow_fallback(__cxx_atomic_impl<_Tp, _Sco> const volatile* __a, _Tp __val, memory_order __order) {
-#if defined(__CUDACC__) && !defined(__CUDACC_RTC__)
-    __libcpp_thread_poll_with_backoff([=] _LIBCUDACXX_INLINE_VISIBILITY () -> bool {
-#else
-    __libcpp_thread_poll_with_backoff([=]() -> bool {
-#endif
-        return !(__cxx_atomic_load(__a, __order) == __val);
-    });
+    __libcpp_thread_poll_with_backoff(__cxx_atomic_poll_tester<_Tp, _Sco>(__a, __val, __order));
 }
 
 #endif
@@ -1753,7 +1765,7 @@ private:
 #endif
 };
 
-#if defined(__cpp_lib_atomic_is_always_lock_free)
+#if defined(_LIBCUDACXX_ATOMIC_ALWAYS_LOCK_FREE)
 template <class _Tp, int _Sco, bool __b>
 _LIBCUDACXX_CONSTEXPR bool __atomic_base<_Tp, _Sco, __b>::is_always_lock_free;
 #endif
@@ -2848,5 +2860,9 @@ typedef atomic<unsigned>  atomic_unsigned_lock_free;
 #define ATOMIC_VAR_INIT(__v) {__v}
 
 _LIBCUDACXX_END_NAMESPACE_STD
+
+#ifndef __cuda_std__
+#include <__pragma_pop>
+#endif
 
 #endif  // _LIBCUDACXX_ATOMIC

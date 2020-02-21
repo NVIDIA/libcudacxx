@@ -417,9 +417,10 @@ namespace std
 #include <__config>
 #include <cstddef>
 #include <version>
+#include <__pragma_push>
 #endif //__cuda_std__
 
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if defined(_LIBCUDACXX_USE_PRAGMA_GCC_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
@@ -4759,7 +4760,7 @@ struct __has_operator_addressof
 template <class...> using void_t = void;
 
 template <class... _Args>
-struct conjunction 
+struct conjunction
 #if defined(_LIBCUDACXX_HAS_NO_LOGICAL_METAFUNCTION_ALIASES)
     : _MetaBase< sizeof...(_Args) != 0 >::template _AndImpl<true_type, _Args...>
 #else
@@ -4885,5 +4886,9 @@ _LIBCUDACXX_END_NAMESPACE_STD_NOVERSION
 }
 #endif //_LIBCUDACXX_END_NAMESPACE_STD_NOVERSION
 #endif
+
+#ifndef __cuda_std__
+#include <__pragma_pop>
+#endif //__cuda_std__
 
 #endif  // _LIBCUDACXX_TYPE_TRAITS

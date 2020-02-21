@@ -12,7 +12,9 @@
 
 // manual variadic expansion for <functional>
 
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#include <__pragma_push>
+
+#if defined(_LIBCUDACXX_USE_PRAGMA_GCC_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
@@ -1587,5 +1589,7 @@ inline _LIBCUDACXX_INLINE_VISIBILITY
 void
 swap(function<_Fp>& __x, function<_Fp>& __y)
 {return __x.swap(__y);}
+
+#include <__pragma_pop>
 
 #endif  // _LIBCUDACXX_FUNCTIONAL_03

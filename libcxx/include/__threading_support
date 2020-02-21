@@ -16,9 +16,10 @@
 #include <iosfwd>
 #include <errno.h>
 #include <climits>
+#include <__pragma_push>
 #endif
 
-#ifndef _LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER
+#if defined(_LIBCUDACXX_USE_PRAGMA_GCC_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
@@ -64,11 +65,6 @@
 
 typedef ::timespec __libcpp_timespec_t;
 #endif // !defined(_LIBCUDACXX_HAS_NO_THREADS)
-
-_LIBCUDACXX_PUSH_MACROS
-#ifndef __cuda_std__
-#include <__undef_macros>
-#endif
 
 _LIBCUDACXX_BEGIN_NAMESPACE_STD
 
@@ -592,8 +588,7 @@ void __libcpp_thread_sleep_for(chrono::nanoseconds __ns)
     // round-up to the nearest milisecond
     milliseconds __ms =
         duration_cast<milliseconds>(__ns + chrono::nanoseconds(999999));
-    // FIXME(compnerd) this should be an alertable sleep (WFSO or SleepEx)
-    Sleep(__ms.count());
+    Sleep(static_cast<DWORD>(__ms.count()));
 }
 
 #endif // defined(_LIBCUDACXX_HAS_THREAD_API_WIN32)
@@ -746,6 +741,8 @@ get_id() _NOEXCEPT
 
 _LIBCUDACXX_END_NAMESPACE_STD
 
-_LIBCUDACXX_POP_MACROS
+#ifndef __cuda_std__
+#include <__pragma_pop>
+#endif
 
 #endif // _LIBCUDACXX_THREADING_SUPPORT

@@ -11,12 +11,18 @@
 #define _LIBCUDACXX_CONFIG
 
 #if defined(_MSC_VER) && !defined(__clang__)
-#  if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#    define _LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER
-#  endif
+  #define _LIBCUDACXX_HAS_PRAGMA_MSVC_WARNING
+  #if !defined(_LIBCUDACXX_DISABLE_PRAGMA_MSVC_WARNING)
+    #define _LIBCUDACXX_USE_PRAGMA_MSVC_WARNING
+  #endif
+#else
+  #define _LIBCUDACXX_HAS_PRAGMA_GCC_SYSTEM_HEADER
+  #if !defined(_LIBCUDACXX_DISABLE_PRAGMA_GCC_SYSTEM_HEADER)
+    #define _LIBCUDACXX_USE_PRAGMA_GCC_SYSTEM_HEADER
+  #endif
 #endif
 
-#ifndef _LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER
+#if defined(_LIBCUDACXX_USE_PRAGMA_GCC_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
@@ -507,6 +513,11 @@ typedef __char32_t char32_t;
 #endif
 
 // https://bugs.llvm.org/show_bug.cgi?id=44517
+#if __has_keyword(__is_trivially_destructible)
+#define _LIBCUDACXX_IS_TRIVIALLY_DESTRUCTIBLE(...) __is_trivially_destructible(__VA_ARGS__)
+#endif
+
+// https://bugs.llvm.org/show_bug.cgi?id=44517
 #if __has_keyword(__is_nothrow_constructible)
 #define _LIBCUDACXX_IS_NOTHROW_CONSTRUCTIBLE(...) __is_nothrow_constructible(__VA_ARGS__)
 #endif
@@ -624,7 +635,7 @@ typedef __char32_t char32_t;
 #define _LIBCUDACXX_HAS_UNIQUE_OBJECT_REPRESENTATIONS(...) __has_unique_object_representations(__VA_ARGS__)
 #endif
 
-#if defined(__cpp_lib_atomic_is_always_lock_free) && !defined(_LIBCUDACXX_ATOMIC_ALWAYS_LOCK_FREE)
+#if !defined(_LIBCUDACXX_ATOMIC_ALWAYS_LOCK_FREE)
 #define _LIBCUDACXX_ATOMIC_ALWAYS_LOCK_FREE(...) __atomic_always_lock_free(__VA_ARGS__)
 #endif
 
@@ -632,7 +643,7 @@ typedef __char32_t char32_t;
 #define _LIBCUDACXX_IS_CONSTANT_EVALUATED(...) __builtin_is_constant_evaluated(__VA_ARGS__)
 #endif
 
-#if !__has_builtin(__builtin_addressof)
+#if __has_builtin(__builtin_addressof)
 #define _LIBCUDACXX_ADDRESSOF(...) __builtin_addressof(__VA_ARGS__)
 #endif
 
@@ -763,7 +774,7 @@ typedef __char32_t char32_t;
 #define _LIBCUDACXX_ADDRESSOF(...) __builtin_addressof(__VA_ARGS__)
 #endif
 
-#if defined(__cpp_lib_atomic_is_always_lock_free) && !defined(_LIBCUDACXX_ATOMIC_ALWAYS_LOCK_FREE)
+#if !defined(_LIBCUDACXX_ATOMIC_ALWAYS_LOCK_FREE)
 #define _LIBCUDACXX_ATOMIC_ALWAYS_LOCK_FREE(...) __atomic_always_lock_free(__VA_ARGS__)
 #endif
 
@@ -780,6 +791,28 @@ typedef __char32_t char32_t;
 #define _LIBCUDACXX_TOSTRING2(x) #x
 #define _LIBCUDACXX_TOSTRING(x) _LIBCUDACXX_TOSTRING2(x)
 #define _LIBCUDACXX_WARNING(x) __pragma(message(__FILE__ "(" _LIBCUDACXX_TOSTRING(__LINE__) ") : warning note: " x))
+
+// https://github.com/microsoft/STL/blob/master/stl/inc/yvals_core.h#L353
+// warning C4455: literal suffix identifiers that do not start with an underscore are reserved
+// warning C4668: 'meow' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
+// warning C4522: 'woof' : multiple assignment operators specified
+// warning C4100: 'quack': unreferenced formal parameter
+// warning C4996: 'meow': was declared deprecated
+// warning C4127: conditional expression is constant
+// warning C4180: qualifier applied to function type has no meaning; ignored
+// warning C4324: 'roar': structure was padded due to alignment specifier
+// warning C4197: 'purr': top-level volatile in cast is ignored
+#define _LIBCUDACXX_MSVC_DISABLED_WARNINGS \
+  4455 \
+  4668 \
+  4522 \
+  4100 \
+  4996 \
+  4127 \
+  4180 \
+  4324 \
+  4197 \
+  /**/
 
 #if _MSC_VER < 1900
 #error "MSVC versions prior to Visual Studio 2015 are not supported"

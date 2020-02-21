@@ -305,14 +305,12 @@ long double    truncl(long double x);
 #include <math.h>
 #include <version>
 #include <type_traits>
+#include <__pragma_push>
 #endif //stdexcept
 
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if defined(_LIBCUDACXX_USE_PRAGMA_GCC_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
-
-_LIBCUDACXX_PUSH_MACROS
-#include <__undef_macros>
 
 _LIBCUDACXX_BEGIN_NAMESPACE_STD
 
@@ -670,6 +668,8 @@ _IntT __clamp_to_integral(_RealT __r) _NOEXCEPT {
 
 _LIBCUDACXX_END_NAMESPACE_STD
 
-_LIBCUDACXX_POP_MACROS
+#ifndef __cuda_std__
+#include <__pragma_pop>
+#endif
 
 #endif  // _LIBCUDACXX_CMATH

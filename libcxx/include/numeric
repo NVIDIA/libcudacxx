@@ -148,7 +148,7 @@ floating_point  midpoint(floating_point a, floating_point b);    // C++20
 #include <cmath> // for isnormal
 #include <version>
 
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if defined(_LIBCUDACXX_USE_PRAGMA_GCC_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 

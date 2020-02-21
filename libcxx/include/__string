@@ -59,7 +59,7 @@ template <> struct char_traits<char8_t>;  // c++20
 
 #include <__debug>
 
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if defined(_LIBCUDACXX_USE_PRAGMA_GCC_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 

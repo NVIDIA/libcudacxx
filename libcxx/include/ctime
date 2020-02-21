@@ -48,9 +48,10 @@ int timespec_get( struct timespec *ts, int base); // C++17
 #ifndef __cuda_std__
 #include <__config>
 #include <time.h>
+#include <__pragma_push>
 #endif
 
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if defined(_LIBCUDACXX_USE_PRAGMA_GCC_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
@@ -85,5 +86,9 @@ using ::timespec_get;
 #endif
 
 _LIBCUDACXX_END_NAMESPACE_STD
+
+#ifndef __cuda_std__
+#include <__pragma_pop>
+#endif //__cuda_std__
 
 #endif  // _LIBCUDACXX_CTIME

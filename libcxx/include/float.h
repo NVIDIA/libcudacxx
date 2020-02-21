@@ -72,7 +72,9 @@ Macros:
 
 #include <__config>
 
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#include <__pragma_push>
+
+#if defined(_LIBCUDACXX_USE_PRAGMA_GCC_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
@@ -89,5 +91,7 @@ Macros:
 #endif
 
 #endif // __cplusplus
+
+#include <__pragma_pop>
 
 #endif  // _LIBCUDACXX_FLOAT_H

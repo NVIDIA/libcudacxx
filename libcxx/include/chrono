@@ -830,15 +830,11 @@ constexpr chrono::year                                  operator ""y(unsigned lo
 #include <ratio>
 #include <limits>
 #include <version>
+#include <__pragma_push>
 #endif
 
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if defined(_LIBCUDACXX_USE_PRAGMA_GCC_SYSTEM_HEADER)
 #pragma GCC system_header
-#endif
-
-_LIBCUDACXX_PUSH_MACROS
-#ifndef __cuda_std__
-#include <__undef_macros>
 #endif
 
 #ifndef _LIBCUDACXX_CXX03_LANG
@@ -1082,7 +1078,7 @@ public:
                (treat_as_floating_point<rep>::value ||
                !treat_as_floating_point<_Rep2>::value)
             >::type* = 0)
-                : __rep_(__r) {}
+                : __rep_(static_cast<rep>(__r)) {}
 
     // conversions
     template <class _Rep2, class _Period2>
@@ -2862,7 +2858,6 @@ inline namespace literals
         return chrono::duration<long double, ratio<3600,1>>(__h);
     }
 
-
     _LIBCUDACXX_INLINE_VISIBILITY
     constexpr chrono::minutes operator""min(unsigned long long __m)
     {
@@ -2874,7 +2869,6 @@ inline namespace literals
     {
         return chrono::duration<long double, ratio<60,1>> (__m);
     }
-
 
     _LIBCUDACXX_INLINE_VISIBILITY
     constexpr chrono::seconds operator""s(unsigned long long __s)
@@ -2888,7 +2882,6 @@ inline namespace literals
         return chrono::duration<long double> (__s);
     }
 
-
     _LIBCUDACXX_INLINE_VISIBILITY
     constexpr chrono::milliseconds operator""ms(unsigned long long __ms)
     {
@@ -2901,7 +2894,6 @@ inline namespace literals
         return chrono::duration<long double, milli>(__ms);
     }
 
-
     _LIBCUDACXX_INLINE_VISIBILITY
     constexpr chrono::microseconds operator""us(unsigned long long __us)
     {
@@ -2913,7 +2905,6 @@ inline namespace literals
     {
         return chrono::duration<long double, micro> (__us);
     }
-
 
     _LIBCUDACXX_INLINE_VISIBILITY
     constexpr chrono::nanoseconds operator""ns(unsigned long long __ns)
@@ -2989,6 +2980,8 @@ _LIBCUDACXX_END_NAMESPACE_FILESYSTEM
 
 #endif
 
-_LIBCUDACXX_POP_MACROS
+#ifndef __cuda_std__
+#include <__pragma_pop>
+#endif
 
 #endif  // _LIBCUDACXX_CHRONO

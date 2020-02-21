@@ -12,21 +12,20 @@
 
 #ifndef __cuda_std__
 #include <__config>
-#endif //__cuda_std__
 #include <iosfwd>
-
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
-#endif
-
 #if defined(_LIBCUDACXX_HAS_NO_NULLPTR)
-# include <cstddef>
+#  include <cstddef>
 #endif
-
 #if _LIBCUDACXX_DEBUG_LEVEL >= 1 || defined(_LIBCUDACXX_BUILDING_LIBRARY)
-#   include <cstdlib>
-#   include <cstdio>
-#   include <cstddef>
+#  include <cstdlib>
+#  include <cstdio>
+#  include <cstddef>
+#endif
+#include <__pragma_push>
+#endif //__cuda_std__
+
+#if defined(_LIBCUDACXX_USE_PRAGMA_GCC_SYSTEM_HEADER)
+#pragma GCC system_header
 #endif
 
 #if _LIBCUDACXX_DEBUG_LEVEL >= 1 && !defined(_LIBCUDACXX_ASSERT)
@@ -276,6 +275,10 @@ _LIBCUDACXX_FUNC_VIS const __libcpp_db* __get_const_db();
 #endif // _LIBCUDACXX_DEBUG_LEVEL >= 2 || defined(_LIBCUDACXX_BUILDING_LIBRARY)
 
 _LIBCUDACXX_END_NAMESPACE_STD
+
+#ifndef __cuda_std__
+  #include <__pragma_pop>
+#endif
 
 #endif  // _LIBCUDACXX_DEBUG_H
 

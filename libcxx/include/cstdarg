@@ -34,9 +34,10 @@ Types:
 #ifndef __cuda_std__
 #include <__config>
 #include <stdarg.h>
+#include <__pragma_push>
 #endif //__cuda_std__
 
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if defined(_LIBCUDACXX_USE_PRAGMA_GCC_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
@@ -45,5 +46,9 @@ _LIBCUDACXX_BEGIN_NAMESPACE_STD
 using ::va_list;
 
 _LIBCUDACXX_END_NAMESPACE_STD
+
+#ifndef __cuda_std__
+#include <__pragma_pop>
+#endif //__cuda_std__
 
 #endif  // _LIBCUDACXX_CSTDARG

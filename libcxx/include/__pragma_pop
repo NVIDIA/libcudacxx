@@ -1,5 +1,5 @@
 // -*- C++ -*-
-//===-------------------------- cassert -----------------------------------===//
+//===---------------------------- chrono ----------------------------------===//
 //
 // Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
 // See https://llvm.org/LICENSE.txt for license information.
@@ -7,19 +7,10 @@
 //
 //===----------------------------------------------------------------------===//
 
-/*
-    cassert synopsis
+#if defined(_LIBCUDACXX_USE_MSVC_PRAGMA_WARNING)
+  #pragma warning(pop)
+#endif
 
-Macros:
-
-    assert
-
-*/
-
-#ifndef __cuda_std__
-#include <__config>
-#include <__pragma_push>
-#include <assert.h>
-#include <__pragma_pop>
-#endif //__cuda_std__
-
+#if defined(_LIBCUDACXX_POP_MACROS)
+  _LIBCUDACXX_POP_MACROS
+#endif

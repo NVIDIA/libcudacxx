@@ -10,7 +10,7 @@
 #if defined(__need_ptrdiff_t) || defined(__need_size_t) || \
     defined(__need_wchar_t) || defined(__need_NULL) || defined(__need_wint_t)
 
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if defined(_LIBCUDACXX_USE_PRAGMA_GCC_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
@@ -38,7 +38,9 @@ Types:
 
 #include <__config>
 
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#include <__pragma_push>
+
+#if defined(_LIBCUDACXX_USE_PRAGMA_GCC_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
@@ -58,5 +60,7 @@ typedef long double max_align_t;
 #endif
 
 #endif
+
+#include <__pragma_pop>
 
 #endif  // _LIBCUDACXX_STDDEF_H

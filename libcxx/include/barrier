@@ -48,13 +48,14 @@ namespace std
 #include <__threading_support>
 #include <atomic>
 #include <cassert>
-# ifndef _LIBCUDACXX_HAS_NO_TREE_BARRIER
+#ifndef _LIBCUDACXX_HAS_NO_TREE_BARRIER
 #  include <thread>
 #  include <vector>
-# endif
+#endif
+#include <__pragma_push>
 #endif
 
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if defined(_LIBCUDACXX_USE_PRAGMA_GCC_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
@@ -268,6 +269,28 @@ class __barrier_base<__empty_completion, _Sco> {
 
     alignas(64) __atomic_base<uint64_t, _Sco> __phase_arrived_expected;
 
+public:
+    using arrival_token = uint64_t;
+
+private:
+    struct __poll_tester {
+        __barrier_base const* __this;
+        arrival_token __phase;
+
+        _LIBCUDACXX_INLINE_VISIBILITY
+        __poll_tester(__barrier_base const* __this_, arrival_token&& __phase_)
+          : __this(__this_)
+          , __phase(_CUDA_VSTD::move(__phase_))
+        {}
+
+        inline _LIBCUDACXX_INLINE_VISIBILITY
+        bool operator()() const
+        {
+            uint64_t const __current = __this->__phase_arrived_expected.load(memory_order_acquire);
+            return ((__current & __phase_bit) != __phase);
+        }
+    };
+
     static inline _LIBCUDACXX_INLINE_VISIBILITY
     constexpr uint64_t __init(ptrdiff_t __count) _NOEXCEPT
     {
@@ -276,8 +299,6 @@ class __barrier_base<__empty_completion, _Sco> {
     }
 
 public:
-    using arrival_token = uint64_t;
-
     __barrier_base() = default;
 
     _LIBCUDACXX_INLINE_VISIBILITY
@@ -304,15 +325,7 @@ public:
     inline _LIBCUDACXX_INLINE_VISIBILITY
     void wait(arrival_token&& __phase) const
     {
-#if defined(__CUDACC__) && !defined(__CUDACC_RTC__)
-        __libcpp_thread_poll_with_backoff([=] _LIBCUDACXX_INLINE_VISIBILITY () -> bool
-#else
-        __libcpp_thread_poll_with_backoff([=]() -> bool
-#endif
-        {
-            uint64_t const __current = __phase_arrived_expected.load(memory_order_acquire);
-            return ((__current & __phase_bit) != __phase);
-        });
+        __libcpp_thread_poll_with_backoff(__poll_tester(this, _CUDA_VSTD::move(__phase)));
     }
     inline _LIBCUDACXX_INLINE_VISIBILITY
     void arrive_and_wait()
@@ -345,5 +358,9 @@ public:
 };
 
 _LIBCUDACXX_END_NAMESPACE_STD
+
+#ifndef __cuda_std__
+#include <__pragma_pop>
+#endif
 
 #endif //_LIBCUDACXX_BARRIER

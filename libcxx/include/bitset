@@ -121,7 +121,7 @@ template <size_t N> struct hash<std::bitset<N>>;
 #include <iosfwd>
 #include <__functional_base>
 
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
+#if defined(_LIBCUDACXX_USE_PRAGMA_GCC_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
