@@ -1511,7 +1511,7 @@ _LIBCUDACXX_INLINE_VISIBILITY void __cxx_atomic_try_wait_slow(__cxx_atomic_impl<
 }
 
 template <class _Tp, int _Sco, typename enable_if<__libcpp_platform_wait_uses_type<_Tp>::__value, int>::type = 1>
-_LIBCUDACXX_INLINE_VISIBILITY void __cxx_atomic_try_wait_slow(__cxx_atomic_impl<_Tp, _Sco> const volatile* __a, _Tp __val, memory_order __order) {
+_LIBCUDACXX_INLINE_VISIBILITY void __cxx_atomic_try_wait_slow(__cxx_atomic_impl<_Tp, _Sco> const volatile* __a, _Tp __val, memory_order) {
 #ifndef _LIBCUDACXX_HAS_NO_THREAD_CONTENTION_TABLE
     auto * const __c = __libcpp_contention_state(__a);
     __cxx_atomic_fetch_add(__cxx_atomic_rebind<_Sco>(&__c->__waiters), (ptrdiff_t)1, memory_order_relaxed);

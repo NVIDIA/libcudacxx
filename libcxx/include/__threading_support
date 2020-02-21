@@ -596,7 +596,7 @@ void __libcpp_thread_sleep_for(chrono::nanoseconds __ns)
     Sleep(__ms.count());
 }
 
-#endif defined(_LIBCUDACXX_HAS_THREAD_API_WIN32)
+#endif // defined(_LIBCUDACXX_HAS_THREAD_API_WIN32)
 
 #endif // !defined(_LIBCUDACXX_HAS_THREAD_LIBRARY_EXTERNAL) || defined(_LIBCUDACXX_BUILDING_THREAD_LIBRARY_EXTERNAL)
 
