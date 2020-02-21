@@ -1060,7 +1060,8 @@ class Configuration(object):
         self.cxx.compile_flags += ['-D_LIBCUDACXX_DEBUG=%s' % debug_level]
 
     def configure_warnings(self):
-        default_enable_warnings = True
+        default_enable_warnings = 'clang' in self.config.available_features or \
+                                  'msvc'  in self.config.available_features
         enable_warnings = self.get_lit_bool('enable_warnings',
                                             default_enable_warnings)
         self.cxx.useWarnings(enable_warnings)
@@ -1074,6 +1075,8 @@ class Configuration(object):
                 self.cxx.warning_flags += [ '-Xcompiler', '-wd4127' ]
                 # warning C4180: qualifier applied to function type has no meaning; ignored
                 self.cxx.warning_flags += [ '-Xcompiler', '-wd4180' ]
+                # warning C4309: 'moo': truncation of constant value
+                self.cxx.warning_flags += [ '-Xcompiler', '-wd4309' ]
             else:
                 # TODO: Re-enable soon.
                 #self.cxx.warning_flags += [ '-Xcompiler', '-Wall', '-Xcompiler', '-Werror' ]
