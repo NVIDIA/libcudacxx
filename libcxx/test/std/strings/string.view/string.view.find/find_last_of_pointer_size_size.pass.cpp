@@ -386,7 +386,7 @@ int main(int, char**)
     static_assert (sv1.find_last_of( "irkhs", 0, 5) == SV::npos, "" );
     static_assert (sv2.find_last_of( "",      0, 0) == SV::npos, "" );
     static_assert (sv2.find_last_of( "gfsrt", 5, 5) == SV::npos, "" );
-#if (!defined(TEST_COMPILER_GCC) || 600 <= TEST_GCC_VER)
+#if (!defined(TEST_COMPILER_GCC) || 700 <= TEST_GCC_VER)
 // TODO: Investigate this.
     static_assert (sv2.find_last_of( "lecar", 5, 5) == 4, "" );
 #endif
