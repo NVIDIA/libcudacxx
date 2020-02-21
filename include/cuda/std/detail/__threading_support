@@ -22,12 +22,4 @@
 
 #include "libcxx/include/__threading_support"
 
-#ifdef _MSC_VER
-
-_LIBCUDACXX_BEGIN_NAMESPACE_STD
-
-_LIBCUDACXX_END_NAMESPACE_STD
-
-#endif
-
 #endif //_CUDA___THREADING_SUPPORT

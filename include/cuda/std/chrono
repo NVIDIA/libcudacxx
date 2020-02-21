@@ -21,6 +21,17 @@
 
 #include "detail/__config"
 
+#include "detail/__pragma_push"
+
+// Silence NVCC warnings `long double` arising from chrono floating pointer
+// user-defined literals which are defined in terms of `long double`.
+
+// FIXME: There is currently no way to disable this diagnostic in a fine-grained
+// fashion; if you include this header, the diagnostic will be suppressed
+// throughout the translation unit. The alternative is loosing (conforming) 
+// chrono user-defined literals; this seems like the lesser of two evils, so...
+#pragma diag_suppress cuda_demote_unsupported_floating_point
+
 #include "detail/libcxx/include/chrono"
 
 _LIBCUDACXX_BEGIN_NAMESPACE_STD
@@ -57,6 +68,8 @@ system_clock::time_point system_clock::from_time_t(time_t __t) _NOEXCEPT
 }
 
 _LIBCUDACXX_END_NAMESPACE_STD
+
+#include "detail/__pragma_pop"
 
 #endif //_CUDA_CHRONO
 

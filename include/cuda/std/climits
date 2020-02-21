@@ -68,7 +68,7 @@
 
     template<typename _To, typename _From>
     static __device__ __forceinline__
-    _To __cowboy_cast(_From __from)
+    _To __cowchild_cast(_From __from)
     {
         static_assert(sizeof(_From) == sizeof(_To), "");
         union __cast { _From __from; _To __to; };
@@ -77,15 +77,17 @@
         return __c.__to;
     }
 
-    #define __builtin_huge_valf() __cowboy_cast<float>(0x7f800000)
-    #define __builtin_nanf(__dummy) __cowboy_cast<float>(0x7fc00000)
-    #define __builtin_nansf(__dummy) __cowboy_cast<float>(0x7fa00000)
-    #define __builtin_huge_val() __cowboy_cast<double>(0x7ff0000000000000)
-    #define __builtin_nan(__dummy) __cowboy_cast<double>(0x7ff8000000000000)
-    #define __builtin_nans(__dummy) __cowboy_cast<double>(0x7ff4000000000000)
+    #define __builtin_huge_valf() __cowchild_cast<float>(0x7f800000)
+    #define __builtin_nanf(__dummy) __cowchild_cast<float>(0x7fc00000)
+    #define __builtin_nansf(__dummy) __cowchild_cast<float>(0x7fa00000)
+    #define __builtin_huge_val() __cowchild_cast<double>(0x7ff0000000000000)
+    #define __builtin_nan(__dummy) __cowchild_cast<double>(0x7ff8000000000000)
+    #define __builtin_nans(__dummy) __cowchild_cast<double>(0x7ff4000000000000)
 #endif //__CUDACC_RTC__
 
 #include "detail/__config"
+
+#include "detail/__pragma_push"
 
 #include "detail/libcxx/include/climits"
 
@@ -96,5 +98,7 @@
 #else
     #define __CHAR_BIT__ 8
 #endif
+
+#include "detail/__pragma_pop"
 
 #endif //_CUDA_CLIMITS

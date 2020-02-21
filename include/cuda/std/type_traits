@@ -15,8 +15,13 @@
 
 #include "cstddef"
 #include "version"
+
 #include "detail/__config"
 
+#include "detail/__pragma_push"
+
 #include "detail/libcxx/include/type_traits"
+
+#include "detail/__pragma_pop"
 
 #endif //_CUDA_TYPE_TRAITS

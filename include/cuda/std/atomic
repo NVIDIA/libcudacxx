@@ -45,6 +45,8 @@
 
 #define _LIBCUDACXX_ATOMIC_ALWAYS_LOCK_FREE(size, ptr) (size <= 8)
 
+#include "detail/__pragma_push"
+
 #include "detail/__atomic"
 #include "detail/__threading_support"
 
@@ -52,11 +54,6 @@
 #undef _LIBCUDACXX_HAS_C_ATOMIC_IMP
 
 #include "detail/libcxx/include/atomic"
-
-#ifdef _LIBCUDACXX_COMPILER_MSVC
-    #pragma warning(push)
-    #pragma warning(disable:4522)
-#endif
 
 _LIBCUDACXX_BEGIN_NAMESPACE_CUDA
 
@@ -191,8 +188,6 @@ inline __host__ __device__ void atomic_signal_fence(memory_order __m) {
 
 _LIBCUDACXX_END_NAMESPACE_CUDA
 
-#ifdef _MSC_VER
-    #pragma warning(pop)
-#endif //_MSC_VER
+#include "detail/__pragma_pop"
 
 #endif //_CUDA_ATOMIC

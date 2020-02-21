@@ -80,6 +80,10 @@
 #include "climits"
 #include "detail/__config"
 
+#include "detail/__pragma_push"
+
 #include "detail/libcxx/include/cstdint"
+
+#include "detail/__pragma_pop"
 
 #endif //_CUDA_CSTDINT
