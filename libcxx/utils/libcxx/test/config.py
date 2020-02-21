@@ -1075,6 +1075,8 @@ class Configuration(object):
                 self.cxx.warning_flags += [ '-Xcompiler', '-wd4127' ]
                 # warning C4180: qualifier applied to function type has no meaning; ignored
                 self.cxx.warning_flags += [ '-Xcompiler', '-wd4180' ]
+                # warning C4309: 'moo': truncation of constant value
+                self.cxx.warning_flags += [ '-Xcompiler', '-wd4309' ]
             else:
                 # TODO: Re-enable soon.
                 #self.cxx.warning_flags += [ '-Xcompiler', '-Wall', '-Xcompiler', '-Werror' ]
