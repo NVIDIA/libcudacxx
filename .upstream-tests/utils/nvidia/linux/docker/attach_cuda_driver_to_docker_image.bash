@@ -7,8 +7,8 @@ source ${SCRIPT_PATH}/configuration.bash
 
 TMP_PATH=$(mktemp -d --suffix=-${FINAL_NAME})
 NVIDIAMODPROBE=$(which nvidia-modprobe)
-LIBCUDA=$(ldconfig -p | grep libcuda.so | tr ' ' '\n' | grep / | tr '\n' ' ' | sed 's/ *$//')
-LIBNVIDIAPTXJITCOMPILER=$(ldconfig -p | grep libnvidia-ptxjitcompiler.so | tr ' ' '\n' | grep / | tr '\n' ' ' | sed 's/ *$//')
+LIBCUDA=$(ldconfig -p | grep libcuda.so | tr ' ' '\n' | grep / | head -n 1 | tr '\n' ' ' | sed 's/ *$//')
+LIBNVIDIAPTXJITCOMPILER=$(ldconfig -p | grep libnvidia-ptxjitcompiler.so | tr ' ' '\n' | grep / | head -n 1 | tr '\n' ' ' | sed 's/ *$//')
 
 echo "CUDA driver utilities found:"
 
