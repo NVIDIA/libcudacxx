@@ -7,6 +7,7 @@
 //===----------------------------------------------------------------------===//
 
 // UNSUPPORTED: libcpp-has-no-threads, pre-sm-60
+// UNSUPPORTED: windows && pre-sm-70
 
 // This test ensures that cuda::std::memory_order has the same size under all
 // standard versions to make sure we're not breaking the ABI. This is

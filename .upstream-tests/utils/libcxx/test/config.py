@@ -571,6 +571,8 @@ class Configuration(object):
         compute_archs = self.get_lit_conf('compute_archs')
         if self.cxx.is_nvrtc is True:
             self.config.available_features.add("nvrtc")
+        if self.cxx.type == 'nvcc':
+            self.cxx.compile_flags += ['--extended-lambda']
         if compute_archs and self.cxx.type == 'nvcc':
             pre_sm_32 = False
             pre_sm_60 = False
@@ -592,7 +594,6 @@ class Configuration(object):
                 self.config.available_features.add("pre-sm-60")
             if pre_sm_70:
                 self.config.available_features.add("pre-sm-70")
-
     def configure_default_compile_flags(self):
         nvcc_host_compiler = self.get_lit_conf('nvcc_host_compiler')
         if nvcc_host_compiler and self.cxx.type == 'nvcc':
@@ -1059,40 +1060,54 @@ class Configuration(object):
         self.cxx.compile_flags += ['-D_LIBCUDACXX_DEBUG=%s' % debug_level]
 
     def configure_warnings(self):
-        # Turn on warnings by default for Clang based compilers when C++ >= 11
-        default_enable_warnings = self.cxx.type in ['clang', 'apple-clang'] \
-            and len(self.config.available_features.intersection(
-                ['c++11', 'c++14', 'c++17', 'c++2a'])) != 0
+        default_enable_warnings = True
         enable_warnings = self.get_lit_bool('enable_warnings',
                                             default_enable_warnings)
         self.cxx.useWarnings(enable_warnings)
-        self.cxx.warning_flags += [
-            '-D_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER',
-            '-Wall', '-Wextra', '-Werror'
-        ]
-        if self.cxx.hasWarningFlag('-Wuser-defined-warnings'):
-            self.cxx.warning_flags += ['-Wuser-defined-warnings']
-            self.config.available_features.add('diagnose-if-support')
-        self.cxx.addWarningFlagIfSupported('-Wshadow')
-        self.cxx.addWarningFlagIfSupported('-Wno-unused-command-line-argument')
-        self.cxx.addWarningFlagIfSupported('-Wno-attributes')
-        self.cxx.addWarningFlagIfSupported('-Wno-pessimizing-move')
-        self.cxx.addWarningFlagIfSupported('-Wno-c++11-extensions')
-        self.cxx.addWarningFlagIfSupported('-Wno-user-defined-literals')
-        self.cxx.addWarningFlagIfSupported('-Wno-noexcept-type')
-        self.cxx.addWarningFlagIfSupported('-Wno-aligned-allocation-unavailable')
-        # These warnings should be enabled in order to support the MSVC
-        # team using the test suite; They enable the warnings below and
-        # expect the test suite to be clean.
-        self.cxx.addWarningFlagIfSupported('-Wsign-compare')
-        self.cxx.addWarningFlagIfSupported('-Wunused-variable')
-        self.cxx.addWarningFlagIfSupported('-Wunused-parameter')
-        self.cxx.addWarningFlagIfSupported('-Wunreachable-code')
+        if 'nvcc' in self.config.available_features:
+            self.cxx.warning_flags += [ '-Xcudafe', '--display_error_number' ]
+            if 'msvc' in self.config.available_features:
+                self.cxx.warning_flags += [ '-Xcompiler', '/W4', '-Xcompiler', '/WX' ]
+                # warning C4100: 'quack': unreferenced formal parameter
+                self.cxx.warning_flags += [ '-Xcompiler', '-wd4100' ]
+                # warning C4127: conditional expression is constant
+                self.cxx.warning_flags += [ '-Xcompiler', '-wd4127' ]
+                # warning C4180: qualifier applied to function type has no meaning; ignored
+                self.cxx.warning_flags += [ '-Xcompiler', '-wd4180' ]
+            else:
+                # TODO: Re-enable soon.
+                #self.cxx.warning_flags += [ '-Xcompiler', '-Wall', '-Xcompiler', '-Werror' ]
+                pass
+        else:
+            self.cxx.warning_flags += [
+                '-D_LIBCUDACXX_DISABLE_PRAGMA_GCC_SYSTEM_HEADER',
+                '-Wall', '-Wextra', '-Werror'
+            ]
+            if self.cxx.hasWarningFlag('-Wuser-defined-warnings'):
+                self.cxx.warning_flags += ['-Wuser-defined-warnings']
+                self.config.available_features.add('diagnose-if-support')
+            self.cxx.addWarningFlagIfSupported('-Wshadow')
+            self.cxx.addWarningFlagIfSupported('-Wno-unused-command-line-argument')
+            self.cxx.addWarningFlagIfSupported('-Wno-attributes')
+            self.cxx.addWarningFlagIfSupported('-Wno-pessimizing-move')
+            self.cxx.addWarningFlagIfSupported('-Wno-c++11-extensions')
+            self.cxx.addWarningFlagIfSupported('-Wno-user-defined-literals')
+            self.cxx.addWarningFlagIfSupported('-Wno-noexcept-type')
+            self.cxx.addWarningFlagIfSupported('-Wno-aligned-allocation-unavailable')
+            # These warnings should be enabled in order to support the MSVC
+            # team using the test suite; They enable the warnings below and
+            # expect the test suite to be clean.
+            self.cxx.addWarningFlagIfSupported('-Wsign-compare')
+            self.cxx.addWarningFlagIfSupported('-Wunused-variable')
+            self.cxx.addWarningFlagIfSupported('-Wunused-parameter')
+            self.cxx.addWarningFlagIfSupported('-Wunreachable-code')
+
         std = self.get_lit_conf('std', None)
         if std in ['c++98', 'c++03']:
-            # The '#define static_assert' provided by libc++ in C++03 mode
-            # causes an unused local typedef whenever it is used.
-            self.cxx.addWarningFlagIfSupported('-Wno-unused-local-typedef')
+            if 'nvcc' not in self.config.available_features:
+                # The '#define static_assert' provided by libc++ in C++03 mode
+                # causes an unused local typedef whenever it is used.
+                self.cxx.addWarningFlagIfSupported('-Wno-unused-local-typedef')
 
     def configure_sanitizer(self):
         san = self.get_lit_conf('use_sanitizer', '').strip()

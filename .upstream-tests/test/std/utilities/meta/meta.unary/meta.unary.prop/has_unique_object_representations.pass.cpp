@@ -9,10 +9,6 @@
 // UNSUPPORTED: c++98, c++03, c++11, c++14
 // UNSUPPORTED: clang-3, clang-4, clang-5, apple-clang, gcc-5, gcc-6
 
-// XFAIL: nvcc
-// FIXME: There's an EDG bug that causes has_unique_object_representations to
-// return true on empty union types.
-
 // type_traits
 
 // has_unique_object_representations
@@ -22,6 +18,7 @@
 #include "test_macros.h"
 
 template <class T>
+__host__ __device__
 void test_has_unique_object_representations()
 {
     static_assert( cuda::std::has_unique_object_representations<T>::value, "");
@@ -36,6 +33,7 @@ void test_has_unique_object_representations()
 }
 
 template <class T>
+__host__ __device__
 void test_has_not_has_unique_object_representations()
 {
     static_assert(!cuda::std::has_unique_object_representations<T>::value, "");
@@ -55,6 +53,7 @@ class Empty
 
 class NotEmpty
 {
+    __host__ __device__
     virtual ~NotEmpty();
 };
 
@@ -68,11 +67,13 @@ struct bit_zero
 
 class Abstract
 {
+    __host__ __device__
     virtual ~Abstract() = 0;
 };
 
 struct A
 {
+    __host__ __device__
     ~A();
     unsigned foo;
 };

@@ -16,21 +16,21 @@
 #include <vector>
 #include <stdlib.h>
 
-#define DEFINE_ASYNC_TRAIT(suffix) \
+#define DEFINE_ASYNC_TRAIT(...) \
     template<typename T, typename = cuda::std::true_type> \
-    struct async ## suffix ## _trait_impl \
+    struct async ## __VA_ARGS__ ## _trait_impl \
     { \
         using type = cuda::std::false_type; \
     }; \
     \
     template<typename T> \
-    struct async ## suffix ## _trait_impl<T, typename T::async ## suffix> \
+    struct async ## __VA_ARGS__ ## _trait_impl<T, typename T::async ## __VA_ARGS__> \
     { \
         using type = cuda::std::true_type; \
     }; \
     \
     template<typename T> \
-    using async ## suffix ## _trait = typename async ## suffix ## _trait_impl<T>::type;
+    using async ## __VA_ARGS__ ## _trait = typename async ## __VA_ARGS__ ## _trait_impl<T>::type;
 
 DEFINE_ASYNC_TRAIT()
 DEFINE_ASYNC_TRAIT(_initialize)
@@ -515,13 +515,13 @@ template<typename T, typename TesterList, typename ...Args>
 void validate_not_movable(Args ...args)
 {
     using list_t = typename validate_list<false, TesterList>::type;
-    list_t list;
-    validate_device_dynamic<T>(list, args...);
+    list_t list0;
+    validate_device_dynamic<T>(list0, args...);
 
     if (check_managed_memory_support(is_tester_list_async<list_t>::value))
     {
-        typename validate_list<true, TesterList>::type list;
-        validate_managed<T>(list, args...);
+        typename validate_list<true, TesterList>::type list1;
+        validate_managed<T>(list1, args...);
     }
 }
 
