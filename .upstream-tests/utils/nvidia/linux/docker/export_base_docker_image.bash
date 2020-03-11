@@ -5,6 +5,8 @@ set -e
 SCRIPT_PATH=$(cd $(dirname ${0}); pwd -P)
 source ${SCRIPT_PATH}/configuration.bash
 
+${SCRIPT_PATH}/clear_docker_containers_and_images.bash
+
 # Arguments are a list of SM architectures to target; if there are no arguments,
 # all known SM architectures are targeted.
 

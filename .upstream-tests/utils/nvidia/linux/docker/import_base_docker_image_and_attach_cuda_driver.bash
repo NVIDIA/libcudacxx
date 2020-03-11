@@ -5,6 +5,8 @@ set -e
 SCRIPT_PATH=$(cd $(dirname ${0}); pwd -P)
 source ${SCRIPT_PATH}/configuration.bash
 
+${SCRIPT_PATH}/clear_docker_containers_and_images.bash
+
 # If invoked with an argument, the argument is the name of the tar.bz2 to import.
 if [ "" == "${1}" ]
 then
