@@ -191,29 +191,8 @@ class LinuxLocalTI(DefaultTargetInfo):
     def platform(self):
         return 'linux'
 
-    def platform_name(self):
-        name, _, _ = platform.linux_distribution()
-        # Some distros have spaces, e.g. 'SUSE Linux Enterprise Server'
-        # lit features can't have spaces
-        name = name.lower().strip().replace(' ', '-')
-        return name # Permitted to be None
-
-    def platform_ver(self):
-        _, ver, _ = platform.linux_distribution()
-        ver = ver.lower().strip().replace(' ', '-')
-        return ver # Permitted to be None.
-
     def add_locale_features(self, features):
         add_common_locales(features, self.full_config.lit_config)
-        # Some linux distributions have different locale data than others.
-        # Insert the distributions name and name-version into the available
-        # features to allow tests to XFAIL on them.
-        name = self.platform_name()
-        ver = self.platform_ver()
-        if name:
-            features.add(name)
-        if name and ver:
-            features.add('%s-%s' % (name, ver))
 
     def add_cxx_compile_flags(self, flags):
         flags += ['-D__STDC_FORMAT_MACROS',
