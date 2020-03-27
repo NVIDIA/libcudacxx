@@ -12,7 +12,11 @@
 
 // These compilers have not implemented Core 2094 which makes volatile
 // qualified types trivially copyable.
-// XFAIL: clang-3, clang-4, apple-clang-6, apple-clang-7, apple-clang-8, apple-clang-9.0, gcc, icc, pgi, msvc
+// XFAIL: clang-3, clang-4, apple-clang-6, apple-clang-7, apple-clang-8, apple-clang-9.0
+// XFAIL: gcc
+// XFAIL: icc
+// XFAIL: pgi
+// XFAIL: msvc-18.0, msvc-19.0, msvc-19.10, msvc-19.11, msvc-19.12, msvc-19.13
 
 // Note that this passes under NVRTC, so don't mark this as expected failure for NVCC,  because that'll get us
 // the wrong result under runtime compilation (since NVRTC also has the `nvcc` feature).
