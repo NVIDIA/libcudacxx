@@ -66,6 +66,17 @@ public:
     }
 
     _LIBCUDACXX_INLINE_VISIBILITY
+    ~barrier() {
+#if __CUDA_ARCH__ >= 800
+        if (__isShared(&__barrier)) {
+            asm volatile ("mbarrier.inval.b64 [%0];"
+                :: "r"(static_cast<std::uint32_t>(__cvta_generic_to_shared(&__barrier)))
+                : "memory");
+        }
+#endif
+    }
+
+    _LIBCUDACXX_INLINE_VISIBILITY
     friend void init(barrier * __b, std::ptrdiff_t __expected, std::__empty_completion __completion = std::__empty_completion()) {
 #if __CUDA_ARCH__ >= 800
         if (__isShared(&__b->__barrier)) {

@@ -43,8 +43,6 @@
 
 #include "detail/__config"
 
-#define _LIBCUDACXX_ATOMIC_ALWAYS_LOCK_FREE(size, ptr) (size <= 8)
-
 #include "detail/__pragma_push"
 
 #include "detail/__atomic"
