@@ -76,7 +76,6 @@ struct MoveOnly1
 
 struct MoveOnly2
 {
-    __host__ __device__
     MoveOnly2(MoveOnly2&&) = default;
 };
 

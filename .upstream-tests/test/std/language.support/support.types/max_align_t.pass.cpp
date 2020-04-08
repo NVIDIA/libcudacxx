@@ -17,6 +17,8 @@
 #endif // __CUDACC_RTC__
 #include "test_macros.h"
 
+#pragma diag_suppress = 3252
+
 int main(int, char**)
 {
 

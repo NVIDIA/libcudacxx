@@ -17,6 +17,8 @@
 
 #include "test_macros.h"
 
+#pragma diag_suppress = 550
+
 int main(int, char**)
 {
     {

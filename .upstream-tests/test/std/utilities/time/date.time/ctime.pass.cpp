@@ -31,6 +31,8 @@
 #pragma GCC diagnostic ignored "-Wformat-zero-length"
 #endif
 
+#pragma diag_suppress = 550
+
 int main(int, char**)
 {
     cuda::std::clock_t c = 0;
@@ -54,7 +56,7 @@ int main(int, char**)
     static_assert((cuda::std::is_same<decltype(cuda::std::mktime(&tm)), cuda::std::time_t>::value), "");
     static_assert((cuda::std::is_same<decltype(cuda::std::time(&t)), cuda::std::time_t>::value), "");
 #if TEST_STD_VER > 14 && defined(TEST_HAS_TIMESPEC_GET)
-    static_assert((cuda::std::is_same<decltype(cuda::std::timespec_get(nullptr, 0)), int>::value), "");
+    static_assert((cuda::std::is_same<decltype(cuda::std::timespec_get(&tmspec, 0)), int>::value), "");
 #endif
 #ifndef _LIBCUDACXX_HAS_NO_THREAD_UNSAFE_C_FUNCTIONS
     static_assert((cuda::std::is_same<decltype(cuda::std::asctime(&tm)), char*>::value), "");

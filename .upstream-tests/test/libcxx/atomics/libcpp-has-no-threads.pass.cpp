@@ -8,7 +8,7 @@
 // XFAIL: libcpp-has-no-threads
 
 #ifdef _LIBCUDACXX_HAS_NO_THREADS
-#error This should be XFAIL'd for the purpose of detecting that the LIT feature\
+#error This should be XFAILed for the purpose of detecting that the LIT feature\
    'libcpp-has-no-threads' is available iff _LIBCUDACXX_HAS_NO_THREADS is defined
 #endif
 

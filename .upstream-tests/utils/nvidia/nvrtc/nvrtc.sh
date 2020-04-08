@@ -56,6 +56,10 @@ do
             modified_flags=("${modified_flags[@]}" "$1")
             ;;
 
+        all-warnings)
+            modified_flags=("${modified_flags[@]}" "$1")
+            ;;
+
         *)
             if [[ "${input}" != "" ]]
             then

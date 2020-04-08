@@ -24,6 +24,7 @@
 #define LIBCPP11_STATIC_ASSERT(...) ((void)0)
 #endif
 
+#pragma diag_suppress = 177
 
 struct A
 {

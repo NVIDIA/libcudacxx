@@ -53,8 +53,8 @@ void test_fully_specialized()
         ::template offsetted<decltype(source_sel)::shared_offset> dest_sel;
     BarrierSelector<cuda::barrier<cuda::thread_scope_block>, constructor_initializer> bar_sel;
 
-    T * source = source_sel.construct(12);
-    T * dest = dest_sel.construct(0);
+    T * source = source_sel.construct(static_cast<T>(12));
+    T * dest = dest_sel.construct(static_cast<T>(0));
     cuda::barrier<cuda::thread_scope_block> * bar = bar_sel.construct(1);
 
     assert(*source == 12);

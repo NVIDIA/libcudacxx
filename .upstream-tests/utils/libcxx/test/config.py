@@ -1061,12 +1061,14 @@ class Configuration(object):
 
     def configure_warnings(self):
         default_enable_warnings = 'clang' in self.config.available_features or \
-                                  'msvc'  in self.config.available_features
+                                  'msvc'  in self.config.available_features or \
+                                  'nvcc'  in self.config.available_features
         enable_warnings = self.get_lit_bool('enable_warnings',
                                             default_enable_warnings)
         self.cxx.useWarnings(enable_warnings)
         if 'nvcc' in self.config.available_features:
             self.cxx.warning_flags += [ '-Xcudafe', '--display_error_number' ]
+            self.cxx.warning_flags += [ '-Werror', 'all-warnings' ]
             if 'msvc' in self.config.available_features:
                 self.cxx.warning_flags += [ '-Xcompiler', '/W4', '-Xcompiler', '/WX' ]
                 # warning C4100: 'quack': unreferenced formal parameter
@@ -1079,7 +1081,27 @@ class Configuration(object):
                 self.cxx.warning_flags += [ '-Xcompiler', '-wd4309' ]
             else:
                 # TODO: Re-enable soon.
-                #self.cxx.warning_flags += [ '-Xcompiler', '-Wall', '-Xcompiler', '-Werror' ]
+                def addIfHostSupports(flag):
+                    if hasattr(self, 'host_cxx') and self.host_cxx.hasWarningFlag(flag):
+                        self.cxx.warning_flags += [ '-Xcompiler', flag ]
+
+                addIfHostSupports('-Wall')
+                addIfHostSupports('-Wextra')
+                addIfHostSupports('-Werror')
+                addIfHostSupports('-Wno-literal-suffix') # GCC warning about reserved UDLs
+                addIfHostSupports('-Wno-user-defined-literals') # Clang warning about reserved UDLs
+                addIfHostSupports('-Wno-unused-parameter')
+                addIfHostSupports('-Wno-deprecated-declarations')
+                addIfHostSupports('-Wno-noexcept-type')
+                addIfHostSupports('-Wno-unused-function')
+
+                if 'gcc-4.8' in self.config.available_features:
+                    # GCC pre-GCC5 spuriously generates these on reasonable aggregate initialization.
+                    addIfHostSupports('-Wno-missing-field-initializers')
+
+                # TODO: port the warning disables from the non-NVCC path?
+
+                self.cxx.warning_flags += [ '-D_LIBCUDACXX_DISABLE_PRAGMA_GCC_SYSTEM_HEADER' ]
                 pass
         else:
             self.cxx.warning_flags += [

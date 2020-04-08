@@ -27,6 +27,7 @@ void test_conversions()
     {
         T p = 0;
         assert(p == nullptr);
+        (void)p; // GCC spuriously claims that p is unused when T is nullptr_t, probably due to optimizations?
     }
     {
         T p = nullptr;
@@ -34,6 +35,7 @@ void test_conversions()
         assert(nullptr == p);
         assert(!(p != nullptr));
         assert(!(nullptr != p));
+        (void)p; // GCC spuriously claims that p is unused when T is nullptr_t, probably due to optimizations?
     }
 }
 
@@ -52,6 +54,7 @@ void test_comparisons()
     assert(!(p != nullptr));
     assert(nullptr == p);
     assert(!(nullptr != p));
+    (void)p; // GCC spuriously claims that p is unused, probably due to optimizations?
 }
 
 #if defined(__clang__)

@@ -23,6 +23,7 @@
 #include "test_macros.h"
 // #include "type_id.h"
 
+#pragma diag_suppress = 550
 
 ///////////////////////////////////////////////////////////////////////////////
 //                       CALLABLE TEST TYPES
@@ -625,6 +626,7 @@ void call_operator_noexcept_test()
         using T = NoExceptCallable<bool>;
         T value(true);
         auto ret = cuda::std::not_fn(value);
+        (void)ret;
         LIBCPP_STATIC_ASSERT(noexcept(!_CUDA_VSTD::__invoke(value)), "");
 #if TEST_STD_VER > 14
         static_assert(noexcept(!cuda::std::invoke(value)), "");
@@ -640,6 +642,7 @@ void call_operator_noexcept_test()
         using T = NoExceptCallable<NoExceptEvilBool>;
         T value(true);
         auto ret = cuda::std::not_fn(value);
+        (void)ret;
 // TODO: nvcc gets this wrong, investigate
 #ifndef __CUDACC__
         static_assert(noexcept(ret()), "call should not be noexcept");

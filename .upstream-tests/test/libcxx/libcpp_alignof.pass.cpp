@@ -16,6 +16,8 @@
 #include <cuda/std/type_traits>
 #include "test_macros.h"
 
+#pragma diag_suppress = 3252
+
 template <class T>
 __host__ __device__
 void test() {

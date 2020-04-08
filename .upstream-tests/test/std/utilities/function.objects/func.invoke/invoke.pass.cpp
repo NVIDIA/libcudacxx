@@ -42,6 +42,8 @@
 #include <cuda/std/utility> // for cuda::std::move
 #include <cuda/std/cassert>
 
+#pragma diag_suppress = 550
+
 struct NonCopyable {
     __host__ __device__
     NonCopyable() {}

@@ -14,6 +14,8 @@
 #include <cuda/std/cstddef>         // for cuda::std::nullptr_t
 #include "test_macros.h"
 
+#pragma diag_suppress = 3252
+
 template <class T>
 __host__ __device__
 void test_is_fundamental()
