@@ -16,11 +16,16 @@
 // XFAIL: gcc
 // XFAIL: icc
 // XFAIL: pgi
-// XFAIL: msvc-18.0, msvc-19.0, msvc-19.10, msvc-19.11, msvc-19.12, msvc-19.13
 
-// Note that this passes under NVRTC, so don't mark this as expected failure for NVCC,  because that'll get us
-// the wrong result under runtime compilation (since NVRTC also has the `nvcc` feature).
-// (It's possible that the compiler detection should be changed to not report `nvcc` for NVRTC, but that's a
+// When we marked this XFAIL for MSVC, QA reported that it unexpectedly passed.
+// When we stopped marking it XFAIL for MSVC, QA reported that it unexpectedly
+// failed
+// UNSUPPORTED: msvc
+
+// Note that this passes under NVRTC, so don't mark this as expected failure
+// for NVCC, because that'll get us the wrong result under runtime compilation
+// (since NVRTC also has the `nvcc` feature). (It's possible that the compiler
+// detection should be changed to not report `nvcc` for NVRTC, but that's a
 // topic for another day.)
 
 // If we're just building the test and not executing it, it should pass.
