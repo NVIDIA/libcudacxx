@@ -779,7 +779,10 @@ typedef __char32_t char32_t;
 #endif
 
 #if _GNUC_VER >= 900
+// TODO: figure out why NVCC is unhappy with the builtin, but _only_ in C++11 mode.
+#if __cplusplus > 201103L
 #define _LIBCUDACXX_IS_CONSTANT_EVALUATED(...) __builtin_is_constant_evaluated(__VA_ARGS__)
+#endif
 #endif
 
 #define _LIBCUDACXX_ALWAYS_INLINE __attribute__ ((__always_inline__))
