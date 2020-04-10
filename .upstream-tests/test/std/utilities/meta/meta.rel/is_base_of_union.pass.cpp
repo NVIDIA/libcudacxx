@@ -20,7 +20,7 @@
 // XFAIL: apple-clang-6.0, apple-clang-7.0, apple-clang-8.0
 // XFAIL: apple-clang-9.0, apple-clang-9.1, apple-clang-10.0, apple-clang-11.0.0
 // XFAIL: clang-3.3, clang-3.4, clang-3.5, clang-3.6, clang-3.7, clang-3.8, clang-3.9
-// XFAIL: clang-4.0, clang-5.0, clang-6.0, clang-7.0, clang-8.0
+// XFAIL: clang-4.0, clang-5.0, clang-6.0, clang-7.0, clang-7.1, clang-8.0
 
 
 template <class T, class U>
