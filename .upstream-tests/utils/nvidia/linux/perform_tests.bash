@@ -314,9 +314,9 @@ then
   par=$(nproc)
   if [[ $? -eq 0 ]]
   then
-    if [[ $par -gt 16 ]]
+    if [[ $par -gt 8 ]]
     then
-      par=16
+      par=8
     fi
     LIT_FLAGS="${LIT_FLAGS} -j${par}"
   fi
