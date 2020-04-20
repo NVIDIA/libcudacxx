@@ -17,7 +17,7 @@
 
 #include "test_macros.h"
 
-#pragma diag_suppress = 550
+#pragma diag_suppress set_but_not_used
 
 int main(int, char**)
 {

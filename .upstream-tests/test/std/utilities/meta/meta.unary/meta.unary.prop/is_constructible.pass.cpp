@@ -24,7 +24,7 @@
 #define LIBCPP11_STATIC_ASSERT(...) ((void)0)
 #endif
 
-#pragma diag_suppress = 177
+#pragma diag_suppress declared_but_not_referenced
 
 struct A
 {
