@@ -2248,11 +2248,11 @@ _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_move_assignable_v
 //  Otherwise, return "std::declval<_Up&>().~_Up()" is well-formed
 //    where _Up is remove_all_extents<_Tp>::type
 
-#if defined(_MSC_VER)
+#if defined(_LIBCUDACXX_IS_DESTRUCTIBLE) && !defined(_LIBCUDACXX_USE_IS_DESTRUCTIBLE_FALLBACK)
 
 template <class _Tp>
 struct is_destructible
-   : public _CUDA_VSTD::integral_constant<bool, __is_destructible(_Tp)> {};
+   : public _CUDA_VSTD::integral_constant<bool, _LIBCUDACXX_IS_DESTRUCTIBLE(_Tp)> {};
 
 #else
 
@@ -2307,7 +2307,7 @@ template <>
 struct is_destructible<void>
     : public _CUDA_VSTD::false_type {};
 
-#endif
+#endif // defined(_LIBCUDACXX_IS_DESTRUCTIBLE) && !defined(_LIBCUDACXX_USE_IS_DESTRUCTIBLE_FALLBACK)
 
 #if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>

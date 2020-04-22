@@ -508,6 +508,10 @@ typedef __char32_t char32_t;
 #define _LIBCUDACXX_IS_CONSTRUCTIBLE(...) __is_constructible(__VA_ARGS__)
 #endif
 
+#if __has_keyword(__is_destructible)
+#define _LIBCUDACXX_IS_DESTRUCTIBLE(...) __is_destructible(__VA_ARGS__)
+#endif
+
 #if __has_feature(is_trivially_constructible)
 #define _LIBCUDACXX_IS_TRIVIALLY_CONSTRUCTIBLE(...) __is_trivially_constructible(__VA_ARGS__)
 #endif
@@ -833,6 +837,7 @@ typedef __char32_t char32_t;
 
 #define _LIBCUDACXX_UNDERLYING_TYPE(...) __underlying_type(__VA_ARGS__)
 #define _LIBCUDACXX_IS_CONSTRUCTIBLE(...) __is_constructible(__VA_ARGS__)
+#define _LIBCUDACXX_IS_DESTRUCTIBLE(...) __is_destructible(__VA_ARGS__)
 #define _LIBCUDACXX_IS_TRIVIALLY_CONSTRUCTIBLE(...) __is_trivially_constructible(__VA_ARGS__)
 #define _LIBCUDACXX_HAS_TRIVIAL_CONSTRUCTOR(...) __has_trivial_constructor(__VA_ARGS__)
 #define _LIBCUDACXX_IS_NOTHROW_CONSTRUCTIBLE(...) __is_nothrow_constructible(__VA_ARGS__)
