@@ -13,7 +13,7 @@ endif ()
 enable_language(C)
 
 set(LIBCXX_HIGHEST_COMPUTE_ARCH 80)
-set(LIBCXX_KNOWN_COMPUTE_ARCHS 30 32 35 50 52 53 60 61 62 70 72 75 80)
+set(LIBCXX_KNOWN_COMPUTE_ARCHS 35 50 52 53 60 61 62 70 72 75 80)
 
 option(LIBCXX_DISABLE_ARCH_BY_DEFAULT "If ON, then all CUDA architectures are disabled on the initial CMake run." OFF)
 set(OPTION_INIT ON)
