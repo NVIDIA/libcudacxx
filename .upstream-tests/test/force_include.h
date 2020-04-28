@@ -55,7 +55,7 @@ void fake_main_kernel(int * ret)
         { \
             printf("CUDA ERROR, line %d: %s: %s\n", __LINE__,\
                    cudaGetErrorName(err), cudaGetErrorString(err)); \
-            return err; \
+            std::exit(1); \
         } \
     } while (false)
 

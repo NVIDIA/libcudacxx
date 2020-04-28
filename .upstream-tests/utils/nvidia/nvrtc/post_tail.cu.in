@@ -1,5 +1,4 @@
-, 1, 1,
-        0, NULL,
+        NULL,
         NULL, 0));
 
     CUDA_API_CALL(cudaGetLastError());

@@ -10,6 +10,12 @@ logdir=${FAUX_NVRTC_LOG_DIR:-.}
 nvcc=$(echo $1 | sed 's/^[[:space:]]*//')
 shift
 
+cudart_include_dir=$(
+    echo '#include <cuda_pipeline_primitives.h>' \
+        | ${nvcc} -x cu - -M -E \
+        | grep -e ' /.*/cuda_pipeline_primitives\.h' -o \
+        | xargs dirname)
+
 echo "${nvcc}" >> ${logdir}/log
 
 original_flags=${@}
@@ -97,6 +103,7 @@ finish() {
 trap finish EXIT
 
 thread_count=$(cat "${input}" | egrep 'cuda_thread_count = [0-9]+' | egrep -o '[0-9]+' || echo 1)
+shmem_size=$(cat "${input}" | egrep 'cuda_block_shmem_size = [0-9]+' | egrep -o '[0-9]+' || echo 0)
 
 gpu_archs=($(printf "%s\n" "${gpu_archs[@]}" | sort -un | tr '\n' ' '))
 
@@ -106,13 +113,15 @@ cat "${nvrtcdir}/middle.cu.in" >> "${tempfile}"
 echo '        // BEGIN SCRIPT GENERATED OPTIONS' >> "${tempfile}"
 echo '        "-I'"${libcudacxxdir}/include"'",' >> "${tempfile}"
 echo '        "-I'"${libcudacxxdir}/test/support"'",' >> "${tempfile}"
+echo '        "-I'"${cudart_include_dir}"'",' >> "${tempfile}"
 # The line below intentionally only uses the first element of ${gpu_archs[@]}.
 # They are sorted numerically above, and this selects the lowest of the requested
 # values.
 echo '        "--gpu-architecture='compute_"${gpu_archs}"'",' >> "${tempfile}"
 echo '        // END SCRIPT GENERATED OPTIONS' >> "${tempfile}"
 cat "${nvrtcdir}/tail.cu.in" >> "${tempfile}"
-echo '        '"${thread_count}" >> "${tempfile}"
+echo '        '"${thread_count}, 1, 1," >> "${tempfile}"
+echo '        '"${shmem_size}," >> "${tempfile}"
 cat "${nvrtcdir}/post_tail.cu.in" >> "${tempfile}"
 
 cat "${tempfile}" > ${logdir}/generated_file
