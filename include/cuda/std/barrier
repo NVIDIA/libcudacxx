@@ -14,6 +14,7 @@
 #define _CUDA_BARRIER
 
 #include "atomic"
+#include "cstddef"
 
 #include "detail/__config"
 
@@ -47,8 +48,10 @@ public:
     }
 };
 
+struct __block_scope_barrier_base {};
+
 template<>
-class barrier<thread_scope_block, std::__empty_completion> {
+class barrier<thread_scope_block, std::__empty_completion> : public __block_scope_barrier_base {
     using __barrier_base = std::__barrier_base<std::__empty_completion, (int)thread_scope_block>;
     __barrier_base __barrier;
 
@@ -62,6 +65,7 @@ public:
 
     _LIBCUDACXX_INLINE_VISIBILITY
     barrier(std::ptrdiff_t __expected, std::__empty_completion __completion = std::__empty_completion()) {
+        static_assert(offsetof(barrier<thread_scope_block>, __barrier) == 0, "fatal error: bad barrier layout");
         init(this, __expected, __completion);
     }
 
