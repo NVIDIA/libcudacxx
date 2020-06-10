@@ -186,6 +186,7 @@ class __tuple_leaf
     _Hp __value_;
 
     template <class _Tp>
+    _LIBCUDACXX_INLINE_VISIBILITY
     static constexpr bool __can_bind_reference() {
 #if __has_keyword(__reference_binds_to_temporary)
       return !__reference_binds_to_temporary(_Hp, _Tp);
@@ -961,7 +962,6 @@ template <>
 class _LIBCUDACXX_TEMPLATE_VIS tuple<>
 {
 public:
-    _LIBCUDACXX_INLINE_VISIBILITY
     _LIBCUDACXX_CONSTEXPR tuple() _NOEXCEPT = default;
     template <class _Alloc>
     _LIBCUDACXX_INLINE_VISIBILITY
@@ -1047,7 +1047,7 @@ get(const tuple<_Tp...>&& __t) _NOEXCEPT
 
 namespace __find_detail {
 
-static constexpr size_t __not_found = -1;
+static constexpr size_t __not_found = SIZE_MAX;
 static constexpr size_t __ambiguous = __not_found - 1;
 
 inline _LIBCUDACXX_INLINE_VISIBILITY
@@ -1132,7 +1132,11 @@ struct __ignore_t
 };
 
 namespace {
+#ifdef __CUDA_ARCH__
+  _LIBCUDACXX_INLINE_VAR __constant__ __ignore_t<unsigned char> ignore = __ignore_t<unsigned char>();
+#else
   _LIBCUDACXX_INLINE_VAR constexpr __ignore_t<unsigned char> ignore = __ignore_t<unsigned char>();
+#endif
 }
 
 template <class... _Tp>
@@ -1352,6 +1356,7 @@ struct __tuple_cat<tuple<_Types...>, __tuple_indices<_I0...>, __tuple_indices<_J
     typename __tuple_cat_return_ref<tuple<_Types...>&&, _Tuple0&&>::type
     operator()(tuple<_Types...> __t, _Tuple0&& __t0)
     {
+        (void)__t;
         return forward_as_tuple(_CUDA_VSTD::forward<_Types>(_CUDA_VSTD::get<_I0>(__t))...,
                                       _CUDA_VSTD::get<_J0>(_CUDA_VSTD::forward<_Tuple0>(__t0))...);
     }
@@ -1361,6 +1366,7 @@ struct __tuple_cat<tuple<_Types...>, __tuple_indices<_I0...>, __tuple_indices<_J
     typename __tuple_cat_return_ref<tuple<_Types...>&&, _Tuple0&&, _Tuple1&&, _Tuples&&...>::type
     operator()(tuple<_Types...> __t, _Tuple0&& __t0, _Tuple1&& __t1, _Tuples&& ...__tpls)
     {
+        (void)__t;
         typedef _LIBCUDACXX_NODEBUG_TYPE typename remove_reference<_Tuple0>::type _T0;
         typedef _LIBCUDACXX_NODEBUG_TYPE typename remove_reference<_Tuple1>::type _T1;
         return __tuple_cat<

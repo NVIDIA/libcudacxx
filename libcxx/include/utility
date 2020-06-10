@@ -284,6 +284,8 @@ template <class _Tp> constexpr add_const_t<_Tp>& as_const(_Tp& __t) noexcept { r
 template <class _Tp>                        void as_const(const _Tp&&) = delete;
 #endif
 
+#endif //__cuda_std__
+
 struct _LIBCUDACXX_TEMPLATE_VIS piecewise_construct_t { explicit piecewise_construct_t() = default; };
 #if defined(_LIBCUDACXX_CXX03_LANG) || defined(_LIBCUDACXX_BUILDING_LIBRARY)
 extern _LIBCUDACXX_EXPORTED_FROM_ABI const piecewise_construct_t piecewise_construct;// = piecewise_construct_t();
@@ -964,8 +966,6 @@ template <class _Tp>
 using __is_inplace_index = __is_inplace_index_imp<__uncvref_t<_Tp>>;
 
 #endif // _LIBCUDACXX_STD_VER > 14
-
-#endif // __cuda_std__
 
 template <class _Arg, class _Result>
 struct _LIBCUDACXX_TEMPLATE_VIS unary_function
