@@ -6,21 +6,31 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _CUDA_UTILITY
-#define _CUDA_UTILITY
+#ifndef _CUDA_TUPLE
+#define _CUDA_TUPLE
+
+#if defined(_MSC_VER) && !defined(LIBCUDACXX_FORCE_TUPLE)
+# error "<tuple> is only supported on GCC and Clang (Override with LIBCUDACXX_FORCE_TUPLE)"
+#endif
+
+#include "cstdint"
+#include "climits"
 
 #include "type_traits"
-#include "version"
+
+#include "detail/libcxx/include/__tuple"
+
+#include "functional"
+#include "utility"
 
 #include "detail/__config"
 
 #include "detail/__pragma_push"
 
-#include "detail/libcxx/include/__tuple"
-#include "detail/libcxx/include/utility"
+#include "detail/libcxx/include/tuple"
 
 #include "detail/__pragma_pop"
 
-#endif //_CUDA_UTILITY
+#endif //_CUDA_TUPLE
 
 
