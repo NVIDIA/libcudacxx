@@ -9,7 +9,7 @@
 #ifndef DEFAULTONLY_H
 #define DEFAULTONLY_H
 
-#include <cassert>
+#include <cuda/std/cassert>
 
 class DefaultOnly
 {
@@ -18,17 +18,15 @@ class DefaultOnly
     DefaultOnly(const DefaultOnly&);
     DefaultOnly& operator=(const DefaultOnly&);
 public:
-    static int count;
+    STATIC_MEMBER_VAR(count, int);
 
-    DefaultOnly() : data_(-1) {++count;}
-    ~DefaultOnly() {data_ = 0; --count;}
+    __host__ __device__ DefaultOnly() : data_(-1) {++count();}
+    __host__ __device__ ~DefaultOnly() {data_ = 0; --count();}
 
-    friend bool operator==(const DefaultOnly& x, const DefaultOnly& y)
+    __host__ __device__ friend bool operator==(const DefaultOnly& x, const DefaultOnly& y)
         {return x.data_ == y.data_;}
-    friend bool operator< (const DefaultOnly& x, const DefaultOnly& y)
+    __host__ __device__ friend bool operator< (const DefaultOnly& x, const DefaultOnly& y)
         {return x.data_ < y.data_;}
 };
-
-int DefaultOnly::count = 0;
 
 #endif  // DEFAULTONLY_H

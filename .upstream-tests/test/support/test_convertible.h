@@ -14,7 +14,7 @@
 // Unlike 'std::is_convertible' which only allows checking for single argument
 // conversions.
 
-#include <type_traits>
+#include <cuda/std/type_traits>
 
 #include "test_macros.h"
 
@@ -23,19 +23,19 @@
 #endif
 
 namespace detail {
-    template <class Tp> void eat_type(Tp);
+    template <class Tp> __host__ __device__ void eat_type(Tp);
 
     template <class Tp, class ...Args>
-    constexpr auto test_convertible_imp(int)
+    __host__ __device__ constexpr auto test_convertible_imp(int)
         -> decltype(eat_type<Tp>({std::declval<Args>()...}), true)
     { return true; }
 
     template <class Tp, class ...Args>
-    constexpr auto test_convertible_imp(long) -> bool { return false; }
+    __host__ __device__ constexpr auto test_convertible_imp(long) -> bool { return false; }
 }
 
 template <class Tp, class ...Args>
-constexpr bool test_convertible()
+__host__ __device__ constexpr bool test_convertible()
 { return detail::test_convertible_imp<Tp, Args...>(0); }
 
 #endif // SUPPORT_TEST_CONVERTIBLE_H

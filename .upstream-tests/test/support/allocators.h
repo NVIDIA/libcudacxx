@@ -9,8 +9,8 @@
 #ifndef ALLOCATORS_H
 #define ALLOCATORS_H
 
-#include <type_traits>
-#include <utility>
+#include <cuda/std/type_traits>
+#include <cuda/std/utility>
 
 #include "test_macros.h"
 
@@ -21,56 +21,59 @@ class A1
 {
     int id_;
 public:
-    explicit A1(int id = 0) TEST_NOEXCEPT : id_(id) {}
+    __device__ __host__ explicit A1(int id = 0) TEST_NOEXCEPT : id_(id) {}
 
     typedef T value_type;
 
-    int id() const {return id_;}
+    __device__ __host__ int id() const {return id_;}
 
-    static bool copy_called;
-    static bool move_called;
-    static bool allocate_called;
-    static std::pair<T*, std::size_t> deallocate_called;
+    STATIC_MEMBER_VAR(copy_called, bool);
+    STATIC_MEMBER_VAR(move_called, bool);
+    STATIC_MEMBER_VAR(allocate_called, bool);
 
-    A1(const A1& a) TEST_NOEXCEPT : id_(a.id()) {copy_called = true;}
-    A1(A1&& a)      TEST_NOEXCEPT : id_(a.id()) {move_called = true;}
-    A1& operator=(const A1& a) TEST_NOEXCEPT { id_ = a.id(); copy_called = true; return *this;}
-    A1& operator=(A1&& a)      TEST_NOEXCEPT { id_ = a.id(); move_called = true; return *this;}
+    __device__ __host__ static cuda::std::pair<T*, cuda::std::size_t>& deallocate_called() {
+        #ifdef __CUDA_ARCH__
+        __shared__ cuda::std::pair<T*, cuda::std::size_t> v;
+        #else
+        static cuda::std::pair<T*, cuda::std::size_t> v = 0;
+        #endif
+        return v;
+    }
+
+    __device__ __host__ A1(const A1& a) TEST_NOEXCEPT : id_(a.id()) {copy_called() = true;}
+    __device__ __host__ A1(A1&& a)      TEST_NOEXCEPT : id_(a.id()) {move_called() = true;}
+    __device__ __host__ A1& operator=(const A1& a) TEST_NOEXCEPT { id_ = a.id(); copy_called() = true; return *this;}
+    __device__ __host__ A1& operator=(A1&& a)      TEST_NOEXCEPT { id_ = a.id(); move_called() = true; return *this;}
 
     template <class U>
-        A1(const A1<U>& a) TEST_NOEXCEPT : id_(a.id()) {copy_called = true;}
+        __device__ __host__ A1(const A1<U>& a) TEST_NOEXCEPT : id_(a.id()) {copy_called() = true;}
     template <class U>
-        A1(A1<U>&& a) TEST_NOEXCEPT : id_(a.id()) {move_called = true;}
+        __device__ __host__ A1(A1<U>&& a) TEST_NOEXCEPT : id_(a.id()) {move_called() = true;}
 
-    T* allocate(std::size_t n)
+    __device__ __host__ T* allocate(cuda::std::size_t n)
     {
-        allocate_called = true;
+        allocate_called() = true;
         return (T*)n;
     }
 
-    void deallocate(T* p, std::size_t n)
+    __device__ __host__ void deallocate(T* p, cuda::std::size_t n)
     {
-        deallocate_called = std::pair<T*, std::size_t>(p, n);
+        deallocate_called() = cuda::std::pair<T*, cuda::std::size_t>(p, n);
     }
 
-    std::size_t max_size() const {return id_;}
+    __device__ __host__ cuda::std::size_t max_size() const {return id_;}
 };
-
-template <class T> bool A1<T>::copy_called = false;
-template <class T> bool A1<T>::move_called = false;
-template <class T> bool A1<T>::allocate_called = false;
-template <class T> std::pair<T*, std::size_t> A1<T>::deallocate_called;
 
 template <class T, class U>
 inline
-bool operator==(const A1<T>& x, const A1<U>& y)
+__device__ __host__ bool operator==(const A1<T>& x, const A1<U>& y)
 {
     return x.id() == y.id();
 }
 
 template <class T, class U>
 inline
-bool operator!=(const A1<T>& x, const A1<U>& y)
+__device__ __host__ bool operator!=(const A1<T>& x, const A1<U>& y)
 {
     return !(x == y);
 }
@@ -80,47 +83,43 @@ class A2
 {
     int id_;
 public:
-    explicit A2(int id = 0) TEST_NOEXCEPT : id_(id) {}
+    __device__ __host__ explicit A2(int id = 0) TEST_NOEXCEPT : id_(id) {}
 
     typedef T value_type;
 
     typedef unsigned size_type;
     typedef int difference_type;
 
-    typedef std::true_type propagate_on_container_move_assignment;
+    typedef cuda::std::true_type propagate_on_container_move_assignment;
 
-    int id() const {return id_;}
+    __device__ __host__ int id() const {return id_;}
 
-    static bool copy_called;
-    static bool move_called;
-    static bool allocate_called;
+    STATIC_MEMBER_VAR(copy_called, bool);
+    STATIC_MEMBER_VAR(move_called, bool);
+    STATIC_MEMBER_VAR(allocate_called, bool);
 
-    A2(const A2& a) TEST_NOEXCEPT : id_(a.id()) {copy_called = true;}
-    A2(A2&& a)      TEST_NOEXCEPT : id_(a.id()) {move_called = true;}
-    A2& operator=(const A2& a) TEST_NOEXCEPT { id_ = a.id(); copy_called = true; return *this;}
-    A2& operator=(A2&& a)      TEST_NOEXCEPT { id_ = a.id(); move_called = true; return *this;}
+    __device__ __host__ A2(const A2& a) TEST_NOEXCEPT : id_(a.id()) {copy_called() = true;}
+    __device__ __host__ A2(A2&& a)      TEST_NOEXCEPT : id_(a.id()) {move_called() = true;}
+    __device__ __host__ A2& operator=(const A2& a) TEST_NOEXCEPT { id_ = a.id(); copy_called() = true; return *this;}
+    __device__ __host__ A2& operator=(A2&& a)      TEST_NOEXCEPT { id_ = a.id(); move_called() = true; return *this;}
 
-    T* allocate(std::size_t, const void* hint)
+    __device__ __host__ T* allocate(cuda::std::size_t, const void* hint)
     {
-        allocate_called = true;
+        allocate_called() = true;
         return (T*) const_cast<void *>(hint);
     }
 };
 
-template <class T> bool A2<T>::copy_called = false;
-template <class T> bool A2<T>::move_called = false;
-template <class T> bool A2<T>::allocate_called = false;
-
 template <class T, class U>
 inline
-bool operator==(const A2<T>& x, const A2<U>& y)
+__device__ __host__ bool operator==(const A2<T>& x, const A2<U>& y)
 {
     return x.id() == y.id();
 }
 
 template <class T, class U>
 inline
-bool operator!=(const A2<T>& x, const A2<U>& y)
+__device__ __host__ bool operator!=(const A2<T>& x, const A2<U>& y)
 {
     return !(x == y);
 }
@@ -130,57 +129,52 @@ class A3
 {
     int id_;
 public:
-    explicit A3(int id = 0) TEST_NOEXCEPT : id_(id) {}
+    __device__ __host__ explicit A3(int id = 0) TEST_NOEXCEPT : id_(id) {}
 
     typedef T value_type;
 
-    typedef std::true_type propagate_on_container_copy_assignment;
-    typedef std::true_type propagate_on_container_swap;
+    typedef cuda::std::true_type propagate_on_container_copy_assignment;
+    typedef cuda::std::true_type propagate_on_container_swap;
 
-    int id() const {return id_;}
+    __device__ __host__ int id() const {return id_;}
 
-    static bool copy_called;
-    static bool move_called;
-    static bool constructed;
-    static bool destroy_called;
+    STATIC_MEMBER_VAR(copy_called, bool);
+    STATIC_MEMBER_VAR(move_called, bool);
+    STATIC_MEMBER_VAR(constructed, bool);
+    STATIC_MEMBER_VAR(destroy_called, bool);
 
-    A3(const A3& a) TEST_NOEXCEPT : id_(a.id()) {copy_called = true;}
-    A3(A3&& a)      TEST_NOEXCEPT : id_(a.id())  {move_called = true;}
-    A3& operator=(const A3& a) TEST_NOEXCEPT { id_ = a.id(); copy_called = true; return *this;}
-    A3& operator=(A3&& a)      TEST_NOEXCEPT { id_ = a.id(); move_called = true; return *this;}
+    __device__ __host__ A3(const A3& a) TEST_NOEXCEPT : id_(a.id()) {copy_called() = true;}
+    __device__ __host__ A3(A3&& a)      TEST_NOEXCEPT : id_(a.id())  {move_called() = true;}
+    __device__ __host__ A3& operator=(const A3& a) TEST_NOEXCEPT { id_ = a.id(); copy_called() = true; return *this;}
+    __device__ __host__ A3& operator=(A3&& a)      TEST_NOEXCEPT { id_ = a.id(); move_called() = true; return *this;}
 
     template <class U, class ...Args>
-    void construct(U* p, Args&& ...args)
+    __device__ __host__ void construct(U* p, Args&& ...args)
     {
-        ::new (p) U(std::forward<Args>(args)...);
-        constructed = true;
+        ::new (p) U(cuda::std::forward<Args>(args)...);
+        constructed() = true;
     }
 
     template <class U>
-    void destroy(U* p)
+    __device__ __host__ void destroy(U* p)
     {
         p->~U();
-        destroy_called = true;
+        destroy_called() = true;
     }
 
-    A3 select_on_container_copy_construction() const {return A3(-1);}
+    __device__ __host__ A3 select_on_container_copy_construction() const {return A3(-1);}
 };
-
-template <class T> bool A3<T>::copy_called = false;
-template <class T> bool A3<T>::move_called = false;
-template <class T> bool A3<T>::constructed = false;
-template <class T> bool A3<T>::destroy_called = false;
 
 template <class T, class U>
 inline
-bool operator==(const A3<T>& x, const A3<U>& y)
+__device__ __host__ bool operator==(const A3<T>& x, const A3<U>& y)
 {
     return x.id() == y.id();
 }
 
 template <class T, class U>
 inline
-bool operator!=(const A3<T>& x, const A3<U>& y)
+__device__ __host__ bool operator!=(const A3<T>& x, const A3<U>& y)
 {
     return !(x == y);
 }
