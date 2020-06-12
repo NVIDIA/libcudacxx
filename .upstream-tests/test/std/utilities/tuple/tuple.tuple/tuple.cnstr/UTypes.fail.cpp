@@ -6,24 +6,35 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef MOVEONLY_H
-#define MOVEONLY_H
+// <cuda/std/tuple>
 
-#include "test_macros.h"
+// template <class... Types> class tuple;
 
-#if TEST_STD_VER >= 11
+// template <class... UTypes>
+//   explicit tuple(UTypes&&... u);
 
-#include <cuda/std/cstddef>
-// #include <functional>
+// UNSUPPORTED: c++98, c++03
+
+/*
+    This is testing an extension whereby only Types having an explicit conversion
+    from UTypes are bound by the explicit tuple constructor.
+*/
+
+#include <cuda/std/tuple>
+#include <cuda/std/cassert>
+
+template <typename T>
+__host__ __device__
+constexpr bool unused(T &&) {return true;}
 
 class MoveOnly
 {
-    MoveOnly(const MoveOnly&) = delete;
-    MoveOnly& operator=(const MoveOnly&) = delete;
+    MoveOnly(const MoveOnly&);
+    MoveOnly& operator=(const MoveOnly&);
 
     int data_;
 public:
-    __host__ __device__ MoveOnly(int data = 1) : data_(data) {}
+    __host__ __device__ explicit MoveOnly(int data = 1) : data_(data) {}
     __host__ __device__ MoveOnly(MoveOnly&& x)
         : data_(x.data_) {x.data_ = 0;}
     __host__ __device__ MoveOnly& operator=(MoveOnly&& x)
@@ -33,22 +44,14 @@ public:
 
     __host__ __device__ bool operator==(const MoveOnly& x) const {return data_ == x.data_;}
     __host__ __device__ bool operator< (const MoveOnly& x) const {return data_ <  x.data_;}
-    __host__ __device__ MoveOnly operator+(const MoveOnly& x) const { return MoveOnly{data_ + x.data_}; }
-    __host__ __device__ MoveOnly operator*(const MoveOnly& x) const { return MoveOnly{data_ * x.data_}; }
 };
 
-/*
-namespace std {
-template <>
-struct hash<MoveOnly>
+int main(int, char**)
 {
-    typedef MoveOnly argument_type;
-    typedef size_t result_type;
-    std::size_t operator()(const MoveOnly& x) const {return x.get();}
-};
+    {
+        cuda::std::tuple<MoveOnly> t = 1;
+        unused(t);
+    }
+
+  return 0;
 }
-*/
-
-#endif  // TEST_STD_VER >= 11
-
-#endif  // MOVEONLY_H
