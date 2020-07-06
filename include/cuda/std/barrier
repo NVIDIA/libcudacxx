@@ -24,6 +24,15 @@
 
 _LIBCUDACXX_BEGIN_NAMESPACE_CUDA
 
+template<std::size_t _Alignment>
+struct aligned_size_t {
+    std::size_t __s;
+    __host__ __device__
+    explicit aligned_size_t(size_t __s) : __s(__s) { }
+    __host__ __device__
+    operator size_t() const { return __s; }
+};
+
 template<thread_scope _Sco, class _CompletionF = std::__empty_completion>
 class barrier : public std::__barrier_base<_CompletionF, _Sco> {
 public:
@@ -50,10 +59,24 @@ public:
 
 struct __block_scope_barrier_base {};
 
+_LIBCUDACXX_END_NAMESPACE_CUDA
+
+_LIBCUDACXX_BEGIN_NAMESPACE_CUDA_DEVICE
+
+__device__
+inline std::uint64_t * barrier_native_handle(barrier<thread_scope_block> & b);
+
+_LIBCUDACXX_END_NAMESPACE_CUDA_DEVICE
+
+_LIBCUDACXX_BEGIN_NAMESPACE_CUDA
+
 template<>
 class barrier<thread_scope_block, std::__empty_completion> : public __block_scope_barrier_base {
     using __barrier_base = std::__barrier_base<std::__empty_completion, (int)thread_scope_block>;
     __barrier_base __barrier;
+
+    __device__
+    friend inline std::uint64_t * device::_LIBCUDACXX_CUDA_ABI_NAMESPACE::barrier_native_handle(barrier<thread_scope_block> & b);
 
 public:
     using arrival_token = typename __barrier_base::arrival_token;
@@ -73,7 +96,7 @@ public:
     ~barrier() {
 #if __CUDA_ARCH__ >= 800
         if (__isShared(&__barrier)) {
-            asm volatile ("mbarrier.inval.b64 [%0];"
+            asm volatile ("mbarrier.inval.shared.b64 [%0];"
                 :: "r"(static_cast<std::uint32_t>(__cvta_generic_to_shared(&__barrier)))
                 : "memory");
         }
@@ -202,19 +225,64 @@ public:
     }
 };
 
-#if __CUDA_ARCH__ >= 800
-template<std::size_t __alignment, bool __large = (__alignment > 16)>
-struct __memcpy_async_impl {
-    __device__ static inline bool __copy(char * __destination, char const * __source, std::size_t __total_size) {
+_LIBCUDACXX_END_NAMESPACE_CUDA
+
+_LIBCUDACXX_BEGIN_NAMESPACE_CUDA_DEVICE
+
+__device__
+inline std::uint64_t * barrier_native_handle(barrier<thread_scope_block> & b) {
+    return reinterpret_cast<std::uint64_t *>(&b.__barrier);
+}
+
+_LIBCUDACXX_END_NAMESPACE_CUDA_DEVICE
+
+_LIBCUDACXX_BEGIN_NAMESPACE_CUDA
+
+template<>
+class barrier<thread_scope_thread, std::__empty_completion> : private barrier<thread_scope_block> {
+    using __base = barrier<thread_scope_block>;
+
+public:
+    using __base::__base;
+
+    _LIBCUDACXX_INLINE_VISIBILITY
+    friend void init(barrier * __b, std::ptrdiff_t __expected, std::__empty_completion __completion = std::__empty_completion()) {
+        init(static_cast<__base *>(__b), __expected, __completion);
+    }
+
+    using __base::arrive;
+    using __base::wait;
+    using __base::arrive_and_wait;
+    using __base::arrive_and_drop;
+    using __base::max;
+};
+
+template<std::size_t _Alignment>
+_LIBCUDACXX_INLINE_VISIBILITY
+inline void __strided_memcpy(char * __destination, char const * __source, std::size_t __total_size, std::size_t __rank, std::size_t __stride = 1) {
+    if (__stride == 1) {
         memcpy(__destination, __source, __total_size);
+    }
+    else {
+        for (std::size_t __offset = __rank * _Alignment; __offset < __total_size; __offset += __stride * _Alignment) {
+            memcpy(__destination + __offset, __source + __offset, _Alignment);
+        }
+    }
+}
+
+#if __CUDA_ARCH__ >= 800
+template<std::size_t _Alignment, bool _Large = (_Alignment > 16)>
+struct __memcpy_async_impl {
+    __device__ static inline bool __copy(char * __destination, char const * __source, std::size_t __total_size, std::size_t __rank, std::size_t __stride) {
+        __strided_memcpy<_Alignment>(__destination, __source, __total_size, __rank, __stride);
         return false;
     }
 };
 
 template<>
 struct __memcpy_async_impl<4, false> {
-    __device__ static inline bool __copy(char * __destination, char const * __source, std::size_t __total_size) {
-        for (std::size_t __offset = 0; __offset < __total_size; __offset += 4) {
+    __device__ static inline bool __copy(char * __destination, char const * __source, std::size_t __total_size, std::size_t __rank, std::size_t __stride) {
+        for (std::size_t __offset = __rank * 4; __offset < __total_size; __offset += __stride * 4) {
             asm volatile ("cp.async.ca.shared.global [%0], [%1], 4;"
                 :: "r"(static_cast<std::uint32_t>(__cvta_generic_to_shared(__destination + __offset))),
                     "l"(__source + __offset)
@@ -226,8 +294,8 @@ struct __memcpy_async_impl<4, false> {
 
 template<>
 struct __memcpy_async_impl<8, false> {
-    __device__ static inline bool __copy(char * __destination, char const * __source, std::size_t __total_size) {
-        for (std::size_t __offset = 0; __offset < __total_size; __offset += 8) {
+    __device__ static inline bool __copy(char * __destination, char const * __source, std::size_t __total_size, std::size_t __rank, std::size_t __stride) {
+        for (std::size_t __offset = __rank * 8; __offset < __total_size; __offset += __stride * 8) {
             asm volatile ("cp.async.ca.shared.global [%0], [%1], 8;"
                 :: "r"(static_cast<std::uint32_t>(__cvta_generic_to_shared(__destination + __offset))),
                     "l"(__source + __offset)
@@ -239,8 +307,8 @@ struct __memcpy_async_impl<8, false> {
 
 template<>
 struct __memcpy_async_impl<16, false> {
-    __device__ static inline bool __copy(char * __destination, char const * __source, std::size_t __total_size) {
-        for (std::size_t __offset = 0; __offset < __total_size; __offset += 16) {
+    __device__ static inline bool __copy(char * __destination, char const * __source, std::size_t __total_size, std::size_t __rank, std::size_t __stride) {
+        for (std::size_t __offset = __rank * 16; __offset < __total_size; __offset += __stride * 16) {
             asm volatile ("cp.async.ca.shared.global [%0], [%1], 16;"
                 :: "r"(static_cast<std::uint32_t>(__cvta_generic_to_shared(__destination + __offset))),
                     "l"(__source + __offset)
@@ -250,45 +318,16 @@ struct __memcpy_async_impl<16, false> {
     }
 };
 
-template<std::size_t __alignment>
-struct __memcpy_async_impl<__alignment, true> : public __memcpy_async_impl<16, false> { };
+template<std::size_t _Alignment>
+struct __memcpy_async_impl<_Alignment, true> : public __memcpy_async_impl<16, false> { };
 #endif
 
-template<std::size_t __native_alignment>
+template<thread_scope _Sco, typename _CompF, bool _Is_mbarrier = (_Sco >= thread_scope_block) && std::is_same<_CompF, std::__empty_completion>::value>
 _LIBCUDACXX_INLINE_VISIBILITY
-void inline __memcpy_async(char * __destination, char const * __source, std::size_t __size, barrier<thread_scope_block> & __barrier) {
-#if __CUDA_ARCH__ >= 800
-    bool __is_async = __isShared(__destination) && __isGlobal(__source);
-
-    if (__is_async) {
-        if (__native_alignment < 4) {
-            auto __source_address = reinterpret_cast<std::uintptr_t>(__source);
-            auto __destination_address = reinterpret_cast<std::uintptr_t>(__destination);
-
-            // Lowest bit set will tell us what the common alignment of the three values is.
-            auto __alignment = __ffs(__source_address | __destination_address | __size);
-
-            switch (__alignment) {
-                default: __is_async = __memcpy_async_impl<16>::__copy(__destination, __source, __size); break;
-                case 4: __is_async = __memcpy_async_impl<8>::__copy(__destination, __source, __size); break;
-                case 3: __is_async = __memcpy_async_impl<4>::__copy(__destination, __source, __size); break;
-                case 2: // fallthrough
-                case 1: __is_async = __memcpy_async_impl<1>::__copy(__destination, __source, __size); break;
-            }
-        }
-        else {
-            __is_async = __memcpy_async_impl<__native_alignment>::__copy(__destination, __source, __size);
-        }
-    }
-    else
-#endif
-    {
-        memcpy(__destination, __source, __size);
-    }
-
+inline void __memcpy_async_synchronize(barrier<_Sco, _CompF> & __barrier, bool __is_async) {
 #if __CUDA_ARCH__ >= 800
     if (__is_async) {
-        if (__isShared(&__barrier)) {
+        if (_Is_mbarrier && __isShared(&__barrier)) {
             asm volatile ("cp.async.mbarrier.arrive.shared.b64 [%0];"
                 :: "r"(static_cast<std::uint32_t>(__cvta_generic_to_shared(&__barrier)))
                 : "memory");
@@ -301,9 +340,55 @@ void inline __memcpy_async(char * __destination, char const * __source, std::siz
 #endif
 }
 
-template<class _Tp>
+template<std::size_t _Native_alignment, typename _Group, typename _Sync>
 _LIBCUDACXX_INLINE_VISIBILITY
-void memcpy_async(_Tp * __destination, _Tp const * __source, std::size_t __size, barrier<thread_scope_block> & __barrier) {
+void inline __memcpy_async(_Group const & __group, char * __destination, char const * __source, std::size_t __size, _Sync & __sync) {
+    bool __is_async = false;
+
+#if __CUDA_ARCH__ >= 800
+    __is_async = __isShared(__destination) && __isGlobal(__source);
+
+    if (__is_async) {
+        if (_Native_alignment < 4) {
+            auto __source_address = reinterpret_cast<std::uintptr_t>(__source);
+            auto __destination_address = reinterpret_cast<std::uintptr_t>(__destination);
+
+            // Lowest bit set will tell us what the common alignment of the three values is.
+            auto _Alignment = __ffs(__source_address | __destination_address | __size);
+
+            switch (_Alignment) {
+                default: __is_async = __memcpy_async_impl<16>::__copy(__destination, __source, __size, __group.thread_rank(), __group.size()); break;
+                case 4: __is_async = __memcpy_async_impl<8>::__copy(__destination, __source, __size, __group.thread_rank(), __group.size()); break;
+                case 3: __is_async = __memcpy_async_impl<4>::__copy(__destination, __source, __size, __group.thread_rank(), __group.size()); break;
+                case 2: // fallthrough
+                case 1: __is_async = __memcpy_async_impl<1>::__copy(__destination, __source, __size, __group.thread_rank(), __group.size()); break;
+            }
+        }
+        else {
+            __is_async = __memcpy_async_impl<_Native_alignment>::__copy(__destination, __source, __size, __group.thread_rank(), __group.size());
+        }
+    }
+    else
+#endif
+    {
+        __strided_memcpy<_Native_alignment>(__destination, __source, __size, __group.thread_rank(), __group.size());
+    }
+
+    __memcpy_async_synchronize(__sync, __is_async);
+}
+
+struct __single_thread_group {
+    _LIBCUDACXX_INLINE_VISIBILITY
+    void sync() const {}
+    _LIBCUDACXX_INLINE_VISIBILITY
+    constexpr std::size_t size() const { return 1; };
+    _LIBCUDACXX_INLINE_VISIBILITY
+    constexpr std::size_t thread_rank() const { return 0; };
+};
+
+template<typename _Group, class _Tp, thread_scope _Sco, typename _CompF>
+_LIBCUDACXX_INLINE_VISIBILITY
+void memcpy_async(_Group const & __group, _Tp * __destination, _Tp const * __source, std::size_t __size, barrier<_Sco, _CompF> & __barrier) {
     // When compiling with NVCC and GCC 4.8, certain user defined types that _are_ trivially copyable are
     // incorrectly classified as not trivially copyable. Remove this assertion to allow for their usage with
     // memcpy_async when compiling with GCC 4.8.
@@ -312,12 +397,45 @@ void memcpy_async(_Tp * __destination, _Tp const * __source, std::size_t __size,
     static_assert(std::is_trivially_copyable<_Tp>::value, "memcpy_async requires a trivially copyable type");
 #endif
 
-    __memcpy_async<alignof(_Tp)>(reinterpret_cast<char *>(__destination), reinterpret_cast<char const *>(__source), __size, __barrier);
+    __memcpy_async<alignof(_Tp)>(__group, reinterpret_cast<char *>(__destination), reinterpret_cast<char const *>(__source), __size, __barrier);
 }
 
+template<typename _Group, class _Tp, std::size_t _Alignment, thread_scope _Sco, typename _CompF, std::size_t _Larger_alignment = (alignof(_Tp) > _Alignment) ? alignof(_Tp) : _Alignment>
 _LIBCUDACXX_INLINE_VISIBILITY
-void inline memcpy_async(void * __destination, void const * __source, std::size_t __size, barrier<thread_scope_block> & __barrier) {
-    __memcpy_async<1>(reinterpret_cast<char *>(__destination), reinterpret_cast<char const *>(__source), __size, __barrier);
+void memcpy_async(_Group const & __group, _Tp * __destination, _Tp const * __source, aligned_size_t<_Alignment> __size, barrier<_Sco, _CompF> & __barrier) {
+    // When compiling with NVCC and GCC 4.8, certain user defined types that _are_ trivially copyable are
+    // incorrectly classified as not trivially copyable. Remove this assertion to allow for their usage with
+    // memcpy_async when compiling with GCC 4.8.
+    // FIXME: remove the #if once GCC 4.8 is no longer supported.
+#if !defined(_LIBCUDACXX_COMPILER_GCC) || _GNUC_VER > 408
+    static_assert(std::is_trivially_copyable<_Tp>::value, "memcpy_async requires a trivially copyable type");
+#endif
+
+    __memcpy_async<_Larger_alignment>(__group, reinterpret_cast<char *>(__destination), reinterpret_cast<char const *>(__source), __size, __barrier);
+}
+
+template<class _Tp, typename _Size, thread_scope _Sco, typename _CompF>
+_LIBCUDACXX_INLINE_VISIBILITY
+void memcpy_async(_Tp * __destination, _Tp const * __source, _Size __size, barrier<_Sco, _CompF> & __barrier) {
+    memcpy_async(__single_thread_group{}, __destination, __source, __size, __barrier);
+}
+
+template<typename _Group, thread_scope _Sco, typename _CompF>
+_LIBCUDACXX_INLINE_VISIBILITY
+void memcpy_async(_Group const & __group, void * __destination, void const * __source, std::size_t __size, barrier<_Sco, _CompF> & __barrier) {
+    __memcpy_async<1>(__group, reinterpret_cast<char *>(__destination), reinterpret_cast<char const *>(__source), __size, __barrier);
+}
+
+template<typename _Group, std::size_t _Alignment, thread_scope _Sco, typename _CompF>
+_LIBCUDACXX_INLINE_VISIBILITY
+void memcpy_async(_Group const & __group, void * __destination, void const * __source, aligned_size_t<_Alignment> __size, barrier<_Sco, _CompF> & __barrier) {
+    __memcpy_async<_Alignment>(__group, reinterpret_cast<char *>(__destination), reinterpret_cast<char const *>(__source), __size, __barrier);
+}
+
+template<typename _Size, thread_scope _Sco, typename _CompF>
+_LIBCUDACXX_INLINE_VISIBILITY
+void memcpy_async(void * __destination, void const * __source, _Size __size, barrier<_Sco, _CompF> & __barrier) {
+    memcpy_async(__single_thread_group{}, __destination, __source, __size, __barrier);
 }
 
 _LIBCUDACXX_END_NAMESPACE_CUDA

@@ -114,6 +114,14 @@
 #  define _LIBCUDACXX_END_NAMESPACE_CUDA } }
 #endif
 
+#ifndef _LIBCUDACXX_BEGIN_NAMESPACE_CUDA_DEVICE
+#  define _LIBCUDACXX_BEGIN_NAMESPACE_CUDA_DEVICE \
+      namespace cuda { namespace device { inline namespace _LIBCUDACXX_CUDA_ABI_NAMESPACE {
+#endif
+#ifndef _LIBCUDACXX_END_NAMESPACE_CUDA_DEVICE
+#  define _LIBCUDACXX_END_NAMESPACE_CUDA_DEVICE } } }
+#endif
+
 // redefine namespace std::
 #undef _LIBCUDACXX_BEGIN_NAMESPACE_STD
 #define _LIBCUDACXX_BEGIN_NAMESPACE_STD \

@@ -55,8 +55,8 @@ endif()
 # TODO: this has to be reconfigurable with other options
 # this has to land in cache, but has to be forced, and controlled by other variables
 set(LIBCXX_TEST_COMPILER_FLAGS
-    "${LIBCXX_FORCE_INCLUDE} -I${CMAKE_SOURCE_DIR}/include"
-    CACHE STRING "Flags for libcxx testing.")
+    "${LIBCXX_FORCE_INCLUDE} -I${CMAKE_SOURCE_DIR}/include -I${CMAKE_SOURCE_DIR}/../cuda/tools/cooperative_groups"
+    CACHE STRING "Flags for libcxx testing." FORCE)
 
 foreach (PATH IN LISTS LIBCXX_TEST_LD_LIBRARY_PATHS)
   if (LIBCXX_TEST_RPATH_FLAGS)

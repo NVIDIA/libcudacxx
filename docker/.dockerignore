@@ -1,13 +1,9 @@
 *
 !bin
-!cuda/import/*.h* 
-!cuda/tools/cudart/*.h*
-!cuda/tools/cudart/nvfunctional
-!cuda/tools/cnprt/*.h*
-!cuda/common/*.h*
-!cuda/tools/cooperative_groups/*.h*
+!cuda/common
+!cuda/import
+!cuda/tools
 !opencl/import/cl_rel/CL/*.h*
-!cuda/tools/cudart/cudart_etbl/*.h*
 !libcudacxx
 libcudacxx/.git
 libcudacxx/libcxx/.git

@@ -41,6 +41,7 @@
 #define __ATOMIC_SYSTEM 0 // 0 indicates default
 #define __ATOMIC_DEVICE 1
 #define __ATOMIC_BLOCK 2
+#define __ATOMIC_THREAD 10
 #endif //__ATOMIC_BLOCK
 
 
@@ -64,7 +65,8 @@ namespace detail {
 enum thread_scope {
     thread_scope_system = __ATOMIC_SYSTEM,
     thread_scope_device = __ATOMIC_DEVICE,
-    thread_scope_block = __ATOMIC_BLOCK
+    thread_scope_block = __ATOMIC_BLOCK,
+    thread_scope_thread = __ATOMIC_THREAD
 };
 
 #define _LIBCUDACXX_ATOMIC_SCOPE_TYPE ::cuda::thread_scope
@@ -72,11 +74,18 @@ enum thread_scope {
 
 namespace detail {
 
+    struct __thread_scope_thread_tag { };
     struct __thread_scope_block_tag { };
     struct __thread_scope_device_tag { };
     struct __thread_scope_system_tag { };
 
     template<int _Scope>  struct __scope_enum_to_tag { };
+    /* This would be the implementation once an actual thread-scope backend exists.
+    template<> struct __scope_enum_to_tag<(int)thread_scope_thread> {
+        using type = __thread_scope_thread_tag; };
+    Until then: */
+    template<> struct __scope_enum_to_tag<(int)thread_scope_thread> {
+        using type = __thread_scope_block_tag; };
     template<> struct __scope_enum_to_tag<(int)thread_scope_block> {
         using type = __thread_scope_block_tag; };
     template<> struct __scope_enum_to_tag<(int)thread_scope_device> {

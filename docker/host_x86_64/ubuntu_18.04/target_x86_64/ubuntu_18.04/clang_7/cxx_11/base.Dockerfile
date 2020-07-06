@@ -30,11 +30,7 @@ ADD bin /sw/gpgpu/bin
 # Copy the core CUDA headers from the source tree.
 ADD cuda/import/*.h* /sw/gpgpu/cuda/import/
 ADD cuda/common/*.h* /sw/gpgpu/cuda/common/
-ADD cuda/tools/cudart/*.h* /sw/gpgpu/cuda/tools/cudart/
-ADD cuda/tools/cudart/nvfunctional /sw/gpgpu/cuda/tools/cudart/
-ADD cuda/tools/cnprt/*.h* /sw/gpgpu/cuda/tools/cnprt/
-ADD cuda/tools/cooperative_groups/*.h* /sw/gpgpu/cuda/tools/cooperative_groups/
-ADD cuda/tools/cudart/cudart_etbl/*.h* /sw/gpgpu/cuda/tools/cudart/cudart_etbl/
+ADD cuda/tools/ /sw/gpgpu/cuda/tools/
 ADD opencl/import/cl_rel/CL/*.h* /sw/gpgpu/opencl/import/cl_rel/CL/
 
 # Copy libcu++ sources from the source tree.
