@@ -10,12 +10,6 @@ logdir=${FAUX_NVRTC_LOG_DIR:-.}
 nvcc=$(echo $1 | sed 's/^[[:space:]]*//')
 shift
 
-cudart_include_dir=$(
-    echo '#include <cuda_pipeline_primitives.h>' \
-        | ${nvcc} -x cu - -M -E \
-        | grep -e ' /.*/cuda_pipeline_primitives\.h' -o \
-        | xargs dirname)
-
 echo "${nvcc}" >> ${logdir}/log
 
 original_flags=${@}
@@ -25,6 +19,7 @@ original_flags=("${original_flags[@]}" -D__LIBCUDACXX_NVRTC_TEST__=1)
 
 declare -a modified_flags
 declare -a gpu_archs
+declare -a includes
 
 input=""
 input_type=""
@@ -40,6 +35,17 @@ do
 
         -c)
             compile=1
+            ;;
+
+        -I*)
+            modified_flags=("${modified_flags[@]}" "$1")
+            includes=("${includes[@]}" "$1")
+            ;;
+
+        -I)
+            modified_flags=("${modified_flags[@]}" "$1" "$2")
+            includes=("${includes[@]}" "$1" "$2")
+            shift
             ;;
 
         -include|-isystem|-o|-ccbin)
@@ -81,11 +87,24 @@ do
     shift
 done
 
+echo "${includes[@]}"
+
 if [[ $compile -eq 0 ]] || [[ "${input_type}" != "-x cu" ]]
 then
     "${nvcc}" ${original_flags[@]} -lnvrtc -lcuda 2> >(tee -a ${logdir}/error_log)
     exit $?
 fi
+
+cudart_include_dir=$(
+    echo '#include <cuda_pipeline_primitives.h>' \
+        | ${nvcc} -x cu - -M -E "${includes[@]}" \
+        | grep -e ' /.*/cuda_pipeline_primitives\.h' -o \
+        | xargs dirname)
+cg_include_dir=$(
+    echo '#include <cooperative_groups.h>' \
+        | ${nvcc} -x cu - -M -E "${includes[@]}" \
+        | grep -e ' /.*/cooperative_groups\.h' -o \
+        | xargs dirname)
 
 echo "detected input file: ${input}" >> ${logdir}/log
 echo "modified flags: ${modified_flags[@]}" >> ${logdir}/log
@@ -114,6 +133,7 @@ echo '        // BEGIN SCRIPT GENERATED OPTIONS' >> "${tempfile}"
 echo '        "-I'"${libcudacxxdir}/include"'",' >> "${tempfile}"
 echo '        "-I'"${libcudacxxdir}/test/support"'",' >> "${tempfile}"
 echo '        "-I'"${cudart_include_dir}"'",' >> "${tempfile}"
+echo '        "-I'"${cg_include_dir}"'",' >> "${tempfile}"
 # The line below intentionally only uses the first element of ${gpu_archs[@]}.
 # They are sorted numerically above, and this selects the lowest of the requested
 # values.
