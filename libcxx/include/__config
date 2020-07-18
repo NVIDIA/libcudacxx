@@ -720,7 +720,9 @@ typedef __char32_t char32_t;
 //#endif
 
 #if _GNUC_VER >= 1000
-#define _LIBCUDACXX_IS_SAME(...) __is_same(__VA_ARGS__)
+// __is_same_as is useless: GCC complains when you try to use it in a SFINAE condition
+// which is the primary place where libc++ tries to use it. Disable.
+// #define _LIBCUDACXX_IS_SAME(...) __is_same_as(__VA_ARGS__)
 #endif
 
 #if !__EXCEPTIONS && !defined(_LIBCUDACXX_NO_EXCEPTIONS)
