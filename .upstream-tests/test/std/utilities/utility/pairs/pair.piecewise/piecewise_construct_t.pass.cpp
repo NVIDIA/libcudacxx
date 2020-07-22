@@ -13,12 +13,15 @@
 // struct piecewise_construct_t { explicit piecewise_construct_t() = default; };
 // constexpr piecewise_construct_t piecewise_construct = piecewise_construct_t();
 
-#include <utility>
+#include <cuda/std/utility>
 
+template <typename T>
+__host__ __device__
+constexpr bool unused(T &&) {return true;}
 
 int main(int, char**) {
-    std::piecewise_construct_t x = std::piecewise_construct;
-    (void)x;
+    cuda::std::piecewise_construct_t x = cuda::std::piecewise_construct;
+    unused(x);
 
     return 0;
 }
