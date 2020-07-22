@@ -7,16 +7,16 @@
 //===----------------------------------------------------------------------===//
 
 // UNSUPPORTED: c++98, c++03, c++11
-#include <utility>
-#include <complex>
+#include <cuda/std/utility>
+#include <cuda/std/complex>
 
-#include <cassert>
+#include <cuda/std/cassert>
 
 int main(int, char**)
 {
-    typedef std::complex<float> cf;
-    auto t1 = std::make_pair<int, int> ( 42, 43 );
-    assert ( std::get<int>(t1) == 42 ); // two ints
+    typedef cuda::std::complex<float> cf;
+    auto t1 = cuda::std::make_pair<int, int> ( 42, 43 );
+    assert ( cuda::std::get<int>(t1) == 42 ); // two ints
 
   return 0;
 }

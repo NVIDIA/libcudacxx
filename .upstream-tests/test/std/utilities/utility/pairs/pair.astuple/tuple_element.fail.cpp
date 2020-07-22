@@ -12,12 +12,12 @@
 
 // tuple_element<I, pair<T1, T2> >::type
 
-#include <utility>
+#include <cuda/std/utility>
 
 int main(int, char**)
 {
-    typedef std::pair<int, short> T;
-    std::tuple_element<2, T>::type foo; // expected-error@utility:* {{Index out of bounds in std::tuple_element<std::pair<T1, T2>>}}
+    typedef cuda::std::pair<int, short> T;
+    cuda::std::tuple_element<2, T>::type foo; // expected-error@utility:* {{Index out of bounds in cuda::std::tuple_element<cuda::std::pair<T1, T2>>}}
 
   return 0;
 }

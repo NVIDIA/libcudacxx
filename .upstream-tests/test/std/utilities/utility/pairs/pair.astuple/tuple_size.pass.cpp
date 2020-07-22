@@ -12,27 +12,27 @@
 
 // tuple_size<pair<T1, T2> >::value
 
-#include <utility>
+#include <cuda/std/utility>
 
 #include "test_macros.h"
 
 int main(int, char**)
 {
     {
-        typedef std::pair<int, short> P1;
-        static_assert((std::tuple_size<P1>::value == 2), "");
+        typedef cuda::std::pair<int, short> P1;
+        static_assert((cuda::std::tuple_size<P1>::value == 2), "");
     }
     {
-        typedef std::pair<int, short> const P1;
-        static_assert((std::tuple_size<P1>::value == 2), "");
+        typedef cuda::std::pair<int, short> const P1;
+        static_assert((cuda::std::tuple_size<P1>::value == 2), "");
     }
     {
-        typedef std::pair<int, short> volatile P1;
-        static_assert((std::tuple_size<P1>::value == 2), "");
+        typedef cuda::std::pair<int, short> volatile P1;
+        static_assert((cuda::std::tuple_size<P1>::value == 2), "");
     }
     {
-        typedef std::pair<int, short> const volatile P1;
-        static_assert((std::tuple_size<P1>::value == 2), "");
+        typedef cuda::std::pair<int, short> const volatile P1;
+        static_assert((cuda::std::tuple_size<P1>::value == 2), "");
     }
 
   return 0;

@@ -7,16 +7,19 @@
 //===----------------------------------------------------------------------===//
 
 // UNSUPPORTED: c++98, c++03, c++11
-#include <utility>
-#include <complex>
+#include <cuda/std/utility>
+#include <cuda/std/complex>
 
-#include <cassert>
+#include <cuda/std/cassert>
 
 int main(int, char**)
 {
-    typedef std::unique_ptr<int> upint;
-    std::pair<upint, int> t(upint(new int(4)), 23);
-    upint p = std::get<upint>(t);
+    // cuda/std/memory not supported
+    /*
+    typedef cuda::std::unique_ptr<int> upint;
+    cuda::std::pair<upint, int> t(upint(new int(4)), 23);
+    upint p = cuda::std::get<upint>(t);
+    */
 
   return 0;
 }
