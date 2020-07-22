@@ -15,9 +15,9 @@
 // struct piecewise_construct_t { explicit piecewise_construct_t() = default; };
 // constexpr piecewise_construct_t piecewise_construct = piecewise_construct_t();
 
-#include <utility>
-#include <tuple>
-#include <cassert>
+#include <cuda/std/utility>
+#include <cuda/std/tuple>
+#include <cuda/std/cassert>
 
 #include "test_macros.h"
 
@@ -26,9 +26,9 @@ class A
     int i_;
     char c_;
 public:
-    A(int i, char c) : i_(i), c_(c) {}
-    int get_i() const {return i_;}
-    char get_c() const {return c_;}
+    __host__ __device__ A(int i, char c) : i_(i), c_(c) {}
+    __host__ __device__ int get_i() const {return i_;}
+    __host__ __device__ char get_c() const {return c_;}
 };
 
 class B
@@ -37,17 +37,17 @@ class B
     unsigned u1_;
     unsigned u2_;
 public:
-    B(double d, unsigned u1, unsigned u2) : d_(d), u1_(u1), u2_(u2) {}
-    double get_d() const {return d_;}
-    unsigned get_u1() const {return u1_;}
-    unsigned get_u2() const {return u2_;}
+    __host__ __device__ B(double d, unsigned u1, unsigned u2) : d_(d), u1_(u1), u2_(u2) {}
+    __host__ __device__ double get_d() const {return d_;}
+    __host__ __device__ unsigned get_u1() const {return u1_;}
+    __host__ __device__ unsigned get_u2() const {return u2_;}
 };
 
 int main(int, char**)
 {
-    std::pair<A, B> p(std::piecewise_construct,
-                      std::make_tuple(4, 'a'),
-                      std::make_tuple(3.5, 6u, 2u));
+    cuda::std::pair<A, B> p(cuda::std::piecewise_construct,
+                      cuda::std::make_tuple(4, 'a'),
+                      cuda::std::make_tuple(3.5, 6u, 2u));
     assert(p.first.get_i() == 4);
     assert(p.first.get_c() == 'a');
     assert(p.second.get_d() == 3.5);
