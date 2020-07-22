@@ -53,10 +53,22 @@ void test_fully_specialized()
     pipe.producer_acquire();
     cuda::memcpy_async(static_cast<void *>(dest), static_cast<void *>(source), sizeof(T), pipe);
     pipe.producer_commit();
-    pipe.consumer_wait();
+    pipe.consumer_wait_for(cuda::std::chrono::seconds(30));
 
     assert(*source == 24);
     assert(*dest == 24);
+
+    pipe.consumer_release();
+
+    *source = 42;
+
+    pipe.producer_acquire();
+    cuda::memcpy_async(static_cast<void *>(dest), static_cast<void *>(source), sizeof(T), pipe);
+    pipe.producer_commit();
+    pipe.consumer_wait_until(cuda::std::chrono::system_clock::now() + cuda::std::chrono::seconds(30));
+
+    assert(*source == 42);
+    assert(*dest == 42);
 
     pipe.consumer_release();
 }
