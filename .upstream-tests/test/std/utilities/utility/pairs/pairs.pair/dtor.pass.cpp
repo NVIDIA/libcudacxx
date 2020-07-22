@@ -19,19 +19,25 @@
 //     if (is_trivially_destructible_v<T1> && is_trivially_destructible_v<T2>) is true.
 
 
-#include <utility>
-#include <type_traits>
-#include <string>
-#include <cassert>
+#include <cuda/std/utility>
+#include <cuda/std/type_traits>
+// cuda::std::string not supported
+// #include <cuda/std/string>
+#include <cuda/std/cassert>
 
 #include "test_macros.h"
+#include "DefaultOnly.h"
 
 int main(int, char**)
 {
-  static_assert((std::is_trivially_destructible<
-      std::pair<int, float> >::value), "");
-  static_assert((!std::is_trivially_destructible<
-      std::pair<int, std::string> >::value), "");
+  static_assert((cuda::std::is_trivially_destructible<
+      cuda::std::pair<int, float> >::value), "");
+  /*
+  static_assert((!cuda::std::is_trivially_destructible<
+      cuda::std::pair<int, cuda::std::string> >::value), "");
+  */
+  static_assert((!cuda::std::is_trivially_destructible<
+      cuda::std::pair<int, DefaultOnly> >::value), "");
 
   return 0;
 }

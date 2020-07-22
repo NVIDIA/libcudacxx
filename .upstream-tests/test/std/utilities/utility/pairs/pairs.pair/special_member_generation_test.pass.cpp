@@ -20,9 +20,10 @@
 // Test that the copy/move constructors and assignment operators are
 // correctly defined or deleted based on the properties of `T` and `U`.
 
-#include <cassert>
-#include <string>
-#include <tuple>
+#include <cuda/std/cassert>
+// cuda::std::string not supported
+// #include <cuda/std/string>
+#include <cuda/std/tuple>
 
 #include "archetypes.h"
 
@@ -31,18 +32,19 @@ using namespace ImplicitTypes; // Get implicitly archetypes
 
 namespace ConstructorTest {
 
-template <class T1, bool CanCopy = true, bool CanMove = CanCopy> void test() {
-  using P1 = std::pair<T1, int>;
-  using P2 = std::pair<int, T1>;
-  static_assert(std::is_copy_constructible<P1>::value == CanCopy, "");
-  static_assert(std::is_move_constructible<P1>::value == CanMove, "");
-  static_assert(std::is_copy_constructible<P2>::value == CanCopy, "");
-  static_assert(std::is_move_constructible<P2>::value == CanMove, "");
+template <class T1, bool CanCopy = true, bool CanMove = CanCopy>
+__host__ __device__ void test() {
+  using P1 = cuda::std::pair<T1, int>;
+  using P2 = cuda::std::pair<int, T1>;
+  static_assert(cuda::std::is_copy_constructible<P1>::value == CanCopy, "");
+  static_assert(cuda::std::is_move_constructible<P1>::value == CanMove, "");
+  static_assert(cuda::std::is_copy_constructible<P2>::value == CanCopy, "");
+  static_assert(cuda::std::is_move_constructible<P2>::value == CanMove, "");
 };
 
 } // namespace ConstructorTest
 
-void test_constructors_exist() {
+__host__ __device__ void test_constructors_exist() {
   using namespace ConstructorTest;
   {
     test<int>();
@@ -79,18 +81,19 @@ void test_constructors_exist() {
 
 namespace AssignmentOperatorTest {
 
-template <class T1, bool CanCopy = true, bool CanMove = CanCopy> void test() {
-  using P1 = std::pair<T1, int>;
-  using P2 = std::pair<int, T1>;
-  static_assert(std::is_copy_assignable<P1>::value == CanCopy, "");
-  static_assert(std::is_move_assignable<P1>::value == CanMove, "");
-  static_assert(std::is_copy_assignable<P2>::value == CanCopy, "");
-  static_assert(std::is_move_assignable<P2>::value == CanMove, "");
+template <class T1, bool CanCopy = true, bool CanMove = CanCopy>
+__host__ __device__ void test() {
+  using P1 = cuda::std::pair<T1, int>;
+  using P2 = cuda::std::pair<int, T1>;
+  static_assert(cuda::std::is_copy_assignable<P1>::value == CanCopy, "");
+  static_assert(cuda::std::is_move_assignable<P1>::value == CanMove, "");
+  static_assert(cuda::std::is_copy_assignable<P2>::value == CanCopy, "");
+  static_assert(cuda::std::is_move_assignable<P2>::value == CanMove, "");
 };
 
 } // namespace AssignmentOperatorTest
 
-void test_assignment_operator_exists() {
+__host__ __device__ void test_assignment_operator_exists() {
   using namespace AssignmentOperatorTest;
   {
     test<int>();

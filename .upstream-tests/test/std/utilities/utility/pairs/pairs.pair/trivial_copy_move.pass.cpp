@@ -13,8 +13,8 @@
 // pair(pair const&) = default;
 // pair(pair&&) = default;
 
-#include <utility>
-#include <cassert>
+#include <cuda/std/utility>
+#include <cuda/std/cassert>
 
 #include "test_macros.h"
 
@@ -25,27 +25,27 @@ struct Dummy {
 
 int main(int, char**)
 {
-    typedef std::pair<int, short> P;
+    typedef cuda::std::pair<int, short> P;
     {
-        static_assert(std::is_copy_constructible<P>::value, "");
+        static_assert(cuda::std::is_copy_constructible<P>::value, "");
 #if !defined(_LIBCUDACXX_DEPRECATED_ABI_DISABLE_PAIR_TRIVIAL_COPY_CTOR)
-        static_assert(std::is_trivially_copy_constructible<P>::value, "");
+        static_assert(cuda::std::is_trivially_copy_constructible<P>::value, "");
 #endif
     }
 #if TEST_STD_VER >= 11
     {
-        static_assert(std::is_move_constructible<P>::value, "");
+        static_assert(cuda::std::is_move_constructible<P>::value, "");
 #if !defined(_LIBCUDACXX_DEPRECATED_ABI_DISABLE_PAIR_TRIVIAL_COPY_CTOR)
-        static_assert(std::is_trivially_move_constructible<P>::value, "");
+        static_assert(cuda::std::is_trivially_move_constructible<P>::value, "");
 #endif
     }
     {
-        using P1 = std::pair<Dummy, int>;
-        static_assert(!std::is_copy_constructible<P1>::value, "");
-        static_assert(!std::is_trivially_copy_constructible<P1>::value, "");
-        static_assert(std::is_move_constructible<P1>::value, "");
+        using P1 = cuda::std::pair<Dummy, int>;
+        static_assert(!cuda::std::is_copy_constructible<P1>::value, "");
+        static_assert(!cuda::std::is_trivially_copy_constructible<P1>::value, "");
+        static_assert(cuda::std::is_move_constructible<P1>::value, "");
 #if !defined(_LIBCUDACXX_DEPRECATED_ABI_DISABLE_PAIR_TRIVIAL_COPY_CTOR)
-        static_assert(std::is_trivially_move_constructible<P1>::value, "");
+        static_assert(cuda::std::is_trivially_move_constructible<P1>::value, "");
 #endif
     }
 #endif

@@ -12,16 +12,16 @@
 
 // template <class U, class V> pair(const pair<U, V>& p);
 
-#include <utility>
-#include <cassert>
+#include <cuda/std/utility>
+#include <cuda/std/cassert>
 
 #include "test_macros.h"
 
 int main(int, char**)
 {
     {
-        typedef std::pair<int, short> P1;
-        typedef std::pair<double, long> P2;
+        typedef cuda::std::pair<int, short> P1;
+        typedef cuda::std::pair<double, long> P2;
         const P1 p1(3, static_cast<short>(4));
         const P2 p2 = p1;
         assert(p2.first == 3);

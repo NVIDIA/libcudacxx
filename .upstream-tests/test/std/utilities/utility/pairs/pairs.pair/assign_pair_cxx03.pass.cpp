@@ -14,16 +14,17 @@
 
 // pair& operator=(pair const& p);
 
-#include <utility>
-#include <memory>
-#include <cassert>
+#include <cuda/std/utility>
+// cuda/std/memory not supported
+// #include <cuda/std/memory>
+#include <cuda/std/cassert>
 
 #include "test_macros.h"
 
 struct NonAssignable {
-  NonAssignable() {}
+  __host__ __device__ NonAssignable() {}
 private:
-  NonAssignable& operator=(NonAssignable const&);
+  __host__ __device__ NonAssignable& operator=(NonAssignable const&);
 };
 
 struct Incomplete;
@@ -35,12 +36,12 @@ int main(int, char**)
     // Test that we don't constrain the assignment operator in C++03 mode.
     // Since we don't have access control SFINAE having pair evaluate SFINAE
     // may cause a hard error.
-    typedef std::pair<int, NonAssignable> P;
-    static_assert(std::is_copy_assignable<P>::value, "");
+    typedef cuda::std::pair<int, NonAssignable> P;
+    static_assert(cuda::std::is_copy_assignable<P>::value, "");
     }
     {
-    typedef std::pair<int, Incomplete&> P;
-    static_assert(std::is_copy_assignable<P>::value, "");
+    typedef cuda::std::pair<int, Incomplete&> P;
+    static_assert(cuda::std::is_copy_assignable<P>::value, "");
     P p(42, inc_obj);
     assert(&p.second == &inc_obj);
     }

@@ -12,8 +12,8 @@
 
 // template<class U, class V> pair& operator=(const pair<U, V>& p);
 
-#include <utility>
-#include <cassert>
+#include <cuda/std/utility>
+#include <cuda/std/cassert>
 
 #include "test_macros.h"
 #if TEST_STD_VER >= 11
@@ -23,8 +23,8 @@
 int main(int, char**)
 {
     {
-        typedef std::pair<int, short> P1;
-        typedef std::pair<double, long> P2;
+        typedef cuda::std::pair<int, short> P1;
+        typedef cuda::std::pair<double, long> P2;
         P1 p1(3, static_cast<short>(4));
         P2 p2;
         p2 = p1;
@@ -34,16 +34,16 @@ int main(int, char**)
 #if TEST_STD_VER >= 11
     {
        using C = TestTypes::TestType;
-       using P = std::pair<int, C>;
-       using T = std::pair<long, C>;
+       using P = cuda::std::pair<int, C>;
+       using T = cuda::std::pair<long, C>;
        const T t(42, -42);
        P p(101, 101);
        C::reset_constructors();
        p = t;
-       assert(C::constructed == 0);
-       assert(C::assigned == 1);
-       assert(C::copy_assigned == 1);
-       assert(C::move_assigned == 0);
+       assert(C::constructed() == 0);
+       assert(C::assigned() == 1);
+       assert(C::copy_assigned() == 1);
+       assert(C::move_assigned() == 0);
        assert(p.first == 42);
        assert(p.second.value == -42);
     }
