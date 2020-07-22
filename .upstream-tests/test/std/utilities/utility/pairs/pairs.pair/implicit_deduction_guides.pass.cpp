@@ -16,14 +16,16 @@
 
 // <utility>
 
-// Test that the constructors offered by std::pair are formulated
+// Test that the constructors offered by cuda::std::pair are formulated
 // so they're compatible with implicit deduction guides, or if that's not
 // possible that they provide explicit guides to make it work.
 
-#include <utility>
-#include <memory>
-#include <string>
-#include <cassert>
+#include <cuda/std/utility>
+// cuda/std/memory not supported
+// #include <cuda/std/memory>
+// cuda::std::string not supported
+// #include <cuda/std/string>
+#include <cuda/std/cassert>
 
 #include "test_macros.h"
 #include "archetypes.h"
@@ -42,39 +44,39 @@
 int main(int, char**)
 {
   using E = ExplicitTestTypes::TestType;
-  static_assert(!std::is_convertible<E const&, E>::value, "");
+  static_assert(!cuda::std::is_convertible<E const&, E>::value, "");
   { // Testing (1)
     int const x = 42;
-    std::pair t1("abc", x);
-    ASSERT_SAME_TYPE(decltype(t1), std::pair<const char*, int>);
+    cuda::std::pair t1("abc", x);
+    ASSERT_SAME_TYPE(decltype(t1), cuda::std::pair<const char*, int>);
   }
   { // Testing (2)
-    std::pair p1(E{}, 42);
-    ASSERT_SAME_TYPE(decltype(p1), std::pair<E, int>);
+    cuda::std::pair p1(E{}, 42);
+    ASSERT_SAME_TYPE(decltype(p1), cuda::std::pair<E, int>);
 
     const E t{};
-    std::pair p2(t, E{});
-    ASSERT_SAME_TYPE(decltype(p2), std::pair<E, E>);
+    cuda::std::pair p2(t, E{});
+    ASSERT_SAME_TYPE(decltype(p2), cuda::std::pair<E, E>);
   }
   { // Testing (3, 5)
-    std::pair<double, decltype(nullptr)> const p(0.0, nullptr);
-    std::pair p1(p);
-    ASSERT_SAME_TYPE(decltype(p1), std::pair<double, decltype(nullptr)>);
+    cuda::std::pair<double, decltype(nullptr)> const p(0.0, nullptr);
+    cuda::std::pair p1(p);
+    ASSERT_SAME_TYPE(decltype(p1), cuda::std::pair<double, decltype(nullptr)>);
   }
   { // Testing (3, 6)
-    std::pair<E, decltype(nullptr)> const p(E{}, nullptr);
-    std::pair p1(p);
-    ASSERT_SAME_TYPE(decltype(p1), std::pair<E, decltype(nullptr)>);
+    cuda::std::pair<E, decltype(nullptr)> const p(E{}, nullptr);
+    cuda::std::pair p1(p);
+    ASSERT_SAME_TYPE(decltype(p1), cuda::std::pair<E, decltype(nullptr)>);
   }
   { // Testing (4, 7)
-    std::pair<std::string, void*> p("abc", nullptr);
-    std::pair p1(std::move(p));
-    ASSERT_SAME_TYPE(decltype(p1), std::pair<std::string, void*>);
+    cuda::std::pair<cuda::std::string, void*> p("abc", nullptr);
+    cuda::std::pair p1(cuda::std::move(p));
+    ASSERT_SAME_TYPE(decltype(p1), cuda::std::pair<cuda::std::string, void*>);
   }
   { // Testing (4, 8)
-    std::pair<std::string, E> p("abc", E{});
-    std::pair p1(std::move(p));
-    ASSERT_SAME_TYPE(decltype(p1), std::pair<std::string, E>);
+    cuda::std::pair<cuda::std::string, E> p("abc", E{});
+    cuda::std::pair p1(cuda::std::move(p));
+    ASSERT_SAME_TYPE(decltype(p1), cuda::std::pair<cuda::std::string, E>);
   }
 
   return 0;

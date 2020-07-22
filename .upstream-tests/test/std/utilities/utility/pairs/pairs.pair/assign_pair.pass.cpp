@@ -14,12 +14,16 @@
 
 // pair& operator=(pair const& p);
 
-#include <utility>
-#include <memory>
-#include <cassert>
+#include <cuda/std/utility>
+// cuda/std/memory not supported
+// #include <cuda/std/memory>
+#include <cuda/std/cassert>
 
 #include "test_macros.h"
 
+template <typename T>
+__host__ __device__
+constexpr void unused(T &&) {}
 
 struct NonAssignable {
   NonAssignable& operator=(NonAssignable const&) = delete;
@@ -38,62 +42,65 @@ struct MoveAssignable {
 };
 
 struct CountAssign {
-  static int copied;
-  static int moved;
-  static void reset() { copied = moved = 0; }
+  STATIC_MEMBER_VAR(copied, int);
+  STATIC_MEMBER_VAR(moved, int);
+  __host__ __device__ static void reset() { copied() = moved() = 0; }
   CountAssign() = default;
-  CountAssign& operator=(CountAssign const&) { ++copied; return *this; }
-  CountAssign& operator=(CountAssign&&) { ++moved; return *this; }
+  __host__ __device__ CountAssign& operator=(CountAssign const&) { ++copied(); return *this; }
+  __host__ __device__ CountAssign& operator=(CountAssign&&) { ++moved(); return *this; }
 };
-int CountAssign::copied = 0;
-int CountAssign::moved = 0;
 
 struct Incomplete;
+#ifdef __CUDA_ARCH__
+__device__ extern Incomplete inc_obj;
+#else
 extern Incomplete inc_obj;
+#endif
 
 int main(int, char**)
 {
     {
-        typedef std::pair<CopyAssignable, short> P;
+        typedef cuda::std::pair<CopyAssignable, short> P;
         const P p1(CopyAssignable(), 4);
         P p2;
         p2 = p1;
         assert(p2.second == 4);
     }
     {
-        using P = std::pair<int&, int&&>;
+        using P = cuda::std::pair<int&, int&&>;
         int x = 42;
         int y = 101;
         int x2 = -1;
         int y2 = 300;
-        P p1(x, std::move(y));
-        P p2(x2, std::move(y2));
+        P p1(x, cuda::std::move(y));
+        P p2(x2, cuda::std::move(y2));
         p1 = p2;
         assert(p1.first == x2);
         assert(p1.second == y2);
     }
     {
-        using P = std::pair<int, NonAssignable>;
-        static_assert(!std::is_copy_assignable<P>::value, "");
+        using P = cuda::std::pair<int, NonAssignable>;
+        static_assert(!cuda::std::is_copy_assignable<P>::value, "");
     }
     {
         CountAssign::reset();
-        using P = std::pair<CountAssign, CopyAssignable>;
-        static_assert(std::is_copy_assignable<P>::value, "");
+        using P = cuda::std::pair<CountAssign, CopyAssignable>;
+        static_assert(cuda::std::is_copy_assignable<P>::value, "");
         P p;
         P p2;
         p = p2;
-        assert(CountAssign::copied == 1);
-        assert(CountAssign::moved == 0);
+        assert(CountAssign::copied() == 1);
+        assert(CountAssign::moved() == 0);
     }
     {
-        using P = std::pair<int, MoveAssignable>;
-        static_assert(!std::is_copy_assignable<P>::value, "");
+        using P = cuda::std::pair<int, MoveAssignable>;
+        static_assert(!cuda::std::is_copy_assignable<P>::value, "");
     }
     {
-        using P = std::pair<int, Incomplete&>;
-        static_assert(!std::is_copy_assignable<P>::value, "");
+        using P = cuda::std::pair<int, Incomplete&>;
+        static_assert(!cuda::std::is_copy_assignable<P>::value, "");
         P p(42, inc_obj);
+        unused(p);
         assert(&p.second == &inc_obj);
     }
 
@@ -101,4 +108,8 @@ int main(int, char**)
 }
 
 struct Incomplete {};
+#ifdef __CUDA_ARCH__
+__device__ Incomplete inc_obj;
+#else
 Incomplete inc_obj;
+#endif

@@ -14,8 +14,8 @@
 
 // template <class U, class V> EXPLICIT constexpr pair(const pair<U, V>& p);
 
-#include <utility>
-#include <cassert>
+#include <cuda/std/utility>
+#include <cuda/std/cassert>
 
 #include "archetypes.h"
 #include "test_convertible.h"
@@ -25,41 +25,41 @@ using namespace ImplicitTypes; // Get implicitly archetypes
 
 template <class T1, class U1,
           bool CanCopy = true, bool CanConvert = CanCopy>
-void test_pair_const()
+__host__ __device__ void test_pair_const()
 {
-    using P1 = std::pair<T1, int>;
-    using P2 = std::pair<int, T1>;
-    using UP1 = std::pair<U1, int> const&;
-    using UP2 = std::pair<int, U1> const&;
-    static_assert(std::is_constructible<P1, UP1>::value == CanCopy, "");
+    using P1 = cuda::std::pair<T1, int>;
+    using P2 = cuda::std::pair<int, T1>;
+    using UP1 = cuda::std::pair<U1, int> const&;
+    using UP2 = cuda::std::pair<int, U1> const&;
+    static_assert(cuda::std::is_constructible<P1, UP1>::value == CanCopy, "");
     static_assert(test_convertible<P1, UP1>() == CanConvert, "");
-    static_assert(std::is_constructible<P2, UP2>::value == CanCopy, "");
+    static_assert(cuda::std::is_constructible<P2, UP2>::value == CanCopy, "");
     static_assert(test_convertible<P2,  UP2>() == CanConvert, "");
 }
 
 template <class T, class U>
-struct DPair : public std::pair<T, U> {
-  using Base = std::pair<T, U>;
+struct DPair : public cuda::std::pair<T, U> {
+  using Base = cuda::std::pair<T, U>;
   using Base::Base;
 };
 
 struct ExplicitT {
-  constexpr explicit ExplicitT(int x) : value(x) {}
-  constexpr explicit ExplicitT(ExplicitT const& o) : value(o.value) {}
+  __host__ __device__ constexpr explicit ExplicitT(int x) : value(x) {}
+  __host__ __device__ constexpr explicit ExplicitT(ExplicitT const& o) : value(o.value) {}
   int value;
 };
 
 struct ImplicitT {
-  constexpr ImplicitT(int x) : value(x) {}
-  constexpr ImplicitT(ImplicitT const& o) : value(o.value) {}
+  __host__ __device__ constexpr ImplicitT(int x) : value(x) {}
+  __host__ __device__ constexpr ImplicitT(ImplicitT const& o) : value(o.value) {}
   int value;
 };
 
 int main(int, char**)
 {
     {
-        typedef std::pair<int, int> P1;
-        typedef std::pair<double, long> P2;
+        typedef cuda::std::pair<int, int> P1;
+        typedef cuda::std::pair<double, long> P2;
         const P1 p1(3, 4);
         const P2 p2 = p1;
         assert(p2.first == 3);
@@ -68,7 +68,7 @@ int main(int, char**)
     {
         // We allow derived types to use this constructor
         using P1 = DPair<long, long>;
-        using P2 = std::pair<int, int>;
+        using P2 = cuda::std::pair<int, int>;
         P1 p1(42, 101);
         P2 p2(p1);
         assert(p2.first == 42);
@@ -155,24 +155,24 @@ int main(int, char**)
     }
 #if TEST_STD_VER > 11
     {
-        typedef std::pair<int, int> P1;
-        typedef std::pair<double, long> P2;
+        typedef cuda::std::pair<int, int> P1;
+        typedef cuda::std::pair<double, long> P2;
         constexpr P1 p1(3, 4);
         constexpr P2 p2 = p1;
         static_assert(p2.first == 3, "");
         static_assert(p2.second == 4, "");
     }
     {
-        using P1 = std::pair<int, int>;
-        using P2 = std::pair<ExplicitT, ExplicitT>;
+        using P1 = cuda::std::pair<int, int>;
+        using P2 = cuda::std::pair<ExplicitT, ExplicitT>;
         constexpr P1 p1(42, 101);
         constexpr P2 p2(p1);
         static_assert(p2.first.value == 42, "");
         static_assert(p2.second.value == 101, "");
     }
     {
-        using P1 = std::pair<int, int>;
-        using P2 = std::pair<ImplicitT, ImplicitT>;
+        using P1 = cuda::std::pair<int, int>;
+        using P2 = cuda::std::pair<ImplicitT, ImplicitT>;
         constexpr P1 p1(42, 101);
         constexpr P2 p2 = p1;
         static_assert(p2.first.value == 42, "");

@@ -15,9 +15,9 @@
 
 // UNSUPPORTED: c++98, c++03
 
-#include <utility>
-#include <type_traits>
-#include <cassert>
+#include <cuda/std/utility>
+#include <cuda/std/type_traits>
+#include <cuda/std/cassert>
 
 #include "test_macros.h"
 
@@ -31,9 +31,9 @@
 
 struct DeletedDefault {
     // A class with a deleted default constructor. Used to test the SFINAE
-    // on std::pair's default constructor.
-    constexpr explicit DeletedDefault(int x) : value(x) {}
-    constexpr DeletedDefault() = delete;
+    // on cuda::std::pair's default constructor.
+    __host__ __device__ constexpr explicit DeletedDefault(int x) : value(x) {}
+    __host__ __device__ constexpr DeletedDefault() = delete;
     int value;
 };
 
@@ -41,65 +41,65 @@ template <class Tp, bool>
 struct DependantType: public Tp {};
 
 template <class T, bool Val>
-using DependantIsDefault = DependantType<std::is_default_constructible<T>, Val>;
+using DependantIsDefault = DependantType<cuda::std::is_default_constructible<T>, Val>;
 
 template <class T>
 struct DefaultSFINAES {
-    template <bool Dummy = false, class = typename std::enable_if<
+    template <bool Dummy = false, class = typename cuda::std::enable_if<
              DependantIsDefault<T, Dummy>::value
                 >::type
             >
-    constexpr DefaultSFINAES() : value() {}
-    constexpr explicit DefaultSFINAES(T const& x) : value(x) {}
+    __host__ __device__ constexpr DefaultSFINAES() : value() {}
+    __host__ __device__ constexpr explicit DefaultSFINAES(T const& x) : value(x) {}
     T value;
 };
 
 struct NoDefault {
-    constexpr NoDefault(int v) : value(v) {}
+    __host__ __device__ constexpr NoDefault(int v) : value(v) {}
     int value;
 };
 
 template <class Tp>
-void test_not_is_default_constructible()
+__host__ __device__ void test_not_is_default_constructible()
 {
     {
-        typedef std::pair<int, Tp> P;
-        static_assert(!std::is_default_constructible<P>::value, "");
-        static_assert(std::is_constructible<P, int, Tp>::value, "");
+        typedef cuda::std::pair<int, Tp> P;
+        static_assert(!cuda::std::is_default_constructible<P>::value, "");
+        static_assert(cuda::std::is_constructible<P, int, Tp>::value, "");
     }
     {
-        typedef std::pair<Tp, int> P;
-        static_assert(!std::is_default_constructible<P>::value, "");
-        static_assert(std::is_constructible<P, Tp, int>::value, "");
+        typedef cuda::std::pair<Tp, int> P;
+        static_assert(!cuda::std::is_default_constructible<P>::value, "");
+        static_assert(cuda::std::is_constructible<P, Tp, int>::value, "");
     }
     {
-        typedef std::pair<Tp, Tp> P;
-        static_assert(!std::is_default_constructible<P>::value, "");
-        static_assert(std::is_constructible<P, Tp, Tp>::value, "");
+        typedef cuda::std::pair<Tp, Tp> P;
+        static_assert(!cuda::std::is_default_constructible<P>::value, "");
+        static_assert(cuda::std::is_constructible<P, Tp, Tp>::value, "");
     }
 }
 
 template <class Tp>
-void test_is_default_constructible()
+__host__ __device__ void test_is_default_constructible()
 {
     {
-        typedef std::pair<int, Tp> P;
-        static_assert(std::is_default_constructible<P>::value, "");
+        typedef cuda::std::pair<int, Tp> P;
+        static_assert(cuda::std::is_default_constructible<P>::value, "");
     }
     {
-        typedef std::pair<Tp, int> P;
-        static_assert(std::is_default_constructible<P>::value, "");
+        typedef cuda::std::pair<Tp, int> P;
+        static_assert(cuda::std::is_default_constructible<P>::value, "");
     }
     {
-        typedef std::pair<Tp, Tp> P;
-        static_assert(std::is_default_constructible<P>::value, "");
+        typedef cuda::std::pair<Tp, Tp> P;
+        static_assert(cuda::std::is_default_constructible<P>::value, "");
     }
 }
 
 template <class T>
 struct IllFormedDefaultImp {
-  constexpr explicit IllFormedDefaultImp(int v) : value(v) {}
-  constexpr IllFormedDefaultImp() : value(T::DoesNotExistAndShouldNotCompile) {}
+  __host__ __device__ constexpr explicit IllFormedDefaultImp(int v) : value(v) {}
+  __host__ __device__ constexpr IllFormedDefaultImp() : value(T::DoesNotExistAndShouldNotCompile) {}
   int value;
 };
 
@@ -115,24 +115,24 @@ typedef IllFormedDefaultImp<int> IllFormedDefault;
 // compile. In C++14 and greater evaluate each test is evaluated as a constant
 // expression.
 // See LWG issue #2367
-void test_illformed_default()
+__host__ __device__ void test_illformed_default()
 {
     {
-    typedef std::pair<IllFormedDefault, int> P;
-    static_assert((std::is_constructible<P, IllFormedDefault, int>::value), "");
+    typedef cuda::std::pair<IllFormedDefault, int> P;
+    static_assert((cuda::std::is_constructible<P, IllFormedDefault, int>::value), "");
     CONSTEXPR_CXX14 P p(IllFormedDefault(42), -5);
     STATIC_ASSERT_CXX14(p.first.value == 42 && p.second == -5);
     }
     {
-    typedef std::pair<int, IllFormedDefault> P;
-    static_assert((std::is_constructible<P, int, IllFormedDefault>::value), "");
+    typedef cuda::std::pair<int, IllFormedDefault> P;
+    static_assert((cuda::std::is_constructible<P, int, IllFormedDefault>::value), "");
     CONSTEXPR_CXX14 IllFormedDefault dd(-5);
     CONSTEXPR_CXX14 P p(42, dd);
     STATIC_ASSERT_CXX14(p.first == 42 && p.second.value == -5);
     }
     {
-    typedef std::pair<IllFormedDefault, IllFormedDefault> P;
-    static_assert((std::is_constructible<P, IllFormedDefault, IllFormedDefault>::value), "");
+    typedef cuda::std::pair<IllFormedDefault, IllFormedDefault> P;
+    static_assert((cuda::std::is_constructible<P, IllFormedDefault, IllFormedDefault>::value), "");
     CONSTEXPR_CXX14 P p(IllFormedDefault(42), IllFormedDefault(-5));
     STATIC_ASSERT_CXX14(p.first.value == 42 && p.second.value == -5);
     }
