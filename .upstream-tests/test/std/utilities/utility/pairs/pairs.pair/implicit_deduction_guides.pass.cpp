@@ -68,6 +68,8 @@ int main(int, char**)
     cuda::std::pair p1(p);
     ASSERT_SAME_TYPE(decltype(p1), cuda::std::pair<E, decltype(nullptr)>);
   }
+  // cuda::std::string not supported
+  /*
   { // Testing (4, 7)
     cuda::std::pair<cuda::std::string, void*> p("abc", nullptr);
     cuda::std::pair p1(cuda::std::move(p));
@@ -78,6 +80,6 @@ int main(int, char**)
     cuda::std::pair p1(cuda::std::move(p));
     ASSERT_SAME_TYPE(decltype(p1), cuda::std::pair<cuda::std::string, E>);
   }
-
+  */
   return 0;
 }
