@@ -8,11 +8,11 @@
 
 // UNSUPPORTED: pre-sm-70
 
-#include "pipeline_memcpy_async.h"
+#include "pipeline_memcpy_async_thread_scope_generic.h"
 
 int main(int argc, char ** argv)
 {
-    test_select_source<large_type>();
+    test_select_source<cuda::thread_scope_block, int32_t>();
 
     return 0;
 }

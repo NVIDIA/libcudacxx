@@ -8,11 +8,11 @@
 
 // UNSUPPORTED: pre-sm-70
 
-#include "pipeline_memcpy_async.h"
+#include "pipeline_memcpy_async_thread_scope_thread.h"
 
 int main(int argc, char ** argv)
 {
-    test_select_source<int64_t>();
+    test_select_source<uint8_t>();
 
     return 0;
 }

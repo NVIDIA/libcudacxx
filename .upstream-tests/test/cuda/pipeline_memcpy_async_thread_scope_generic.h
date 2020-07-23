@@ -14,26 +14,33 @@
 #include "cuda_space_selector.h"
 #include "large_type.h"
 
-template <class T,
+template <
+    cuda::thread_scope Scope,
+    class T,
     template<typename, typename> class SourceSelector,
     template<typename, typename> class DestSelector,
     template<typename, typename> class PipelineSelector,
-    cuda::thread_scope PipelineScope,
     uint8_t PipelineStages
 >
-__device__ __noinline__
+__host__ __device__ __noinline__
 void test_fully_specialized()
 {
     SourceSelector<T, constructor_initializer> source_sel;
     typename DestSelector<T, constructor_initializer>
         ::template offsetted<decltype(source_sel)::shared_offset> dest_sel;
-    PipelineSelector<cuda::pipeline_shared_state<PipelineScope, PipelineStages>, constructor_initializer> pipe_state_sel;
+    PipelineSelector<cuda::pipeline_shared_state<Scope, PipelineStages>, constructor_initializer> pipe_state_sel;
 
     T * source = source_sel.construct(static_cast<T>(12));
     T * dest = dest_sel.construct(static_cast<T>(0));
-    cuda::pipeline_shared_state<PipelineScope, PipelineStages> * pipe_state = pipe_state_sel.construct();
+    cuda::pipeline_shared_state<Scope, PipelineStages> * pipe_state = pipe_state_sel.construct();
 
-    auto pipe = make_pipeline(cooperative_groups::this_thread_block(), pipe_state);
+#ifdef __CUDA_ARCH__
+    auto group = cooperative_groups::this_thread_block();
+#else
+    auto group = cuda::__single_thread_group{};
+#endif
+
+    auto pipe = make_pipeline(group, pipe_state);
 
     assert(*source == 12);
     assert(*dest == 0);
@@ -73,68 +80,45 @@ void test_fully_specialized()
     pipe.consumer_release();
 }
 
-template <class T,
-    template<typename, typename> class SourceSelector,
-    template<typename, typename> class DestSelector,
-    template<typename, typename> class PipelineSelector,
-    cuda::thread_scope PipelineScope
->
-__host__ __device__ __noinline__
-void test_select_stages()
-{
-    test_fully_specialized<T, SourceSelector, DestSelector, PipelineSelector, PipelineScope, 1>();
-    test_fully_specialized<T, SourceSelector, DestSelector, PipelineSelector, PipelineScope, 8>();
-}
-
-template <class T,
-    template<typename, typename> class SourceSelector,
-    template<typename, typename> class DestSelector,
-    template<typename, typename> class PipelineSelector
->
-__host__ __device__ __noinline__
-void test_select_scope()
-{
-#ifdef __CUDA_ARCH__
-    test_select_stages<T, SourceSelector, DestSelector, PipelineSelector, cuda::thread_scope_block>();
-    test_select_stages<T, SourceSelector, DestSelector, PipelineSelector, cuda::thread_scope_device>();
-    test_select_stages<T, SourceSelector, DestSelector, PipelineSelector, cuda::thread_scope_system>();
-#endif
-}
-
-template <class T,
+template <
+    cuda::thread_scope Scope,
+    class T,
     template<typename, typename> class SourceSelector,
     template<typename, typename> class DestSelector
 >
 __host__ __device__ __noinline__
 void test_select_pipeline()
 {
-    test_select_scope<T, SourceSelector, DestSelector, local_memory_selector>();
+    constexpr uint8_t stages_count = 2;
+    test_fully_specialized<Scope, T, SourceSelector, DestSelector, local_memory_selector, stages_count>();
 #ifdef __CUDA_ARCH__
-    test_select_scope<T, SourceSelector, DestSelector, shared_memory_selector>();
-    test_select_scope<T, SourceSelector, DestSelector, global_memory_selector>();
+    test_fully_specialized<Scope, T, SourceSelector, DestSelector, shared_memory_selector, stages_count>();
+    test_fully_specialized<Scope, T, SourceSelector, DestSelector, global_memory_selector, stages_count>();
 #endif
 }
 
-template <class T,
+template <
+    cuda::thread_scope Scope,
+    class T,
     template<typename, typename> class SourceSelector
 >
 __host__ __device__ __noinline__
 void test_select_destination()
 {
-    test_select_pipeline<T, SourceSelector, local_memory_selector>();
+    test_select_pipeline<Scope, T, SourceSelector, local_memory_selector>();
 #ifdef __CUDA_ARCH__
-    test_select_pipeline<T, SourceSelector, shared_memory_selector>();
-    test_select_pipeline<T, SourceSelector, global_memory_selector>();
+    test_select_pipeline<Scope, T, SourceSelector, shared_memory_selector>();
+    test_select_pipeline<Scope, T, SourceSelector, global_memory_selector>();
 #endif
 }
 
-template <class T>
+template <cuda::thread_scope Scope, class T>
 __host__ __device__ __noinline__
 void test_select_source()
 {
-    test_select_destination<T, local_memory_selector>();
+    test_select_destination<Scope, T, local_memory_selector>();
 #ifdef __CUDA_ARCH__
-    test_select_destination<T, shared_memory_selector>();
-    test_select_destination<T, global_memory_selector>();
+    test_select_destination<Scope, T, shared_memory_selector>();
+    test_select_destination<Scope, T, global_memory_selector>();
 #endif
 }

@@ -8,7 +8,6 @@
 
 // UNSUPPORTED: pre-sm-70
 
-#include <cooperative_groups.h>
 #include <cuda/pipeline>
 
 #include "cuda_space_selector.h"
@@ -78,15 +77,4 @@ void test_select_source()
     test_select_destination<T, shared_memory_selector>();
     test_select_destination<T, global_memory_selector>();
 #endif
-}
-
-int main(int argc, char ** argv)
-{
-    test_select_source<uint8_t>();
-    test_select_source<uint16_t>();
-    test_select_source<uint32_t>();
-    test_select_source<uint64_t>();
-    test_select_source<large_type>();
-
-    return 0;
 }
