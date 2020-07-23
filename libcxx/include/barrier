@@ -235,6 +235,12 @@ public:
         return __old_phase;
     }
     _LIBCUDACXX_INLINE_VISIBILITY
+    bool __try_wait(arrival_token __old_phase) const
+    {
+        return __phase != __old_phase;
+    }
+
+    _LIBCUDACXX_INLINE_VISIBILITY
     void wait(arrival_token&& __old_phase) const
     {
         __phase.wait(__old_phase, memory_order_acquire);
@@ -286,8 +292,7 @@ private:
         inline _LIBCUDACXX_INLINE_VISIBILITY
         bool operator()() const
         {
-            uint64_t const __current = __this->__phase_arrived_expected.load(memory_order_acquire);
-            return ((__current & __phase_bit) != __phase);
+            return __this->__try_wait(__phase);
         }
     };
 
@@ -310,6 +315,13 @@ public:
 
     __barrier_base(__barrier_base const&) = delete;
     __barrier_base& operator=(__barrier_base const&) = delete;
+
+    _LIBCUDACXX_INLINE_VISIBILITY
+    bool __try_wait(arrival_token __phase) const
+    {
+        uint64_t const __current = __phase_arrived_expected.load(memory_order_acquire);
+        return ((__current & __phase_bit) != __phase);
+    }
 
     _LIBCUDACXX_NODISCARD_ATTRIBUTE inline _LIBCUDACXX_INLINE_VISIBILITY
     arrival_token arrive(ptrdiff_t __update = 1)
