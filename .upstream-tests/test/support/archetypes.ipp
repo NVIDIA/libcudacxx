@@ -1,6 +1,7 @@
 
 #ifndef DEFINE_BASE
 #define DEFINE_BASE(Name) ::ArchetypeBases::NullBase
+#define DEFINE_INIT_LIST : ::ArchetypeBases::NullBase()
 #endif
 #ifndef DEFINE_EXPLICIT
 #define DEFINE_EXPLICIT
@@ -24,6 +25,7 @@
 #endif
 #ifndef DEFINE_CTOR
 #define DEFINE_CTOR = default
+#undef  DEFINE_INIT_LIST // defaulted constructors do not require explicit initializers for the base class
 #endif
 #ifndef DEFINE_DEFAULT_CTOR
 #define DEFINE_DEFAULT_CTOR DEFINE_CTOR
@@ -34,14 +36,17 @@
 #ifndef DEFINE_DTOR
 #define DEFINE_DTOR(Name)
 #endif
+#ifndef DEFINE_INIT_LIST
+#define DEFINE_INIT_LIST
+#endif
 
 struct AllCtors : DEFINE_BASE(AllCtors) {
   using Base = DEFINE_BASE(AllCtors);
   using Base::Base;
   using Base::operator=;
   DEFINE_EXPLICIT DEFINE_CONSTEXPR AllCtors() DEFINE_NOEXCEPT DEFINE_DEFAULT_CTOR;
-  DEFINE_EXPLICIT DEFINE_CONSTEXPR AllCtors(AllCtors const&) DEFINE_NOEXCEPT DEFINE_CTOR;
-  DEFINE_EXPLICIT DEFINE_CONSTEXPR AllCtors(AllCtors &&) DEFINE_NOEXCEPT DEFINE_CTOR;
+  DEFINE_EXPLICIT DEFINE_CONSTEXPR AllCtors(AllCtors const&) DEFINE_NOEXCEPT DEFINE_INIT_LIST DEFINE_CTOR;
+  DEFINE_EXPLICIT DEFINE_CONSTEXPR AllCtors(AllCtors &&) DEFINE_NOEXCEPT DEFINE_INIT_LIST DEFINE_CTOR;
   DEFINE_ASSIGN_CONSTEXPR AllCtors& operator=(AllCtors const&) DEFINE_NOEXCEPT DEFINE_ASSIGN;
   DEFINE_ASSIGN_CONSTEXPR AllCtors& operator=(AllCtors &&) DEFINE_NOEXCEPT DEFINE_ASSIGN;
   DEFINE_DTOR(AllCtors)
@@ -75,7 +80,7 @@ struct Copyable : DEFINE_BASE(Copyable) {
   using Base = DEFINE_BASE(Copyable);
   using Base::Base;
   DEFINE_EXPLICIT DEFINE_CONSTEXPR Copyable() DEFINE_NOEXCEPT DEFINE_DEFAULT_CTOR;
-  DEFINE_EXPLICIT DEFINE_CONSTEXPR Copyable(Copyable const &) DEFINE_NOEXCEPT DEFINE_CTOR;
+  DEFINE_EXPLICIT DEFINE_CONSTEXPR Copyable(Copyable const &) DEFINE_NOEXCEPT DEFINE_INIT_LIST DEFINE_CTOR;
   Copyable &operator=(Copyable const &) DEFINE_NOEXCEPT DEFINE_ASSIGN;
   DEFINE_DTOR(Copyable)
 };
@@ -84,7 +89,7 @@ struct CopyOnly : DEFINE_BASE(CopyOnly) {
   using Base = DEFINE_BASE(CopyOnly);
   using Base::Base;
   DEFINE_EXPLICIT DEFINE_CONSTEXPR CopyOnly() DEFINE_NOEXCEPT DEFINE_DEFAULT_CTOR;
-  DEFINE_EXPLICIT DEFINE_CONSTEXPR CopyOnly(CopyOnly const &) DEFINE_NOEXCEPT DEFINE_CTOR;
+  DEFINE_EXPLICIT DEFINE_CONSTEXPR CopyOnly(CopyOnly const &) DEFINE_NOEXCEPT DEFINE_INIT_LIST DEFINE_CTOR;
   DEFINE_EXPLICIT DEFINE_CONSTEXPR CopyOnly(CopyOnly &&) DEFINE_NOEXCEPT = delete;
   CopyOnly &operator=(CopyOnly const &) DEFINE_NOEXCEPT DEFINE_ASSIGN;
   CopyOnly &operator=(CopyOnly &&) DEFINE_NOEXCEPT = delete;
@@ -104,7 +109,7 @@ struct MoveOnly : DEFINE_BASE(MoveOnly) {
   using Base = DEFINE_BASE(MoveOnly);
   using Base::Base;
   DEFINE_EXPLICIT DEFINE_CONSTEXPR MoveOnly() DEFINE_NOEXCEPT DEFINE_DEFAULT_CTOR;
-  DEFINE_EXPLICIT DEFINE_CONSTEXPR MoveOnly(MoveOnly &&) DEFINE_NOEXCEPT DEFINE_CTOR;
+  DEFINE_EXPLICIT DEFINE_CONSTEXPR MoveOnly(MoveOnly &&) DEFINE_NOEXCEPT DEFINE_INIT_LIST DEFINE_CTOR;
   MoveOnly &operator=(MoveOnly &&) DEFINE_NOEXCEPT DEFINE_ASSIGN;
   DEFINE_DTOR(MoveOnly)
 };
@@ -139,12 +144,12 @@ struct ConvertingType : DEFINE_BASE(ConvertingType) {
   using Base = DEFINE_BASE(ConvertingType);
   using Base::Base;
   DEFINE_EXPLICIT DEFINE_CONSTEXPR ConvertingType() DEFINE_NOEXCEPT DEFINE_DEFAULT_CTOR;
-  DEFINE_EXPLICIT DEFINE_CONSTEXPR ConvertingType(ConvertingType const&) DEFINE_NOEXCEPT DEFINE_CTOR;
-  DEFINE_EXPLICIT DEFINE_CONSTEXPR ConvertingType(ConvertingType &&) DEFINE_NOEXCEPT DEFINE_CTOR;
+  DEFINE_EXPLICIT DEFINE_CONSTEXPR ConvertingType(ConvertingType const&) DEFINE_NOEXCEPT DEFINE_INIT_LIST DEFINE_CTOR;
+  DEFINE_EXPLICIT DEFINE_CONSTEXPR ConvertingType(ConvertingType &&) DEFINE_NOEXCEPT DEFINE_INIT_LIST DEFINE_CTOR;
   ConvertingType& operator=(ConvertingType const&) DEFINE_NOEXCEPT DEFINE_ASSIGN;
   ConvertingType& operator=(ConvertingType &&) DEFINE_NOEXCEPT DEFINE_ASSIGN;
   template <class ...Args>
-  DEFINE_EXPLICIT DEFINE_CONSTEXPR ConvertingType(Args&&...) DEFINE_NOEXCEPT {}
+  DEFINE_EXPLICIT DEFINE_CONSTEXPR ConvertingType(Args&&...) DEFINE_NOEXCEPT DEFINE_INIT_LIST {}
   template <class Arg>
   ConvertingType& operator=(Arg&&) DEFINE_NOEXCEPT { return *this; }
   DEFINE_DTOR(ConvertingType)
@@ -175,3 +180,4 @@ using ApplyTypes = List<
 #undef DEFINE_DEFAULT_CTOR
 #undef DEFINE_ASSIGN
 #undef DEFINE_DTOR
+#undef DEFINE_INIT_LIST
