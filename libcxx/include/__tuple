@@ -479,15 +479,16 @@ using __tuple_like_with_size _LIBCUDACXX_NODEBUG_TYPE = __tuple_like_with_size_i
                               >;
 
 struct _LIBCUDACXX_TYPE_VIS __check_tuple_constructor_fail {
-
-    static constexpr bool __enable_explicit_default() { return false; }
-    static constexpr bool __enable_implicit_default() { return false; }
+    template <int&...>
+    using __enable_explicit_default = false_type;
+    template <int&...>
+    using __enable_implicit_default = false_type;
     template <class ...>
-    static constexpr bool __enable_explicit() { return false; }
+    using __enable_explicit = false_type;
     template <class ...>
-    static constexpr bool __enable_implicit() { return false; }
+    using __enable_implicit = false_type;
     template <class ...>
-    static constexpr bool __enable_assign() { return false; }
+    using __enable_assign = false_type;
 };
 #endif // !defined(_LIBCUDACXX_CXX03_LANG)
 

@@ -504,21 +504,21 @@ class _LIBCUDACXX_TEMPLATE_VIS tuple
     struct _CheckArgsConstructor<true, _Dummy>
     {
         template <int&...>
-        static constexpr bool __enable_implicit_default() {
-           return __all<__is_implicitly_default_constructible<_Tp>::value... >::value;
-        }
+        struct __enable_implicit_default {
+            static constexpr bool value =
+                __all<__is_implicitly_default_constructible<_Tp>::value...>::value;
+        };
 
         template <int&...>
-        static constexpr bool __enable_explicit_default() {
-            return
-                __all<is_default_constructible<_Tp>::value...>::value &&
-                !__enable_implicit_default< >();
-        }
-
+        struct __enable_explicit_default {
+            static constexpr bool value =
+                __all<is_default_constructible<_Tp>::value ...>::value &&
+                !__enable_implicit_default<>::value;
+        };
 
         template <class ..._Args>
-        static constexpr bool __enable_explicit() {
-            return
+        struct __enable_explicit {
+            static constexpr bool value =
                 __tuple_constructible<
                     tuple<_Args...>,
                     typename __make_tuple_types<tuple,
@@ -539,11 +539,11 @@ class _LIBCUDACXX_TEMPLATE_VIS tuple
                                  sizeof...(_Args) :
                                  sizeof...(_Tp)>::type
                 >::value;
-        }
+        };
 
         template <class ..._Args>
-        static constexpr bool __enable_implicit() {
-            return
+        struct __enable_implicit {
+            static constexpr bool value =
                __tuple_constructible<
                     tuple<_Args...>,
                     typename __make_tuple_types<tuple,
@@ -564,7 +564,7 @@ class _LIBCUDACXX_TEMPLATE_VIS tuple
                                  sizeof...(_Args) :
                                  sizeof...(_Tp)>::type
                 >::value;
-        }
+        };
     };
 
     template <bool _MaybeEnable,
@@ -576,16 +576,18 @@ class _LIBCUDACXX_TEMPLATE_VIS tuple
     struct _CheckTupleLikeConstructor<true, false, _Dummy>
     {
         template <class _Tuple>
-        static constexpr bool __enable_implicit() {
-            return __tuple_constructible<_Tuple, tuple>::value
+        struct __enable_implicit {
+            static constexpr bool value =
+                   __tuple_constructible<_Tuple, tuple>::value
                 && __tuple_convertible<_Tuple, tuple>::value;
-        }
+        };
 
         template <class _Tuple>
-        static constexpr bool __enable_explicit() {
-            return __tuple_constructible<_Tuple, tuple>::value
+        struct __enable_explicit {
+            static constexpr bool value =
+                   __tuple_constructible<_Tuple, tuple>::value
                && !__tuple_convertible<_Tuple, tuple>::value;
-        }
+        };
     };
 
     template <class _Dummy>
@@ -606,22 +608,24 @@ class _LIBCUDACXX_TEMPLATE_VIS tuple
         >;
 
         template <class _Tuple>
-        static constexpr bool __enable_implicit() {
-            return _And<
-                __tuple_constructible<_Tuple, tuple>,
-                __tuple_convertible<_Tuple, tuple>,
-                _PreferTupleLikeConstructor<_Tuple>
-            >::value;
-        }
+        struct __enable_implicit {
+            static constexpr bool value =
+                _And<
+                    __tuple_constructible<_Tuple, tuple>,
+                    __tuple_convertible<_Tuple, tuple>,
+                    _PreferTupleLikeConstructor<_Tuple>
+                >::value;
+        };
 
         template <class _Tuple>
-        static constexpr bool __enable_explicit() {
-            return _And<
-                __tuple_constructible<_Tuple, tuple>,
-                _PreferTupleLikeConstructor<_Tuple>,
-                _Not<__tuple_convertible<_Tuple, tuple>>
-            >::value;
-        }
+        struct __enable_explicit {
+            static constexpr bool value =
+                _And<
+                    __tuple_constructible<_Tuple, tuple>,
+                    _PreferTupleLikeConstructor<_Tuple>,
+                    _Not<__tuple_convertible<_Tuple, tuple>>
+                >::value;
+        };
     };
 
     template <class _Tuple, bool _DisableIfLValue>
@@ -630,7 +634,7 @@ class _LIBCUDACXX_TEMPLATE_VIS tuple
                              __tuple_like_with_size<_Tuple, sizeof...(_Tp)>::value
                              && !_PackExpandsToThisTuple<_Tuple>::value
                              && (!is_lvalue_reference<_Tuple>::value || !_DisableIfLValue)
-                         >::template __enable_implicit<_Tuple>(),
+                         >::template __enable_implicit<_Tuple>::value,
                          bool
                       >;
 
@@ -640,7 +644,7 @@ class _LIBCUDACXX_TEMPLATE_VIS tuple
                              __tuple_like_with_size<_Tuple, sizeof...(_Tp)>::value
                              && !_PackExpandsToThisTuple<_Tuple>::value
                              && (!is_lvalue_reference<_Tuple>::value || !_DisableIfLValue)
-                         >::template __enable_explicit<_Tuple>(),
+                         >::template __enable_explicit<_Tuple>::value,
                          bool
                       >;
     template <size_t _Jp, class ..._Up> friend _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
@@ -654,14 +658,14 @@ class _LIBCUDACXX_TEMPLATE_VIS tuple
 public:
 
     template <bool _Dummy = true, _EnableIf<
-        _CheckArgsConstructor<_Dummy>::__enable_implicit_default()
+        _CheckArgsConstructor<_Dummy>::template __enable_implicit_default<>::value
     , void*> = nullptr>
     _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR
     tuple()
         _NOEXCEPT_(__all<is_nothrow_default_constructible<_Tp>::value...>::value) {}
 
     template <bool _Dummy = true, _EnableIf<
-        _CheckArgsConstructor<_Dummy>::__enable_explicit_default()
+        _CheckArgsConstructor<_Dummy>::template __enable_explicit_default<>::value
     , void*> = nullptr>
     explicit _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR
     tuple()
@@ -671,7 +675,7 @@ public:
     tuple(tuple&&) = default;
 
     template <class _AllocArgT, class _Alloc, _EnableIf<
-             _CheckArgsConstructor<_IsSame<allocator_arg_t, _AllocArgT>::value >::__enable_implicit_default()
+             _CheckArgsConstructor<_IsSame<allocator_arg_t, _AllocArgT>::value >::template __enable_implicit_default<>::value
       , void*> = nullptr
     >
     _LIBCUDACXX_INLINE_VISIBILITY
@@ -682,7 +686,7 @@ public:
                     __tuple_types<_Tp...>()) {}
 
     template <class _AllocArgT, class _Alloc, _EnableIf<
-             _CheckArgsConstructor<_IsSame<allocator_arg_t, _AllocArgT>::value>::__enable_explicit_default()
+             _CheckArgsConstructor<_IsSame<allocator_arg_t, _AllocArgT>::value>::template __enable_explicit_default<>::value
       , void*> = nullptr
     >
     explicit _LIBCUDACXX_INLINE_VISIBILITY
@@ -697,7 +701,7 @@ public:
                       <
                          _CheckArgsConstructor<
                             _Dummy
-                         >::template __enable_implicit<_Tp const&...>(),
+                         >::template __enable_implicit<_Tp const&...>::value,
                          bool
                       >::type = false
         >
@@ -715,7 +719,7 @@ public:
                       <
                          _CheckArgsConstructor<
                             _Dummy
-                         >::template __enable_explicit<_Tp const&...>(),
+                         >::template __enable_explicit<_Tp const&...>::value,
                          bool
                       >::type = false
         >
@@ -733,7 +737,7 @@ public:
                       <
                          _CheckArgsConstructor<
                             _Dummy
-                         >::template __enable_implicit<_Tp const&...>(),
+                         >::template __enable_implicit<_Tp const&...>::value,
                          bool
                       >::type = false
         >
@@ -752,7 +756,7 @@ public:
                       <
                          _CheckArgsConstructor<
                             _Dummy
-                         >::template __enable_explicit<_Tp const&...>(),
+                         >::template __enable_explicit<_Tp const&...>::value,
                          bool
                       >::type = false
         >
@@ -774,12 +778,12 @@ public:
                          _CheckArgsConstructor<
                              sizeof...(_Up) == sizeof...(_Tp)
                              && !_PackIsTuple
-                         >::template __enable_implicit<_Up...>() ||
+                         >::template __enable_implicit<_Up...>::value ||
                         _CheckArgsConstructor<
                             _EnableImplicitReducedArityExtension
                             && sizeof...(_Up) < sizeof...(_Tp)
                             && !_PackIsTuple
-                         >::template __enable_implicit<_Up...>(),
+                         >::template __enable_implicit<_Up...>::value,
                          bool
                       >::type = false
              >
@@ -806,12 +810,12 @@ public:
                          _CheckArgsConstructor<
                              sizeof...(_Up) <= sizeof...(_Tp)
                              && !_PackExpandsToThisTuple<_Up...>::value
-                         >::template __enable_explicit<_Up...>() ||
+                         >::template __enable_explicit<_Up...>::value ||
                          _CheckArgsConstructor<
                             !_EnableImplicitReducedArityExtension
                             && sizeof...(_Up) < sizeof...(_Tp)
                             && !_PackExpandsToThisTuple<_Up...>::value
-                         >::template __enable_implicit<_Up...>(),
+                         >::template __enable_implicit<_Up...>::value,
                          bool
                       >::type = false
              >
@@ -839,7 +843,7 @@ public:
                          _CheckArgsConstructor<
                              sizeof...(_Up) == sizeof...(_Tp) &&
                              !_PackExpandsToThisTuple<_Up...>::value
-                         >::template __enable_implicit<_Up...>(),
+                         >::template __enable_implicit<_Up...>::value,
                          bool
                       >::type = false
              >
@@ -858,7 +862,7 @@ public:
                          _CheckArgsConstructor<
                              sizeof...(_Up) == sizeof...(_Tp) &&
                              !_PackExpandsToThisTuple<_Up...>::value
-                         >::template __enable_explicit<_Up...>(),
+                         >::template __enable_explicit<_Up...>::value,
                          bool
                       >::type = false
              >
@@ -893,28 +897,30 @@ public:
         tuple(const _Tuple& __t) _NOEXCEPT_((is_nothrow_constructible<_BaseT, const _Tuple&>::value))
             : __base_(__t) {}
 
+    template <typename _Tuple>
+    using _EnableIfTupleLikeConstructor = typename enable_if<
+            _CheckTupleLikeConstructor<
+                __tuple_like_with_size<_Tuple, sizeof...(_Tp)>::value
+            >::template __enable_implicit<_Tuple>::value,
+            bool
+        >::type;
+
+    template <typename _Tuple>
+    using _EnableIfTupleLikeExplicitConstructor = typename enable_if<
+            _CheckTupleLikeConstructor<
+                __tuple_like_with_size<_Tuple, sizeof...(_Tp)>::value
+            >::template __enable_explicit<_Tuple>::value,
+            bool
+        >::type;
+
     template <class _Alloc, class _Tuple,
-              typename enable_if
-                      <
-                         _CheckTupleLikeConstructor<
-                             __tuple_like_with_size<_Tuple, sizeof...(_Tp)>::value
-                         >::template __enable_implicit<_Tuple>(),
-                         bool
-                      >::type = false
-             >
+        _EnableIfTupleLikeConstructor<_Tuple> = false>
         _LIBCUDACXX_INLINE_VISIBILITY
         tuple(allocator_arg_t, const _Alloc& __a, _Tuple&& __t)
             : __base_(allocator_arg_t(), __a, _CUDA_VSTD::forward<_Tuple>(__t)) {}
 
     template <class _Alloc, class _Tuple,
-              typename enable_if
-                      <
-                         _CheckTupleLikeConstructor<
-                             __tuple_like_with_size<_Tuple, sizeof...(_Tp)>::value
-                         >::template __enable_explicit<_Tuple>(),
-                         bool
-                      >::type = false
-             >
+              _EnableIfTupleLikeExplicitConstructor<_Tuple> = false>
         _LIBCUDACXX_INLINE_VISIBILITY
         explicit
         tuple(allocator_arg_t, const _Alloc& __a, _Tuple&& __t)
@@ -940,10 +946,11 @@ public:
     }
 
     template <class _Tuple,
-              class = typename enable_if
+              typename enable_if
                       <
-                         __tuple_assignable<_Tuple, tuple>::value
-                      >::type
+                         __tuple_assignable<_Tuple, tuple>::value,
+                         void*
+                      >::type = nullptr
              >
         _LIBCUDACXX_INLINE_VISIBILITY
         tuple&
