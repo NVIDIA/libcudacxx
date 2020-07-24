@@ -224,12 +224,13 @@ public:
               "Attempted to default construct a reference element in a tuple");}
 
     template <class _Tp,
-              class = _EnableIf<
+              _EnableIf<
                   _And<
                       _IsNotSame<__uncvref_t<_Tp>, __tuple_leaf>,
                       is_constructible<_Hp, _Tp>
-                    >::value
-                >
+                    >::value,
+                  bool
+                > = false
             >
         _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
         explicit __tuple_leaf(_Tp&& __t) _NOEXCEPT_((is_nothrow_constructible<_Hp, _Tp>::value))
@@ -306,12 +307,13 @@ public:
             : _Hp(__a) {}
 
     template <class _Tp,
-              class = _EnableIf<
+              _EnableIf<
                   _And<
                     _IsNotSame<__uncvref_t<_Tp>, __tuple_leaf>,
                     is_constructible<_Hp, _Tp>
-                  >::value
-                >
+                  >::value,
+                  bool
+                > = false
             >
         _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
         explicit __tuple_leaf(_Tp&& __t) _NOEXCEPT_((is_nothrow_constructible<_Hp, _Tp>::value))
@@ -659,14 +661,14 @@ public:
 
     template <bool _Dummy = true, _EnableIf<
         _CheckArgsConstructor<_Dummy>::template __enable_implicit_default<>::value
-    , void*> = nullptr>
+    , bool> = false>
     _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR
     tuple()
         _NOEXCEPT_(__all<is_nothrow_default_constructible<_Tp>::value...>::value) {}
 
     template <bool _Dummy = true, _EnableIf<
         _CheckArgsConstructor<_Dummy>::template __enable_explicit_default<>::value
-    , void*> = nullptr>
+    , bool> = false>
     explicit _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR
     tuple()
         _NOEXCEPT_(__all<is_nothrow_default_constructible<_Tp>::value...>::value) {}
@@ -676,7 +678,7 @@ public:
 
     template <class _AllocArgT, class _Alloc, _EnableIf<
              _CheckArgsConstructor<_IsSame<allocator_arg_t, _AllocArgT>::value >::template __enable_implicit_default<>::value
-      , void*> = nullptr
+      , bool> = false
     >
     _LIBCUDACXX_INLINE_VISIBILITY
     tuple(_AllocArgT, _Alloc const& __a)
@@ -687,7 +689,7 @@ public:
 
     template <class _AllocArgT, class _Alloc, _EnableIf<
              _CheckArgsConstructor<_IsSame<allocator_arg_t, _AllocArgT>::value>::template __enable_explicit_default<>::value
-      , void*> = nullptr
+      , bool> = false
     >
     explicit _LIBCUDACXX_INLINE_VISIBILITY
     tuple(_AllocArgT, _Alloc const& __a)
