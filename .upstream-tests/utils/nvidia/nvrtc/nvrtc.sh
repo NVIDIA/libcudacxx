@@ -105,6 +105,11 @@ cg_include_dir=$(
         | ${nvcc} -x cu - -M -E "${includes[@]}" \
         | grep -e ' /.*/cooperative_groups\.h' -o \
         | xargs dirname)
+ext_include_dir=$(
+    echo '#include <cuda/pipeline>' \
+        | ${nvcc} -x cu - -M -E "${includes[@]}" -arch sm_70 \
+        | grep -e ' /.*/cuda/pipeline' -o \
+        | xargs dirname | xargs dirname)
 
 echo "detected input file: ${input}" >> ${logdir}/log
 echo "modified flags: ${modified_flags[@]}" >> ${logdir}/log
@@ -134,6 +139,7 @@ echo '        "-I'"${libcudacxxdir}/include"'",' >> "${tempfile}"
 echo '        "-I'"${libcudacxxdir}/test/support"'",' >> "${tempfile}"
 echo '        "-I'"${cudart_include_dir}"'",' >> "${tempfile}"
 echo '        "-I'"${cg_include_dir}"'",' >> "${tempfile}"
+echo '        "-I'"${ext_include_dir}"'",' >> "${tempfile}"
 # The line below intentionally only uses the first element of ${gpu_archs[@]}.
 # They are sorted numerically above, and this selects the lowest of the requested
 # values.
