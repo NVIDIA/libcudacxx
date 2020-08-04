@@ -6,11 +6,11 @@
 //
 //===----------------------------------------------------------------------===//
 
-// <tuple>
+// <cuda/std/tuple>
 
 // constexpr unspecified ignore;
 
-// UNSUPPORTED: c++98, c++03
+// UNSUPPORTED: c++98, c++03, msvc
 
 #include <cuda/std/tuple>
 #include <cuda/std/cassert>

@@ -7,6 +7,7 @@
 //===----------------------------------------------------------------------===//
 
 // UNSUPPORTED: c++98, c++03, c++11
+// UNSUPPORTED: msvc
 
 #include <cuda/std/utility>
 // cuda::std::string not supported

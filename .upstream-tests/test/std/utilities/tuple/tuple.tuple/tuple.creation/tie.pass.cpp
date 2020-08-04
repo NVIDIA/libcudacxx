@@ -15,7 +15,7 @@
 // template<class... Types>
 //   tuple<Types&...> tie(Types&... t);
 
-// UNSUPPORTED: c++98, c++03
+// UNSUPPORTED: c++98, c++03, msvc
 
 #include <cuda/std/tuple>
 

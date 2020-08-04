@@ -15,7 +15,9 @@
 //     get(const pair<T1, T2>&&);
 
 // UNSUPPORTED: c++98, c++03
+// UNSUPPORTED: msvc
 
+#include <cuda/std/tuple>
 #include <cuda/std/utility>
 // cuda/std/memory not supported
 // #include <cuda/std/memory>

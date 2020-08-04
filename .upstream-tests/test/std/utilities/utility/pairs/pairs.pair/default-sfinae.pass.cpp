@@ -14,6 +14,7 @@
 // is_default_constructible<pair>
 
 // UNSUPPORTED: c++98, c++03
+// UNSUPPORTED: msvc
 
 #include <cuda/std/utility>
 #include <cuda/std/type_traits>

@@ -14,7 +14,10 @@
 //     const typename tuple_element<I, cuda::std::pair<T1, T2> >::type&
 //     get(const pair<T1, T2>&);
 
+// UNSUPPORTED: msvc
+
 #include <cuda/std/utility>
+#include <cuda/std/tuple>
 #include <cuda/std/cassert>
 
 #include "test_macros.h"
