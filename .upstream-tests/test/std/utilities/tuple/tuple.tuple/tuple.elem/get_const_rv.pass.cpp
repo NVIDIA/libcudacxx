@@ -16,7 +16,7 @@
 //   const typename tuple_element<I, tuple<Types...> >::type&&
 //   get(const tuple<Types...>&& t);
 
-// UNSUPPORTED: c++98, c++03
+// UNSUPPORTED: c++98, c++03, msvc
 
 #include <cuda/std/tuple>
 #include <cuda/std/utility>

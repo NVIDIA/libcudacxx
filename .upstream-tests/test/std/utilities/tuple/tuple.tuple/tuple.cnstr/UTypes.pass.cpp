@@ -15,7 +15,7 @@
 
 // XFAIL: gcc-4.8, gcc-4.9, gcc-8 && c++17
 
-// UNSUPPORTED: c++98, c++03
+// UNSUPPORTED: c++98, c++03, msvc
 
 #include <cuda/std/tuple>
 #include <cuda/std/cassert>

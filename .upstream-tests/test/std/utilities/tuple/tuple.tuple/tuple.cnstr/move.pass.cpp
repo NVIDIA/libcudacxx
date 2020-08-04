@@ -12,7 +12,7 @@
 
 // tuple(tuple&& u);
 
-// UNSUPPORTED: c++98, c++03
+// UNSUPPORTED: c++98, c++03, msvc
 
 #include <cuda/std/tuple>
 #include <cuda/std/utility>

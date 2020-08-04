@@ -9,7 +9,7 @@
 
 // XFAIL: gcc-8 && c++17
 
-// UNSUPPORTED: c++98, c++03
+// UNSUPPORTED: c++98, c++03, msvc
 
 // <cuda/std/tuple>
 

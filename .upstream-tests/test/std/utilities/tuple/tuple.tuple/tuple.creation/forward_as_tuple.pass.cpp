@@ -13,7 +13,7 @@
 // template<class... Types>
 //     tuple<Types&&...> forward_as_tuple(Types&&... t);
 
-// UNSUPPORTED: c++98, c++03
+// UNSUPPORTED: c++98, c++03, msvc
 
 #include <cuda/std/tuple>
 #include <cuda/std/type_traits>
