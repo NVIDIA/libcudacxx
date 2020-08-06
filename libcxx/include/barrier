@@ -197,12 +197,18 @@ public:
 
 #else
 
+# if _LIBCUDACXX_CUDA_ABI_VERSION < 3
+#  define _LIBCUDACXX_BARRIER_ALIGNMENTS alignas(64)
+# else
+#  define _LIBCUDACXX_BARRIER_ALIGNMENTS
+# endif
+
 template<class _CompletionF, int _Sco = 0>
 class __barrier_base {
 
-    alignas(64) __atomic_base<ptrdiff_t, _Sco> __expected, __arrived;
-    alignas(64) _CompletionF                   __completion;
-    alignas(64) __atomic_base<bool, _Sco>      __phase;
+    _LIBCUDACXX_BARRIER_ALIGNMENTS __atomic_base<ptrdiff_t, _Sco> __expected, __arrived;
+    _LIBCUDACXX_BARRIER_ALIGNMENTS _CompletionF                   __completion;
+    _LIBCUDACXX_BARRIER_ALIGNMENTS __atomic_base<bool, _Sco>      __phase;
 public:
     using arrival_token = bool;
 
@@ -273,7 +279,7 @@ class __barrier_base<__empty_completion, _Sco> {
     static constexpr uint64_t __phase_bit = 1ull << 63;
     static constexpr uint64_t __arrived_mask = (__phase_bit - 1) & ~__expected_mask;
 
-    alignas(64) __atomic_base<uint64_t, _Sco> __phase_arrived_expected;
+    _LIBCUDACXX_BARRIER_ALIGNMENTS __atomic_base<uint64_t, _Sco> __phase_arrived_expected;
 
 public:
     using arrival_token = uint64_t;
