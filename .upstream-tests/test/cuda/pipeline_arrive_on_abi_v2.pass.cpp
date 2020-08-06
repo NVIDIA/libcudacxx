@@ -8,6 +8,8 @@
 
 // UNSUPPORTED: pre-sm-70
 
+#define _LIBCUDACXX_CUDA_ABI_VERSION 2
+
 #pragma diag_suppress static_var_with_dynamic_init
 #pragma diag_suppress declared_but_not_referenced
 
