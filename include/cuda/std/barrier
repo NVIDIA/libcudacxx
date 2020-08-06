@@ -26,11 +26,12 @@ _LIBCUDACXX_BEGIN_NAMESPACE_CUDA
 
 template<std::size_t _Alignment>
 struct aligned_size_t {
-    std::size_t __s;
+    static constexpr std::size_t align = _Alignment;
+    std::size_t value;
     __host__ __device__
-    explicit aligned_size_t(size_t __s) : __s(__s) { }
+    explicit aligned_size_t(size_t __s) : value(__s) { }
     __host__ __device__
-    operator size_t() const { return __s; }
+    operator size_t() const { return value; }
 };
 
 template<thread_scope _Sco, class _CompletionF = std::__empty_completion>
