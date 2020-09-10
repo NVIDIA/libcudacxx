@@ -100,48 +100,48 @@ void __atomic_store(volatile _Type *__ptr, _Type *__val, int __memorder) {
 
 template<class _Type, typename _CUDA_VSTD::enable_if<sizeof(_Type)==1, int>::type = 0>
 bool __atomic_compare_exchange_relaxed(const volatile _Type *__ptr, _Type *__expected, const _Type *__desired) {
-    auto __tmp_desired = reinterpret_cast<char&>(*__desired);
+    auto __tmp_desired = reinterpret_cast<const char&>(*__desired);
     auto __tmp_expected = reinterpret_cast<char&>(*__expected);
     auto const __old = _InterlockedCompareExchange8((volatile char *)__ptr, __tmp_desired, __tmp_expected);
     if(__old == __tmp_expected)
         return true;
-    *__expected = reinterpret_cast<_Type&>(__old);
+    *__expected = reinterpret_cast<const _Type&>(__old);
     return false;
 }
 template<class _Type, typename _CUDA_VSTD::enable_if<sizeof(_Type)==2, int>::type = 0>
 bool __atomic_compare_exchange_relaxed(const volatile _Type *__ptr, _Type *__expected, const _Type *__desired) {
-    auto __tmp_desired = reinterpret_cast<short&>(*__desired);
+    auto __tmp_desired = reinterpret_cast<const short&>(*__desired);
     auto __tmp_expected = reinterpret_cast<short&>(*__expected);
     auto const __old = _InterlockedCompareExchange16((volatile short *)__ptr, __tmp_desired, __tmp_expected);
     if(__old == __tmp_expected)
         return true;
-    *__expected = reinterpret_cast<_Type&>(__old);
+    *__expected = reinterpret_cast<const _Type&>(__old);
     return false;
 }
 template<class _Type, typename _CUDA_VSTD::enable_if<sizeof(_Type)==4, int>::type = 0>
 bool __atomic_compare_exchange_relaxed(const volatile _Type *__ptr, _Type *__expected, const _Type *__desired) {
-    auto __tmp_desired = reinterpret_cast<long&>(*__desired);
+    auto __tmp_desired = reinterpret_cast<const long&>(*__desired);
     auto __tmp_expected = reinterpret_cast<long&>(*__expected);
     auto const __old = _InterlockedCompareExchange((volatile long *)__ptr, __tmp_desired, __tmp_expected);
     if(__old == __tmp_expected)
         return true;
-    *__expected = reinterpret_cast<_Type&>(__old);
+    *__expected = reinterpret_cast<const _Type&>(__old);
     return false;
 }
 template<class _Type, typename _CUDA_VSTD::enable_if<sizeof(_Type)==8, int>::type = 0>
 bool __atomic_compare_exchange_relaxed(const volatile _Type *__ptr, _Type *__expected, const _Type *__desired) {
-    auto __tmp_desired = reinterpret_cast<__int64&>(*__desired);
+    auto __tmp_desired = reinterpret_cast<const __int64&>(*__desired);
     auto __tmp_expected = reinterpret_cast<__int64&>(*__expected);
     auto const __old = _InterlockedCompareExchange64((volatile __int64 *)__ptr, __tmp_desired, __tmp_expected);
     if(__old == __tmp_expected)
         return true;
-    *__expected = reinterpret_cast<_Type&>(__old);
+    *__expected = reinterpret_cast<const _Type&>(__old);
     return false;
 }
 template<class _Type>
 bool __atomic_compare_exchange(_Type volatile *__ptr, _Type *__expected, const _Type *__desired, bool, int __success_memorder, int __failure_memorder) {
     bool success;
-    switch (__stronger_order_cuda(__success_memorder, __failure_memorder)) {
+    switch (detail::__stronger_order_cuda(__success_memorder, __failure_memorder)) {
     case __ATOMIC_RELEASE: _Compiler_or_memory_barrier(); success = __atomic_compare_exchange_relaxed(__ptr, __expected, __desired); break;
     case __ATOMIC_ACQ_REL: _Compiler_or_memory_barrier(); 
     case __ATOMIC_ACQUIRE: success = __atomic_compare_exchange_relaxed(__ptr, __expected, __desired); _Compiler_or_memory_barrier(); break;
@@ -208,11 +208,11 @@ template<class _Type, class _Delta>
 _Type __atomic_fetch_add(_Type volatile *__ptr, _Delta __val, int __memorder) {
     _Type __ret;
     switch (__memorder) {
-    case __ATOMIC_RELEASE: _Compiler_or_memory_barrier(); __atomic_fetch_add_relaxed(__ptr, __val, &__ret);break;
+    case __ATOMIC_RELEASE: _Compiler_or_memory_barrier(); __atomic_fetch_add_relaxed(__ptr, &__val, &__ret);break;
     case __ATOMIC_ACQ_REL: _Compiler_or_memory_barrier(); 
-    case __ATOMIC_ACQUIRE: __atomic_fetch_add_relaxed(__ptr, __val, &__ret); _Compiler_or_memory_barrier(); break;
-    case __ATOMIC_SEQ_CST: _Memory_barrier(); __atomic_fetch_add_relaxed(__ptr, __val, &__ret); _Compiler_or_memory_barrier(); break;
-    case __ATOMIC_RELAXED: __atomic_fetch_add_relaxed(__ptr, __val, &__ret); break;
+    case __ATOMIC_ACQUIRE: __atomic_fetch_add_relaxed(__ptr, &__val, &__ret); _Compiler_or_memory_barrier(); break;
+    case __ATOMIC_SEQ_CST: _Memory_barrier(); __atomic_fetch_add_relaxed(__ptr, &__val, &__ret); _Compiler_or_memory_barrier(); break;
+    case __ATOMIC_RELAXED: __atomic_fetch_add_relaxed(__ptr, &__val, &__ret); break;
     default: assert(0);
     }
     return __ret;
@@ -225,33 +225,33 @@ _Type __atomic_fetch_sub(_Type volatile *__ptr, _Delta __val, int __memorder) {
 
 template<class _Type, class _Delta, typename _CUDA_VSTD::enable_if<sizeof(_Type)==1, int>::type = 0>
 void __atomic_fetch_and_relaxed(const volatile _Type *__ptr, const _Delta *__val, _Type *__ret) {
-    auto const __old = _InterlockedExchangeAnd8((volatile char *)__ptr, reinterpret_cast<char const&>(*__val));
+    auto const __old = _InterlockedAnd8((volatile char *)__ptr, reinterpret_cast<char const&>(*__val));
     *__ret = reinterpret_cast<_Type const&>(__old);
 }
 template<class _Type, class _Delta, typename _CUDA_VSTD::enable_if<sizeof(_Type)==2, int>::type = 0>
 void __atomic_fetch_and_relaxed(const volatile _Type *__ptr, const _Delta *__val, _Type *__ret) {
-    auto const __old = _InterlockedExchangeAnd16((volatile short *)__ptr, reinterpret_cast<short const&>(*__val));
+    auto const __old = _InterlockedAnd16((volatile short *)__ptr, reinterpret_cast<short const&>(*__val));
     *__ret = reinterpret_cast<_Type const&>(__old);
 }
 template<class _Type, class _Delta, typename _CUDA_VSTD::enable_if<sizeof(_Type)==4, int>::type = 0>
 void __atomic_fetch_and_relaxed(const volatile _Type *__ptr, const _Delta *__val, _Type *__ret) {
-    auto const __old = _InterlockedExchangeAnd((volatile long *)__ptr, reinterpret_cast<long const&>(*__val));
+    auto const __old = _InterlockedAnd((volatile long *)__ptr, reinterpret_cast<long const&>(*__val));
     *__ret = reinterpret_cast<_Type const&>(__old);
 }
 template<class _Type, class _Delta, typename _CUDA_VSTD::enable_if<sizeof(_Type)==8, int>::type = 0>
 void __atomic_fetch_and_relaxed(const volatile _Type *__ptr, const _Delta *__val, _Type *__ret) {
-    auto const __old = _InterlockedExchangeAnd64((volatile __int64 *)__ptr, reinterpret_cast<__int64 const&>(*__val));
+    auto const __old = _InterlockedAnd64((volatile __int64 *)__ptr, reinterpret_cast<__int64 const&>(*__val));
     *__ret = reinterpret_cast<_Type const&>(__old);
 }
 template<class _Type, class _Delta>
 _Type __atomic_fetch_and(_Type volatile *__ptr, _Delta __val, int __memorder) {
     _Type __ret;
     switch (__memorder) {
-    case __ATOMIC_RELEASE: _Compiler_or_memory_barrier(); __atomic_fetch_and_relaxed(__ptr, __val, &__ret);break;
+    case __ATOMIC_RELEASE: _Compiler_or_memory_barrier(); __atomic_fetch_and_relaxed(__ptr, &__val, &__ret);break;
     case __ATOMIC_ACQ_REL: _Compiler_or_memory_barrier(); 
-    case __ATOMIC_ACQUIRE: __atomic_fetch_and_relaxed(__ptr, __val, &__ret); _Compiler_or_memory_barrier(); break;
-    case __ATOMIC_SEQ_CST: _Memory_barrier(); __atomic_fetch_and_relaxed(__ptr, __val, &__ret); _Compiler_or_memory_barrier(); break;
-    case __ATOMIC_RELAXED: __atomic_fetch_and_relaxed(__ptr, __val, &__ret); break;
+    case __ATOMIC_ACQUIRE: __atomic_fetch_and_relaxed(__ptr, &__val, &__ret); _Compiler_or_memory_barrier(); break;
+    case __ATOMIC_SEQ_CST: _Memory_barrier(); __atomic_fetch_and_relaxed(__ptr, &__val, &__ret); _Compiler_or_memory_barrier(); break;
+    case __ATOMIC_RELAXED: __atomic_fetch_and_relaxed(__ptr, &__val, &__ret); break;
     default: assert(0);
     }
     return __ret;
@@ -259,33 +259,33 @@ _Type __atomic_fetch_and(_Type volatile *__ptr, _Delta __val, int __memorder) {
 
 template<class _Type, class _Delta, typename _CUDA_VSTD::enable_if<sizeof(_Type)==1, int>::type = 0>
 void __atomic_fetch_xor_relaxed(const volatile _Type *__ptr, const _Delta *__val, _Type *__ret) {
-    auto const __old = _InterlockedExchangeXor8((volatile char *)__ptr, reinterpret_cast<char const&>(*__val));
+    auto const __old = _InterlockedXor8((volatile char *)__ptr, reinterpret_cast<char const&>(*__val));
     *__ret = reinterpret_cast<_Type const&>(__old);
 }
 template<class _Type, class _Delta, typename _CUDA_VSTD::enable_if<sizeof(_Type)==2, int>::type = 0>
 void __atomic_fetch_xor_relaxed(const volatile _Type *__ptr, const _Delta *__val, _Type *__ret) {
-    auto const __old = _InterlockedExchangeXor16((volatile short *)__ptr, reinterpret_cast<short const&>(*__val));
+    auto const __old = _InterlockedXor16((volatile short *)__ptr, reinterpret_cast<short const&>(*__val));
     *__ret = reinterpret_cast<_Type const&>(__old);
 }
 template<class _Type, class _Delta, typename _CUDA_VSTD::enable_if<sizeof(_Type)==4, int>::type = 0>
 void __atomic_fetch_xor_relaxed(const volatile _Type *__ptr, const _Delta *__val, _Type *__ret) {
-    auto const __old = _InterlockedExchangeXor((volatile long *)__ptr, reinterpret_cast<long const&>(*__val));
+    auto const __old = _InterlockedXor((volatile long *)__ptr, reinterpret_cast<long const&>(*__val));
     *__ret = reinterpret_cast<_Type const&>(__old);
 }
 template<class _Type, class _Delta, typename _CUDA_VSTD::enable_if<sizeof(_Type)==8, int>::type = 0>
 void __atomic_fetch_xor_relaxed(const volatile _Type *__ptr, const _Delta *__val, _Type *__ret) {
-    auto const __old = _InterlockedExchangeXor64((volatile __int64 *)__ptr, reinterpret_cast<__int64 const&>(*__val));
+    auto const __old = _InterlockedXor64((volatile __int64 *)__ptr, reinterpret_cast<__int64 const&>(*__val));
     *__ret = reinterpret_cast<_Type const&>(__old);
 }
 template<class _Type, class _Delta>
 _Type __atomic_fetch_xor(_Type volatile *__ptr, _Delta __val, int __memorder) {
     _Type __ret;
     switch (__memorder) {
-    case __ATOMIC_RELEASE: _Compiler_or_memory_barrier(); __atomic_fetch_xor_relaxed(__ptr, __val, &__ret);break;
+    case __ATOMIC_RELEASE: _Compiler_or_memory_barrier(); __atomic_fetch_xor_relaxed(__ptr, &__val, &__ret);break;
     case __ATOMIC_ACQ_REL: _Compiler_or_memory_barrier(); 
-    case __ATOMIC_ACQUIRE: __atomic_fetch_xor_relaxed(__ptr, __val, &__ret); _Compiler_or_memory_barrier(); break;
-    case __ATOMIC_SEQ_CST: _Memory_barrier(); __atomic_fetch_xor_relaxed(__ptr, __val, &__ret); _Compiler_or_memory_barrier(); break;
-    case __ATOMIC_RELAXED: __atomic_fetch_xor_relaxed(__ptr, __val, &__ret); break;
+    case __ATOMIC_ACQUIRE: __atomic_fetch_xor_relaxed(__ptr, &__val, &__ret); _Compiler_or_memory_barrier(); break;
+    case __ATOMIC_SEQ_CST: _Memory_barrier(); __atomic_fetch_xor_relaxed(__ptr, &__val, &__ret); _Compiler_or_memory_barrier(); break;
+    case __ATOMIC_RELAXED: __atomic_fetch_xor_relaxed(__ptr, &__val, &__ret); break;
     default: assert(0);
     }
     return __ret;
@@ -293,33 +293,33 @@ _Type __atomic_fetch_xor(_Type volatile *__ptr, _Delta __val, int __memorder) {
 
 template<class _Type, class _Delta, typename _CUDA_VSTD::enable_if<sizeof(_Type)==1, int>::type = 0>
 void __atomic_fetch_or_relaxed(const volatile _Type *__ptr, const _Delta *__val, _Type *__ret) {
-    auto const __old = _InterlockedExchangeOr8((volatile char *)__ptr, reinterpret_cast<char const&>(*__val));
+    auto const __old = _InterlockedOr8((volatile char *)__ptr, reinterpret_cast<char const&>(*__val));
     *__ret = reinterpret_cast<_Type const&>(__old);
 }
 template<class _Type, class _Delta, typename _CUDA_VSTD::enable_if<sizeof(_Type)==2, int>::type = 0>
 void __atomic_fetch_or_relaxed(const volatile _Type *__ptr, const _Delta *__val, _Type *__ret) {
-    auto const __old = _InterlockedExchangeOr16((volatile short *)__ptr, reinterpret_cast<short const&>(*__val));
+    auto const __old = _InterlockedOr16((volatile short *)__ptr, reinterpret_cast<short const&>(*__val));
     *__ret = reinterpret_cast<_Type const&>(__old);
 }
 template<class _Type, class _Delta, typename _CUDA_VSTD::enable_if<sizeof(_Type)==4, int>::type = 0>
 void __atomic_fetch_or_relaxed(const volatile _Type *__ptr, const _Delta *__val, _Type *__ret) {
-    auto const __old = _InterlockedExchangeOr((volatile long *)__ptr, reinterpret_cast<long const&>(*__val));
+    auto const __old = _InterlockedOr((volatile long *)__ptr, reinterpret_cast<long const&>(*__val));
     *__ret = reinterpret_cast<_Type const&>(__old);
 }
 template<class _Type, class _Delta, typename _CUDA_VSTD::enable_if<sizeof(_Type)==8, int>::type = 0>
 void __atomic_fetch_or_relaxed(const volatile _Type *__ptr, const _Delta *__val, _Type *__ret) {
-    auto const __old = _InterlockedExchangeOr64((volatile __int64 *)__ptr, reinterpret_cast<__int64 const&>(*__val));
+    auto const __old = _InterlockedOr64((volatile __int64 *)__ptr, reinterpret_cast<__int64 const&>(*__val));
     *__ret = reinterpret_cast<_Type const&>(__old);
 }
 template<class _Type, class _Delta>
 _Type __atomic_fetch_or(_Type volatile *__ptr, _Delta __val, int __memorder) {
     _Type __ret;
     switch (__memorder) {
-    case __ATOMIC_RELEASE: _Compiler_or_memory_barrier(); __atomic_fetch_or_relaxed(__ptr, __val, &__ret);break;
+    case __ATOMIC_RELEASE: _Compiler_or_memory_barrier(); __atomic_fetch_or_relaxed(__ptr, &__val, &__ret);break;
     case __ATOMIC_ACQ_REL: _Compiler_or_memory_barrier(); 
-    case __ATOMIC_ACQUIRE: __atomic_fetch_or_relaxed(__ptr, __val, &__ret); _Compiler_or_memory_barrier(); break;
-    case __ATOMIC_SEQ_CST: _Memory_barrier(); __atomic_fetch_or_relaxed(__ptr, __val, &__ret); _Compiler_or_memory_barrier(); break;
-    case __ATOMIC_RELAXED: __atomic_fetch_or_relaxed(__ptr, __val, &__ret); break;
+    case __ATOMIC_ACQUIRE: __atomic_fetch_or_relaxed(__ptr, &__val, &__ret); _Compiler_or_memory_barrier(); break;
+    case __ATOMIC_SEQ_CST: _Memory_barrier(); __atomic_fetch_or_relaxed(__ptr, &__val, &__ret); _Compiler_or_memory_barrier(); break;
+    case __ATOMIC_RELAXED: __atomic_fetch_or_relaxed(__ptr, &__val, &__ret); break;
     default: assert(0);
     }
     return __ret;
