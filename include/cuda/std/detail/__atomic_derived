@@ -43,9 +43,9 @@ template<class _Type, class _Delta, class _Scope, typename _CUDA_VSTD::enable_if
 _Type __device__ __atomic_fetch_add_cuda(_Type volatile *__ptr, _Delta __val, int __memorder, _Scope __s) {
 
     _Type __expected = __atomic_load_n_cuda(__ptr, __ATOMIC_RELAXED, __s);
-    _Type const __desired = __expected + __val;
+    _Type __desired = __expected + __val;
     while(!__atomic_compare_exchange_cuda(__ptr, &__expected, &__desired, true, __memorder, __memorder, __s))
-        ;
+        __desired = __expected + __val;
     return __expected;
 }
 
@@ -53,13 +53,13 @@ template<class _Type, class _Delta, class _Scope, typename _CUDA_VSTD::enable_if
 _Type __host__ __device__ __atomic_fetch_max_cuda(_Type volatile *__ptr, _Delta __val, int __memorder, _Scope __s) {
 
     _Type __expected = __atomic_load_n_cuda(__ptr, __ATOMIC_RELAXED, __s);
-    _Type const __desired = __expected > __val ? __expected : __val;
+    _Type __desired = __expected > __val ? __expected : __val;
 #ifdef __CUDA_ARCH__
     while(__desired == __val &&
           !__atomic_compare_exchange_cuda(__ptr, &__expected, &__desired, true, __memorder, __memorder, __s)) {
 #else
     while(__desired == __val &&
-          !::std::atomic_compare_exchange_strong_explicit(__ptr, &__expected, __desired, __memorder, __memorder)) {
+          !__atomic_compare_exchange(__ptr, &__expected, &__desired, true, __memorder, __memorder)) {
 #endif
         __desired = __expected > __val ? __expected : __val;
     }
@@ -70,13 +70,13 @@ template<class _Type, class _Delta, class _Scope, typename _CUDA_VSTD::enable_if
 _Type __host__ __device__ __atomic_fetch_min_cuda(_Type volatile *__ptr, _Delta __val, int __memorder, _Scope __s) {
 
     _Type __expected = __atomic_load_n_cuda(__ptr, __ATOMIC_RELAXED, __s);
-    _Type const __desired = __expected < __val ? __expected : __val;
+    _Type __desired = __expected < __val ? __expected : __val;
 #ifdef __CUDA_ARCH__
     while(__desired != __val &&
           !__atomic_compare_exchange_cuda(__ptr, &__expected, &__desired, true, __memorder, __memorder, __s)) {
 #else
     while(__desired != __val &&
-          !::std::atomic_compare_exchange_strong_explicit(__ptr, &__expected, __desired, __memorder, __memorder)) {
+          !__atomic_compare_exchange(__ptr, &__expected, &__desired, true, __memorder, __memorder)) {
 #endif
         __desired = __expected < __val ? __expected : __val;
     }
@@ -87,9 +87,9 @@ template<class _Type, class _Delta, class _Scope, typename _CUDA_VSTD::enable_if
 _Type __device__ __atomic_fetch_sub_cuda(_Type volatile *__ptr, _Delta __val, int __memorder, _Scope __s) {
 
     _Type __expected = __atomic_load_n_cuda(__ptr, __ATOMIC_RELAXED, __s);
-    _Type const __desired = __expected - __val;
+    _Type __desired = __expected - __val;
     while(!__atomic_compare_exchange_cuda(__ptr, &__expected, &__desired, true, __memorder, __memorder, __s))
-        ;
+        __desired = __expected - __val;
     return __expected;
 }
 
@@ -97,9 +97,9 @@ template<class _Type, class _Delta, class _Scope, typename _CUDA_VSTD::enable_if
 _Type __device__ __atomic_fetch_and_cuda(_Type volatile *__ptr, _Delta __val, int __memorder, _Scope __s) {
 
     _Type __expected = __atomic_load_n_cuda(__ptr, __ATOMIC_RELAXED, __s);
-    _Type const __desired = __expected & __val;
+    _Type __desired = __expected & __val;
     while(!__atomic_compare_exchange_cuda(__ptr, &__expected, &__desired, true, __memorder, __memorder, __s))
-        ;
+        __desired = __expected & __val;
     return __expected;
 }
 
@@ -107,9 +107,9 @@ template<class _Type, class _Delta, class _Scope, typename _CUDA_VSTD::enable_if
 _Type __device__ __atomic_fetch_xor_cuda(_Type volatile *__ptr, _Delta __val, int __memorder, _Scope __s) {
 
     _Type __expected = __atomic_load_n_cuda(__ptr, __ATOMIC_RELAXED, __s);
-    _Type const __desired = __expected ^ __val;
+    _Type __desired = __expected ^ __val;
     while(!__atomic_compare_exchange_cuda(__ptr, &__expected, &__desired, true, __memorder, __memorder, __s))
-        ;
+        __desired = __expected ^ __val;
     return __expected;
 }
 
@@ -117,9 +117,9 @@ template<class _Type, class _Delta, class _Scope, typename _CUDA_VSTD::enable_if
 _Type __device__ __atomic_fetch_or_cuda(_Type volatile *__ptr, _Delta __val, int __memorder, _Scope __s) {
 
     _Type __expected = __atomic_load_n_cuda(__ptr, __ATOMIC_RELAXED, __s);
-    _Type const __desired = __expected | __val;
+    _Type __desired = __expected | __val;
     while(!__atomic_compare_exchange_cuda(__ptr, &__expected, &__desired, true, __memorder, __memorder, __s))
-        ;
+        __desired = __expected | __val;
     return __expected;
 }
 
