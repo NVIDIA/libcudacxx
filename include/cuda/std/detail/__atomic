@@ -277,7 +277,7 @@ __host__ __device__ inline _Tp* __cxx_atomic_fetch_sub(__cxx_atomic_base_impl_de
 #ifdef __CUDA_ARCH__
     return detail::__atomic_fetch_sub_cuda(&__a->__a_value, __delta, __order, detail::__scope_tag<_Sco>());
 #else
-    return __atomic_fetch_sub_explicit(&__a->__a_value, __delta, __order);
+    return __atomic_fetch_sub(&__a->__a_value, __delta, __order);
 #endif
 }
 template<class _Tp, int _Sco>
