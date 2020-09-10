@@ -49,7 +49,7 @@ _LIBCUDACXX_BEGIN_NAMESPACE_CUDA
 
 namespace detail {
 
-    inline __device__ int __stronger_order_cuda(int __a, int __b) {
+    inline __host__ __device__ int __stronger_order_cuda(int __a, int __b) {
         int const __max = __a > __b ? __a : __b;
         if(__max != __ATOMIC_RELEASE)
             return __max;
@@ -301,7 +301,7 @@ __host__ __device__ inline _Tp __cxx_atomic_fetch_xor(__cxx_atomic_base_impl_def
 #ifdef __CUDA_ARCH__
     return detail::__atomic_fetch_xor_cuda(&__a->__a_value, __pattern, __order, detail::__scope_tag<_Sco>());
 #else
-    return __atomic_fetch_xor_explicit(&__a->__a_value, __pattern, __order);
+    return __atomic_fetch_xor(&__a->__a_value, __pattern, __order);
 #endif
 }
 
