@@ -111,6 +111,12 @@ _LIBCUDACXX_END_NAMESPACE_CUDA
 
 _LIBCUDACXX_BEGIN_NAMESPACE_STD
 
+template <typename _Tp>
+struct __skip_amt { enum {value = 1}; };
+
+template <typename _Tp>
+struct __skip_amt<_Tp*> { enum {value = sizeof(_Tp)}; };
+
 // Forward-declare the function templates that are defined libcxx later.
 template <typename _Tp, typename _Tv> _LIBCUDACXX_INLINE_VISIBILITY
 typename enable_if<is_assignable<_Tp&, _Tv>::value>::type
@@ -261,7 +267,7 @@ __host__ __device__ inline _Tp* __cxx_atomic_fetch_add(__cxx_atomic_base_impl_de
 #ifdef __CUDA_ARCH__
     return detail::__atomic_fetch_add_cuda(&__a->__a_value, __delta, __order, detail::__scope_tag<_Sco>());
 #else
-    return __atomic_fetch_add(&__a->__a_value, __delta, __order);
+    return __atomic_fetch_add(&__a->__a_value, __delta * __skip_amt<_Tp*>::value, __order);
 #endif
 }
 template<class _Tp, int _Sco>
@@ -277,7 +283,7 @@ __host__ __device__ inline _Tp* __cxx_atomic_fetch_sub(__cxx_atomic_base_impl_de
 #ifdef __CUDA_ARCH__
     return detail::__atomic_fetch_sub_cuda(&__a->__a_value, __delta, __order, detail::__scope_tag<_Sco>());
 #else
-    return __atomic_fetch_sub(&__a->__a_value, __delta, __order);
+    return __atomic_fetch_sub(&__a->__a_value, __delta * __skip_amt<_Tp*>::value, __order);
 #endif
 }
 template<class _Tp, int _Sco>
