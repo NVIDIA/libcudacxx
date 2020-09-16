@@ -213,7 +213,8 @@ __host__ __device__ inline void __cxx_atomic_store(__cxx_atomic_base_impl_defaul
 #ifdef __CUDA_ARCH__
     detail::__atomic_store_n_cuda(&__a->__a_value, __cxx_atomic_alignment_wrap(__val), __order, detail::__scope_tag<_Sco>());
 #else
-    __atomic_store_n(&__a->__a_value, __cxx_atomic_alignment_wrap(__val), __order);
+    auto __t = __cxx_atomic_alignment_wrap(__val);
+    __atomic_store(&__a->__a_value, &__t, __order);
 #endif
 }
 template<class _Tp, int _Sco>
@@ -221,7 +222,10 @@ __host__ __device__ inline _Tp __cxx_atomic_load(__cxx_atomic_base_impl_default<
 #ifdef __CUDA_ARCH__
     return __cxx_atomic_alignment_unwrap(detail::__atomic_load_n_cuda(&__a->__a_value, __order, detail::__scope_tag<_Sco>()));
 #else
-    return __cxx_atomic_alignment_unwrap(__atomic_load_n(&__a->__a_value, __order));
+    alignas(_Tp) unsigned char __buf[sizeof(_Tp)];
+    auto* __dest = reinterpret_cast<_Tp*>(__buf);
+    __atomic_load(&__a->__a_value, __dest, __order);
+    return __cxx_atomic_alignment_unwrap(*__dest);
 #endif
 }
 template<class _Tp, int _Sco>
@@ -229,7 +233,11 @@ __host__ __device__ inline _Tp __cxx_atomic_exchange(__cxx_atomic_base_impl_defa
 #ifdef __CUDA_ARCH__
     return __cxx_atomic_alignment_unwrap(detail::__atomic_exchange_n_cuda(&__a->__a_value, __cxx_atomic_alignment_wrap(__val), __order, detail::__scope_tag<_Sco>()));
 #else
-    return __cxx_atomic_alignment_unwrap(__atomic_exchange_n(&__a->__a_value, __cxx_atomic_alignment_wrap(__val), __order));
+    alignas(_Tp) unsigned char __buf[sizeof(_Tp)];
+    auto* __dest = reinterpret_cast<_Tp*>(__buf);
+    auto __t = __cxx_atomic_alignment_wrap(__val);
+    __atomic_exchange(&__a->__a_value, &__t, __dest, __order);
+    return __cxx_atomic_alignment_unwrap(*__dest);
 #endif
 }
 template<class _Tp, int _Sco>
@@ -238,7 +246,7 @@ __host__ __device__ inline bool __cxx_atomic_compare_exchange_strong(__cxx_atomi
 #ifdef __CUDA_ARCH__
     bool __result = detail::__atomic_compare_exchange_n_cuda(&__a->__a_value, &__tmp, __cxx_atomic_alignment_wrap(__val), false, __success, __failure, detail::__scope_tag<_Sco>());
 #else
-    bool __result = __atomic_compare_exchange_n(&__a->__a_value, &__tmp, __cxx_atomic_alignment_wrap(__val), false, __success, __failure);
+    bool __result = __atomic_compare_exchange(&__a->__a_value, &__tmp, &__val, false, __success, __failure);
 #endif
     *__expected = __cxx_atomic_alignment_unwrap(__tmp);
     return __result;
@@ -249,7 +257,7 @@ __host__ __device__ inline bool __cxx_atomic_compare_exchange_weak(__cxx_atomic_
 #ifdef __CUDA_ARCH__
     bool __result = detail::__atomic_compare_exchange_n_cuda(&__a->__a_value, &__tmp, __cxx_atomic_alignment_wrap(__val), true, __success, __failure, detail::__scope_tag<_Sco>());
 #else
-    bool __result = __atomic_compare_exchange_n(&__a->__a_value, &__tmp, __cxx_atomic_alignment_wrap(__val), true, __success, __failure);
+    bool __result = __atomic_compare_exchange(&__a->__a_value, &__tmp, &__val, true, __success, __failure);
 #endif
     *__expected = __cxx_atomic_alignment_unwrap(__tmp);
     return __result;
