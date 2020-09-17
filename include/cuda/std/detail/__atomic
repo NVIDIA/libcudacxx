@@ -103,7 +103,7 @@ namespace detail {
 _LIBCUDACXX_END_NAMESPACE_CUDA
 
 #ifdef _MSC_VER
-    #include "__atomic_msvc"
+    #include "libcxx/include/support/win32/atomic_msvc.h"
 #endif
 
 #include "__atomic_generated"
