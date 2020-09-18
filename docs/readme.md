@@ -5,7 +5,8 @@
 <th><b><a href="https://nvidia.github.io/libcudacxx">Documentation</a></b></th>
 </tr></table>
 
-**libcu++ is the C++ Standard Library for your entire system.**
+**libcu++, the NVIDIA C++ Standard Library,  is the C++ Standard Library for
+  your entire system.**
 It provides a heterogeneous implementation of the C++ Standard Library that can
   be used in and between CPU and GPU code.
 
@@ -19,15 +20,15 @@ All you have to do is add `cuda/std/` to the start of your Standard Library
 cuda::std::atomic<int> x;
 ```
 
-libcu++ is an open source project; it is available on [GitHub] and included in
-  the NVIDIA HPC SDK and CUDA Toolkit.
+The NVIDIA C++ Standard Library is an open source project; it is available on
+  [GitHub] and included in the NVIDIA HPC SDK and CUDA Toolkit.
 No additional installation or compiler flags are needed.
 
 ## `cuda::` and `cuda::std::`
 
-When used with NVCC, libcu++ facilities live in their own header hierarchy and
-  namespace with the same structure as, but distinct from, the host compiler's
-  Standard Library:
+When used with NVCC, NVIDIA C++ Standard Library facilities live in their own
+  header hierarchy and namespace with the same structure as, but distinct from,
+  the host compiler's Standard Library:
 
 * `std::`/`<*>`: Your host compiler's Standard Library that works in
       `__host__` code only.
@@ -59,8 +60,8 @@ cuda::atomic<int, cuda::thread_scope_block> x;
 
 ## libcu++ is Heterogeneous
 
-libcu++ work across your entire codebase, both in and across host and device
-  code.
+The NVIDIA C++ Standard Library works across your entire codebase, both in and
+  across host and device code.
 libcu++ is a C++ Standard Library for your entire system, not just
 Everything in `cuda::` is `__host__ __device__`.
 
@@ -80,31 +81,40 @@ A small number of libcu++ facilities only work in device code, usually because
 
 Such facilities live in `cuda::device::`.
 
-## `cuda::` is Incremental
+## libcu++ is Incremental
 
-libcu++ delivers a high-priority subset of the C++ Standard Library today, and
-  each release increases the feature set.
+Today, the NVIDIA C++ Standard Library delivers a high-priority subset of the
+  C++ Standard Library today, and each release increases the feature set.
 But it is a subset; not everything is available today.
 The [API section] lists the facilities available and the releases they were
   first introduced in.
 
 ## Licensing
 
-libcu++ is an open source project developed on [GitHub].
+The NVIDIA C++ Standard Library is an open source project developed on [GitHub].
 It is NVIDIA's variant of [LLVM's libc++].
 libcu++ is distributed under the [Apache License v2.0 with LLVM Exceptions].
 
 ## Conformance
 
-libcu++ aims to be a conforming implementation of the C++ Standard,
-  [ISO/IEC IS 14882], Clause 16 through 32.
+The NVIDIA C++ Standard Library aims to be a conforming implementation of the
+  C++ Standard, [ISO/IEC IS 14882], Clause 16 through 32.
 
 ## ABI Evolution
 
-libcu++ does not promise long term ABI stability.
-The life cycle of an ABI version is approximately 1 year.
-Long-term support for an ABI version ends after approximately 2 years.
+The NVIDIA C++ Standard Library does not maintain long-term ABI stability.
+Promising long-term ABI stability would prevent us from fixing mistakes and
+  providing best in class performance.
+So, we make no such promises.
+
+Every major CUDA Toolkit release, the ABI will be broken.
+The life cycle of an ABI version is approximately one year.
+Long-term support for an ABI version ends after approximately two years.
 Please see the [versioning section] for more details.
+
+We recommend that you always recompile your code and dependencies with the
+  latest NVIDIA SDKs and use the latest NVIDIA C++ Standard Library ABI.
+[Live at head].
 
 
 [GitHub]: https://github.com/nvidia/libcudacxx
@@ -119,4 +129,6 @@ Please see the [versioning section] for more details.
 [Apache License v2.0 with LLVM Exceptions]: https://llvm.org/LICENSE.txt
 
 [ISO/IEC IS 14882]: https://eel.is/c++draft
+
+[live at head]: https://www.youtube.com/watch?v=tISy7EJQPzI&t=1032s
 
