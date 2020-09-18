@@ -96,7 +96,7 @@ libcu++ is distributed under the [Apache License v2.0 with LLVM Exceptions].
 [GitHub]: https://github.com/nvidia/libcudacxx
 
 [API section]: https://nvidia.github.io/libcudacxx/api.html
-[synchronization library section]: https//nvidia.github.io/libcudacxx/api/synchronization_library.html
+[synchronization library section]: https://nvidia.github.io/libcudacxx/api/synchronization_library.html
 
 [documentation]: https://nvidia.github.io/libcudacxx
 
