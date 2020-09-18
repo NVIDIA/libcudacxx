@@ -1,9 +1,8 @@
 title: libcu++
 
-theme: just-the-docs
-remote_theme: pmarsceill/just-the-docs
+repository: nvidia/libcudacxx
 
-highlight_theme: dark2
+remote_theme: pmarsceill/just-the-docs
 
 color_scheme: nvidia
 logo: /assets/images/nvidia_logo.png
