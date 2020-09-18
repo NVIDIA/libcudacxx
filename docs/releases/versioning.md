@@ -1,6 +1,6 @@
 # Versioning
 
-The NVIDIA C++ Standard Library is versioned along two axes:
+libcu++ is versioned along two axes:
 
 - API Version: A 3-component semantic version for the programmatic interface.
     - Follows [semantic versioning].
