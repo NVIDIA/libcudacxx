@@ -1,6 +1,6 @@
 # Versioning
 
-The NVIDIA Standard Library is versioned along two axes:
+The NVIDIA C++ Standard Library is versioned along two axes:
 
 - API Version: A 3-component semantic version for the programmatic interface.
     - Follows [semantic versioning].
@@ -128,11 +128,11 @@ A program is ill-formed, no diagnostic required, if it uses two different
   version.
 For example, all of the following is disallowed:
 
-* Compiling `foo.cu` with ABI version 1, `bar.cu` with ABI version 2, and
+- Compiling `foo.cu` with ABI version 1, `bar.cu` with ABI version 2, and
       linking `foo.cu` and `bar.cu` into one program.
-* Compiling `foo.cu` with ABI version 2 and linking it with a library,
+- Compiling `foo.cu` with ABI version 2 and linking it with a library,
       `libbar.so`, compiled with ABI version 1.
-* Compiling `foo.cu` with ABI version 1 and linking it with a library,
+- Compiling `foo.cu` with ABI version 1 and linking it with a library,
       `libbar.a`, compiled with ABI version 2.
 
 Every namespace used by the NVIDIA Standard Library has an
@@ -169,7 +169,7 @@ However, we must be careful, because ABI namespaces cannot diagnosis all mixing
 Let's say we a translation unit compiled with ABI version 3 that contains this
   code:
 
-```
+```c++
 struct sum { cuda::atomic<float> };
 void negate(sum&);
 ```

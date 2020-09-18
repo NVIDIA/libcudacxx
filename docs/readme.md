@@ -1,5 +1,10 @@
 # libcu++: The NVIDIA C++ Standard Library
 
+<table><tr>
+<th><b><a href="https://github.com/nvidia/libcudacxx/tree/main/samples">Examples</a></b></th>
+<th><b><a href="https://nvidia.github.io/libcudacxx">Documentation</a></b></th>
+</tr></table>
+
 libcu++ is the NVIDIA C++ Standard Library, bringing you familiar features from
   the C++ Standard Library that you can seamlessly use in CUDA C++ in both host
   and device code.
@@ -17,11 +22,6 @@ cuda::std::atomic<int> x;
 libcu++ is an open source project; it is available on [GitHub] and included in
   the NVIDIA HPC SDK and CUDA Toolkit.
 No additional installation or compiler flags are needed.
-
-<table><tr>
-<th><b><a href="https://github.com/nvidia/libcudacxx/tree/main/samples">Examples</a></b></th>
-<th><b><a href="https://nvidia.github.io/libcudacxx">Documentation</a></b></th>
-</tr></table>
 
 ## `cuda::` and `cuda::std::`
 
