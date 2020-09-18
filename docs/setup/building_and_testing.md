@@ -1,17 +1,15 @@
-# Testing `libcu++`
-
-This document will describe how to build and run the `libcu++` test suite.
+# Building & Testing libcu++
 
 ## *nix Systems, Native Build/Test
 
 The procedure is demonstrated for NVCC + GCC in C++11 mode on a Debian-like
 Linux systems; the same basic steps are required on all other platforms.
 
-### Step 0: Install Prerequisites
+### Step 0: Install Build Prerequisites
 
 In a Bash shell:
 
-```
+```bash
 # Install LLVM (needed for LLVM's CMake modules)
 apt-get -y install llvm
 
@@ -27,7 +25,7 @@ pip install lit
 
 In a Bash shell:
 
-```
+```bash
 export LIBCUDACXX_ROOT=/path/to/libcudacxx # Should be //sw/gpgpu/libcudacxx or the Git repo root.
 
 cd ${LIBCUDACXX_ROOT}
@@ -40,11 +38,11 @@ cmake .. \
   -DLIBCXX_TEST_STANDARD_VER=c++11
 ```
 
-### Step 2: Build and Run the Tests
+### Step 2: Build & Run the Tests
 
 In a Bash shell:
 
-```
+```bash
 export LIBCUDACXX_ROOT=/path/to/libcudacxx # Should be //sw/gpgpu/libcudacxx or the Git repo root.
 
 cd ${LIBCUDACXX_ROOT}/build # `libcudacxx` should be //sw/gpgpu/libcudacxx or the Git repo root.
@@ -57,15 +55,15 @@ The procedure is demonstrated for NVCC + GCC cross compiler in C++14 mode on a
 Debian-like Linux systems targeting an aarch64 L4T system; the same basic steps
 are required on all other platforms.
 
-### Step 0:
+### Step 0: Install Build Prerequisites
 
 Follow Step 0 for \*nix native builds/tests.
 
-### Step 1:
+### Step 1: Generate the Build Files
 
 In a Bash shell:
 
-```
+```bash
 export HOST=executor.nvidia.com
 export USERNAME=ubuntu
 export LIBCUDACXX_ROOT=/path/to/libcudacxx # Should be //sw/gpgpu/libcudacxx or the Git repo root.
@@ -84,7 +82,7 @@ cmake .. \
 Ensure that you can SSH to the target system from the host system without
 inputing a password (e.g. use SSH keys).
 
-### Step 2:
+### Step 2: Build & Run the Tests
 
 Follow Step 2 for \*nix native builds/tests.
 
@@ -93,7 +91,7 @@ Follow Step 2 for \*nix native builds/tests.
 The procedure is demonstrated for NVRTC in C++11 mode on a Debian-like
 Linux systems; the same basic steps are required on all other platforms.
 
-### Step 0: Install Prerequisites
+### Step 0: Install Build Prerequisites
 
 Follow Step 0 for \*nix native builds/tests.
 
@@ -101,7 +99,7 @@ Follow Step 0 for \*nix native builds/tests.
 
 In a Bash shell:
 
-```
+```bash
 export LIBCUDACXX_ROOT=/path/to/libcudacxx # Should be //sw/gpgpu/libcudacxx or the Git repo root.
 export CXX="${LIBCUDACXX_ROOT}/utils/nvidia/nvrtc/nvrtc.sh nvcc"
 
@@ -116,7 +114,7 @@ cmake .. \
   -DLIBCXX_TEST_WITH_NVRTC=ON
 ```
 
-### Step 2: Build and Run the Tests
+### Step 2: Build & Run the Tests
 
 Follow Step 2 for \*nix native builds/tests.
 
@@ -129,7 +127,7 @@ Install [Git for Windows](https://git-scm.com/download/win):
 Checkout [the LLVM Git mono repo](https://github.com/llvm/llvm-project) using a
 Git Bash shell:
 
-```
+```bat
 export LLVM_ROOT=/path/to/llvm
 
 git clone https://github.com/llvm/llvm-project.git ${LLVM_ROOT}
@@ -141,7 +139,7 @@ Download [the get-pip.py bootstrap script](https://bootstrap.pypa.io/get-pip.py)
 
 Install the LLVM Integrated Tester (`lit`) using a Visual Studio command prompt:
 
-```
+```bat
 pip install lit
 ```
 
@@ -149,7 +147,7 @@ pip install lit
 
 In a Visual Studio command prompt:
 
-```
+```bat
 set LLVM_ROOT=\path\to\llvm
 set LIBCUDACXX_ROOT=\path\to\libcudacxx # Should be //sw/gpgpu/libcudacxx or the Git repo root.
 
@@ -165,11 +163,11 @@ cmake .. ^
   -DCMAKE_C_COMPILER_FORCED=ON
 ```
 
-### Step 2:
+### Step 2: Build & Run the Tests
 
 In a Visual Studio command prompt:
 
-```
+```bat
 set LIBCUDACXX_ROOT=\path\to\libcudacxx # Should be //sw/gpgpu/libcudacxx or the Git repo root.
 set SM_ARCH=70
 

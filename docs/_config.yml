@@ -1,0 +1,191 @@
+title: libcu++
+
+theme: just-the-docs
+remote_theme: pmarsceill/just-the-docs
+
+highlight_theme: dark2
+
+color_scheme: nvidia
+logo: /assets/images/nvidia_logo.png
+
+markdown: kramdown
+
+search_enabled: true
+
+# just-the-docs ignores these filenames by default.
+include: [ "contributing.md", "code_of_conduct.md" ]
+
+plugins:
+  - jekyll-optional-front-matter # GitHub Pages
+  - jekyll-default-layout        # GitHub Pages
+  - jekyll-titles-from-headings  # GitHub Pages
+  - jekyll-readme-index          # GitHub Pages
+  - jekyll-relative-links        # GitHub Pages
+
+defaults:
+  -
+    scope:
+      path: readme.md
+    values:
+      title: Overview
+      nav_order: 0
+  -
+    scope:
+      path: setup.md
+    values:
+      has_children: true
+      has_toc: true
+      nav_order: 1
+  -
+    scope:
+      path: setup/requirements.md
+    values:
+      parent: Setup
+      nav_order: 0
+  -
+    scope:
+      path: setup/getting.md
+    values:
+      parent: Setup
+      nav_order: 1
+  -
+    scope:
+      path: setup/building_and_testing.md
+    values:
+      parent: Setup
+      nav_order: 2
+  -
+    scope:
+      path: api.md
+    values:
+      has_children: true
+      has_toc: false
+      nav_order: 2
+  -
+    scope:
+      path: api/synchronization_library.md
+    values:
+      parent: API
+      has_children: true
+      has_toc: false
+      nav_order: 0
+  -
+    scope:
+      path: api/synchronization_library/header_table.md
+    values:
+      parent: API
+      nav_exclude: true
+  -
+    scope:
+      path: api/synchronization_library/thread_scopes.md
+    values:
+      grand_parent: API
+      parent: Synchronization Library
+      nav_order: 0
+  -
+    scope:
+      path: api/synchronization_library/atomic.md
+    values:
+      grand_parent: API
+      parent: Synchronization Library
+      nav_order: 1
+  -
+    scope:
+      path: api/synchronization_library/barrier.md
+    values:
+      grand_parent: API
+      parent: Synchronization Library
+      nav_order: 2
+  -
+    scope:
+      path: api/synchronization_library/latch.md
+    values:
+      grand_parent: API
+      parent: Synchronization Library
+      nav_order: 3
+  -
+    scope:
+      path: api/synchronization_library/semaphore.md
+    values:
+      grand_parent: API
+      parent: Synchronization Library
+      nav_order: 4
+  -
+    scope:
+      path: api/time_library.md
+    values:
+      parent: API
+      has_children: true
+      has_toc: false
+      nav_order: 1
+  -
+    scope:
+      path: api/time_library/header_table.md
+    values:
+      parent: API
+      nav_exclude: true
+  -
+    scope:
+      path: api/time_library/chrono.md
+    values:
+      grand_parent: API
+      parent: Time Library
+  -
+    scope:
+      path: api/utility_library.md
+    values:
+      parent: API
+      has_children: true
+      has_toc: false
+      nav_order: 2
+  -
+    scope:
+      path: api/utility_library/header_table.md
+    values:
+      parent: API
+      nav_exclude: true
+  -
+    scope:
+      path: api/utility_library/functional.md
+    values:
+      grand_parent: API
+      parent: Utility Library
+      nav_order: 0
+  -
+    scope:
+      path: api/utility_library/utility.md
+    values:
+      grand_parent: API
+      parent: Utility Library
+      nav_order: 1
+  -
+    scope:
+      path: api/utility_library/version.md
+    values:
+      grand_parent: API
+      parent: Utility Library
+      nav_order: 2
+  -
+    scope:
+      path: releases.md
+    values:
+      has_children: true
+      has_toc: true
+      nav_order: 3
+  -
+    scope:
+      path: releases/*
+    values:
+      parent: Releases
+  -
+    scope:
+      path: contributing.md
+    values:
+      has_children: true
+      has_toc: true
+      nav_order: 4
+  -
+    scope:
+      path: contributing/*
+    values:
+      parent: Contributing
