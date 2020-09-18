@@ -99,11 +99,19 @@ libcu++ is distributed under the [Apache License v2.0 with LLVM Exceptions].
 libcu++ aims to be a conforming implementation of the C++ Standard,
   [ISO/IEC IS 14882], Clause 16 through 32.
 
+## ABI Evolution
+
+libcu++ does not promise long term ABI stability.
+The life cycle of an ABI version is approximately 1 year.
+Long-term support for an ABI version ends after approximately 2 years.
+Please see the [versioning section] for more details.
+
 
 [GitHub]: https://github.com/nvidia/libcudacxx
 
 [API section]: https://nvidia.github.io/libcudacxx/api.html
 [synchronization library section]: https://nvidia.github.io/libcudacxx/api/synchronization_library.html
+[versioning section]: https://nvidia.github.io/libcudacxx/releases/versioning.html
 
 [documentation]: https://nvidia.github.io/libcudacxx
 

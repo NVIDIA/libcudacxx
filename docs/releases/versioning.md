@@ -109,19 +109,24 @@ An ABI version represents stability in the ABI to the best of our ability
 When any changes are made to the ABI, even seemingly minor ones, the ABI
   version is incremented.
 
-A snapshot of the codebase may support multiple ABI versions at the same time.
-They always use the latest available ABI version by default.
-The macro `_LIBCUDACXX_CUDA_ABI_VERSION_LATEST` from `<cuda/std/version>`
-  defines the value of the latest ABI version.
-New ABI versions may be introduced at any point in time, which means that the
-  default ABI version may change in any release.
-A subset of older ABI versions can be used instead by defining
-  `_LIBCUDACXX_CUDA_ABI_VERSION` to the desired version.
+libcu++ does not promise long term ABI stability.
+The life cycle of an ABI version is approximately 1 year.
+Long-term support for an ABI version ends after approximately 2 years.
 Whenever a new major [CUDA Compute Capability] is released, a new NVIDIA
   Standard Library ABI version is introduced and support for all older ABI
   versions is dropped.
 For more information on specific ABI versions, please see the [releases section]
   and [changelog].
+
+A snapshot of the codebase may support multiple ABI versions at the same time.
+They always use the latest available ABI version by default.
+The macro `_LIBCUDACXX_CUDA_ABI_VERSION_LATEST` from `<cuda/std/version>`
+  defines the value of the latest ABI version.
+
+New ABI versions may be introduced at any point in time, which means that the
+  default ABI version may change in any release.
+A subset of older ABI versions can be used instead by defining
+  `_LIBCUDACXX_CUDA_ABI_VERSION` to the desired version.
 
 A program is ill-formed, no diagnostic required, if it uses two different
   translation units compiled with a different NVIDIA Standard Library ABI
