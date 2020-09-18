@@ -6,19 +6,22 @@ libcu++ is the NVIDIA C++ Standard Library, bringing you familiar features from
 
 If you know how to use your C++ Standard Library, then you know how to use
   libcu++.
-It's included in your NVIDIA HPC SDK or CUDA Toolkit installation.
-No additional installation or compiler flags are needed.
-
-All you have to do is add `cuda/` to the start of your includes and `cuda::`
-  before any uses of `std::`:
+All you have to do is add `cuda/std/` to the start of your Standard Library
+  includes and `cuda::` before any uses of `std::`:
 
 ```c++
 #include <cuda/std/atomic>
 cuda::std::atomic<int> x;
 ```
 
-**[Examples] are a great way to get familiar with libcu++; the [documentation]
-is also pretty helpful.**
+libcu++ is an open source project; it is available on [GitHub] and included in
+  the NVIDIA HPC SDK and CUDA Toolkit.
+No additional installation or compiler flags are needed.
+
+<table><tr>
+<th><b><a href="https://github.com/nvidia/libcudacxx/tree/main/samples">Examples</a></b></th>
+<th><b><a href="https://nvidia.github.io/libcudacxx">Documentation</a></b></th>
+</tr></table>
 
 ## `cuda::` and `cuda::std::`
 
@@ -85,15 +88,16 @@ The [API section] lists the facilities available and the releases they were
 
 ## libcu++ is Open Source
 
-libcu++ is an open source project developed on GitHub.
+libcu++ is an open source project developed on [GitHub].
 It is NVIDIA's variant of [LLVM's libc++].
 libcu++ is distributed under the [Apache License v2.0 with LLVM Exceptions].
 
 
-[API section]: ./api.md
-[synchronization library section]: ./api/synchronization_library.md
+[GitHub]: https://github.com/nvidia/libcudacxx
 
-[examples]: https://github.com/NVIDIA/libcudacxx/tree/main/samples
+[API section]: https://nvidia.github.io/libcudacxx/api.html
+[synchronization library section]: https//nvidia.github.io/libcudacxx/api/synchronization_library.html
+
 [documentation]: https://nvidia.github.io/libcudacxx
 
 [LLVM's libc++]: https://libcxx.llvm.org

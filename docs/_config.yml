@@ -8,8 +8,6 @@ highlight_theme: dark2
 color_scheme: nvidia
 logo: /assets/images/nvidia_logo.png
 
-markdown: kramdown
-
 search_enabled: true
 
 # just-the-docs ignores these filenames by default.
