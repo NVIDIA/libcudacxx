@@ -1,5 +1,7 @@
 # API
 
+Any header not listed below is omitted.
+
 *: Some the Standard C++ facilities in this header are omitted, see the libcu++
 Addendum for details.
 
