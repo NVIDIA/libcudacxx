@@ -39,7 +39,7 @@ That implementation might be
 Further research and investigation is required before we can provide this
   feature.
 
-### `cuda::std::reference_
+### `cuda::std::reference_wrapper`
 
 `cuda::std::reference_wrapper` is a [*CopyConstructible*] and
   [*CopyAssignable*] wrapper around a reference to an object or function of
