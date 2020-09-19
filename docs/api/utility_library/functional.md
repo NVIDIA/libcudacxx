@@ -2,7 +2,7 @@
 
 ## Omissions
 
-The following facilities [ISO/IEC IS 14882 [functional.syn]] are not available
+The following facilities ISO/IEC IS 14882 [[functional.syn]] are not available
   in libcu++ today:
 
 - `cuda::std::function`: Polymorphic function object wrapper.
@@ -58,7 +58,7 @@ However, this feature failed tests involving function pointers with some of the
 So, we've omitted this feature for now.
 
 
-[ISO/IEC IS 14882 [functional.syn]]: http://eel.is/c++draft/functional.syn
+[functional.syn]: https://eel.is/c++draft/functional.syn
 
 [*CopyConstructible*]: https://eel.is/c++draft/utility.arg.requirements#:requirements,Cpp17CopyConstructible
 [*CopyAssignable*]: https://eel.is/c++draft/utility.arg.requirements#:requirements,Cpp17CopyAssignable
