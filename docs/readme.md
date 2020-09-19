@@ -31,7 +31,8 @@ When used with NVCC, NVIDIA C++ Standard Library facilities live in their own
   the host compiler's Standard Library:
 
 * `std::`/`<*>`: Your host compiler's Standard Library that works in
-      `__host__` code only.
+      `__host__` code only (although `--expt-relaxed-constexpr` lets you call
+      the standard library's `constexpr` functions from device code).
     When using NVCC, libcu++ does not replace or interfere with host compiler's
       Standard Library.
 * `cuda::std::`/`<cuda/std/*>`: Strictly conforming implementations of
