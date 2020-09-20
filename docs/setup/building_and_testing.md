@@ -5,7 +5,7 @@
 The procedure is demonstrated for NVCC + GCC in C++11 mode on a Debian-like
 Linux systems; the same basic steps are required on all other platforms.
 
-### Step 0: Install Build Prerequisites
+### Step 0: Install Build Requirements
 
 In a Bash shell:
 
@@ -120,7 +120,7 @@ Follow Step 2 for \*nix native builds/tests.
 
 ## Windows, Native Build/Test
 
-### Step 0: Install Prerequisites
+### Step 0: Install Build Requirements
 
 Install [Git for Windows](https://git-scm.com/download/win):
 
