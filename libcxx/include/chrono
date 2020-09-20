@@ -2758,6 +2758,7 @@ inline constexpr year_month_weekday_last& year_month_weekday_last::operator-=(co
 inline constexpr year_month_weekday_last& year_month_weekday_last::operator+=(const years& __dy)  noexcept { *this = *this + __dy; return *this; }
 inline constexpr year_month_weekday_last& year_month_weekday_last::operator-=(const years& __dy)  noexcept { *this = *this - __dy; return *this; }
 
+#if _LIBCUDACXX_STD_VER > 17
 
 template <class _Duration>
 class hh_mm_ss
@@ -2817,6 +2818,8 @@ private:
     chrono::seconds __s;
     precision       __f;
 };
+
+#endif // _LIBCUDACXX_STD_VER > 17
 
 constexpr bool is_am(const hours& __h) noexcept { return __h >= hours( 0) && __h < hours(12); }
 constexpr bool is_pm(const hours& __h) noexcept { return __h >= hours(12) && __h < hours(24); }
