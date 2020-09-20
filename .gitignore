@@ -34,3 +34,5 @@ build/
 .p4config
 compare_git_to_perforce.bash
 *.log
+.cache
+compile_commands.json
