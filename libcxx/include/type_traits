@@ -448,7 +448,7 @@ struct _LIBCUDACXX_TEMPLATE_VIS integral_constant
 template <class _Tp, _Tp __v>
 _LIBCUDACXX_CONSTEXPR const _Tp integral_constant<_Tp, __v>::value;
 
-#if _LIBCUDACXX_STD_VER > 14
+#if _LIBCUDACXX_STD_VER > 11
 template <bool __b>
 using bool_constant = integral_constant<bool, __b>;
 #define _LIBCUDACXX_BOOL_CONSTANT(__b) bool_constant<(__b)>
@@ -552,7 +552,7 @@ template <bool _Bp, class _Tp = void> using enable_if_t = typename enable_if<_Bp
 template <class _Tp, class _Up> struct _LIBCUDACXX_TEMPLATE_VIS is_same           : public false_type {};
 template <class _Tp>            struct _LIBCUDACXX_TEMPLATE_VIS is_same<_Tp, _Tp> : public true_type {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp, class _Up>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_same_v
     = is_same<_Tp, _Up>::value;
@@ -654,7 +654,7 @@ struct __two {char __lx[2];};
 template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_const            : public false_type {};
 template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_const<_Tp const> : public true_type {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_const_v
     = is_const<_Tp>::value;
@@ -665,7 +665,7 @@ _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_const_v
 template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_volatile               : public false_type {};
 template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_volatile<_Tp volatile> : public true_type {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_volatile_v
     = is_volatile<_Tp>::value;
@@ -703,7 +703,7 @@ template <>          struct __libcpp_is_void<void> : public true_type {};
 template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_void
     : public __libcpp_is_void<typename remove_cv<_Tp>::type> {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_void_v
     = is_void<_Tp>::value;
@@ -721,7 +721,7 @@ template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS __is_nullptr_t
 template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_null_pointer
     : public __is_nullptr_t_impl<typename remove_cv<_Tp>::type> {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_null_pointer_v
     = is_null_pointer<_Tp>::value;
@@ -759,7 +759,7 @@ template <>          struct __libcpp_is_integral<__uint128_t>        : public tr
 template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_integral
     : public __libcpp_is_integral<typename remove_cv<_Tp>::type> {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_integral_v
     = is_integral<_Tp>::value;
@@ -775,7 +775,7 @@ template <>          struct __libcpp_is_floating_point<long double> : public tru
 template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_floating_point
     : public __libcpp_is_floating_point<typename remove_cv<_Tp>::type> {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_floating_point_v
     = is_floating_point<_Tp>::value;
@@ -790,7 +790,7 @@ template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_array<_Tp[]>
 template <class _Tp, size_t _Np> struct _LIBCUDACXX_TEMPLATE_VIS is_array<_Tp[_Np]>
     : public true_type {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_array_v
     = is_array<_Tp>::value;
@@ -812,7 +812,7 @@ template <class _Tp> struct __libcpp_remove_objc_qualifiers<_Tp __unsafe_unretai
 template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_pointer
     : public __libcpp_is_pointer<typename __libcpp_remove_objc_qualifiers<typename remove_cv<_Tp>::type>::type> {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_pointer_v
     = is_pointer<_Tp>::value;
@@ -830,7 +830,7 @@ template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_reference        : publi
 template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_reference<_Tp&>  : public true_type {};
 template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_reference<_Tp&&> : public true_type {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_reference_v
     = is_reference<_Tp>::value;
@@ -858,7 +858,7 @@ template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_union
 
 #endif // defined(_LIBCUDACXX_IS_UNION) && !defined(_LIBCUDACXX_USE_IS_UNION_FALLBACK)
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_union_v
     = is_union<_Tp>::value;
@@ -884,7 +884,7 @@ template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_class
 
 #endif // defined(_LIBCUDACXX_IS_CLASS) && !defined(_LIBCUDACXX_USE_IS_CLASS_FALLBACK)
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_class_v
     = is_class<_Tp>::value;
@@ -902,7 +902,7 @@ template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_function
     > {};
 
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_function_v
     = is_function<_Tp>::value;
@@ -927,7 +927,7 @@ template <class _Tp, class _Up> struct __libcpp_is_member_pointer<_Tp _Up::*> {
 template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_member_function_pointer
     : public _BoolConstant< __libcpp_is_member_pointer<typename remove_cv<_Tp>::type>::__is_func > {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_member_function_pointer_v
     = is_member_function_pointer<_Tp>::value;
@@ -938,7 +938,7 @@ _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_member_function_pointer_v
 template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_member_pointer
  : public _BoolConstant< __libcpp_is_member_pointer<typename remove_cv<_Tp>::type>::__is_member > {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_member_pointer_v
     = is_member_pointer<_Tp>::value;
@@ -949,7 +949,7 @@ _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_member_pointer_v
 template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_member_object_pointer
     : public _BoolConstant< __libcpp_is_member_pointer<typename remove_cv<_Tp>::type>::__is_obj >  {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_member_object_pointer_v
     = is_member_object_pointer<_Tp>::value;
@@ -978,7 +978,7 @@ template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_enum
 
 #endif // defined(_LIBCUDACXX_IS_ENUM) && !defined(_LIBCUDACXX_USE_IS_ENUM_FALLBACK)
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_enum_v
     = is_enum<_Tp>::value;
@@ -990,7 +990,7 @@ template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_arithmetic
     : public integral_constant<bool, is_integral<_Tp>::value      ||
                                      is_floating_point<_Tp>::value> {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_arithmetic_v
     = is_arithmetic<_Tp>::value;
@@ -1003,7 +1003,7 @@ template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_fundamental
                                      __is_nullptr_t<_Tp>::value ||
                                      is_arithmetic<_Tp>::value> {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_fundamental_v
     = is_fundamental<_Tp>::value;
@@ -1020,7 +1020,7 @@ template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_scalar
 
 template <> struct _LIBCUDACXX_TEMPLATE_VIS is_scalar<nullptr_t> : public true_type {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_scalar_v
     = is_scalar<_Tp>::value;
@@ -1034,7 +1034,7 @@ template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_object
                                      is_union<_Tp>::value  ||
                                      is_class<_Tp>::value  > {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_object_v
     = is_object<_Tp>::value;
@@ -1045,7 +1045,7 @@ _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_object_v
 template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_compound
     : public integral_constant<bool, !is_fundamental<_Tp>::value> {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_compound_v
     = is_compound<_Tp>::value;
@@ -1221,7 +1221,7 @@ template <class _Tp> struct __libcpp_is_signed<_Tp, false> : public false_type {
 
 template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_signed : public __libcpp_is_signed<_Tp> {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_signed_v
     = is_signed<_Tp>::value;
@@ -1242,7 +1242,7 @@ template <class _Tp> struct __libcpp_is_unsigned<_Tp, false> : public false_type
 
 template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_unsigned : public __libcpp_is_unsigned<_Tp> {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_unsigned_v
     = is_unsigned<_Tp>::value;
@@ -1257,7 +1257,7 @@ template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS rank<_Tp[]>
 template <class _Tp, size_t _Np> struct _LIBCUDACXX_TEMPLATE_VIS rank<_Tp[_Np]>
     : public integral_constant<size_t, rank<_Tp>::value + 1> {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR size_t rank_v
     = rank<_Tp>::value;
@@ -1276,7 +1276,7 @@ template <class _Tp, size_t _Np> struct _LIBCUDACXX_TEMPLATE_VIS extent<_Tp[_Np]
 template <class _Tp, size_t _Np, unsigned _Ip> struct _LIBCUDACXX_TEMPLATE_VIS extent<_Tp[_Np], _Ip>
     : public integral_constant<size_t, extent<_Tp, _Ip-1>::value> {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp, unsigned _Ip = 0>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR size_t extent_v
     = extent<_Tp, _Ip>::value;
@@ -1369,7 +1369,7 @@ template <class _Tp> using decay_t = typename decay<_Tp>::type;
 template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_abstract
     : public integral_constant<bool, __is_abstract(_Tp)> {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_abstract_v
     = is_abstract<_Tp>::value;
@@ -1394,14 +1394,14 @@ template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS
 is_final : public integral_constant<bool, _LIBCUDACXX_IS_FINAL(_Tp)> {};
 #endif
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_final_v
     = is_final<_Tp>::value;
 #endif
 
 // is_aggregate
-#if _LIBCUDACXX_STD_VER > 14 && defined(_LIBCUDACXX_IS_AGGREGATE)
+#if _LIBCUDACXX_STD_VER > 11 && defined(_LIBCUDACXX_IS_AGGREGATE)
 
 template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS
 is_aggregate : public integral_constant<bool, _LIBCUDACXX_IS_AGGREGATE(_Tp)> {};
@@ -1412,7 +1412,7 @@ _LIBCUDACXX_INLINE_VAR constexpr bool is_aggregate_v
     = is_aggregate<_Tp>::value;
 #endif
 
-#endif // _LIBCUDACXX_STD_VER > 14 && defined(_LIBCUDACXX_IS_AGGREGATE)
+#endif // _LIBCUDACXX_STD_VER > 11 && defined(_LIBCUDACXX_IS_AGGREGATE)
 
 // is_base_of
 
@@ -1449,7 +1449,7 @@ struct _LIBCUDACXX_TEMPLATE_VIS is_base_of
 
 #endif  // defined(_LIBCUDACXX_IS_BASE_OF) && !defined(_LIBCUDACXX_USE_IS_BASE_OF_FALLBACK)
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Bp, class _Dp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_base_of_v
     = is_base_of<_Bp, _Dp>::value;
@@ -1532,7 +1532,7 @@ template <class _T1, class _T2> struct _LIBCUDACXX_TEMPLATE_VIS is_convertible
 
 #endif // defined(_LIBCUDACXX_IS_CONVERTIBLE_TO) && !defined(_LIBCUDACXX_USE_IS_CONVERTIBLE_FALLBACK)
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _From, class _To>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_convertible_v
     = is_convertible<_From, _To>::value;
@@ -1595,7 +1595,7 @@ template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_empty : public __libcpp_
 
 #endif // defined(_LIBCUDACXX_IS_EMPTY) && !defined(_LIBCUDACXX_USE_IS_EMPTY_FALLBACK)
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_empty_v
     = is_empty<_Tp>::value;
@@ -1621,7 +1621,7 @@ template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_polymorphic
 
 #endif // defined(_LIBCUDACXX_IS_POLYMORPHIC) && !defined(_LIBCUDACXX_USE_IS_POLYMORPHIC_FALLBACK)
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_polymorphic_v
     = is_polymorphic<_Tp>::value;
@@ -1641,7 +1641,7 @@ template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS has_virtual_destructor
 
 #endif // defined(_LIBCUDACXX_HAS_VIRTUAL_DESTRUCTOR) && !defined(_LIBCUDACXX_USE_HAS_VIRTUAL_DESTRUCTOR_FALLBACK)
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool has_virtual_destructor_v
     = has_virtual_destructor<_Tp>::value;
@@ -1649,7 +1649,7 @@ _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool has_virtual_destructor_v
 
 // has_unique_object_representations
 
-#if _LIBCUDACXX_STD_VER > 14 && defined(_LIBCUDACXX_HAS_UNIQUE_OBJECT_REPRESENTATIONS)
+#if _LIBCUDACXX_STD_VER > 11 && defined(_LIBCUDACXX_HAS_UNIQUE_OBJECT_REPRESENTATIONS)
 
 template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS has_unique_object_representations
     : public integral_constant<bool,
@@ -1661,14 +1661,14 @@ _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool has_unique_object_representati
     = has_unique_object_representations<_Tp>::value;
 #endif
 
-#endif // _LIBCUDACXX_STD_VER > 14 && defined(_LIBCUDACXX_HAS_UNIQUE_OBJECT_REPRESENTATIONS)
+#endif // _LIBCUDACXX_STD_VER > 11 && defined(_LIBCUDACXX_HAS_UNIQUE_OBJECT_REPRESENTATIONS)
 
 // alignment_of
 
 template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS alignment_of
     : public integral_constant<size_t, _LIBCUDACXX_ALIGNOF(_Tp)> {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR size_t alignment_of_v
     = alignment_of<_Tp>::value;
@@ -2209,7 +2209,7 @@ struct is_assignable
 
 #endif // defined(_LIBCUDACXX_IS_ASSIGNABLE) && !defined(_LIBCUDACXX_USE_IS_ASSIGNABLE_FALLBACK)
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp, class _Arg>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_assignable_v
     = is_assignable<_Tp, _Arg>::value;
@@ -2221,7 +2221,7 @@ template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_copy_assignable
     : public is_assignable<typename add_lvalue_reference<_Tp>::type,
                   typename add_lvalue_reference<typename add_const<_Tp>::type>::type> {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_copy_assignable_v
     = is_copy_assignable<_Tp>::value;
@@ -2233,7 +2233,7 @@ template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_move_assignable
     : public is_assignable<typename add_lvalue_reference<_Tp>::type,
                            typename add_rvalue_reference<_Tp>::type> {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_move_assignable_v
     = is_move_assignable<_Tp>::value;
@@ -2309,7 +2309,7 @@ struct is_destructible<void>
 
 #endif // defined(_LIBCUDACXX_IS_DESTRUCTIBLE) && !defined(_LIBCUDACXX_USE_IS_DESTRUCTIBLE_FALLBACK)
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_destructible_v
     = is_destructible<_Tp>::value;
@@ -3332,7 +3332,7 @@ struct _LIBCUDACXX_TEMPLATE_VIS is_constructible
 
 #endif  // defined(_LIBCUDACXX_IS_CONSTRUCTIBLE) && !defined(_LIBCUDACXX_USE_IS_CONSTRUCTIBLE_FALLBACK)
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp, class ..._Args>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_constructible_v
     = is_constructible<_Tp, _Args...>::value;
@@ -3345,7 +3345,7 @@ struct _LIBCUDACXX_TEMPLATE_VIS is_default_constructible
     : public is_constructible<_Tp>
     {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_default_constructible_v
     = is_default_constructible<_Tp>::value;
@@ -3383,7 +3383,7 @@ struct _LIBCUDACXX_TEMPLATE_VIS is_copy_constructible
     : public is_constructible<_Tp,
                   typename add_lvalue_reference<typename add_const<_Tp>::type>::type> {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_copy_constructible_v
     = is_copy_constructible<_Tp>::value;
@@ -3396,7 +3396,7 @@ struct _LIBCUDACXX_TEMPLATE_VIS is_move_constructible
     : public is_constructible<_Tp, typename add_rvalue_reference<_Tp>::type>
     {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_move_constructible_v
     = is_move_constructible<_Tp>::value;
@@ -3525,7 +3525,7 @@ struct _LIBCUDACXX_TEMPLATE_VIS is_trivially_constructible<_Tp, _Tp&,
 
 #endif  // _LIBCUDACXX_HAS_NO_VARIADICS
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp, class... _Args>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_trivially_constructible_v
     = is_trivially_constructible<_Tp, _Args...>::value;
@@ -3537,7 +3537,7 @@ template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_trivially_default_constr
     : public is_trivially_constructible<_Tp>
     {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_trivially_default_constructible_v
     = is_trivially_default_constructible<_Tp>::value;
@@ -3549,7 +3549,7 @@ template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_trivially_copy_construct
     : public is_trivially_constructible<_Tp, typename add_lvalue_reference<const _Tp>::type>
     {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_trivially_copy_constructible_v
     = is_trivially_copy_constructible<_Tp>::value;
@@ -3561,7 +3561,7 @@ template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_trivially_move_construct
     : public is_trivially_constructible<_Tp, typename add_rvalue_reference<_Tp>::type>
     {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_trivially_move_constructible_v
     = is_trivially_move_constructible<_Tp>::value;
@@ -3601,7 +3601,7 @@ struct is_trivially_assignable<_Tp&, _Tp&&>
 
 #endif // defined(_LIBCUDACXX_IS_TRIVIALLY_ASSIGNABLE) && !defined(_LIBCUDACXX_USE_IS_TRIVIALLY_ASSIGNABLE_FALLBACK)
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp, class _Arg>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_trivially_assignable_v
     = is_trivially_assignable<_Tp, _Arg>::value;
@@ -3613,7 +3613,7 @@ template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_trivially_copy_assignabl
     : public is_trivially_assignable<typename add_lvalue_reference<_Tp>::type,
                   typename add_lvalue_reference<typename add_const<_Tp>::type>::type> {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_trivially_copy_assignable_v
     = is_trivially_copy_assignable<_Tp>::value;
@@ -3626,7 +3626,7 @@ template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_trivially_move_assignabl
                                      typename add_rvalue_reference<_Tp>::type>
     {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_trivially_move_assignable_v
     = is_trivially_move_assignable<_Tp>::value;
@@ -3658,7 +3658,7 @@ template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_trivially_destructible<_
 
 #endif // defined(_LIBCUDACXX_HAS_TRIVIAL_DESTRUCTOR) && !defined(_LIBCUDACXX_USE_HAS_TRIVIAL_DESTRUCTOR_FALLBACK)
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_trivially_destructible_v
     = is_trivially_destructible<_Tp>::value;
@@ -3827,7 +3827,7 @@ struct _LIBCUDACXX_TEMPLATE_VIS is_nothrow_constructible<_Tp, _Tp&,
 
 #endif // defined(_LIBCUDACXX_IS_NOTHROW_CONSTRUCTIBLE) && !defined(_LIBCUDACXX_USE_IS_NOTHROW_CONSTRUCTIBLE_FALLBACK)
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp, class ..._Args>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_nothrow_constructible_v
     = is_nothrow_constructible<_Tp, _Args...>::value;
@@ -3839,7 +3839,7 @@ template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_nothrow_default_construc
     : public is_nothrow_constructible<_Tp>
     {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_nothrow_default_constructible_v
     = is_nothrow_default_constructible<_Tp>::value;
@@ -3851,7 +3851,7 @@ template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_nothrow_copy_constructib
     : public is_nothrow_constructible<_Tp,
                   typename add_lvalue_reference<typename add_const<_Tp>::type>::type> {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_nothrow_copy_constructible_v
     = is_nothrow_copy_constructible<_Tp>::value;
@@ -3863,7 +3863,7 @@ template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_nothrow_move_constructib
     : public is_nothrow_constructible<_Tp, typename add_rvalue_reference<_Tp>::type>
     {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_nothrow_move_constructible_v
     = is_nothrow_move_constructible<_Tp>::value;
@@ -3943,7 +3943,7 @@ struct is_nothrow_assignable<_Tp&, _Tp&&>
 
 #endif // !defined(_LIBCUDACXX_HAS_NO_NOEXCEPT)
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp, class _Arg>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_nothrow_assignable_v
     = is_nothrow_assignable<_Tp, _Arg>::value;
@@ -3955,7 +3955,7 @@ template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_nothrow_copy_assignable
     : public is_nothrow_assignable<typename add_lvalue_reference<_Tp>::type,
                   typename add_lvalue_reference<typename add_const<_Tp>::type>::type> {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_nothrow_copy_assignable_v
     = is_nothrow_copy_assignable<_Tp>::value;
@@ -3968,7 +3968,7 @@ template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_nothrow_move_assignable
                                      typename add_rvalue_reference<_Tp>::type>
     {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_nothrow_move_assignable_v
     = is_nothrow_move_assignable<_Tp>::value;
@@ -4037,7 +4037,7 @@ struct _LIBCUDACXX_TEMPLATE_VIS is_nothrow_destructible<_Tp[]>
 
 #endif // defined(_LIBCUDACXX_IS_NOTHROW_DESTRUCTIBLE) && !defined(_LIBCUDACXX_USE_IS_NOTHROW_DESTRUCTIBLE_FALLBACK)
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_nothrow_destructible_v
     = is_nothrow_destructible<_Tp>::value;
@@ -4060,7 +4060,7 @@ template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_pod
 
 #endif // defined(_LIBCUDACXX_IS_POD) && !defined(_LIBCUDACXX_USE_IS_POD_FALLBACK)
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_pod_v
     = is_pod<_Tp>::value;
@@ -4077,7 +4077,7 @@ template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_literal_type
 #endif // defined(_LIBCUDACXX_IS_LITERAL) && !defined(_LIBCUDACXX_USE_IS_LITERAL_FALLBACK)
     {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_literal_type_v
     = is_literal_type<_Tp>::value;
@@ -4093,7 +4093,7 @@ template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_standard_layout
 #endif // defined(_LIBCUDACXX_IS_STANDARD_LAYOUT) && !defined(_LIBCUDACXX_USE_IS_STANDARD_LAYOUT_FALLBACK)
     {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_standard_layout_v
     = is_standard_layout<_Tp>::value;
@@ -4109,7 +4109,7 @@ template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_trivially_copyable
 #endif // defined(_LIBCUDACXX_IS_TRIVIALLY_COPYABLE) && !defined(_LIBCUDACXX_USE_IS_TRIVIALLY_COPYABLE_FALLBACK)
     {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_trivially_copyable_v
     = is_trivially_copyable<_Tp>::value;
@@ -4126,7 +4126,7 @@ template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_trivial
 #endif // defined(_LIBCUDACXX_IS_TRIVIAL) && !defined(_LIBCUDACXX_USE_IS_TRIVIAL_FALLBACK)
     {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Tp>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool is_trivial_v
     = is_trivial<_Tp>::value;
@@ -4410,7 +4410,7 @@ class _LIBCUDACXX_TEMPLATE_VIS result_of<_Fp(_Args...)>
 template <class _Tp> using result_of_t = typename result_of<_Tp>::type;
 #endif
 
-#if _LIBCUDACXX_STD_VER > 14
+#if _LIBCUDACXX_STD_VER > 11
 
 // invoke_result
 
@@ -4459,7 +4459,7 @@ template <class _Ret, class _Fn, class ..._Args>
 _LIBCUDACXX_INLINE_VAR constexpr bool is_nothrow_invocable_r_v
     = is_nothrow_invocable_r<_Ret, _Fn, _Args...>::value;
 
-#endif // _LIBCUDACXX_STD_VER > 14
+#endif // _LIBCUDACXX_STD_VER > 11
 
 #endif  // !defined(_LIBCUDACXX_CXX03_LANG)
 
@@ -4583,7 +4583,7 @@ struct __is_nothrow_swappable
 {
 };
 
-#if _LIBCUDACXX_STD_VER > 14
+#if _LIBCUDACXX_STD_VER > 11
 
 template <class _Tp, class _Up>
 struct _LIBCUDACXX_TEMPLATE_VIS is_swappable_with
@@ -4637,7 +4637,7 @@ template <class _Tp>
 _LIBCUDACXX_INLINE_VAR constexpr bool is_nothrow_swappable_v
     = is_nothrow_swappable<_Tp>::value;
 
-#endif // _LIBCUDACXX_STD_VER > 14
+#endif // _LIBCUDACXX_STD_VER > 11
 
 #if defined(_LIBCUDACXX_UNDERLYING_TYPE) && !defined(_LIBCUDACXX_USE_UNDERLYING_TYPE_FALLBACK)
 template <class _Tp, bool = is_enum<_Tp>::value> struct __underlying_type_impl;
@@ -4755,7 +4755,7 @@ struct __has_operator_addressof
 
 #endif  // _LIBCUDACXX_CXX03_LANG
 
-#if _LIBCUDACXX_STD_VER > 14
+#if _LIBCUDACXX_STD_VER > 11
 
 template <class...> using void_t = void;
 
@@ -4788,7 +4788,7 @@ struct negation : _Not<_Tp> {};
 template<class _Tp>
 _LIBCUDACXX_INLINE_VAR constexpr bool negation_v
     = negation<_Tp>::value;
-#endif  // _LIBCUDACXX_STD_VER > 14
+#endif  // _LIBCUDACXX_STD_VER > 11
 
 // These traits are used in __tree and __hash_table
 #ifndef _LIBCUDACXX_CXX03_LANG
@@ -4843,7 +4843,7 @@ using _IsCharLikeType = _And<is_standard_layout<_CharT>, is_trivial<_CharT> >;
 
 _LIBCUDACXX_END_NAMESPACE_STD
 
-#if _LIBCUDACXX_STD_VER > 14
+#if _LIBCUDACXX_STD_VER > 11
 // std::byte
 #ifdef _LIBCUDACXX_BEGIN_NAMESPACE_STD_NOVERSION
 _LIBCUDACXX_BEGIN_NAMESPACE_STD_NOVERSION
