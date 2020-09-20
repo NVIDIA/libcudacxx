@@ -162,6 +162,8 @@ You cannot utilize two different ABI versions in a single translation unit by
 
 ABI namespaces aid in diagnosing the use of translation units compiled with
   different ABI versions.
+We want to try and help anyone who is mixing code from different ABIs by loudly
+  breaking them at compile time instead of quietly failing them at runtime.
 Suppose we have one translation unit that uses ABI version 3 and defines a
   function `void negate(cuda::atomic<float>&)`.
 `cuda::atomic<float>` is just another name for `cuda::__3::atomic<float>`, so
