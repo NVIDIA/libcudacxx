@@ -948,7 +948,7 @@ duration_cast(const duration<_Rep, _Period>& __fd)
 template <class _Rep>
 struct _LIBCUDACXX_TEMPLATE_VIS treat_as_floating_point : is_floating_point<_Rep> {};
 
-#if _LIBCUDACXX_STD_VER > 14 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
+#if _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 template <class _Rep>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool treat_as_floating_point_v
     = treat_as_floating_point<_Rep>::value;
@@ -963,7 +963,7 @@ public:
     _LIBCUDACXX_INLINE_VISIBILITY static _LIBCUDACXX_CONSTEXPR _Rep min()  _NOEXCEPT {return numeric_limits<_Rep>::lowest();}
 };
 
-#if _LIBCUDACXX_STD_VER > 14
+#if _LIBCUDACXX_STD_VER > 11
 template <class _ToDuration, class _Rep, class _Period>
 inline _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR
 typename enable_if
@@ -1061,7 +1061,7 @@ private:
     rep __rep_;
 public:
 
-#if !defined(_LIBCUDACXX_CXX03_LANG)
+#if !defined(_LIBCUDACXX_CXX03_LANG) && !defined(__NVCC__)
     _LIBCUDACXX_CONSTEXPR
         duration() = default;
 #else
@@ -1127,7 +1127,7 @@ typedef duration<long long,        milli> milliseconds;
 typedef duration<long long              > seconds;
 typedef duration<     long, ratio<  60> > minutes;
 typedef duration<     long, ratio<3600> > hours;
-#if _LIBCUDACXX_STD_VER > 17
+#if _LIBCUDACXX_STD_VER > 11
 typedef duration<     int, ratio_multiply<ratio<24>, hours::period>>         days;
 typedef duration<     int, ratio_multiply<ratio<7>,   days::period>>         weeks;
 typedef duration<     int, ratio_multiply<ratio<146097, 400>, days::period>> years;
@@ -1413,7 +1413,7 @@ time_point_cast(const time_point<_Clock, _Duration>& __t)
     return time_point<_Clock, _ToDuration>(_CUDA_VSTD::chrono::duration_cast<_ToDuration>(__t.time_since_epoch()));
 }
 
-#if _LIBCUDACXX_STD_VER > 14
+#if _LIBCUDACXX_STD_VER > 11
 template <class _ToDuration, class _Clock, class _Duration>
 inline _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR
 typename enable_if
@@ -1612,7 +1612,7 @@ typedef system_clock high_resolution_clock;
 
 #undef _LIBCUDACXX_CLOCK_API
 
-#if _LIBCUDACXX_STD_VER > 17
+#if _LIBCUDACXX_STD_VER > 11
 
 // [time.clock.file], type file_clock
 using file_clock = _CUDA_VSTD_FS::_FilesystemClock;
@@ -1981,27 +1981,27 @@ inline constexpr
 weekday_last    weekday::operator[](last_spec) const noexcept { return weekday_last{*this}; }
 
 
-inline constexpr last_spec last{};
-inline constexpr weekday   Sunday{0};
-inline constexpr weekday   Monday{1};
-inline constexpr weekday   Tuesday{2};
-inline constexpr weekday   Wednesday{3};
-inline constexpr weekday   Thursday{4};
-inline constexpr weekday   Friday{5};
-inline constexpr weekday   Saturday{6};
+_LIBCUDACXX_INLINE_VAR constexpr last_spec last{};
+_LIBCUDACXX_INLINE_VAR constexpr weekday   Sunday{0};
+_LIBCUDACXX_INLINE_VAR constexpr weekday   Monday{1};
+_LIBCUDACXX_INLINE_VAR constexpr weekday   Tuesday{2};
+_LIBCUDACXX_INLINE_VAR constexpr weekday   Wednesday{3};
+_LIBCUDACXX_INLINE_VAR constexpr weekday   Thursday{4};
+_LIBCUDACXX_INLINE_VAR constexpr weekday   Friday{5};
+_LIBCUDACXX_INLINE_VAR constexpr weekday   Saturday{6};
 
-inline constexpr month January{1};
-inline constexpr month February{2};
-inline constexpr month March{3};
-inline constexpr month April{4};
-inline constexpr month May{5};
-inline constexpr month June{6};
-inline constexpr month July{7};
-inline constexpr month August{8};
-inline constexpr month September{9};
-inline constexpr month October{10};
-inline constexpr month November{11};
-inline constexpr month December{12};
+_LIBCUDACXX_INLINE_VAR constexpr month January{1};
+_LIBCUDACXX_INLINE_VAR constexpr month February{2};
+_LIBCUDACXX_INLINE_VAR constexpr month March{3};
+_LIBCUDACXX_INLINE_VAR constexpr month April{4};
+_LIBCUDACXX_INLINE_VAR constexpr month May{5};
+_LIBCUDACXX_INLINE_VAR constexpr month June{6};
+_LIBCUDACXX_INLINE_VAR constexpr month July{7};
+_LIBCUDACXX_INLINE_VAR constexpr month August{8};
+_LIBCUDACXX_INLINE_VAR constexpr month September{9};
+_LIBCUDACXX_INLINE_VAR constexpr month October{10};
+_LIBCUDACXX_INLINE_VAR constexpr month November{11};
+_LIBCUDACXX_INLINE_VAR constexpr month December{12};
 
 
 class month_day {
@@ -2836,7 +2836,7 @@ constexpr hours make24(const hours& __h, bool __is_pm) noexcept
         return __h == hours(12) ? hours(0) : __h;
 }
 
-#endif // _LIBCUDACXX_STD_VER > 17
+#endif // _LIBCUDACXX_STD_VER > 11
 } // chrono
 
 #if _LIBCUDACXX_STD_VER > 11
