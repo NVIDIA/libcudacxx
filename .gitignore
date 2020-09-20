@@ -35,4 +35,5 @@ build/
 compare_git_to_perforce.bash
 *.log
 .clangd/
+.cache
 compile_commands.json
