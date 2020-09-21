@@ -39,21 +39,21 @@ class counting_semaphore;
 ## Requirements
 
 Extend `[intro.races]` paragraph 21 of N4860 as follows:
-> 21. The execution of a program contains a data race if it contains two potentially concurrent conflicting actions, at least one of which is not atomic ***with a scope that includes the thread that performed the other***, and neither happens before the other, except for the special case for signal handlers described below. Any such data race results in undefined behavior. [...]
+> The execution of a program contains a data race if it contains two potentially concurrent conflicting actions, at least one of which is not atomic ***with a scope that includes the thread that performed the other***, and neither happens before the other, except for the special case for signal handlers described below. Any such data race results in undefined behavior. [...]
 
 Extend `[thread.barrier.class]` paragraph 4 of N4860 as follows:
-> 4. Concurrent invocations of the member functions of barrier, other than its destructor, do not introduce data races ***if performed by threads related by the scope specified by template argument***. [...]
+> Concurrent invocations of the member functions of barrier, other than its destructor, do not introduce data races ***if performed by threads related by the scope specified by template argument***. [...]
 
 Extend `[thread.latch.class]` paragraph 2 of N4860 as follows:
-> 2. Concurrent invocations of the member functions of latch, other than its destructor, do not introduce data races ***if performed by threads related by the scope specified by template argument***.
+> Concurrent invocations of the member functions of latch, other than its destructor, do not introduce data races ***if performed by threads related by the scope specified by template argument***.
 
 Extend `[thread.sema.cnt]` paragraph 3 of N4860 as follows:
-> 3. Concurrent invocations of the member functions of counting_semaphore, other than its destructor, do not introduce data races ***if performed by threads related by the scope specified by template argument***.
+> Concurrent invocations of the member functions of counting_semaphore, other than its destructor, do not introduce data races ***if performed by threads related by the scope specified by template argument***.
 
 Extend `[atomics.fences]` paragraphs 2 through 4 of N4860 as follows:
-> 2. A release fence A synchronizes with an acquire fence B if there exist atomic operations X and Y, both operating on some atomic object M, such that A is sequenced before X, X modifies M, Y is sequenced before B, and Y reads the value written by X or a value written by any side effect in the hypothetical release sequence X would head if it were a release operation ***,and each operation (A, B, X, and Y) has a scope that includes the thread that performed each other operation***.
-> 3. A release fence A synchronizes with an atomic operation B that performs an acquire operation on an atomic object M if there exists an atomic operation X such that A is sequenced before X, X modifies M, and B reads the value written by X or a value written by any side effect in the hypothetical release sequence X would head if it were a release operation ***,and each operation (A, B, and X) has a scope that includes the thread that performed each other operation***.
-> 4. An atomic operation A that is a release operation on an atomic object M synchronizes with an acquire fence B if there exists some atomic operation X on M such that X is sequenced before B and reads the value written by A or a value written by any side effect in the release sequence headed by A ***,and each operation (A, B, and X) has a scope that includes the thread that performed each other operation***.
+> A release fence A synchronizes with an acquire fence B if there exist atomic operations X and Y, both operating on some atomic object M, such that A is sequenced before X, X modifies M, Y is sequenced before B, and Y reads the value written by X or a value written by any side effect in the hypothetical release sequence X would head if it were a release operation ***,and each operation (A, B, X, and Y) has a scope that includes the thread that performed each other operation***.
+> A release fence A synchronizes with an atomic operation B that performs an acquire operation on an atomic object M if there exists an atomic operation X such that A is sequenced before X, X modifies M, and B reads the value written by X or a value written by any side effect in the hypothetical release sequence X would head if it were a release operation ***,and each operation (A, B, and X) has a scope that includes the thread that performed each other operation***.
+> An atomic operation A that is a release operation on an atomic object M synchronizes with an acquire fence B if there exists some atomic operation X on M such that X is sequenced before B and reads the value written by A or a value written by any side effect in the release sequence headed by A ***,and each operation (A, B, and X) has a scope that includes the thread that performed each other operation***.
 
 ## Restrictions
 
