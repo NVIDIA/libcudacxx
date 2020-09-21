@@ -146,7 +146,7 @@ bool __atomic_compare_exchange_relaxed(const volatile _Type *__ptr, _Type *__exp
 }
 template<class _Type>
 bool __atomic_compare_exchange(_Type volatile *__ptr, _Type *__expected, const _Type *__desired, bool, int __success_memorder, int __failure_memorder) {
-    bool success;
+    bool success = false;
     switch (detail::__stronger_order_cuda(__success_memorder, __failure_memorder)) {
     case __ATOMIC_RELEASE: _Compiler_or_memory_barrier(); success = __atomic_compare_exchange_relaxed(__ptr, __expected, __desired); break;
     case __ATOMIC_ACQ_REL: _Compiler_or_memory_barrier();
@@ -212,20 +212,22 @@ void __atomic_fetch_add_relaxed(const volatile _Type *__ptr, const _Delta *__val
 }
 template<class _Type, class _Delta>
 _Type __atomic_fetch_add(_Type volatile *__ptr, _Delta __val, int __memorder) {
-    _Type __ret;
+    alignas(_Type) unsigned char __buf[sizeof(_Type)] = {};
+    auto* __dest = reinterpret_cast<_Type*>(__buf);
+
     switch (__memorder) {
-    case __ATOMIC_RELEASE: _Compiler_or_memory_barrier(); __atomic_fetch_add_relaxed(__ptr, &__val, &__ret);break;
+    case __ATOMIC_RELEASE: _Compiler_or_memory_barrier(); __atomic_fetch_add_relaxed(__ptr, &__val, __dest);break;
     case __ATOMIC_ACQ_REL: _Compiler_or_memory_barrier();
-    case __ATOMIC_ACQUIRE: __atomic_fetch_add_relaxed(__ptr, &__val, &__ret); _Compiler_or_memory_barrier(); break;
-    case __ATOMIC_SEQ_CST: _Memory_barrier(); __atomic_fetch_add_relaxed(__ptr, &__val, &__ret); _Compiler_or_memory_barrier(); break;
-    case __ATOMIC_RELAXED: __atomic_fetch_add_relaxed(__ptr, &__val, &__ret); break;
+    case __ATOMIC_ACQUIRE: __atomic_fetch_add_relaxed(__ptr, &__val, __dest); _Compiler_or_memory_barrier(); break;
+    case __ATOMIC_SEQ_CST: _Memory_barrier(); __atomic_fetch_add_relaxed(__ptr, &__val, __dest); _Compiler_or_memory_barrier(); break;
+    case __ATOMIC_RELAXED: __atomic_fetch_add_relaxed(__ptr, &__val, __dest); break;
     default: assert(0);
     }
-    return __ret;
+    return *__dest;
 }
 template<class _Type, class _Delta>
 _Type __atomic_fetch_sub(_Type volatile *__ptr, _Delta __val, int __memorder) {
-    return __atomic_fetch_add(__ptr, -__val, __memorder);
+    return __atomic_fetch_add(__ptr, 0-__val, __memorder);
 }
 
 
@@ -251,16 +253,18 @@ void __atomic_fetch_and_relaxed(const volatile _Type *__ptr, const _Delta *__val
 }
 template<class _Type, class _Delta>
 _Type __atomic_fetch_and(_Type volatile *__ptr, _Delta __val, int __memorder) {
-    _Type __ret;
+    alignas(_Type) unsigned char __buf[sizeof(_Type)] = {};
+    auto* __dest = reinterpret_cast<_Type*>(__buf);
+
     switch (__memorder) {
-    case __ATOMIC_RELEASE: _Compiler_or_memory_barrier(); __atomic_fetch_and_relaxed(__ptr, &__val, &__ret);break;
+    case __ATOMIC_RELEASE: _Compiler_or_memory_barrier(); __atomic_fetch_and_relaxed(__ptr, &__val, __dest);break;
     case __ATOMIC_ACQ_REL: _Compiler_or_memory_barrier();
-    case __ATOMIC_ACQUIRE: __atomic_fetch_and_relaxed(__ptr, &__val, &__ret); _Compiler_or_memory_barrier(); break;
-    case __ATOMIC_SEQ_CST: _Memory_barrier(); __atomic_fetch_and_relaxed(__ptr, &__val, &__ret); _Compiler_or_memory_barrier(); break;
-    case __ATOMIC_RELAXED: __atomic_fetch_and_relaxed(__ptr, &__val, &__ret); break;
+    case __ATOMIC_ACQUIRE: __atomic_fetch_and_relaxed(__ptr, &__val, __dest); _Compiler_or_memory_barrier(); break;
+    case __ATOMIC_SEQ_CST: _Memory_barrier(); __atomic_fetch_and_relaxed(__ptr, &__val, __dest); _Compiler_or_memory_barrier(); break;
+    case __ATOMIC_RELAXED: __atomic_fetch_and_relaxed(__ptr, &__val, __dest); break;
     default: assert(0);
     }
-    return __ret;
+    return *__dest;
 }
 
 template<class _Type, class _Delta, detail::_enable_if_sized_as<_Type,1> = 0>
@@ -285,16 +289,18 @@ void __atomic_fetch_xor_relaxed(const volatile _Type *__ptr, const _Delta *__val
 }
 template<class _Type, class _Delta>
 _Type __atomic_fetch_xor(_Type volatile *__ptr, _Delta __val, int __memorder) {
-    _Type __ret;
+    alignas(_Type) unsigned char __buf[sizeof(_Type)] = {};
+    auto* __dest = reinterpret_cast<_Type*>(__buf);
+
     switch (__memorder) {
-    case __ATOMIC_RELEASE: _Compiler_or_memory_barrier(); __atomic_fetch_xor_relaxed(__ptr, &__val, &__ret);break;
+    case __ATOMIC_RELEASE: _Compiler_or_memory_barrier(); __atomic_fetch_xor_relaxed(__ptr, &__val, __dest);break;
     case __ATOMIC_ACQ_REL: _Compiler_or_memory_barrier();
-    case __ATOMIC_ACQUIRE: __atomic_fetch_xor_relaxed(__ptr, &__val, &__ret); _Compiler_or_memory_barrier(); break;
-    case __ATOMIC_SEQ_CST: _Memory_barrier(); __atomic_fetch_xor_relaxed(__ptr, &__val, &__ret); _Compiler_or_memory_barrier(); break;
-    case __ATOMIC_RELAXED: __atomic_fetch_xor_relaxed(__ptr, &__val, &__ret); break;
+    case __ATOMIC_ACQUIRE: __atomic_fetch_xor_relaxed(__ptr, &__val, __dest); _Compiler_or_memory_barrier(); break;
+    case __ATOMIC_SEQ_CST: _Memory_barrier(); __atomic_fetch_xor_relaxed(__ptr, &__val, __dest); _Compiler_or_memory_barrier(); break;
+    case __ATOMIC_RELAXED: __atomic_fetch_xor_relaxed(__ptr, &__val, __dest); break;
     default: assert(0);
     }
-    return __ret;
+    return *__dest;
 }
 
 template<class _Type, class _Delta, detail::_enable_if_sized_as<_Type,1> = 0>
@@ -319,23 +325,27 @@ void __atomic_fetch_or_relaxed(const volatile _Type *__ptr, const _Delta *__val,
 }
 template<class _Type, class _Delta>
 _Type __atomic_fetch_or(_Type volatile *__ptr, _Delta __val, int __memorder) {
-    _Type __ret;
+    alignas(_Type) unsigned char __buf[sizeof(_Type)] = {};
+    auto* __dest = reinterpret_cast<_Type*>(__buf);
+
     switch (__memorder) {
-    case __ATOMIC_RELEASE: _Compiler_or_memory_barrier(); __atomic_fetch_or_relaxed(__ptr, &__val, &__ret);break;
+    case __ATOMIC_RELEASE: _Compiler_or_memory_barrier(); __atomic_fetch_or_relaxed(__ptr, &__val, __dest);break;
     case __ATOMIC_ACQ_REL: _Compiler_or_memory_barrier();
-    case __ATOMIC_ACQUIRE: __atomic_fetch_or_relaxed(__ptr, &__val, &__ret); _Compiler_or_memory_barrier(); break;
-    case __ATOMIC_SEQ_CST: _Memory_barrier(); __atomic_fetch_or_relaxed(__ptr, &__val, &__ret); _Compiler_or_memory_barrier(); break;
-    case __ATOMIC_RELAXED: __atomic_fetch_or_relaxed(__ptr, &__val, &__ret); break;
+    case __ATOMIC_ACQUIRE: __atomic_fetch_or_relaxed(__ptr, &__val, __dest); _Compiler_or_memory_barrier(); break;
+    case __ATOMIC_SEQ_CST: _Memory_barrier(); __atomic_fetch_or_relaxed(__ptr, &__val, __dest); _Compiler_or_memory_barrier(); break;
+    case __ATOMIC_RELAXED: __atomic_fetch_or_relaxed(__ptr, &__val, __dest); break;
     default: assert(0);
     }
-    return __ret;
+    return *__dest;
 }
 
 template<class _Type>
 _Type __atomic_load_n(const _Type volatile *__ptr, int __memorder) {
-    _Type __ret;
-    __atomic_load(__ptr, &__ret, __memorder);
-    return __ret;
+    alignas(_Type) unsigned char __buf[sizeof(_Type)] = {};
+    auto* __dest = reinterpret_cast<_Type*>(__buf);
+
+    __atomic_load(__ptr, __dest, __memorder);
+    return *__dest;
 }
 
 template<class _Type>
@@ -350,9 +360,11 @@ bool __atomic_compare_exchange_n(_Type volatile *__ptr, _Type *__expected, _Type
 
 template<class _Type>
 _Type __atomic_exchange_n(_Type volatile *__ptr, _Type __val, int __memorder) {
-    _Type __ret;
-    __atomic_exchange(__ptr, &__val, &__ret, __memorder);
-    return __ret;
+    alignas(_Type) unsigned char __buf[sizeof(_Type)] = {};
+    auto* __dest = reinterpret_cast<_Type*>(__buf);
+
+    __atomic_exchange(__ptr, &__val, __dest, __memorder);
+    return *__dest;
 }
 
 template<class _Type, class _Delta>
