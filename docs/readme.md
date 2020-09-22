@@ -56,7 +56,7 @@ cuda::std::atomic<int> x;
 
 // CUDA C++, __host__ __device__.
 // Conforming extensions to the C++ Standard.
-#include <cuda/std/atomic>
+#include <cuda/atomic>
 cuda::atomic<int, cuda::thread_scope_block> x;
 ```
 
