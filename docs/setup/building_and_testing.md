@@ -19,6 +19,9 @@ apt-get -y install cmake
 # Install the LLVM Integrated Tester (`lit`)
 apt-get -y install python-pip
 pip install lit
+
+# Env vars that should be set, or kept in mind for use later
+export LIBCUDACXX_ROOT=/path/to/libcudacxx # Git repo root.
 ```
 
 ### Step 1: Generate the Build Files
@@ -26,8 +29,6 @@ pip install lit
 In a Bash shell:
 
 ```bash
-export LIBCUDACXX_ROOT=/path/to/libcudacxx # Should be //sw/gpgpu/libcudacxx or the Git repo root.
-
 cd ${LIBCUDACXX_ROOT}
 mkdir -p build
 cd build
@@ -43,9 +44,7 @@ cmake .. \
 In a Bash shell:
 
 ```bash
-export LIBCUDACXX_ROOT=/path/to/libcudacxx # Should be //sw/gpgpu/libcudacxx or the Git repo root.
-
-cd ${LIBCUDACXX_ROOT}/build # `libcudacxx` should be //sw/gpgpu/libcudacxx or the Git repo root.
+cd ${LIBCUDACXX_ROOT}/build # build directory of this repo
 ../utils/nvidia/linux/perform_tests.bash --skip-libcxx-tests
 ```
 
@@ -66,7 +65,6 @@ In a Bash shell:
 ```bash
 export HOST=executor.nvidia.com
 export USERNAME=ubuntu
-export LIBCUDACXX_ROOT=/path/to/libcudacxx # Should be //sw/gpgpu/libcudacxx or the Git repo root.
 
 cd ${LIBCUDACXX_ROOT}
 mkdir -p build
@@ -100,7 +98,6 @@ Follow Step 0 for \*nix native builds/tests.
 In a Bash shell:
 
 ```bash
-export LIBCUDACXX_ROOT=/path/to/libcudacxx # Should be //sw/gpgpu/libcudacxx or the Git repo root.
 export CXX="${LIBCUDACXX_ROOT}/utils/nvidia/nvrtc/nvrtc.sh nvcc"
 
 cd ${LIBCUDACXX_ROOT}
@@ -143,13 +140,21 @@ Install the LLVM Integrated Tester (`lit`) using a Visual Studio command prompt:
 pip install lit
 ```
 
+### Step 0.5: Launching a Build Environment
+
+Visual Studio comes with a few build environments that are appropriate to use.
+
+The `x64 Native Tools Command Prompt` and other similarly named environments will work.
+
+If Powershell is desired, it would be best to launch it from within the native tools. This helps avoid configuration step issues.
+
 ### Step 1: Generate the Build Files
 
 In a Visual Studio command prompt:
 
 ```bat
 set LLVM_ROOT=\path\to\llvm
-set LIBCUDACXX_ROOT=\path\to\libcudacxx # Should be //sw/gpgpu/libcudacxx or the Git repo root.
+set LIBCUDACXX_ROOT=\path\to\libcudacxx # Helpful env var pointing to the git repo root.
 
 cd %LIBCUDACXX_ROOT%
 mkdir build
@@ -168,7 +173,6 @@ cmake .. ^
 In a Visual Studio command prompt:
 
 ```bat
-set LIBCUDACXX_ROOT=\path\to\libcudacxx # Should be //sw/gpgpu/libcudacxx or the Git repo root.
 set SM_ARCH=70
 
 cd %LIBCUDACXX_ROOT%\build
