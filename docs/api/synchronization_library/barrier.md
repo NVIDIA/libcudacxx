@@ -60,6 +60,8 @@ An object of type `barrier` shall not be accessed concurrently by CPU and GPU th
 
 (Note, for objects of scopes other than `thread_scope_system` this is a data-race, and thefore also prohibited regardless of memory characteristics.)
 
+Under Compute Capability 8 or above, when an object of type `barrier<thread_scope_block>` is placed in `__shared__` memory, the member function `arrive` performs a reduction of the arrival count among [coalesced](https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#coalesced-group-cg) threads followed by the arrival operation in one thread. Programs shall ensure that this transformation would not introduce errors, for example relative to the requirements of `[thread.barrier.class]` paragraph 12 in N4860.
+
 Under Compute Capability 6 or prior, an object of type `barrier` may not be used.
 
 ## Implementation-Defined Behavior
