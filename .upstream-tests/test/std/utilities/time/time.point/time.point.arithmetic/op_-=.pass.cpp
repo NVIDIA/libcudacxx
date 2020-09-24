@@ -21,9 +21,9 @@
 #if TEST_STD_VER > 14
 constexpr bool constexpr_test()
 {
-    typedef std::chrono::system_clock Clock;
-    typedef std::chrono::milliseconds Duration;
-    std::chrono::time_point<Clock, Duration> t(Duration(5));
+    typedef cuda::std::chrono::system_clock Clock;
+    typedef cuda::std::chrono::milliseconds Duration;
+    cuda::std::chrono::time_point<Clock, Duration> t(Duration(5));
     t -= Duration(4);
     return t.time_since_epoch() == Duration(1);
 }
@@ -32,9 +32,9 @@ constexpr bool constexpr_test()
 int main(int, char**)
 {
     {
-    typedef std::chrono::system_clock Clock;
-    typedef std::chrono::milliseconds Duration;
-    std::chrono::time_point<Clock, Duration> t(Duration(3));
+    typedef cuda::std::chrono::system_clock Clock;
+    typedef cuda::std::chrono::milliseconds Duration;
+    cuda::std::chrono::time_point<Clock, Duration> t(Duration(3));
     t -= Duration(2);
     assert(t.time_since_epoch() == Duration(1));
     }
