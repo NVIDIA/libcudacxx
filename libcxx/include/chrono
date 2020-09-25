@@ -2787,8 +2787,10 @@ public:
                                                  __width(__CommonType::period::den) : 6u;
     using precision = duration<typename __CommonType::rep, ratio<1, __pow10(fractional_width)>>;
 
+    _LIBCUDACXX_INLINE_VISIBILITY
     constexpr hh_mm_ss() noexcept : hh_mm_ss{_Duration::zero()} {}
 
+    _LIBCUDACXX_INLINE_VISIBILITY
     constexpr explicit hh_mm_ss(_Duration __d) noexcept :
         __is_neg(__d < _Duration(0)),
         __h(duration_cast<chrono::hours>  (abs(__d))),
@@ -2797,18 +2799,25 @@ public:
         __f(duration_cast<precision>      (abs(__d) - hours() - minutes() - seconds()))
         {}
 
+    _LIBCUDACXX_INLINE_VISIBILITY
     constexpr bool is_negative()        const noexcept { return __is_neg; }
+    _LIBCUDACXX_INLINE_VISIBILITY
     constexpr chrono::hours hours()     const noexcept { return __h; }
+    _LIBCUDACXX_INLINE_VISIBILITY
     constexpr chrono::minutes minutes() const noexcept { return __m; }
+    _LIBCUDACXX_INLINE_VISIBILITY
     constexpr chrono::seconds seconds() const noexcept { return __s; }
+    _LIBCUDACXX_INLINE_VISIBILITY
     constexpr precision subseconds()    const noexcept { return __f; }
 
+    _LIBCUDACXX_INLINE_VISIBILITY
     constexpr precision to_duration() const noexcept
     {
         auto __dur = __h + __m + __s + __f;
         return __is_neg ? -__dur : __dur;
     }
 
+    _LIBCUDACXX_INLINE_VISIBILITY
     constexpr explicit operator precision() const noexcept { return to_duration(); }
 
 private:
@@ -2821,9 +2830,12 @@ private:
 
 #endif // _LIBCUDACXX_STD_VER > 17
 
+_LIBCUDACXX_INLINE_VISIBILITY
 constexpr bool is_am(const hours& __h) noexcept { return __h >= hours( 0) && __h < hours(12); }
+_LIBCUDACXX_INLINE_VISIBILITY
 constexpr bool is_pm(const hours& __h) noexcept { return __h >= hours(12) && __h < hours(24); }
 
+_LIBCUDACXX_INLINE_VISIBILITY
 constexpr hours make12(const hours& __h) noexcept
 {
     if      (__h == hours( 0)) return hours(12);
@@ -2831,6 +2843,7 @@ constexpr hours make12(const hours& __h) noexcept
     else                       return __h - hours(12);
 }
 
+_LIBCUDACXX_INLINE_VISIBILITY
 constexpr hours make24(const hours& __h, bool __is_pm) noexcept
 {
     if (__is_pm)
