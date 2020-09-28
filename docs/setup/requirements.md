@@ -40,7 +40,7 @@ Please see the [API section] for more details.
 When used with NVCC, the NVIDIA C++ Standard Library supports the following host
   compilers:
 
-- MSVC 2015, 2017, and 2019.
+- MSVC 2017 and 2019.
 - GCC 5, 6, 7, 8, 9, and 10.
 - Clang 7, 8, 9, and 10.
 - ICPC 19.
