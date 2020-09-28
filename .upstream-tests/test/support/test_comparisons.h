@@ -23,6 +23,7 @@
 
 //  Test all six comparison operations for sanity
 template <class T, class U = T>
+__host__ __device__
 TEST_CONSTEXPR_CXX14 bool testComparisons6(const T& t1, const U& t2, bool isEqual, bool isLess)
 {
     if (isEqual)
@@ -76,6 +77,7 @@ TEST_CONSTEXPR_CXX14 bool testComparisons6(const T& t1, const U& t2, bool isEqua
 
 //  Easy call when you can init from something already comparable.
 template <class T, class Param>
+__host__ __device__
 TEST_CONSTEXPR_CXX14 bool testComparisons6Values(Param val1, Param val2)
 {
     const bool isEqual = val1 == val2;
@@ -85,6 +87,7 @@ TEST_CONSTEXPR_CXX14 bool testComparisons6Values(Param val1, Param val2)
 }
 
 template <class T, class U = T>
+__host__ __device__
 void AssertComparisons6AreNoexcept()
 {
     ASSERT_NOEXCEPT(std::declval<const T&>() == std::declval<const U&>());
@@ -96,6 +99,7 @@ void AssertComparisons6AreNoexcept()
 }
 
 template <class T, class U = T>
+__host__ __device__
 void AssertComparisons6ReturnBool()
 {
     ASSERT_SAME_TYPE(decltype(std::declval<const T&>() == std::declval<const U&>()), bool);
@@ -108,6 +112,7 @@ void AssertComparisons6ReturnBool()
 
 
 template <class T, class U = T>
+__host__ __device__
 void AssertComparisons6ConvertibleToBool()
 {
     static_assert((std::is_convertible<decltype(std::declval<const T&>() == std::declval<const U&>()), bool>::value), "");
@@ -120,6 +125,7 @@ void AssertComparisons6ConvertibleToBool()
 
 //  Test all two comparison operations for sanity
 template <class T, class U = T>
+__host__ __device__
 TEST_CONSTEXPR_CXX14 bool testComparisons2(const T& t1, const U& t2, bool isEqual)
 {
     if (isEqual)
@@ -142,6 +148,7 @@ TEST_CONSTEXPR_CXX14 bool testComparisons2(const T& t1, const U& t2, bool isEqua
 
 //  Easy call when you can init from something already comparable.
 template <class T, class Param>
+__host__ __device__
 TEST_CONSTEXPR_CXX14 bool testComparisons2Values(Param val1, Param val2)
 {
     const bool isEqual = val1 == val2;
@@ -150,6 +157,7 @@ TEST_CONSTEXPR_CXX14 bool testComparisons2Values(Param val1, Param val2)
 }
 
 template <class T, class U = T>
+__host__ __device__
 void AssertComparisons2AreNoexcept()
 {
     ASSERT_NOEXCEPT(std::declval<const T&>() == std::declval<const U&>());
@@ -157,6 +165,7 @@ void AssertComparisons2AreNoexcept()
 }
 
 template <class T, class U = T>
+__host__ __device__
 void AssertComparisons2ReturnBool()
 {
     ASSERT_SAME_TYPE(decltype(std::declval<const T&>() == std::declval<const U&>()), bool);
@@ -165,6 +174,7 @@ void AssertComparisons2ReturnBool()
 
 
 template <class T, class U = T>
+__host__ __device__
 void AssertComparisons2ConvertibleToBool()
 {
     static_assert((std::is_convertible<decltype(std::declval<const T&>() == std::declval<const U&>()), bool>::value), "");
