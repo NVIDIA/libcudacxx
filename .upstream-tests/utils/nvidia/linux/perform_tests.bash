@@ -314,10 +314,10 @@ then
   par=$(nproc)
   if [[ $? -eq 0 ]]
   then
-    if [[ $par -gt 8 ]]
-    then
-      par=8
-    fi
+    # if [[ $par -gt 8 ]]
+    # then
+    #   par=8
+    # fi
     LIT_FLAGS="${LIT_FLAGS} -j${par}"
   fi
 
@@ -334,4 +334,3 @@ fi
 ################################################################################
 
 report_and_exit
-
