@@ -13,7 +13,7 @@
 // template <class... UTypes>
 //   explicit tuple(UTypes&&... u);
 
-// XFAIL: gcc-4.8, gcc-4.9, gcc-8 && c++17
+// XFAIL: gcc-4.8, gcc-4.9
 
 // UNSUPPORTED: c++98, c++03, msvc
 
