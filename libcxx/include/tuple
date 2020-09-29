@@ -409,10 +409,10 @@ struct _LIBCUDACXX_DECLSPEC_EMPTY_BASES __tuple_impl<__tuple_indices<_Indx...>, 
             {}
 
     template <class _Tuple,
-              class = typename enable_if
-                      <
-                         __tuple_constructible<_Tuple, tuple<_Tp...> >::value
-                      >::type
+              _EnableIf<
+                    __tuple_constructible<_Tuple, tuple<_Tp...> >::value,
+                    bool
+                > = false
              >
         _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
         __tuple_impl(_Tuple&& __t) _NOEXCEPT_((__all<is_nothrow_constructible<_Tp, typename tuple_element<_Indx,
@@ -422,10 +422,10 @@ struct _LIBCUDACXX_DECLSPEC_EMPTY_BASES __tuple_impl<__tuple_indices<_Indx...>, 
             {}
 
     template <class _Alloc, class _Tuple,
-              class = typename enable_if
-                      <
-                         __tuple_constructible<_Tuple, tuple<_Tp...> >::value
-                      >::type
+              _EnableIf<
+                    __tuple_constructible<_Tuple, tuple<_Tp...> >::value,
+                    bool
+                > = false
              >
         _LIBCUDACXX_INLINE_VISIBILITY
         __tuple_impl(allocator_arg_t, const _Alloc& __a, _Tuple&& __t)
@@ -699,13 +699,13 @@ public:
                     __tuple_types<_Tp...>()) {}
 
     template <bool _Dummy = true,
-              typename enable_if
+              _EnableIf
                       <
                          _CheckArgsConstructor<
                             _Dummy
                          >::template __enable_implicit<_Tp const&...>::value,
                          bool
-                      >::type = false
+                      > = false
         >
     _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
     tuple(const _Tp& ... __t) _NOEXCEPT_((__all<is_nothrow_copy_constructible<_Tp>::value...>::value))
@@ -717,13 +717,13 @@ public:
                ) {}
 
     template <bool _Dummy = true,
-              typename enable_if
+              _EnableIf
                       <
                          _CheckArgsConstructor<
                             _Dummy
                          >::template __enable_explicit<_Tp const&...>::value,
                          bool
-                      >::type = false
+                      > = false
         >
     _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
     explicit tuple(const _Tp& ... __t) _NOEXCEPT_((__all<is_nothrow_copy_constructible<_Tp>::value...>::value))
@@ -735,13 +735,13 @@ public:
                ) {}
 
     template <class _Alloc, bool _Dummy = true,
-              typename enable_if
+              _EnableIf
                       <
                          _CheckArgsConstructor<
                             _Dummy
                          >::template __enable_implicit<_Tp const&...>::value,
                          bool
-                      >::type = false
+                      > = false
         >
       _LIBCUDACXX_INLINE_VISIBILITY
       tuple(allocator_arg_t, const _Alloc& __a, const _Tp& ... __t)
@@ -754,13 +754,13 @@ public:
                ) {}
 
     template <class _Alloc, bool _Dummy = true,
-              typename enable_if
+              _EnableIf
                       <
                          _CheckArgsConstructor<
                             _Dummy
                          >::template __enable_explicit<_Tp const&...>::value,
                          bool
-                      >::type = false
+                      > = false
         >
       _LIBCUDACXX_INLINE_VISIBILITY
       explicit
@@ -773,9 +773,20 @@ public:
                 __t...
                ) {}
 
+#if defined(_LIBCUDACXX_NO_TUPLE_NOEXCEPT)
+    template <class ..._Vp>
+    using __base_noexcept_constructible = false_type;
+#else
+    template <class ..._Vp>
+    using __base_noexcept_constructible = is_nothrow_constructible<
+                _BaseT,
+                _Vp...
+            >;
+#endif // defined(_LIBCUDACXX_NO_TUPLE_NOEXCEPT)
+
     template <class ..._Up,
               bool _PackIsTuple = _PackExpandsToThisTuple<_Up...>::value,
-              typename enable_if
+              _EnableIf
                       <
                          _CheckArgsConstructor<
                              sizeof...(_Up) == sizeof...(_Tp)
@@ -787,12 +798,12 @@ public:
                             && !_PackIsTuple
                          >::template __enable_implicit<_Up...>::value,
                          bool
-                      >::type = false
+                      > = false
              >
         _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
         tuple(_Up&&... __u)
             _NOEXCEPT_((
-                is_nothrow_constructible<_BaseT,
+                __base_noexcept_constructible<
                     typename __make_tuple_indices<sizeof...(_Up)>::type,
                     typename __make_tuple_types<tuple, sizeof...(_Up)>::type,
                     typename __make_tuple_indices<sizeof...(_Tp), sizeof...(_Up)>::type,
@@ -807,7 +818,7 @@ public:
                     _CUDA_VSTD::forward<_Up>(__u)...) {}
 
     template <class ..._Up,
-              typename enable_if
+              _EnableIf
                       <
                          _CheckArgsConstructor<
                              sizeof...(_Up) <= sizeof...(_Tp)
@@ -819,13 +830,13 @@ public:
                             && !_PackExpandsToThisTuple<_Up...>::value
                          >::template __enable_implicit<_Up...>::value,
                          bool
-                      >::type = false
+                      > = false
              >
         _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
         explicit
         tuple(_Up&&... __u)
             _NOEXCEPT_((
-                is_nothrow_constructible<_BaseT,
+                __base_noexcept_constructible<
                     typename __make_tuple_indices<sizeof...(_Up)>::type,
                     typename __make_tuple_types<tuple, sizeof...(_Up)>::type,
                     typename __make_tuple_indices<sizeof...(_Tp), sizeof...(_Up)>::type,
@@ -840,14 +851,14 @@ public:
                     _CUDA_VSTD::forward<_Up>(__u)...) {}
 
     template <class _Alloc, class ..._Up,
-              typename enable_if
+              _EnableIf
                       <
                          _CheckArgsConstructor<
                              sizeof...(_Up) == sizeof...(_Tp) &&
                              !_PackExpandsToThisTuple<_Up...>::value
                          >::template __enable_implicit<_Up...>::value,
                          bool
-                      >::type = false
+                      > = false
              >
         _LIBCUDACXX_INLINE_VISIBILITY
         tuple(allocator_arg_t, const _Alloc& __a, _Up&&... __u)
@@ -859,14 +870,14 @@ public:
                     _CUDA_VSTD::forward<_Up>(__u)...) {}
 
     template <class _Alloc, class ..._Up,
-              typename enable_if
+              _EnableIf
                       <
                          _CheckArgsConstructor<
                              sizeof...(_Up) == sizeof...(_Tp) &&
                              !_PackExpandsToThisTuple<_Up...>::value
                          >::template __enable_explicit<_Up...>::value,
                          bool
-                      >::type = false
+                      > = false
              >
         _LIBCUDACXX_INLINE_VISIBILITY
         explicit

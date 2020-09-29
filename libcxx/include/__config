@@ -790,6 +790,14 @@ typedef __char32_t char32_t;
 #define _LIBCUDACXX_IS_CONSTANT_EVALUATED(...) __builtin_is_constant_evaluated(__VA_ARGS__)
 #endif
 
+// NVCC cannot properly handle some deductions occuring within NOEXCEPT
+// C++17 mode causes reference instatiation errors in tuple
+#if (_GNUC_VER >= 702 && _GNUC_VER <= 805)
+#if defined(_LIBCUDACXX_COMPILER_NVCC) && _LIBCUDACXX_STD_VER == 17
+#define _LIBCUDACXX_NO_TUPLE_NOEXCEPT
+#endif
+#endif
+
 #define _LIBCUDACXX_ALWAYS_INLINE __attribute__ ((__always_inline__))
 
 #define _LIBCUDACXX_DISABLE_EXTENSION_WARNING __extension__
