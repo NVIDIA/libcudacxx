@@ -54,28 +54,28 @@ struct TestBase {
     __host__ __device__ TestBase() noexcept : value(0) {
         ++alive(); ++constructed(); ++default_constructed();
     }
-    template <bool Dummy = true, typename std::enable_if<Dummy && Explicit, bool>::type = true>
+    template <bool Dummy = true, typename cuda::std::enable_if<Dummy && Explicit, bool>::type = true>
     __host__ __device__ explicit TestBase(int x) noexcept : value(x) {
         ++alive(); ++constructed(); ++value_constructed();
     }
-    template <bool Dummy = true, typename std::enable_if<Dummy && !Explicit, bool>::type = true>
+    template <bool Dummy = true, typename cuda::std::enable_if<Dummy && !Explicit, bool>::type = true>
     __host__ __device__ TestBase(int x) noexcept : value(x) {
         ++alive(); ++constructed(); ++value_constructed();
     }
-    template <bool Dummy = true, typename std::enable_if<Dummy && Explicit, bool>::type = true>
+    template <bool Dummy = true, typename cuda::std::enable_if<Dummy && Explicit, bool>::type = true>
     __host__ __device__ explicit TestBase(int, int y) noexcept : value(y) {
         ++alive(); ++constructed(); ++value_constructed();
     }
-    template <bool Dummy = true, typename std::enable_if<Dummy && !Explicit, bool>::type = true>
+    template <bool Dummy = true, typename cuda::std::enable_if<Dummy && !Explicit, bool>::type = true>
     __host__ __device__ TestBase(int, int y) noexcept : value(y) {
         ++alive(); ++constructed(); ++value_constructed();
     }
-    template <bool Dummy = true, typename std::enable_if<Dummy && Explicit, bool>::type = true>
+    template <bool Dummy = true, typename cuda::std::enable_if<Dummy && Explicit, bool>::type = true>
     __host__ __device__ explicit TestBase(std::initializer_list<int>& il, int = 0) noexcept
       : value(static_cast<int>(il.size())) {
         ++alive(); ++constructed(); ++value_constructed();
     }
-    template <bool Dummy = true, typename std::enable_if<Dummy && !Explicit, bool>::type = true>
+    template <bool Dummy = true, typename cuda::std::enable_if<Dummy && !Explicit, bool>::type = true>
     __host__ __device__ explicit TestBase(std::initializer_list<int>& il, int = 0) noexcept : value(static_cast<int>(il.size())) {
         ++alive(); ++constructed(); ++value_constructed();
     }
@@ -119,17 +119,17 @@ public:
 
 template <bool Explicit = false>
 struct ValueBase {
-    template <bool Dummy = true, typename std::enable_if<Dummy && Explicit, bool>::type = true>
+    template <bool Dummy = true, typename cuda::std::enable_if<Dummy && Explicit, bool>::type = true>
     __host__ __device__ explicit constexpr ValueBase(int x) : value(x) {}
-    template <bool Dummy = true, typename std::enable_if<Dummy && !Explicit, bool>::type = true>
+    template <bool Dummy = true, typename cuda::std::enable_if<Dummy && !Explicit, bool>::type = true>
     __host__ __device__ constexpr ValueBase(int x) : value(x) {}
-    template <bool Dummy = true, typename std::enable_if<Dummy && Explicit, bool>::type = true>
+    template <bool Dummy = true, typename cuda::std::enable_if<Dummy && Explicit, bool>::type = true>
     __host__ __device__ explicit constexpr ValueBase(int, int y) : value(y) {}
-    template <bool Dummy = true, typename std::enable_if<Dummy && !Explicit, bool>::type = true>
+    template <bool Dummy = true, typename cuda::std::enable_if<Dummy && !Explicit, bool>::type = true>
     __host__ __device__ constexpr ValueBase(int, int y) : value(y) {}
-    template <bool Dummy = true, typename std::enable_if<Dummy && Explicit, bool>::type = true>
+    template <bool Dummy = true, typename cuda::std::enable_if<Dummy && Explicit, bool>::type = true>
     __host__ __device__ explicit constexpr ValueBase(std::initializer_list<int>& il, int = 0) : value(static_cast<int>(il.size())) {}
-    template <bool Dummy = true, typename std::enable_if<Dummy && !Explicit, bool>::type = true>
+    template <bool Dummy = true, typename cuda::std::enable_if<Dummy && !Explicit, bool>::type = true>
     __host__ __device__ constexpr ValueBase(std::initializer_list<int>& il, int = 0) : value(static_cast<int>(il.size())) {}
     __host__ __device__ TEST_CONSTEXPR_CXX14 ValueBase& operator=(int xvalue) noexcept {
         value = xvalue;
@@ -179,17 +179,17 @@ protected:
 
 template <bool Explicit = false>
 struct TrivialValueBase {
-    template <bool Dummy = true, typename std::enable_if<Dummy && Explicit, bool>::type = true>
+    template <bool Dummy = true, typename cuda::std::enable_if<Dummy && Explicit, bool>::type = true>
     __host__ __device__ explicit constexpr TrivialValueBase(int x) : value(x) {}
-    template <bool Dummy = true, typename std::enable_if<Dummy && !Explicit, bool>::type = true>
+    template <bool Dummy = true, typename cuda::std::enable_if<Dummy && !Explicit, bool>::type = true>
     __host__ __device__ constexpr TrivialValueBase(int x) : value(x) {}
-    template <bool Dummy = true, typename std::enable_if<Dummy && Explicit, bool>::type = true>
+    template <bool Dummy = true, typename cuda::std::enable_if<Dummy && Explicit, bool>::type = true>
     __host__ __device__ explicit constexpr TrivialValueBase(int, int y) : value(y) {}
-    template <bool Dummy = true, typename std::enable_if<Dummy && !Explicit, bool>::type = true>
+    template <bool Dummy = true, typename cuda::std::enable_if<Dummy && !Explicit, bool>::type = true>
     __host__ __device__ constexpr TrivialValueBase(int, int y) : value(y) {}
-    template <bool Dummy = true, typename std::enable_if<Dummy && Explicit, bool>::type = true>
+    template <bool Dummy = true, typename cuda::std::enable_if<Dummy && Explicit, bool>::type = true>
     __host__ __device__ explicit constexpr TrivialValueBase(std::initializer_list<int>& il, int = 0) : value(static_cast<int>(il.size())) {}
-    template <bool Dummy = true, typename std::enable_if<Dummy && !Explicit, bool>::type = true>
+    template <bool Dummy = true, typename cuda::std::enable_if<Dummy && !Explicit, bool>::type = true>
     __host__ __device__ constexpr TrivialValueBase(std::initializer_list<int>& il, int = 0) : value(static_cast<int>(il.size())) {}
     int value;
 #ifndef TEST_WORKAROUND_C1XX_BROKEN_ZA_CTOR_CHECK

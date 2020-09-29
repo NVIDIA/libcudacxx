@@ -15,6 +15,7 @@
 //   get(const tuple<Types...>& t);
 
 // UNSUPPORTED: c++98, c++03, msvc
+// UNSUPPORTED: nvrtc
 
 #include <cuda/std/tuple>
 // cuda::std::string not supported

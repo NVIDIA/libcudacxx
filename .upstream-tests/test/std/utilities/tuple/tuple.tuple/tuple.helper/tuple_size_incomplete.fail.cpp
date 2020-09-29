@@ -15,6 +15,7 @@
 //     : public integral_constant<size_t, sizeof...(Types)> { };
 
 // UNSUPPORTED: c++98, c++03, msvc
+// UNSUPPORTED: nvrtc
 
 #include <cuda/std/tuple>
 #include <cuda/std/array>

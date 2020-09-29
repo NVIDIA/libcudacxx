@@ -16,6 +16,7 @@
 
 // UNSUPPORTED: c++98, c++03, c++11, c++14
 // UNSUPPORTED: libcpp-no-structured-bindings, msvc
+// UNSUPPORTED: nvrtc
 
 #include <cuda/std/tuple>
 // cuda::std::array not supported

@@ -27,7 +27,7 @@ namespace detail {
 
     template <class Tp, class ...Args>
     __host__ __device__ constexpr auto test_convertible_imp(int)
-        -> decltype(eat_type<Tp>({std::declval<Args>()...}), true)
+        -> decltype(eat_type<Tp>({cuda::std::declval<Args>()...}), true)
     { return true; }
 
     template <class Tp, class ...Args>

@@ -14,6 +14,7 @@
 //   tuple(allocator_arg_t, const Alloc& a, tuple<UTypes...> const&);
 
 // UNSUPPORTED: c++98, c++03, msvc
+// UNSUPPORTED: nvrtc
 
 #include <cuda/std/tuple>
 

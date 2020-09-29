@@ -14,6 +14,7 @@
 //   explicit tuple(UTypes&&... u);
 
 // UNSUPPORTED: c++98, c++03, msvc
+// UNSUPPORTED: nvrtc
 
 /*
     This is testing an extension whereby only Types having an explicit conversion

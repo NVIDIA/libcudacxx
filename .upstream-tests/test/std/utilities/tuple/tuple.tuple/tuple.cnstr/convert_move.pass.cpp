@@ -15,11 +15,11 @@
 // template <class... UTypes> tuple(tuple<UTypes...>&& u);
 
 // UNSUPPORTED: c++98, c++03, msvc
+// UNSUPPORTED: nvrtc
 
 #include <cuda/std/tuple>
 #include <cuda/std/cassert>
-#include <type_traits>
-#include <tuple>
+#include <cuda/std/type_traits>
 
 #include "test_macros.h"
 
@@ -56,10 +56,10 @@ struct BonkersBananas {
 };
 
 void test_bonkers_bananas_conversion() {
-  using ReturnType = std::tuple<int, int>;
-  static_assert(std::is_convertible<BonkersBananas, ReturnType>(), "");
+  using ReturnType = cuda::std::tuple<int, int>;
+  static_assert(cuda::std::is_convertible<BonkersBananas, ReturnType>(), "");
   //TODO: possibly a compiler bug that allows NVCC to think that it can construct a tuple from this type
-  // static_assert(!std::is_constructible<ReturnType, BonkersBananas>(), "");
+  // static_assert(!cuda::std::is_constructible<ReturnType, BonkersBananas>(), "");
 }
 
 int main(int, char**)
