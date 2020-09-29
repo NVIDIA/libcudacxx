@@ -14,6 +14,7 @@
 // into issues with libc++. However GCC accepts this code when compiling
 // against libstdc++.
 // XFAIL: gcc-5, gcc-6, gcc-7
+// UNSUPPORTED: nvrtc
 
 // <cuda/std/tuple>
 

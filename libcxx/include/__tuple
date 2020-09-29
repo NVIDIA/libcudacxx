@@ -265,7 +265,7 @@ struct __indexer<__tuple_types<_Types...>, __tuple_indices<_Idx...>>
 {};
 
 template <size_t _Idx, class _Tp>
-__indexed<_Idx, _Tp> __at_index(__indexed<_Idx, _Tp> const&);
+_LIBCUDACXX_INLINE_VISIBILITY __indexed<_Idx, _Tp> __at_index(__indexed<_Idx, _Tp> const&);
 
 } // namespace __indexer_detail
 

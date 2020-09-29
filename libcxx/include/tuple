@@ -195,7 +195,7 @@ class __tuple_leaf
 #endif
     }
 
-    __tuple_leaf& operator=(const __tuple_leaf&);
+    _LIBCUDACXX_INLINE_VISIBILITY __tuple_leaf& operator=(const __tuple_leaf&);
 public:
     _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR __tuple_leaf()
              _NOEXCEPT_(is_nothrow_default_constructible<_Hp>::value) : __value_()
@@ -287,7 +287,7 @@ class __tuple_leaf<_Ip, _Hp, true>
     : private _Hp
 {
 
-    __tuple_leaf& operator=(const __tuple_leaf&);
+    _LIBCUDACXX_INLINE_VISIBILITY __tuple_leaf& operator=(const __tuple_leaf&);
 public:
     _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR __tuple_leaf()
              _NOEXCEPT_(is_nothrow_default_constructible<_Hp>::value) {}
@@ -649,13 +649,17 @@ class _LIBCUDACXX_TEMPLATE_VIS tuple
                          >::template __enable_explicit<_Tuple>::value,
                          bool
                       >;
-    template <size_t _Jp, class ..._Up> friend _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
+    template <size_t _Jp, class ..._Up> friend
+        _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
         typename tuple_element<_Jp, tuple<_Up...> >::type& get(tuple<_Up...>&) _NOEXCEPT;
-    template <size_t _Jp, class ..._Up> friend _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
+    template <size_t _Jp, class ..._Up> friend
+        _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
         const typename tuple_element<_Jp, tuple<_Up...> >::type& get(const tuple<_Up...>&) _NOEXCEPT;
-    template <size_t _Jp, class ..._Up> friend _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
+    template <size_t _Jp, class ..._Up> friend
+        _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
         typename tuple_element<_Jp, tuple<_Up...> >::type&& get(tuple<_Up...>&&) _NOEXCEPT;
-    template <size_t _Jp, class ..._Up> friend _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
+    template <size_t _Jp, class ..._Up> friend
+        _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
         const typename tuple_element<_Jp, tuple<_Up...> >::type&& get(const tuple<_Up...>&&) _NOEXCEPT;
 public:
 
@@ -1067,7 +1071,7 @@ get(const tuple<_Tp...>&& __t) _NOEXCEPT
 
 namespace __find_detail {
 
-static constexpr size_t __not_found = SIZE_MAX;
+static constexpr size_t __not_found = ~size_t(0);
 static constexpr size_t __ambiguous = __not_found - 1;
 
 inline _LIBCUDACXX_INLINE_VISIBILITY

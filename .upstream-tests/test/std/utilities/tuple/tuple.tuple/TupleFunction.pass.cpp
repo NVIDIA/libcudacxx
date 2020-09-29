@@ -18,12 +18,12 @@
 
 struct X
 {
-    X() {}
+    __device__ __host__ X() {}
 
     template <class T>
-    X(T);
+    __device__ __host__ X(T);
 
-    void operator()() {}
+    __device__ __host__ void operator()() {}
 };
 
 int main(int, char**)

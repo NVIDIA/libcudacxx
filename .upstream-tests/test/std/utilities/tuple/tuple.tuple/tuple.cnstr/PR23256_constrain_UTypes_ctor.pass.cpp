@@ -23,7 +23,7 @@
 // 'UTypes...' is an instance of the tuple itself. See PR23256.
 
 #include <cuda/std/tuple>
-#include <type_traits>
+#include <cuda/std/type_traits>
 
 #include "test_macros.h"
 
