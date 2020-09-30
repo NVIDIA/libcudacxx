@@ -7,6 +7,7 @@
 //===----------------------------------------------------------------------===//
 
 // UNSUPPORTED: nvrtc
+// UNSUPPORTED: msvc
 
 // uncomment for a really verbose output detailing what test steps are being launched
 // #define DEBUG_TESTERS
