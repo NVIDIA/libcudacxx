@@ -48,11 +48,11 @@ include_directories(${CMAKE_SOURCE_DIR}/../include)
 find_package(Threads REQUIRED)
 find_package(OpenMP)
 
-add_executable(benchmark_host benchmark.cpp)
+add_executable(concurrency_host concurrency.cpp)
 
-target_link_libraries(benchmark_host PUBLIC Threads::Threads)
+target_link_libraries(concurrency_host PUBLIC Threads::Threads)
 if(OpenMP_CXX_FOUND)
     target_link_libraries(benchmark_host PUBLIC OpenMP::OpenMP_CXX)
 endif()
 
-add_executable(benchmark_device benchmark.cu)
+add_executable(concurrency_device concurrency.cu)
