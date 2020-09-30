@@ -13,7 +13,7 @@
 
 #include "helpers.h"
 
-#include <cuda/std/tuple>
+#include <cuda/std/utility>
 #include <cuda/std/cassert>
 
 struct pod {
