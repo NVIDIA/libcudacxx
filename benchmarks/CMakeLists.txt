@@ -4,7 +4,7 @@ project(libcudacxx-benchmarks LANGUAGES CXX CUDA)
 
 set(CMAKE_BUILD_TYPE "RelWithDebInfo")
 
-set(GPU_ARCHS "70;72;75;80" CACHE STRING "List of GPU architectures to be compiled for.")
+set(GPU_ARCHS "70;72;75;80" CACHE STRING "List of GPU architectures to compile for.")
 
 message(STATUS "Enabled CUDA architectures:${GPU_ARCHS}")
 
