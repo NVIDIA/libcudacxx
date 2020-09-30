@@ -34,5 +34,5 @@ endfunction(ConfigureDeviceBench)
 
 ConfigureHostBench(concurrency_host concurrency.cpp)                                        
 
-ConfigureDeviceBench(concurrent_device concurrency.cu)
+ConfigureDeviceBench(concurrency_device concurrency.cu)
 
