@@ -1,48 +1,38 @@
 cmake_minimum_required(VERSION 3.18)
-project(libcudacxx-samples LANGUAGE CXX CUDA)
+
+project(libcudacxx-benchmarks LANGUAGES CXX CUDA)
 
 set(CMAKE_BUILD_TYPE "RelWithDebInfo")
-set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} --expt-relaxed-constexpr --expt-extended-lambda")
 
-set(HIGHEST_COMPUTE_ARCH 80)
-set(KNOWN_COMPUTE_ARCHS 70 72 75 80)
+set(GPU_ARCHS "70;72;75;80" CACHE STRING "List of GPU architectures to be compiled for.")
 
-option(DISABLE_ARCH_BY_DEFAULT "If ON, then all CUDA architectures are disabled on the initial CMake run." OFF)
-set(OPTION_INIT ON)
-if (DISABLE_ARCH_BY_DEFAULT)
-  set(OPTION_INIT OFF)
-endif ()
-if (NOT ${HIGHEST_COMPUTE_ARCH} IN_LIST KNOWN_COMPUTE_ARCHS)
-  message(FATAL_ERROR "When changing the highest compute version, don't forget to add it to the list!")
-endif ()
-
-foreach (COMPUTE_ARCH IN LISTS KNOWN_COMPUTE_ARCHS)
-  option(ENABLE_COMPUTE_${COMPUTE_ARCH} "Enable code generation for tests for sm_${COMPUTE_ARCH}" ${OPTION_INIT})
-  if (ENABLE_COMPUTE_${COMPUTE_ARCH})
-    set(COMPUTE_ARCHS "${COMPUTE_ARCHS} ${COMPUTE_ARCH}")
-    set(COMPUTE_MESSAGE "${COMPUTE_MESSAGE} sm_${COMPUTE_ARCH}")
-    set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -gencode arch=compute_${COMPUTE_ARCH},code=sm_${COMPUTE_ARCH}")
-  endif ()
-endforeach ()
-
-option(ENABLE_COMPUTE_FUTURE "Enable code generation for tests for compute_${HIGHEST_COMPUTE_ARCH}" ${OPTION_INIT})
-if (ENABLE_COMPUTE_FUTURE)
-  set(COMPUTE_MESSAGE "${COMPUTE_MESSAGE} compute_${HIGHEST_COMPUTE_ARCH}")
-  set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -gencode arch=compute_${HIGHEST_COMPUTE_ARCH},code=compute_${HIGHEST_COMPUTE_ARCH}")
-endif ()
-
-message(STATUS "Enabled CUDA architectures:${COMPUTE_MESSAGE}")
-
-include_directories(${CMAKE_SOURCE_DIR}/../include)
+message(STATUS "Enabled CUDA architectures:${GPU_ARCHS}")
 
 find_package(Threads REQUIRED)
 find_package(OpenMP)
 
-add_executable(concurrency_host concurrency.cpp)
+function(ConfigureHostBench BENCH_NAME BENCH_SRC)
+   add_executable("${BENCH_NAME}" "${BENCH_SRC}")
+   target_link_libraries("${BENCH_NAME}" PRIVATE Threads::Threads)
 
-target_link_libraries(concurrency_host PUBLIC Threads::Threads)
-if(OpenMP_CXX_FOUND)
-    target_link_libraries(benchmark_host PUBLIC OpenMP::OpenMP_CXX)
-endif()
+   # TODO: Link against libcudaxx interface target instead
+   target_include_directories("${BENCH_NAME}" PRIVATE
+                                              "${CMAKE_CURRENT_SOURCE_DIR}/../include")
+   if(OpenMP_CXX_FOUND)
+      target_link_libraries("${BENCH_NAME}" PRIVATE OpenMP::OpenMP_CXX)
+   endif()
+endfunction(ConfigureHostBench)
 
-add_executable(concurrency_device concurrency.cu)
+function(ConfigureDeviceBench BENCH_NAME BENCH_SRC)
+   add_executable("${BENCH_NAME}" "${BENCH_SRC}")
+   set_property(TARGET "${BENCH_NAME}" PROPERTY CUDA_ARCHITECTURES "${GPU_ARCHS}")
+   # TODO: Link against libcudaxx interface target instead
+   target_include_directories("${BENCH_NAME}" PRIVATE
+                                              "${CMAKE_CURRENT_SOURCE_DIR}/../include")
+   target_compile_options("${BENCH_NAME}" PRIVATE --expt-extended-lambda --expt-relaxed-constexpr)
+endfunction(ConfigureDeviceBench)
+
+ConfigureHostBench(concurrency_host concurrency.cpp)                                        
+
+ConfigureDeviceBench(concurrent_device concurrency.cu)
+
