@@ -1,15 +1,5 @@
-cmake_minimum_required(VERSION 3.8)
-project(libcudacxx-samples CXX)
-
-if (NOT "${CMAKE_CUDA_HOST_COMPILER}" STREQUAL "")
-  unset(CMAKE_CUDA_HOST_COMPILER CACHE)
-  message(FATAL_ERROR "Thrust tests and examples require the C++ compiler"
-    " and the CUDA host compiler to be the same; to set this compiler, please"
-    " use the CMAKE_CXX_COMPILER variable, not the CMAKE_CUDA_HOST_COMPILER"
-    " variable.")
-  endif ()
-set(CMAKE_CUDA_HOST_COMPILER ${CMAKE_CXX_COMPILER})
-enable_language(CUDA)
+cmake_minimum_required(VERSION 3.18)
+project(libcudacxx-samples LANGUAGE CXX CUDA)
 
 set(CMAKE_BUILD_TYPE "RelWithDebInfo")
 set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} --expt-relaxed-constexpr --expt-extended-lambda")
