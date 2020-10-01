@@ -33,7 +33,6 @@ function(ConfigureDeviceBench BENCH_NAME BENCH_SRC)
    target_compile_options("${BENCH_NAME}" PRIVATE --expt-extended-lambda --expt-relaxed-constexpr)
 endfunction(ConfigureDeviceBench)
 
-
 add_executable(trie_st trie_st.cpp)
 target_compile_features(trie_st PRIVATE cxx_std_11)
 
@@ -63,5 +62,10 @@ if(CUDAToolkit_VERSION VERSION_GREATER_EQUAL 11.1)
 else()
     message(STATUS "Insufficient CUDA version. Skipping trie.cu example.")
 endif()    
+
+
+add_executable(rtc rtc_example.cpp)
+target_link_libraries(rtc CUDA::nvrtc)
+target_compile_features(rtc PRIVATE cxx_std_11)
 
 
