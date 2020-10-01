@@ -96,8 +96,13 @@ int main() {
     };
 
     for(auto* ptr : files) {
+        std::cout << ptr << std::endl;
         auto const cur = input.size();
         std::ifstream in(ptr);
+        if(in.fail()) {
+            std::cerr << "Failed to open file: " << ptr << std::endl;
+            return -1;
+        }
         in.seekg(0, std::ios_base::end);
         auto const pos = in.tellg();
         input.resize(cur + pos);
