@@ -91,8 +91,8 @@ int main() {
     std::string input;
 
     char const* files[] = {
-        "2600-0.txt", "2701-0.txt", "35-0.txt", "84-0.txt", "8800.txt",
-      	"pg1727.txt", "pg55.txt", "pg6130.txt", "pg996.txt", "1342-0.txt"
+        "books/2600-0.txt", "books/2701-0.txt", "books/35-0.txt", "books/84-0.txt", "books/8800.txt",
+      	"books/pg1727.txt", "books/pg55.txt", "books/pg6130.txt", "books/pg996.txt", "books/1342-0.txt"
     };
 
     for(auto* ptr : files) {
