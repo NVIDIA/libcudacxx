@@ -128,14 +128,12 @@ int main(int argc, char *argv[])
   
   const char *opts[] = {"-std=c++11",
                         "-I/usr/include/linux",
-                        "-I/usr/include/c++/7.3.0",
                         "-I/usr/local/cuda/include",
-                        "-I/home/olivier/freestanding/include",
                         "--gpu-architecture=compute_70",
                         "--relocatable-device-code=true",
                         "-default-device"};
   nvrtcResult compileResult = nvrtcCompileProgram(prog,  // prog
-                                                  8,     // numOptions
+                                                  6,     // numOptions
                                                   opts); // options
   // Obtain compilation log from the program.
   size_t logSize;
