@@ -11,6 +11,7 @@ find_package(OpenMP)
 add_executable(trie_st trie_st.cpp)
 target_compile_features(trie_st PRIVATE cxx_std_11)
 
+# Download input files for the trie examples.
 if(NOT (EXISTS books))
     execute_process(COMMAND mkdir books)
     file(DOWNLOAD https://www.gutenberg.org/files/2600/2600-0.txt books/2600-0.txt SHOW_PROGRESS)
