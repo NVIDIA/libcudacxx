@@ -39,9 +39,9 @@ THE SOFTWARE.
 const char *trie =
 R"xxx(
 
-#include <simt/cstddef>
-#include <simt/cstdint>
-#include <simt/atomic>
+#include <cuda/std/cstddef>
+#include <cuda/std/cstdint>
+#include <cuda/std/atomic>
 
 template<class T> static constexpr T min(T a, T b) { return a < b ? a : b; }
 
