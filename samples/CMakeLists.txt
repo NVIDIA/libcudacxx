@@ -36,7 +36,9 @@ endfunction(ConfigureDeviceBench)
 
 add_executable(trie_st trie_st.cpp)
 target_compile_features(trie_st PRIVATE cxx_std_11)
-execute_process(COMMAND mkdir -p books)
+
+if(NOT (EXISTS books))
+    execute_process(COMMAND mkdir books)
 file(DOWNLOAD https://www.gutenberg.org/files/2600/2600-0.txt books/2600-0.txt SHOW_PROGRESS)
 file(DOWNLOAD http://www.gutenberg.org/cache/epub/996/pg996.txt books/pg996.txt SHOW_PROGRESS)
 file(DOWNLOAD http://www.gutenberg.org/cache/epub/55/pg55.txt books/pg55.txt SHOW_PROGRESS)
@@ -47,6 +49,7 @@ file(DOWNLOAD http://www.gutenberg.org/cache/epub/1727/pg1727.txt books/pg1727.t
 file(DOWNLOAD https://www.gutenberg.org/files/2701/2701-0.txt books/2701-0.txt SHOW_PROGRESS)
 file(DOWNLOAD https://www.gutenberg.org/files/35/35-0.txt books/35-0.txt SHOW_PROGRESS)
 file(DOWNLOAD https://www.gutenberg.org/files/1342/1342-0.txt books/1342-0.txt SHOW_PROGRESS)
+endif()
 
 add_executable(trie_mt trie_mt.cpp)
 target_compile_features(trie_mt PRIVATE cxx_std_11)
