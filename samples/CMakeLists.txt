@@ -55,9 +55,13 @@ add_executable(trie_mt trie_mt.cpp)
 target_compile_features(trie_mt PRIVATE cxx_std_11)
 target_link_libraries(trie_mt Threads::Threads)
 
-add_executable(trie_cuda trie.cu)
-target_compile_features(trie_cuda PRIVATE cxx_std_11 cuda_std_11)
-target_compile_options(trie_cuda PRIVATE --expt-relaxed-constexpr)
-set_property(TARGET trie_cuda PROPERTY CUDA_ARCHITECTURES 70)
+if(CUDAToolkit_VERSION VERSION_GREATER_EQUAL 11.1)
+    add_executable(trie_cuda trie.cu)
+    target_compile_features(trie_cuda PRIVATE cxx_std_11 cuda_std_11)
+    target_compile_options(trie_cuda PRIVATE --expt-relaxed-constexpr)
+    set_property(TARGET trie_cuda PROPERTY CUDA_ARCHITECTURES 70)
+else()
+    message(STATUS "Insufficient CUDA version. Skipping trie.cu example.")
+endif()    
 
 
