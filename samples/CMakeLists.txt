@@ -39,9 +39,6 @@ else()
     message(STATUS "Insufficient CUDA version. Skipping trie.cu example.")
 endif()    
 
-
 add_executable(rtc rtc_example.cpp)
 target_link_libraries(rtc CUDA::nvrtc)
 target_compile_features(rtc PRIVATE cxx_std_11)
-
-
