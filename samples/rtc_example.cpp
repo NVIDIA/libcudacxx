@@ -47,11 +47,11 @@ template<class T> static constexpr T min(T a, T b) { return a < b ? a : b; }
 
 struct trie {
     struct ref {
-        simt::std::atomic<trie*> ptr = ATOMIC_VAR_INIT(nullptr);
+        cuda::std::atomic<trie*> ptr = ATOMIC_VAR_INIT(nullptr);
         // the flag will protect against multiple pointer updates
-        simt::std::atomic_flag flag = ATOMIC_FLAG_INIT;
+        cuda::std::atomic_flag flag = ATOMIC_FLAG_INIT;
     } next[26];
-    simt::std::atomic<int> count = ATOMIC_VAR_INIT(0);
+    cuda::std::atomic<int> count = ATOMIC_VAR_INIT(0);
 };
 __host__ __device__
 int index_of(char c) {
@@ -61,7 +61,7 @@ int index_of(char c) {
 };
 __host__ __device__
 void make_trie(/* trie to insert word counts into */ trie& root,
-               /* bump allocator to get new nodes*/ simt::std::atomic<trie*>& bump,
+               /* bump allocator to get new nodes*/ cuda::std::atomic<trie*>& bump,
                /* input */ const char* begin, const char* end,
                /* thread this invocation is for */ unsigned index, 
                /* how many threads there are */ unsigned domain) {
@@ -80,7 +80,7 @@ void make_trie(/* trie to insert word counts into */ trie& root,
         auto const index = off >= size ? -1 : index_of(c);
         if(index == -1) {
             if(n != &root) {
-                n->count.fetch_add(1, simt::std::memory_order_relaxed);
+                n->count.fetch_add(1, cuda::std::memory_order_relaxed);
                 n = &root;
             }
             //end of last word?
@@ -89,20 +89,20 @@ void make_trie(/* trie to insert word counts into */ trie& root,
             else
                 continue;
         }
-        if(n->next[index].ptr.load(simt::std::memory_order_acquire) == nullptr) {
-            if(n->next[index].flag.test_and_set(simt::std::memory_order_relaxed))
-                while(n->next[index].ptr.load(simt::std::memory_order_acquire) == nullptr);
+        if(n->next[index].ptr.load(cuda::std::memory_order_acquire) == nullptr) {
+            if(n->next[index].flag.test_and_set(cuda::std::memory_order_relaxed))
+                while(n->next[index].ptr.load(cuda::std::memory_order_acquire) == nullptr);
             else {
-                auto next = bump.fetch_add(1, simt::std::memory_order_relaxed);
-                n->next[index].ptr.store(next, simt::std::memory_order_release);
+                auto next = bump.fetch_add(1, cuda::std::memory_order_relaxed);
+                n->next[index].ptr.store(next, cuda::std::memory_order_release);
             } 
         } 
-        n = n->next[index].ptr.load(simt::std::memory_order_relaxed);
+        n = n->next[index].ptr.load(cuda::std::memory_order_relaxed);
     }
 }
 
 __global__ // __launch_bounds__(1024, 1) 
-void call_make_trie(trie* t, simt::std::atomic<trie*>* bump, const char* begin, const char* end) {
+void call_make_trie(trie* t, cuda::std::atomic<trie*>* bump, const char* begin, const char* end) {
     
     auto const index = blockDim.x * blockIdx.x + threadIdx.x;
     auto const domain = gridDim.x * blockDim.x;
