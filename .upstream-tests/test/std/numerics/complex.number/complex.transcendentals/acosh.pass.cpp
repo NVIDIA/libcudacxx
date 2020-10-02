@@ -19,20 +19,20 @@
 #include "../cases.h"
 
 template <class T>
-void
+__host__ __device__ void
 test(const cuda::std::complex<T>& c, cuda::std::complex<T> x)
 {
     assert(acosh(c) == x);
 }
 
 template <class T>
-void
+__host__ __device__ void
 test()
 {
     test(cuda::std::complex<T>(INFINITY, 1), cuda::std::complex<T>(INFINITY, 0));
 }
 
-void test_edges()
+__host__ __device__ void test_edges()
 {
     const double pi = cuda::std::atan2(+0., -0.);
     const unsigned N = sizeof(testcases) / sizeof(testcases[0]);
@@ -145,7 +145,8 @@ int main(int, char**)
 {
     test<float>();
     test<double>();
-    test<long double>();
+// CUDA treats long double as double
+//  test<long double>();
     test_edges();
 
   return 0;

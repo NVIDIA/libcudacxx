@@ -993,7 +993,7 @@ proj(_Tp __re)
 // polar
 
 template<class _Tp>
-complex<_Tp>
+_LIBCUDACXX_INLINE_VISIBILITY complex<_Tp>
 polar(const _Tp& __rho, const _Tp& __theta = _Tp())
 {
     if (__libcpp_isnan_or_builtin(__rho) || signbit(__rho))
@@ -1132,7 +1132,7 @@ pow(const _Tp& __x, const complex<_Up>& __y)
 
 template<class _Tp>
 inline _LIBCUDACXX_INLINE_VISIBILITY
-complex<_Tp>
+_LIBCUDACXX_INLINE_VISIBILITY complex<_Tp>
 __sqr(const complex<_Tp>& __x)
 {
     return complex<_Tp>((__x.real() - __x.imag()) * (__x.real() + __x.imag()),
@@ -1142,7 +1142,7 @@ __sqr(const complex<_Tp>& __x)
 // asinh
 
 template<class _Tp>
-complex<_Tp>
+_LIBCUDACXX_INLINE_VISIBILITY complex<_Tp>
 asinh(const complex<_Tp>& __x)
 {
     const _Tp __pi(atan2(+0., -0.));
@@ -1171,7 +1171,7 @@ asinh(const complex<_Tp>& __x)
 // acosh
 
 template<class _Tp>
-complex<_Tp>
+_LIBCUDACXX_INLINE_VISIBILITY complex<_Tp>
 acosh(const complex<_Tp>& __x)
 {
     const _Tp __pi(atan2(+0., -0.));
@@ -1205,7 +1205,7 @@ acosh(const complex<_Tp>& __x)
 // atanh
 
 template<class _Tp>
-complex<_Tp>
+_LIBCUDACXX_INLINE_VISIBILITY complex<_Tp>
 atanh(const complex<_Tp>& __x)
 {
     const _Tp __pi(atan2(+0., -0.));
@@ -1238,7 +1238,7 @@ atanh(const complex<_Tp>& __x)
 // sinh
 
 template<class _Tp>
-complex<_Tp>
+_LIBCUDACXX_INLINE_VISIBILITY complex<_Tp>
 sinh(const complex<_Tp>& __x)
 {
     if (__libcpp_isinf_or_builtin(__x.real()) && !__libcpp_isfinite_or_builtin(__x.imag()))
@@ -1253,7 +1253,7 @@ sinh(const complex<_Tp>& __x)
 // cosh
 
 template<class _Tp>
-complex<_Tp>
+_LIBCUDACXX_INLINE_VISIBILITY complex<_Tp>
 cosh(const complex<_Tp>& __x)
 {
     if (__libcpp_isinf_or_builtin(__x.real()) && !__libcpp_isfinite_or_builtin(__x.imag()))
@@ -1270,7 +1270,7 @@ cosh(const complex<_Tp>& __x)
 // tanh
 
 template<class _Tp>
-complex<_Tp>
+_LIBCUDACXX_INLINE_VISIBILITY complex<_Tp>
 tanh(const complex<_Tp>& __x)
 {
     if (__libcpp_isinf_or_builtin(__x.real()))
@@ -1294,7 +1294,7 @@ tanh(const complex<_Tp>& __x)
 // asin
 
 template<class _Tp>
-complex<_Tp>
+_LIBCUDACXX_INLINE_VISIBILITY complex<_Tp>
 asin(const complex<_Tp>& __x)
 {
     complex<_Tp> __z = asinh(complex<_Tp>(-__x.imag(), __x.real()));
@@ -1304,7 +1304,7 @@ asin(const complex<_Tp>& __x)
 // acos
 
 template<class _Tp>
-complex<_Tp>
+_LIBCUDACXX_INLINE_VISIBILITY complex<_Tp>
 acos(const complex<_Tp>& __x)
 {
     const _Tp __pi(atan2(+0., -0.));
@@ -1341,7 +1341,7 @@ acos(const complex<_Tp>& __x)
 // atan
 
 template<class _Tp>
-complex<_Tp>
+_LIBCUDACXX_INLINE_VISIBILITY complex<_Tp>
 atan(const complex<_Tp>& __x)
 {
     complex<_Tp> __z = atanh(complex<_Tp>(-__x.imag(), __x.real()));
@@ -1351,7 +1351,7 @@ atan(const complex<_Tp>& __x)
 // sin
 
 template<class _Tp>
-complex<_Tp>
+_LIBCUDACXX_INLINE_VISIBILITY complex<_Tp>
 sin(const complex<_Tp>& __x)
 {
     complex<_Tp> __z = sinh(complex<_Tp>(-__x.imag(), __x.real()));
@@ -1371,7 +1371,7 @@ cos(const complex<_Tp>& __x)
 // tan
 
 template<class _Tp>
-complex<_Tp>
+_LIBCUDACXX_INLINE_VISIBILITY complex<_Tp>
 tan(const complex<_Tp>& __x)
 {
     complex<_Tp> __z = tanh(complex<_Tp>(-__x.imag(), __x.real()));
