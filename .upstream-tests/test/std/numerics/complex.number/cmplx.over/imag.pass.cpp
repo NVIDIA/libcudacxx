@@ -20,7 +20,7 @@
 #include "../cases.h"
 
 template <class T, int x>
-void
+__host__ __device__ void
 test(typename cuda::std::enable_if<cuda::std::is_integral<T>::value>::type* = 0)
 {
     static_assert((cuda::std::is_same<decltype(cuda::std::imag(T(x))), double>::value), "");
@@ -34,7 +34,7 @@ test(typename cuda::std::enable_if<cuda::std::is_integral<T>::value>::type* = 0)
 }
 
 template <class T, int x>
-void
+__host__ __device__ void
 test(typename cuda::std::enable_if<!cuda::std::is_integral<T>::value>::type* = 0)
 {
     static_assert((cuda::std::is_same<decltype(cuda::std::imag(T(x))), T>::value), "");
@@ -48,7 +48,7 @@ test(typename cuda::std::enable_if<!cuda::std::is_integral<T>::value>::type* = 0
 }
 
 template <class T>
-void
+__host__ __device__ void
 test()
 {
     test<T, 0>();
@@ -60,7 +60,8 @@ int main(int, char**)
 {
     test<float>();
     test<double>();
-    test<long double>();
+// CUDA treats long double as double
+//  test<long double>();
     test<int>();
     test<unsigned>();
     test<long long>();

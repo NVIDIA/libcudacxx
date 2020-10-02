@@ -6,20 +6,33 @@
 //
 //===----------------------------------------------------------------------===//
 
-// <cuda/std/ccomplex>
+// <cuda/std/complex>
 
-#include <cuda/std/ccomplex>
+// template<class T>
+// class complex
+// {
+// public:
+//   typedef T value_type;
+//   ...
+// };
+
+#include <cuda/std/complex>
+#include <cuda/std/type_traits>
 
 #include "test_macros.h"
 
-template <typename T>
-__host__ __device__
-constexpr bool unused(T &&) {return true;}
+template <class T>
+__host__ __device__ void
+test()
+{
+    typedef cuda::std::complex<T> C;
+    static_assert((cuda::std::is_same<typename C::value_type, T>::value), "");
+    C c;
+}
 
 int main(int, char**)
 {
-    cuda::std::complex<double> d;
-    unused(d);
+  test<long double>();
 
   return 0;
 }

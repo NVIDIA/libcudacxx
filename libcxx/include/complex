@@ -257,8 +257,11 @@ _LIBCUDACXX_BEGIN_NAMESPACE_STD
 
 template<class _Tp> class _LIBCUDACXX_TEMPLATE_VIS complex;
 
-template<class _Tp> complex<_Tp> operator*(const complex<_Tp>& __z, const complex<_Tp>& __w);
-template<class _Tp> complex<_Tp> operator/(const complex<_Tp>& __x, const complex<_Tp>& __y);
+template<class _Tp> _LIBCUDACXX_INLINE_VISIBILITY
+complex<_Tp> operator*(const complex<_Tp>& __z, const complex<_Tp>& __w);
+
+template<class _Tp> _LIBCUDACXX_INLINE_VISIBILITY
+complex<_Tp> operator/(const complex<_Tp>& __x, const complex<_Tp>& __y);
 
 template<class _Tp>
 class _LIBCUDACXX_TEMPLATE_VIS complex
@@ -319,8 +322,10 @@ public:
         }
 };
 
-template<> class _LIBCUDACXX_TEMPLATE_VIS complex<double>;
+template<> class complex<double>;
+#ifdef _LIBCUDACXX_HAS_COMPLEX_LONG_DOUBLE
 template<> class _LIBCUDACXX_TEMPLATE_VIS complex<long double>;
+#endif // _LIBCUDACXX_HAS_COMPLEX_LONG_DOUBLE
 
 template<>
 class _LIBCUDACXX_TEMPLATE_VIS complex<float>
@@ -441,6 +446,17 @@ public:
 template<>
 class _LIBCUDACXX_TEMPLATE_VIS complex<long double>
 {
+#ifndef _LIBCUDACXX_HAS_COMPLEX_LONG_DOUBLE
+public:
+    template <typename _Dummy = void>
+    _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR complex(long double __re = 0.0, long double __im = 0.0)
+        {static_assert(is_same<_Dummy, void>::value, "complex<long double> is not supported");}
+
+    template <typename _Tp, typename _Dummy = void>
+    _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR complex(const complex<_Tp> &__c)
+        {static_assert(is_same<_Dummy, void>::value, "complex<long double> is not supported");}
+
+#else
     long double __re_;
     long double __im_;
 public:
@@ -465,7 +481,6 @@ public:
     _LIBCUDACXX_INLINE_VISIBILITY complex& operator-=(long double __re) {__re_ -= __re; return *this;}
     _LIBCUDACXX_INLINE_VISIBILITY complex& operator*=(long double __re) {__re_ *= __re; __im_ *= __re; return *this;}
     _LIBCUDACXX_INLINE_VISIBILITY complex& operator/=(long double __re) {__re_ /= __re; __im_ /= __re; return *this;}
-
     template<class _Xp> _LIBCUDACXX_INLINE_VISIBILITY complex& operator= (const complex<_Xp>& __c)
         {
             __re_ = __c.real();
@@ -494,6 +509,7 @@ public:
             *this = *this / complex(__c.real(), __c.imag());
             return *this;
         }
+#endif // _LIBCUDACXX_HAS_COMPLEX_LONG_DOUBLE
 };
 
 inline
@@ -503,12 +519,13 @@ complex<float>::complex(const complex<double>& __c)
 
 inline
 _LIBCUDACXX_CONSTEXPR
-complex<float>::complex(const complex<long double>& __c)
+complex<double>::complex(const complex<float>& __c)
     : __re_(__c.real()), __im_(__c.imag()) {}
 
+#ifdef _LIBCUDACXX_HAS_COMPLEX_LONG_DOUBLE
 inline
 _LIBCUDACXX_CONSTEXPR
-complex<double>::complex(const complex<float>& __c)
+complex<float>::complex(const complex<long double>& __c)
     : __re_(__c.real()), __im_(__c.imag()) {}
 
 inline
@@ -525,6 +542,7 @@ inline
 _LIBCUDACXX_CONSTEXPR
 complex<long double>::complex(const complex<double>& __c)
     : __re_(__c.real()), __im_(__c.imag()) {}
+#endif // _LIBCUDACXX_HAS_COMPLEX_LONG_DOUBLE
 
 // 26.3.6 operators:
 
@@ -892,7 +910,8 @@ typename enable_if
 >::type
 arg(_Tp __re)
 {
-    return atan2(0., __re);
+    // integrals need to be promoted to double
+    return atan2(0., static_cast<double>(__re));
 }
 
 template <class _Tp>
@@ -1042,7 +1061,7 @@ log10(const complex<_Tp>& __x)
 // sqrt
 
 template<class _Tp>
-complex<_Tp>
+_LIBCUDACXX_INLINE_VISIBILITY complex<_Tp>
 sqrt(const complex<_Tp>& __x)
 {
     if (__libcpp_isinf_or_builtin(__x.imag()))
@@ -1059,7 +1078,7 @@ sqrt(const complex<_Tp>& __x)
 // exp
 
 template<class _Tp>
-complex<_Tp>
+_LIBCUDACXX_INLINE_VISIBILITY complex<_Tp>
 exp(const complex<_Tp>& __x)
 {
     _Tp __i = __x.imag();
@@ -1462,6 +1481,7 @@ inline namespace literals
 {
   inline namespace complex_literals
   {
+#ifdef _LIBCUDACXX_HAS_COMPLEX_LONG_DOUBLE
     constexpr complex<long double> operator""il(long double __im)
     {
         return { 0.0l, __im };
@@ -1471,7 +1491,6 @@ inline namespace literals
     {
         return { 0.0l, static_cast<long double>(__im) };
     }
-
 
     constexpr complex<double> operator""i(long double __im)
     {
@@ -1483,7 +1502,6 @@ inline namespace literals
         return { 0.0, static_cast<double>(__im) };
     }
 
-
     constexpr complex<float> operator""if(long double __im)
     {
         return { 0.0f, static_cast<float>(__im) };
@@ -1493,6 +1511,27 @@ inline namespace literals
     {
         return { 0.0f, static_cast<float>(__im) };
     }
+#else
+    constexpr complex<double> operator""i(double __im)
+    {
+        return { 0.0, static_cast<double>(__im) };
+    }
+
+    constexpr complex<double> operator""i(unsigned long long __im)
+    {
+        return { 0.0, static_cast<double>(__im) };
+    }
+
+    constexpr complex<float> operator""if(double __im)
+    {
+        return { 0.0f, static_cast<float>(__im) };
+    }
+
+    constexpr complex<float> operator""if(unsigned long long __im)
+    {
+        return { 0.0f, static_cast<float>(__im) };
+    }
+#endif
   }
 }
 #endif

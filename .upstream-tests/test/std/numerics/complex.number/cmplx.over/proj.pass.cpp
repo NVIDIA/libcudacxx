@@ -22,7 +22,7 @@
 #include "../cases.h"
 
 template <class T>
-void
+__host__ __device__ void
 test(T x, typename cuda::std::enable_if<cuda::std::is_integral<T>::value>::type* = 0)
 {
     static_assert((cuda::std::is_same<decltype(cuda::std::proj(x)), cuda::std::complex<double> >::value), "");
@@ -30,7 +30,7 @@ test(T x, typename cuda::std::enable_if<cuda::std::is_integral<T>::value>::type*
 }
 
 template <class T>
-void
+__host__ __device__ void
 test(T x, typename cuda::std::enable_if<cuda::std::is_floating_point<T>::value>::type* = 0)
 {
     static_assert((cuda::std::is_same<decltype(cuda::std::proj(x)), cuda::std::complex<T> >::value), "");
@@ -38,7 +38,7 @@ test(T x, typename cuda::std::enable_if<cuda::std::is_floating_point<T>::value>:
 }
 
 template <class T>
-void
+__host__ __device__ void
 test(T x, typename cuda::std::enable_if<!cuda::std::is_integral<T>::value &&
                                   !cuda::std::is_floating_point<T>::value>::type* = 0)
 {
@@ -47,7 +47,7 @@ test(T x, typename cuda::std::enable_if<!cuda::std::is_integral<T>::value &&
 }
 
 template <class T>
-void
+__host__ __device__ void
 test()
 {
     test<T>(0);
@@ -59,7 +59,8 @@ int main(int, char**)
 {
     test<float>();
     test<double>();
-    test<long double>();
+// CUDA treats long double as double
+//  test<long double>();
     test<int>();
     test<unsigned>();
     test<long long>();
