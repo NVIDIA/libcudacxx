@@ -19,7 +19,7 @@
 #include "../cases.h"
 
 template <class T>
-void
+__host__ __device__ void
 test(const cuda::std::complex<T>& a, const T& b, cuda::std::complex<T> x)
 {
     cuda::std::complex<T> c = pow(a, b);
@@ -28,13 +28,13 @@ test(const cuda::std::complex<T>& a, const T& b, cuda::std::complex<T> x)
 }
 
 template <class T>
-void
+__host__ __device__ void
 test()
 {
     test(cuda::std::complex<T>(2, 3), T(2), cuda::std::complex<T>(-5, 12));
 }
 
-void test_edges()
+__host__ __device__ void test_edges()
 {
     const unsigned N = sizeof(testcases) / sizeof(testcases[0]);
     for (unsigned i = 0; i < N; ++i)
@@ -63,7 +63,8 @@ int main(int, char**)
 {
     test<float>();
     test<double>();
-    test<long double>();
+// CUDA treats long double as double
+//  test<long double>();
     test_edges();
 
   return 0;

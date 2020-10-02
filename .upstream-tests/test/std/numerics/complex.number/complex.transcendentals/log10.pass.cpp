@@ -19,26 +19,26 @@
 #include "../cases.h"
 
 template <class T>
-void
+__host__ __device__ void
 test(const cuda::std::complex<T>& c, cuda::std::complex<T> x)
 {
     assert(log10(c) == x);
 }
 
 template <class T>
-void
+__host__ __device__ void
 test()
 {
     test(cuda::std::complex<T>(0, 0), cuda::std::complex<T>(-INFINITY, 0));
 }
 
-void test_edges()
+__host__ __device__ void test_edges()
 {
     const unsigned N = sizeof(testcases) / sizeof(testcases[0]);
     for (unsigned i = 0; i < N; ++i)
     {
         cuda::std::complex<double> r = log10(testcases[i]);
-        cuda::std::complex<double> z = log(testcases[i])/cuda::std::log(10);
+        cuda::std::complex<double> z = log(testcases[i]) / cuda::std::log(10.0);
         if (cuda::std::isnan(real(r)))
             assert(cuda::std::isnan(real(z)));
         else
@@ -60,7 +60,8 @@ int main(int, char**)
 {
     test<float>();
     test<double>();
-    test<long double>();
+// CUDA treats long double as double
+//  test<long double>();
     test_edges();
 
   return 0;
