@@ -127,8 +127,8 @@ int main(int argc, char *argv[])
                        NULL));       // includeNames
   
   const char *opts[] = {"-std=c++11",
-                        "-I/usr/include/linux",
                         "-I/usr/local/cuda/include",
+                        "-I../../include",
                         "--gpu-architecture=compute_70",
                         "--relocatable-device-code=true",
                         "-default-device"};
