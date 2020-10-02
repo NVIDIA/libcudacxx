@@ -8,9 +8,6 @@ find_package(CUDAToolkit REQUIRED)
 find_package(Threads REQUIRED)
 find_package(OpenMP)
 
-add_executable(trie_st trie_st.cpp)
-target_compile_features(trie_st PRIVATE cxx_std_11)
-
 # Download input files for the trie examples.
 if(NOT (EXISTS books))
     execute_process(COMMAND mkdir books)
@@ -26,6 +23,9 @@ if(NOT (EXISTS books))
     file(DOWNLOAD https://www.gutenberg.org/files/1342/1342-0.txt books/1342-0.txt SHOW_PROGRESS)
 endif()
 
+add_executable(trie_st trie_st.cpp)
+target_compile_features(trie_st PRIVATE cxx_std_11)
+
 add_executable(trie_mt trie_mt.cpp)
 target_compile_features(trie_mt PRIVATE cxx_std_11)
 target_link_libraries(trie_mt Threads::Threads)
@@ -39,6 +39,10 @@ else()
     message(STATUS "Insufficient CUDA version. Skipping trie.cu example.")
 endif()    
 
-add_executable(rtc rtc_example.cpp)
-target_link_libraries(rtc CUDA::nvrtc)
-target_compile_features(rtc PRIVATE cxx_std_11)
+if(CUDAToolkit_VERSION VERSION_GREATER 10.2)
+    add_executable(rtc rtc_example.cpp)
+    target_link_libraries(rtc CUDA::nvrtc)
+    target_compile_features(rtc PRIVATE cxx_std_11)
+else()
+    message(STATUS "Insufficient CUDA version. Skipping rtc_example.cpp example.")
+endif()    
