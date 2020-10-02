@@ -17,7 +17,7 @@
 #include "test_macros.h"
 
 template <class T, class X>
-void
+__host__ __device__ void
 test()
 {
     cuda::std::complex<T> c;
@@ -37,15 +37,17 @@ int main(int, char**)
 {
     test<float, float>();
     test<float, double>();
-    test<float, long double>();
 
     test<double, float>();
     test<double, double>();
-    test<double, long double>();
 
-    test<long double, float>();
-    test<long double, double>();
-    test<long double, long double>();
+// CUDA treats long double as double
+//  test<float, long double>();
+//  test<double, long double>();
+//  test<long double, float>();
+//  test<long double, double>();
+//  test<long double, long double>();
+
 
   return 0;
 }

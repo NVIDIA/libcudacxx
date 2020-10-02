@@ -7,15 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++98, c++03, c++11
-#include <cuda/std/complex>
-#include <cuda/std/cassert>
-
-#include "test_macros.h"
-
 int main(int, char**)
 {
-    cuda::std::complex<float> foo  = 1.0if;  // should fail w/conversion operator not found
 
   return 0;
 }
