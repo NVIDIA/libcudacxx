@@ -150,18 +150,25 @@ defaults:
       nav_order: 0
   -
     scope:
+      path: api/utility_library/tuple.md
+    values:
+      grand_parent: API
+      parent: Utility Library
+      nav_order: 2
+  -
+    scope:
       path: api/utility_library/utility.md
     values:
       grand_parent: API
       parent: Utility Library
-      nav_order: 1
+      nav_order: 3
   -
     scope:
       path: api/utility_library/version.md
     values:
       grand_parent: API
       parent: Utility Library
-      nav_order: 2
+      nav_order: 4
   -
     scope:
       path: releases.md
