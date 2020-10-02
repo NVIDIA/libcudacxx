@@ -28,15 +28,15 @@
 #include "../cases.h"
 
 template <class T>
-double
+__host__ __device__ double
 promote(T, typename cuda::std::enable_if<cuda::std::is_integral<T>::value>::type* = 0);
 
-float promote(float);
-double promote(double);
-long double promote(long double);
+__host__ __device__ float promote(float);
+__host__ __device__ double promote(double);
+__host__ __device__ long double promote(long double);
 
 template <class T, class U>
-void
+__host__ __device__ void
 test(T x, const cuda::std::complex<U>& y)
 {
     typedef decltype(promote(x)+promote(real(y))) V;
@@ -45,7 +45,7 @@ test(T x, const cuda::std::complex<U>& y)
 }
 
 template <class T, class U>
-void
+__host__ __device__ void
 test(const cuda::std::complex<T>& x, U y)
 {
     typedef decltype(promote(real(x))+promote(y)) V;
@@ -54,7 +54,7 @@ test(const cuda::std::complex<T>& x, U y)
 }
 
 template <class T, class U>
-void
+__host__ __device__ void
 test(const cuda::std::complex<T>& x, const cuda::std::complex<U>& y)
 {
     typedef decltype(promote(real(x))+promote(real(y))) V;
@@ -63,7 +63,7 @@ test(const cuda::std::complex<T>& x, const cuda::std::complex<U>& y)
 }
 
 template <class T, class U>
-void
+__host__ __device__ void
 test(typename cuda::std::enable_if<cuda::std::is_integral<T>::value>::type* = 0, typename cuda::std::enable_if<!cuda::std::is_integral<U>::value>::type* = 0)
 {
     test(T(3), cuda::std::complex<U>(4, 5));
@@ -71,7 +71,7 @@ test(typename cuda::std::enable_if<cuda::std::is_integral<T>::value>::type* = 0,
 }
 
 template <class T, class U>
-void
+__host__ __device__ void
 test(typename cuda::std::enable_if<!cuda::std::is_integral<T>::value>::type* = 0, typename cuda::std::enable_if<!cuda::std::is_integral<U>::value>::type* = 0)
 {
     test(T(3), cuda::std::complex<U>(4, 5));
@@ -83,24 +83,25 @@ int main(int, char**)
 {
     test<int, float>();
     test<int, double>();
-    test<int, long double>();
 
     test<unsigned, float>();
     test<unsigned, double>();
-    test<unsigned, long double>();
 
     test<long long, float>();
     test<long long, double>();
-    test<long long, long double>();
 
     test<float, double>();
-    test<float, long double>();
 
     test<double, float>();
-    test<double, long double>();
 
-    test<long double, float>();
-    test<long double, double>();
+// CUDA treats long double as double
+//  test<int, long double>();
+//  test<unsigned, long double>();
+//  test<long long, long double>();
+//  test<float, long double>();
+//  test<double, long double>();
+//  test<long double, float>();
+//  test<long double, double>();
 
   return 0;
 }

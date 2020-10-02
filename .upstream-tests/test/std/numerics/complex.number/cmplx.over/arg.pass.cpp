@@ -16,11 +16,12 @@
 #include <cuda/std/type_traits>
 #include <cuda/std/cassert>
 
+
 #include "test_macros.h"
 #include "../cases.h"
 
 template <class T>
-void
+__host__ __device__ void
 test(T x, typename cuda::std::enable_if<cuda::std::is_integral<T>::value>::type* = 0)
 {
     static_assert((cuda::std::is_same<decltype(cuda::std::arg(x)), double>::value), "");
@@ -28,7 +29,7 @@ test(T x, typename cuda::std::enable_if<cuda::std::is_integral<T>::value>::type*
 }
 
 template <class T>
-void
+__host__ __device__ void
 test(T x, typename cuda::std::enable_if<!cuda::std::is_integral<T>::value>::type* = 0)
 {
     static_assert((cuda::std::is_same<decltype(cuda::std::arg(x)), T>::value), "");
@@ -36,8 +37,7 @@ test(T x, typename cuda::std::enable_if<!cuda::std::is_integral<T>::value>::type
 }
 
 template <class T>
-void
-test()
+__host__ __device__ void test()
 {
     test<T>(0);
     test<T>(1);
@@ -48,7 +48,8 @@ int main(int, char**)
 {
     test<float>();
     test<double>();
-    test<long double>();
+// CUDA treats long double as double
+//  test<long double>();
     test<int>();
     test<unsigned>();
     test<long long>();
