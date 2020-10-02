@@ -19,14 +19,14 @@
 #include "../cases.h"
 
 template <class T>
-void
+__host__ __device__ void
 test(const cuda::std::complex<T>& lhs, const cuda::std::complex<T>& rhs, cuda::std::complex<T> x)
 {
     assert(lhs / rhs == x);
 }
 
 template <class T>
-void
+__host__ __device__ void
 test()
 {
     cuda::std::complex<T> lhs(-4.0, 7.5);
@@ -35,7 +35,7 @@ test()
     test(lhs, rhs, x);
 }
 
-void test_edges()
+__host__ __device__ void test_edges()
 {
     const unsigned N = sizeof(testcases) / sizeof(testcases[0]);
     for (unsigned i = 0; i < N; ++i)
@@ -154,7 +154,8 @@ int main(int, char**)
 {
     test<float>();
     test<double>();
-    test<long double>();
+// CUDA treats long double as double
+//  test<long double>();
     test_edges();
 
   return 0;
