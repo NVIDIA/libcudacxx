@@ -18,7 +18,7 @@
 #include "test_macros.h"
 
 template <class T>
-void
+__host__ __device__ void
 test_constexpr()
 {
 #if TEST_STD_VER > 11
@@ -36,7 +36,7 @@ test_constexpr()
 }
 
 template <class T>
-void
+__host__ __device__ void
 test()
 {
     {
@@ -56,7 +56,8 @@ int main(int, char**)
 {
     test<float>();
     test<double>();
-    test<long double>();
+// CUDA treats long double as double
+//  test<long double>();
 //    test_constexpr<int> ();
 
   return 0;

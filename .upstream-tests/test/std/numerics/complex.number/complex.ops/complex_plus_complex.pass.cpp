@@ -18,14 +18,14 @@
 #include "test_macros.h"
 
 template <class T>
-void
+__host__ __device__ void
 test(const cuda::std::complex<T>& lhs, const cuda::std::complex<T>& rhs, cuda::std::complex<T> x)
 {
     assert(lhs + rhs == x);
 }
 
 template <class T>
-void
+__host__ __device__ void
 test()
 {
     {
@@ -46,7 +46,8 @@ int main(int, char**)
 {
     test<float>();
     test<double>();
-    test<long double>();
+// CUDA treats long double as double
+//  test<long double>();
 
   return 0;
 }
