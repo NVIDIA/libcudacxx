@@ -963,11 +963,11 @@ public:
     }
 
     template <class _Tuple,
-              typename enable_if
+              _EnableIf
                       <
                          __tuple_assignable<_Tuple, tuple>::value,
-                         void*
-                      >::type = nullptr
+                         bool
+                      > = false
              >
         _LIBCUDACXX_INLINE_VISIBILITY
         tuple&
