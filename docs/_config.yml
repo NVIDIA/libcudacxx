@@ -30,19 +30,16 @@ defaults:
     scope:
       path: api/synchronization_library/header_table.md
     values:
-      parent: API
       nav_exclude: true
   -
     scope:
       path: api/time_library/header_table.md
     values:
-      parent: API
       nav_exclude: true
   -
     scope:
       path: api/utility_library/header_table.md
     values:
-      parent: API
       nav_exclude: true
   -
     scope:
