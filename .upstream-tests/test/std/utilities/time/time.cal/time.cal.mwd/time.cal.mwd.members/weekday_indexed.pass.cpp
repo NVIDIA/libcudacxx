@@ -35,7 +35,8 @@ int main(int, char**)
 
     for (unsigned i = 1; i <= 10; ++i)
     {
-        month_weekday md(cuda::std::chrono::March, weekday_indexed{Sunday, i});
+        constexpr month March = cuda::std::chrono::March;
+        month_weekday md(March, weekday_indexed{Sunday, i});
         assert( static_cast<unsigned>(md.weekday_indexed().weekday() == Sunday));
         assert( static_cast<unsigned>(md.weekday_indexed().index() == i));
     }
