@@ -61,38 +61,41 @@ int main(int, char**)
     using months     = cuda::std::chrono::months;
     using year_month = cuda::std::chrono::year_month;
 
-    {   // year_month + years
-    ASSERT_NOEXCEPT(cuda::std::declval<year_month>() + std::declval<years>());
-    ASSERT_NOEXCEPT(cuda::std::declval<years>() + std::declval<year_month>());
+    auto constexpr January = cuda::std::chrono::January;
 
-    ASSERT_SAME_TYPE(year_month, decltype(cuda::std::declval<year_month>() + std::declval<years>()));
-    ASSERT_SAME_TYPE(year_month, decltype(cuda::std::declval<years>() + std::declval<year_month>()));
+    {   // year_month + years
+    ASSERT_NOEXCEPT(cuda::std::declval<year_month>() + cuda::std::declval<years>());
+    ASSERT_NOEXCEPT(cuda::std::declval<years>() + cuda::std::declval<year_month>());
+
+    ASSERT_SAME_TYPE(year_month, decltype(cuda::std::declval<year_month>() + cuda::std::declval<years>()));
+    ASSERT_SAME_TYPE(year_month, decltype(cuda::std::declval<years>() + cuda::std::declval<year_month>()));
 
     static_assert(testConstexprYears (year_month{year{1}, month{1}}), "");
 
-    year_month ym{year{1234}, cuda::std::chrono::January};
+
+    year_month ym{year{1234}, January};
     for (int i = 0; i <= 10; ++i)
     {
         year_month ym1 = ym + years{i};
         year_month ym2 = years{i} + ym;
         assert(static_cast<int>(ym1.year()) == i + 1234);
         assert(static_cast<int>(ym2.year()) == i + 1234);
-        assert(ym1.month() == cuda::std::chrono::January);
-        assert(ym2.month() == cuda::std::chrono::January);
+        assert(ym1.month() == January);
+        assert(ym2.month() == January);
         assert(ym1 == ym2);
     }
     }
 
     {   // year_month + months
-    ASSERT_NOEXCEPT(cuda::std::declval<year_month>() + std::declval<months>());
-    ASSERT_NOEXCEPT(cuda::std::declval<months>() + std::declval<year_month>());
+    ASSERT_NOEXCEPT(cuda::std::declval<year_month>() + cuda::std::declval<months>());
+    ASSERT_NOEXCEPT(cuda::std::declval<months>() + cuda::std::declval<year_month>());
 
-    ASSERT_SAME_TYPE(year_month, decltype(cuda::std::declval<year_month>() + std::declval<months>()));
-    ASSERT_SAME_TYPE(year_month, decltype(cuda::std::declval<months>() + std::declval<year_month>()));
+    ASSERT_SAME_TYPE(year_month, decltype(cuda::std::declval<year_month>() + cuda::std::declval<months>()));
+    ASSERT_SAME_TYPE(year_month, decltype(cuda::std::declval<months>() + cuda::std::declval<year_month>()));
 
     static_assert(testConstexprMonths(year_month{year{1}, month{1}}), "");
 
-    year_month ym{year{1234}, cuda::std::chrono::January};
+    year_month ym{year{1234}, January};
     for (int i = 0; i <= 10; ++i)  // TODO test wrap-around
     {
         year_month ym1 = ym + months{i};
