@@ -3270,19 +3270,17 @@ inline namespace literals
         return chrono::duration<long double, nano> (__ns);
     }
 
-#if _LIBCUDACXX_STD_VER > 17 && !defined(_LIBCUDACXX_HAS_NO_CXX20_CHRONO_LITERALS)
     _LIBCUDACXX_INLINE_VISIBILITY
-    constexpr chrono::day operator ""d(unsigned long long __d) noexcept
+    constexpr chrono::day operator""d(unsigned long long __d) noexcept
     {
         return chrono::day(static_cast<unsigned>(__d));
     }
 
     _LIBCUDACXX_INLINE_VISIBILITY
-    constexpr chrono::year operator ""y(unsigned long long __y) noexcept
+    constexpr chrono::year operator""y(unsigned long long __y) noexcept
     {
         return chrono::year(static_cast<int>(__y));
     }
-#endif
 }}
 
 namespace chrono { // hoist the literals into namespace std::chrono
