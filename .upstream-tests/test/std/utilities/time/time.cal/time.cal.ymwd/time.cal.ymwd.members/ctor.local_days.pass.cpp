@@ -25,7 +25,7 @@
 
 #include <cuda/std/chrono>
 #include <cuda/std/type_traits>
-#include <cassert>
+#include <cuda/std/cassert>
 
 #include "test_macros.h"
 
@@ -39,16 +39,19 @@ int main(int, char**)
 
     ASSERT_NOEXCEPT(year_month_weekday{cuda::std::declval<const local_days>()});
 
+    auto constexpr January = cuda::std::chrono::January;
+
     {
     constexpr local_days sd{}; // 1-Jan-1970 was a Thursday
     constexpr year_month_weekday ymwd{sd};
+    auto constexpr Thursday = cuda::std::chrono::Thursday;
 
     static_assert( ymwd.ok(),                                                            "");
     static_assert( ymwd.year()            == year{1970},                                 "");
-    static_assert( ymwd.month()           == cuda::std::chrono::January,                       "");
-    static_assert( ymwd.weekday()         == cuda::std::chrono::Thursday,                      "");
+    static_assert( ymwd.month()           == January,                       "");
+    static_assert( ymwd.weekday()         == Thursday,                      "");
     static_assert( ymwd.index()           == 1,                                          "");
-    static_assert( ymwd.weekday_indexed() == weekday_indexed{cuda::std::chrono::Thursday, 1},  "");
+    static_assert( ymwd.weekday_indexed() == weekday_indexed{Thursday, 1},  "");
     static_assert( ymwd                   == year_month_weekday{local_days{ymwd}},       ""); // round trip
     }
 
@@ -56,12 +59,15 @@ int main(int, char**)
     constexpr local_days sd{days{10957+32}}; // 2-Feb-2000 was a Wednesday
     constexpr year_month_weekday ymwd{sd};
 
+    auto constexpr February = cuda::std::chrono::February;
+    auto constexpr Wednesday = cuda::std::chrono::Wednesday;
+
     static_assert( ymwd.ok(),                                                            "");
     static_assert( ymwd.year()            == year{2000},                                 "");
-    static_assert( ymwd.month()           == cuda::std::chrono::February,                      "");
-    static_assert( ymwd.weekday()         == cuda::std::chrono::Wednesday,                     "");
+    static_assert( ymwd.month()           == February,                      "");
+    static_assert( ymwd.weekday()         == Wednesday,                     "");
     static_assert( ymwd.index()           == 1,                                          "");
-    static_assert( ymwd.weekday_indexed() == weekday_indexed{cuda::std::chrono::Wednesday, 1}, "");
+    static_assert( ymwd.weekday_indexed() == weekday_indexed{Wednesday, 1}, "");
     static_assert( ymwd                   == year_month_weekday{local_days{ymwd}},       ""); // round trip
     }
 
@@ -70,25 +76,29 @@ int main(int, char**)
     constexpr local_days sd{days{-10957}}; // 2-Jan-1940 was a Tuesday
     constexpr year_month_weekday ymwd{sd};
 
+    auto constexpr Tuesday = cuda::std::chrono::Tuesday;
+
     static_assert( ymwd.ok(),                                                            "");
     static_assert( ymwd.year()            == year{1940},                                 "");
-    static_assert( ymwd.month()           == cuda::std::chrono::January,                       "");
-    static_assert( ymwd.weekday()         == cuda::std::chrono::Tuesday,                       "");
+    static_assert( ymwd.month()           == January,                       "");
+    static_assert( ymwd.weekday()         == Tuesday,                       "");
     static_assert( ymwd.index()           == 1,                                          "");
-    static_assert( ymwd.weekday_indexed() == weekday_indexed{cuda::std::chrono::Tuesday, 1},   "");
+    static_assert( ymwd.weekday_indexed() == weekday_indexed{Tuesday, 1},   "");
     static_assert( ymwd                   == year_month_weekday{local_days{ymwd}},       ""); // round trip
     }
 
     {
     local_days sd{days{-(10957+34)}}; // 29-Nov-1939 was a Wednesday
     year_month_weekday ymwd{sd};
+    auto constexpr November = cuda::std::chrono::November;
+    auto constexpr Wednesday = cuda::std::chrono::Wednesday;
 
     assert( ymwd.ok());
     assert( ymwd.year()            == year{1939});
-    assert( ymwd.month()           == cuda::std::chrono::November);
-    assert( ymwd.weekday()         == cuda::std::chrono::Wednesday);
+    assert( ymwd.month()           == November);
+    assert( ymwd.weekday()         == Wednesday);
     assert( ymwd.index()           == 5);
-    assert((ymwd.weekday_indexed() == weekday_indexed{cuda::std::chrono::Wednesday, 5}));
+    assert((ymwd.weekday_indexed() == weekday_indexed{Wednesday, 5}));
     assert( ymwd                   == year_month_weekday{local_days{ymwd}}); // round trip
     }
 
