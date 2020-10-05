@@ -2700,6 +2700,7 @@ chrono::day year_month_day_last::day() const noexcept
         chrono::day(31), chrono::day(31), chrono::day(30),
         chrono::day(31), chrono::day(30), chrono::day(31)
     };
+    auto constexpr February = cuda::std::chrono::February;
     return month() != February || !__y.is_leap() ?
         __d[static_cast<unsigned>(month()) - 1] : chrono::day{29};
 }

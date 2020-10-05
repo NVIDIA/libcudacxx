@@ -25,7 +25,7 @@
 
 #include <cuda/std/chrono>
 #include <cuda/std/type_traits>
-#include <cassert>
+#include <cuda/std/cassert>
 
 #include "test_macros.h"
 
@@ -39,13 +39,15 @@ int main(int, char**)
 
     ASSERT_NOEXCEPT(year_month_day{cuda::std::declval<local_days>()});
 
+    auto constexpr January = cuda::std::chrono::January;
+
     {
     constexpr local_days sd{};
     constexpr year_month_day ymd{sd};
 
     static_assert( ymd.ok(),                            "");
     static_assert( ymd.year()  == year{1970},           "");
-    static_assert( ymd.month() == cuda::std::chrono::January, "");
+    static_assert( ymd.month() == January, "");
     static_assert( ymd.day()   == day{1},               "");
     }
 
@@ -53,9 +55,11 @@ int main(int, char**)
     constexpr local_days sd{days{10957+32}};
     constexpr year_month_day ymd{sd};
 
+    auto constexpr February = cuda::std::chrono::February;
+
     static_assert( ymd.ok(),                             "");
     static_assert( ymd.year()  == year{2000},            "");
-    static_assert( ymd.month() == cuda::std::chrono::February, "");
+    static_assert( ymd.month() == February, "");
     static_assert( ymd.day()   == day{2},                "");
     }
 
@@ -68,17 +72,18 @@ int main(int, char**)
 
     static_assert( ymd.ok(),                            "");
     static_assert( ymd.year()  == year{1940},           "");
-    static_assert( ymd.month() == cuda::std::chrono::January, "");
+    static_assert( ymd.month() == January, "");
     static_assert( ymd.day()   == day{2},               "");
     }
 
     {
     local_days sd{days{-(10957+34)}};
     year_month_day ymd{sd};
+    auto constexpr November = cuda::std::chrono::November;
 
     assert( ymd.ok());
     assert( ymd.year()  == year{1939});
-    assert( ymd.month() == cuda::std::chrono::November);
+    assert( ymd.month() == November);
     assert( ymd.day()   == day{29});
     }
 
