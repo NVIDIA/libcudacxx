@@ -16,7 +16,7 @@
 
 #include <cuda/std/chrono>
 #include <cuda/std/type_traits>
-#include <cassert>
+#include <cuda/std/cassert>
 
 #include "test_macros.h"
 #include "../../euclidian.h"
@@ -29,10 +29,10 @@ int main(int, char**)
 
     constexpr weekday Sunday = cuda::std::chrono::Sunday;
 
-    ASSERT_NOEXCEPT(                           std::declval<weekday>()[1U]);
+    ASSERT_NOEXCEPT(                           cuda::std::declval<weekday>()[1U]);
     ASSERT_SAME_TYPE(weekday_indexed, decltype(cuda::std::declval<weekday>()[1U]));
 
-    ASSERT_NOEXCEPT(                           std::declval<weekday>()[cuda::std::chrono::last]);
+    ASSERT_NOEXCEPT(                           cuda::std::declval<weekday>()[cuda::std::chrono::last]);
     ASSERT_SAME_TYPE(weekday_last,    decltype(cuda::std::declval<weekday>()[cuda::std::chrono::last]));
 
     static_assert(Sunday[2].weekday() == Sunday, "");

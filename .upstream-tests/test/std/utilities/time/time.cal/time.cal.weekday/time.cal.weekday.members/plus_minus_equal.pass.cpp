@@ -15,7 +15,7 @@
 
 #include <cuda/std/chrono>
 #include <cuda/std/type_traits>
-#include <cassert>
+#include <cuda/std/cassert>
 
 #include "test_macros.h"
 #include "../../euclidian.h"
@@ -39,11 +39,11 @@ int main(int, char**)
     using weekday = cuda::std::chrono::weekday;
     using days    = cuda::std::chrono::days;
 
-    ASSERT_NOEXCEPT(                    std::declval<weekday&>() += std::declval<days&>());
-    ASSERT_SAME_TYPE(weekday&, decltype(cuda::std::declval<weekday&>() += std::declval<days&>()));
+    ASSERT_NOEXCEPT(                    cuda::std::declval<weekday&>() += cuda::std::declval<days&>());
+    ASSERT_SAME_TYPE(weekday&, decltype(cuda::std::declval<weekday&>() += cuda::std::declval<days&>()));
 
-    ASSERT_NOEXCEPT(                    std::declval<weekday&>() -= std::declval<days&>());
-    ASSERT_SAME_TYPE(weekday&, decltype(cuda::std::declval<weekday&>() -= std::declval<days&>()));
+    ASSERT_NOEXCEPT(                    cuda::std::declval<weekday&>() -= cuda::std::declval<days&>());
+    ASSERT_SAME_TYPE(weekday&, decltype(cuda::std::declval<weekday&>() -= cuda::std::declval<days&>()));
 
     static_assert(testConstexpr<weekday, days>(), "");
 
