@@ -95,15 +95,17 @@ int main(int, char**)
 
     static_assert(testConstexprYears (year_month_day{year{1}, month{1}, day{1}}), "");
 
-    year_month_day ym{year{1234}, cuda::std::chrono::January, day{12}};
+    auto constexpr January = cuda::std::chrono::January;
+
+    year_month_day ym{year{1234}, January, day{12}};
     for (int i = 0; i <= 10; ++i)
     {
         year_month_day ym1 = ym + years{i};
         year_month_day ym2 = years{i} + ym;
         assert(static_cast<int>(ym1.year()) == i + 1234);
         assert(static_cast<int>(ym2.year()) == i + 1234);
-        assert(ym1.month() == cuda::std::chrono::January);
-        assert(ym2.month() == cuda::std::chrono::January);
+        assert(ym1.month() == January);
+        assert(ym2.month() == January);
         assert(ym1.day()   == day{12});
         assert(ym2.day()   == day{12});
         assert(ym1 == ym2);
