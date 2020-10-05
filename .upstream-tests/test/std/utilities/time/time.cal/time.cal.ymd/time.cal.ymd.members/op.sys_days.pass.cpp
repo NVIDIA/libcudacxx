@@ -40,9 +40,9 @@ void RunTheExample()
 {
     using namespace cuda::std::chrono;
 
-    static_assert(year_month_day{sys_days{year{2017}/January/0}}  == year{2016}/December/31);
-    static_assert(year_month_day{sys_days{year{2017}/January/31}} == year{2017}/January/31);
-    static_assert(year_month_day{sys_days{year{2017}/January/32}} == year{2017}/February/1);  
+    static_assert(year_month_day{sys_days{year{2017}/January/0}}  == year{2016}/December/31,"");
+    static_assert(year_month_day{sys_days{year{2017}/January/31}} == year{2017}/January/31,"");
+    static_assert(year_month_day{sys_days{year{2017}/January/32}} == year{2017}/February/1,"");  
 }
 
 int main(int, char**)
