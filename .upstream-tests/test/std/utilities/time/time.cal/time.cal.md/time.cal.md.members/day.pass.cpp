@@ -31,7 +31,8 @@ int main(int, char**)
 
     for (unsigned i = 1; i <= 50; ++i)
     {
-        month_day md(cuda::std::chrono::March, day{i});
+        auto constexpr March = cuda::std::chrono::March;
+        month_day md(March, day{i});
         assert( static_cast<unsigned>(md.day()) == i);
     }
 

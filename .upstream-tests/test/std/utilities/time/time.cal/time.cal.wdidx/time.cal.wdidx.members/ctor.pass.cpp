@@ -44,17 +44,19 @@ int main(int, char**)
     static_assert( wdi1.index() == 2,                     "");
     static_assert( wdi1.ok(),                             "");
 
+    auto constexpr Tuesday = cuda::std::chrono::Tuesday;
+
     for (unsigned i = 1; i <= 5; ++i)
     {
-        weekday_indexed wdi(cuda::std::chrono::Tuesday, i);
-        assert( wdi.weekday() == cuda::std::chrono::Tuesday);
+        weekday_indexed wdi(Tuesday, i);
+        assert( wdi.weekday() == Tuesday);
         assert( wdi.index() == i);
         assert( wdi.ok());
     }
 
     for (unsigned i = 6; i <= 20; ++i)
     {
-        weekday_indexed wdi(cuda::std::chrono::Tuesday, i);
+        weekday_indexed wdi(Tuesday, i);
         assert(!wdi.ok());
     }
 
