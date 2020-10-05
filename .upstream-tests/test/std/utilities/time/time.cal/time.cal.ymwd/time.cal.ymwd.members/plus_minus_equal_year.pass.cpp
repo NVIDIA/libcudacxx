@@ -48,8 +48,8 @@ int main(int, char**)
     ASSERT_NOEXCEPT(                               std::declval<year_month_weekday&>() -= std::declval<years>());
     ASSERT_SAME_TYPE(year_month_weekday&, decltype(cuda::std::declval<year_month_weekday&>() -= std::declval<years>()));
 
-    constexpr weekday Tuesday = cuda::std::chrono::Tuesday;
-    constexpr month January = cuda::std::chrono::January;
+    auto constexpr Tuesday = cuda::std::chrono::Tuesday;
+    auto constexpr January = cuda::std::chrono::January;
 
     static_assert(testConstexpr<year_month_weekday, years>(year_month_weekday{year{1}, January, weekday_indexed{Tuesday, 2}}), "");
 
