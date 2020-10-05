@@ -659,12 +659,6 @@ typedef __char32_t char32_t;
 
 #define _LIBCUDACXX_ALWAYS_INLINE __attribute__ ((__always_inline__))
 
-// Literal operators ""d and ""y are supported starting with LLVM Clang 8 and AppleClang 10.0.1
-#if (defined(_LIBCUDACXX_CLANG_VER) && _LIBCUDACXX_CLANG_VER < 800) || \
-    (defined(__apple_build_version__) && __apple_build_version__ < 10010000)
-#define _LIBCUDACXX_HAS_NO_CXX20_CHRONO_LITERALS
-#endif
-
 #if __has_feature(cxx_reference_qualified_functions)
 #define _LIBCUDACXX_HAS_REFERENCE_QUALIFIED_FUNCTIONS
 #endif
