@@ -16,7 +16,7 @@
 
 #include <cuda/std/chrono>
 #include <cuda/std/type_traits>
-#include <cassert>
+#include <cuda/std/cassert>
 
 #include "test_macros.h"
 
@@ -34,8 +34,8 @@ int main(int, char**)
     ASSERT_NOEXCEPT(                    static_cast<sys_days>(cuda::std::declval<const year_month_weekday_last>()));
     ASSERT_SAME_TYPE(sys_days, decltype(static_cast<sys_days>(cuda::std::declval<const year_month_weekday_last>())));
 
-    constexpr month   January = cuda::std::chrono::January;
-    constexpr weekday Tuesday = cuda::std::chrono::Tuesday;
+    auto constexpr January = cuda::std::chrono::January;
+    auto constexpr Tuesday = cuda::std::chrono::Tuesday;
 
     { // Last Tuesday in Jan 1970 was the 27th
     constexpr year_month_weekday_last ymwdl{year{1970}, January, weekday_last{Tuesday}};
