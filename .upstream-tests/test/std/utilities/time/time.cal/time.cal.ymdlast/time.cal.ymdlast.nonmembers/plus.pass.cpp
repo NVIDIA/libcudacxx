@@ -114,8 +114,8 @@ int main(int, char**)
         year_month_day_last ym2 = years{i} + ym;
         assert(static_cast<int>(ym1.year()) == i + 1234);
         assert(static_cast<int>(ym2.year()) == i + 1234);
-        assert(ym1.month() == cuda::std::chrono::January);
-        assert(ym2.month() == cuda::std::chrono::January);
+        assert(ym1.month() == January);
+        assert(ym2.month() == January);
         assert(ym1 == ym2);
     }
     }
