@@ -74,7 +74,7 @@ int main(int, char**)
     using months              = cuda::std::chrono::months;
     using years               = cuda::std::chrono::years;
 
-    constexpr month January = cuda::std::chrono::January;
+    auto constexpr January = cuda::std::chrono::January;
 
     {   // year_month_day_last + months
     ASSERT_NOEXCEPT(cuda::std::declval<year_month_day_last>() + std::declval<months>());

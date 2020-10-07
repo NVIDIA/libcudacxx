@@ -59,8 +59,8 @@ int main(int, char**)
     using years                   = cuda::std::chrono::years;
     using months                  = cuda::std::chrono::months;
 
-    constexpr weekday Tuesday = cuda::std::chrono::Tuesday;
-    constexpr month January = cuda::std::chrono::January;
+    auto constexpr Tuesday = cuda::std::chrono::Tuesday;
+    auto constexpr January = cuda::std::chrono::January;
 
     {   // year_month_weekday_last + months
     ASSERT_NOEXCEPT(cuda::std::declval<year_month_weekday_last>() + std::declval<months>());
