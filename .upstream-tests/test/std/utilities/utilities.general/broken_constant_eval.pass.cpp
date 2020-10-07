@@ -11,7 +11,7 @@
 // UNSUPPORTED: windows, icc, pgi
 // XFAIL: clang-9 && c++11
 // XFAIL: clang-10 && c++11
-// XFAIL: gcc-9 && c++11
+// gcc 10.0 is expected to pass, but later versions do not.
 // XFAIL: gcc-10 && c++11
 
 
