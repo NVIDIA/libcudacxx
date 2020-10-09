@@ -1156,7 +1156,7 @@ template <class _Tp, class _Up>
 struct __is_same_uncvref : _IsSame<typename __uncvref<_Tp>::type,
                                    typename __uncvref<_Up>::type> {};
 
-#if _LIBCUDACXX_STD_VER > 17
+#if _LIBCUDACXX_STD_VER > 11
 // remove_cvref - same as __uncvref
 template <class _Tp>
 struct remove_cvref : public __uncvref<_Tp> {};
