@@ -1308,7 +1308,7 @@ template <class _Tp, size_t _Np> struct _LIBCUDACXX_TEMPLATE_VIS remove_all_exte
 template <class _Tp> using remove_all_extents_t = typename remove_all_extents<_Tp>::type;
 #endif
 
-#if _LIBCUDACXX_STD_VER > 17
+#if _LIBCUDACXX_STD_VER > 11
 // is_bounded_array
 
 template <class>                 struct _LIBCUDACXX_TEMPLATE_VIS is_bounded_array           : false_type {};
