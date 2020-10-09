@@ -5,7 +5,7 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-// UNSUPPORTED: c++98, c++03, c++11, c++14, c++17
+// UNSUPPORTED: c++98, c++03, c++11
 // UNSUPPORTED: clang-5, clang-6, clang-7
 // UNSUPPORTED: apple-clang-6, apple-clang-7, apple-clang-8, apple-clang-9
 // UNSUPPORTED: apple-clang-10.0.0
@@ -17,7 +17,7 @@
 
 #include <cuda/std/chrono>
 #include <cuda/std/type_traits>
-#include <cassert>
+#include <cuda/std/cassert>
 
 #include "test_macros.h"
 
@@ -33,7 +33,7 @@ int main(int, char**)
     }
 
     {
-    using namespace std::literals;
+    using namespace cuda::std::literals;
     ASSERT_NOEXCEPT(4d);
 
     static_assert( 2017y == cuda::std::chrono::year(2017), "");
