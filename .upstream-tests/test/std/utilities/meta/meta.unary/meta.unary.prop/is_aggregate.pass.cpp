@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++98, c++03, c++11, c++14
+// UNSUPPORTED: c++98, c++03, c++11
 
 // <cuda/std/type_traits>
 
@@ -20,7 +20,7 @@ template <class T>
 __host__ __device__
 void test_true()
 {
-#if !defined(_LIBCUDACXX_HAS_NO_IS_AGGREGATE)
+#if defined(_LIBCUDACXX_IS_AGGREGATE)
     static_assert( cuda::std::is_aggregate<T>::value, "");
     static_assert( cuda::std::is_aggregate<const T>::value, "");
     static_assert( cuda::std::is_aggregate<volatile T>::value, "");
@@ -36,7 +36,7 @@ template <class T>
 __host__ __device__
 void test_false()
 {
-#if !defined(_LIBCUDACXX_HAS_NO_IS_AGGREGATE)
+#if defined(_LIBCUDACXX_IS_AGGREGATE)
     static_assert(!cuda::std::is_aggregate<T>::value, "");
     static_assert(!cuda::std::is_aggregate<const T>::value, "");
     static_assert(!cuda::std::is_aggregate<volatile T>::value, "");

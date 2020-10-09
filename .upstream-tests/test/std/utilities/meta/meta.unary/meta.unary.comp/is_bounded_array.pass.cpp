@@ -5,7 +5,7 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-// UNSUPPORTED: c++98, c++03, c++11, c++14, c++17
+// UNSUPPORTED: c++98, c++03, c++11
 
 // type_traits
 
@@ -17,6 +17,7 @@
 #include "test_macros.h"
 
 template <class T, bool B>
+__host__ __device__
 void test_array_imp()
 {
 	static_assert( B == cuda::std::is_bounded_array<T>::value, "" );
@@ -24,6 +25,7 @@ void test_array_imp()
 }
 
 template <class T, bool B>
+__host__ __device__
 void test_array()
 {
     test_array_imp<T, B>();

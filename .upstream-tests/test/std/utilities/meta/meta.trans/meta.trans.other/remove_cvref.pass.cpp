@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++98, c++03, c++11, c++14, c++17
+// UNSUPPORTED: c++98, c++03, c++11
 
 // type_traits
 
@@ -17,6 +17,7 @@
 #include "test_macros.h"
 
 template <class T, class U>
+__host__ __device__
 void test_remove_cvref()
 {
     ASSERT_SAME_TYPE(U, typename cuda::std::remove_cvref<T>::type);
