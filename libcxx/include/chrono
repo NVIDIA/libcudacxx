@@ -1061,7 +1061,7 @@ private:
     rep __rep_;
 public:
 
-#if !defined(_LIBCUDACXX_CXX03_LANG) && !defined(__NVCC__)
+#if !defined(_LIBCUDACXX_CXX03_LANG)
     _LIBCUDACXX_CONSTEXPR
         duration() = default;
 #else
