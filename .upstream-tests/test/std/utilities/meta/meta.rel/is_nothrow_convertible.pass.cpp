@@ -8,7 +8,7 @@
 //
 
 // <cuda/std/type_traits>
-// UNSUPPORTED: c++98, c++03, c++11, c++14, c++17
+// UNSUPPORTED: c++98, c++03, c++11
 
 #include <cuda/std/type_traits>
 

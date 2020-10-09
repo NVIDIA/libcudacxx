@@ -5,7 +5,7 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-// UNSUPPORTED: c++98, c++03, c++11, c++14, c++17
+// UNSUPPORTED: c++98, c++03, c++11
 
 // type_traits
 
@@ -16,6 +16,7 @@
 #include "test_macros.h"
 
 template <class T>
+__host__ __device__
 void test_type_identity()
 {
     ASSERT_SAME_TYPE(T, typename cuda::std::type_identity<T>::type);
