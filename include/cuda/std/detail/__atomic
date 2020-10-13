@@ -44,7 +44,6 @@
 #define __ATOMIC_THREAD 10
 #endif //__ATOMIC_BLOCK
 
-
 _LIBCUDACXX_BEGIN_NAMESPACE_CUDA
 
 namespace detail {
@@ -102,7 +101,8 @@ namespace detail {
 
 _LIBCUDACXX_END_NAMESPACE_CUDA
 
-#ifdef _MSC_VER
+#if defined(_LIBCUDACXX_COMPILER_MSVC)
+    // Inject atomic intrinsics built from MSVC compiler intrinsics
     #include "libcxx/include/support/win32/atomic_msvc.h"
 #endif
 
