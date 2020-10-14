@@ -107,7 +107,7 @@ cg_include_dir=$(
         | xargs dirname)
 ext_include_dir=$(
     echo '#include <cuda/pipeline>' \
-        | ${nvcc} -x cu - -M -E "${includes[@]}" -arch sm_70 \
+        | ${nvcc} -x cu - -M -E "${includes[@]}" -arch sm_70 -std=c++11 \
         | grep -e ' /.*/cuda/pipeline' -o \
         | xargs dirname | xargs dirname)
 
