@@ -46,3 +46,8 @@ if(CUDAToolkit_VERSION VERSION_GREATER 10.2)
 else()
     message(STATUS "Insufficient CUDA version. Skipping rtc_example.cpp example.")
 endif()    
+
+add_executable(hash_map concurrent_hash_table.cu)
+target_compile_features(hash_map PRIVATE cxx_std_14 cuda_std_14)
+set_property(TARGET hash_map PROPERTY CUDA_ARCHITECTURES 70)
+target_compile_options(hash_map PRIVATE --expt-extended-lambda)
