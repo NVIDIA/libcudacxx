@@ -1,3 +1,9 @@
+---
+grand_parent: API
+parent: Utility Library
+nav_order: 4
+---
+
 # `<cuda/std/version>`
 
 ## Extensions
@@ -14,12 +20,8 @@ The following version macros, which are explained in the [versioning section],
 
 ## Restrictions
 
-TODO (Michal): Explain what we do about feature test macros, why we don't define
-our own, and why this doesn't interfere with your host standard library.
-
-## Implementation-Defined Behavior
-
-TODO (Olivier/Michal): Remove section if not applicable.
+When using NVCC, the definition of C++ feature test macros is provided by the
+  host Standard Library, not libcu++.
 
 
 [versioning section]: ./api/releases/versioning.md

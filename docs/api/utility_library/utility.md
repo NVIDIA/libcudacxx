@@ -1,18 +1,14 @@
+---
+grand_parent: API
+parent: Utility Library
+nav_order: 3
+---
+
 # `<cuda/std/utility>`
-
-## Extensions
-
-TODO (Olivier/Michal): Remove section if not applicable.
-
-## Implementation-Defined Behavior
-
-TODO (Olivier/Michal): Remove section if not applicable.
 
 ## Omissions
 
-TODO (Olivier/Michal): Remove section if not applicable.
-
-## Restrictions
-
-TODO (Olivier/Michal): Remove section if not applicable.
+Only `pair` is available at this time.
+There is no inherent challenge in providing many of the things in `<utility>`;
+  they simply have not been our highest priority.
 

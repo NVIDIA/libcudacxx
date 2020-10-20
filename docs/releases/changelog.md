@@ -1,3 +1,8 @@
+---
+parent: Releases
+nav_order: 0
+---
+
 # Changelog
 
 ## libcu++ 1.3.0 (CUDA Toolkit 11.2)

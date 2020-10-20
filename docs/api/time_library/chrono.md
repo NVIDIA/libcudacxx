@@ -1,3 +1,9 @@
+---
+grand_parent: API
+parent: Time Library
+nav_order: 0
+---
+
 # `<cuda/std/chrono>`
 
 ## Implementation-Defined Behavior
@@ -70,8 +76,8 @@ While our [`std::chrono::high_resolution_clock`] is not heterogeneously steady,
 
 ## Omissions
 
-The following facilities in section ISO/IEC IS 14882 [[time.syn]] of the C++
-  Standard are not available in the NVIDIA C++ Standard Library today:
+The following facilities in section [time.syn] of ISO/IEC IS 14882 (the C++
+  Standard) are not available in the NVIDIA C++ Standard Library today:
 
 - [`std::chrono::steady_clock`] - a monotonically increasing clock.
 - [`std::chrono::duration` I/O operators].
