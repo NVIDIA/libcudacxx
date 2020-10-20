@@ -6,7 +6,7 @@
 <th><b><a href="https://nvidia.github.io/libcudacxx">Documentation</a></b></th>
 </tr></table>
 
-**libcu++, the NVIDIA C++ Standard Library,  is the C++ Standard Library for
+**libcu++, the NVIDIA C++ Standard Library, is the C++ Standard Library for
   your entire system.**
 It provides a heterogeneous implementation of the C++ Standard Library that can
   be used in and between CPU and GPU code.

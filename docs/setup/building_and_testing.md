@@ -1,3 +1,8 @@
+---
+parent: Setup
+nav_order: 2
+---
+
 # Building & Testing libcu++
 
 ## *nix Systems, Native Build/Test

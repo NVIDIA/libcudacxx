@@ -1,40 +1,55 @@
+---
+grand_parent: API
+parent: Synchronization Library
+nav_order: 3
+---
+
 # `<cuda/std/latch>`, `<cuda/latch>`
 
-## Extensions in the `cuda::` namespace
+## Extensions
 
-The class template `latch` takes an additional scope argument, defaulted to `thread_scope_system`.
+The class template `latch` takes an additional [thread scope] argument,
+  defaulted to `thread_scope_system`.
 
 ```c++
-// This object is latch suitable for all threads in the system
-cuda::latch<> a; 
+// This latch is suitable for all threads in the system.
+cuda::latch<cuda::thread_scope_system> a;
 
-// This object has the same type as the previous
-cuda::latch<cuda::thread_scope_system> b; 
+// These latches has the same type as the previous one (`a`).
+cuda::latch<> ba;
+cuda::std::latch<> bb;
 
-// This object is a latch for threads in the same thread block
-cuda::latch<cuda::thread_scope_block> c; 
+// This latch is suitable for all threads in the same thread block.
+cuda::latch<cuda::thread_scope_block> c;
 ```
-
-## Omissions
-
-None.
 
 ## Restrictions
 
-An object of type `latch` shall not be accessed concurrently by CPU and GPU threads unless:
-  1. it is in managed memory, with `concurrentManagedAccess==1`, or
-  2. it is in host memory, with `hostNativeAtomicSupported==1`.
+An object of type `latch` shall not be accessed concurrently by CPU and GPU
+  threads unless:
+- it is in unified memory and the [`concurrentManagedAccess` property] is 1, or
+- it is in CPU memory and the [`hostNativeAtomicSupported` property] is 1.
 
-This requirement is in addition to the requirement to avoid data-races, see [thread scopes]({{ "./thread_scopes.html" | relative_url }}) for more information.
+Note, for objects of scopes other than `thread_scope_system` this is a
+  data-race, and thefore also prohibited regardless of memory characteristics.
 
-Under Compute Capability 6 or prior, an object of type `latch` may not be used.
+Under CUDA Compute Capability 6 (Pascal) or prior, an object of type `latch`
+  may not be used.
 
 ## Implementation-Defined Behavior
 
-For each scope `S`, the value of `latch<S>::max()` is as follows:
+For each [thread scope] `S`, the value of `latch<S>::max()` is as follows:
 
-|Scope `S`|`latch<S>::max()`|
-|-|-|
-|Any|`std::numeric_limits<ptrdiff_t>::max()`|
+|Thread Scope `S`|`latch<S>::max()`                 |
+|----------------|----------------------------------|
+|Any             |`numeric_limits<ptrdiff_t>::max()`|
 
-Objects in namespace `cuda::std::` have the same behavior as corresponding objects in namespace `cuda::` when instantiated with a scope of `cuda::thread_scope_system`.
+Objects in namespace `cuda::std::` have the same behavior as corresponding
+  objects in namespace `cuda::` when instantiated with a scope of
+  `cuda::thread_scope_system`.
+
+
+[thread scope]: ./thread_scopes.md
+
+[`concurrentManagedAccess` property]: https://docs.nvidia.com/cuda/cuda-runtime-api/structcudaDeviceProp.html#structcudaDeviceProp_116f9619ccc85e93bc456b8c69c80e78b
+[`hostNativeAtomicSupported` property]: https://docs.nvidia.com/cuda/cuda-runtime-api/structcudaDeviceProp.html#structcudaDeviceProp_1ef82fd7d1d0413c7d6f33287e5b6306f
