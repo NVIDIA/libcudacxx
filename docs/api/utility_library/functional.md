@@ -1,9 +1,15 @@
+---
+grand_parent: API
+parent: Utility Library
+nav_order: 0
+---
+
 # `<cuda/std/functional>`
 
 ## Omissions
 
-The following facilities in section ISO/IEC IS 14882 [[functional.syn]] of the
-  C++ Standard are not available in the NVIDIA C++ Standard Library today:
+The following facilities in section [functional.syn] of ISO/IEC IS 14882 (the
+  C++ Standard) are not available in the NVIDIA C++ Standard Library today:
 
 - [`std::function`] - Polymorphic function object wrapper.
 - [`std::bind`] - Generic function object binder / lambda facility.

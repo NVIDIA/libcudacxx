@@ -1,3 +1,8 @@
+---
+parent: Setup
+nav_order: 0
+---
+
 # Requirements
 
 All requirements are applicable to the `main` branch on GitHub.

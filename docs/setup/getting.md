@@ -1,3 +1,8 @@
+---
+parent: Setup
+nav_order: 1
+---
+
 # Getting libcu++
 
 ## NVIDIA HPC SDK or CUDA Toolkit

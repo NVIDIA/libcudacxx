@@ -1,3 +1,8 @@
+---
+parent: Releases
+nav_order: 1
+---
+
 # Versioning
 
 libcu++ is versioned along two axes:
