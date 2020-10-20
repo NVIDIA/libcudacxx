@@ -13,32 +13,32 @@
 
 #if TEST_STD_VER >= 11
 
-#include <cstddef>
-#include <functional>
+#include <cuda/std/cstddef>
+// #include <functional>
 
 class MoveOnly
 {
-    MoveOnly(const MoveOnly&);
-    MoveOnly& operator=(const MoveOnly&);
+    MoveOnly(const MoveOnly&) = delete;
+    MoveOnly& operator=(const MoveOnly&) = delete;
 
     int data_;
 public:
-    MoveOnly(int data = 1) : data_(data) {}
-    MoveOnly(MoveOnly&& x)
+    __host__ __device__ MoveOnly(int data = 1) : data_(data) {}
+    __host__ __device__ MoveOnly(MoveOnly&& x)
         : data_(x.data_) {x.data_ = 0;}
-    MoveOnly& operator=(MoveOnly&& x)
+    __host__ __device__ MoveOnly& operator=(MoveOnly&& x)
         {data_ = x.data_; x.data_ = 0; return *this;}
 
-    int get() const {return data_;}
+    __host__ __device__ int get() const {return data_;}
 
-    bool operator==(const MoveOnly& x) const {return data_ == x.data_;}
-    bool operator< (const MoveOnly& x) const {return data_ <  x.data_;}
-    MoveOnly operator+(const MoveOnly& x) const { return MoveOnly{data_ + x.data_}; }
-    MoveOnly operator*(const MoveOnly& x) const { return MoveOnly{data_ * x.data_}; }
+    __host__ __device__ bool operator==(const MoveOnly& x) const {return data_ == x.data_;}
+    __host__ __device__ bool operator< (const MoveOnly& x) const {return data_ <  x.data_;}
+    __host__ __device__ MoveOnly operator+(const MoveOnly& x) const { return MoveOnly{data_ + x.data_}; }
+    __host__ __device__ MoveOnly operator*(const MoveOnly& x) const { return MoveOnly{data_ * x.data_}; }
 };
 
+/*
 namespace std {
-
 template <>
 struct hash<MoveOnly>
 {
@@ -46,8 +46,8 @@ struct hash<MoveOnly>
     typedef size_t result_type;
     std::size_t operator()(const MoveOnly& x) const {return x.get();}
 };
-
 }
+*/
 
 #endif  // TEST_STD_VER >= 11
 

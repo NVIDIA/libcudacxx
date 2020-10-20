@@ -16,6 +16,7 @@
 
 #include "detail/__pragma_push"
 
+#include "detail/libcxx/include/__tuple"
 #include "detail/libcxx/include/utility"
 
 #include "detail/__pragma_pop"

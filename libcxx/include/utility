@@ -284,6 +284,8 @@ template <class _Tp> constexpr add_const_t<_Tp>& as_const(_Tp& __t) noexcept { r
 template <class _Tp>                        void as_const(const _Tp&&) = delete;
 #endif
 
+#endif //__cuda_std__
+
 struct _LIBCUDACXX_TEMPLATE_VIS piecewise_construct_t { explicit piecewise_construct_t() = default; };
 #if defined(_LIBCUDACXX_CXX03_LANG) || defined(_LIBCUDACXX_BUILDING_LIBRARY)
 extern _LIBCUDACXX_EXPORTED_FROM_ABI const piecewise_construct_t piecewise_construct;// = piecewise_construct_t();
@@ -343,33 +345,37 @@ struct _LIBCUDACXX_TEMPLATE_VIS pair
 
     struct _CheckArgs {
       template <int&...>
-      static constexpr bool __enable_explicit_default() {
-          return is_default_constructible<_T1>::value
-              && is_default_constructible<_T2>::value
-              && !__enable_implicit_default<>();
-      }
+      struct __enable_implicit_default {
+          static constexpr bool value =
+                 __is_implicitly_default_constructible<_T1>::value
+              && __is_implicitly_default_constructible<_T2>::value;
+      };
 
       template <int&...>
-      static constexpr bool __enable_implicit_default() {
-          return __is_implicitly_default_constructible<_T1>::value
-              && __is_implicitly_default_constructible<_T2>::value;
-      }
+      struct __enable_explicit_default {
+          static constexpr bool value =
+                 is_default_constructible<_T1>::value
+              && is_default_constructible<_T2>::value
+              && !__enable_implicit_default<>::value;
+      };
 
       template <class _U1, class _U2>
-      static constexpr bool __enable_explicit() {
-          return is_constructible<first_type, _U1>::value
+      struct __enable_explicit {
+          static constexpr bool value =
+                 is_constructible<first_type, _U1>::value
               && is_constructible<second_type, _U2>::value
               && (!is_convertible<_U1, first_type>::value
                   || !is_convertible<_U2, second_type>::value);
-      }
+      };
 
       template <class _U1, class _U2>
-      static constexpr bool __enable_implicit() {
-          return is_constructible<first_type, _U1>::value
+      struct __enable_implicit {
+          static constexpr bool value =
+                 is_constructible<first_type, _U1>::value
               && is_constructible<second_type, _U2>::value
               && is_convertible<_U1, first_type>::value
               && is_convertible<_U2, second_type>::value;
-      }
+      };
     };
 
     template <bool _MaybeEnable>
@@ -378,20 +384,23 @@ struct _LIBCUDACXX_TEMPLATE_VIS pair
 
     struct _CheckTupleLikeConstructor {
         template <class _Tuple>
-        static constexpr bool __enable_implicit() {
-            return __tuple_convertible<_Tuple, pair>::value;
-        }
+        struct __enable_implicit {
+            static constexpr bool value =
+                __tuple_convertible<_Tuple, pair>::value;
+        };
 
         template <class _Tuple>
-        static constexpr bool __enable_explicit() {
-            return __tuple_constructible<_Tuple, pair>::value
+        struct __enable_explicit {
+            static constexpr bool value =
+                   __tuple_constructible<_Tuple, pair>::value
                && !__tuple_convertible<_Tuple, pair>::value;
-        }
+        };
 
         template <class _Tuple>
-        static constexpr bool __enable_assign() {
-            return __tuple_assignable<_Tuple, pair>::value;
-        }
+        struct __enable_assign {
+            static constexpr bool value =
+                __tuple_assignable<_Tuple, pair>::value;
+        };
     };
 
     template <class _Tuple>
@@ -403,7 +412,7 @@ struct _LIBCUDACXX_TEMPLATE_VIS pair
     >::type;
 
     template<bool _Dummy = true, _EnableB<
-            _CheckArgsDep<_Dummy>::__enable_explicit_default()
+            _CheckArgsDep<_Dummy>::template __enable_explicit_default<>::value
     > = false>
     explicit _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR
     pair() _NOEXCEPT_(is_nothrow_default_constructible<first_type>::value &&
@@ -411,7 +420,7 @@ struct _LIBCUDACXX_TEMPLATE_VIS pair
         : first(), second() {}
 
     template<bool _Dummy = true, _EnableB<
-            _CheckArgsDep<_Dummy>::__enable_implicit_default()
+            _CheckArgsDep<_Dummy>::template __enable_implicit_default<>::value
     > = false>
     _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR
     pair() _NOEXCEPT_(is_nothrow_default_constructible<first_type>::value &&
@@ -419,7 +428,7 @@ struct _LIBCUDACXX_TEMPLATE_VIS pair
         : first(), second() {}
 
     template <bool _Dummy = true, _EnableB<
-             _CheckArgsDep<_Dummy>::template __enable_explicit<_T1 const&, _T2 const&>()
+             _CheckArgsDep<_Dummy>::template __enable_explicit<_T1 const&, _T2 const&>::value
     > = false>
     _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
     explicit pair(_T1 const& __t1, _T2 const& __t2)
@@ -428,7 +437,7 @@ struct _LIBCUDACXX_TEMPLATE_VIS pair
         : first(__t1), second(__t2) {}
 
     template<bool _Dummy = true, _EnableB<
-            _CheckArgsDep<_Dummy>::template __enable_implicit<_T1 const&, _T2 const&>()
+            _CheckArgsDep<_Dummy>::template __enable_implicit<_T1 const&, _T2 const&>::value
     > = false>
     _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
     pair(_T1 const& __t1, _T2 const& __t2)
@@ -437,7 +446,7 @@ struct _LIBCUDACXX_TEMPLATE_VIS pair
         : first(__t1), second(__t2) {}
 
     template<class _U1, class _U2, _EnableB<
-             _CheckArgs::template __enable_explicit<_U1, _U2>()
+             _CheckArgs::template __enable_explicit<_U1, _U2>::value
     > = false>
     _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
     explicit pair(_U1&& __u1, _U2&& __u2)
@@ -446,7 +455,7 @@ struct _LIBCUDACXX_TEMPLATE_VIS pair
         : first(_CUDA_VSTD::forward<_U1>(__u1)), second(_CUDA_VSTD::forward<_U2>(__u2)) {}
 
     template<class _U1, class _U2, _EnableB<
-            _CheckArgs::template __enable_implicit<_U1, _U2>()
+            _CheckArgs::template __enable_implicit<_U1, _U2>::value
     > = false>
     _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
     pair(_U1&& __u1, _U2&& __u2)
@@ -455,7 +464,7 @@ struct _LIBCUDACXX_TEMPLATE_VIS pair
         : first(_CUDA_VSTD::forward<_U1>(__u1)), second(_CUDA_VSTD::forward<_U2>(__u2)) {}
 
     template<class _U1, class _U2, _EnableB<
-            _CheckArgs::template __enable_explicit<_U1 const&, _U2 const&>()
+            _CheckArgs::template __enable_explicit<_U1 const&, _U2 const&>::value
     > = false>
     _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
     explicit pair(pair<_U1, _U2> const& __p)
@@ -464,7 +473,7 @@ struct _LIBCUDACXX_TEMPLATE_VIS pair
         : first(__p.first), second(__p.second) {}
 
     template<class _U1, class _U2, _EnableB<
-            _CheckArgs::template __enable_implicit<_U1 const&, _U2 const&>()
+            _CheckArgs::template __enable_implicit<_U1 const&, _U2 const&>::value
     > = false>
     _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
     pair(pair<_U1, _U2> const& __p)
@@ -473,7 +482,7 @@ struct _LIBCUDACXX_TEMPLATE_VIS pair
         : first(__p.first), second(__p.second) {}
 
     template<class _U1, class _U2, _EnableB<
-            _CheckArgs::template __enable_explicit<_U1, _U2>()
+            _CheckArgs::template __enable_explicit<_U1, _U2>::value
     > = false>
     _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
     explicit pair(pair<_U1, _U2>&&__p)
@@ -482,7 +491,7 @@ struct _LIBCUDACXX_TEMPLATE_VIS pair
         : first(_CUDA_VSTD::forward<_U1>(__p.first)), second(_CUDA_VSTD::forward<_U2>(__p.second)) {}
 
     template<class _U1, class _U2, _EnableB<
-            _CheckArgs::template __enable_implicit<_U1, _U2>()
+            _CheckArgs::template __enable_implicit<_U1, _U2>::value
     > = false>
     _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
     pair(pair<_U1, _U2>&& __p)
@@ -491,7 +500,7 @@ struct _LIBCUDACXX_TEMPLATE_VIS pair
         : first(_CUDA_VSTD::forward<_U1>(__p.first)), second(_CUDA_VSTD::forward<_U2>(__p.second)) {}
 
     template<class _Tuple, _EnableB<
-            _CheckTLC<_Tuple>::template __enable_explicit<_Tuple>()
+            _CheckTLC<_Tuple>::template __enable_explicit<_Tuple>::value
     > = false>
     _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
     explicit pair(_Tuple&& __p)
@@ -499,7 +508,7 @@ struct _LIBCUDACXX_TEMPLATE_VIS pair
           second(_CUDA_VSTD::get<1>(_CUDA_VSTD::forward<_Tuple>(__p))) {}
 
     template<class _Tuple, _EnableB<
-            _CheckTLC<_Tuple>::template __enable_implicit<_Tuple>()
+            _CheckTLC<_Tuple>::template __enable_implicit<_Tuple>::value
     > = false>
     _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
     pair(_Tuple&& __p)
@@ -543,7 +552,7 @@ struct _LIBCUDACXX_TEMPLATE_VIS pair
     }
 
     template <class _Tuple, _EnableB<
-            _CheckTLC<_Tuple>::template __enable_assign<_Tuple>()
+            _CheckTLC<_Tuple>::template __enable_assign<_Tuple>::value
      > = false>
     _LIBCUDACXX_INLINE_VISIBILITY
     pair& operator=(_Tuple&& __p) {
@@ -964,8 +973,6 @@ template <class _Tp>
 using __is_inplace_index = __is_inplace_index_imp<__uncvref_t<_Tp>>;
 
 #endif // _LIBCUDACXX_STD_VER > 14
-
-#endif // __cuda_std__
 
 template <class _Arg, class _Result>
 struct _LIBCUDACXX_TEMPLATE_VIS unary_function

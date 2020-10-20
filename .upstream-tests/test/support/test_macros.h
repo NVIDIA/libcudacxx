@@ -346,6 +346,20 @@ inline void DoNotOptimize(Tp const& value) {
 #define TEST_NOINLINE
 #endif
 
+// NVCC can't handle static member variables, so with a little care
+// a function returning a reference will result in the same thing
+#ifdef __CUDA_ARCH__
+# define _STATIC_MEMBER_IMPL(type) __shared__ type v;
+#else
+# define _STATIC_MEMBER_IMPL(type) static type v;
+#endif
+
+#define STATIC_MEMBER_VAR(name, type) \
+  __host__ __device__ static type& name() { \
+    _STATIC_MEMBER_IMPL(type); \
+    return v; \
+  }
+
 #if defined(__GNUC__)
 #pragma GCC diagnostic pop
 #endif

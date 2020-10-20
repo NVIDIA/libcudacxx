@@ -643,7 +643,8 @@ typedef __char32_t char32_t;
 #define _LIBCUDACXX_ATOMIC_ALWAYS_LOCK_FREE(...) __atomic_always_lock_free(__VA_ARGS__)
 #endif
 
-#if __has_builtin(__builtin_is_constant_evaluated)
+// NVCC in C++11 mode freaks out about `__builtin_is_constant_evaluated`.
+#if __has_builtin(__builtin_is_constant_evaluated) && !(defined(_LIBCUDACXX_COMPILER_NVCC) && _LIBCUDACXX_STD_VER < 14)
 #define _LIBCUDACXX_IS_CONSTANT_EVALUATED(...) __builtin_is_constant_evaluated(__VA_ARGS__)
 #endif
 
@@ -784,10 +785,16 @@ typedef __char32_t char32_t;
 #define _LIBCUDACXX_ATOMIC_ALWAYS_LOCK_FREE(...) __atomic_always_lock_free(__VA_ARGS__)
 #endif
 
-#if _GNUC_VER >= 900
-// TODO: figure out why NVCC is unhappy with the builtin, but _only_ in C++11 mode.
-#if __cplusplus > 201103L
+// NVCC in C++11 mode freaks out about `__builtin_is_constant_evaluated`.
+#if _GNUC_VER >= 900 && !(defined(_LIBCUDACXX_COMPILER_NVCC) && _LIBCUDACXX_STD_VER < 14)
 #define _LIBCUDACXX_IS_CONSTANT_EVALUATED(...) __builtin_is_constant_evaluated(__VA_ARGS__)
+#endif
+
+// NVCC cannot properly handle some deductions occuring within NOEXCEPT
+// C++17 mode causes reference instatiation errors in tuple
+#if (_GNUC_VER >= 702 && _GNUC_VER <= 805)
+#if defined(_LIBCUDACXX_COMPILER_NVCC) && _LIBCUDACXX_STD_VER == 17
+#define _LIBCUDACXX_NO_TUPLE_NOEXCEPT
 #endif
 #endif
 
@@ -1644,7 +1651,7 @@ _LIBCUDACXX_FUNC_VIS extern "C" void __sanitizer_annotate_contiguous_container(
 
 #ifndef _LIBCUDACXX_NODEBUG_TYPE
 #if __has_attribute(__nodebug__) && \
-    (defined(_LIBCUDACXX_CLANG_VER) && _LIBCUDACXX_CLANG_VER >= 900)
+    (defined(_LIBCUDACXX_CLANG_VER) && _LIBCUDACXX_CLANG_VER >= 1001)
 #define _LIBCUDACXX_NODEBUG_TYPE __attribute__((nodebug))
 #else
 #define _LIBCUDACXX_NODEBUG_TYPE

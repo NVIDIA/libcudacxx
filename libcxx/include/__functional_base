@@ -387,8 +387,6 @@ struct __invoke_void_return_wrapper<void>
 #endif
 };
 
-#ifndef __cuda_std__
-
 template <class _Tp>
 class _LIBCUDACXX_TEMPLATE_VIS reference_wrapper
     : public __weak_result_type<_Tp>
@@ -564,8 +562,6 @@ cref(reference_wrapper<_Tp> __t) _NOEXCEPT
 template <class _Tp> void ref(const _Tp&&) = delete;
 template <class _Tp> void cref(const _Tp&&) = delete;
 #endif
-
-#endif // __cuda_std__
 
 #if _LIBCUDACXX_STD_VER > 11
 template <class _Tp, class, class = void>
