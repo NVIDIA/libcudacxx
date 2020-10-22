@@ -2018,7 +2018,7 @@ _LIBCUDACXX_INLINE_VISIBILITY
 constexpr days operator-(const weekday& __lhs, const weekday& __rhs) noexcept
 {
     // casts are required to work around nvcc bug 3145483
-    const int __wdu = static_cast<int>(__lhs.c_encoding())- static_cast<int>(__rhs.c_encoding());
+    const int __wdu = static_cast<int>(__lhs.c_encoding()) - static_cast<int>(__rhs.c_encoding());
     const int __wk = (__wdu >= 0 ? __wdu : __wdu-6) / 7;
     return days{__wdu - __wk * 7};
 }
