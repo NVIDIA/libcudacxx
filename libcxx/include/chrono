@@ -952,7 +952,7 @@ struct _LIBCUDACXX_TEMPLATE_VIS treat_as_floating_point : is_floating_point<_Rep
 template <class _Rep>
 _LIBCUDACXX_INLINE_VAR _LIBCUDACXX_CONSTEXPR bool treat_as_floating_point_v
     = treat_as_floating_point<_Rep>::value;
-#endif
+#endif // _LIBCUDACXX_STD_VER > 11 && !defined(_LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES)
 
 template <class _Rep>
 struct _LIBCUDACXX_TEMPLATE_VIS duration_values
@@ -1013,7 +1013,7 @@ round(const duration<_Rep, _Period>& __d)
         return __upper;
     return __lower.count() & 1 ? __upper : __lower;
 }
-#endif
+#endif // _LIBCUDACXX_STD_VER > 11 
 
 // duration
 
@@ -1132,7 +1132,7 @@ typedef duration<     int, ratio_multiply<ratio<24>, hours::period>>         day
 typedef duration<     int, ratio_multiply<ratio<7>,   days::period>>         weeks;
 typedef duration<     int, ratio_multiply<ratio<146097, 400>, days::period>> years;
 typedef duration<     int, ratio_divide<years::period, ratio<12>>>           months;
-#endif
+#endif // _LIBCUDACXX_STD_VER > 11
 // Duration ==
 
 template <class _LhsDuration, class _RhsDuration>
@@ -1461,7 +1461,7 @@ abs(duration<_Rep, _Period> __d)
 {
     return __d >= __d.zero() ? +__d : -__d;
 }
-#endif
+#endif // _LIBCUDACXX_STD_VER > 11
 
 // time_point ==
 
@@ -3086,8 +3086,6 @@ inline constexpr year_month_weekday_last& year_month_weekday_last::operator+=(co
 _LIBCUDACXX_INLINE_VISIBILITY
 inline constexpr year_month_weekday_last& year_month_weekday_last::operator-=(const years& __dy)  noexcept { *this = *this - __dy; return *this; }
 
-#if _LIBCUDACXX_STD_VER > 17
-
 template <class _Duration>
 class hh_mm_ss
 {
@@ -3158,8 +3156,6 @@ private:
     precision       __f;
 };
 
-#endif // _LIBCUDACXX_STD_VER > 17
-
 _LIBCUDACXX_INLINE_VISIBILITY
 constexpr bool is_am(const hours& __h) noexcept { return __h >= hours( 0) && __h < hours(12); }
 _LIBCUDACXX_INLINE_VISIBILITY
@@ -3182,10 +3178,7 @@ constexpr hours make24(const hours& __h, bool __is_pm) noexcept
         return __h == hours(12) ? hours(0) : __h;
 }
 
-#endif // _LIBCUDACXX_STD_VER > 11
 } // chrono
-
-#if _LIBCUDACXX_STD_VER > 11
 
 // GCC 5 and 6 warn (and then error) on us using the standard reserved UDL names,
 // but have no way of disabling that. Use the system_header pragma on those GCC versions
@@ -3290,7 +3283,7 @@ namespace chrono { // hoist the literals into namespace std::chrono
    using namespace literals::chrono_literals;
 }
 
-#endif
+#endif // _LIBCUDACXX_STD_VER > 11
 
 _LIBCUDACXX_END_NAMESPACE_STD
 
