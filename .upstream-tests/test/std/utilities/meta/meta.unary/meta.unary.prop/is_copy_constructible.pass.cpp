@@ -18,7 +18,7 @@ __host__ __device__
 void test_is_copy_constructible()
 {
     static_assert( cuda::std::is_copy_constructible<T>::value, "");
-#if TEST_STD_VER > 14
+#if TEST_STD_VER > 11
     static_assert( cuda::std::is_copy_constructible_v<T>, "");
 #endif
 }
@@ -28,7 +28,7 @@ __host__ __device__
 void test_is_not_copy_constructible()
 {
     static_assert(!cuda::std::is_copy_constructible<T>::value, "");
-#if TEST_STD_VER > 14
+#if TEST_STD_VER > 11
     static_assert(!cuda::std::is_copy_constructible_v<T>, "");
 #endif
 }
