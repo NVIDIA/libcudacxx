@@ -98,7 +98,7 @@ void test_is_constructible()
     // use it, so waive it.
     LIBCPP11_STATIC_ASSERT((cuda::std::__libcpp_is_constructible<T>::type::value), "");
 #endif
-#if TEST_STD_VER > 14
+#if TEST_STD_VER > 11
     static_assert( cuda::std::is_constructible_v<T>, "");
 #endif
 }
@@ -113,7 +113,7 @@ void test_is_constructible()
     // use it, so waive it.
     LIBCPP11_STATIC_ASSERT((cuda::std::__libcpp_is_constructible<T, A0>::type::value), "");
 #endif
-#if TEST_STD_VER > 14
+#if TEST_STD_VER > 11
     static_assert(( cuda::std::is_constructible_v<T, A0>), "");
 #endif
 }
@@ -128,7 +128,7 @@ void test_is_constructible()
     // use it, so waive it.
     LIBCPP11_STATIC_ASSERT((cuda::std::__libcpp_is_constructible<T, A0, A1>::type::value), "");
 #endif
-#if TEST_STD_VER > 14
+#if TEST_STD_VER > 11
     static_assert(( cuda::std::is_constructible_v<T, A0, A1>), "");
 #endif
 }
@@ -143,7 +143,7 @@ void test_is_constructible()
     // use it, so waive it.
     LIBCPP11_STATIC_ASSERT((cuda::std::__libcpp_is_constructible<T, A0, A1, A2>::type::value), "");
 #endif
-#if TEST_STD_VER > 14
+#if TEST_STD_VER > 11
     static_assert(( cuda::std::is_constructible_v<T, A0, A1, A2>), "");
 #endif
 }
@@ -158,7 +158,7 @@ void test_is_not_constructible()
     // use it, so waive it.
     LIBCPP11_STATIC_ASSERT((!cuda::std::__libcpp_is_constructible<T>::type::value), "");
 #endif
-#if TEST_STD_VER > 14
+#if TEST_STD_VER > 11
     static_assert((!cuda::std::is_constructible_v<T>), "");
 #endif
 }
@@ -173,7 +173,7 @@ void test_is_not_constructible()
     // use it, so waive it.
     LIBCPP11_STATIC_ASSERT((!cuda::std::__libcpp_is_constructible<T, A0>::type::value), "");
 #endif
-#if TEST_STD_VER > 14
+#if TEST_STD_VER > 11
     static_assert((!cuda::std::is_constructible_v<T, A0>), "");
 #endif
 }

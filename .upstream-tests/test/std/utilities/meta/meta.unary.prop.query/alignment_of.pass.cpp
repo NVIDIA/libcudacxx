@@ -26,7 +26,7 @@ void test_alignment_of()
     static_assert( cuda::std::alignment_of<const T>::value == A, "");
     static_assert( cuda::std::alignment_of<volatile T>::value == A, "");
     static_assert( cuda::std::alignment_of<const volatile T>::value == A, "");
-#if TEST_STD_VER > 14
+#if TEST_STD_VER > 11
     static_assert( cuda::std::alignment_of_v<T> == A, "");
     static_assert( cuda::std::alignment_of_v<const T> == A, "");
     static_assert( cuda::std::alignment_of_v<volatile T> == A, "");
