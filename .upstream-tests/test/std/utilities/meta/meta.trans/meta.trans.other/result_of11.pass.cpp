@@ -31,7 +31,7 @@ struct wat
 struct F {};
 struct FD : public F {};
 
-#if TEST_STD_VER > 14
+#if TEST_STD_VER > 11
 template <typename T, typename U>
 struct test_invoke_result;
 
@@ -57,7 +57,7 @@ void test_result_of_imp()
 #if TEST_STD_VER > 11
     ASSERT_SAME_TYPE(U,        cuda::std::result_of_t<T>);
 #endif
-#if TEST_STD_VER > 14
+#if TEST_STD_VER > 11
     test_invoke_result<T, U>::call();
 #endif
 }
