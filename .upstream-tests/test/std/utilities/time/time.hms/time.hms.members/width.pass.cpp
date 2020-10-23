@@ -27,6 +27,7 @@
 #include "test_macros.h"
 
 template <typename Duration, unsigned width>
+__host__ __device__
 constexpr bool check_width()
 {
 	using HMS = cuda::std::chrono::hh_mm_ss<Duration>;
