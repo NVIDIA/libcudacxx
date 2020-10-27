@@ -10,7 +10,7 @@
 
 // constexpr unspecified ignore;
 
-// UNSUPPORTED: c++98, c++03, msvc
+// UNSUPPORTED: c++98, c++03 
 
 #include <cuda/std/tuple>
 #include <cuda/std/cassert>

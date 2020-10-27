@@ -392,19 +392,28 @@ template <bool ..._Pred>
 using __all = _IsSame<__all_dummy<_Pred...>, __all_dummy<((void)_Pred, true)...>>;
 
 struct __tuple_sfinae_base {
+  template <class, class>
+  struct __test_size : false_type {};
+
+  template <class ..._Tp, class ..._Up>
+  struct __test_size<__tuple_types<_Tp...>, __tuple_types<_Up...>>
+    : _BoolConstant<sizeof...(_Tp) == sizeof...(_Up)> {};
+
+  template <template <class, class...> class,
+            class _Tp, class _Up, bool = __test_size<_Tp, _Up>::value>
+  struct __test : false_type {};
+
   template <template <class, class...> class _Trait,
-            class ..._LArgs, class ..._RArgs,
-            class Ret = __all<_EnableIf<_Trait<_LArgs, _RArgs>::value, bool>{true}...>>
-  _LIBCUDACXX_INLINE_VISIBILITY static auto __do_test(__tuple_types<_LArgs...>, __tuple_types<_RArgs...>) -> Ret;
-  template <template <class...> class>
-  _LIBCUDACXX_INLINE_VISIBILITY static auto __do_test(...) -> false_type;
+            class ..._LArgs, class ..._RArgs>
+  struct __test<_Trait, __tuple_types<_LArgs...>, __tuple_types<_RArgs...>, true>
+      : __all<_Trait<_LArgs, _RArgs>::value...> {};
 
   template <class _FromArgs, class _ToArgs>
-  using __constructible = decltype(__do_test<is_constructible>(_ToArgs{}, _FromArgs{}));
+  using __constructible = __test<is_constructible, _ToArgs, _FromArgs>;
   template <class _FromArgs, class _ToArgs>
-  using __convertible = decltype(__do_test<is_convertible>(_FromArgs{}, _ToArgs{}));
+  using __convertible = __test<is_convertible, _FromArgs, _ToArgs>;
   template <class _FromArgs, class _ToArgs>
-  using __assignable = decltype(__do_test<is_assignable>(_ToArgs{}, _FromArgs{}));
+  using __assignable = __test<is_assignable, _ToArgs, _FromArgs>;
 };
 
 // __tuple_convertible
@@ -491,7 +500,6 @@ struct _LIBCUDACXX_TYPE_VIS __check_tuple_constructor_fail {
     using __enable_assign = false_type;
 };
 #endif // !defined(_LIBCUDACXX_CXX03_LANG)
-
 #if _LIBCUDACXX_STD_VER > 14
 
 template <bool _CanCopy, bool _CanMove>
