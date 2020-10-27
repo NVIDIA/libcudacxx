@@ -16,7 +16,7 @@
 //     typedef Ti type;
 // };
 
-// UNSUPPORTED: c++98, c++03, msvc
+// UNSUPPORTED: c++98, c++03 
 // UNSUPPORTED: nvrtc
 
 #include <cuda/std/tuple>

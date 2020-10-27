@@ -8,7 +8,7 @@
 
 
 
-// UNSUPPORTED: c++98, c++03, msvc
+// UNSUPPORTED: c++98, c++03 
 
 // <cuda/std/tuple>
 

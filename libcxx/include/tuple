@@ -383,7 +383,20 @@ struct _LIBCUDACXX_DECLSPEC_EMPTY_BASES __tuple_impl<__tuple_indices<_Indx...>, 
         _NOEXCEPT_(__all<is_nothrow_default_constructible<_Tp>::value...>::value) {}
 
     template <size_t ..._Uf, class ..._Tf,
-              size_t ..._Ul, class ..._Tl, class ..._Up>
+              size_t ..._Ul, class ..._Tl, class ..._Up,
+              _EnableIf<sizeof...(_Uf) == sizeof...(_Tp), bool> = false>
+        _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
+        explicit
+        __tuple_impl(__tuple_indices<_Uf...>, __tuple_types<_Tf...>,
+                     __tuple_indices<_Ul...>, __tuple_types<_Tl...>,
+                     _Up&&... __u)
+                     _NOEXCEPT_((__all<is_nothrow_constructible<_Tf, _Up>::value...>::value)) :
+            __tuple_leaf<_Uf, _Tf>(_CUDA_VSTD::forward<_Up>(__u))...
+            {}
+
+    template <size_t ..._Uf, class ..._Tf,
+              size_t ..._Ul, class ..._Tl, class ..._Up,
+              _EnableIf<sizeof...(_Up) != sizeof...(_Tp), bool> = false>
         _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
         explicit
         __tuple_impl(__tuple_indices<_Uf...>, __tuple_types<_Tf...>,
@@ -396,7 +409,21 @@ struct _LIBCUDACXX_DECLSPEC_EMPTY_BASES __tuple_impl<__tuple_indices<_Indx...>, 
             {}
 
     template <class _Alloc, size_t ..._Uf, class ..._Tf,
-              size_t ..._Ul, class ..._Tl, class ..._Up>
+              size_t ..._Ul, class ..._Tl, class ..._Up,
+              _EnableIf<sizeof...(_Up) == sizeof...(_Tp), bool> = false>
+        _LIBCUDACXX_INLINE_VISIBILITY
+        explicit
+        __tuple_impl(allocator_arg_t, const _Alloc& __a,
+                     __tuple_indices<_Uf...>, __tuple_types<_Tf...>,
+                     __tuple_indices<_Ul...>, __tuple_types<_Tl...>,
+                     _Up&&... __u) :
+            __tuple_leaf<_Uf, _Tf>(__uses_alloc_ctor<_Tf, _Alloc, _Up>(), __a,
+            _CUDA_VSTD::forward<_Up>(__u))...
+            {}
+
+    template <class _Alloc, size_t ..._Uf, class ..._Tf,
+              size_t ..._Ul, class ..._Tl, class ..._Up,
+              _EnableIf<sizeof...(_Up) != sizeof...(_Tp), bool> = false>
         _LIBCUDACXX_INLINE_VISIBILITY
         explicit
         __tuple_impl(allocator_arg_t, const _Alloc& __a,
@@ -499,6 +526,12 @@ class _LIBCUDACXX_TEMPLATE_VIS tuple
     struct _PackExpandsToThisTuple<_Arg>
         : is_same<typename __uncvref<_Arg>::type, tuple> {};
 
+    template <size_t _Lh, size_t _Rh, bool = (_Lh < _Rh)>
+    struct __lesser : integral_constant<size_t, _Lh> {};
+
+    template <size_t _Lh, size_t _Rh>
+    struct __lesser<_Lh, _Rh, false> : integral_constant<size_t, _Rh> {};
+
     template <bool _MaybeEnable, class _Dummy = void>
     struct _CheckArgsConstructor : __check_tuple_constructor_fail {};
 
@@ -524,22 +557,19 @@ class _LIBCUDACXX_TEMPLATE_VIS tuple
                 __tuple_constructible<
                     tuple<_Args...>,
                     typename __make_tuple_types<tuple,
-                             sizeof...(_Args) < sizeof...(_Tp) ?
-                                 sizeof...(_Args) :
-                                 sizeof...(_Tp)>::type
+                            __lesser<sizeof...(_Args), sizeof...(_Tp)>::value
+                        >::type
                 >::value &&
                 !__tuple_convertible<
                     tuple<_Args...>,
                     typename __make_tuple_types<tuple,
-                             sizeof...(_Args) < sizeof...(_Tp) ?
-                                 sizeof...(_Args) :
-                                 sizeof...(_Tp)>::type
+                            __lesser<sizeof...(_Args), sizeof...(_Tp)>::value
+                        >::type
                 >::value &&
                 __all_default_constructible<
                     typename __make_tuple_types<tuple, sizeof...(_Tp),
-                             sizeof...(_Args) < sizeof...(_Tp) ?
-                                 sizeof...(_Args) :
-                                 sizeof...(_Tp)>::type
+                            __lesser<sizeof...(_Args), sizeof...(_Tp)>::value
+                        >::type
                 >::value;
         };
 
@@ -549,22 +579,19 @@ class _LIBCUDACXX_TEMPLATE_VIS tuple
                __tuple_constructible<
                     tuple<_Args...>,
                     typename __make_tuple_types<tuple,
-                             sizeof...(_Args) < sizeof...(_Tp) ?
-                                 sizeof...(_Args) :
-                                 sizeof...(_Tp)>::type
+                            __lesser<sizeof...(_Args), sizeof...(_Tp)>::value
+                        >::type
                 >::value &&
                 __tuple_convertible<
                     tuple<_Args...>,
                     typename __make_tuple_types<tuple,
-                             sizeof...(_Args) < sizeof...(_Tp) ?
-                                 sizeof...(_Args) :
-                                 sizeof...(_Tp)>::type
+                            __lesser<sizeof...(_Args), sizeof...(_Tp)>::value
+                        >::type
                 >::value &&
                 __all_default_constructible<
                     typename __make_tuple_types<tuple, sizeof...(_Tp),
-                             sizeof...(_Args) < sizeof...(_Tp) ?
-                                 sizeof...(_Args) :
-                                 sizeof...(_Tp)>::type
+                            __lesser<sizeof...(_Args), sizeof...(_Tp)>::value
+                        >::type
                 >::value;
         };
     };
@@ -649,6 +676,7 @@ class _LIBCUDACXX_TEMPLATE_VIS tuple
                          >::template __enable_explicit<_Tuple>::value,
                          bool
                       >;
+
     template <size_t _Jp, class ..._Up> friend
         _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
         typename tuple_element<_Jp, tuple<_Up...> >::type& get(tuple<_Up...>&) _NOEXCEPT;

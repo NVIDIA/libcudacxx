@@ -19,7 +19,7 @@
 //  LWG #2212 says that tuple_size and tuple_element must be
 //     available after including <utility>
 
-// UNSUPPORTED: c++98, c++03, msvc
+// UNSUPPORTED: c++98, c++03 
 
 #include <cuda/std/tuple>
 // cuda::std::array not supported

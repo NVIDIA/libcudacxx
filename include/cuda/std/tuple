@@ -9,10 +9,6 @@
 #ifndef _CUDA_TUPLE
 #define _CUDA_TUPLE
 
-#if defined(_MSC_VER) && !defined(LIBCUDACXX_FORCE_TUPLE)
-# error "<tuple> is only supported on GCC and Clang (Override with LIBCUDACXX_FORCE_TUPLE)"
-#endif
-
 #include "cstdint"
 #include "climits"
 
