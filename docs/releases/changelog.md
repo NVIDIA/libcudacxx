@@ -65,7 +65,7 @@ Included in: CUDA 11.1.
   A new ABI version was necessary to improve the performance of
     `cuda::[std::]barrier` by changing its alignment.
   Users may define `_LIBCUDACXX_CUDA_ABI_VERSION=2` before including any libcu++
-    or CUDA headres to use ABI version 2, which was the default for the 1.1.0 /
+    or CUDA headers to use ABI version 2, which was the default for the 1.1.0 /
     CUDA 11.0 release.
   Both ABI version 3 and ABI version 2 will be supported until the next major
     CUDA release.
@@ -76,7 +76,7 @@ Included in: CUDA 11.1.
     `cuda::memcpy_async` operations.
 - `<cuda/std/version>`: API version macros `_LIBCUDACXX_CUDA_API_VERSION`,
     `_LIBCUDACXX_CUDA_API_VERSION_MAJOR`, `_LIBCUDACXX_CUDA_API_VERSION_MINOR`,
-    `_LIBCUDACXX_CUDA_API_VERSION_PATCH`.
+    and `_LIBCUDACXX_CUDA_API_VERSION_PATCH`.
 - ABI version switching: users can define `_LIBCUDACXX_CUDA_ABI_VERSION`
     to request a particular supported ABI version.
   `_LIBCUDACXX_CUDA_ABI_VERSION_LATEST` is set to the latest ABI version, which
@@ -175,5 +175,5 @@ It also introduces `<cuda/std/type_traits>`, `<cuda/std/cassert>`,
     install libcu++ to the wrong path.
   This makes libcu++ unusable if installed from the NVIDIA-provided Debian
     packages and may interfere with the operation of your host C++ Standard
-    library.
+    Library.
 
