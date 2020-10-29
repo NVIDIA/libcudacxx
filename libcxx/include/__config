@@ -844,9 +844,6 @@ typedef __char32_t char32_t;
 #define _LIBCUDACXX_HAS_NO_LOGICAL_METAFUNCTION_ALIASES
 #endif
 
-#define _LIBCUDACXX_NO_TUPLE_EXPLICIT_SFINAE
-#define _LIBCUDACXX_NO_TUPLE_NOEXCEPT
-
 #define _LIBCUDACXX_UNDERLYING_TYPE(...) __underlying_type(__VA_ARGS__)
 #define _LIBCUDACXX_IS_CONSTRUCTIBLE(...) __is_constructible(__VA_ARGS__)
 #define _LIBCUDACXX_IS_DESTRUCTIBLE(...) __is_destructible(__VA_ARGS__)
