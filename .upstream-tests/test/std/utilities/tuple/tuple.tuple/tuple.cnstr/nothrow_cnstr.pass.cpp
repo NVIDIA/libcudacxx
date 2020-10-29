@@ -12,9 +12,10 @@
 
 // tuple(tuple&& u);
 
-// UNSUPPORTED: c++98, c++03 
+// UNSUPPORTED: c++98, c++03
 
 // XFAIL: gcc-8 && c++17
+// XFAIL: gcc-7 && c++17
 
 #include <cuda/std/tuple>
 #include <cuda/std/utility>
