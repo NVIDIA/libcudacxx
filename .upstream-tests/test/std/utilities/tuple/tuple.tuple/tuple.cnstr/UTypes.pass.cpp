@@ -15,7 +15,7 @@
 
 // XFAIL: gcc-4.8, gcc-4.9
 
-// UNSUPPORTED: c++98, c++03 
+// UNSUPPORTED: c++98, c++03
 
 #include <cuda/std/tuple>
 #include <cuda/std/cassert>
@@ -139,9 +139,9 @@ int main(int, char**)
 
         Tup t2(E(0));
         static_assert(!test_convertible<Tup, E>(), "");
-        assert(cuda::std::get<0>(t) == 0);
-        assert(cuda::std::get<1>(t) == E());
-        assert(cuda::std::get<2>(t) == E());
+        assert(cuda::std::get<0>(t2) == 0);
+        assert(cuda::std::get<1>(t2) == E());
+        assert(cuda::std::get<2>(t2) == E());
     }
 #endif
 #if TEST_STD_VER > 11
