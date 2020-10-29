@@ -863,7 +863,7 @@ typedef __char32_t char32_t;
 #define _LIBCUDACXX_IS_LITERAL(...) __is_literal_type(__VA_ARGS__)
 #define _LIBCUDACXX_IS_UNION(...) __is_union(__VA_ARGS__)
 #define _LIBCUDACXX_IS_CLASS(...) __is_class(__VA_ARGS__)
-#if _LIBCUDACXX_STD_VER > 14 // MSVC doesn't include the __is_aggregate built-in in C++14 mode
+#if _MSC_VER > 1914 // MSVC doesn't include __is_aggregate until 19.15
 #define _LIBCUDACXX_IS_AGGREGATE(...) __is_aggregate(__VA_ARGS__)
 #endif // _LIBCUDACXX_STD_VER > 14
 #define _LIBCUDACXX_IS_POD(...) __is_pod(__VA_ARGS__)
