@@ -865,7 +865,7 @@ typedef __char32_t char32_t;
 #define _LIBCUDACXX_IS_CLASS(...) __is_class(__VA_ARGS__)
 #if _MSC_VER > 1914 // MSVC doesn't include __is_aggregate until 19.15
 #define _LIBCUDACXX_IS_AGGREGATE(...) __is_aggregate(__VA_ARGS__)
-#endif // _LIBCUDACXX_STD_VER > 14
+#endif // _MSC_VER > 1914 
 #define _LIBCUDACXX_IS_POD(...) __is_pod(__VA_ARGS__)
 #define _LIBCUDACXX_IS_STANDARD_LAYOUT(...) __is_standard_layout(__VA_ARGS__)
 #define _LIBCUDACXX_IS_ENUM(...) __is_enum(__VA_ARGS__)
