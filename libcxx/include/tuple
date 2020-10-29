@@ -382,6 +382,7 @@ struct _LIBCUDACXX_DECLSPEC_EMPTY_BASES __tuple_impl<__tuple_indices<_Indx...>, 
     _LIBCUDACXX_CONSTEXPR __tuple_impl()
         _NOEXCEPT_(__all<is_nothrow_default_constructible<_Tp>::value...>::value) {}
 
+    // Handle non-allocator, full initialization
     template <size_t ..._Uf, class ..._Tf,
               size_t ..._Ul, class ..._Tl, class ..._Up,
               _EnableIf<sizeof...(_Uf) == sizeof...(_Tp), bool> = false>
@@ -394,9 +395,10 @@ struct _LIBCUDACXX_DECLSPEC_EMPTY_BASES __tuple_impl<__tuple_indices<_Indx...>, 
             __tuple_leaf<_Uf, _Tf>(_CUDA_VSTD::forward<_Up>(__u))...
             {}
 
+    // Handle non-allocator, partial default initialization
     template <size_t ..._Uf, class ..._Tf,
               size_t ..._Ul, class ..._Tl, class ..._Up,
-              _EnableIf<sizeof...(_Up) != sizeof...(_Tp), bool> = false>
+              _EnableIf<(sizeof...(_Up) > 0) && (sizeof...(_Up) < sizeof...(_Tp)), bool> = false>
         _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
         explicit
         __tuple_impl(__tuple_indices<_Uf...>, __tuple_types<_Tf...>,
@@ -408,6 +410,21 @@ struct _LIBCUDACXX_DECLSPEC_EMPTY_BASES __tuple_impl<__tuple_indices<_Indx...>, 
             __tuple_leaf<_Ul, _Tl>()...
             {}
 
+    // Handle non-allocator, full default initialization
+    template <size_t ..._Uf, class ..._Tf,
+              size_t ..._Ul, class ..._Tl, class ..._Up,
+              _EnableIf<sizeof...(_Up) == 0, bool> = false>
+        _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
+        explicit
+        __tuple_impl(__tuple_indices<_Uf...>, __tuple_types<_Tf...>,
+                     __tuple_indices<_Ul...>, __tuple_types<_Tl...>,
+                     _Up&&... __u)
+                     _NOEXCEPT_((__all<is_nothrow_default_constructible<_Tl>::value...>::value)) :
+            __tuple_leaf<_Ul, _Tl>()...
+            {}
+
+
+    // Handle allocator aware, full initialization
     template <class _Alloc, size_t ..._Uf, class ..._Tf,
               size_t ..._Ul, class ..._Tl, class ..._Up,
               _EnableIf<sizeof...(_Up) == sizeof...(_Tp), bool> = false>
@@ -418,12 +435,13 @@ struct _LIBCUDACXX_DECLSPEC_EMPTY_BASES __tuple_impl<__tuple_indices<_Indx...>, 
                      __tuple_indices<_Ul...>, __tuple_types<_Tl...>,
                      _Up&&... __u) :
             __tuple_leaf<_Uf, _Tf>(__uses_alloc_ctor<_Tf, _Alloc, _Up>(), __a,
-            _CUDA_VSTD::forward<_Up>(__u))...
+                    _CUDA_VSTD::forward<_Up>(__u))...
             {}
 
+    // Handle allocator aware, partial default initialization
     template <class _Alloc, size_t ..._Uf, class ..._Tf,
               size_t ..._Ul, class ..._Tl, class ..._Up,
-              _EnableIf<sizeof...(_Up) != sizeof...(_Tp), bool> = false>
+              _EnableIf<(sizeof...(_Up) > 0) && (sizeof...(_Up) < sizeof...(_Tp)), bool> = false>
         _LIBCUDACXX_INLINE_VISIBILITY
         explicit
         __tuple_impl(allocator_arg_t, const _Alloc& __a,
@@ -431,7 +449,20 @@ struct _LIBCUDACXX_DECLSPEC_EMPTY_BASES __tuple_impl<__tuple_indices<_Indx...>, 
                      __tuple_indices<_Ul...>, __tuple_types<_Tl...>,
                      _Up&&... __u) :
             __tuple_leaf<_Uf, _Tf>(__uses_alloc_ctor<_Tf, _Alloc, _Up>(), __a,
-            _CUDA_VSTD::forward<_Up>(__u))...,
+                    _CUDA_VSTD::forward<_Up>(__u))...,
+            __tuple_leaf<_Ul, _Tl>(__uses_alloc_ctor<_Tl, _Alloc>(), __a)...
+            {}
+
+    // Handle allocator aware, full default initialization
+    template <class _Alloc, size_t ..._Uf, class ..._Tf,
+              size_t ..._Ul, class ..._Tl, class ..._Up,
+              _EnableIf<sizeof...(_Up) == 0, bool> = false>
+        _LIBCUDACXX_INLINE_VISIBILITY
+        explicit
+        __tuple_impl(allocator_arg_t, const _Alloc& __a,
+                     __tuple_indices<_Uf...>, __tuple_types<_Tf...>,
+                     __tuple_indices<_Ul...>, __tuple_types<_Tl...>,
+                     _Up&&... __u) :
             __tuple_leaf<_Ul, _Tl>(__uses_alloc_ctor<_Tl, _Alloc>(), __a)...
             {}
 
