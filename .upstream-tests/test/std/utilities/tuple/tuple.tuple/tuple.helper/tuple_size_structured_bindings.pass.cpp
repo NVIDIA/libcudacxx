@@ -15,8 +15,9 @@
 //     : public integral_constant<size_t, sizeof...(Types)> { };
 
 // UNSUPPORTED: c++98, c++03, c++11, c++14
-// UNSUPPORTED: libcpp-no-structured-bindings 
+// UNSUPPORTED: libcpp-no-structured-bindings
 // UNSUPPORTED: nvrtc
+// UNSUPPORTED: msvc
 
 #include <cuda/std/tuple>
 // cuda::std::array not supported

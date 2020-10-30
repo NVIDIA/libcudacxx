@@ -122,8 +122,8 @@ int main(int, char**)
         assert(cuda::std::get<1>(t) == 1);
         assert(cuda::std::get<2>(t) == 2);
     }
-    // extensions
-#ifdef _LIBCUDACXX_VERSION
+    // extensions, MSVC issues
+#if defined(_LIBCUDACXX_VERSION) && !defined(_MSC_VER)
     {
         using E = MoveOnly;
         using Tup = cuda::std::tuple<E, E, E>;
