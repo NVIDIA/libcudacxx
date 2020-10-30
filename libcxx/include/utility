@@ -428,7 +428,10 @@ struct _LIBCUDACXX_TEMPLATE_VIS pair
         : first(), second() {}
 
     template <bool _Dummy = true, _EnableB<
-             _CheckArgsDep<_Dummy>::template __enable_explicit<_T1 const&, _T2 const&>::value
+             _CheckArgsDep<_Dummy>::template __enable_explicit<
+                    typename remove_reference<_T1>::type const&,
+                    typename remove_reference<_T2>::type const&
+                >::value
     > = false>
     _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
     explicit pair(_T1 const& __t1, _T2 const& __t2)
@@ -437,7 +440,10 @@ struct _LIBCUDACXX_TEMPLATE_VIS pair
         : first(__t1), second(__t2) {}
 
     template<bool _Dummy = true, _EnableB<
-            _CheckArgsDep<_Dummy>::template __enable_implicit<_T1 const&, _T2 const&>::value
+            _CheckArgsDep<_Dummy>::template __enable_implicit<
+                    typename remove_reference<_T1>::type const&,
+                    typename remove_reference<_T2>::type const&
+                >::value
     > = false>
     _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
     pair(_T1 const& __t1, _T2 const& __t2)
