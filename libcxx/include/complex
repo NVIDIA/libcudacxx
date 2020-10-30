@@ -324,7 +324,7 @@ public:
 
 template<> class complex<double>;
 #ifdef _LIBCUDACXX_HAS_COMPLEX_LONG_DOUBLE
-template<> class _LIBCUDACXX_TEMPLATE_VIS complex<long double>;
+template<> class complex<long double>;
 #endif // _LIBCUDACXX_HAS_COMPLEX_LONG_DOUBLE
 
 template<>

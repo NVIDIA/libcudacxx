@@ -529,7 +529,9 @@ using ::truncl;
 #if _LIBCUDACXX_STD_VER > 14
 inline _LIBCUDACXX_INLINE_VISIBILITY float       hypot(       float x,       float y,       float z ) { return sqrt(x*x + y*y + z*z); }
 inline _LIBCUDACXX_INLINE_VISIBILITY double      hypot(      double x,      double y,      double z ) { return sqrt(x*x + y*y + z*z); }
+#ifdef _LIBCUDACXX_HAS_COMPLEX_LONG_DOUBLE
 inline _LIBCUDACXX_INLINE_VISIBILITY long double hypot( long double x, long double y, long double z ) { return sqrt(x*x + y*y + z*z); }
+#endif
 
 template <class _A1, class _A2, class _A3>
 inline _LIBCUDACXX_INLINE_VISIBILITY
