@@ -838,6 +838,11 @@ typedef __char32_t char32_t;
 #error "MSVC versions prior to Visual Studio 2015 are not supported"
 #endif
 
+// MSVC implemented P0030R1 in 15.7, only available under C++17
+#if _MSC_VER < 1914
+#define _LIBCUDACXX_NO_HOST_CPP17_HYPOT
+#endif
+
 #if _MSC_VER < 1920
 #define _LIBCUDACXX_HAS_NO_NOEXCEPT_SFINAE
 #define _LIBCUDACXX_HAS_NO_PRAGMA_PUSH_POP_MACRO // This is conservative but correct.
