@@ -10,7 +10,8 @@
 #include <type_traits>
 #include "test_macros.h"
 
-// XFAIL: c++98, c++03, c++11, c++14
+
+// UNSUPPORTED: c++98, c++03, c++11, c++14
 
 // If we're just building the test and not executing it, it should pass.
 // UNSUPPORTED: no_execute
