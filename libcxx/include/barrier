@@ -273,13 +273,20 @@ public:
 template<int _Sco>
 class __barrier_base<__empty_completion, _Sco> {
 
-    static constexpr uint64_t __expected_unit = 1ull;
-    static constexpr uint64_t __arrived_unit = 1ull << 32;
-    static constexpr uint64_t __expected_mask = __arrived_unit - 1;
-    static constexpr uint64_t __phase_bit = 1ull << 63;
-    static constexpr uint64_t __arrived_mask = (__phase_bit - 1) & ~__expected_mask;
+    static constexpr uint64_t __arrived_shift = 32;
+    static constexpr uint64_t __guard_shift = 31;
+    static constexpr uint64_t __phase_shift = 63;
 
-    _LIBCUDACXX_BARRIER_ALIGNMENTS __atomic_base<uint64_t, _Sco> __phase_arrived_expected;
+    static constexpr uint64_t __expected_unit = 1ull;
+    static constexpr uint64_t __arrived_unit = 1ull << __arrived_shift;
+
+    static constexpr uint64_t __phase_bit = 1ull << __phase_shift;
+    static constexpr uint64_t __arrived_sign_bit = __phase_bit >> 1;
+    static constexpr uint64_t __guard_bit = 1ull << __guard_shift;
+
+    static constexpr uint64_t __expected_mask = __guard_bit - 1;
+
+    mutable _LIBCUDACXX_BARRIER_ALIGNMENTS __atomic_base<uint64_t, _Sco> __phase_arrived_expected;
 
 public:
     using arrival_token = uint64_t;
@@ -301,12 +308,55 @@ private:
             return __this->__try_wait(__phase);
         }
     };
+    struct __poll_tester_parity {
+        __barrier_base const* __this;
+        bool __parity;
+
+        _LIBCUDACXX_INLINE_VISIBILITY
+        __poll_tester_parity(__barrier_base const* __this_, bool __parity_)
+          : __this(__this_)
+          , __parity(__parity_)
+        {}
+
+        inline _LIBCUDACXX_INLINE_VISIBILITY
+        bool operator()() const
+        {
+            return __this->__try_wait_parity(__parity);
+        }
+    };
 
     static inline _LIBCUDACXX_INLINE_VISIBILITY
     constexpr uint64_t __init(ptrdiff_t __count) _NOEXCEPT
     {
-        return (((1u << 31) - __count) << 32)
-              | ((1u << 31) - __count);
+        return ((__guard_bit - __count) << __arrived_shift)
+              | (__guard_bit - __count);
+    }
+
+    _LIBCUDACXX_NODISCARD_ATTRIBUTE inline _LIBCUDACXX_INLINE_VISIBILITY
+    uint64_t __update_fetch(uint64_t __with_inc, memory_order __order) const
+    {
+        uint64_t __old = __phase_arrived_expected.load(__order == memory_order_acquire ? memory_order_acquire : memory_order_relaxed); 
+        uint64_t __new;
+        while(1)
+        {
+            if((__old & __arrived_sign_bit) == 0) //[[unlikely]] 
+            {
+                auto const __shifted_expected = (__old & __expected_mask) << __arrived_shift;
+                __new = __old + __with_inc + __shifted_expected;
+                if(__phase_arrived_expected.compare_exchange_weak(__old, __new, __order))
+                    break;
+            }
+            else 
+            {
+                if(__with_inc != 0)
+                    __old = __phase_arrived_expected.fetch_add(__with_inc, __order);
+                __new = __old + __with_inc;
+                break;
+            }
+        }
+        if((__old ^ __new) & __phase_bit)
+            __phase_arrived_expected.notify_all();
+        return __new;
     }
 
 public:
@@ -322,28 +372,46 @@ public:
     __barrier_base(__barrier_base const&) = delete;
     __barrier_base& operator=(__barrier_base const&) = delete;
 
-    _LIBCUDACXX_INLINE_VISIBILITY
-    bool __try_wait(arrival_token __phase) const
+    inline _LIBCUDACXX_INLINE_VISIBILITY
+    bool __try_wait(arrival_token __old) const
     {
-        uint64_t const __current = __phase_arrived_expected.load(memory_order_acquire);
-        return ((__current & __phase_bit) != __phase);
+        auto const __new = __update_fetch(0, memory_order_acquire);
+        return (__old ^ __new) & __phase_bit;
     }
+    inline _LIBCUDACXX_INLINE_VISIBILITY
+    bool __try_wait_parity(bool __parity) const
+    {
+        auto const __new = __update_fetch(0, memory_order_acquire);
+        return (__new & __phase_bit) != (__parity ? __phase_bit : 0);
+    }
+
+#ifndef _LIBCUDACXX_HAS_PLATFORM_WAIT
+    inline _LIBCUDACXX_INLINE_VISIBILITY
+    friend void __expect_extra_arrive(__barrier_base& __self, uint64_t __inc = __arrived_unit)
+    {
+        (void)__self.__update_fetch(~__inc + 1, memory_order_relaxed);
+    }
+    inline _LIBCUDACXX_INLINE_VISIBILITY
+    friend void __extra_arrive(__barrier_base& __self, uint64_t __inc = __arrived_unit)
+    {
+        __self.__phase_arrived_expected.fetch_add(__inc, memory_order_release);
+    }
+#endif
 
     _LIBCUDACXX_NODISCARD_ATTRIBUTE inline _LIBCUDACXX_INLINE_VISIBILITY
     arrival_token arrive(ptrdiff_t __update = 1)
     {
-        auto const __inc = __arrived_unit * __update;
+        auto const __inc = __update << __arrived_shift;
         auto const __old = __phase_arrived_expected.fetch_add(__inc, memory_order_acq_rel);
-        if((__old ^ (__old + __inc)) & __phase_bit) {
-            __phase_arrived_expected.fetch_add((__old & __expected_mask) << 32, memory_order_relaxed);
+        auto const __new = __old + __inc;
+        if((__old ^ __new) & __phase_bit)
             __phase_arrived_expected.notify_all();
-        }
-        return __old & __phase_bit;
+        return __old;
     }
     inline _LIBCUDACXX_INLINE_VISIBILITY
-    void wait(arrival_token&& __phase) const
+    void wait(arrival_token&& __old) const
     {
-        __libcpp_thread_poll_with_backoff(__poll_tester(this, _CUDA_VSTD::move(__phase)));
+        __libcpp_thread_poll_with_backoff(__poll_tester(this, _CUDA_VSTD::move(__old)));
     }
     inline _LIBCUDACXX_INLINE_VISIBILITY
     void arrive_and_wait()
@@ -353,8 +421,7 @@ public:
     inline _LIBCUDACXX_INLINE_VISIBILITY
     void arrive_and_drop()
     {
-        __phase_arrived_expected.fetch_add(__expected_unit, memory_order_relaxed);
-        (void)arrive();
+        (void)__update_fetch(__arrived_unit + __expected_unit, memory_order_release);
     }
 
     _LIBCUDACXX_INLINE_VISIBILITY
@@ -362,6 +429,12 @@ public:
     {
         return numeric_limits<int32_t>::max();
     }
+
+    inline _LIBCUDACXX_INLINE_VISIBILITY
+    friend void wait_for_parity(__barrier_base const* __self, bool __parity)
+    {
+        __libcpp_thread_poll_with_backoff(__poll_tester_parity(__self, __parity));
+    }    
 };
 
 #endif //_LIBCUDACXX_HAS_NO_TREE_BARRIER
