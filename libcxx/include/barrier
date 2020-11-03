@@ -431,7 +431,7 @@ public:
     }
 
     inline _LIBCUDACXX_INLINE_VISIBILITY
-    friend void wait_for_parity(__barrier_base const* __self, bool __parity)
+    friend void barrier_wait_for_parity(__barrier_base const* __self, bool __parity)
     {
         __libcpp_thread_poll_with_backoff(__poll_tester_parity(__self, __parity));
     }    
