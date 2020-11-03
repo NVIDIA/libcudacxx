@@ -104,6 +104,22 @@ private:
             return __this->__try_wait(__phase);
         }
     };
+    struct __poll_tester_parity {
+        barrier const* __this;
+        bool __parity;
+
+        _LIBCUDACXX_INLINE_VISIBILITY
+        __poll_tester_parity(barrier const* __this_, bool __parity_)
+          : __this(__this_)
+          , __parity(__parity_)
+        {}
+
+        inline _LIBCUDACXX_INLINE_VISIBILITY
+        bool operator()() const
+        {
+            return __this->__try_wait_parity(__parity);
+        }
+    };
 
     _LIBCUDACXX_INLINE_VISIBILITY
     bool __try_wait(arrival_token __phase) const {
@@ -124,6 +140,28 @@ private:
 #endif
         {
             return __barrier.__try_wait(std::move(__phase));
+        }
+    }
+
+    _LIBCUDACXX_INLINE_VISIBILITY
+    bool __try_wait_parity(bool __parity) const {
+#if __CUDA_ARCH__ >= 800
+        if (__isShared(&__barrier)) {
+            int __ready = 0;
+            asm volatile ("{\n\t"
+                    ".reg .pred p;\n\t"
+                    "mbarrier.test_wait.parity.shared.b64 p, [%1], %2;\n\t"
+                    "selp.b32 %0, 1, 0, p;\n\t"
+                    "}"
+                : "=r"(__ready)
+                : "r"(static_cast<std::uint32_t>(__cvta_generic_to_shared(&__barrier))), "r"(static_cast<std::uint32_t>(__parity))
+                : "memory");
+            return bool(__ready);
+        }
+        else
+#endif
+        {
+            return __barrier.__try_wait_parity(__parity);
         }
     }
 
@@ -244,6 +282,12 @@ public:
     static constexpr ptrdiff_t max() noexcept
     {
         return (1 << 20) - 1;
+    }
+
+    inline _LIBCUDACXX_INLINE_VISIBILITY
+    friend void wait_for_parity(barrier const* __self, bool __parity)
+    {
+        _CUDA_VSTD::__libcpp_thread_poll_with_backoff(__poll_tester_parity(__self, __parity));
     }
 };
 
