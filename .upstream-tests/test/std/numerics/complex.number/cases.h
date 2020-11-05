@@ -184,17 +184,17 @@ classify(const cuda::std::complex<T>& x)
 {
     if (x == cuda::std::complex<T>())
         return zero;
-    if (std::isinf(x.real()) || std::isinf(x.imag()))
+    if (cuda::std::isinf(x.real()) || cuda::std::isinf(x.imag()))
         return inf;
-    if (std::isnan(x.real()) && std::isnan(x.imag()))
+    if (cuda::std::isnan(x.real()) && cuda::std::isnan(x.imag()))
         return NaN;
-    if (std::isnan(x.real()))
+    if (cuda::std::isnan(x.real()))
     {
         if (x.imag() == T(0))
             return NaN;
         return non_zero_nan;
     }
-    if (std::isnan(x.imag()))
+    if (cuda::std::isnan(x.imag()))
     {
         if (x.real() == T(0))
             return NaN;
@@ -209,28 +209,28 @@ classify(double x)
 {
     if (x == 0)
         return zero;
-    if (std::isinf(x))
+    if (cuda::std::isinf(x))
         return inf;
-    if (std::isnan(x))
+    if (cuda::std::isnan(x))
         return NaN;
     return non_zero;
 }
 
 __host__ __device__ void is_about(float x, float y)
 {
-    assert(std::abs((x-y)/(x+y)) < 1.e-6);
+    assert(cuda::std::abs((x-y)/(x+y)) < 1.e-6);
 }
 
 __host__ __device__ void is_about(double x, double y)
 {
-    assert(std::abs((x-y)/(x+y)) < 1.e-14);
+    assert(cuda::std::abs((x-y)/(x+y)) < 1.e-14);
 }
 
 // CUDA treats long double as double
 /*
 __host__ __device__ void is_about(long double x, long double y)
 {
-    assert(std::abs((x-y)/(x+y)) < 1.e-14);
+    assert(cuda::std::abs((x-y)/(x+y)) < 1.e-14);
 }
 */
 #endif  // CASES_H
