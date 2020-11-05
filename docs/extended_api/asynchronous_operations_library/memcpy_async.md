@@ -55,7 +55,7 @@ Both objects are reinterpreted as arrays of `unsigned char`.
 
 ## Example
 
-CUDA kernels often first copy data from global to shared memory, to then perform a computation using that shared memory data:
+CUDA kernels often first copy data from global to shared memory, to then perform a computation using that shared memory data ([live](https://cuda.godbolt.org/z/34PMMe)):
 
 ```c++
 #include <cooperative_groups.h>
@@ -76,7 +76,7 @@ __global__ void kernel(float* global, size_t subset_count) {
 }
 ```
 
-With `cuda::memcpy_async` we can overlap the global to shared memory copies of the next batch, with the computation on the current batch, by using a two-stage pipeline as follows: 
+With `cuda::memcpy_async` we can overlap the global to shared memory copies of the next batch, with the computation on the current batch, by using a two-stage pipeline as follows ([live](https://cuda.godbolt.org/z/GMGe8P)):
 
 ```c++
 #include <cooperative_groups.h>
