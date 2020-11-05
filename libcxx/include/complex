@@ -1174,7 +1174,7 @@ template<class _Tp>
 _LIBCUDACXX_INLINE_VISIBILITY complex<_Tp>
 asinh(const complex<_Tp>& __x)
 {
-    const _Tp __pi(atan2(+0., -0.));
+    const _Tp __pi(static_cast<_Tp>(atan2(+0., -0.)));
     if (__libcpp_isinf_or_builtin(__x.real()))
     {
         if (__libcpp_isnan_or_builtin(__x.imag()))
@@ -1203,7 +1203,7 @@ template<class _Tp>
 _LIBCUDACXX_INLINE_VISIBILITY complex<_Tp>
 acosh(const complex<_Tp>& __x)
 {
-    const _Tp __pi(atan2(+0., -0.));
+    const _Tp __pi(static_cast<_Tp>(atan2(+0., -0.)));
     if (__libcpp_isinf_or_builtin(__x.real()))
     {
         if (__libcpp_isnan_or_builtin(__x.imag()))
@@ -1237,7 +1237,7 @@ template<class _Tp>
 _LIBCUDACXX_INLINE_VISIBILITY complex<_Tp>
 atanh(const complex<_Tp>& __x)
 {
-    const _Tp __pi(atan2(+0., -0.));
+    const _Tp __pi(static_cast<_Tp>(atan2(+0., -0.)));
     if (__libcpp_isinf_or_builtin(__x.imag()))
     {
         return complex<_Tp>(copysign(_Tp(0), __x.real()), copysign(__pi/_Tp(2), __x.imag()));
@@ -1336,7 +1336,7 @@ template<class _Tp>
 _LIBCUDACXX_INLINE_VISIBILITY complex<_Tp>
 acos(const complex<_Tp>& __x)
 {
-    const _Tp __pi(atan2(+0., -0.));
+    const _Tp __pi(static_cast<_Tp>(atan2(+0., -0.)));
     if (__libcpp_isinf_or_builtin(__x.real()))
     {
         if (__libcpp_isnan_or_builtin(__x.imag()))
