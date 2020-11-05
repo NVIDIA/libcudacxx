@@ -512,6 +512,12 @@ public:
 #endif // _LIBCUDACXX_HAS_COMPLEX_LONG_DOUBLE
 };
 
+#if defined(_LIBCUDACXX_USE_PRAGMA_MSVC_WARNING)
+  // MSVC complains about narrowing conversions on these copy constructors regardless if they are used
+  #pragma warning(push)
+  #pragma warning(disable : 4244)
+#endif
+
 inline
 _LIBCUDACXX_CONSTEXPR
 complex<float>::complex(const complex<double>& __c)
@@ -543,6 +549,10 @@ _LIBCUDACXX_CONSTEXPR
 complex<long double>::complex(const complex<double>& __c)
     : __re_(__c.real()), __im_(__c.imag()) {}
 #endif // _LIBCUDACXX_HAS_COMPLEX_LONG_DOUBLE
+
+#if defined(_LIBCUDACXX_USE_PRAGMA_MSVC_WARNING)
+  #pragma warning(pop)
+#endif
 
 // 26.3.6 operators:
 
