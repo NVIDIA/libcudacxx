@@ -7,8 +7,11 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++98, c++03 
+// UNSUPPORTED: c++98, c++03
 // UNSUPPORTED: nvrtc
+
+// Some early versions (cl.exe 14.16 / VC141) do not identify correct constructors
+// UNSUPPORTED: msvc
 
 // <cuda/std/tuple>
 
