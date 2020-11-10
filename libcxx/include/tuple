@@ -418,7 +418,7 @@ struct _LIBCUDACXX_DECLSPEC_EMPTY_BASES __tuple_impl<__tuple_indices<_Indx...>, 
         explicit
         __tuple_impl(__tuple_indices<_Uf...>, __tuple_types<_Tf...>,
                      __tuple_indices<_Ul...>, __tuple_types<_Tl...>,
-                     _Up&&... __u)
+                     _Up&&...)
                      _NOEXCEPT_((__all<is_nothrow_default_constructible<_Tl>::value...>::value)) :
             __tuple_leaf<_Ul, _Tl>()...
             {}
@@ -462,7 +462,7 @@ struct _LIBCUDACXX_DECLSPEC_EMPTY_BASES __tuple_impl<__tuple_indices<_Indx...>, 
         __tuple_impl(allocator_arg_t, const _Alloc& __a,
                      __tuple_indices<_Uf...>, __tuple_types<_Tf...>,
                      __tuple_indices<_Ul...>, __tuple_types<_Tl...>,
-                     _Up&&... __u) :
+                     _Up&&...) :
             __tuple_leaf<_Ul, _Tl>(__uses_alloc_ctor<_Tl, _Alloc>(), __a)...
             {}
 
