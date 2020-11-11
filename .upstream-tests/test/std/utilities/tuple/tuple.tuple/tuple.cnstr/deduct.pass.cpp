@@ -14,7 +14,7 @@
 // GCC's implementation of class template deduction is still immature and runs
 // into issues with libc++. However GCC accepts this code when compiling
 // against libstdc++.
-// XFAIL: gcc-5, gcc-6, gcc-7
+// XFAIL: gcc-5, gcc-6, gcc-7, gcc-10.2
 // UNSUPPORTED: nvrtc
 
 // <cuda/std/tuple>
