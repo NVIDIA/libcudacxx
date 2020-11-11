@@ -11,7 +11,7 @@
 // template <class... Types> class tuple;
 
 // UNSUPPORTED: c++98, c++03
-// UNSUPPORTED: msvc
+// UNSUPPORTED: msvc, gcc-4.8
 
 #include <cuda/std/tuple>
 #include <cuda/std/cassert>
