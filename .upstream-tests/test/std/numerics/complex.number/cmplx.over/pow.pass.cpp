@@ -27,6 +27,10 @@
 #include "test_macros.h"
 #include "../cases.h"
 
+#if defined(_MSC_VER)
+#pragma warning(disable: 4244) // conversion from 'const double' to 'int', possible loss of data
+#endif
+
 template <class T>
 __host__ __device__ double
 promote(T, typename cuda::std::enable_if<cuda::std::is_integral<T>::value>::type* = 0);
