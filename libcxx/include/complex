@@ -708,12 +708,13 @@ operator/(const complex<_Tp>& __z, const complex<_Tp>& __w)
     if (__libcpp_isfinite_or_builtin(__logbw))
     {
         __ilogbw = static_cast<int>(__logbw);
-        __c = scalbn(__c, -__ilogbw);
-        __d = scalbn(__d, -__ilogbw);
+        // ldexp is equivalent to scalbn when FLT_RADIX == 2
+        __c = ldexp(__c, -__ilogbw);
+        __d = ldexp(__d, -__ilogbw);
     }
     _Tp __denom = __c * __c + __d * __d;
-    _Tp __x = scalbn((__a * __c + __b * __d) / __denom, -__ilogbw);
-    _Tp __y = scalbn((__b * __c - __a * __d) / __denom, -__ilogbw);
+    _Tp __x = ldexp((__a * __c + __b * __d) / __denom, -__ilogbw);
+    _Tp __y = ldexp((__b * __c - __a * __d) / __denom, -__ilogbw);
     if (__libcpp_isnan_or_builtin(__x) && __libcpp_isnan_or_builtin(__y))
     {
         if ((__denom == _Tp(0)) && (!__libcpp_isnan_or_builtin(__a) || !__libcpp_isnan_or_builtin(__b)))
