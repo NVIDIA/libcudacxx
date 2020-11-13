@@ -315,10 +315,13 @@ long double    truncl(long double x);
 _LIBCUDACXX_BEGIN_NAMESPACE_STD
 
 using ::signbit;
-using ::fpclassify;
 using ::isfinite;
 using ::isinf;
 using ::isnan;
+
+// GCC <= 50X is missing some math intrinsics in the global namespace
+#if !defined(_LIBCUDACXX_MISSING_GCC_MATH_INTRINSICS)
+using ::fpclassify;
 using ::isnormal;
 using ::isgreater;
 using ::isgreaterequal;
@@ -327,6 +330,7 @@ using ::islessequal;
 using ::islessgreater;
 using ::isunordered;
 using ::isunordered;
+#endif
 
 using ::float_t;
 using ::double_t;
