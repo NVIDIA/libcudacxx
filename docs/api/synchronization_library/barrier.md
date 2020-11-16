@@ -23,7 +23,7 @@ cuda::std::barrier<> bb;
 cuda::barrier<cuda::thread_scope_block> c;
 ```
 
-The class template `barrier` may also be declared without initialization; a
+The class template `barrier` may also be declared without initialization in the `cuda::` namespace; a
 friend function `init` may be used to initialize the object.
 
 ```c++
@@ -31,7 +31,18 @@ friend function `init` may be used to initialize the object.
 __shared__ cuda::barrier<cuda::thread_scope_block> b;
 
 init(&b, 1); // Use this friend function to initialize the object.
+/*
+namespace cuda {
+  template<thread_scope Sco, class CompletionF>
+  __host__ __device__ void init(barrier<Sco,CompletionF>* bar, std::ptrdiff_t expected);
+  template<thread_scope Sco, class CompletionF>
+  __host__ __device__ void init(barrier<Sco,CompletionF>* bar, std::ptrdiff_t expected, CompletionF completion);
+}
+*/
 ```
+
+- Expects: `*bar` is trivially initialized.
+- Effects: equivalent to initializing `*bar` with a constructor.
 
 In the `device::` namespace, a `__device__` free function is available that
   provides direct access to the underlying PTX state of a `barrier` object, if
@@ -39,10 +50,8 @@ In the `device::` namespace, a `__device__` free function is available that
 
 ```c++
 namespace cuda { namespace device {
-
-__device__ std::uint64_t* barrier_native_handle(
+  __device__ std::uint64_t* barrier_native_handle(
     barrier<thread_scope_block>& b);
-
 }}
 ```
 
