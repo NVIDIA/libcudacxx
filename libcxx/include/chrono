@@ -2539,8 +2539,10 @@ inline constexpr days year_month_day::__to_days() const noexcept
     static_assert(std::numeric_limits<unsigned>::digits >= 18, "");
     static_assert(std::numeric_limits<int>::digits >= 20     , "");
 
-    auto constexpr February = cuda::std::chrono::February;
-    const int      __yr  = static_cast<int>(__y) - (__m <= February);
+    // nvcc doesn't allow ODR using constexpr globals. Therefore, 
+    // make a temporary initialized from the global
+    auto constexpr __Feb = February;
+    const int      __yr  = static_cast<int>(__y) - (__m <= __Feb);
     const unsigned __mth = static_cast<unsigned>(__m);
     const unsigned __dy  = static_cast<unsigned>(__d);
 
@@ -2702,8 +2704,11 @@ chrono::day year_month_day_last::day() const noexcept
         chrono::day(31), chrono::day(31), chrono::day(30),
         chrono::day(31), chrono::day(30), chrono::day(31)
     };
-    auto constexpr February = cuda::std::chrono::February;
-    return month() != February || !__y.is_leap() ?
+
+    // nvcc doesn't allow ODR using constexpr globals. Therefore, 
+    // make a temporary initialized from the global
+    auto constexpr __Feb = February;
+    return month() != __Feb || !__y.is_leap() ?
         __d[static_cast<unsigned>(month()) - 1] : chrono::day{29};
 }
 
