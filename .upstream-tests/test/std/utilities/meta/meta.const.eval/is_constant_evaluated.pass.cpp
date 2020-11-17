@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++98, c++03, c++11
+// UNSUPPORTED: c++98, c++03
 
 // <cuda/std/type_traits>
 
@@ -17,17 +17,20 @@
 
 #include "test_macros.h"
 
+// libcudacxx does not have feature test macros... yet
+/*
 #ifndef __cpp_lib_is_constant_evaluated
 #if TEST_HAS_BUILTIN(__builtin_is_constant_evaluated)
 # error __cpp_lib_is_constant_evaluated should be defined
 #endif
 #endif
+*/
 
 template <bool> struct InTemplate {};
 
 int main(int, char**)
 {
-#ifdef __cpp_lib_is_constant_evaluated
+#if defined(_LIBCUDACXX_IS_CONSTANT_EVALUATED)
   // Test the signature
   {
     ASSERT_SAME_TYPE(decltype(cuda::std::is_constant_evaluated()), bool);
