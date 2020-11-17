@@ -695,6 +695,32 @@ operator*(const _Tp& __x, const complex<_Tp>& __y)
     return __t;
 }
 
+namespace detail {
+    template <class _Tp>
+    inline _LIBCUDACXX_INLINE_VISIBILITY
+    _Tp __scalbn(_Tp __x, int __i) {
+        return static_cast<_Tp>(scalbn(static_cast<double>(__x), __i));
+    }
+
+    template <>
+    inline _LIBCUDACXX_INLINE_VISIBILITY
+    float __scalbn<float>(float __x, int __i) {
+        return scalbnf(__x, __i);
+    }
+
+    template <>
+    inline _LIBCUDACXX_INLINE_VISIBILITY
+    double __scalbn<double>(double __x, int __i) {
+        return scalbn(__x, __i);
+    }
+
+    template <>
+    inline _LIBCUDACXX_INLINE_VISIBILITY
+    long double __scalbn<long double>(long double __x, int __i) {
+        return scalbnl(__x, __i);
+    }
+}
+
 template<class _Tp>
 complex<_Tp>
 operator/(const complex<_Tp>& __z, const complex<_Tp>& __w)
@@ -708,13 +734,12 @@ operator/(const complex<_Tp>& __z, const complex<_Tp>& __w)
     if (__libcpp_isfinite_or_builtin(__logbw))
     {
         __ilogbw = static_cast<int>(__logbw);
-        // ldexp is equivalent to scalbn when FLT_RADIX == 2
-        __c = ldexp(__c, -__ilogbw);
-        __d = ldexp(__d, -__ilogbw);
+        __c = detail::__scalbn(__c, -__ilogbw);
+        __d = detail::__scalbn(__d, -__ilogbw);
     }
     _Tp __denom = __c * __c + __d * __d;
-    _Tp __x = ldexp((__a * __c + __b * __d) / __denom, -__ilogbw);
-    _Tp __y = ldexp((__b * __c - __a * __d) / __denom, -__ilogbw);
+    _Tp __x = detail::__scalbn((__a * __c + __b * __d) / __denom, -__ilogbw);
+    _Tp __y = detail::__scalbn((__b * __c - __a * __d) / __denom, -__ilogbw);
     if (__libcpp_isnan_or_builtin(__x) && __libcpp_isnan_or_builtin(__y))
     {
         if ((__denom == _Tp(0)) && (!__libcpp_isnan_or_builtin(__a) || !__libcpp_isnan_or_builtin(__b)))
