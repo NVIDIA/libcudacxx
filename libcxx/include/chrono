@@ -3177,8 +3177,10 @@ constexpr hours make24(const hours& __h, bool __is_pm) noexcept
     else
         return __h == hours(12) ? hours(0) : __h;
 }
-
+#endif // _LIBCUDACXX_STD_VER > 11
 } // chrono
+
+#if _LIBCUDACXX_STD_VER > 11
 
 // GCC 5 and 6 warn (and then error) on us using the standard reserved UDL names,
 // but have no way of disabling that. Use the system_header pragma on those GCC versions
