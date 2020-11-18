@@ -2040,7 +2040,7 @@ public:
     weekday_indexed() = default;
     _LIBCUDACXX_INLINE_VISIBILITY
     inline constexpr weekday_indexed(const _CUDA_VSTD::chrono::weekday& __wdval, unsigned __idxval) noexcept
-        : __wd{__wdval}, __idx(__idxval) {}
+        : __wd{__wdval}, __idx(static_cast<unsigned char>(__idxval)) {}
     _LIBCUDACXX_INLINE_VISIBILITY
     inline constexpr _CUDA_VSTD::chrono::weekday weekday() const noexcept { return __wd; }
     _LIBCUDACXX_INLINE_VISIBILITY
