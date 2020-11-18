@@ -19,6 +19,7 @@
 #include "test_macros.h"
 
 #if TEST_STD_VER > 14
+__host__ __device__
 constexpr bool constexpr_test()
 {
     typedef cuda::std::chrono::system_clock Clock;
