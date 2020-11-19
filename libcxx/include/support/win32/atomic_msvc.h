@@ -46,7 +46,7 @@ namespace detail {
 
 template<class _Type, detail::_enable_if_sized_as<_Type,1> = 0>
 void __atomic_load_relaxed(const volatile _Type *__ptr, _Type *__ret) {
-#ifdef _LIBCUDACXX_HAS_NO_ISO_INTRIN
+#ifdef _LIBCUDACXX_MSVC_HAS_NO_ISO_INTRIN
     __int8 __tmp = *(const volatile __int8 *)__ptr;
 #else
     __int8 __tmp = __iso_volatile_load8((const volatile __int8 *)__ptr);
@@ -55,8 +55,8 @@ void __atomic_load_relaxed(const volatile _Type *__ptr, _Type *__ret) {
 }
 template<class _Type, detail::_enable_if_sized_as<_Type,2> = 0>
 void __atomic_load_relaxed(const volatile _Type *__ptr, _Type *__ret) {
-#ifdef _LIBCUDACXX_HAS_NO_ISO_INTRIN
-    __int16 __tmp = *(const volatile __int8 *)__ptr;
+#ifdef _LIBCUDACXX_MSVC_HAS_NO_ISO_INTRIN
+    __int16 __tmp = *(const volatile __int16 *)__ptr;
 #else
     __int16 __tmp = __iso_volatile_load16((const volatile __int16 *)__ptr);
 #endif
@@ -64,8 +64,8 @@ void __atomic_load_relaxed(const volatile _Type *__ptr, _Type *__ret) {
 }
 template<class _Type, detail::_enable_if_sized_as<_Type,4> = 0>
 void __atomic_load_relaxed(const volatile _Type *__ptr, _Type *__ret) {
-#ifdef _LIBCUDACXX_HAS_NO_ISO_INTRIN
-    __int32 __tmp = *(const volatile __int8 *)__ptr;
+#ifdef _LIBCUDACXX_MSVC_HAS_NO_ISO_INTRIN
+    __int32 __tmp = *(const volatile __int32 *)__ptr;
 #else
     __int32 __tmp = __iso_volatile_load32((const volatile __int32 *)__ptr);
 #endif
@@ -73,8 +73,8 @@ void __atomic_load_relaxed(const volatile _Type *__ptr, _Type *__ret) {
 }
 template<class _Type, detail::_enable_if_sized_as<_Type,8> = 0>
 void __atomic_load_relaxed(const volatile _Type *__ptr, _Type *__ret) {
-#ifdef _LIBCUDACXX_HAS_NO_ISO_INTRIN
-    __int64 __tmp = *(const volatile __int8 *)__ptr;
+#ifdef _LIBCUDACXX_MSVC_HAS_NO_ISO_INTRIN
+    __int64 __tmp = *(const volatile __int64 *)__ptr;
 #else
     __int64 __tmp = __iso_volatile_load64((const volatile __int64 *)__ptr);
 #endif
@@ -92,27 +92,48 @@ void __atomic_load(const volatile _Type *__ptr, _Type *__ret, int __memorder) {
     }
 }
 
-
 template<class _Type, detail::_enable_if_sized_as<_Type,1> = 0>
-void __atomic_store_relaxed(const volatile _Type *__ptr, _Type *__val) {
-    __int8 __tmp = reinterpret_cast<__int8&>(*__val);
-    __iso_volatile_store8((volatile __int8 *)__ptr, __tmp);
+void __atomic_store_relaxed(volatile _Type *__ptr, _Type *__val) {
+    auto __t = reinterpret_cast<__int8 *>(__val);
+    auto __d = reinterpret_cast<volatile __int8 *>(__ptr);
+#ifdef _LIBCUDACXX_MSVC_HAS_NO_ISO_INTRIN
+    (void)_InterlockedExchange8(__d, *__t);
+#else
+    __iso_volatile_store8(__d, __t);
+#endif
 }
 template<class _Type, detail::_enable_if_sized_as<_Type,2> = 0>
-void __atomic_store_relaxed(const volatile _Type *__ptr, _Type *__val) {
-    __int16 __tmp = reinterpret_cast<__int16&>(*__val);
-    __iso_volatile_store16((volatile __int16 *)__ptr, __tmp);
+void __atomic_store_relaxed(volatile _Type *__ptr, _Type *__val) {
+    auto __t = reinterpret_cast<__int16 *>(__val);
+    auto __d = reinterpret_cast<volatile __int16 *>(__ptr);
+#ifdef _LIBCUDACXX_MSVC_HAS_NO_ISO_INTRIN
+    (void)_InterlockedExchange16(__d, *__t);
+#else
+    __iso_volatile_store16(__d, __t);
+#endif
 }
 template<class _Type, detail::_enable_if_sized_as<_Type,4> = 0>
-void __atomic_store_relaxed(const volatile _Type *__ptr, _Type *__val) {
-    __int32 __tmp = reinterpret_cast<__int32&>(*__val);
-    __iso_volatile_store32((volatile __int32 *)__ptr, __tmp);
+void __atomic_store_relaxed(volatile _Type *__ptr, _Type *__val) {
+    auto __t = reinterpret_cast<__int32 *>(__val);
+    auto __d = reinterpret_cast<volatile __int32 *>(__ptr);
+#ifdef _LIBCUDACXX_MSVC_HAS_NO_ISO_INTRIN
+    // int cannot be converted to long?...
+    (void)_InterlockedExchange(reinterpret_cast<volatile long *>(__d), *__t);
+#else
+    __iso_volatile_store32(__d, __t);
+#endif
 }
 template<class _Type, detail::_enable_if_sized_as<_Type,8> = 0>
-void __atomic_store_relaxed(const volatile _Type *__ptr, _Type *__val) {
-    __int64 __tmp = reinterpret_cast<__int64&>(*__val);
-    __iso_volatile_store64((volatile __int64 *)__ptr, __tmp);
+void __atomic_store_relaxed(volatile _Type *__ptr, _Type *__val) {
+    auto __t = reinterpret_cast<__int64 *>(__val);
+    auto __d = reinterpret_cast<volatile __int64 *>(__ptr);
+#ifdef _LIBCUDACXX_MSVC_HAS_NO_ISO_INTRIN
+    (void)_InterlockedExchange64(__d, *__t);
+#else
+    __iso_volatile_store64(__d, __t);
+#endif
 }
+
 template<class _Type>
 void __atomic_store(volatile _Type *__ptr, _Type *__val, int __memorder) {
     switch (__memorder) {

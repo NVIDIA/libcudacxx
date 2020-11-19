@@ -860,7 +860,7 @@ typedef __char32_t char32_t;
 
 // MSVC exposed __iso_volatile intrinsics beginning on 1924 for x86
 #if _MSC_VER < 1924
-    #define _LIBCUDACXX_HAS_NO_ISO_INTRIN
+    #define _LIBCUDACXX_MSVC_HAS_NO_ISO_INTRIN
 #endif
 
 #define _LIBCUDACXX_UNDERLYING_TYPE(...) __underlying_type(__VA_ARGS__)
