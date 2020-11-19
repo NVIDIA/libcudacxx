@@ -210,9 +210,9 @@
 // compiler.
 #  define _LIBCUDACXX_COMPILER_NVCC
 #else
-// As NVCC does not really support `long double` the type is ignored
+// If NVCC is not being used <complex> can safely use `long double` without warnings
 #  define _LIBCUDACXX_HAS_COMPLEX_LONG_DOUBLE
-// Also, since we cannot silence non '_' prefixed literal warnings, we need to disable some UDLs
+// NVCC does not have a way of silencing non '_' prefixed UDLs
 #  define _LIBCUDACXX_HAS_STL_LITERALS
 #endif
 
