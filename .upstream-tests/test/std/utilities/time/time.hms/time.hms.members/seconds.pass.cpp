@@ -22,7 +22,7 @@
 
 template <typename Duration>
 __host__ __device__
-constexpr long check_seconds(Duration d)
+constexpr auto check_seconds(Duration d)
 {
     using HMS = cuda::std::chrono::hh_mm_ss<Duration>;
     ASSERT_SAME_TYPE(cuda::std::chrono::seconds, decltype(cuda::std::declval<HMS>().seconds()));
