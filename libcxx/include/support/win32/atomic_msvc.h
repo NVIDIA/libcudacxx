@@ -1,3 +1,4 @@
+// -*- C++ -*-
 //===----------------------------------------------------------------------===//
 //
 // Part of libcu++, the C++ Standard Library for your entire system,
@@ -45,22 +46,38 @@ namespace detail {
 
 template<class _Type, detail::_enable_if_sized_as<_Type,1> = 0>
 void __atomic_load_relaxed(const volatile _Type *__ptr, _Type *__ret) {
+#ifdef _LIBCUDACXX_HAS_NO_ISO_INTRIN
+    __int8 __tmp = *(const volatile __int8 *)__ptr;
+#else
     __int8 __tmp = __iso_volatile_load8((const volatile __int8 *)__ptr);
+#endif
     *__ret = reinterpret_cast<_Type&>(__tmp);
 }
 template<class _Type, detail::_enable_if_sized_as<_Type,2> = 0>
 void __atomic_load_relaxed(const volatile _Type *__ptr, _Type *__ret) {
+#ifdef _LIBCUDACXX_HAS_NO_ISO_INTRIN
+    __int16 __tmp = *(const volatile __int8 *)__ptr;
+#else
     __int16 __tmp = __iso_volatile_load16((const volatile __int16 *)__ptr);
+#endif
     *__ret = reinterpret_cast<_Type&>(__tmp);
 }
 template<class _Type, detail::_enable_if_sized_as<_Type,4> = 0>
 void __atomic_load_relaxed(const volatile _Type *__ptr, _Type *__ret) {
+#ifdef _LIBCUDACXX_HAS_NO_ISO_INTRIN
+    __int32 __tmp = *(const volatile __int8 *)__ptr;
+#else
     __int32 __tmp = __iso_volatile_load32((const volatile __int32 *)__ptr);
+#endif
     *__ret = reinterpret_cast<_Type&>(__tmp);
 }
 template<class _Type, detail::_enable_if_sized_as<_Type,8> = 0>
 void __atomic_load_relaxed(const volatile _Type *__ptr, _Type *__ret) {
+#ifdef _LIBCUDACXX_HAS_NO_ISO_INTRIN
+    __int64 __tmp = *(const volatile __int8 *)__ptr;
+#else
     __int64 __tmp = __iso_volatile_load64((const volatile __int64 *)__ptr);
+#endif
     *__ret = reinterpret_cast<_Type&>(__tmp);
 }
 
@@ -74,6 +91,7 @@ void __atomic_load(const volatile _Type *__ptr, _Type *__ret, int __memorder) {
     default: assert(0);
     }
 }
+
 
 template<class _Type, detail::_enable_if_sized_as<_Type,1> = 0>
 void __atomic_store_relaxed(const volatile _Type *__ptr, _Type *__val) {
