@@ -30,7 +30,7 @@ All threads in `group` acquire collective ownership of the `shared_state` storag
 
 `make_pipeline` must be invoked by every threads in `group` such that `group::sync` may be invoked.
 
-`shared_state` and `producer_count` must be uniform across all threads in `group`, else the behavior is undefined.
+`shared_state` and `producer_count` must be the same across all threads in `group`, else the behavior is undefined.
 
 `producer_count` must be strictly inferior to `group::size`, else the behavior is undefined.
 
