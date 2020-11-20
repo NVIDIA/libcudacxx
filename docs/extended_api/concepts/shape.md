@@ -5,17 +5,7 @@ parent: Concepts
 
 # Shape
 
-```c++
-struct Shape {
-    operator size_t() const;
-};
-```
-
 The _Shape concept_ defines the requirements of a type that represents a byte extent with a particular memory layout.
-
-## Member functions
-
-| operator size_t | implicit conversion to [`size_t`](https://en.cppreference.com/w/cpp/types/size_t) |
 
 ## Notes
 
