@@ -28,6 +28,11 @@ void memcpy_async(Group const & group, void * destination, void const * source, 
 Asynchronously copies `size` bytes from the memory location pointed to by `source` to the memory location pointed to by `destination`.
 Both objects are reinterpreted as arrays of `unsigned char`.
 
+1. Binds the asynchronous copy completion to `barrier` and issues the copy in the current thread.
+2. Binds the asynchronous copy completion to `barrier` and cooperatively issues the copy across all threads in `group`.
+3. Binds the asynchronous copy completion to `pipeline` and issues the copy in the current thread
+4. Binds the asynchronous copy completion to `pipeline` and cooperatively issues the copy across all threads in `group`.
+
 `cuda::memcpy_async` have similar constraints to [`std::memcpy`](https://en.cppreference.com/w/cpp/string/byte/memcpy), namely:
 * If the objects overlap, the behavior is undefined.
 * If either `destination` or `source` is an invalid or null pointer, the behavior is undefined (even if `count` is zero).
@@ -38,10 +43,7 @@ If _Shape_ is [`cuda::aligned_size_t`](./aligned_size_t.md)), `source` and `dest
 
 If `pipeline` is in a _quitted state_ (see [`pipeline::quit`](../synchronization_library/pipeline/quit.md)), the behavior is undefined.
 
-1. Binds the asynchronous copy completion to `barrier` and issues the copy in the current thread.
-2. Binds the asynchronous copy completion to `barrier` and cooperatively issues the copy across all threads in `group`.
-3. Binds the asynchronous copy completion to `pipeline` and issues the copy in the current thread
-4. Binds the asynchronous copy completion to `pipeline` and cooperatively issues the copy across all threads in `group`.
+For cooperative variants, if the parameters are not the same across all threads in `group`, the behavior is undefined.
 
 ## Template parameters
 
