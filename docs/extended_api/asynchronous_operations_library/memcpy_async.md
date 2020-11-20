@@ -8,21 +8,21 @@ parent: Asynchronous operations library
 Defined in header [`<cuda/barrier>`](../../api/synchronization_library/barrier.md)
 
 ```c++
-template<typename Shape, thread_scope Scope>
-void memcpy_async(void * destination, void const * source, Shape size, barrier<Scope> & barrier);                        // (1)
+template<typename Shape, thread_scope Scope, typename CompletionFunction>
+void memcpy_async(void * destination, void const * source, Shape size, barrier<Scope, CompletionFunction> & barrier);                      // (1)
 
-template<typename Group, typename Shape, thread_scope Scope>
-void memcpy_async(Group const & group, void * destination, void const * source, Shape size, barrier<Scope> & barrier);   // (2)
+template<typename Group, typename Shape, thread_scope Scope, typename CompletionFunction>
+void memcpy_async(Group const & group, void * destination, void const * source, Shape size, barrier<Scope, CompletionFunction> & barrier); // (2)
 ```
 
 Defined in header [`<cuda/pipeline>`](../headers/pipeline.md)
 
 ```c++
 template<typename Shape, thread_scope Scope>
-void memcpy_async(void * destination, void const * source, Shape size, pipeline<Scope> & pipeline);                      // (3)
+void memcpy_async(void * destination, void const * source, Shape size, pipeline<Scope> & pipeline);                                        // (3)
 
 template<typename Group, typename Shape, thread_scope Scope>
-void memcpy_async(Group const & group, void * destination, void const * source, Shape size, pipeline<Scope> & pipeline); // (4)
+void memcpy_async(Group const & group, void * destination, void const * source, Shape size, pipeline<Scope> & pipeline);                   // (4)
 ```
 
 Asynchronously copies `size` bytes from the memory location pointed to by `source` to the memory location pointed to by `destination`.
