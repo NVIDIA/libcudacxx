@@ -20,8 +20,8 @@ The NVIDIA C++ Standard Library requires either the [NVIDIA HPC SDK] or the
 
 libcu++ was first released in NVHPC 20.3 and CUDA 10.2.
 Some features are only available in newer releases.
-Please see the [API section] and the [release section] to find which features
-  require newer releases.
+Please see the [Standard API section], [Extended API section], and
+  [release section] to find which features require newer releases.
 
 Releases of libcu++ are only tested against the latest releases of NVHPC and
   CUDA.
@@ -98,8 +98,9 @@ To build and test libcu++ yourself, you will need the following in addition to
   - We recommend installing lit using Python's pip package manager.
 
 
-[API section]: ./api.md
-[synchronization library section]: https://nvidia.github.io/libcudacxx/api/synchronization_library.html
+[Standard API section]: ./standard_api.md
+[Extended API section]: ./extended_api.md
+[synchronization library section]: https://nvidia.github.io/libcudacxx/standard_api/synchronization_library.html
 [changelog]: ./releases/changelog.md
 
 [NVIDIA HPC SDK]: https://developer.nvidia.com/hpc-sdk

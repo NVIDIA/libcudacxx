@@ -6,24 +6,23 @@ nav_order: 3
 
 # Extended API
 
-## [Headers](./extended_api/headers.md)
+| Feature                   | Added In                                                            |
+|---------------------------|---------------------------------------------------------------------|
+| [Thread Scopes]           | 1.0.0 / CUDA 10.2                                                   |
+| [Thread Groups]           | 1.2.0 / CUDA 11.1                                                   |
+| [Atomics]                 | 1.0.0 / CUDA 10.2                                                   |
+| [Barriers]                | 1.1.0 / CUDA 11.0                                                   |
+| [Latches]                 | 1.1.0 / CUDA 11.0                                                   |
+| [Semaphores]              | 1.1.0 / CUDA 11.0                                                   |
+| [Pipelines]               | CUDA 11.1 (only in the CUDA toolkit, not on GitHub)                 |
+| [Asynchronous Operations] | 1.1.0 / CUDA 11.0<br/>1.2.0 / CUDA 11.1 (group & aligned overloads) |
 
-### [\<cuda/pipeline>](./extended_api/headers/pipeline.md)
 
-## [Concepts](./extended_api/concepts.md)
-
-### [Group](./extended_api/concepts/group.md)
-
-### [Shape](./extended_api/concepts/shape.md)
-
-## [Synchronization library](./extended_api/synchronization_library.md)
-
-### [pipeline](./extended_api/synchronization_library/pipeline.md)
-
-### [pipeline_shared_state](./extended_api/synchronization_library/pipeline_shared_state.md)
-
-## [Asynchronous operations library](./extended_api/asynchronous_operations_library.md)
-
-### [aligned_size_t](./extended_api/asynchronous_operations_library/aligned_size_t.md)
-
-### [memcpy_async](./extended_api/asynchronous_operations_library/memcpy_async.md)
+[Thread Scopes]: ./extended_api/thread_groups.md
+[Thread Groups]: ./extended_api/thread_scopes.md
+[Atomics]: ./extended_api/atomics.md
+[Barriers]: ./extended_api/barriers.md
+[Latches]: ./extended_api/latches.md
+[Semaphores]: ./extended_api/semaphores.md
+[Pipelines]: ./extended_api/pipelines.md
+[Asynchronous Operations]: ./extended_api/asynchronous_operations.md

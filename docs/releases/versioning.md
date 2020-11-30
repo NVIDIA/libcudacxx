@@ -184,7 +184,7 @@ However, we must be careful, because ABI namespaces cannot diagnosis all mixing
 Let's say we a translation unit compiled with ABI version 3 that contains this
   code:
 
-```c++
+```cuda
 struct sum { cuda::atomic<float> };
 void negate(sum&);
 ```
