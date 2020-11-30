@@ -16,7 +16,7 @@ If you know how to use your C++ Standard Library, then you know how to use
 All you have to do is add `cuda/std/` to the start of your Standard Library
   includes and `cuda::` before any uses of `std::`:
 
-```c++
+```cuda
 #include <cuda/std/atomic>
 cuda::std::atomic<int> x;
 ```
@@ -45,7 +45,7 @@ When used with NVCC, NVIDIA C++ Standard Library facilities live in their own
 * `cuda::device`/`<cuda/device/*>`: Conforming extensions to the Standard
       Library that work only in `__device__` code.
 
-```c++
+```cuda
 // Standard C++, __host__ only.
 #include <atomic>
 std::atomic<int> x;
@@ -89,8 +89,8 @@ Such facilities live in `cuda::device::`.
 Today, the NVIDIA C++ Standard Library delivers a high-priority subset of the
   C++ Standard Library today, and each release increases the feature set.
 But it is a subset; not everything is available today.
-The [API section] lists the facilities available and the releases they were
-  first introduced in.
+The [Standard API section] lists the facilities available and the releases they
+  were first introduced in.
 
 ## Licensing
 
@@ -122,8 +122,8 @@ We recommend that you always recompile your code and dependencies with the
 
 [GitHub]: https://github.com/nvidia/libcudacxx
 
-[API section]: https://nvidia.github.io/libcudacxx/api.html
-[synchronization library section]: https://nvidia.github.io/libcudacxx/api/synchronization_library.html
+[Standard API section]: https://nvidia.github.io/libcudacxx/standard_api.html
+[synchronization library section]: https://nvidia.github.io/libcudacxx/standard_api/synchronization_library.html
 [versioning section]: https://nvidia.github.io/libcudacxx/releases/versioning.html
 
 [documentation]: https://nvidia.github.io/libcudacxx

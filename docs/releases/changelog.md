@@ -8,14 +8,16 @@ nav_order: 0
 ## libcu++ 1.4.0
 
 libcu++ 1.4.0 adds `<cuda/std/complex>`, NVCC + MSVC support for
-  `<cuda/std/tuple>` and `cuda::std::pair`, and backports of C++20
-  `<cuda/std/chrono>` and C++17 `<cuda/std/type_traits>` features.
+  `<cuda/std/tuple>`, and backports of C++20 `<cuda/std/chrono>` and C++17
+  `<cuda/std/type_traits>` features to C++14.
 
 Supported ABI versions: 3 (default) and 2.
 
-## New Features
+### New Features
 
-## Issues Fixed
+### Other Enhancements
+
+### Issues Fixed
 
 ## libcu++ 1.3.0 (CUDA Toolkit 11.2)
 
