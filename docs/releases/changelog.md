@@ -5,6 +5,27 @@ nav_order: 0
 
 # Changelog
 
+<!--
+
+## libcu++ 2.0.0
+
+libcu++ 2.0.0 is the first release of libcu++ as a complete standalone Standard
+  Library for NVC++.
+It adds `cuda::[std::]atomic_ref`, `<cuda/std/mutex>`, and
+  `cuda::[std::]atomic` support for padding bits.
+It pulls in the latest version of upstream libc++ and marks the beginning of
+  automatic tracking of upstream.
+
+Supported ABI versions: 3 (default) and 2.
+
+### New Features
+
+### Other Enhancements
+
+### Issues Fixed
+
+-->
+
 ## libcu++ 1.4.0
 
 libcu++ 1.4.0 adds `<cuda/std/complex>`, NVCC + MSVC support for
