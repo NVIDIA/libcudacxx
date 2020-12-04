@@ -15,10 +15,10 @@ libcu++ Addendum for details.
 
 | Header                                         | Added In          | Docs |
 |------------------------------------------------|-------------------|------|
-| `<cuda/std/atomic>`    | 1.0.0 / CUDA 10.2 | [Standard API](https://en.cppreference.com/w/cpp/header/atomic), [Extended API](./extended_api/atomics.md)       |
-| `<cuda/std/barrier>`   | 1.1.0 / CUDA 11.0 | [Standard API](https://en.cppreference.com/w/cpp/header/barrier), [Extended API](./extended_api/barriers.md)     |
-| `<cuda/std/latch>`     | 1.1.0 / CUDA 11.0 | [Standard API](https://en.cppreference.com/w/cpp/header/latch), [Extended API](./extended_api/latches.md)        |
-| `<cuda/std/semaphore>` | 1.1.0 / CUDA 11.0 | [Standard API](https://en.cppreference.com/w/cpp/header/semaphore), [Extended API](./extended_api/semaphores.md) |
+| `<cuda/std/atomic>`    | 1.0.0 / CUDA 10.2 | [Standard API](https://en.cppreference.com/w/cpp/header/atomic), [Extended API](./extended_api/synchronization_primitives/atomic.md)       |
+| `<cuda/std/barrier>`   | 1.1.0 / CUDA 11.0 | [Standard API](https://en.cppreference.com/w/cpp/header/barrier), [Extended API](./extended_api/synchronization_primtives/barrier.md)     |
+| `<cuda/std/latch>`     | 1.1.0 / CUDA 11.0 | [Standard API](https://en.cppreference.com/w/cpp/header/latch), [Extended API](./extended_api/synchronization_primitives/latch.md)        |
+| `<cuda/std/semaphore>` | 1.1.0 / CUDA 11.0 | [Standard API](https://en.cppreference.com/w/cpp/header/semaphore), [Extended API](./extended_api/synchronization_primitives/counting_semaphore.md) |
 
 ## [Time Library](./standard_api/time_library.md)
 
