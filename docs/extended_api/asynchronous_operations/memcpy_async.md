@@ -48,7 +48,7 @@ Both objects are reinterpreted as arrays of `unsigned char`.
 2. Binds the asynchronous copy completion to `cuda::barrier` and cooperatively
    issues the copy across all threads in `group`.
 3. Binds the asynchronous copy completion to `cuda::pipeline` and issues the copy
-   in the current thread
+   in the current thread.
 4. Binds the asynchronous copy completion to `cuda::pipeline` and cooperatively
    issues the copy across all threads in `group`.
 

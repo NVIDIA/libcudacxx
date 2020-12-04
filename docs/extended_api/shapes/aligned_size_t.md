@@ -36,9 +36,9 @@ The class template `cuda::aligned_size_t` is a _shape_ representing an extent
 | `operator=` [implicitly declared]  | Trivial implicit copy/move assignment.                                                                  |
 | `operator cuda::std::size_t`       | Implicit conversion to [`cuda::std::size_t`].                                                           |
 
-## Expects
+## Notes
 
-`Alignment` is a [valid alignment].
+If `Alignment` is not a [valid alignment], the behavior is undefined.
 
 ## Example
 

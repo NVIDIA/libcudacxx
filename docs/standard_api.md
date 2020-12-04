@@ -24,17 +24,22 @@ libcu++ Addendum for details.
 
 {% include_relative standard_api/time_library/header_table.md %}
 
+## [Numerics Library](./standard_api/numerics_library.md)
+
+{% include_relative standard_api/numerics_library/header_table.md %}
+
 ## [Utility Library](./standard_api/utility_library.md)
 
 {% include_relative standard_api/utility_library/header_table.md %}
 
 ## C Library
 
-| Header                   | Added In          | Docs |
-|--------------------------|-------------------|------|
-| `<cuda/std/cassert>`     | 1.0.0 / CUDA 10.2 | [Standard API](https://en.cppreference.com/w/cpp/header/cassert) |
-| `<cuda/std/cfloat>`      | 1.0.0 / CUDA 10.2 | [Standard API](https://en.cppreference.com/w/cpp/header/cfloat)  |
-| `<cuda/std/climits>`     | 1.0.0 / CUDA 10.2 | [Standard API](https://en.cppreference.com/w/cpp/header/climits) |
-| `<cuda/std/cstddef>`     | 1.0.0 / CUDA 10.2 | [Standard API](https://en.cppreference.com/w/cpp/header/cstddef) |
-| `<cuda/std/cstdint>`     | 1.0.0 / CUDA 10.2 | [Standard API](https://en.cppreference.com/w/cpp/header/cstdint) |
+| Header                   | Added In                             | Docs |
+|--------------------------|--------------------------------------|------|
+| `<cuda/std/cassert>`     | 1.0.0 / CUDA 10.2                    | [Standard API](https://en.cppreference.com/w/cpp/header/cassert)  |
+| `<cuda/std/ccomplex>`    | 1.4.0                                | [Standard API](https://en.cppreference.com/w/cpp/header/ccomplex) |
+| `<cuda/std/cfloat>`      | 1.0.0 / CUDA 10.2                    | [Standard API](https://en.cppreference.com/w/cpp/header/cfloat)   |
+| `<cuda/std/climits>`     | 1.0.0 / CUDA 10.2                    | [Standard API](https://en.cppreference.com/w/cpp/header/climits)  |
+| `<cuda/std/cstddef>`     | 1.0.0 / CUDA 10.2<br/>1.4.0 (`byte`) | [Standard API](https://en.cppreference.com/w/cpp/header/cstddef)  |
+| `<cuda/std/cstdint>`     | 1.0.0 / CUDA 10.2                    | [Standard API](https://en.cppreference.com/w/cpp/header/cstdint)  |
 

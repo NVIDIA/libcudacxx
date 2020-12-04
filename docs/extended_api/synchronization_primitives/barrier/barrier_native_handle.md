@@ -16,9 +16,9 @@ Returns a pointer to the native handle of a [`cuda::barrier`] if its scope
   is `cuda::thread_scope_block` and it is allocated in shared memory.
 The pointer is suitable for use with PTX instructions.
 
-## Expects
+## Notes
 
-`bar` is in `__shared__` memory.
+If `bar` is not in `__shared__` memory, the behavior is undefined.
 
 ## Return Value
 

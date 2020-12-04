@@ -1,6 +1,6 @@
 ---
-grand_parent: Extended API
-parent: Atomics
+grand_parent: Synchronization Primitives
+parent: cuda::atomic
 ---
 
 # `cuda::atomic::fetch_min`

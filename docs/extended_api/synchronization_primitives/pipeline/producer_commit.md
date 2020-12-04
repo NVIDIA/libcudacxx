@@ -16,11 +16,12 @@ void cuda::pipeline<Scope>::producer_commit();
 Commits operations previously issued by the current thread to the current
   _pipeline stage_.
 
-## Notes
+## Expects
 
-The calling thread is a _producer thread_.
+If the calling thread is a _consumer thread_, the behavior is undefined.
 
-The pipeline is not in a _quitted state_ (see [`cuda::pipeline::quit`]).
+The pipeline is in a _quitted state_ (see [`cuda::pipeline::quit`]), the
+  behavior is undefined.
 
 
 [`cuda::pipeline::quit`]: ./quit.md

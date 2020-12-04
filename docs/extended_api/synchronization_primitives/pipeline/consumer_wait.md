@@ -3,7 +3,7 @@ grand_parent: Pipelines
 parent: cuda::pipeline
 ---
 
-# `cuda::pipeline::consumer_wait*`
+# `cuda::pipeline::consumer_wait`
 
 Defined in header `<cuda/pipeline>`:
 
@@ -44,11 +44,12 @@ bool cuda::pipeline<Scope>::consumer_wait_until(
 
 `false` if the _wait_ timed out, `true` otherwise.
 
-## Expects
+## Notes
 
-The calling thread is a _consumer thread_.
+If the calling thread is a _producer thread_, the behavior is undefined.
 
-The pipeline is not in a _quitted state_ (see [`cuda::pipeline::quit`]).
+The pipeline is in a _quitted state_ (see [`cuda::pipeline::quit`]), the
+  behavior is undefined.
 
 
 [`cuda::pipeline::quit`]: ./quit.md

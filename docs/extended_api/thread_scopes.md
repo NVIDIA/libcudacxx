@@ -17,29 +17,29 @@ enum thread_scope {
   thread_scope_thread
 };
 
-template <typename T, thread_scope Scope = thread_scope_thread>
+template <typename T, thread_scope Scope = thread_scope_system>
 class atomic;
 
-void atomic_thread_fence(memory_order, thread_scope = thread_scope_thread);
+void atomic_thread_fence(std::memory_order, thread_scope = thread_scope_system);
 
 // Header `<cuda/barrier>`.
 
-template <thread_scope Scope = thread_scope_thread,
+template <thread_scope Scope,
           typename Completion = /* implementation-defined */>
 class barrier;
 
 // Header `<cuda/latch>`.
 
-template <thread_scope Scope = thread_scope_thread>
+template <thread_scope Scope>
 class latch;
 
 // Header `<cuda/semaphore>`.
 
-template <thread_scope Scope = thread_scope_thread>
+template <thread_scope Scope>
 class binary_semaphore;
 
 template <thread_scope Scope = thread_scope_thread,
-          ptrdiff_t LeastMaximum = /* implementation-defined */>
+          ptrdiff_t LeastMaximumValue = /* implementation-defined */>
 class counting_semaphore;
 
 }
