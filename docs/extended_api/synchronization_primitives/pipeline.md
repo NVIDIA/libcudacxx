@@ -1,7 +1,6 @@
 ---
 grand_parent: Extended API
-parent: Pipelines
-nav_order: 0
+parent: Synchronization Primitives
 ---
 
 # `cuda::pipeline`

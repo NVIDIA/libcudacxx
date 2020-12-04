@@ -1,9 +1,10 @@
 ---
-parent: Extended API
-nav_order: 5
+grand_parent: Extended API
+parent: Synchronization Primitives
+nav_order: 2
 ---
 
-# Latches
+# `cuda::latch`
 
 Defined in header `<cuda/latch>`:
 
@@ -61,7 +62,7 @@ __global__ void example_kernel() {
 [See it on Godbolt](https://godbolt.org/z/zcW167){: .btn }
 
 
-[`cuda::thread_scope`]: ./thread_scopes.md
+[`cuda::thread_scope`]: ../thread_scopes.md
 
 [`cuda::std::latch`]: https://en.cppreference.com/w/cpp/thread/latch
 

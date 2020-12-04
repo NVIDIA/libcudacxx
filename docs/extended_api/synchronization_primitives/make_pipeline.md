@@ -1,6 +1,6 @@
 ---
 grand_parent: Extended API
-parent: Pipelines
+parent: Synchronization Primitives
 ---
 
 # `cuda::make_pipeline`

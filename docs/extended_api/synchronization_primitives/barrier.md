@@ -1,9 +1,10 @@
 ---
-parent: Extended API
-nav_order: 4
+grand_parent: Extended API
+parent: Synchronization Primitives
+nav_order: 1
 ---
 
-# Barriers
+# `cuda::barrier`
 
 Defined in header `<cuda/barrier>`:
 
@@ -15,7 +16,8 @@ class cuda::barrier;
 
 The class template `cuda::barrier` is an extended form of [`cuda::std::barrier`]
   that takes an additional [`cuda::thread_scope`] argument.
-It has the same interface and semantics as [`cuda::std::barrier`].
+It has the same interface and semantics as [`cuda::std::barrier`], with the
+  following additional operations.
 
 ## Barrier Operations
 
@@ -92,10 +94,10 @@ __global__ void example_kernel() {
 [See it on Godbolt](https://godbolt.org/z/cqqnzs){: .btn }
 
 
-[`cuda::thread_scope`]: ./thread_scopes.md
+[`cuda::thread_scope`]: ../thread_scopes.md
 
-[`cuda::barrier::init`]: ./barriers/init.md
-[`cuda::device::barrier_native_handle`]: ./barriers/barrier_native_handle.md
+[`cuda::barrier::init`]: ./barrier/init.md
+[`cuda::device::barrier_native_handle`]: ./barrier/barrier_native_handle.md
 
 [`cuda::std::barrier`]: https://en.cppreference.com/w/cpp/thread/barrier
 

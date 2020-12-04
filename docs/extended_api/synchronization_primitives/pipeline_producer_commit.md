@@ -1,6 +1,6 @@
 ---
 grand_parent: Extended API
-parent: Pipelines
+parent: Synchronization Primitives
 ---
 
 # `cuda::pipeline_producer_commit`
@@ -22,7 +22,7 @@ The bind operation implicitly increments the barrier's current phase to account
 ## Parameters
 
 | `pipe` | The thread-scoped `cuda::pipeline` object to wait on. |
-| `bar`  | The `cuda::barrier` to arrive on.                      |
+| `bar`  | The `cuda::barrier` to arrive on.                     |
 
 ## Notes
 

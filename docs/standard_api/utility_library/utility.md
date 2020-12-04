@@ -1,7 +1,7 @@
 ---
 grand_parent: Standard API
 parent: Utility Library
-nav_order: 3
+nav_order: 1
 ---
 
 # `<cuda/std/utility>`

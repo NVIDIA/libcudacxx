@@ -15,29 +15,35 @@ Supported ABI versions: 3 (default) and 2.
 
 ### New Features
 
-- #34: C++17/20 <chrono> backports to C++14
-- #44: C++17 <type_traits> backports to C++14
-- #76: C++20 `is_constant_evaluated` backported to C++11
-- #32: <complex> enabled
-  - `long double` is not supported and disabled when building under NVCC
+- #32: `<cuda/std/complex>`.
+  - `long double` is not supported and disabled when building with NVCC.
+- #34: C++17/20 `<cuda/std/chrono>` backported to C++14.
+  - Thanks to Jake Hemstad and Paul Taylor for this contribution.
+- #44: C++17 `<cuda/std/type_traits>` backported to C++14.
+  - Thanks to Jake Hemstad and Paul Taylor for this contribution.
+- #66: C++17 `cuda::std::byte` (in `<cuda/std/cstddef>`) backported to C++14.
+  - Thanks to Jake Hemstad and Paul Taylor for this contribution.
+- #76: C++20 `cuda::std::is_constant_evaluated` backported to C++11.
+  - Thanks to Jake Hemstad and Paul Taylor for this contribution.
 
 ### Other Enhancements
 
-- [Documentation](https://nvidia.github.io/libcudacxx) has been improved.
-- #43: Atomics on MSVC have been decoupled from host STL
-- #78: Fixed header licensing
-- #31: Revamped samples, benchmarks, and the related build components
-  - Thanks Jake Hemstad
+- [Documentation](https://nvidia.github.io/libcudacxx) has been improved and
+    reorganized.
+- #43: Atomics on MSVC have been decoupled from host Standard Library.
+- #78: Fixed header licensing.
+- #31: Revamped [examples and benchmarks](https://github.com/NVIDIA/libcudacxx/tree/main/examples).
+  - Thanks to Jake Hemstad for this contribution.
 
 ### Issues Fixed
 
-- #53, #80, #81: Improved documentation for the async ops API
-  - Thanks Matthieu Tardy
-- #14: NVRTC missing definitions for several macros
-  - Thanks Ben Barsdell
-- #56: <tuple> now works on a set of most recent MSVC compilers.
-- #66, #82: <chrono>/<type_traits> backports
-  - Thanks Jake Hemstad and Paul Taylor
+- #53, #80, #81: Improved documentation for `<cuda/pipeline>` and the
+    asynchronous operations API.
+- #14: NVRTC missing definitions for several macros.
+  - Thanks to Ben Barsdell for this contribution.
+- #56: `<cuda/std/tuple>` now works on a set of most recent MSVC compilers.
+- #66, #82: `<cuda/std/chrono>`/`<cuda/std/type_traits>` backports.
+  - Thanks to Jake Hemstad and Paul Taylor for this contribution.
 
 ## libcu++ 1.3.0 (CUDA Toolkit 11.2)
 

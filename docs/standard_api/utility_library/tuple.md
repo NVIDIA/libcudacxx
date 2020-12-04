@@ -1,7 +1,7 @@
 ---
 grand_parent: Standard API
 parent: Utility Library
-nav_order: 2
+nav_order: 0
 ---
 
 # `<cuda/std/tuple>`

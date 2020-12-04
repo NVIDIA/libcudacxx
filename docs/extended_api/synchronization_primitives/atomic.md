@@ -1,9 +1,10 @@
 ---
-parent: Extended API
-nav_order: 3
+grand_parent: Extended API
+parent: Synchronization Primitives
+nav_order: 0
 ---
 
-# Atomics
+# `cuda::atomic`
 
 Defined in header `<cuda/atomic>`:
 
@@ -15,7 +16,12 @@ class cuda::atomic;
 The class template `cuda::atomic` is an extended form of [`cuda::std::atomic`]
   that takes an additional [`cuda::thread_scope`] argument, defaulted to
   `cuda::std::thread_scope_system`.
-It has the same interface and semantics as [`cuda::std::atomic`].
+It has the same interface and semantics as [`cuda::std::atomic`], with the
+  following additional operations.
+
+## Atomic Fence Operations
+
+| [`cuda::atomic_thread_fence`] | Memory order and scope dependent fence synchronization primitive. `(function)` |
 
 ## Atomic Extrema Operations
 
@@ -72,10 +78,10 @@ __global__ void example_kernel() {
 [See it on Godbolt](https://godbolt.org/z/Mr9oxd){: .btn }
 
 
-[`cuda::thread_scope`]: ./thread_scopes.md
+[`cuda::thread_scope`]: ../thread_scopes.md
 
-[`cuda::atomic::fetch_min`]: ./atomics/fetch_min.md
-[`cuda::atomic::fetch_max`]: ./atomics/fetch_max.md
+[`cuda::atomic::fetch_min`]: ./atomic/fetch_min.md
+[`cuda::atomic::fetch_max`]: ./atomic/fetch_max.md
 
 [`cuda::std::atomic`]: https://en.cppreference.com/w/cpp/atomic/atomic
 
