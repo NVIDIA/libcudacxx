@@ -68,6 +68,7 @@ RUN set -o pipefail; cd /sw/gpgpu/libcudacxx\
  LIBCUDACXX_SKIP_BASE_TESTS_BUILD=$LIBCUDACXX_SKIP_BASE_TESTS_BUILD\
  /sw/gpgpu/libcudacxx/utils/nvidia/linux/perform_tests.bash\
  --skip-tests-runs\
+ --skip-libcxx-tests\
  2>&1 | tee /sw/gpgpu/libcudacxx/build/build_lit_all.log
 
 # Build tests for sm6x if requested.
