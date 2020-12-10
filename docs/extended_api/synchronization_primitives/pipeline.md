@@ -89,10 +89,10 @@ A thread role cannot change during the lifetime of the pipeline object.
 #pragma diag_suppress static_var_with_dynamic_init
 
 template <typename T>
-__device__ void compute(T * ptr);
+__device__ void compute(T* ptr);
 
 template <typename T>
-__global__ void example_kernel(T* global1, T* global2, cuda::std::size_t subset_count) {
+__global__ void example_kernel(T* global0, T* global1, cuda::std::size_t subset_count) {
   extern __shared__ T s[];
   auto group = cooperative_groups::this_thread_block();
   T* shared[2] = { s, s + 2 * group.size() };
@@ -106,7 +106,7 @@ __global__ void example_kernel(T* global1, T* global2, cuda::std::size_t subset_
   // Prime the pipeline.
   pipeline.producer_acquire();
   cuda::memcpy_async(group, shared[0],
-                     &global1[0], sizeof(T) * group.size(), pipeline);
+                     &global0[0], sizeof(T) * group.size(), pipeline);
   cuda::memcpy_async(group, shared[0] + group.size(),
                      &global2[0], sizeof(T) * group.size(), pipeline);
   pipeline.producer_commit();
@@ -115,10 +115,10 @@ __global__ void example_kernel(T* global1, T* global2, cuda::std::size_t subset_
   for (cuda::std::size_t subset = 1; subset < subset_count; ++subset) {
     pipeline.producer_acquire();
     cuda::memcpy_async(group, shared[subset % 2],
-                       &global1[subset * group.size()],
+                       &global0[subset * group.size()],
                        sizeof(T) * group.size(), pipeline);
     cuda::memcpy_async(group, shared[subset % 2] + group.size(),
-                       &global2[subset * group.size()],
+                       &global1[subset * group.size()],
                        sizeof(T) * group.size(), pipeline);
     pipeline.producer_commit();
     pipeline.consumer_wait();
@@ -135,7 +135,7 @@ __global__ void example_kernel(T* global1, T* global2, cuda::std::size_t subset_
 template void __global__ example_kernel<int>(int*, int*, cuda::std::size_t);
 ```
 
-[See it on Godbolt](https://godbolt.org/z/8Ej4o5){: .btn }
+[See it on Godbolt](https://godbolt.org/z/43dr9e){: .btn }
 
 
 [asynchronous operations]: ../asynchronous_operations.md

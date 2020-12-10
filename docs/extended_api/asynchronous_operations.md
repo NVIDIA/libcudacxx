@@ -1,14 +1,7 @@
----
-parent: Extended API
-has_children: true
-has_toc: false
-nav_order: 8
----
+## Asynchronous Operations
 
-# Asynchronous Operations
-
-| [`cuda::memcpy_async`] | Asynchronously copies one buffer to another. `(function template)` |
+| [`cuda::memcpy_async`] | Asynchronously copies one range to another. `(function template)` <br/><br/> 1.1.0 / CUDA 11.0 <br/> 1.2.0 / CUDA 11.1 (group & aligned overloads) |
 
 
-[`cuda::memcpy_async`]: ./asynchronous_operations/memcpy_async.md
+[`cuda::memcpy_async`]: {{ "extended_api/asynchronous_operations/memcpy_async.html" | relative_url }}
 
