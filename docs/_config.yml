@@ -28,22 +28,56 @@ defaults:
       nav_order: 0
   -
     scope:
-      path: api/synchronization_library/header_table.md
-    values:
-      nav_exclude: true
-  -
-    scope:
-      path: api/time_library/header_table.md
-    values:
-      nav_exclude: true
-  -
-    scope:
-      path: api/utility_library/header_table.md
-    values:
-      nav_exclude: true
-  -
-    scope:
       path: contributing/code_of_conduct.md
     values:
       parent: Contributing
       nav_order: 0
+  -
+    scope:
+      path: standard_api/time_library.md
+    values:
+      parent: Standard API
+      has_children: true
+      has_toc: false
+      nav_order: 0
+  -
+    scope:
+      path: standard_api/numerics_library.md
+    values:
+      parent: Standard API
+      has_children: true
+      has_toc: false
+      nav_order: 1
+  -
+    scope:
+      path: standard_api/utility_library.md
+    values:
+      parent: Standard API
+      has_children: true
+      has_toc: false
+      nav_order: 2
+  -
+    scope:
+      path: extended_api/shapes.md
+    values:
+      parent: Extended API
+      has_children: true
+      has_toc: false
+      nav_order: 2
+  -
+    scope:
+      path: extended_api/synchronization_primitives.md
+    values:
+      parent: Extended API
+      has_children: true
+      has_toc: false
+      nav_order: 3
+  -
+    scope:
+      path: extended_api/asynchronous_operations.md
+    values:
+      parent: Extended API
+      has_children: true
+      has_toc: false
+      nav_order: 4
+

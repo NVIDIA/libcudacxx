@@ -4,7 +4,7 @@ parent: Synchronization Primitives
 nav_order: 3
 ---
 
-# `cuda::counting_sempahore`
+# `cuda::counting_semaphore`
 
 Defined in header `<cuda/semaphore>`:
 

@@ -50,11 +50,11 @@ Standard C++ presents a view that the cost to synchronize threads is uniform
 CUDA C++ is different: the overhead is low among threads within a block, and
   high across arbitrary threads in the system.
 
-To bridge these two realities, libcu++ introduces the concept of **thread scopes**,
+To bridge these two realities, libcu++ introduces **thread scopes**,
   to the Standard's concurrency facilities in the `cuda::` namespace, while
   retaining the syntax and semantics of Standard C++ by default.
-A thread scope specifies the group of threads that can synchronize with each
-  other using a concurrency primitive, such as an `atomic` or a `barrier`.
+A thread scope specifies the kind of threads that can synchronize with each
+  other using a primitive such as an `atomic` or a `barrier`.
 
 ## Scope Relationships
 
