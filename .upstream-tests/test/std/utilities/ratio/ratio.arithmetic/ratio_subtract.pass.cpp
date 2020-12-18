@@ -8,7 +8,7 @@
 
 // test ratio_subtract
 
-// XFAIL: nvcc && !nvrtc
+// XFAIL: (nvcc-10 || nvcc-11.0 || nvcc-11.1 || nvcc-11.2) && !nvrtc
 
 // NVCC emits completely nonsensical code for the host compiler for this test
 // because some of the specializations of ratio appear multiple times, whether
