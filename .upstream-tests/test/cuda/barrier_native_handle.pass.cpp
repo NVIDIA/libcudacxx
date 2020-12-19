@@ -9,7 +9,9 @@
 
 // UNSUPPORTED: pre-sm-70
 
+#ifndef __NVCOMPILER
 #pragma diag_suppress static_var_with_dynamic_init
+#endif
 #pragma diag_suppress set_but_not_used
 
 #include <cuda/barrier>

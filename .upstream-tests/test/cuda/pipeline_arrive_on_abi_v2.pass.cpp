@@ -11,7 +11,9 @@
 
 #define _LIBCUDACXX_CUDA_ABI_VERSION 2
 
+#ifndef __NVCOMPILER
 #pragma diag_suppress static_var_with_dynamic_init
+#endif
 #pragma diag_suppress declared_but_not_referenced
 
 #include <cuda_pipeline.h>
