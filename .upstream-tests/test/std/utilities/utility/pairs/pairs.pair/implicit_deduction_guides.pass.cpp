@@ -16,6 +16,9 @@
 // against libstdc++.
 // XFAIL: gcc
 
+// Currently broken with Clang + NVCC.
+// XFAIL: clang
+
 // <utility>
 
 // Test that the constructors offered by cuda::std::pair are formulated
