@@ -1,8 +1,3 @@
----
-parent: Releases
-nav_order: 0
----
-
 # Changelog
 
 <!--
