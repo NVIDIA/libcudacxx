@@ -23,7 +23,8 @@ cuda::std::atomic<int> x;
 
 The NVIDIA C++ Standard Library is an open source project; it is available on
   [GitHub] and included in the NVIDIA HPC SDK and CUDA Toolkit.
-No additional installation or compiler flags are needed.
+If you have one of those SDKs installed, no additional installation or compiler
+  flags are needed to use libcu++.
 
 ## `cuda::` and `cuda::std::`
 
