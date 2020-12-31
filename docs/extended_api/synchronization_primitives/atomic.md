@@ -80,6 +80,8 @@ __global__ void example_kernel() {
 
 [`cuda::thread_scope`]: ../thread_scopes.md
 
+[`cuda::atomic_thread_fence`]: ./atomic/atomic_thread_fence.md
+
 [`cuda::atomic::fetch_min`]: ./atomic/fetch_min.md
 [`cuda::atomic::fetch_max`]: ./atomic/fetch_max.md
 
