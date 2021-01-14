@@ -10,19 +10,21 @@
 #ifndef _LIBCUDACXX___MUTEX_BASE
 #define _LIBCUDACXX___MUTEX_BASE
 
+#ifndef __cuda_std__
 #include <__config>
 #include <chrono>
 #include <system_error>
 #include <__threading_support>
 
 #include <time.h>
+#endif
 
 #if defined(_LIBCUDACXX_USE_PRAGMA_GCC_SYSTEM_HEADER)
 #pragma GCC system_header
 #endif
 
 _LIBCUDACXX_PUSH_MACROS
-#include <__undef_macros>
+#include "__undef_macros"
 
 
 _LIBCUDACXX_BEGIN_NAMESPACE_STD
@@ -37,31 +39,54 @@ _LIBCUDACXX_BEGIN_NAMESPACE_STD
 #  endif
 #endif  // _LIBCUDACXX_THREAD_SAFETY_ANNOTATION
 
-
-class _LIBCUDACXX_TYPE_VIS _LIBCUDACXX_THREAD_SAFETY_ANNOTATION(capability("mutex")) mutex
+template<int _Sco>
+class _LIBCUDACXX_TYPE_VIS _LIBCUDACXX_THREAD_SAFETY_ANNOTATION(capability("mutex")) __mutex_base
 {
-    __libcpp_mutex_t __m_ = _LIBCUDACXX_MUTEX_INITIALIZER;
+    __libcpp_mutex_t<_Sco> __m_ = _LIBCUDACXX_MUTEX_INITIALIZER;
 
 public:
+#ifdef _LIBCUDACXX_CXX03_LANG
     _LIBCUDACXX_INLINE_VISIBILITY
-    _LIBCUDACXX_CONSTEXPR mutex() = default;
+#endif
+    _LIBCUDACXX_CONSTEXPR __mutex_base() = default;
 
-    mutex(const mutex&) = delete;
-    mutex& operator=(const mutex&) = delete;
+    __mutex_base(const __mutex_base&) = delete;
+    __mutex_base& operator=(const __mutex_base&) = delete;
 
 #if defined(_LIBCUDACXX_HAS_TRIVIAL_MUTEX_DESTRUCTION)
-    ~mutex() = default;
+    ~__mutex_base() = default;
 #else
-    ~mutex() _NOEXCEPT;
+    ~__mutex_base() _NOEXCEPT;
 #endif
 
+#ifndef _LIBCUDACXX_INLINE_THREADING
     void lock() _LIBCUDACXX_THREAD_SAFETY_ANNOTATION(acquire_capability());
     bool try_lock() _NOEXCEPT _LIBCUDACXX_THREAD_SAFETY_ANNOTATION(try_acquire_capability(true));
     void unlock() _NOEXCEPT _LIBCUDACXX_THREAD_SAFETY_ANNOTATION(release_capability());
+#else
+    _LIBCUDACXX_INLINE_VISIBILITY void lock() _LIBCUDACXX_THREAD_SAFETY_ANNOTATION(acquire_capability()) {
+        __m_.acquire(); //while(!__m_.exchange(0));
+    }
+    _LIBCUDACXX_INLINE_VISIBILITY bool try_lock() _NOEXCEPT _LIBCUDACXX_THREAD_SAFETY_ANNOTATION(try_acquire_capability(true)) {
+        return __m_.try_acquire_for(chrono::nanoseconds::zero());
+    }
+    _LIBCUDACXX_INLINE_VISIBILITY void unlock() _NOEXCEPT _LIBCUDACXX_THREAD_SAFETY_ANNOTATION(release_capability()) {
+        __m_.release(); //__m_.store(1);
+    }
+    template <class _Rep, class _Period> _LIBCUDACXX_INLINE_VISIBILITY
+    bool try_lock_for(const chrono::duration<_Rep, _Period>& __d)
+        { return __m_.try_acquire_for(__d);}
+    template <class _Clock, class _Duration> _LIBCUDACXX_INLINE_VISIBILITY
+    bool try_lock_until(const chrono::time_point<_Clock, _Duration>& __t)
+        { return __m_.try_acquire_until(__t);}
+#endif
 
-    typedef __libcpp_mutex_t* native_handle_type;
+    typedef __libcpp_mutex_t<_Sco>* native_handle_type;
     _LIBCUDACXX_INLINE_VISIBILITY native_handle_type native_handle() {return &__m_;}
 };
+
+using mutex = __mutex_base<0>;
+using timed_mutex = __mutex_base<0>;
 
 static_assert(is_nothrow_default_constructible<mutex>::value,
               "the default constructor for std::mutex must be nothrow");
@@ -174,15 +199,15 @@ public:
 
 #endif  // _LIBCUDACXX_CXX03_LANG
 
-    void lock();
-    bool try_lock();
+    _LIBCUDACXX_INLINE_VISIBILITY void lock();
+    _LIBCUDACXX_INLINE_VISIBILITY bool try_lock();
 
-    template <class _Rep, class _Period>
+    template <class _Rep, class _Period> _LIBCUDACXX_INLINE_VISIBILITY
         bool try_lock_for(const chrono::duration<_Rep, _Period>& __d);
-    template <class _Clock, class _Duration>
+    template <class _Clock, class _Duration> _LIBCUDACXX_INLINE_VISIBILITY
         bool try_lock_until(const chrono::time_point<_Clock, _Duration>& __t);
 
-    void unlock();
+    _LIBCUDACXX_INLINE_VISIBILITY void unlock();
 
     _LIBCUDACXX_INLINE_VISIBILITY
     void swap(unique_lock& __u) _NOEXCEPT
@@ -208,7 +233,7 @@ public:
     mutex_type* mutex() const _NOEXCEPT {return __m_;}
 };
 
-template <class _Mutex>
+template <class _Mutex> _LIBCUDACXX_INLINE_VISIBILITY 
 void
 unique_lock<_Mutex>::lock()
 {
@@ -220,7 +245,7 @@ unique_lock<_Mutex>::lock()
     __owns_ = true;
 }
 
-template <class _Mutex>
+template <class _Mutex> _LIBCUDACXX_INLINE_VISIBILITY 
 bool
 unique_lock<_Mutex>::try_lock()
 {
@@ -232,8 +257,8 @@ unique_lock<_Mutex>::try_lock()
     return __owns_;
 }
 
-template <class _Mutex>
-template <class _Rep, class _Period>
+template <class _Mutex> 
+template <class _Rep, class _Period> _LIBCUDACXX_INLINE_VISIBILITY 
 bool
 unique_lock<_Mutex>::try_lock_for(const chrono::duration<_Rep, _Period>& __d)
 {
@@ -246,7 +271,7 @@ unique_lock<_Mutex>::try_lock_for(const chrono::duration<_Rep, _Period>& __d)
 }
 
 template <class _Mutex>
-template <class _Clock, class _Duration>
+template <class _Clock, class _Duration> _LIBCUDACXX_INLINE_VISIBILITY 
 bool
 unique_lock<_Mutex>::try_lock_until(const chrono::time_point<_Clock, _Duration>& __t)
 {
@@ -258,7 +283,7 @@ unique_lock<_Mutex>::try_lock_until(const chrono::time_point<_Clock, _Duration>&
     return __owns_;
 }
 
-template <class _Mutex>
+template <class _Mutex> _LIBCUDACXX_INLINE_VISIBILITY 
 void
 unique_lock<_Mutex>::unlock()
 {
@@ -274,6 +299,8 @@ void
 swap(unique_lock<_Mutex>& __x, unique_lock<_Mutex>& __y) _NOEXCEPT
     {__x.swap(__y);}
 
+/*
+
 //enum class cv_status
 _LIBCUDACXX_DECLARE_STRONG_ENUM(cv_status)
 {
@@ -286,7 +313,9 @@ class _LIBCUDACXX_TYPE_VIS condition_variable
 {
     __libcpp_condvar_t __cv_ = _LIBCUDACXX_CONDVAR_INITIALIZER;
 public:
+#ifdef _LIBCUDACXX_CXX03_LANG
     _LIBCUDACXX_INLINE_VISIBILITY
+#endif
     _LIBCUDACXX_CONSTEXPR condition_variable() _NOEXCEPT = default;
 
 #ifdef _LIBCUDACXX_HAS_TRIVIAL_CONDVAR_DESTRUCTION
@@ -346,6 +375,7 @@ private:
     void __do_timed_wait(unique_lock<mutex>& __lk,
        chrono::time_point<_Clock, chrono::nanoseconds>) _NOEXCEPT;
 };
+*/
 #endif // !_LIBCUDACXX_HAS_NO_THREADS
 
 template <class _Rep, class _Period>
@@ -410,6 +440,7 @@ __safe_nanosecond_cast(chrono::duration<_Rep, _Period> __d)
 }
 
 #ifndef _LIBCUDACXX_HAS_NO_THREADS
+/*
 template <class _Predicate>
 void
 condition_variable::wait(unique_lock<mutex>& __lk, _Predicate __pred)
@@ -531,7 +562,7 @@ condition_variable::__do_timed_wait(unique_lock<mutex>& __lk,
 {
     wait_for(__lk, __tp - _Clock::now());
 }
-
+*/
 #endif // !_LIBCUDACXX_HAS_NO_THREADS
 
 _LIBCUDACXX_END_NAMESPACE_STD

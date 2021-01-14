@@ -302,8 +302,8 @@ private:
         }
     };
 
-    static inline _LIBCUDACXX_INLINE_VISIBILITY
-    constexpr uint64_t __init(ptrdiff_t __count) _NOEXCEPT
+    static inline _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR
+    uint64_t __init(ptrdiff_t __count) _NOEXCEPT
     {
         return (((1u << 31) - __count) << 32)
               | ((1u << 31) - __count);
@@ -312,7 +312,7 @@ private:
 public:
     __barrier_base() = default;
 
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR
     __barrier_base(ptrdiff_t __count, __empty_completion = __empty_completion())
         : __phase_arrived_expected(__init(__count)) {
     }
@@ -369,7 +369,7 @@ public:
 template<class _CompletionF = __empty_completion>
 class barrier : public __barrier_base<_CompletionF> {
 public:
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR
     barrier(ptrdiff_t __count, _CompletionF __completion = _CompletionF())
         : __barrier_base<_CompletionF>(__count, __completion) {
     }

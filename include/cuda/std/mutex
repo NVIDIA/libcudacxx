@@ -11,30 +11,42 @@
 #  error "CUDA synchronization primitives are only supported for sm_70 and up."
 #endif
 
-#ifndef _CUDA_LATCH
-#define _CUDA_LATCH
-
-#include "atomic"
+#ifndef _CUDA_MUTEX
+#define _CUDA_MUTEX
 
 #include "detail/__config"
+#include "detail/__threading_support"
+#include "detail/__mutex_base"
+
+#include "cstdint"
+#include "functional"
+#include "tuple"
+#include "version"
 
 #include "detail/__pragma_push"
 
-#include "detail/libcxx/include/latch"
+#include "detail/libcxx/include/mutex"
 
 _LIBCUDACXX_BEGIN_NAMESPACE_CUDA
 
 template<thread_scope _Sco>
-class latch : public std::__latch_base<_Sco> {
-public:
-    _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR
-    latch(std::ptrdiff_t __count)
-        : std::__latch_base<_Sco>(__count) {
-    }
-};
+using mutex = std::__mutex_base<_Sco>;
+
+template<thread_scope _Sco>
+using timed_mutex = std::__mutex_base<_Sco>;
+
+template<thread_scope _Sco>
+using once_flag = std::__once_flag_base<_Sco>;
+
+template<class... _Args>
+inline _LIBCUDACXX_INLINE_VISIBILITY
+void call_once(_Args&&... __args)
+{
+    call_once(std::forward<_Args&&>(__args)...);
+}
 
 _LIBCUDACXX_END_NAMESPACE_CUDA
 
 #include "detail/__pragma_pop"
 
-#endif //_CUDA_LATCH
+#endif //_CUDA_MUTEX
