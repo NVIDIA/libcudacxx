@@ -10,12 +10,11 @@
 #ifndef _CUDA_MEMORY_RESOURCE
 #define _CUDA_MEMORY_RESOURCE
 
-
 #include "cstddef"
-
-#include "version"
 #include "detail/__config"
 #include "detail/__pragma_push"
+#include "stream"
+#include "version"
 
 _LIBCUDACXX_BEGIN_NAMESPACE_CUDA
 
@@ -26,47 +25,44 @@ _LIBCUDACXX_BEGIN_NAMESPACE_CUDA
  * and the performance characteristics of the accesses.
  *
  */
-enum class memory_kind { 
-    device,  ///< Device memory accessible only from device
-    unified, ///< Unified memory accessible from both host and device 
-    pinned,  ///< Page-locked system memory accessible from both host and device
-    host     ///< System memory only accessible from host code
+enum class memory_kind {
+  device,  ///< Device memory accessible only from device
+  unified, ///< Unified memory accessible from both host and device
+  pinned,  ///< Page-locked system memory accessible from both host and device
+  host     ///< System memory only accessible from host code
 };
 
 /**
- * @brief Determines the default alignment for an allocation of a given `memory_kind`
- * 
- * @tparam _Kind The `memory_kind` of the allocation
- */
-template <memory_kind _Kind>
-_LIBCUDACXX_INLINE_VAR constexpr std::size_t __default_alignment = (memory_kind::host ? alignof(std::max_align_t) : 256);
-
-/**
  * @brief Abstract interface for synchronous memory allocation.
- * 
+ *
  * @tparam _Kind The `memory_kind` of the allocated memory.
  */
-template <memory_kind _Kind> 
-class memory_resource {
+template <memory_kind _Kind> class memory_resource {
 public:
   static constexpr memory_kind memory_kind = _Kind;
 
-  virtual ~memory_resource() = default;
+  static constexpr std::size_t
+      default_alignment = (_Kind == memory_kind::host)
+                              ? alignof(std::max_align_t)
+                              : 256
+
+                                virtual ~memory_resource() = default;
 
   /**
    * @brief Allocates storage of size at least `__bytes` bytes.
    *
    * The returned storage is aligned to the specified `__alignment` if such
-   * alignment is supported, and to `default_alignment<_Kind>` otherwise.
-   * 
+   * alignment is supported, and to `default_alignment` otherwise.
+   *
    * @throws If storage of the requested size and alignment cannot be obtained.
    *
    * @param __bytes The size in bytes of the allocation
    * @param __alignment The alignment of the allocation
    * @return Pointer to the requested storage
    */
-  void* allocate(std::size_t __bytes, std::size_t __alignment = detail::__default_alignment<_Kind>){
-      return do_allocate(__bytes, __alignment);
+  void *allocate(std::size_t __bytes,
+                 std::size_t __alignment = default_alignment) {
+    return do_allocate(__bytes, __alignment);
   }
 
   /**
@@ -87,8 +83,9 @@ public:
    * the value of `__alignment` that was specified to the `allocate` call that
    * returned `__p`.
    */
-  void deallocate(void* __p, std::size_t __bytes, std::size_t __alignment = detail::__default_alignment<_Kind>){
-      do_deallocate(__p, __bytes, __alignment);
+  void deallocate(void *__p, std::size_t __bytes,
+                  std::size_t __alignment = default_alignment) {
+    do_deallocate(__p, __bytes, __alignment);
   }
 
   /**
@@ -96,27 +93,175 @@ public:
    *
    * Two resources compare equal if and only if memory allocated from one
    * resource can be deallocated from the other and vice versa.
-   * 
+   *
    * @tparam _OtherKind The `memory_kind` of the other resource
    * @param __other The other resource to compare against
    */
-  template <memory_kind _OtherKind> 
-  bool is_equal(memory_resource<_OtherKind> const& __other) const noexcept {
+  template <memory_kind _OtherKind>
+  bool is_equal(memory_resource<_OtherKind> const &__other) const noexcept {
     return do_is_equal(other);
   }
 
 private:
-  virtual void* do_allocate(std::size_t __bytes, std::size_t __alignment) = 0;
+  virtual void *do_allocate(std::size_t __bytes, std::size_t __alignment) = 0;
 
-  virtual void do_deallocate(void* __p, std::size_t __bytes, std::size_t __alignment) = 0;
+  virtual void do_deallocate(void *__p, std::size_t __bytes,
+                             std::size_t __alignment) = 0;
 
   template <memory_kind _OtherKind>
-  virtual bool do_is_equal(memory_resource<_OtherKind> const& __other) const noexcept = 0;
+  virtual bool do_is_equal(memory_resource<_OtherKind> const &__other) const
+      noexcept = 0;
+};
+
+/**
+ * @brief Abstract interface for stream-ordred memory allocation.
+ *
+ * "Stream-ordered memory allocation" extends the CUDA programming model to
+ * include memory allocation as stream-ordered operations.
+ *
+ * Allocating on stream `s0` returns memory that is valid to use immediately
+ * only on `s0`. Using it on any other stream (or the host) first requires
+ * synchronization with `s0`, otherwise behavior is undefined.
+ *
+ * Deallocating memory on stream `s1` indicates that it is valid to reuse the
+ * deallocated memory immediately for another allocation on `s1`.
+ *
+ * Memory may be allocated and deallocated on different streams, `s0` and `s1`
+ * respectively, but requires synchronization between `s0` and `s1` before the
+ * deallocation occurs.
+ *
+ * @tparam _Kind The `memory_kind` of the allocated memory.
+ */
+template <memory_kind _Kind>
+class stream_ordered_memory_resource : public memory_resource<_Kind> {
+public:
+  using memory_resource<_Kind>::memory_kind;
+  using memory_resource<_Kind>::default_alignment;
+
+  /**
+   * @brief Allocates storage of size at least `__bytes` bytes in stream order
+   * on `__stream`.
+   *
+   * The returned storage is aligned to `default_alignment`.
+   *
+   * The returned storage may be used immediately only on `__stream`. Using it
+   * on any other stream (or the host) requires first synchronizing with `__stream`.
+   *
+   * @throws If the storage of the requested size cannot be obtained.
+   *
+   * @param __bytes The size in bytes of the allocation.
+   * @param __stream The stream on which to perform the allocation.
+   * @return Pointer to the requested storage.
+   */
+  void *allocate_async(std::size_t __bytes, stream_view __stream) {
+    return do_allocate_async(__bytes, default_alignment, stream);
+  }
+
+  /**
+   * @brief Allocates storage of size at least `__bytes` bytes in stream order
+   * on `__stream`.
+   *
+   * The returned storage is aligned to the specified `__alignment` if such
+   * alignment is supported, and to `default_alignment` otherwise.
+   *
+   * The returned storage may be used immediately only on `__stream`. Using it
+   * on any other stream (or the host) requires first synchronizing with
+   * `__stream`.
+   *
+   * @throws If the storage of the requested size cannot be obtained.
+   *
+   * @param __bytes The size in bytes of the allocation.
+   * @param __alignment The alignment of the allocation
+   * @param __stream The stream on which to perform the allocation.
+   * @return Pointer to the requested storage.
+   */
+  void *allocate_async(std::size_t __bytes, std::size_t __alignment,
+                       stream_view __stream) {
+    return do_allocate_async(__bytes, __alignment, __stream);
+  }
+
+  /**
+   * @brief Deallocates the storage pointed to by `__p` in stream order on
+   * `__stream`.
+   *
+   * `__p` must have been returned by a prior call to
+   * `allocate_async(__bytes, default_alignment)` or `allocate(__bytes,
+   * default_alignment)` on a `stream_ordered_memory_resource` that compares
+   * equal to `*this`, and the storage it points to must not yet have been
+   * deallocated, otherwise behavior is undefined.
+   *
+   * Storage deallocated on `__stream` can be immediately reused by a future
+   * call to `allocate` or `allocate_async` on the same stream. Therefore,
+   * `__stream` is typically the last stream on which `__p` was last used. It is
+   * the users responsibility to ensure the storage pointed to by `__p` is not
+   * in use on any other stream (or the host), or behavior is undefined.
+   *
+   * @param __p Pointer to storage to be deallocated.
+   * @param __bytes The size in bytes of the allocation. This must be equal to
+   * the value of `__bytes` that was specified to the `allocate` or
+   * `allocate_async` call that returned `__p`.
+   * @param __stream The stream on which to perform the deallocation.
+   */
+  void deallocate_async(void *__p, std::size_t __bytes, stream_view __stream) {
+    do_deallocate_async(p, __bytes, default_alignment, __stream);
+  }
+
+  /**
+   * @brief Deallocates the storage pointed to by `__p` in stream order on
+   * `__stream`.
+   *
+   * `__p` must have been returned by a prior call to
+   * `allocate_async(__bytes, __alignment)` or `allocate(__bytes,
+   * __alignment)` on a `stream_ordered_memory_resource` that compares
+   * equal to `*this`, and the storage it points to must not yet have been
+   * deallocated, otherwise behavior is undefined.
+   *
+   * Storage deallocated on `__stream` can be immediately reused by a future
+   * call to `allocate` or `allocate_async` on the same stream. Therefore,
+   * `__stream` is typically the last stream on which `__p` was last used. It is
+   * the users responsibility to ensure the storage pointed to by `__p` is not
+   * in use on any other stream (or the host), or behavior is undefined.
+   *
+   * @param __p Pointer to storage to be deallocated.
+   * @param __bytes The size in bytes of the allocation. This must be equal to
+   * the value of `__bytes` that was specified to the `allocate` or
+   * `allocate_async` call that returned `__p`.
+   * @param __alignment The alignment of the allocation. This must be equal to
+   * the value of `__alignment` that was specified to the `allocate` or
+   * `allocate_async` call that returned `__p`.
+   * @param __stream The stream on which to perform the deallocation.
+   */
+  void deallocate_async(void *__p, std::size_t __bytes, std::size_t __alignment,
+                        stream_view __stream) {
+    do_deallocate_async(__p, __bytes, __alignment, __stream)
+  }
+
+private:
+  /// Default synchronous implementation of `memory_resource::do_allocate`
+  void *do_allocate(std::size_t __bytes, std::size_t __alignment) override {
+    auto const __default_stream = stream_view{};
+    auto __p = do_allocate_async(__bytes, __alignment, default_stream);
+    __default_stream.syncrhonize();
+    return __p;
+  }
+
+  /// Default synchronous implementation of `memory_resource::do_deallocate`
+  void do_deallocate(void *__p, std::size_t __bytes,
+                     std::size_t __alignment) override {
+    auto const __default_stream = stream_view{};
+    do_deallocate_async(__p, __bytes, __alignment, __default_stream);
+    __default_stream.synchronize();
+  }
+
+  void *do_allocate_async(std::size_t __bytes, std::size_t __alignment,
+                          stream_view __stream) = 0;
+
+  void do_deallocate_async(void *__p, std::size_t __bytes,
+                           std::size_t __alignment, stream_view __stream) = 0;
 };
 
 _LIBCUDACXX_END_NAMESPACE_CUDA
 
 #include "detail/__pragma_pop"
-
 
 #endif //_CUDA_MEMORY_RESOURCE
