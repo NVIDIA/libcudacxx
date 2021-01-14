@@ -1,0 +1,156 @@
+//===----------------------------------------------------------------------===//
+//
+// Part of libcu++, the C++ Standard Library for your entire system,
+// under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+//
+//===----------------------------------------------------------------------===//
+
+#ifndef _CUDA_STREAM
+#define _CUDA_STREAM
+
+#include "cstddef"
+
+#include "detail/__config"
+#include "detail/__pragma_push"
+#include "version"
+
+#include <cuda_runtime_api.h>
+#include <memory>
+#include <stdexcept>
+
+_LIBCUDACXX_BEGIN_NAMESPACE_CUDA
+
+/**
+ * @brief A non-owning wrapper for a `cudaStream_t`.
+ *
+ */
+class stream_view {
+
+  /**
+   * @brief Constructs a `stream_view` of the "default" CUDA stream.
+   *
+   * For behavior of the default stream,
+   * see https://docs.nvidia.com/cuda/cuda-runtime-api/stream-sync-behavior.html
+   *
+   */
+  constexpr stream_view() = default;
+
+  /**
+   * @brief Constructs a `stream_view` from a `cudaStream_t` handle
+   *
+   * @note: It is the callers responsibilty to ensure the `stream_view` does not
+   * outlive the stream identified by the `cudaStream_t` handle.
+   *
+   */
+  explicit constexpr stream_view(cudaStream_t stream) : __stream{stream} {}
+
+  /// Disallow construction from an `int`, e.g., `0`.
+  stream_view(int) = delete;
+
+  /// Disallow construction from `nullptr`
+  stream_view(std::nullptr_t) = delete;
+
+  /// Returns the wrapped `cudaStream_t` handle
+  constexpr cudaStream_t value() const noexcept { return __stream; }
+
+  /// Explicit conversion to `cudaStream_t` returns the wrapped `cudaStream_t`
+  /// handle
+  explicit constexpr operator cudaStream_t const noexcept { return value(); }
+
+  /**
+   * @brief Synchronizes the wrapped stream.
+   *
+   * @throws TODO: 
+   *
+   */
+  void synchronize() const { cudaStreamSynchronize(value()); }
+
+private:
+  cudaStream_t __stream{0}; ///< Handle of the viewed stream
+};
+
+/**
+ * @brief Compares two `stream_view`s for equality
+ *
+ * @param lhs The first `stream_view` to compare
+ * @param rhs The second `stream_view` to compare
+ * @return true if equal, false if unequal
+ */
+inline constexpr bool operator==(stream_view lhs, stream_view rhs) {
+  return lhs.value() == rhs.value();
+}
+
+/**
+ * @brief Compares two `stream_view`s for inequality
+ *
+ * @param lhs The first `stream_view` to compare
+ * @param rhs The second `stream_view` to compare
+ * Return true if unequal, false if equal
+ */
+inline constexpr bool operator!=(stream_view lhs, stream_view rhs) {
+  return not(lhs == rhs);
+}
+
+/**
+ * @brief An owning wrapper of a `cudaStream_t`.
+ *
+ * `unique_stream` is movable, but not copyable.
+ *
+ */
+class unique_stream {
+public:
+  /**
+   * @brief Construct a `unique_stream` wrapping a new CUDA stream.
+   *
+   * TODO: Flags, priority
+   */
+  unique_stream() : __stream{new cudaStream_t} {
+    cudaStreamCreate(__stream.get());
+  }
+
+  ~unique_stream() = default;
+  unique_stream(unique_stream const &) = default;
+  unique_stream(unique_stream &&) = default;
+  unique_stream &operator=(unique_stream const &) = default;
+  unique_stream &operator=(unique_stream &&) = default;
+
+  /**
+   * @brief Returns a `stream_view` of the owned stream.
+   *
+   * @note: It is the callers responsibility to ensure the resulting
+   * `stream_view` does not outlive the `unique_stream`.
+   *
+   * @throws //TODO:
+   *
+   * @return stream_view
+   */
+  operator stream_view() const {
+    // Check if the owned stream has been moved
+    if (__stream) {
+      return stream_view{*__stream};
+    }
+    throw std::runtime_error; // TODO: Throw a proper exception here
+  }
+
+  /**
+   * @brief Synchronizes the owned stream.
+   * 
+   * @throws //TODO:
+   *
+   */
+  void synchronize() const { stream_view{*this}.synchronize(); }
+
+private:
+  struct destroy_stream {
+    void operator()(cudaStream_t *__s) { cudaStreamDestroy(*__s); }
+  };
+  std::unique_ptr<cudaStream_t, destroy_stream> __stream;
+};
+
+_LIBCUDACXX_END_NAMESPACE_CUDA
+
+#include "detail/__pragma_pop"
+
+#endif _CUDA_STREAM
