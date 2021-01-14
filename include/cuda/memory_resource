@@ -49,7 +49,7 @@ struct any_context{};
 namespace detail {
 struct __empty {};
 
-template <typename _Context> 
+template <typename _Context>
 struct __get_context_impl {
   _Context get_context() const noexcept { return do_get_context(); }
 private:
