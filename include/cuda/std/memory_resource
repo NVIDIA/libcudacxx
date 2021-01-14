@@ -10,11 +10,109 @@
 #ifndef _CUDA_MEMORY_RESOURCE
 #define _CUDA_MEMORY_RESOURCE
 
+
+#include "cstddef"
+
 #include "version"
 #include "detail/__config"
 #include "detail/__pragma_push"
 
 _LIBCUDACXX_BEGIN_NAMESPACE_CUDA
+
+/**
+ * @brief Specifies the kind of memory of an allocation.
+ *
+ * A memory allocation's kind determines where the memory can be accessed from
+ * and the performance characteristics of the accesses.
+ *
+ */
+enum class memory_kind { 
+    device,  ///< Device memory accessible only from device
+    unified, ///< Unified memory accessible from both host and device 
+    pinned,  ///< Page-locked system memory accessible from both host and device
+    host     ///< System memory only accessible from host code
+};
+
+/**
+ * @brief Determines the default alignment for an allocation of a given `memory_kind`
+ * 
+ * @tparam _Kind The `memory_kind` of the allocation
+ */
+template <memory_kind _Kind>
+_LIBCUDACXX_INLINE_VAR constexpr std::size_t __default_alignment = (memory_kind::host ? alignof(std::max_align_t) : 256);
+
+/**
+ * @brief Abstract interface for synchronous memory allocation.
+ * 
+ * @tparam _Kind The `memory_kind` of the allocated memory.
+ */
+template <memory_kind _Kind> 
+class memory_resource {
+public:
+  static constexpr memory_kind memory_kind = _Kind;
+
+  virtual ~memory_resource() = default;
+
+  /**
+   * @brief Allocates storage of size at least `__bytes` bytes.
+   *
+   * The returned storage is aligned to the specified `__alignment` if such
+   * alignment is supported, and to `default_alignment<_Kind>` otherwise.
+   * 
+   * @throws If storage of the requested size and alignment cannot be obtained.
+   *
+   * @param __bytes The size in bytes of the allocation
+   * @param __alignment The alignment of the allocation
+   * @return Pointer to the requested storage
+   */
+  void* allocate(std::size_t __bytes, std::size_t __alignment = detail::__default_alignment<_Kind>){
+      return do_allocate(__bytes, __alignment);
+  }
+
+  /**
+   * @brief Deallocates the storage pointed to by `__p`.
+   *
+   * `__p` must have been returned by a prior call to `allocate(__bytes,
+   * __alignment)` on a `memory_resource` that compares equal to `*this`, and
+   * the storage it points to must not yet have been deallocated, otherwise
+   * behavior is undefined.
+   *
+   * @throws Nothing.
+   *
+   * @param __p Pointer to storage to be deallocated
+   * @param __bytes The size in bytes of the allocation. This must be equal to
+   * the value of `__bytes` that was specified to the `allocate` call that
+   * returned `__p`.
+   * @param __alignment The alignment of the allocation. This must be equal to
+   * the value of `__alignment` that was specified to the `allocate` call that
+   * returned `__p`.
+   */
+  void deallocate(void* __p, std::size_t __bytes, std::size_t __alignment = detail::__default_alignment<_Kind>){
+      do_deallocate(__p, __bytes, __alignment);
+  }
+
+  /**
+   * @brief Compare this resource to another.
+   *
+   * Two resources compare equal if and only if memory allocated from one
+   * resource can be deallocated from the other and vice versa.
+   * 
+   * @tparam _OtherKind The `memory_kind` of the other resource
+   * @param __other The other resource to compare against
+   */
+  template <memory_kind _OtherKind> 
+  bool is_equal(memory_resource<_OtherKind> const& __other) const noexcept {
+    return do_is_equal(other);
+  }
+
+private:
+  virtual void* do_allocate(std::size_t __bytes, std::size_t __alignment) = 0;
+
+  virtual void do_deallocate(void* __p, std::size_t __bytes, std::size_t __alignment) = 0;
+
+  template <memory_kind _OtherKind>
+  virtual bool do_is_equal(memory_resource<_OtherKind> const& __other) const noexcept = 0;
+};
 
 _LIBCUDACXX_END_NAMESPACE_CUDA
 
