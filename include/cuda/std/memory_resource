@@ -21,8 +21,8 @@ _LIBCUDACXX_BEGIN_NAMESPACE_CUDA
 /**
  * @brief Specifies the kind of memory of an allocation.
  *
- * A memory allocation's kind determines where the memory can be accessed from
- * and the performance characteristics of the accesses.
+ * Memory allocation kind determines where memory can be accessed and the
+ * performance characteristics of accesses.
  *
  */
 enum class memory_kind {
@@ -112,13 +112,13 @@ private:
 };
 
 /**
- * @brief Abstract interface for stream-ordred memory allocation.
+ * @brief Abstract interface for CUDA stream-ordered memory allocation.
  *
  * "Stream-ordered memory allocation" extends the CUDA programming model to
  * include memory allocation as stream-ordered operations.
  *
- * Allocating on stream `s0` returns memory that is valid to use immediately
- * only on `s0`. Using it on any other stream (or the host) first requires
+ * Allocating on stream `s0` returns memory that is valid to access immediately
+ * only on `s0`. Accessing it on any other stream (or the host) first requires
  * synchronization with `s0`, otherwise behavior is undefined.
  *
  * Deallocating memory on stream `s1` indicates that it is valid to reuse the
@@ -142,8 +142,8 @@ public:
    *
    * The returned storage is aligned to `default_alignment`.
    *
-   * The returned storage may be used immediately only on `__stream`. Using it
-   * on any other stream (or the host) requires first synchronizing with
+   * The returned storage may be used immediately only on `__stream`. Accessing
+   * it on any other stream (or the host) requires first synchronizing with
    * `__stream`.
    *
    * @throws If the storage of the requested size cannot be obtained.
@@ -189,11 +189,12 @@ public:
    * equal to `*this`, and the storage it points to must not yet have been
    * deallocated, otherwise behavior is undefined.
    *
-   * Storage deallocated on `__stream` can be immediately reused by a future
-   * call to `allocate` or `allocate_async` on the same stream. Therefore,
-   * `__stream` is typically the last stream on which `__p` was last used. It is
-   * the users responsibility to ensure the storage pointed to by `__p` is not
-   * in use on any other stream (or the host), or behavior is undefined.
+   * Storage deallocated on `__stream` may be reused by a future
+   * call to `allocate_async` on the same stream without synchronizing
+   * `__stream`. Therefore,  `__stream` is typically the last stream on which
+   * `__p` was last used. It is the caller's responsibility to ensure the
+   * storage pointed to by `__p` is not in use on any other stream (or the
+   * host), or behavior is undefined.
    *
    * @param __p Pointer to storage to be deallocated.
    * @param __bytes The size in bytes of the allocation. This must be equal to
@@ -215,11 +216,12 @@ public:
    * equal to `*this`, and the storage it points to must not yet have been
    * deallocated, otherwise behavior is undefined.
    *
-   * Storage deallocated on `__stream` can be immediately reused by a future
-   * call to `allocate` or `allocate_async` on the same stream. Therefore,
-   * `__stream` is typically the last stream on which `__p` was last used. It is
-   * the users responsibility to ensure the storage pointed to by `__p` is not
-   * in use on any other stream (or the host), or behavior is undefined.
+   * Storage deallocated on `__stream` may be reused by a future
+   * call to `allocate_async` on the same stream without synchronizing
+   * `__stream`. Therefore,  `__stream` is typically the last stream on which
+   * `__p` was last used. It is the caller's responsibility to ensure the
+   * storage pointed to by `__p` is not in use on any other stream (or the
+   * host), or behavior is undefined.
    *
    * @param __p Pointer to storage to be deallocated.
    * @param __bytes The size in bytes of the allocation. This must be equal to
