@@ -53,11 +53,11 @@ class stream_view {
   stream_view(std::nullptr_t) = delete;
 
   /// Returns the wrapped `cudaStream_t` handle
-  constexpr cudaStream_t value() const noexcept { return __stream; }
+  constexpr cudaStream_t get() const noexcept { return __stream; }
 
   /// Explicit conversion to `cudaStream_t` returns the wrapped `cudaStream_t`
   /// handle
-  explicit constexpr operator cudaStream_t const noexcept { return value(); }
+  explicit constexpr operator cudaStream_t const noexcept { return get(); }
 
   /**
    * @brief Synchronizes the wrapped stream.
@@ -65,7 +65,7 @@ class stream_view {
    * @throws TODO: 
    *
    */
-  void synchronize() const { cudaStreamSynchronize(value()); }
+  void synchronize() const { cudaStreamSynchronize(get()); }
 
 private:
   cudaStream_t __stream{0}; ///< Handle of the viewed stream
@@ -79,7 +79,7 @@ private:
  * @return true if equal, false if unequal
  */
 inline constexpr bool operator==(stream_view __lhs, stream_view __rhs) {
-  return __lhs.value() == __rhs.value();
+  return __lhs.get() == __rhs.get();
 }
 
 /**
