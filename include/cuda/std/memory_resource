@@ -92,11 +92,9 @@ public:
    * Two resources compare equal if and only if memory allocated from one
    * resource can be deallocated from the other and vice versa.
    *
-   * @tparam _OtherKind The `memory_kind` of the other resource
    * @param __other The other resource to compare against
    */
-  template <memory_kind _OtherKind>
-  bool is_equal(memory_resource<_OtherKind> const &__other) const noexcept {
+  bool is_equal(memory_resource const& __other) const noexcept {
     return do_is_equal(other);
   }
 
@@ -106,9 +104,7 @@ private:
   virtual void do_deallocate(void *__p, std::size_t __bytes,
                              std::size_t __alignment) = 0;
 
-  template <memory_kind _OtherKind>
-  virtual bool do_is_equal(memory_resource<_OtherKind> const &__other) const
-      noexcept = 0;
+  virtual bool do_is_equal(memory_resource const &__other) const noexcept = 0;
 };
 
 /**
