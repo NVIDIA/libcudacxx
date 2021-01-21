@@ -68,6 +68,7 @@
 #endif
 
 #include "libcxx/include/__config"
+#include "__arch_support"
 
 #if defined(__CUDA_ARCH__)
     #define _LIBCUDACXX_HAS_THREAD_API_CUDA
