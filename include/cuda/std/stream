@@ -44,7 +44,7 @@ class stream_view {
    * outlive the stream identified by the `cudaStream_t` handle.
    *
    */
-  explicit constexpr stream_view(cudaStream_t stream) : __stream{stream} {}
+  constexpr stream_view(cudaStream_t stream) : __stream{stream} {}
 
   /// Disallow construction from an `int`, e.g., `0`.
   stream_view(int) = delete;
