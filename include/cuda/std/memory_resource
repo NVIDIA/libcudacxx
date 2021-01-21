@@ -37,7 +37,8 @@ enum class memory_kind {
  *
  * @tparam _Kind The `memory_kind` of the allocated memory.
  */
-template <memory_kind _Kind> class memory_resource {
+template <memory_kind _Kind> 
+class memory_resource {
 public:
   static constexpr memory_kind memory_kind = _Kind;
 
