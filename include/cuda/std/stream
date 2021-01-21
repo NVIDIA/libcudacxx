@@ -55,10 +55,6 @@ class stream_view {
   /// Returns the wrapped `cudaStream_t` handle
   constexpr cudaStream_t get() const noexcept { return __stream; }
 
-  /// Explicit conversion to `cudaStream_t` returns the wrapped `cudaStream_t`
-  /// handle
-  explicit constexpr operator cudaStream_t const noexcept { return get(); }
-
   /**
    * @brief Synchronizes the wrapped stream.
    *
