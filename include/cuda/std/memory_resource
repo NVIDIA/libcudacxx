@@ -104,7 +104,10 @@ private:
   virtual void do_deallocate(void *__p, std::size_t __bytes,
                              std::size_t __alignment) = 0;
 
-  virtual bool do_is_equal(memory_resource const &__other) const noexcept = 0;
+  // Default to identity comparison
+  virtual bool do_is_equal(memory_resource const &__other) const noexcept{
+      return this == &__other;
+  }
 };
 
 /**
