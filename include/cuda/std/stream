@@ -93,62 +93,6 @@ inline constexpr bool operator!=(stream_view __lhs, stream_view __rhs) {
   return not(__lhs == __rhs);
 }
 
-/**
- * @brief An owning wrapper of a `cudaStream_t`.
- *
- * `unique_stream` is movable, but not copyable.
- *
- */
-class unique_stream {
-public:
-  /**
-   * @brief Construct a `unique_stream` wrapping a new CUDA stream.
-   *
-   * TODO: Flags, priority
-   */
-  unique_stream() : __stream{new cudaStream_t} {
-    cudaStreamCreate(__stream.get());
-  }
-
-  ~unique_stream() = default;
-  unique_stream(unique_stream const &) = default;
-  unique_stream(unique_stream &&) = default;
-  unique_stream &operator=(unique_stream const &) = default;
-  unique_stream &operator=(unique_stream &&) = default;
-
-  /**
-   * @brief Returns a `stream_view` of the owned stream.
-   *
-   * @note: It is the callers responsibility to ensure the resulting
-   * `stream_view` does not outlive the `unique_stream`.
-   *
-   * @throws //TODO:
-   *
-   * @return stream_view
-   */
-  operator stream_view() const {
-    // Check if the owned stream has been moved
-    if (__stream) {
-      return stream_view{*__stream};
-    }
-    throw std::runtime_error; // TODO: Throw a proper exception here
-  }
-
-  /**
-   * @brief Synchronizes the owned stream.
-   * 
-   * @throws //TODO:
-   *
-   */
-  void synchronize() const { stream_view{*this}.synchronize(); }
-
-private:
-  struct destroy_stream {
-    void operator()(cudaStream_t *__s) { cudaStreamDestroy(*__s); }
-  };
-  std::unique_ptr<cudaStream_t, destroy_stream> __stream;
-};
-
 _LIBCUDACXX_END_NAMESPACE_CUDA
 
 #include "detail/__pragma_pop"
