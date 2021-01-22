@@ -15,6 +15,11 @@
 #include "detail/__pragma_push"
 #include "stream"
 #include "version"
+#include "type_traits"
+
+#if _LIBCUDACXX_STD_VER > 14
+#include <memory_resource>
+#endif // _LIBCUDACXX_STD_VER > 14
 
 _LIBCUDACXX_BEGIN_NAMESPACE_CUDA
 
@@ -40,6 +45,10 @@ enum class memory_kind {
  */
 struct any_context{};
 
+namespace detail{
+    struct __empty{};
+}
+
 /**
  * @brief Abstract interface for synchronous memory allocation.
  *
@@ -47,8 +56,15 @@ struct any_context{};
  * @tparam _Context The execution context on which the storage may be used
  * without synchronization
  */
-template <memory_kind _Kind, typename _Context = any_context> 
-class memory_resource {
+template <memory_kind _Kind, typename _Context = any_context>
+class memory_resource
+#if _LIBCUDACXX_STD_VER > 14
+    : public _CUDA_VSTD::conditional_t<
+          (_Kind == memory_kind::host) and
+              (_CUDA_VSTD::is_same<_Context, any_context>::value),
+          std::pmr::memory_resource, detail::__empty>
+#endif // _LIBCUDACXX_STD_VER > 14
+{
 public:
   static constexpr memory_kind kind = _Kind;
   using context = _Context;
