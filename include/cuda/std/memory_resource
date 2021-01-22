@@ -240,8 +240,8 @@ private:
   /// Default synchronous implementation of `memory_resource::do_allocate`
   void *do_allocate(std::size_t __bytes, std::size_t __alignment) override {
     auto const __default_stream = stream_view{};
-    __default_stream.synchronize();
     auto __p = do_allocate_async(__bytes, __alignment, default_stream);
+    __default_stream.synchronize();
     return __p;
   }
 
