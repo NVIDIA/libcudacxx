@@ -50,7 +50,7 @@ public:
    * @brief Allocates storage of size at least `__bytes` bytes.
    *
    * The returned storage is aligned to the specified `__alignment` if such
-   * alignment is supported, and to `default_alignment` otherwise.
+   * alignment is supported.
    *
    * @throws If storage of the requested size and alignment cannot be obtained.
    *
@@ -160,7 +160,7 @@ public:
    * on `__stream`.
    *
    * The returned storage is aligned to the specified `__alignment` if such
-   * alignment is supported, and to `default_alignment` otherwise.
+   * alignment is supported.
    *
    * The returned storage may be used immediately only on `__stream`. Using it
    * on any other stream (or the host) requires first synchronizing with
