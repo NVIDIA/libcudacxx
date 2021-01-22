@@ -33,24 +33,46 @@ enum class memory_kind {
 };
 
 /**
+ * @brief Tag type for the default context of `memory_resource`.
+ *
+ * Default context in which storage may be used immediately on any thread or any
+ * CUDA stream without synchronization.
+ */
+struct any_context{};
+
+/**
  * @brief Abstract interface for synchronous memory allocation.
  *
  * @tparam _Kind The `memory_kind` of the allocated memory.
+ * @tparam _Context The execution context on which the storage may be used
+ * without synchronization
  */
-template <memory_kind _Kind> 
+template <memory_kind _Kind, typename _Context = any_context> 
 class memory_resource {
 public:
   static constexpr memory_kind kind = _Kind;
+  using context = _Context;
 
   static constexpr std::size_t default_alignment = alignof(std::max_align_t);
 
   virtual ~memory_resource() = default;
 
   /**
+   * @brief Returns the resource's execution context 
+   *
+   */
+  context get_context() const noexcept {
+      return do_get_context();
+  }
+
+  /**
    * @brief Allocates storage of size at least `__bytes` bytes.
    *
    * The returned storage is aligned to the specified `__alignment` if such
    * alignment is supported.
+   *
+   * Storage may be accessed immediately within the execution context returned
+   * by `get_context()`, otherwise synchronization is required.
    *
    * @throws If storage of the requested size and alignment cannot be obtained.
    *
@@ -108,6 +130,9 @@ private:
   virtual bool do_is_equal(memory_resource const &__other) const noexcept{
       return this == &__other;
   }
+
+  // Default to return default constructed Context object
+  virtual context do_get_context() const noexcept { return _Context{}; }
 };
 
 /**
@@ -130,7 +155,7 @@ private:
  * @tparam _Kind The `memory_kind` of the allocated memory.
  */
 template <memory_kind _Kind>
-class stream_ordered_memory_resource : public memory_resource<_Kind> {
+class stream_ordered_memory_resource : public memory_resource<_Kind /* default context */> {
 public:
   using memory_resource<_Kind>::memory_kind;
   using memory_resource<_Kind>::default_alignment;
