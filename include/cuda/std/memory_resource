@@ -253,11 +253,12 @@ private:
     do_deallocate_async(__p, __bytes, __alignment, __default_stream);
   }
 
-  void *do_allocate_async(std::size_t __bytes, std::size_t __alignment,
-                          stream_view __stream) = 0;
+  virtual void *do_allocate_async(std::size_t __bytes, std::size_t __alignment,
+                                  stream_view __stream) = 0;
 
-  void do_deallocate_async(void *__p, std::size_t __bytes,
-                           std::size_t __alignment, stream_view __stream) = 0;
+  virtual void do_deallocate_async(void *__p, std::size_t __bytes,
+                                   std::size_t __alignment,
+                                   stream_view __stream) = 0;
 };
 
 _LIBCUDACXX_END_NAMESPACE_CUDA
