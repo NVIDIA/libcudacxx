@@ -50,7 +50,7 @@ namespace detail{
 }
 
 /**
- * @brief Abstract interface for synchronous memory allocation.
+ * @brief Abstract interface for context specific memory allocation.
  *
  * @tparam _Kind The `memory_kind` of the allocated memory.
  * @tparam _Context The execution context on which the storage may be used
@@ -229,6 +229,10 @@ public:
    * equal to `*this`, and the storage it points to must not yet have been
    * deallocated, otherwise behavior is undefined.
    *
+   * Asynchronous, stream-ordered operations on `__stream` initiated before
+   * `deallocate_async(__p, __bytes, __stream)` may still access the storage
+   * pointed to by `__p` after `deallocate_async` returns.
+   *
    * Storage deallocated on `__stream` may be reused by a future
    * call to `allocate_async` on the same stream without synchronizing
    * `__stream`. Therefore,  `__stream` is typically the last stream on which
@@ -255,6 +259,10 @@ public:
    * __alignment)` on a `stream_ordered_memory_resource` that compares
    * equal to `*this`, and the storage it points to must not yet have been
    * deallocated, otherwise behavior is undefined.
+   * 
+   * Asynchronous, stream-ordered operations on `__stream` initiated before
+   * `deallocate_async(__p, __bytes, __stream)` may still access the storage
+   * pointed to by `__p` after `deallocate_async` returns.
    *
    * Storage deallocated on `__stream` may be reused by a future
    * call to `allocate_async` on the same stream without synchronizing
