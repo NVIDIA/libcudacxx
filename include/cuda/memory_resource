@@ -44,7 +44,7 @@ enum class memory_kind {
  * Default context in which storage may be used immediately on any thread or any
  * CUDA stream without synchronization.
  */
-struct any_context{};
+struct any_context {};
 
 namespace detail {
 struct __empty {};
@@ -152,8 +152,8 @@ private:
                              std::size_t __alignment) = 0;
 
   // Default to identity comparison
-  virtual bool do_is_equal(memory_resource const &__other) const noexcept{
-      return this == &__other;
+  virtual bool do_is_equal(memory_resource const &__other) const noexcept {
+    return this == &__other;
   }
 };
 
@@ -233,7 +233,8 @@ private:
  * @tparam _Kind The `memory_kind` of the allocated memory.
  */
 template <memory_kind _Kind>
-class stream_ordered_memory_resource : public memory_resource<_Kind /* default context */> {
+class stream_ordered_memory_resource
+    : public memory_resource<_Kind /* default context */> {
 public:
   using memory_resource<_Kind>::kind;
   using memory_resource<_Kind>::default_alignment;
@@ -370,6 +371,37 @@ private:
   virtual void do_deallocate_async(void *__p, std::size_t __bytes,
                                    std::size_t __alignment,
                                    stream_view __stream) = 0;
+};
+
+template <memory_kind _Kind, typename _ValueType = _CUDA_VSTD::byte,
+          typename _Context = any_context>
+class polymorphic_allocator {
+public:
+  using value_type = _ValueType;
+  using kind = _Kind;
+  using context = _Context;
+  using resource_type = memory_resource<_Kind, _Context>;
+
+  context get_context() const noexcept { return __mr->get_context(); }
+
+  polymorphic_allocator(resource_type *__r) noexcept : __mr{__r} {}
+
+  polymorphic_allocator(polymorphic_allocator const&) = default;
+
+  template <typename _OtherValueType>
+  polymorphic_allocator(polymorphic_allocator<_Kind, _OtherValueType,
+                                              _Context> const &__other) noexcept
+      : __mr{other.resource()} {}
+
+  polymorphic_allocator &operator=(polymorphic_allocator const &) = delete;
+
+  value_type *allocate(size_t __n) {
+    return static_cast<value_type *>(
+        __mr->allocate(__n * sizeof(value_type), alignof(value_type)));
+  }
+
+private:
+  resource_type *__mr;
 };
 
 _LIBCUDACXX_END_NAMESPACE_CUDA
