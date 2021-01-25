@@ -91,4 +91,4 @@ _LIBCUDACXX_END_NAMESPACE_CUDA
 
 #include "std/detail/__pragma_pop"
 
-#endif _CUDA_STREAM
+#endif //_CUDA_STREAM
