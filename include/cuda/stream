@@ -25,7 +25,7 @@ _LIBCUDACXX_BEGIN_NAMESPACE_CUDA
  *
  */
 class stream_view {
-
+public:
   /**
    * @brief Constructs a `stream_view` of the "default" CUDA stream.
    *
