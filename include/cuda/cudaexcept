@@ -10,10 +10,10 @@
 #ifndef _CUDA_EXCEPTION
 #define _CUDA_EXCEPTION
 
+#include "detail/cuda_util"
 #include "std/detail/__config"
 #include "std/detail/__pragma_push"
 #include "std/version"
-#include "detail/cuda_util"
 
 #include <cuda_runtime_api.h>
 #include <stdexcept>
@@ -25,11 +25,21 @@ _LIBCUDACXX_BEGIN_NAMESPACE_CUDA
  *
  */
 struct cuda_error : ::std::runtime_error {
-  using ::std::runtime_error::runtime_error;
+
+  cuda_error(cudaError_t __error, ::std::string const &__msg)
+      : ::std::runtime_error{__msg + ": " + cudaGetErrorName(__error) + ": " +
+                             cudaGetErrorString(__error)},
+        __error_code_{__error} {}
+
+  explicit cuda_error(cudaError_t __error) : cuda_error{__error, ""} {}
+
+  cudaError_t code() const noexcept { return __error_code_; }
+
+private:
+  cudaError_t __error_code_;
 };
 
 _LIBCUDACXX_END_NAMESPACE_CUDA
-
 
 #include "std/detail/__pragma_pop"
 
