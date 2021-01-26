@@ -7,7 +7,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include <cuda/stream>
+#include <cuda/stream_view>
 #include <cassert>
 
 int main(int argc, char** argv){
