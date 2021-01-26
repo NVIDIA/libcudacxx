@@ -16,6 +16,7 @@
 #include "std/detail/__config"
 #include "std/detail/__pragma_push"
 #include "std/type_traits"
+#include "std/cstddef"
 
 #if _LIBCUDACXX_STD_VER > 14
 #include <memory_resource>
@@ -69,7 +70,7 @@ public:
   static constexpr memory_kind kind = _Kind;
   using context = _Context;
 
-  static constexpr std::size_t default_alignment = alignof(std::max_align_t);
+  static constexpr std::size_t default_alignment = alignof(_CUDA_VSTD::max_align_t);
 
   virtual ~memory_resource() = default;
 
@@ -173,7 +174,7 @@ private:
 template <memory_kind _Kind>
 class stream_ordered_memory_resource : public memory_resource<_Kind /* default context */> {
 public:
-  using memory_resource<_Kind>::memory_kind;
+  using memory_resource<_Kind>::kind;
   using memory_resource<_Kind>::default_alignment;
 
   /**
