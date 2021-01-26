@@ -133,7 +133,7 @@ public:
    * @param __other The other resource to compare against
    */
   bool is_equal(memory_resource const& __other) const noexcept {
-    return do_is_equal(other);
+    return do_is_equal(__other);
   }
 
 private:
@@ -193,7 +193,7 @@ public:
    * @return Pointer to the requested storage.
    */
   void *allocate_async(std::size_t __bytes, stream_view __stream) {
-    return do_allocate_async(__bytes, default_alignment, stream);
+    return do_allocate_async(__bytes, default_alignment, __stream);
   }
 
   /**
@@ -247,7 +247,7 @@ public:
    * @param __stream The stream on which to perform the deallocation.
    */
   void deallocate_async(void *__p, std::size_t __bytes, stream_view __stream) {
-    do_deallocate_async(p, __bytes, default_alignment, __stream);
+    do_deallocate_async(__p, __bytes, default_alignment, __stream);
   }
 
   /**
@@ -282,14 +282,14 @@ public:
    */
   void deallocate_async(void *__p, std::size_t __bytes, std::size_t __alignment,
                         stream_view __stream) {
-    do_deallocate_async(__p, __bytes, __alignment, __stream)
+    do_deallocate_async(__p, __bytes, __alignment, __stream);
   }
 
 private:
   /// Default synchronous implementation of `memory_resource::do_allocate`
   void *do_allocate(std::size_t __bytes, std::size_t __alignment) override {
     auto const __default_stream = stream_view{};
-    auto __p = do_allocate_async(__bytes, __alignment, default_stream);
+    auto __p = do_allocate_async(__bytes, __alignment, __default_stream);
     __default_stream.synchronize();
     return __p;
   }
