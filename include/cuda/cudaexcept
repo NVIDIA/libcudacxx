@@ -30,7 +30,10 @@ struct cuda_error : ::std::runtime_error {
                              cudaGetErrorString(__error)},
         __error_code_{__error} {}
 
-  explicit cuda_error(cudaError_t __error) : cuda_error{__error, ""} {}
+  explicit cuda_error(cudaError_t __error)
+      : ::std::runtime_error{::std::string{cudaGetErrorName(__error)} + ": " +
+                             cudaGetErrorString(__error)},
+        __error_code_{__error} {}
 
   cudaError_t code() const noexcept { return __error_code_; }
 
