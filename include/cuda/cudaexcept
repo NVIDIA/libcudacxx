@@ -1,0 +1,36 @@
+//===----------------------------------------------------------------------===//
+//
+// Part of libcu++, the C++ Standard Library for your entire system,
+// under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+//
+//===----------------------------------------------------------------------===//
+
+#ifndef _CUDA_EXCEPTION
+#define _CUDA_EXCEPTION
+
+#include "std/detail/__config"
+#include "std/detail/__pragma_push"
+#include "std/version"
+#include "detail/cuda_util"
+
+#include <cuda_runtime_api.h>
+#include <stdexcept>
+
+_LIBCUDACXX_BEGIN_NAMESPACE_CUDA
+
+/**
+ * @brief Exception thrown when a CUDA runtime error is encountered.
+ *
+ */
+struct cuda_error : ::std::runtime_error {
+  using ::std::runtime_error::runtime_error;
+};
+
+_LIBCUDACXX_END_NAMESPACE_CUDA
+
+
+#include "std/detail/__pragma_pop"
+
+#endif // _CUDA_EXCEPTION
