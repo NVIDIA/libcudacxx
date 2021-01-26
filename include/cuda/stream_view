@@ -61,7 +61,7 @@ public:
    *
    */
   void synchronize() const {
-    detail::throw_on_cuda_error(cudaStreamSynchronize(get()));
+    detail::throw_on_cuda_error(cudaStreamSynchronize(get()), "Failed to synchronize");
   }
 
 private:
