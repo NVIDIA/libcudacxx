@@ -57,7 +57,7 @@ public:
   /**
    * @brief Synchronizes the wrapped stream.
    *
-   * @throws TODO: 
+   * @throws cuda::cuda_error if synchronization fails.
    *
    */
   void synchronize() const {
