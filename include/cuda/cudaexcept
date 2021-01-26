@@ -10,7 +10,6 @@
 #ifndef _CUDA_EXCEPTION
 #define _CUDA_EXCEPTION
 
-#include "detail/cuda_util"
 #include "std/detail/__config"
 #include "std/detail/__pragma_push"
 #include "std/version"
