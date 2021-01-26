@@ -7,7 +7,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include <cuda/stream_view>
+#include <cuda/stream>
 #include <cassert>
 
 void foo(cuda::stream_view){}
