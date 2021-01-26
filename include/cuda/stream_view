@@ -14,6 +14,7 @@
 #include "std/detail/__config"
 #include "std/detail/__pragma_push"
 #include "std/version"
+#include "detail/cuda_util"
 
 #include <cuda_runtime_api.h>
 #include <stdexcept>
@@ -59,7 +60,9 @@ public:
    * @throws TODO: 
    *
    */
-  void synchronize() const { cudaStreamSynchronize(get()); }
+  void synchronize() const {
+    detail::throw_on_cuda_error(cudaStreamSynchronize(get()));
+  }
 
 private:
   cudaStream_t __stream{0}; ///< Handle of the viewed stream
