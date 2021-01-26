@@ -29,7 +29,7 @@ bool operator==(event const& lhs, event const& rhs){
          std::tie(rhs.act, rhs.pointer, rhs.bytes, rhs.alignment);
 }
 
-template <cuda::memory_kind Kind> 
+template <cuda::memory_kind Kind>
 class derived_resource : public cuda::memory_resource<Kind> {
 public:
   std::vector<event> &events() { return events_; }
