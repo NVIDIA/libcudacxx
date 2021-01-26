@@ -10,7 +10,7 @@
 #ifndef _CUDA_MEMORY_RESOURCE
 #define _CUDA_MEMORY_RESOURCE
 
-#include "stream"
+#include "stream_view"
 #include "std/version"
 #include "std/cstddef"
 #include "std/detail/__config"
