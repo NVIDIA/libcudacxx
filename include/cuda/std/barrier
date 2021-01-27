@@ -7,7 +7,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-#if defined(__CUDA_ARCH__) && __CUDA_ARCH__ < 700
+#if defined(_LIBCUDACXX_CUDA_ARCH_DEF) && _LIBCUDACXX_CUDA_ARCH_DEF < 700
 #  error "CUDA synchronization primitives are only supported for sm_70 and up."
 #endif
 
@@ -108,24 +108,25 @@ private:
 
     _LIBCUDACXX_INLINE_VISIBILITY
     bool __try_wait(arrival_token __phase) const {
-#if __CUDA_ARCH__ >= 800
-        if (__isShared(&__barrier)) {
-            int __ready = 0;
-            asm volatile ("{\n\t"
-                    ".reg .pred p;\n\t"
-                    "mbarrier.test_wait.shared.b64 p, [%1], %2;\n\t"
-                    "selp.b32 %0, 1, 0, p;\n\t"
-                    "}"
-                : "=r"(__ready)
-                : "r"(static_cast<std::uint32_t>(__cvta_generic_to_shared(&__barrier))), "l"(__phase)
-                : "memory");
-            return __ready;
-        }
-        else
-#endif
-        {
-            return __barrier.__try_wait(std::move(__phase));
-        }
+        _LIBCUDACXX_CUDA_DISPATCH(
+            GREATER_THAN_SM75, _LIBCUDACXX_ARCH_BLOCK(
+                if (__isShared(&__barrier)) {
+                    int __ready = 0;
+                    asm volatile ("{\n\t"
+                            ".reg .pred p;\n\t"
+                            "mbarrier.test_wait.shared.b64 p, [%1], %2;\n\t"
+                            "selp.b32 %0, 1, 0, p;\n\t"
+                            "}"
+                        : "=r"(__ready)
+                        : "r"(static_cast<std::uint32_t>(__cvta_generic_to_shared(&__barrier))), "l"(__phase)
+                        : "memory");
+                    return __ready;
+                }
+            )
+        );
+
+        // Not shared or Arch < SM80
+        return __barrier.__try_wait(std::move(__phase));
     }
 
     template<thread_scope>
@@ -145,72 +146,79 @@ public:
 
     _LIBCUDACXX_INLINE_VISIBILITY
     ~barrier() {
-#if __CUDA_ARCH__ >= 800
-        if (__isShared(&__barrier)) {
-            asm volatile ("mbarrier.inval.shared.b64 [%0];"
-                :: "r"(static_cast<std::uint32_t>(__cvta_generic_to_shared(&__barrier)))
-                : "memory");
-        }
-#endif
+        _LIBCUDACXX_CUDA_DISPATCH(
+            GREATER_THAN_SM75, _LIBCUDACXX_ARCH_BLOCK(
+                if (__isShared(&__barrier)) {
+                    asm volatile ("mbarrier.inval.shared.b64 [%0];"
+                        :: "r"(static_cast<std::uint32_t>(__cvta_generic_to_shared(&__barrier)))
+                        : "memory");
+                }
+            )
+        );
     }
 
     _LIBCUDACXX_INLINE_VISIBILITY
     friend void init(barrier * __b, std::ptrdiff_t __expected, std::__empty_completion __completion = std::__empty_completion()) {
-#if __CUDA_ARCH__ >= 800
-        if (__isShared(&__b->__barrier)) {
-            asm volatile ("mbarrier.init.shared.b64 [%0], %1;"
-                :: "r"(static_cast<std::uint32_t>(__cvta_generic_to_shared(&__b->__barrier))),
-                    "r"(static_cast<std::uint32_t>(__expected))
-                : "memory");
-        }
-        else
-#endif
-        {
-            new (&__b->__barrier) __barrier_base(__expected);
-        }
+        _LIBCUDACXX_CUDA_DISPATCH(
+            GREATER_THAN_SM75, _LIBCUDACXX_ARCH_BLOCK(
+                if (__isShared(&__b->__barrier)) {
+                    asm volatile ("mbarrier.init.shared.b64 [%0], %1;"
+                        :: "r"(static_cast<std::uint32_t>(__cvta_generic_to_shared(&__b->__barrier))),
+                            "r"(static_cast<std::uint32_t>(__expected))
+                        : "memory");
+                    return;
+                }
+            )
+        );
+        // non-shared, non-ampere barrier instantiation
+        new (&__b->__barrier) __barrier_base(__expected);
     }
 
     _LIBCUDACXX_NODISCARD_ATTRIBUTE _LIBCUDACXX_INLINE_VISIBILITY
     arrival_token arrive(std::ptrdiff_t __update = 1)
     {
-#if __CUDA_ARCH__
-        if (__isShared(&__barrier)) {
-            arrival_token __token;
-#if __CUDA_ARCH__ >= 800
-            if (__update > 1) {
-                asm volatile ("mbarrier.arrive.noComplete.shared.b64 %0, [%1], %2;"
-                    : "=l"(__token)
-                    : "r"(static_cast<std::uint32_t>(__cvta_generic_to_shared(&__barrier))),
-                        "r"(static_cast<std::uint32_t>(__update - 1))
-                    : "memory");
-            }
-            asm volatile ("mbarrier.arrive.shared.b64 %0, [%1];"
-                : "=l"(__token)
-                : "r"(static_cast<std::uint32_t>(__cvta_generic_to_shared(&__barrier)))
-                : "memory");
-#else
-            unsigned int __activeA = __match_any_sync(__activemask(), __update);
-            unsigned int __activeB = __match_any_sync(__activemask(), reinterpret_cast<std::uintptr_t>(&__barrier));
-            unsigned int __active = __activeA & __activeB;
-            int __inc = __popc(__active) * __update;
+        _LIBCUDACXX_CUDA_DISPATCH(
+            LESS_THAN_SM80, _LIBCUDACXX_ARCH_BLOCK(
+                if (__isShared(&__barrier)) {
+                    arrival_token __token;
 
-            unsigned __laneid;
-            asm volatile ("mov.u32 %0, %laneid;" : "=r"(__laneid));
-            int __leader = __ffs(__active) - 1;
+                    unsigned int __activeA = __match_any_sync(__activemask(), __update);
+                    unsigned int __activeB = __match_any_sync(__activemask(), reinterpret_cast<std::uintptr_t>(&__barrier));
+                    unsigned int __active = __activeA & __activeB;
+                    int __inc = __popc(__active) * __update;
 
-            if(__leader == __laneid)
-            {
-                __token = __barrier.arrive(__inc);
-            }
-            __token = __shfl_sync(__active, __token, __leader);
-#endif
-            return __token;
-        }
-        else
-#endif
-        {
-            return __barrier.arrive(__update);
-        }
+                    unsigned __laneid;
+                    asm volatile ("mov.u32 %0, %laneid;" : "=r"(__laneid));
+                    int __leader = __ffs(__active) - 1;
+
+                    if(__leader == __laneid)
+                    {
+                        __token = __barrier.arrive(__inc);
+                    }
+                    __token = __shfl_sync(__active, __token, __leader);
+                    return __token;
+                }
+            ),
+            GREATER_THAN_SM75, _LIBCUDACXX_ARCH_BLOCK(
+                if (__isShared(&__barrier)) {
+                    arrival_token __token;
+                    if (__update > 1) {
+                        asm volatile ("mbarrier.arrive.noComplete.shared.b64 %0, [%1], %2;"
+                            : "=l"(__token)
+                            : "r"(static_cast<std::uint32_t>(__cvta_generic_to_shared(&__barrier))),
+                                "r"(static_cast<std::uint32_t>(__update - 1))
+                            : "memory");
+                    }
+                    asm volatile ("mbarrier.arrive.shared.b64 %0, [%1];"
+                        : "=l"(__token)
+                        : "r"(static_cast<std::uint32_t>(__cvta_generic_to_shared(&__barrier)))
+                        : "memory");
+                    return __token;
+                }
+            )
+        )
+        // non-shared, non-device fallback
+        return __barrier.arrive(__update);
     }
 
     _LIBCUDACXX_INLINE_VISIBILITY
@@ -228,17 +236,18 @@ public:
     _LIBCUDACXX_INLINE_VISIBILITY
     void arrive_and_drop()
     {
-#if __CUDA_ARCH__ >= 800
-        if (__isShared(&__barrier)) {
-            asm volatile ("mbarrier.arrive_drop.shared.b64 _, [%0];"
-                :: "r"(static_cast<std::uint32_t>(__cvta_generic_to_shared(&__barrier)))
-                : "memory");
-        }
-        else
-#endif
-        {
-            __barrier.arrive_and_drop();
-        }
+        _LIBCUDACXX_CUDA_DISPATCH(
+            GREATER_THAN_SM75, _LIBCUDACXX_ARCH_BLOCK(
+                if (__isShared(&__barrier)) {
+                    asm volatile ("mbarrier.arrive_drop.shared.b64 _, [%0];"
+                        :: "r"(static_cast<std::uint32_t>(__cvta_generic_to_shared(&__barrier)))
+                        : "memory");
+                    return;
+                }
+            )
+        )
+
+        __barrier.arrive_and_drop();
     }
 
     _LIBCUDACXX_INLINE_VISIBILITY
@@ -293,7 +302,7 @@ inline void __strided_memcpy(char * __destination, char const * __source, std::s
     }
 }
 
-#if __CUDA_ARCH__ >= 800
+#if _LIBCUDACXX_CUDA_ARCH_DEF >= 800
 template<std::size_t _Alignment, bool _Large = (_Alignment > 16)>
 struct __memcpy_async_impl {
     __device__ static inline bool __copy(char * __destination, char const * __source, std::size_t __total_size, std::size_t __rank, std::size_t __stride) {
@@ -348,19 +357,21 @@ struct __memcpy_async_impl<_Alignment, true> : public __memcpy_async_impl<16, fa
 template<thread_scope _Sco, typename _CompF, bool _Is_mbarrier = (_Sco >= thread_scope_block) && std::is_same<_CompF, std::__empty_completion>::value>
 _LIBCUDACXX_INLINE_VISIBILITY
 inline void __memcpy_async_synchronize(barrier<_Sco, _CompF> & __barrier, bool __is_async) {
-#if __CUDA_ARCH__ >= 800
-    if (__is_async) {
-        if (_Is_mbarrier && __isShared(&__barrier)) {
-            asm volatile ("cp.async.mbarrier.arrive.shared.b64 [%0];"
-                :: "r"(static_cast<std::uint32_t>(__cvta_generic_to_shared(&__barrier)))
-                : "memory");
-        }
-        else {
-            asm volatile ("cp.async.wait_all;"
-                ::: "memory");
-        }
-    }
-#endif
+    _LIBCUDACXX_CUDA_DISPATCH(
+        GREATER_THAN_SM75, _LIBCUDACXX_ARCH_BLOCK(
+            if (__is_async) {
+                if (_Is_mbarrier && __isShared(&__barrier)) {
+                    asm volatile ("cp.async.mbarrier.arrive.shared.b64 [%0];"
+                        :: "r"(static_cast<std::uint32_t>(__cvta_generic_to_shared(&__barrier)))
+                        : "memory");
+                }
+                else {
+                    asm volatile ("cp.async.wait_all;"
+                        ::: "memory");
+                }
+            }
+        )
+    )
 }
 
 template<std::size_t _Native_alignment, typename _Group, typename _Sync>
@@ -368,34 +379,39 @@ _LIBCUDACXX_INLINE_VISIBILITY
 void inline __memcpy_async(_Group const & __group, char * __destination, char const * __source, std::size_t __size, _Sync & __sync) {
     bool __is_async = false;
 
-#if __CUDA_ARCH__ >= 800
-    __is_async = __isShared(__destination) && __isGlobal(__source);
+    _LIBCUDACXX_CUDA_DISPATCH(
+        GREATER_THAN_SM75, _LIBCUDACXX_ARCH_BLOCK(
+            __is_async = __isShared(__destination) && __isGlobal(__source);
 
-    if (__is_async) {
-        if (_Native_alignment < 4) {
-            auto __source_address = reinterpret_cast<std::uintptr_t>(__source);
-            auto __destination_address = reinterpret_cast<std::uintptr_t>(__destination);
+            if (__is_async) {
+                if (_Native_alignment < 4) {
+                    auto __source_address = reinterpret_cast<std::uintptr_t>(__source);
+                    auto __destination_address = reinterpret_cast<std::uintptr_t>(__destination);
 
-            // Lowest bit set will tell us what the common alignment of the three values is.
-            auto _Alignment = __ffs(__source_address | __destination_address | __size);
+                    // Lowest bit set will tell us what the common alignment of the three values is.
+                    auto _Alignment = __ffs(__source_address | __destination_address | __size);
 
-            switch (_Alignment) {
-                default: __is_async = __memcpy_async_impl<16>::__copy(__destination, __source, __size, __group.thread_rank(), __group.size()); break;
-                case 4: __is_async = __memcpy_async_impl<8>::__copy(__destination, __source, __size, __group.thread_rank(), __group.size()); break;
-                case 3: __is_async = __memcpy_async_impl<4>::__copy(__destination, __source, __size, __group.thread_rank(), __group.size()); break;
-                case 2: // fallthrough
-                case 1: __is_async = __memcpy_async_impl<1>::__copy(__destination, __source, __size, __group.thread_rank(), __group.size()); break;
+                    switch (_Alignment) {
+                        default: __is_async = __memcpy_async_impl<16>::__copy(__destination, __source, __size, __group.thread_rank(), __group.size()); break;
+                        case 4: __is_async = __memcpy_async_impl<8>::__copy(__destination, __source, __size, __group.thread_rank(), __group.size()); break;
+                        case 3: __is_async = __memcpy_async_impl<4>::__copy(__destination, __source, __size, __group.thread_rank(), __group.size()); break;
+                        case 2: // fallthrough
+                        case 1: __is_async = __memcpy_async_impl<1>::__copy(__destination, __source, __size, __group.thread_rank(), __group.size()); break;
+                    }
+                }
+                else {
+                    __is_async = __memcpy_async_impl<_Native_alignment>::__copy(__destination, __source, __size, __group.thread_rank(), __group.size());
+                }
             }
-        }
-        else {
-            __is_async = __memcpy_async_impl<_Native_alignment>::__copy(__destination, __source, __size, __group.thread_rank(), __group.size());
-        }
-    }
-    else
-#endif
-    {
-        __strided_memcpy<_Native_alignment>(__destination, __source, __size, __group.thread_rank(), __group.size());
-    }
+            else {
+                __strided_memcpy<_Native_alignment>(__destination, __source, __size, __group.thread_rank(), __group.size());
+            }
+            __memcpy_async_synchronize(__sync, __is_async);
+            return;
+        )
+    )
+    // non-ampere, non-conforming copy
+    __strided_memcpy<_Native_alignment>(__destination, __source, __size, __group.thread_rank(), __group.size());
 
     __memcpy_async_synchronize(__sync, __is_async);
 }
