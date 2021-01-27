@@ -38,6 +38,7 @@ int main(int argc, char **argv) {
     assert(e.what() ==
            std::string{
                "cudaErrorInvalidKernelImage: device kernel image is invalid"});
+    assert(e.code() == cudaErrorInvalidKernelImage);
   }
 
   try {
