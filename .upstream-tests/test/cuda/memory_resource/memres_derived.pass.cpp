@@ -48,6 +48,11 @@ private:
                              alignment});
   }
 
+  typename cuda::memory_resource<Kind>::context
+  do_get_context() const noexcept override {
+    return {};
+  }
+
   std::vector<event> events_;
 };
 
