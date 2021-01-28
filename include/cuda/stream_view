@@ -14,7 +14,7 @@
 #include "std/detail/__config"
 #include "std/detail/__pragma_push"
 #include "std/version"
-#include "detail/cuda_util"
+#include "detail/__cuda_util"
 
 #include <cuda_runtime_api.h>
 #include <stdexcept>
