@@ -7,7 +7,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include <cuda/cudaexcept>
+#include <cuda/exception>
 #include <cuda/std/type_traits>
 
 #include <cassert>
