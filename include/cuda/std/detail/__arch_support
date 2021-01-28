@@ -22,6 +22,7 @@
 #  define _LIBCUDACXX_CUDA_ARCH_VAL stdpar::target::device
 
 #  define _LIBCUDACXX_CUDA_IS_HOST stdpar::target::is_host
+#  define _LIBCUDACXX_CUDA_IS_DEVICE stdpar::target::is_device
 
 #if defined(__NVCOMPILER_CUDA_ARCH__)
 #  define _LIBCUDACXX_CUDA_ARCH_DEF __NVCOMPILER_CUDA_ARCH__
@@ -51,6 +52,7 @@
 #endif
 
 #  define _LIBCUDACXX_CUDA_IS_HOST !defined(__CUDA_ARCH__)
+#  define _LIBCUDACXX_CUDA_IS_DEVICE !_LIBCUDACXX_CUDA_IS_HOST
 
 #if defined(_LIBCUDACXX_CUDA_ARCH_VAL)
 #  define _LIBCUDACXX_DEVICE_CHECK(q) (q)
@@ -100,6 +102,7 @@
 #define _LIBCUDACXX_CUDA_ARCH_SM80 (_LIBCUDACXX_DEVICE_CHECK(_LIBCUDACXX_CUDA_ARCH_VAL == _LIBCUDACXX_CUDA_ARCH_VAL_SM80))
 
 #define _LIBCUDACXX_CUDA_ARCH_HOST (_LIBCUDACXX_CUDA_IS_HOST)
+#define _LIBCUDACXX_CUDA_ARCH_DEVICE (_LIBCUDACXX_CUDA_IS_DEVICE)
 
 // Platform invoke mechanisms
 #if defined(_LIBCUDACXX_COMPILER_PGI)
@@ -183,8 +186,10 @@
 
 #if !defined(__CUDA_ARCH__)
 #  define _LIBCUDACXX_CUDA_INVOKE_HOST(fn) fn
+#  define _LIBCUDACXX_CUDA_INVOKE_DEVICE(fn)
 #else
 #  define _LIBCUDACXX_CUDA_INVOKE_HOST(fn)
+#  define _LIBCUDACXX_CUDA_INVOKE_DEVICE(fn) fn
 #endif
 
 // NVCC Less than stuff

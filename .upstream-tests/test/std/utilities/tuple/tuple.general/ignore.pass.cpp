@@ -10,7 +10,7 @@
 
 // constexpr unspecified ignore;
 
-// UNSUPPORTED: c++98, c++03 
+// UNSUPPORTED: c++98, c++03
 
 #include <cuda/std/tuple>
 #include <cuda/std/cassert>
@@ -47,10 +47,14 @@ constexpr bool test_ignore_constexpr()
 }
 
 int main(int, char**) {
-    {
-        constexpr auto& ignore_v = cuda::std::ignore;
-        ((void)ignore_v);
-    }
+    _LIBCUDACXX_CUDA_DISPATCH(
+        HOST, _LIBCUDACXX_ARCH_BLOCK(
+            {
+                constexpr auto& ignore_v = cuda::std::ignore;
+                ((void)ignore_v);
+            }
+        )
+    )
     {
         static_assert(test_ignore_constexpr(), "");
     }

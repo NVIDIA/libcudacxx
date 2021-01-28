@@ -15,7 +15,7 @@
 // template<class... Types>
 //   tuple<Types&...> tie(Types&... t);
 
-// UNSUPPORTED: c++98, c++03 
+// UNSUPPORTED: c++98, c++03
 
 #include <cuda/std/tuple>
 
@@ -30,11 +30,12 @@ __host__ __device__ constexpr bool test_tie_constexpr() {
     {
         int i = 42;
         double f = 1.1;
-        using ExpectT = cuda::std::tuple<int&, decltype(cuda::std::ignore)&, double&>;
-        auto res = cuda::std::tie(i, cuda::std::ignore, f);
+        constexpr auto ignore_v = cuda::std::ignore;
+        using ExpectT = cuda::std::tuple<int&, decltype(ignore_v)&, double&>;
+        auto res = cuda::std::tie(i, ignore_v, f);
         static_assert(cuda::std::is_same<ExpectT, decltype(res)>::value, "");
         assert(&cuda::std::get<0>(res) == &i);
-        assert(&cuda::std::get<1>(res) == &cuda::std::ignore);
+        assert(&cuda::std::get<1>(res) == &ignore_v);
         assert(&cuda::std::get<2>(res) == &f);
         // FIXME: If/when tuple gets constexpr assignment
         //res = cuda::std::make_tuple(101, nullptr, -1.0);
@@ -51,7 +52,8 @@ int main(int, char**)
         // cuda::std::string not supported
         // cuda::std::string s;
         const char *s;
-        cuda::std::tie(i, cuda::std::ignore, s) = cuda::std::make_tuple(42, 3.14, _s);
+        constexpr auto ignore_v = cuda::std::ignore;
+        cuda::std::tie(i, ignore_v, s) = cuda::std::make_tuple(42, 3.14, _s);
         assert(i == 42);
         assert(s == _s);
     }

@@ -7,7 +7,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-#if defined(__CUDA_ARCH__) && ((!defined(_MSC_VER) && __CUDA_ARCH__ < 600) || (defined(_MSC_VER) && __CUDA_ARCH__ < 700))
+#if defined(_LIBCUDACXX_CUDA_ARCH_DEF) && ((!defined(_MSC_VER) && _LIBCUDACXX_CUDA_ARCH_DEF < 600) || (defined(_MSC_VER) && _LIBCUDACXX_CUDA_ARCH_DEF < 700))
 #  error "CUDA atomics are only supported for sm_60 and up on *nix and sm_70 and up on Windows."
 #endif
 
@@ -131,18 +131,24 @@ __host__ __device__ inline bool __cxx_atomic_is_lock_free(size_t __x) {
     return __x <= 8;
 }
 __host__ __device__ inline void __cxx_atomic_thread_fence(int __order) {
-#ifdef __CUDA_ARCH__
-    detail::__atomic_thread_fence_cuda(__order, detail::__thread_scope_system_tag());
-#else
-    __atomic_thread_fence(__order);
-#endif
+    _LIBCUDACXX_CUDA_DISPATCH(
+        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+            detail::__atomic_thread_fence_cuda(__order, detail::__thread_scope_system_tag());
+        ),
+        HOST, _LIBCUDACXX_ARCH_BLOCK(
+            __atomic_thread_fence(__order);
+        )
+    )
 }
 __host__ __device__ inline void __cxx_atomic_signal_fence(int __order) {
-#ifdef __CUDA_ARCH__
-    detail::__atomic_signal_fence_cuda(__order);
-#else
-    __atomic_signal_fence(__order);
-#endif
+    _LIBCUDACXX_CUDA_DISPATCH(
+        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+            detail::__atomic_signal_fence_cuda(__order);
+        ),
+        HOST, _LIBCUDACXX_ARCH_BLOCK(
+            __atomic_signal_fence(__order);
+        )
+    )
 }
 
 template <typename _Tp, typename = void>
@@ -172,10 +178,12 @@ template <typename _Tp>
 __host__ __device__ __cxx_atomic_alignment_wrapper_t<_Tp> __cxx_atomic_alignment_wrap(_Tp __value, true_type) {
     return __value;
 }
+
 template <typename _Tp>
 __host__ __device__ __cxx_atomic_alignment_wrapper_t<_Tp> __cxx_atomic_alignment_wrap(_Tp __value, false_type) {
     return __cxx_atomic_alignment_wrapper_t<_Tp>(__value);
 }
+
 template <typename _Tp>
 __host__ __device__ __cxx_atomic_alignment_wrapper_t<_Tp> __cxx_atomic_alignment_wrap(_Tp __value) {
     return __cxx_atomic_alignment_wrap(__value, integral_constant<bool, _LIBCUDACXX_ALIGNOF(_Tp) == sizeof(_Tp)>{});
@@ -185,10 +193,12 @@ template <typename _Tp>
 __host__ __device__ _Tp __cxx_atomic_alignment_unwrap(_Tp __value, true_type) {
     return __value;
 }
+
 template <typename _Tp>
 __host__ __device__ typename _Tp::__wrapped_type __cxx_atomic_alignment_unwrap(_Tp __value, false_type) {
     return __value.__a_held;
 }
+
 template <typename _Tp>
 __host__ __device__ auto __cxx_atomic_alignment_unwrap(_Tp __value)
     -> decltype(__cxx_atomic_alignment_unwrap(__value, integral_constant<bool, _LIBCUDACXX_ALIGNOF(_Tp) == sizeof(_Tp)>{}))
@@ -209,115 +219,165 @@ __host__ __device__ inline void __cxx_atomic_init(__cxx_atomic_base_impl_default
     auto __tmp = __cxx_atomic_alignment_wrap(__val);
     __cxx_atomic_assign_volatile(__a->__a_value, __tmp);
 }
+
 template<class _Tp, int _Sco>
 __host__ __device__ inline void __cxx_atomic_store(__cxx_atomic_base_impl_default<_Tp, _Sco> volatile* __a, _Tp __val, int __order) {
-#ifdef __CUDA_ARCH__
-    detail::__atomic_store_n_cuda(&__a->__a_value, __cxx_atomic_alignment_wrap(__val), __order, detail::__scope_tag<_Sco>());
-#else
-    auto __t = __cxx_atomic_alignment_wrap(__val);
-    __atomic_store(&__a->__a_value, &__t, __order);
-#endif
+    _LIBCUDACXX_CUDA_DISPATCH(
+        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+            detail::__atomic_store_n_cuda(&__a->__a_value, __cxx_atomic_alignment_wrap(__val), __order, detail::__scope_tag<_Sco>());
+        ),
+        HOST, _LIBCUDACXX_ARCH_BLOCK(
+            auto __t = __cxx_atomic_alignment_wrap(__val);
+            __atomic_store(&__a->__a_value, &__t, __order);
+        )
+    )
 }
+
 template<class _Tp, int _Sco>
 __host__ __device__ inline _Tp __cxx_atomic_load(__cxx_atomic_base_impl_default<_Tp, _Sco> const volatile* __a, int __order) {
-#ifdef __CUDA_ARCH__
-    return __cxx_atomic_alignment_unwrap(detail::__atomic_load_n_cuda(&__a->__a_value, __order, detail::__scope_tag<_Sco>()));
-#else
-    alignas(_Tp) unsigned char __buf[sizeof(_Tp)];
-    auto* __dest = reinterpret_cast<_Tp*>(__buf);
-    __atomic_load(&__a->__a_value, __dest, __order);
-    return __cxx_atomic_alignment_unwrap(*__dest);
-#endif
+    _LIBCUDACXX_CUDA_DISPATCH(
+        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+            return __cxx_atomic_alignment_unwrap(detail::__atomic_load_n_cuda(&__a->__a_value, __order, detail::__scope_tag<_Sco>()));
+        ),
+        HOST, _LIBCUDACXX_ARCH_BLOCK(
+            alignas(_Tp) unsigned char __buf[sizeof(_Tp)];
+            auto* __dest = reinterpret_cast<_Tp*>(__buf);
+            __atomic_load(&__a->__a_value, __dest, __order);
+            return __cxx_atomic_alignment_unwrap(*__dest);
+        )
+    )
 }
+
 template<class _Tp, int _Sco>
 __host__ __device__ inline _Tp __cxx_atomic_exchange(__cxx_atomic_base_impl_default<_Tp, _Sco> volatile* __a, _Tp __val, int __order) {
-#ifdef __CUDA_ARCH__
-    return __cxx_atomic_alignment_unwrap(detail::__atomic_exchange_n_cuda(&__a->__a_value, __cxx_atomic_alignment_wrap(__val), __order, detail::__scope_tag<_Sco>()));
-#else
-    alignas(_Tp) unsigned char __buf[sizeof(_Tp)];
-    auto* __dest = reinterpret_cast<_Tp*>(__buf);
-    auto __t = __cxx_atomic_alignment_wrap(__val);
-    __atomic_exchange(&__a->__a_value, &__t, __dest, __order);
-    return __cxx_atomic_alignment_unwrap(*__dest);
-#endif
+    _LIBCUDACXX_CUDA_DISPATCH(
+        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+            return __cxx_atomic_alignment_unwrap(detail::__atomic_exchange_n_cuda(&__a->__a_value, __cxx_atomic_alignment_wrap(__val), __order, detail::__scope_tag<_Sco>()));
+        ),
+        HOST, _LIBCUDACXX_ARCH_BLOCK(
+            alignas(_Tp) unsigned char __buf[sizeof(_Tp)];
+            auto* __dest = reinterpret_cast<_Tp*>(__buf);
+            auto __t = __cxx_atomic_alignment_wrap(__val);
+            __atomic_exchange(&__a->__a_value, &__t, __dest, __order);
+            return __cxx_atomic_alignment_unwrap(*__dest);
+        )
+    )
 }
+
 template<class _Tp, int _Sco>
 __host__ __device__ inline bool __cxx_atomic_compare_exchange_strong(__cxx_atomic_base_impl_default<_Tp, _Sco> volatile* __a, _Tp* __expected, _Tp __val, int __success, int __failure) {
     auto __tmp = __cxx_atomic_alignment_wrap(*__expected);
-#ifdef __CUDA_ARCH__
-    bool __result = detail::__atomic_compare_exchange_n_cuda(&__a->__a_value, &__tmp, __cxx_atomic_alignment_wrap(__val), false, __success, __failure, detail::__scope_tag<_Sco>());
-#else
-    bool __result = __atomic_compare_exchange(&__a->__a_value, &__tmp, &__val, false, __success, __failure);
-#endif
+    bool __result = false;
+    _LIBCUDACXX_CUDA_DISPATCH(
+        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+            __result = detail::__atomic_compare_exchange_n_cuda(&__a->__a_value, &__tmp, __cxx_atomic_alignment_wrap(__val), false, __success, __failure, detail::__scope_tag<_Sco>());
+        ),
+        HOST, _LIBCUDACXX_ARCH_BLOCK(
+            __result = __atomic_compare_exchange(&__a->__a_value, &__tmp, &__val, false, __success, __failure);
+        )
+    )
     *__expected = __cxx_atomic_alignment_unwrap(__tmp);
     return __result;
 }
+
 template<class _Tp, int _Sco>
 __host__ __device__ inline bool __cxx_atomic_compare_exchange_weak(__cxx_atomic_base_impl_default<_Tp, _Sco> volatile* __a, _Tp* __expected, _Tp __val, int __success, int __failure) {
     auto __tmp = __cxx_atomic_alignment_wrap(*__expected);
-#ifdef __CUDA_ARCH__
-    bool __result = detail::__atomic_compare_exchange_n_cuda(&__a->__a_value, &__tmp, __cxx_atomic_alignment_wrap(__val), true, __success, __failure, detail::__scope_tag<_Sco>());
-#else
-    bool __result = __atomic_compare_exchange(&__a->__a_value, &__tmp, &__val, true, __success, __failure);
-#endif
+    bool __result = false;
+    _LIBCUDACXX_CUDA_DISPATCH(
+        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+            __result = detail::__atomic_compare_exchange_n_cuda(&__a->__a_value, &__tmp, __cxx_atomic_alignment_wrap(__val), true, __success, __failure, detail::__scope_tag<_Sco>());
+        ),
+        HOST, _LIBCUDACXX_ARCH_BLOCK(
+            __result = __atomic_compare_exchange(&__a->__a_value, &__tmp, &__val, true, __success, __failure);
+        )
+    )
     *__expected = __cxx_atomic_alignment_unwrap(__tmp);
     return __result;
 }
+
 template<class _Tp, int _Sco>
 __host__ __device__ inline _Tp __cxx_atomic_fetch_add(__cxx_atomic_base_impl_default<_Tp, _Sco> volatile* __a, _Tp __delta, int __order) {
-#ifdef __CUDA_ARCH__
-    return detail::__atomic_fetch_add_cuda(&__a->__a_value, __delta, __order, detail::__scope_tag<_Sco>());
-#else
-    return __atomic_fetch_add(&__a->__a_value, __delta, __order);
-#endif
+    _LIBCUDACXX_CUDA_DISPATCH(
+        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+            return detail::__atomic_fetch_add_cuda(&__a->__a_value, __delta, __order, detail::__scope_tag<_Sco>());
+        ),
+        HOST, _LIBCUDACXX_ARCH_BLOCK(
+            return __atomic_fetch_add(&__a->__a_value, __delta, __order);
+        )
+    )
 }
+
 template<class _Tp, int _Sco>
 __host__ __device__ inline _Tp* __cxx_atomic_fetch_add(__cxx_atomic_base_impl_default<_Tp*, _Sco> volatile* __a, ptrdiff_t __delta, int __order) {
-#ifdef __CUDA_ARCH__
-    return detail::__atomic_fetch_add_cuda(&__a->__a_value, __delta, __order, detail::__scope_tag<_Sco>());
-#else
-    return __atomic_fetch_add(&__a->__a_value, __delta * __skip_amt<_Tp*>::value, __order);
-#endif
+    _LIBCUDACXX_CUDA_DISPATCH(
+        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+            return detail::__atomic_fetch_add_cuda(&__a->__a_value, __delta, __order, detail::__scope_tag<_Sco>());
+        ),
+        HOST, _LIBCUDACXX_ARCH_BLOCK(
+            return __atomic_fetch_add(&__a->__a_value, __delta * __skip_amt<_Tp*>::value, __order);
+        )
+    )
 }
+
 template<class _Tp, int _Sco>
 __host__ __device__ inline _Tp __cxx_atomic_fetch_sub(__cxx_atomic_base_impl_default<_Tp, _Sco> volatile* __a, _Tp __delta, int __order) {
-#ifdef __CUDA_ARCH__
-    return detail::__atomic_fetch_sub_cuda(&__a->__a_value, __delta, __order, detail::__scope_tag<_Sco>());
-#else
-    return __atomic_fetch_sub(&__a->__a_value, __delta, __order);
-#endif
+    _LIBCUDACXX_CUDA_DISPATCH(
+        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+            return detail::__atomic_fetch_sub_cuda(&__a->__a_value, __delta, __order, detail::__scope_tag<_Sco>());
+        ),
+        HOST, _LIBCUDACXX_ARCH_BLOCK(
+            return __atomic_fetch_sub(&__a->__a_value, __delta, __order);
+        )
+    )
 }
+
 template<class _Tp, int _Sco>
 __host__ __device__ inline _Tp* __cxx_atomic_fetch_sub(__cxx_atomic_base_impl_default<_Tp*, _Sco> volatile* __a, ptrdiff_t __delta, int __order) {
-#ifdef __CUDA_ARCH__
-    return detail::__atomic_fetch_sub_cuda(&__a->__a_value, __delta, __order, detail::__scope_tag<_Sco>());
-#else
-    return __atomic_fetch_sub(&__a->__a_value, __delta * __skip_amt<_Tp*>::value, __order);
-#endif
+    _LIBCUDACXX_CUDA_DISPATCH(
+        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+            return detail::__atomic_fetch_sub_cuda(&__a->__a_value, __delta, __order, detail::__scope_tag<_Sco>());
+        ),
+        HOST, _LIBCUDACXX_ARCH_BLOCK(
+            return __atomic_fetch_sub(&__a->__a_value, __delta * __skip_amt<_Tp*>::value, __order);
+        )
+    )
 }
+
 template<class _Tp, int _Sco>
 __host__ __device__ inline _Tp __cxx_atomic_fetch_and(__cxx_atomic_base_impl_default<_Tp, _Sco> volatile* __a, _Tp __pattern, int __order) {
-#ifdef __CUDA_ARCH__
-    return detail::__atomic_fetch_and_cuda(&__a->__a_value, __pattern, __order, detail::__scope_tag<_Sco>());
-#else
-    return __atomic_fetch_and(&__a->__a_value, __pattern, __order);
-#endif
+    _LIBCUDACXX_CUDA_DISPATCH(
+        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+            return detail::__atomic_fetch_and_cuda(&__a->__a_value, __pattern, __order, detail::__scope_tag<_Sco>());
+        ),
+        HOST, _LIBCUDACXX_ARCH_BLOCK(
+            return __atomic_fetch_and(&__a->__a_value, __pattern, __order);
+        )
+    )
 }
+
 template<class _Tp, int _Sco>
 __host__ __device__ inline _Tp __cxx_atomic_fetch_or(__cxx_atomic_base_impl_default<_Tp, _Sco> volatile* __a, _Tp __pattern, int __order) {
-#ifdef __CUDA_ARCH__
-    return detail::__atomic_fetch_or_cuda(&__a->__a_value, __pattern, __order, detail::__scope_tag<_Sco>());
-#else
-    return __atomic_fetch_or(&__a->__a_value, __pattern, __order);
-#endif
+    _LIBCUDACXX_CUDA_DISPATCH(
+        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+            return detail::__atomic_fetch_or_cuda(&__a->__a_value, __pattern, __order, detail::__scope_tag<_Sco>());
+        ),
+        HOST, _LIBCUDACXX_ARCH_BLOCK(
+            return __atomic_fetch_or(&__a->__a_value, __pattern, __order);
+        )
+    )
 }
+
 template<class _Tp, int _Sco>
 __host__ __device__ inline _Tp __cxx_atomic_fetch_xor(__cxx_atomic_base_impl_default<_Tp, _Sco> volatile* __a, _Tp __pattern, int __order) {
-#ifdef __CUDA_ARCH__
-    return detail::__atomic_fetch_xor_cuda(&__a->__a_value, __pattern, __order, detail::__scope_tag<_Sco>());
-#else
-    return __atomic_fetch_xor(&__a->__a_value, __pattern, __order);
-#endif
+    _LIBCUDACXX_CUDA_DISPATCH(
+        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+            return detail::__atomic_fetch_xor_cuda(&__a->__a_value, __pattern, __order, detail::__scope_tag<_Sco>());
+        ),
+        HOST, _LIBCUDACXX_ARCH_BLOCK(
+            return __atomic_fetch_xor(&__a->__a_value, __pattern, __order);
+        )
+    )
 }
 
 template <typename _Tp, int _Sco>
@@ -356,34 +416,42 @@ template<class _Tp, int _Sco>
 __host__ __device__ inline void __cxx_atomic_init(__cxx_atomic_base_impl_small<_Tp, _Sco> volatile* __a, _Tp __val) {
     __cxx_atomic_init(&__a->__a_value, __cxx_small_to_32(__val));
 }
+
 template<class _Tp, int _Sco>
 __host__ __device__ inline void __cxx_atomic_store(__cxx_atomic_base_impl_small<_Tp, _Sco> volatile* __a, _Tp __val, int __order) {
     __cxx_atomic_store(&__a->__a_value, __cxx_small_to_32(__val), __order);
 }
+
 template<class _Tp, int _Sco>
 __host__ __device__ inline _Tp __cxx_atomic_load(__cxx_atomic_base_impl_small<_Tp, _Sco> const volatile* __a, int __order) {
     return __cxx_small_from_32<_Tp>(__cxx_atomic_load(&__a->__a_value, __order));
 }
+
 template<class _Tp, int _Sco>
 __host__ __device__ inline _Tp __cxx_atomic_exchange(__cxx_atomic_base_impl_small<_Tp, _Sco> volatile* __a, _Tp __value, int __order) {
     return __cxx_small_from_32<_Tp>(__cxx_atomic_exchange(&__a->__a_value, __cxx_small_to_32(__value), __order));
 }
+
 __host__ __device__
 inline int __cuda_memcmp(void const * __lhs, void const * __rhs, size_t __count) {
-#ifdef __CUDA_ARCH__
-    auto __lhs_c = reinterpret_cast<unsigned char const *>(__lhs);
-    auto __rhs_c = reinterpret_cast<unsigned char const *>(__rhs);
-    while (__count--) {
-        auto const __lhs_v = *__lhs_c++;
-        auto const __rhs_v = *__rhs_c++;
-        if (__lhs_v < __rhs_v) { return -1; }
-        if (__lhs_v > __rhs_v) { return 1; }
-    }
-    return 0;
-#else
-    return memcmp(__lhs, __rhs, __count);
-#endif
+    _LIBCUDACXX_CUDA_DISPATCH(
+        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+            auto __lhs_c = reinterpret_cast<unsigned char const *>(__lhs);
+            auto __rhs_c = reinterpret_cast<unsigned char const *>(__rhs);
+            while (__count--) {
+                auto const __lhs_v = *__lhs_c++;
+                auto const __rhs_v = *__rhs_c++;
+                if (__lhs_v < __rhs_v) { return -1; }
+                if (__lhs_v > __rhs_v) { return 1; }
+            }
+            return 0;
+        ),
+        HOST, _LIBCUDACXX_ARCH_BLOCK(
+            return memcmp(__lhs, __rhs, __count);
+        )
+    )
 }
+
 template<class _Tp, int _Sco>
 __host__ __device__ inline bool __cxx_atomic_compare_exchange_weak(__cxx_atomic_base_impl_small<_Tp, _Sco> volatile* __a, _Tp* __expected, _Tp __value, int __success, int __failure) {
     auto __temp = __cxx_small_to_32(*__expected);
@@ -397,6 +465,7 @@ __host__ __device__ inline bool __cxx_atomic_compare_exchange_weak(__cxx_atomic_
     }
     return __ret;
 }
+
 template<class _Tp, int _Sco>
 __host__ __device__ inline bool __cxx_atomic_compare_exchange_strong(__cxx_atomic_base_impl_small<_Tp, _Sco> volatile* __a, _Tp* __expected, _Tp __value, int __success, int __failure) {
     auto const __old = *__expected;
@@ -407,22 +476,27 @@ __host__ __device__ inline bool __cxx_atomic_compare_exchange_strong(__cxx_atomi
             return false;
     }
 }
+
 template<class _Tp, int _Sco>
 __host__ __device__ inline _Tp __cxx_atomic_fetch_add(__cxx_atomic_base_impl_small<_Tp, _Sco> volatile* __a, _Tp __delta, int __order) {
     return __cxx_small_from_32<_Tp>(__cxx_atomic_fetch_add(&__a->__a_value, __cxx_small_to_32(__delta), __order));
 }
+
 template<class _Tp, int _Sco>
 __host__ __device__ inline _Tp __cxx_atomic_fetch_sub(__cxx_atomic_base_impl_small<_Tp, _Sco> volatile* __a, _Tp __delta, int __order) {
     return __cxx_small_from_32<_Tp>(__cxx_atomic_fetch_sub(&__a->__a_value, __cxx_small_to_32(__delta), __order));
 }
+
 template<class _Tp, int _Sco>
 __host__ __device__ inline _Tp __cxx_atomic_fetch_and(__cxx_atomic_base_impl_small<_Tp, _Sco> volatile* __a, _Tp __pattern, int __order) {
     return __cxx_small_from_32<_Tp>(__cxx_atomic_fetch_and(&__a->__a_value, __cxx_small_to_32(__pattern), __order));
 }
+
 template<class _Tp, int _Sco>
 __host__ __device__ inline _Tp __cxx_atomic_fetch_or(__cxx_atomic_base_impl_small<_Tp, _Sco> volatile* __a, _Tp __pattern, int __order) {
     return __cxx_small_from_32<_Tp>(__cxx_atomic_fetch_or(&__a->__a_value, __cxx_small_to_32(__pattern), __order));
 }
+
 template<class _Tp, int _Sco>
 __host__ __device__ inline _Tp __cxx_atomic_fetch_xor(__cxx_atomic_base_impl_small<_Tp, _Sco> volatile* __a, _Tp __pattern, int __order) {
     return __cxx_small_from_32<_Tp>(__cxx_atomic_fetch_xor(&__a->__a_value, __cxx_small_to_32(__pattern), __order));
