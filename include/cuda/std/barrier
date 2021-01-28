@@ -48,7 +48,7 @@ public:
     barrier(const barrier &) = delete;
     barrier & operator=(const barrier &) = delete;
 
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR
     barrier(std::ptrdiff_t __expected, _CompletionF __completion = _CompletionF())
         : std::__barrier_base<_CompletionF, _Sco>(__expected, __completion) {
     }

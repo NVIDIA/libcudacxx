@@ -119,8 +119,8 @@ public:
         return numeric_limits<ptrdiff_t>::max();
     }
 
-    _LIBCUDACXX_INLINE_VISIBILITY
-    __atomic_semaphore_base(ptrdiff_t __count) : __count(__count) { }
+    _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR
+    __atomic_semaphore_base(ptrdiff_t __count) noexcept : __count(__count) { }
 
     ~__atomic_semaphore_base() = default;
 
@@ -190,7 +190,7 @@ public:
     _LIBCUDACXX_INLINE_VISIBILITY
     static constexpr ptrdiff_t max() noexcept { return 1; }
 
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR
     __atomic_semaphore_base(ptrdiff_t __available) : __available(__available) { }
 
     ~__atomic_semaphore_base() = default;
@@ -428,7 +428,7 @@ class counting_semaphore : public __semaphore_base<__least_max_value, 0>
 {
     static_assert(__least_max_value <= __semaphore_base<__least_max_value, 0>::max(), "");
 public:
-    _LIBCUDACXX_INLINE_VISIBILITY
+    _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR
     counting_semaphore(ptrdiff_t __count = 0) : __semaphore_base<__least_max_value, 0>(__count) { }
     ~counting_semaphore() = default;
 
