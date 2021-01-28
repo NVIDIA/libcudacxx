@@ -75,7 +75,7 @@ _LIBCUDACXX_BEGIN_NAMESPACE_STD
 _LIBCUDACXX_INLINE_VISIBILITY
 inline void __libcpp_thread_yield_processor()
 {
-#if defined(__CUDA_ARCH__)
+#if defined(_LIBCUDACXX_CUDA_ARCH_DEF)
   ;
 #elif defined(__aarch64__)
   asm volatile ("yield" :::);
@@ -293,13 +293,13 @@ void __libcpp_thread_yield() {}
 _LIBCUDACXX_THREAD_ABI_VISIBILITY
 void __libcpp_thread_sleep_for(chrono::nanoseconds __ns)
 {
-#if __CUDA_ARCH__ >= 700
-    auto const __step = __ns.count();
-    assert(__step < numeric_limits<unsigned>::max());
-    asm volatile("nanosleep.u32 %0;"::"r"((unsigned)__step):);
-#else
-    ;
-#endif
+    _LIBCUDACXX_CUDA_DISPATCH(
+        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+            auto const __step = __ns.count();
+            assert(__step < numeric_limits<unsigned>::max());
+            asm volatile("nanosleep.u32 %0;"::"r"((unsigned)__step):);
+        )
+    )
 }
 
 #elif defined(_LIBCUDACXX_HAS_THREAD_API_PTHREAD)

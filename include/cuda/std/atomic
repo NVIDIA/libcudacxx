@@ -160,29 +160,35 @@ struct atomic<_Tp*, _Sco>
 };
 
 inline __host__ __device__ void atomic_thread_fence(memory_order __m, thread_scope _Scope = thread_scope_system) {
-#ifdef __CUDA_ARCH__
-    switch(_Scope) {
-    case thread_scope_system:
-        detail::__atomic_thread_fence_cuda((int)__m, detail::__thread_scope_system_tag());
-        break;
-    case thread_scope_device:
-        detail::__atomic_thread_fence_cuda((int)__m, detail::__thread_scope_device_tag());
-        break;
-    case thread_scope_block:
-        detail::__atomic_thread_fence_cuda((int)__m, detail::__thread_scope_block_tag());
-        break;
-    }
-#else
-    ::std::atomic_thread_fence((::std::memory_order)__m);
-#endif
+    _LIBCUDACXX_CUDA_DISPATCH(
+        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+            switch(_Scope) {
+            case thread_scope_system:
+                detail::__atomic_thread_fence_cuda((int)__m, detail::__thread_scope_system_tag());
+                break;
+            case thread_scope_device:
+                detail::__atomic_thread_fence_cuda((int)__m, detail::__thread_scope_device_tag());
+                break;
+            case thread_scope_block:
+                detail::__atomic_thread_fence_cuda((int)__m, detail::__thread_scope_block_tag());
+                break;
+            }
+        ),
+        HOST, _LIBCUDACXX_ARCH_BLOCK(
+            ::std::atomic_thread_fence((::std::memory_order)__m);
+        )
+    )
 }
 
 inline __host__ __device__ void atomic_signal_fence(memory_order __m) {
-#ifdef __CUDA_ARCH__
-    detail::__atomic_signal_fence_cuda((int)__m);
-#else
-    ::std::atomic_signal_fence((::std::memory_order)__m);
-#endif
+    _LIBCUDACXX_CUDA_DISPATCH(
+        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+            detail::__atomic_signal_fence_cuda((int)__m);
+        ),
+        HOST, _LIBCUDACXX_ARCH_BLOCK(
+            ::std::atomic_signal_fence((::std::memory_order)__m);
+        )
+    )
 }
 
 _LIBCUDACXX_END_NAMESPACE_CUDA
