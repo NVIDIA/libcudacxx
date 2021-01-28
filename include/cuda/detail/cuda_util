@@ -10,7 +10,7 @@
 #ifndef _LIBCUDACXX_CUDA_UTIL
 #define _LIBCUDACXX_CUDA_UTIL
 
-#include "../cudaexcept"
+#include "../exception"
 #include "../std/detail/__config"
 #include "../std/detail/__pragma_push"
 #include "../std/version"
