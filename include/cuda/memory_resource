@@ -309,8 +309,9 @@ private:
                                    std::size_t __alignment,
                                    stream_view __stream) = 0;
 
+//
   typename memory_resource<_Kind>::context do_get_context() const
-      noexcept override {
+      noexcept final {
     return {};
   }
 };
