@@ -46,6 +46,7 @@ test()
 
 __host__ __device__ void test_edges()
 {
+    auto testcases = get_testcases();
     const unsigned N = sizeof(testcases) / sizeof(testcases[0]);
     for (unsigned i = 0; i < N; ++i)
     {

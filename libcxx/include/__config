@@ -209,7 +209,9 @@
 // This is not mutually exclusive with other compilers, as NVCC uses a host
 // compiler.
 #  define _LIBCUDACXX_COMPILER_NVCC
-#else
+#endif
+
+#if !defined(_LIBCUDACXX_COMPILER_NVCC) && !defined(_LIBCUDACXX_COMPILER_NVRTC)
 // If NVCC is not being used <complex> can safely use `long double` without warnings
 #  define _LIBCUDACXX_HAS_COMPLEX_LONG_DOUBLE
 // NVCC does not have a way of silencing non '_' prefixed UDLs
@@ -662,7 +664,7 @@ typedef __char32_t char32_t;
 // Literal operators ""d and ""y are supported starting with LLVM Clang 8 and AppleClang 10.0.1
 #if (defined(_LIBCUDACXX_CLANG_VER) && _LIBCUDACXX_CLANG_VER < 800) ||         \
     (defined(__apple_build_version__) && __apple_build_version__ < 10010000)
-#define _LIBCUDACXX_HAS_NO_CXX20_CHRONO_LITERALS	
+#define _LIBCUDACXX_HAS_NO_CXX20_CHRONO_LITERALS
 #endif
 
 #if __has_feature(cxx_reference_qualified_functions)

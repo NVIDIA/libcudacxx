@@ -16,165 +16,202 @@
 #include <cuda/std/complex>
 #include <cuda/std/cassert>
 
-#ifdef __CUDA_ARCH__
-__constant__
-#else
-const
-#endif
-cuda::std::complex<double> testcases[] =
-{
-    cuda::std::complex<double>( 1.e-6,  1.e-6),
-    cuda::std::complex<double>(-1.e-6,  1.e-6),
-    cuda::std::complex<double>(-1.e-6, -1.e-6),
-    cuda::std::complex<double>( 1.e-6, -1.e-6),
+using testcases_t = cuda::std::complex<double>[137];
 
-    cuda::std::complex<double>( 1.e+6,  1.e-6),
-    cuda::std::complex<double>(-1.e+6,  1.e-6),
-    cuda::std::complex<double>(-1.e+6, -1.e-6),
-    cuda::std::complex<double>( 1.e+6, -1.e-6),
+struct _testcases {
+    testcases_t _cases;
 
-    cuda::std::complex<double>( 1.e-6,  1.e+6),
-    cuda::std::complex<double>(-1.e-6,  1.e+6),
-    cuda::std::complex<double>(-1.e-6, -1.e+6),
-    cuda::std::complex<double>( 1.e-6, -1.e+6),
+    static constexpr size_t count = sizeof(_cases) / sizeof(_cases[0]);
 
-    cuda::std::complex<double>( 1.e+6,  1.e+6),
-    cuda::std::complex<double>(-1.e+6,  1.e+6),
-    cuda::std::complex<double>(-1.e+6, -1.e+6),
-    cuda::std::complex<double>( 1.e+6, -1.e+6),
+    __host__ __device__  const cuda::std::complex<double>* begin() const {
+        return  &_cases[0];
+    }
+    __host__ __device__  const cuda::std::complex<double>* cbegin() const {
+        return  &_cases[0];
+    }
+    __host__ __device__  cuda::std::complex<double>* begin() {
+        return  &_cases[0];
+    }
 
-    cuda::std::complex<double>(NAN, NAN),
-    cuda::std::complex<double>(-INFINITY, NAN),
-    cuda::std::complex<double>(-2, NAN),
-    cuda::std::complex<double>(-1, NAN),
-    cuda::std::complex<double>(-0.5, NAN),
-    cuda::std::complex<double>(-0., NAN),
-    cuda::std::complex<double>(+0., NAN),
-    cuda::std::complex<double>(0.5, NAN),
-    cuda::std::complex<double>(1, NAN),
-    cuda::std::complex<double>(2, NAN),
-    cuda::std::complex<double>(INFINITY, NAN),
+    __host__ __device__  const cuda::std::complex<double>* end() const {
+        return  &_cases[count];
+    }
+    __host__ __device__  const cuda::std::complex<double>* cend() const {
+        return  &_cases[count];
+    }
+    __host__ __device__  cuda::std::complex<double>* end() {
+        return  &_cases[count];
+    }
 
-    cuda::std::complex<double>(NAN, -INFINITY),
-    cuda::std::complex<double>(-INFINITY, -INFINITY),
-    cuda::std::complex<double>(-2, -INFINITY),
-    cuda::std::complex<double>(-1, -INFINITY),
-    cuda::std::complex<double>(-0.5, -INFINITY),
-    cuda::std::complex<double>(-0., -INFINITY),
-    cuda::std::complex<double>(+0., -INFINITY),
-    cuda::std::complex<double>(0.5, -INFINITY),
-    cuda::std::complex<double>(1, -INFINITY),
-    cuda::std::complex<double>(2, -INFINITY),
-    cuda::std::complex<double>(INFINITY, -INFINITY),
+    __host__ __device__  cuda::std::complex<double>& operator[](size_t n) {
+        return _cases[n];
+    }
 
-    cuda::std::complex<double>(NAN, -2),
-    cuda::std::complex<double>(-INFINITY, -2),
-    cuda::std::complex<double>(-2, -2),
-    cuda::std::complex<double>(-1, -2),
-    cuda::std::complex<double>(-0.5, -2),
-    cuda::std::complex<double>(-0., -2),
-    cuda::std::complex<double>(+0., -2),
-    cuda::std::complex<double>(0.5, -2),
-    cuda::std::complex<double>(1, -2),
-    cuda::std::complex<double>(2, -2),
-    cuda::std::complex<double>(INFINITY, -2),
-
-    cuda::std::complex<double>(NAN, -1),
-    cuda::std::complex<double>(-INFINITY, -1),
-    cuda::std::complex<double>(-2, -1),
-    cuda::std::complex<double>(-1, -1),
-    cuda::std::complex<double>(-0.5, -1),
-    cuda::std::complex<double>(-0., -1),
-    cuda::std::complex<double>(+0., -1),
-    cuda::std::complex<double>(0.5, -1),
-    cuda::std::complex<double>(1, -1),
-    cuda::std::complex<double>(2, -1),
-    cuda::std::complex<double>(INFINITY, -1),
-
-    cuda::std::complex<double>(NAN, -0.5),
-    cuda::std::complex<double>(-INFINITY, -0.5),
-    cuda::std::complex<double>(-2, -0.5),
-    cuda::std::complex<double>(-1, -0.5),
-    cuda::std::complex<double>(-0.5, -0.5),
-    cuda::std::complex<double>(-0., -0.5),
-    cuda::std::complex<double>(+0., -0.5),
-    cuda::std::complex<double>(0.5, -0.5),
-    cuda::std::complex<double>(1, -0.5),
-    cuda::std::complex<double>(2, -0.5),
-    cuda::std::complex<double>(INFINITY, -0.5),
-
-    cuda::std::complex<double>(NAN, -0.),
-    cuda::std::complex<double>(-INFINITY, -0.),
-    cuda::std::complex<double>(-2, -0.),
-    cuda::std::complex<double>(-1, -0.),
-    cuda::std::complex<double>(-0.5, -0.),
-    cuda::std::complex<double>(-0., -0.),
-    cuda::std::complex<double>(+0., -0.),
-    cuda::std::complex<double>(0.5, -0.),
-    cuda::std::complex<double>(1, -0.),
-    cuda::std::complex<double>(2, -0.),
-    cuda::std::complex<double>(INFINITY, -0.),
-
-    cuda::std::complex<double>(NAN, +0.),
-    cuda::std::complex<double>(-INFINITY, +0.),
-    cuda::std::complex<double>(-2, +0.),
-    cuda::std::complex<double>(-1, +0.),
-    cuda::std::complex<double>(-0.5, +0.),
-    cuda::std::complex<double>(-0., +0.),
-    cuda::std::complex<double>(+0., +0.),
-    cuda::std::complex<double>(0.5, +0.),
-    cuda::std::complex<double>(1, +0.),
-    cuda::std::complex<double>(2, +0.),
-    cuda::std::complex<double>(INFINITY, +0.),
-
-    cuda::std::complex<double>(NAN, 0.5),
-    cuda::std::complex<double>(-INFINITY, 0.5),
-    cuda::std::complex<double>(-2, 0.5),
-    cuda::std::complex<double>(-1, 0.5),
-    cuda::std::complex<double>(-0.5, 0.5),
-    cuda::std::complex<double>(-0., 0.5),
-    cuda::std::complex<double>(+0., 0.5),
-    cuda::std::complex<double>(0.5, 0.5),
-    cuda::std::complex<double>(1, 0.5),
-    cuda::std::complex<double>(2, 0.5),
-    cuda::std::complex<double>(INFINITY, 0.5),
-
-    cuda::std::complex<double>(NAN, 1),
-    cuda::std::complex<double>(-INFINITY, 1),
-    cuda::std::complex<double>(-2, 1),
-    cuda::std::complex<double>(-1, 1),
-    cuda::std::complex<double>(-0.5, 1),
-    cuda::std::complex<double>(-0., 1),
-    cuda::std::complex<double>(+0., 1),
-    cuda::std::complex<double>(0.5, 1),
-    cuda::std::complex<double>(1, 1),
-    cuda::std::complex<double>(2, 1),
-    cuda::std::complex<double>(INFINITY, 1),
-
-    cuda::std::complex<double>(NAN, 2),
-    cuda::std::complex<double>(-INFINITY, 2),
-    cuda::std::complex<double>(-2, 2),
-    cuda::std::complex<double>(-1, 2),
-    cuda::std::complex<double>(-0.5, 2),
-    cuda::std::complex<double>(-0., 2),
-    cuda::std::complex<double>(+0., 2),
-    cuda::std::complex<double>(0.5, 2),
-    cuda::std::complex<double>(1, 2),
-    cuda::std::complex<double>(2, 2),
-    cuda::std::complex<double>(INFINITY, 2),
-
-    cuda::std::complex<double>(NAN, INFINITY),
-    cuda::std::complex<double>(-INFINITY, INFINITY),
-    cuda::std::complex<double>(-2, INFINITY),
-    cuda::std::complex<double>(-1, INFINITY),
-    cuda::std::complex<double>(-0.5, INFINITY),
-    cuda::std::complex<double>(-0., INFINITY),
-    cuda::std::complex<double>(+0., INFINITY),
-    cuda::std::complex<double>(0.5, INFINITY),
-    cuda::std::complex<double>(1, INFINITY),
-    cuda::std::complex<double>(2, INFINITY),
-    cuda::std::complex<double>(INFINITY, INFINITY)
+    __host__ __device__  const cuda::std::complex<double>& operator[](size_t n) const {
+        return _cases[n];
+    }
 };
+
+__host__ __device__ _testcases get_testcases() {
+    const double _nan = cuda::std::numeric_limits<double>::quiet_NaN();
+    const double _inf = cuda::std::numeric_limits<double>::infinity();
+
+    _testcases tc {
+        cuda::std::complex<double>( 1.e-6,  1.e-6),
+        cuda::std::complex<double>(-1.e-6,  1.e-6),
+        cuda::std::complex<double>(-1.e-6, -1.e-6),
+        cuda::std::complex<double>( 1.e-6, -1.e-6),
+
+        cuda::std::complex<double>( 1.e+6,  1.e-6),
+        cuda::std::complex<double>(-1.e+6,  1.e-6),
+        cuda::std::complex<double>(-1.e+6, -1.e-6),
+        cuda::std::complex<double>( 1.e+6, -1.e-6),
+
+        cuda::std::complex<double>( 1.e-6,  1.e+6),
+        cuda::std::complex<double>(-1.e-6,  1.e+6),
+        cuda::std::complex<double>(-1.e-6, -1.e+6),
+        cuda::std::complex<double>( 1.e-6, -1.e+6),
+
+        cuda::std::complex<double>( 1.e+6,  1.e+6),
+        cuda::std::complex<double>(-1.e+6,  1.e+6),
+        cuda::std::complex<double>(-1.e+6, -1.e+6),
+        cuda::std::complex<double>( 1.e+6, -1.e+6),
+
+        cuda::std::complex<double>(_nan, _nan),
+        cuda::std::complex<double>(-_inf, _nan),
+        cuda::std::complex<double>(-2, _nan),
+        cuda::std::complex<double>(-1, _nan),
+        cuda::std::complex<double>(-0.5, _nan),
+        cuda::std::complex<double>(-0., _nan),
+        cuda::std::complex<double>(+0., _nan),
+        cuda::std::complex<double>(0.5, _nan),
+        cuda::std::complex<double>(1, _nan),
+        cuda::std::complex<double>(2, _nan),
+        cuda::std::complex<double>(_inf, _nan),
+
+        cuda::std::complex<double>(_nan, -_inf),
+        cuda::std::complex<double>(-_inf, -_inf),
+        cuda::std::complex<double>(-2, -_inf),
+        cuda::std::complex<double>(-1, -_inf),
+        cuda::std::complex<double>(-0.5, -_inf),
+        cuda::std::complex<double>(-0., -_inf),
+        cuda::std::complex<double>(+0., -_inf),
+        cuda::std::complex<double>(0.5, -_inf),
+        cuda::std::complex<double>(1, -_inf),
+        cuda::std::complex<double>(2, -_inf),
+        cuda::std::complex<double>(_inf, -_inf),
+
+        cuda::std::complex<double>(_nan, -2),
+        cuda::std::complex<double>(-_inf, -2),
+        cuda::std::complex<double>(-2, -2),
+        cuda::std::complex<double>(-1, -2),
+        cuda::std::complex<double>(-0.5, -2),
+        cuda::std::complex<double>(-0., -2),
+        cuda::std::complex<double>(+0., -2),
+        cuda::std::complex<double>(0.5, -2),
+        cuda::std::complex<double>(1, -2),
+        cuda::std::complex<double>(2, -2),
+        cuda::std::complex<double>(_inf, -2),
+
+        cuda::std::complex<double>(_nan, -1),
+        cuda::std::complex<double>(-_inf, -1),
+        cuda::std::complex<double>(-2, -1),
+        cuda::std::complex<double>(-1, -1),
+        cuda::std::complex<double>(-0.5, -1),
+        cuda::std::complex<double>(-0., -1),
+        cuda::std::complex<double>(+0., -1),
+        cuda::std::complex<double>(0.5, -1),
+        cuda::std::complex<double>(1, -1),
+        cuda::std::complex<double>(2, -1),
+        cuda::std::complex<double>(_inf, -1),
+
+        cuda::std::complex<double>(_nan, -0.5),
+        cuda::std::complex<double>(-_inf, -0.5),
+        cuda::std::complex<double>(-2, -0.5),
+        cuda::std::complex<double>(-1, -0.5),
+        cuda::std::complex<double>(-0.5, -0.5),
+        cuda::std::complex<double>(-0., -0.5),
+        cuda::std::complex<double>(+0., -0.5),
+        cuda::std::complex<double>(0.5, -0.5),
+        cuda::std::complex<double>(1, -0.5),
+        cuda::std::complex<double>(2, -0.5),
+        cuda::std::complex<double>(_inf, -0.5),
+
+        cuda::std::complex<double>(_nan, -0.),
+        cuda::std::complex<double>(-_inf, -0.),
+        cuda::std::complex<double>(-2, -0.),
+        cuda::std::complex<double>(-1, -0.),
+        cuda::std::complex<double>(-0.5, -0.),
+        cuda::std::complex<double>(-0., -0.),
+        cuda::std::complex<double>(+0., -0.),
+        cuda::std::complex<double>(0.5, -0.),
+        cuda::std::complex<double>(1, -0.),
+        cuda::std::complex<double>(2, -0.),
+        cuda::std::complex<double>(_inf, -0.),
+
+        cuda::std::complex<double>(_nan, +0.),
+        cuda::std::complex<double>(-_inf, +0.),
+        cuda::std::complex<double>(-2, +0.),
+        cuda::std::complex<double>(-1, +0.),
+        cuda::std::complex<double>(-0.5, +0.),
+        cuda::std::complex<double>(-0., +0.),
+        cuda::std::complex<double>(+0., +0.),
+        cuda::std::complex<double>(0.5, +0.),
+        cuda::std::complex<double>(1, +0.),
+        cuda::std::complex<double>(2, +0.),
+        cuda::std::complex<double>(_inf, +0.),
+
+        cuda::std::complex<double>(_nan, 0.5),
+        cuda::std::complex<double>(-_inf, 0.5),
+        cuda::std::complex<double>(-2, 0.5),
+        cuda::std::complex<double>(-1, 0.5),
+        cuda::std::complex<double>(-0.5, 0.5),
+        cuda::std::complex<double>(-0., 0.5),
+        cuda::std::complex<double>(+0., 0.5),
+        cuda::std::complex<double>(0.5, 0.5),
+        cuda::std::complex<double>(1, 0.5),
+        cuda::std::complex<double>(2, 0.5),
+        cuda::std::complex<double>(_inf, 0.5),
+
+        cuda::std::complex<double>(_nan, 1),
+        cuda::std::complex<double>(-_inf, 1),
+        cuda::std::complex<double>(-2, 1),
+        cuda::std::complex<double>(-1, 1),
+        cuda::std::complex<double>(-0.5, 1),
+        cuda::std::complex<double>(-0., 1),
+        cuda::std::complex<double>(+0., 1),
+        cuda::std::complex<double>(0.5, 1),
+        cuda::std::complex<double>(1, 1),
+        cuda::std::complex<double>(2, 1),
+        cuda::std::complex<double>(_inf, 1),
+
+        cuda::std::complex<double>(_nan, 2),
+        cuda::std::complex<double>(-_inf, 2),
+        cuda::std::complex<double>(-2, 2),
+        cuda::std::complex<double>(-1, 2),
+        cuda::std::complex<double>(-0.5, 2),
+        cuda::std::complex<double>(-0., 2),
+        cuda::std::complex<double>(+0., 2),
+        cuda::std::complex<double>(0.5, 2),
+        cuda::std::complex<double>(1, 2),
+        cuda::std::complex<double>(2, 2),
+        cuda::std::complex<double>(_inf, 2),
+
+        cuda::std::complex<double>(_nan, _inf),
+        cuda::std::complex<double>(-_inf, _inf),
+        cuda::std::complex<double>(-2, _inf),
+        cuda::std::complex<double>(-1, _inf),
+        cuda::std::complex<double>(-0.5, _inf),
+        cuda::std::complex<double>(-0., _inf),
+        cuda::std::complex<double>(+0., _inf),
+        cuda::std::complex<double>(0.5, _inf),
+        cuda::std::complex<double>(1, _inf),
+        cuda::std::complex<double>(2, _inf),
+        cuda::std::complex<double>(_inf, _inf)
+    };
+
+    return tc;
+}
 
 enum {zero, non_zero, inf, NaN, non_zero_nan};
 

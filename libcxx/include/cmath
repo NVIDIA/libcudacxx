@@ -312,32 +312,18 @@ long double    truncl(long double x);
 #pragma GCC system_header
 #endif
 
+#ifdef _LIBCUDACXX_COMPILER_NVRTC
+#include <math_constants.h>
+#define INFINITY CUDART_INF_F
+#define NAN      CUDART_NAN_F
+#endif
+
 _LIBCUDACXX_BEGIN_NAMESPACE_STD
 
 using ::signbit;
 using ::isfinite;
 using ::isinf;
 using ::isnan;
-
-// GCC <= 50X is missing some math intrinsics in the global namespace
-#if !defined(_LIBCUDACXX_MISSING_GCC_MATH_INTRINSICS)
-using ::fpclassify;
-using ::isnormal;
-using ::isgreater;
-using ::isgreaterequal;
-using ::isless;
-using ::islessequal;
-using ::islessgreater;
-using ::isunordered;
-using ::isunordered;
-#endif
-
-using ::float_t;
-using ::double_t;
-
-#ifndef _AIX
-using ::abs;
-#endif
 
 using ::acos;
 using ::acosf;
@@ -356,6 +342,53 @@ using ::coshf;
 
 using ::exp;
 using ::expf;
+
+using ::pow;
+using ::powf;
+
+using ::sin;
+using ::sinf;
+using ::sinh;
+using ::sinhf;
+
+using ::sqrt;
+using ::sqrtf;
+using ::tan;
+using ::tanf;
+
+using ::tanh;
+using ::tanhf;
+
+using ::acosh;
+using ::acoshf;
+using ::asinh;
+using ::asinhf;
+using ::atanh;
+using ::atanhf;
+
+using ::log;
+using ::logf;
+
+#ifndef _AIX
+using ::abs;
+#endif
+
+#ifndef _LIBCUDACXX_COMPILER_NVRTC
+// GCC <= 50X is missing some math intrinsics in the global namespace
+#if !defined(_LIBCUDACXX_MISSING_GCC_MATH_INTRINSICS)
+using ::fpclassify;
+using ::isnormal;
+using ::isgreater;
+using ::isgreaterequal;
+using ::isless;
+using ::islessequal;
+using ::islessgreater;
+using ::isunordered;
+using ::isunordered;
+#endif
+
+using ::float_t;
+using ::double_t;
 
 using ::fabs;
 using ::fabsf;
@@ -529,6 +562,7 @@ using ::scalblnl;
 using ::scalbnl;
 using ::tgammal;
 using ::truncl;
+#endif
 
 #if _LIBCUDACXX_STD_VER > 14 && (defined(_LIBCUDACXX_NO_HOST_CPP17_HYPOT) || !defined(_LIBCUDACXX_COMPILER_NVCC))
 inline _LIBCUDACXX_INLINE_VISIBILITY float       hypot(       float x,       float y,       float z ) { return sqrt(x*x + y*y + z*z); }

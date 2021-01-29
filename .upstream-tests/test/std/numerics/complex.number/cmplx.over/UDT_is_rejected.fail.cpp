@@ -6,10 +6,13 @@
 //
 //===----------------------------------------------------------------------===//
 
+// UNSUPPORTED: nvrtc
+
 // <cuda/std/complex>
 
 // Test that UDT's convertible to an integral or floating point type do not
 // participate in overload resolution.
+
 
 #include <cuda/std/complex>
 #include <cuda/std/type_traits>
