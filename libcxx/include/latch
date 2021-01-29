@@ -72,7 +72,7 @@ class __latch_base
     _LIBCUDACXX_LATCH_ALIGNMENT __atomic_base<ptrdiff_t, _Sco> __counter;
 public:
     inline _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR
-    constexpr explicit __latch_base(ptrdiff_t __expected)
+    explicit __latch_base(ptrdiff_t __expected)
         : __counter(__expected) { }
 
     ~__latch_base() = default;
