@@ -46,9 +46,24 @@ enum class memory_kind {
  */
 struct any_context{};
 
-namespace detail{
-    struct __empty{};
-}
+namespace detail {
+struct __empty {};
+
+template <typename _Context> 
+struct __get_context_impl {
+  _Context get_context() const noexcept { return do_get_context(); }
+private:
+  virtual _Context do_get_context() const noexcept = 0;
+};
+
+// Specialization for the default `any_context` returns a default constructed
+// object and removes the virtual `do_get_context` from the class
+template<>
+struct __get_context_impl<any_context> {
+  any_context get_context() const noexcept { return any_context{}; }
+};
+
+} // namespace detail
 
 /**
  * @brief Abstract interface for context specific memory allocation.
@@ -58,9 +73,9 @@ namespace detail{
  * without synchronization
  */
 template <memory_kind _Kind, typename _Context = any_context>
-class memory_resource
+class memory_resource : public detail::__get_context_impl<_Context>
 #if _LIBCUDACXX_STD_VER > 14
-    : public _CUDA_VSTD::conditional_t<
+     , public _CUDA_VSTD::conditional_t<
           (_Kind == memory_kind::host) and
               (_CUDA_VSTD::is_same<_Context, any_context>::value),
           std::pmr::memory_resource, detail::__empty>
@@ -75,12 +90,12 @@ public:
   virtual ~memory_resource() = default;
 
   /**
-   * @brief Returns the resource's execution context 
+   * @brief Returns the resource's execution context
    *
+   * Inherited from base class
+   *
+   * context get_context() const noexcept;
    */
-  context get_context() const noexcept {
-      return do_get_context();
-  }
 
   /**
    * @brief Allocates storage of size at least `__bytes` bytes.
@@ -147,8 +162,6 @@ private:
   virtual bool do_is_equal(memory_resource const &__other) const noexcept{
       return this == &__other;
   }
-
-  virtual context do_get_context() const noexcept = 0;
 };
 
 /**
@@ -308,12 +321,6 @@ private:
   virtual void do_deallocate_async(void *__p, std::size_t __bytes,
                                    std::size_t __alignment,
                                    stream_view __stream) = 0;
-
-//
-  typename memory_resource<_Kind>::context do_get_context() const
-      noexcept final {
-    return {};
-  }
 };
 
 _LIBCUDACXX_END_NAMESPACE_CUDA
