@@ -62,6 +62,12 @@ void test_derived_resource(){
     assert(b->is_equal(*b));
     assert(b->is_equal(d));
 
+    auto derived_context = d.get_context();
+    static_assert(std::is_same<decltype(derived_context), cuda::any_context>::value,"");
+
+    auto base_context = b->get_context();
+    static_assert(std::is_same<decltype(base_context), cuda::any_context>::value,"");
+
     auto p0 = b->allocate(100);
     assert(d.events().size() == 1);
     assert((d.events().back() == event{event::ALLOCATE,
