@@ -70,11 +70,10 @@
 
 #include "libcxx/include/__config"
 
-//#if defined(__CUDA_ARCH__)
-    #define _LIBCUDACXX_HAS_THREAD_API_CUDA
-//#elif defined(_LIBCUDACXX_COMPILER_MSVC)
-  //  #define _LIBCUDACXX_HAS_THREAD_API_WIN32
-//#endif
+#define _LIBCUDACXX_HAS_THREAD_API_CUDA
+#if defined(_LIBCUDACXX_COMPILER_MSVC)
+    #define _LIBCUDACXX_HAS_THREAD_API_WIN32
+#endif
 
 #if _GNUC_VER <= 409
     #define _LIBCUDACXX_CUDA_HAS_NO_HOST_STD_ATOMIC_INIT
@@ -159,10 +158,14 @@
 #undef _LIBCUDACXX_END_NAMESPACE_STD_NOVERSION
 #define _LIBCUDACXX_END_NAMESPACE_STD_NOVERSION } }
 
-_LIBCUDACXX_NORETURN _LIBCUDACXX_INLINE_VISIBILITY
+_LIBCUDACXX_INLINE_VISIBILITY
 inline void __throw_system_error(int, const char*)
 {
+#ifdef __CUDA_ARCH__
+    asm volatile("trap;");
+#else
     abort();
+#endif
 }
 
 #endif //__cuda_std__

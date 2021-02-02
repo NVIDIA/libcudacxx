@@ -299,7 +299,7 @@ void
 swap(unique_lock<_Mutex>& __x, unique_lock<_Mutex>& __y) _NOEXCEPT
     {__x.swap(__y);}
 
-/*
+#ifndef _LIBCUDACXX_HAS_THREAD_API_CUDA
 
 //enum class cv_status
 _LIBCUDACXX_DECLARE_STRONG_ENUM(cv_status)
@@ -313,9 +313,7 @@ class _LIBCUDACXX_TYPE_VIS condition_variable
 {
     __libcpp_condvar_t __cv_ = _LIBCUDACXX_CONDVAR_INITIALIZER;
 public:
-#ifdef _LIBCUDACXX_CXX03_LANG
     _LIBCUDACXX_INLINE_VISIBILITY
-#endif
     _LIBCUDACXX_CONSTEXPR condition_variable() _NOEXCEPT = default;
 
 #ifdef _LIBCUDACXX_HAS_TRIVIAL_CONDVAR_DESTRUCTION
@@ -375,7 +373,8 @@ private:
     void __do_timed_wait(unique_lock<mutex>& __lk,
        chrono::time_point<_Clock, chrono::nanoseconds>) _NOEXCEPT;
 };
-*/
+
+#endif // _LIBCUDACXX_HAS_THREAD_API_CUDA
 #endif // !_LIBCUDACXX_HAS_NO_THREADS
 
 template <class _Rep, class _Period>
@@ -440,7 +439,8 @@ __safe_nanosecond_cast(chrono::duration<_Rep, _Period> __d)
 }
 
 #ifndef _LIBCUDACXX_HAS_NO_THREADS
-/*
+#ifndef _LIBCUDACXX_HAS_THREAD_API_CUDA
+
 template <class _Predicate>
 void
 condition_variable::wait(unique_lock<mutex>& __lk, _Predicate __pred)
@@ -562,7 +562,8 @@ condition_variable::__do_timed_wait(unique_lock<mutex>& __lk,
 {
     wait_for(__lk, __tp - _Clock::now());
 }
-*/
+
+#endif //_LIBCUDACXX_HAS_THREAD_API_CUDA
 #endif // !_LIBCUDACXX_HAS_NO_THREADS
 
 _LIBCUDACXX_END_NAMESPACE_STD

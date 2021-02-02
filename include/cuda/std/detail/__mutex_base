@@ -14,19 +14,17 @@
 #ifndef _CUDA_MUTEX_BASE
 #define _CUDA_MUTEX_BASE
 
-#include "../chrono"
-    _LIBCUDACXX_BEGIN_NAMESPACE_STD
-    namespace chrono { 
-        using steady_clock = system_clock;
-    }
-    _LIBCUDACXX_END_NAMESPACE_STD
-
 #include "../semaphore"
-    template<int _Sco>
-    using __libcpp_mutex_t = cuda::std::__atomic_semaphore_base<_Sco,1>;
-    #undef _LIBCUDACXX_MUTEX_INITIALIZER
-    #define _LIBCUDACXX_MUTEX_INITIALIZER {1ll}
-    #define _LIBCUDACXX_HAS_TRIVIAL_MUTEX_DESTRUCTION
+
+_LIBCUDACXX_BEGIN_NAMESPACE_STD
+
+template<int _Sco>
+using __libcpp_mutex_t = cuda::std::__atomic_semaphore_base<_Sco,1>;
+
+#define _LIBCUDACXX_MUTEX_INITIALIZER {1ll}
+#define _LIBCUDACXX_HAS_TRIVIAL_MUTEX_DESTRUCTION
+
+_LIBCUDACXX_END_NAMESPACE_STD
 
 #include "__config"
 #include "__pragma_push"
