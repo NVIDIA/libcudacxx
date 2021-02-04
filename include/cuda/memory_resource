@@ -10,13 +10,13 @@
 #ifndef _CUDA_MEMORY_RESOURCE
 #define _CUDA_MEMORY_RESOURCE
 
-#include "stream_view"
-#include "std/version"
 #include "std/cstddef"
 #include "std/detail/__config"
 #include "std/detail/__pragma_push"
 #include "std/type_traits"
-#include "std/cstddef"
+#include "std/utility"
+#include "std/version"
+#include "stream_view"
 
 #if _LIBCUDACXX_STD_VER > 14
 #include <memory_resource>
@@ -73,14 +73,7 @@ struct __get_context_impl<any_context> {
  * without synchronization
  */
 template <memory_kind _Kind, typename _Context = any_context>
-class memory_resource : public detail::__get_context_impl<_Context>
-#if _LIBCUDACXX_STD_VER > 14
-     , public _CUDA_VSTD::conditional_t<
-          (_Kind == memory_kind::host) and
-              (_CUDA_VSTD::is_same<_Context, any_context>::value),
-          std::pmr::memory_resource, detail::__empty>
-#endif // _LIBCUDACXX_STD_VER > 14
-{
+class memory_resource : public detail::__get_context_impl<_Context> {
 public:
   static constexpr memory_kind kind = _Kind;
   using context = _Context;
@@ -163,6 +156,44 @@ private:
       return this == &__other;
   }
 };
+
+#if _LIBCUDACXX_STD_VER > 14
+template <typename _Pointer>
+class pmr_adaptor final : public ::std::pmr::memory_resource {
+  static_assert(
+      _CUDA_VSTD::is_base_of_v<cuda::memory_resource<cuda::memory_kind::host>,
+                               _CUDA_VSTD::remove_reference_t<
+                                   decltype(*_CUDA_VSTD::declval<_Pointer>())>>,
+      "Pointer must be a pointer-like type to a type that is or derives from "
+      "memory_resource<memory_kind::host /* default context */>");
+public:
+  pmr_adaptor(Pointer __mr) : __mr_{mr} {}
+
+  using raw_pointer = _CUDA_VSTD::remove_reference_t<decltype(&*_CUDA_VSTD::declval<_Pointer>())>;
+
+  raw_pointer resource() const noexcept { return &*__mr_; }
+
+private:
+  void *do_allocate(std::size_t __bytes, std::size_t __alignment) override {
+    return __mr_->allocate(__bytes, __alignment);
+  }
+
+  void do_deallocate(void *__p, std::size_t __bytes,
+                     std::size_t __alignment) override {
+    return __mr_->deallocate(__p, __bytes, __alignment);
+  }
+
+  bool do_is_equal(::std::pmr::memory_resource const& __other) const noexcept override {
+    auto __other_p = dynamic_cast<pmr_adaptor<_Pointer> const*>(&__other);
+    if (__other_p) {
+      return __other_p->resource()->is_equal(*resource());
+    }
+    return &__other == this;
+  }
+
+  Pointer __mr_;
+};
+#endif // _LIBCUDACXX_STD_VER > 14
 
 /**
  * @brief Abstract interface for CUDA stream-ordered memory allocation.
