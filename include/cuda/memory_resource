@@ -168,20 +168,29 @@ private:
 #endif // __has_include(<experimental/memory_resource>)
 
 #if defined(_LIBCUDACXX_STD_PMR_NS)
+
+namespace detail{
+class __pmr_adaptor_base : public _LIBCUDACXX_STD_PMR_NS::memory_resource {
+public:
+  virtual cuda::memory_resource<cuda::memory_kind::host>* resource() const noexcept = 0;
+};
+}
+
 template <typename _Pointer>
-class pmr_adaptor final : public _LIBCUDACXX_STD_PMR_NS::memory_resource {
+class pmr_adaptor final : public detail::__pmr_adaptor_base {
   static_assert(
       _CUDA_VSTD::is_base_of_v<cuda::memory_resource<cuda::memory_kind::host>,
                                _CUDA_VSTD::remove_reference_t<
                                    decltype(*_CUDA_VSTD::declval<_Pointer>())>>,
       "Pointer must be a pointer-like type to a type that is or derives from "
       "memory_resource<memory_kind::host /* default context */>");
+
 public:
   pmr_adaptor(_Pointer __mr) : __mr_{std::move(__mr)} {}
 
   using raw_pointer = _CUDA_VSTD::remove_reference_t<decltype(&*_CUDA_VSTD::declval<_Pointer>())>;
 
-  raw_pointer resource() const noexcept { return &*__mr_; }
+  raw_pointer resource() const noexcept override { return &*__mr_; }
 
 private:
   void *do_allocate(std::size_t __bytes, std::size_t __alignment) override {
@@ -193,9 +202,10 @@ private:
     return __mr_->deallocate(__p, __bytes, __alignment);
   }
 
-  bool do_is_equal(_LIBCUDACXX_STD_PMR_NS::memory_resource const& __other) const noexcept override {
-    auto __other_p = dynamic_cast<pmr_adaptor<_Pointer> const*>(&__other);
-    return (__other_p) ? __other_p->resource()->is_equal(*resource()) : false;
+  bool do_is_equal(_LIBCUDACXX_STD_PMR_NS::memory_resource const &__other) const noexcept override {
+    auto __other_p = dynamic_cast<detail::__pmr_adaptor_base const *>(&__other);
+    return __other_p and (__other_p->resource() == resource() or
+                          __other_p->resource()->is_equal(*resource()));
   }
 
   _Pointer __mr_;
