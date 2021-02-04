@@ -158,8 +158,18 @@ private:
 };
 
 #if _LIBCUDACXX_STD_VER > 14
+
+#if __has_include(<memory_resource>)
+#include <memory_resource>
+#define _LIBCUDACXX_STD_PMR_NS ::std::pmr
+#elif __has_include(<experimental/memory_resource>)
+#include <experimental/memory_resource>
+#define _LIBCUDACXX_STD_PMR_NS ::std::experimental::pmr
+#endif // __has_include(<experimental/memory_resource>)
+
+#if defined(_LIBCUDACXX_STD_PMR_NS)
 template <typename _Pointer>
-class pmr_adaptor final : public ::std::pmr::memory_resource {
+class pmr_adaptor final : public _LIBCUDACXX_STD_PMR_NS::memory_resource {
   static_assert(
       _CUDA_VSTD::is_base_of_v<cuda::memory_resource<cuda::memory_kind::host>,
                                _CUDA_VSTD::remove_reference_t<
@@ -183,7 +193,7 @@ private:
     return __mr_->deallocate(__p, __bytes, __alignment);
   }
 
-  bool do_is_equal(::std::pmr::memory_resource const& __other) const noexcept override {
+  bool do_is_equal(_LIBCUDACXX_STD_PMR_NS::memory_resource const& __other) const noexcept override {
     auto __other_p = dynamic_cast<pmr_adaptor<_Pointer> const*>(&__other);
     if (__other_p) {
       return __other_p->resource()->is_equal(*resource());
@@ -193,6 +203,7 @@ private:
 
   Pointer __mr_;
 };
+#endif // _LIBCUDACXX_STD_PMR_NS
 #endif // _LIBCUDACXX_STD_VER > 14
 
 /**
