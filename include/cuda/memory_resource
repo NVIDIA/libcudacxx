@@ -177,7 +177,7 @@ class pmr_adaptor final : public _LIBCUDACXX_STD_PMR_NS::memory_resource {
       "Pointer must be a pointer-like type to a type that is or derives from "
       "memory_resource<memory_kind::host /* default context */>");
 public:
-  pmr_adaptor(Pointer __mr) : __mr_{std::move(mr)} {}
+  pmr_adaptor(_Pointer __mr) : __mr_{std::move(__mr)} {}
 
   using raw_pointer = _CUDA_VSTD::remove_reference_t<decltype(&*_CUDA_VSTD::declval<_Pointer>())>;
 
@@ -198,7 +198,7 @@ private:
     return (__other_p) ? __other_p->resource()->is_equal(*resource()) : false;
   }
 
-  Pointer __mr_;
+  _Pointer __mr_;
 };
 #endif // defined(_LIBCUDACXX_STD_PMR_NS)
 #endif // _LIBCUDACXX_STD_VER > 14
