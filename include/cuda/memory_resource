@@ -203,7 +203,7 @@ private:
 
   Pointer __mr_;
 };
-#endif // _LIBCUDACXX_STD_PMR_NS
+#endif // defined(_LIBCUDACXX_STD_PMR_NS)
 #endif // _LIBCUDACXX_STD_VER > 14
 
 /**
