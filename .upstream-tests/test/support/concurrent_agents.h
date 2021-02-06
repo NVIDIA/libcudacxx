@@ -11,47 +11,47 @@
     #include <thread>
 #endif
 
+#if defined(_LIBCUDACXX_CUDA_ARCH_DEF) && _LIBCUDACXX_CUDA_ARCH_DEF < 350
+    #error "This test requires CUDA dynamic parallelism to work."
+#endif
+
 template<typename... Fs>
 __host__ __device__
 void concurrent_agents_launch(Fs ...fs)
 {
-#ifdef __CUDA_ARCH__
+    _LIBCUDACXX_CUDA_DISPATCH(
+        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+            assert(blockDim.x == sizeof...(Fs));
 
-    #if __CUDA_ARCH__ < 350
-        #error "This test requires CUDA dynamic parallelism to work."
-    #endif
+            using fptr = void (*)(void *);
 
-    assert(blockDim.x == sizeof...(Fs));
+            fptr device_threads[] = {
+                [](void * data) {
+                    (*reinterpret_cast<Fs *>(data))();
+                }...
+            };
 
-    using fptr = void (*)(void *);
+            void * device_thread_data[] = {
+                reinterpret_cast<void *>(&fs)...
+            };
 
-    fptr device_threads[] = {
-        [](void * data) {
-            (*reinterpret_cast<Fs *>(data))();
-        }...
-    };
+            __syncthreads();
 
-    void * device_thread_data[] = {
-        reinterpret_cast<void *>(&fs)...
-    };
+            device_threads[threadIdx.x](device_thread_data[threadIdx.x]);
 
-    __syncthreads();
+            __syncthreads();
 
-    device_threads[threadIdx.x](device_thread_data[threadIdx.x]);
+        ),
+        HOST, _LIBCUDACXX_ARCH_BLOCK(
+            std::thread threads[]{
+                std::thread{ std::forward<Fs>(fs) }...
+            };
 
-    __syncthreads();
-
-#else
-
-    std::thread threads[]{
-        std::thread{ std::forward<Fs>(fs) }...
-    };
-
-    for (auto && thread : threads)
-    {
-        thread.join();
-    }
-
-#endif
+            for (auto && thread : threads)
+            {
+                thread.join();
+            }
+        )
+    )
 }
 

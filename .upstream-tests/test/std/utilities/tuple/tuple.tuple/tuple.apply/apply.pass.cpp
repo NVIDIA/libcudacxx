@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++98, c++03, c++11, c++14 
+// UNSUPPORTED: c++98, c++03, c++11, c++14
 // UNSUPPORTED: nvrtc
 
 // <cuda/std/tuple>
@@ -239,7 +239,7 @@ void test_noexcept()
 }
 
 namespace ReturnTypeTest {
-    #ifdef __CUDA_ARCH__
+    #ifdef _LIBCUDACXX_CUDA_ARCH_DEF
     __constant__ int my_int = 42;
     #else
     static int my_int = 42;

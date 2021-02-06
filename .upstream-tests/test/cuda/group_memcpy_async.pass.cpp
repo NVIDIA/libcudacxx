@@ -145,10 +145,12 @@ template <class T,
 __host__ __device__ __noinline__
 void test_select_barrier()
 {
-#ifdef __CUDA_ARCH__
-    test_select_scope<T, SourceSelector, DestSelector, shared_memory_selector>();
-    test_select_scope<T, SourceSelector, DestSelector, global_memory_selector>();
-#endif
+    _LIBCUDACXX_CUDA_DISPATCH(
+        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+            test_select_scope<T, SourceSelector, DestSelector, shared_memory_selector>();
+            test_select_scope<T, SourceSelector, DestSelector, global_memory_selector>();
+        )
+    )
 }
 
 template <class T,
@@ -157,28 +159,34 @@ template <class T,
 __host__ __device__ __noinline__
 void test_select_destination()
 {
-#ifdef __CUDA_ARCH__
-    test_select_barrier<T, SourceSelector, shared_memory_selector>();
-    test_select_barrier<T, SourceSelector, global_memory_selector>();
-#endif
+    _LIBCUDACXX_CUDA_DISPATCH(
+        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+            test_select_barrier<T, SourceSelector, shared_memory_selector>();
+            test_select_barrier<T, SourceSelector, global_memory_selector>();
+        )
+    )
 }
 
 template <class T>
 __host__ __device__ __noinline__
 void test_select_source()
 {
-#ifdef __CUDA_ARCH__
-    test_select_destination<T, shared_memory_selector>();
-    test_select_destination<T, global_memory_selector>();
-#endif
+    _LIBCUDACXX_CUDA_DISPATCH(
+        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+            test_select_destination<T, shared_memory_selector>();
+            test_select_destination<T, global_memory_selector>();
+        )
+    )
 }
 
 
 int main(int argc, char ** argv)
 {
-#ifndef __CUDA_ARCH__
-    cuda_thread_count = 4;
-#endif
+    _LIBCUDACXX_CUDA_DISPATCH(
+        HOST, _LIBCUDACXX_ARCH_BLOCK(
+            cuda_thread_count = 4;
+        )
+    )
 
     //test_select_source<storage<int8_t>>();
     test_select_source<storage<uint16_t>>();

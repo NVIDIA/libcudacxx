@@ -24,57 +24,86 @@ template<template<typename, typename> class Selector>
 __host__ __device__
 void test()
 {
-#ifdef __CUDA_ARCH__
-    __shared__
-#endif
-    cuda::std::atomic_flag * t;
-#ifdef __CUDA_ARCH__
-    if (threadIdx.x == 0) {
-#endif
-    t = new cuda::std::atomic_flag();
-    cuda::std::atomic_flag_clear(t);
-    cuda::std::atomic_flag_wait(t, true);
-#ifdef __CUDA_ARCH__
-    }
-    __syncthreads();
-#endif
+    _LIBCUDACXX_CUDA_DISPATCH(
+        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+            __shared__ cuda::std::atomic_flag * t;
+            if (threadIdx.x == 0) {
+                t = new cuda::std::atomic_flag();
+                cuda::std::atomic_flag_clear(t);
+                cuda::std::atomic_flag_wait(t, true);
+            }
+            __syncthreads();
 
-    auto agent_notify = LAMBDA (){
-        assert(cuda::std::atomic_flag_test_and_set(t) == false);
-        cuda::std::atomic_flag_notify_one(t);
-    };
+            auto agent_notify = LAMBDA (){
+                assert(cuda::std::atomic_flag_test_and_set(t) == false);
+                cuda::std::atomic_flag_notify_one(t);
+            };
 
-    auto agent_wait = LAMBDA (){
-        cuda::std::atomic_flag_wait(t, false);
-    };
+            auto agent_wait = LAMBDA (){
+                cuda::std::atomic_flag_wait(t, false);
+            };
 
-    concurrent_agents_launch(agent_notify, agent_wait);
+            concurrent_agents_launch(agent_notify, agent_wait);
+        ),
+        HOST, _LIBCUDACXX_ARCH_BLOCK(
+            t = new cuda::std::atomic_flag();
+            cuda::std::atomic_flag_clear(t);
+            cuda::std::atomic_flag_wait(t, true);
+            cuda::std::atomic_flag * t;
 
-#ifdef __CUDA_ARCH__
-    __shared__
-#endif
-    volatile cuda::std::atomic_flag * vt;
-#ifdef __CUDA_ARCH__
-    if (threadIdx.x == 0) {
-#endif
-    vt = new cuda::std::atomic_flag();
-    cuda::std::atomic_flag_clear(vt);
-    cuda::std::atomic_flag_wait(vt, true);
-#ifdef __CUDA_ARCH__
-    }
-    __syncthreads();
-#endif
+            auto agent_notify = LAMBDA (){
+                assert(cuda::std::atomic_flag_test_and_set(t) == false);
+                cuda::std::atomic_flag_notify_one(t);
+            };
 
-    auto agent_notify_v = LAMBDA (){
-        assert(cuda::std::atomic_flag_test_and_set(vt) == false);
-        cuda::std::atomic_flag_notify_one(vt);
-    };
+            auto agent_wait = LAMBDA (){
+                cuda::std::atomic_flag_wait(t, false);
+            };
 
-    auto agent_wait_v = LAMBDA (){
-        cuda::std::atomic_flag_wait(vt, false);
-    };
+            concurrent_agents_launch(agent_notify, agent_wait);
+        )
+    )
 
-    concurrent_agents_launch(agent_notify_v, agent_wait_v);
+    _LIBCUDACXX_CUDA_DISPATCH(
+        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+            __shared__ volatile cuda::std::atomic_flag * vt;
+            if (threadIdx.x == 0) {
+                vt = new cuda::std::atomic_flag();
+                cuda::std::atomic_flag_clear(vt);
+                cuda::std::atomic_flag_wait(vt, true);
+            }
+            __syncthreads();
+
+            auto agent_notify_v = LAMBDA (){
+                assert(cuda::std::atomic_flag_test_and_set(vt) == false);
+                cuda::std::atomic_flag_notify_one(vt);
+            };
+
+            auto agent_wait_v = LAMBDA (){
+                cuda::std::atomic_flag_wait(vt, false);
+            };
+
+            concurrent_agents_launch(agent_notify_v, agent_wait_v);
+        ),
+        HOST, _LIBCUDACXX_ARCH_BLOCK(
+            volatile cuda::std::atomic_flag * vt;
+            vt = new cuda::std::atomic_flag();
+            cuda::std::atomic_flag_clear(vt);
+            cuda::std::atomic_flag_wait(vt, true);
+
+
+            auto agent_notify_v = LAMBDA (){
+                assert(cuda::std::atomic_flag_test_and_set(vt) == false);
+                cuda::std::atomic_flag_notify_one(vt);
+            };
+
+            auto agent_wait_v = LAMBDA (){
+                cuda::std::atomic_flag_wait(vt, false);
+            };
+
+            concurrent_agents_launch(agent_notify_v, agent_wait_v);
+        )
+    )
 }
 
 int main(int, char**)

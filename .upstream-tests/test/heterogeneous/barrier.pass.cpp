@@ -48,11 +48,14 @@ struct barrier_and_token_with_completion
             assert(completed.load() == false);
             completed.store(true);
 
-#ifdef __CUDA_ARCH__
-            completed_from_device = true;
-#else
-            completed_from_host = true;
-#endif
+            _LIBCUDACXX_CUDA_DISPATCH(
+                DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+                    completed_from_device = true;
+                ),
+                HOST, _LIBCUDACXX_ARCH_BLOCK(
+                completed_from_host = true;
+                )
+            )
         }
     };
 
@@ -232,15 +235,17 @@ void kernel_invoker()
 
 int main(int arg, char ** argv)
 {
-#ifndef __CUDA_ARCH__
-    kernel_invoker();
+    _LIBCUDACXX_CUDA_DISPATCH(
+        HOST, _LIBCUDACXX_ARCH_BLOCK(
+            kernel_invoker();
 
-    if (check_managed_memory_support(true))
-    {
-        assert(completed_from_host);
-    }
-    assert(completed_from_device);
-#endif
+            if (check_managed_memory_support(true))
+            {
+                assert(completed_from_host);
+            }
+            assert(completed_from_device);
+        )
+    )
 
     return 0;
 }

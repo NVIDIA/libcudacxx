@@ -33,10 +33,12 @@ __host__ __device__
 void test_select_barrier()
 {
     test<Sco, local_memory_selector>();
-#ifdef __CUDA_ARCH__
-    test<Sco, shared_memory_selector>();
-    test<Sco, global_memory_selector>();
-#endif
+    _LIBCUDACXX_CUDA_DISPATCH(
+        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+            test<Sco, shared_memory_selector>();
+            test<Sco, global_memory_selector>();
+        )
+    )
 }
 
 int main(int argc, char ** argv)

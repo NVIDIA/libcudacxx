@@ -154,11 +154,20 @@ do_test()
 
 #if __cplusplus > 201703L
     {
-#if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 700
-        TEST_ALIGNAS_TYPE(A) char storage[sizeof(A)] = {23};
-        A& zero = *new (storage) A();
-        assert(zero == 0);
-        zero.~A();
+        _LIBCUDACXX_CUDA_DISPATCH(
+            HOST, _LIBCUDACXX_ARCH_BLOCK(
+                TEST_ALIGNAS_TYPE(A) char storage[sizeof(A)] = {23};
+                A& zero = *new (storage) A();
+                assert(zero == 0);
+                zero.~A();
+            ),
+            GREATER_THAN_SM62, _LIBCUDACXX_ARCH_BLOCK(
+                TEST_ALIGNAS_TYPE(A) char storage[sizeof(A)] = {23};
+                A& zero = *new (storage) A();
+                assert(zero == 0);
+                zero.~A();
+            )
+        )
 #endif
     }
 #endif
@@ -220,17 +229,23 @@ int main(int, char**)
     // a *reasonable* subset of all the possible combinations to provide enough
     // confidence that this all actually works
 
-#if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 700
-    test_for_all_types<cuda_std_atomic, cuda::thread_scope_system, local_memory_selector>();
-    test_for_all_types<cuda_atomic, cuda::thread_scope_system, local_memory_selector>();
-#endif
-#ifdef __CUDA_ARCH__
-    test_for_all_types<cuda_std_atomic, cuda::thread_scope_system, shared_memory_selector>();
-    test_for_all_types<cuda_atomic, cuda::thread_scope_block, shared_memory_selector>();
+    _LIBCUDACXX_CUDA_DISPATCH(
+        HOST, _LIBCUDACXX_ARCH_BLOCK(
+            test_for_all_types<cuda_std_atomic, cuda::thread_scope_system, local_memory_selector>();
+            test_for_all_types<cuda_atomic, cuda::thread_scope_system, local_memory_selector>();
+        ),
+        GREATER_THAN_SM62, _LIBCUDACXX_ARCH_BLOCK(
+            test_for_all_types<cuda_std_atomic, cuda::thread_scope_system, local_memory_selector>();
+            test_for_all_types<cuda_atomic, cuda::thread_scope_system, local_memory_selector>();
+        ),
+        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+            test_for_all_types<cuda_std_atomic, cuda::thread_scope_system, shared_memory_selector>();
+            test_for_all_types<cuda_atomic, cuda::thread_scope_block, shared_memory_selector>();
 
-    test_for_all_types<cuda_std_atomic, cuda::thread_scope_system, global_memory_selector>();
-    test_for_all_types<cuda_atomic, cuda::thread_scope_device, global_memory_selector>();
-#endif
+            test_for_all_types<cuda_std_atomic, cuda::thread_scope_system, global_memory_selector>();
+            test_for_all_types<cuda_atomic, cuda::thread_scope_device, global_memory_selector>();
+        )
+    )
 
   return 0;
 }
