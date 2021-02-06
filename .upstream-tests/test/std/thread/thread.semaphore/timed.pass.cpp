@@ -25,65 +25,89 @@ __host__ __device__
 void test()
 {
   Selector<Semaphore, Initializer> sel;
-  SHARED Semaphore * s;
-  s = sel.construct(0);
 
-  auto const start = cuda::std::chrono::high_resolution_clock::now();
+  _LIBCUDACXX_CUDA_DISPATCH(
+    DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+      __shared__ Semaphore * s;
+      s = sel.construct(0);
 
-#ifdef __CUDA_ARCH__
-  if (threadIdx.x == 0) {
-#endif
-  assert(!s->try_acquire_until(start + cuda::std::chrono::milliseconds(250)));
-  assert(!s->try_acquire_for(cuda::std::chrono::milliseconds(250)));
-#ifdef __CUDA_ARCH__
-  }
-  __syncthreads();
-#endif
+      auto const start = cuda::std::chrono::high_resolution_clock::now();
+      if (threadIdx.x == 0) {
+        assert(!s->try_acquire_until(start + cuda::std::chrono::milliseconds(250)));
+        assert(!s->try_acquire_for(cuda::std::chrono::milliseconds(250)));
+      }
+    __syncthreads();
 
-  auto releaser = LAMBDA (){
-    //cuda::std::this_thread::sleep_for(cuda::std::chrono::milliseconds(250));
-    s->release();
-    //cuda::std::this_thread::sleep_for(cuda::std::chrono::milliseconds(250));
-    s->release();
-  };
+      auto releaser = LAMBDA (){
+        //cuda::std::this_thread::sleep_for(cuda::std::chrono::milliseconds(250));
+        s->release();
+        //cuda::std::this_thread::sleep_for(cuda::std::chrono::milliseconds(250));
+        s->release();
+      };
 
-  auto acquirer = LAMBDA (){
-    assert(s->try_acquire_until(start + cuda::std::chrono::seconds(2)));
-    assert(s->try_acquire_for(cuda::std::chrono::seconds(2)));
-  };
+      auto acquirer = LAMBDA (){
+        assert(s->try_acquire_until(start + cuda::std::chrono::seconds(2)));
+        assert(s->try_acquire_for(cuda::std::chrono::seconds(2)));
+      };
 
-  concurrent_agents_launch(acquirer, releaser);
+      concurrent_agents_launch(acquirer, releaser);
 
-#ifdef __CUDA_ARCH__
-  if (threadIdx.x == 0) {
-#endif
-  auto const end = cuda::std::chrono::high_resolution_clock::now();
-  assert(end - start < cuda::std::chrono::seconds(10));
-#ifdef __CUDA_ARCH__
-  }
-#endif
+      if (threadIdx.x == 0) {
+        auto const end = cuda::std::chrono::high_resolution_clock::now();
+        assert(end - start < cuda::std::chrono::seconds(10));
+      }
+    ),
+    HOST, _LIBCUDACXX_ARCH_BLOCK(
+      Semaphore * s;
+      s = sel.construct(0);
+
+      auto const start = cuda::std::chrono::high_resolution_clock::now();
+
+      assert(!s->try_acquire_until(start + cuda::std::chrono::milliseconds(250)));
+      assert(!s->try_acquire_for(cuda::std::chrono::milliseconds(250)));
+
+      auto releaser = LAMBDA (){
+        //cuda::std::this_thread::sleep_for(cuda::std::chrono::milliseconds(250));
+        s->release();
+        //cuda::std::this_thread::sleep_for(cuda::std::chrono::milliseconds(250));
+        s->release();
+      };
+
+      auto acquirer = LAMBDA (){
+        assert(s->try_acquire_until(start + cuda::std::chrono::seconds(2)));
+        assert(s->try_acquire_for(cuda::std::chrono::seconds(2)));
+      };
+
+      concurrent_agents_launch(acquirer, releaser);
+
+      auto const end = cuda::std::chrono::high_resolution_clock::now();
+      assert(end - start < cuda::std::chrono::seconds(10));
+    )
+  )
 }
 
 int main(int, char**)
 {
-#ifndef __CUDA_ARCH__
-  cuda_thread_count = 2;
+  _LIBCUDACXX_CUDA_DISPATCH(
+    HOST, _LIBCUDACXX_ARCH_BLOCK(
+        cuda_thread_count = 2;
 
-  test<cuda::std::counting_semaphore<>, local_memory_selector>();
-  test<cuda::counting_semaphore<cuda::thread_scope_block>, local_memory_selector>();
-  test<cuda::counting_semaphore<cuda::thread_scope_device>, local_memory_selector>();
-  test<cuda::counting_semaphore<cuda::thread_scope_system>, local_memory_selector>();
-#else
-  test<cuda::std::counting_semaphore<>, shared_memory_selector>();
-  test<cuda::counting_semaphore<cuda::thread_scope_block>, shared_memory_selector>();
-  test<cuda::counting_semaphore<cuda::thread_scope_device>, shared_memory_selector>();
-  test<cuda::counting_semaphore<cuda::thread_scope_system>, shared_memory_selector>();
+        test<cuda::std::counting_semaphore<>, local_memory_selector>();
+        test<cuda::counting_semaphore<cuda::thread_scope_block>, local_memory_selector>();
+        test<cuda::counting_semaphore<cuda::thread_scope_device>, local_memory_selector>();
+        test<cuda::counting_semaphore<cuda::thread_scope_system>, local_memory_selector>();
+    DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+        test<cuda::std::counting_semaphore<>, shared_memory_selector>();
+        test<cuda::counting_semaphore<cuda::thread_scope_block>, shared_memory_selector>();
+        test<cuda::counting_semaphore<cuda::thread_scope_device>, shared_memory_selector>();
+        test<cuda::counting_semaphore<cuda::thread_scope_system>, shared_memory_selector>();
 
-  test<cuda::std::counting_semaphore<>, global_memory_selector>();
-  test<cuda::counting_semaphore<cuda::thread_scope_block>, global_memory_selector>();
-  test<cuda::counting_semaphore<cuda::thread_scope_device>, global_memory_selector>();
-  test<cuda::counting_semaphore<cuda::thread_scope_system>, global_memory_selector>();
-#endif
+        test<cuda::std::counting_semaphore<>, global_memory_selector>();
+        test<cuda::counting_semaphore<cuda::thread_scope_block>, global_memory_selector>();
+        test<cuda::counting_semaphore<cuda::thread_scope_device>, global_memory_selector>();
+        test<cuda::counting_semaphore<cuda::thread_scope_system>, global_memory_selector>();
+    )
+  )
 
   return 0;
 }

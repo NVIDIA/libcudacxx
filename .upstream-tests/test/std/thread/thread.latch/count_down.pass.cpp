@@ -27,14 +27,18 @@ void test()
   SHARED Latch * l;
   l = sel.construct(2);
 
-#ifdef __CUDA_ARCH__
-  if (threadIdx.x == 0) {
-#endif
-  l->count_down();
-#ifdef __CUDA_ARCH__
-  }
-  __syncthreads();
-#endif
+  _LIBCUDACXX_CUDA_DISPATCH(
+      DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+          if (threadIdx.x == 0) {
+              l->count_down();
+          }
+          __syncthreads();
+      ),
+      HOST, _LIBCUDACXX_ARCH_BLOCK(
+              l->count_down();
+      )
+  )
+
   auto count_downer = LAMBDA (){
     l->count_down();
   };
@@ -48,24 +52,27 @@ void test()
 
 int main(int, char**)
 {
-#ifndef __CUDA_ARCH__
-  cuda_thread_count = 2;
+    _LIBCUDACXX_CUDA_DISPATCH(
+      HOST, _LIBCUDACXX_ARCH_BLOCK(
+        cuda_thread_count = 2;
 
-  test<cuda::std::latch, local_memory_selector>();
-  test<cuda::latch<cuda::thread_scope_block>, local_memory_selector>();
-  test<cuda::latch<cuda::thread_scope_device>, local_memory_selector>();
-  test<cuda::latch<cuda::thread_scope_system>, local_memory_selector>();
-#else
-  test<cuda::std::latch, shared_memory_selector>();
-  test<cuda::latch<cuda::thread_scope_block>, shared_memory_selector>();
-  test<cuda::latch<cuda::thread_scope_device>, shared_memory_selector>();
-  test<cuda::latch<cuda::thread_scope_system>, shared_memory_selector>();
+        test<cuda::std::latch, local_memory_selector>();
+        test<cuda::latch<cuda::thread_scope_block>, local_memory_selector>();
+        test<cuda::latch<cuda::thread_scope_device>, local_memory_selector>();
+        test<cuda::latch<cuda::thread_scope_system>, local_memory_selector>();
+      ),
+      DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+        test<cuda::std::latch, shared_memory_selector>();
+        test<cuda::latch<cuda::thread_scope_block>, shared_memory_selector>();
+        test<cuda::latch<cuda::thread_scope_device>, shared_memory_selector>();
+        test<cuda::latch<cuda::thread_scope_system>, shared_memory_selector>();
 
-  test<cuda::std::latch, global_memory_selector>();
-  test<cuda::latch<cuda::thread_scope_block>, global_memory_selector>();
-  test<cuda::latch<cuda::thread_scope_device>, global_memory_selector>();
-  test<cuda::latch<cuda::thread_scope_system>, global_memory_selector>();
-#endif
+        test<cuda::std::latch, global_memory_selector>();
+        test<cuda::latch<cuda::thread_scope_block>, global_memory_selector>();
+        test<cuda::latch<cuda::thread_scope_device>, global_memory_selector>();
+        test<cuda::latch<cuda::thread_scope_system>, global_memory_selector>();
+      )
+    )
 
   return 0;
 }

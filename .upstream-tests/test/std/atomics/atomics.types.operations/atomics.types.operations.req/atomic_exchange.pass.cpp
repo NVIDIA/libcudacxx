@@ -49,13 +49,18 @@ struct TestFn {
 
 int main(int, char**)
 {
-#if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 700
-    TestEachAtomicType<TestFn, local_memory_selector>()();
-#endif
-#ifdef __CUDA_ARCH__
-    TestEachAtomicType<TestFn, shared_memory_selector>()();
-    TestEachAtomicType<TestFn, global_memory_selector>()();
-#endif
+    _LIBCUDACXX_CUDA_DISPATCH(
+        GREATER_THAN_SM62, _LIBCUDACXX_ARCH_BLOCK(
+            TestEachAtomicType<TestFn, local_memory_selector>()();
+        ),
+        HOST, _LIBCUDACXX_ARCH_BLOCK(
+            TestEachAtomicType<TestFn, local_memory_selector>()();
+        ),
+        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+            TestEachAtomicType<TestFn, shared_memory_selector>()();
+            TestEachAtomicType<TestFn, global_memory_selector>()();
+        )
+    )
 
   return 0;
 }

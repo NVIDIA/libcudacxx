@@ -8,7 +8,7 @@
 
 
 
-// UNSUPPORTED: c++98, c++03, c++11, c++14 
+// UNSUPPORTED: c++98, c++03, c++11, c++14
 
 // <cuda/std/tuple>
 
@@ -31,7 +31,7 @@
 #include "test_macros.h"
 #include "disable_missing_braces_warning.h"
 
-#ifdef __CUDA_ARCH__
+#ifdef _LIBCUDACXX_CUDA_ARCH_DEF
 __device__ int count = 0;
 #else
 int count = 0;

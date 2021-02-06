@@ -29,7 +29,7 @@
 #include "test_macros.h"
 
 struct IncompleteType;
-#ifdef __CUDA_ARCH__
+#ifdef _LIBCUDACXX_CUDA_ARCH_DEF
 __device__ extern IncompleteType inc1;
 __device__ extern IncompleteType inc2;
 __device__ IncompleteType const& cinc1 = inc1;
@@ -60,7 +60,7 @@ int main(int, char**) {
 }
 
 struct IncompleteType {};
-#ifdef __CUDA_ARCH__
+#ifdef _LIBCUDACXX_CUDA_ARCH_DEF
 __device__ IncompleteType inc1;
 __device__ IncompleteType inc2;
 #else

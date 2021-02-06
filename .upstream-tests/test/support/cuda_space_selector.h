@@ -21,7 +21,7 @@
 #define LAMBDA [=] __host__ __device__
 #endif
 
-#ifdef __CUDA_ARCH__
+#ifdef _LIBCUDACXX_CUDA_ARCH_DEF
 #define SHARED __shared__
 #else
 #define SHARED
@@ -39,27 +39,35 @@ private:
     __host__ __device__
     T *& get_pointer() {
         alignas(T*)
-#ifdef __CUDA_ARCH__
-        __shared__
-#else
-        static
-#endif
-        char storage[shared_offset];
-        T *& allocated = *reinterpret_cast<T **>(storage + prefix_size);
-        return allocated;
+        _LIBCUDACXX_CUDA_DISPATCH(
+            DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+                __shared__ char storage[shared_offset];
+                T *& allocated = *reinterpret_cast<T **>(storage + prefix_size);
+                return allocated;
+            ),
+            HOST, _LIBCUDACXX_ARCH_BLOCK(
+                static char storage[shared_offset];
+                T *& allocated = *reinterpret_cast<T **>(storage + prefix_size);
+                return allocated;
+            )
+        )
     }
 
 public:
     __host__ __device__
     T * get() {
-#ifdef __CUDA_ARCH__
-        if (threadIdx.x == 0) {
-#endif
-        get_pointer() = reinterpret_cast<T *>(malloc(sizeof(T) + alignof(T)));
-#ifdef __CUDA_ARCH__
-        }
-        __syncthreads();
-#endif
+        _LIBCUDACXX_CUDA_DISPATCH(
+            DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+                if (threadIdx.x == 0) {
+                    get_pointer() = reinterpret_cast<T *>(malloc(sizeof(T) + alignof(T)));
+                }
+                __syncthreads();
+            )
+            HOST, _LIBCUDACXX_ARCH_BLOCK(
+                get_pointer() = reinterpret_cast<T *>(malloc(sizeof(T) + alignof(T)));
+            )
+        )
+
         auto ptr = reinterpret_cast<cuda::std::uintptr_t>(get_pointer());
         ptr += alignof(T) - ptr % alignof(T);
         return reinterpret_cast<T *>(ptr);
@@ -67,14 +75,17 @@ public:
 
     __host__ __device__
     ~malloc_memory_provider() {
-#ifdef __CUDA_ARCH__
-        if (threadIdx.x == 0) {
-#endif
-        free((void*)get_pointer());
-#ifdef __CUDA_ARCH__
-        }
-        __syncthreads();
-#endif
+        _LIBCUDACXX_CUDA_DISPATCH(
+            DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+                if (threadIdx.x == 0) {
+                    free((void*)get_pointer());
+                }
+                __syncthreads();
+            ),
+            HOST, _LIBCUDACXX_ARCH_BLOCK(
+                free((void*)get_pointer());
+            )
+        )
     }
 };
 
@@ -154,14 +165,19 @@ public:
     T * construct(Ts && ...ts) {
         ptr = provider.get();
         assert(ptr);
-#ifdef __CUDA_ARCH__
-        if (threadIdx.x == 0) {
-#endif
-        Initializer::construct(*ptr, std::forward<Ts>(ts)...);
-#ifdef __CUDA_ARCH__
-        }
-        __syncthreads();
-#endif
+
+        _LIBCUDACXX_CUDA_DISPATCH(
+            DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+                if (threadIdx.x == 0) {
+                    Initializer::construct(*ptr, std::forward<Ts>(ts)...);
+                }
+                __syncthreads();
+            ),
+            HOST, _LIBCUDACXX_ARCH_BLOCK(
+                Initializer::construct(*ptr, std::forward<Ts>(ts)...);
+            )
+        )
+
         return ptr;
     }
 
@@ -170,14 +186,17 @@ public:
 #endif
     __host__ __device__
     ~memory_selector() {
-#ifdef __CUDA_ARCH__
-        if (threadIdx.x == 0) {
-#endif
-        ptr->~T();
-#ifdef __CUDA_ARCH__
-        }
-        __syncthreads();
-#endif
+        _LIBCUDACXX_CUDA_DISPATCH(
+            DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+                if (threadIdx.x == 0) {
+                    ptr->~T();
+                }
+                __syncthreads();
+            ),
+            HOST, _LIBCUDACXX_ARCH_BLOCK(
+                ptr->~T();
+            )
+        )
     }
 };
 

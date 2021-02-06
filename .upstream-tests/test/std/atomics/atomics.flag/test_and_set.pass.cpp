@@ -132,13 +132,18 @@ void test()
 
 int main(int, char**)
 {
-#if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 700
-    test<local_memory_selector>();
-#endif
-#ifdef __CUDA_ARCH__
-    test<shared_memory_selector>();
-    test<global_memory_selector>();
-#endif
+    _LIBCUDACXX_CUDA_DISPATCH(
+        HOST, _LIBCUDACXX_ARCH_BLOCK(
+            test<local_memory_selector>();
+        ),
+        GREATER_THAN_SM62, _LIBCUDACXX_ARCH_BLOCK(
+            test<local_memory_selector>();
+        ),
+        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+            test<shared_memory_selector>();
+            test<global_memory_selector>();
+        )
+    )
 
   return 0;
 }

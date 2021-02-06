@@ -14,7 +14,7 @@
 
 // tuple& operator=(tuple&& u);
 
-// UNSUPPORTED: c++98, c++03 
+// UNSUPPORTED: c++98, c++03
 
 #include <cuda/std/tuple>
 #include <cuda/std/utility>
@@ -41,7 +41,7 @@ struct MoveAssignable {
   MoveAssignable& operator=(MoveAssignable&&) = default;
 };
 
-#ifdef __CUDA_ARCH__
+#ifdef _LIBCUDACXX_CUDA_ARCH_DEF
 __device__ static int copied = 0;
 __device__ static int moved = 0;
 #else

@@ -23,7 +23,7 @@
 
 #include "test_macros.h"
 
-#ifdef __CUDA_ARCH__
+#ifdef _LIBCUDACXX_CUDA_ARCH_DEF
 __device__ int count = 0;
 #else
 int count = 0;
