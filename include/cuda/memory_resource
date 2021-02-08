@@ -373,12 +373,12 @@ private:
                                    stream_view __stream) = 0;
 };
 
-template <memory_kind _Kind, typename _ValueType = _CUDA_VSTD::byte,
+template <memory_kind _Kind, typename _ValueType = std::byte,
           typename _Context = any_context>
 class polymorphic_allocator {
 public:
   using value_type = _ValueType;
-  using kind = _Kind;
+  static constexpr memory_kind kind = _Kind;
   using context = _Context;
   using resource_type = memory_resource<_Kind, _Context>;
 
@@ -393,7 +393,7 @@ public:
   template <typename _OtherValueType>
   polymorphic_allocator(polymorphic_allocator<_Kind, _OtherValueType,
                                               _Context> const &__other) noexcept
-      : __mr{other.resource()} {}
+      : __mr{__other.resource()} {}
 
   polymorphic_allocator &operator=(polymorphic_allocator const &) = delete;
 
