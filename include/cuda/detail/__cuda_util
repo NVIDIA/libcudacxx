@@ -21,15 +21,15 @@
 _LIBCUDACXX_BEGIN_NAMESPACE_CUDA
 
 namespace detail {
-void throw_on_cuda_error(cudaError_t __error, char const *__msg) {
+void __throw_on_cuda_error(cudaError_t __error, char const *__msg) {
   if (cudaSuccess != __error) {
     cudaGetLastError(); // Clear CUDA error state
     throw cuda::cuda_error{__error, __msg};
   }
 }
 
-void throw_on_cuda_error(cudaError_t __error) {
-  throw_on_cuda_error(__error, "");
+void __throw_on_cuda_error(cudaError_t __error) {
+  __throw_on_cuda_error(__error, "");
 }
 
 } // namespace detail
