@@ -434,12 +434,13 @@ public:
     deallocate_bytes(__p, __n * sizeof(_Object), alignof(_Object));
   }
 
-  template <typename _Object, typename... _Args, typename _K = _Kind>
-  typename _CUDA_VSTD::enable_if<_K != memory_kind::device, _Object *>::type
+  template <typename _Object, typename... _Args, memory_kind _MemKind = _Kind>
+  typename _CUDA_VSTD::enable_if<_MemKind != memory_kind::device,
+                                 _Object *>::type
   new_object(_Args &&... __args) {}
 
-  template <typename _Object, typename _K = _Kind>
-  typename _CUDA_VSTD::enable_if<_K != memory_kind::device, void>::type
+  template <typename _Object, memory_kind _MemKind = _Kind>
+  typename _CUDA_VSTD::enable_if<_MemKind != memory_kind::device, void>::type
   delete_object(_Object *__p) {}
 
 private:
