@@ -404,12 +404,11 @@ public:
   }
 
   value_type *allocate(size_t __n) {
-    return static_cast<value_type *>(
-        resource()->allocate(__n * sizeof(value_type), alignof(value_type)));
+      return allocate_object<value_type>(__n);
   }
 
   void deallocate(value_type *__p, std::size_t __n) {
-    resource()->deallocate(__p, __n * sizeof(value_type), alignof(value_type));
+      deallocate_object<value_type>(__p, __n);
   }
 
   void *
