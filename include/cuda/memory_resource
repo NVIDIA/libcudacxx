@@ -382,7 +382,9 @@ public:
   using context = _Context;
   using resource_type = memory_resource<_Kind, _Context>;
 
-  context get_context() const noexcept { return __mr->get_context(); }
+  // TODO: Need to figure out `get_default_resource()` before a default
+  // allocator constructor can be defined
+  polymorphic_allocator() = delete;
 
   polymorphic_allocator(resource_type *__r) noexcept : __mr{__r} {}
 
@@ -395,10 +397,48 @@ public:
 
   polymorphic_allocator &operator=(polymorphic_allocator const &) = delete;
 
+  context get_context() const noexcept { return __mr->get_context(); }
+
+  resource_type * resource() const {
+      return __mr;
+  }
+
   value_type *allocate(size_t __n) {
     return static_cast<value_type *>(
-        __mr->allocate(__n * sizeof(value_type), alignof(value_type)));
+        resource()->allocate(__n * sizeof(value_type), alignof(value_type)));
   }
+
+  void deallocate(value_type *__p, std::size_t __n) {
+    resource()->deallocate(__p, __n * sizeof(value_type), alignof(value_type));
+  }
+
+  void *
+  allocate_bytes(std::size_t __bytes,
+                 std::size_t __alignment = alignof(_CUDA_VSTD::max_align_t)) {
+    return resource()->allocate(__bytes, __alignment);
+  }
+
+  void
+  deallocate_bytes(void *__p, std::size_t __bytes,
+                   std::size_t __alignment = alignof(_CUDA_VSTD::max_align_t)) {
+    resource()->deallocate(__p, __bytes, __alignment);
+  }
+
+  template <typename _U>
+  _U* allocate_object(std::size_t __n = 1){
+    return static_cast<_U *>(allocate_bytes(__n * sizeof(_U), alignof(_U)));
+  }
+
+  template <typename _U>
+  void deallocate_object(_U* __p, std::size_t __n = 1){
+    deallocate_bytes(__p, __n * sizeof(_U), alignof(_U));
+  }
+
+  template <typename _U, typename _Args...>
+  _U* new_object(_Args&&... __args){}
+
+  template <typename _U>
+  void delete_object(_U* __p){}
 
 private:
   resource_type *__mr;
