@@ -424,21 +424,21 @@ public:
     resource()->deallocate(__p, __bytes, __alignment);
   }
 
-  template <typename _U>
-  _U* allocate_object(std::size_t __n = 1){
-    return static_cast<_U *>(allocate_bytes(__n * sizeof(_U), alignof(_U)));
+  template <typename _Object> 
+  _Object *allocate_object(std::size_t __n = 1) {
+    return static_cast<_Object *>(allocate_bytes(__n * sizeof(_Object), alignof(_Object)));
   }
 
-  template <typename _U>
-  void deallocate_object(_U* __p, std::size_t __n = 1){
-    deallocate_bytes(__p, __n * sizeof(_U), alignof(_U));
+  template <typename _Object>
+  void deallocate_object(_Object* __p, std::size_t __n = 1){
+    deallocate_bytes(__p, __n * sizeof(_Object), alignof(_Object));
   }
 
-  template <typename _U, typename _Args...>
-  _U* new_object(_Args&&... __args){}
+  template <typename _Object, typename... _Args>
+  _Object* new_object(_Args&&... __args){}
 
-  template <typename _U>
-  void delete_object(_U* __p){}
+  template <typename _Object>
+  void delete_object(_Object* __p){}
 
 private:
   resource_type *__mr;
