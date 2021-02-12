@@ -99,7 +99,7 @@ void __atomic_store_relaxed(volatile _Type *__ptr, _Type *__val) {
 #ifdef _LIBCUDACXX_MSVC_HAS_NO_ISO_INTRIN
     (void)_InterlockedExchange8(__d, *__t);
 #else
-    __iso_volatile_store8(__d, __t);
+    __iso_volatile_store8(__d, *__t);
 #endif
 }
 template<class _Type, detail::_enable_if_sized_as<_Type,2> = 0>
@@ -109,7 +109,7 @@ void __atomic_store_relaxed(volatile _Type *__ptr, _Type *__val) {
 #ifdef _LIBCUDACXX_MSVC_HAS_NO_ISO_INTRIN
     (void)_InterlockedExchange16(__d, *__t);
 #else
-    __iso_volatile_store16(__d, __t);
+    __iso_volatile_store16(__d, *__t);
 #endif
 }
 template<class _Type, detail::_enable_if_sized_as<_Type,4> = 0>
@@ -120,7 +120,7 @@ void __atomic_store_relaxed(volatile _Type *__ptr, _Type *__val) {
     // int cannot be converted to long?...
     (void)_InterlockedExchange(reinterpret_cast<volatile long *>(__d), *__t);
 #else
-    __iso_volatile_store32(__d, __t);
+    __iso_volatile_store32(__d, *__t);
 #endif
 }
 template<class _Type, detail::_enable_if_sized_as<_Type,8> = 0>
@@ -130,7 +130,7 @@ void __atomic_store_relaxed(volatile _Type *__ptr, _Type *__val) {
 #ifdef _LIBCUDACXX_MSVC_HAS_NO_ISO_INTRIN
     (void)_InterlockedExchange64(__d, *__t);
 #else
-    __iso_volatile_store64(__d, __t);
+    __iso_volatile_store64(__d, *__t);
 #endif
 }
 
