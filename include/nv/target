@@ -1,0 +1,164 @@
+#pragma once
+
+#if defined(__NVCC__)
+#  define _NV_COMPILER_NVCC
+#elif defined(__PGIC__)
+#  define _NV_COMPILER_NVCXX
+
+namespace nv {
+  namespace target {
+    namespace detail {
+
+      typedef unsigned long long base_int_t;
+
+      // No host specialization
+      constexpr base_int_t all_hosts = 1;
+
+      // NVIDIA GPUs
+      constexpr base_int_t sm35_bit = 1 << 1;
+      constexpr base_int_t sm37_bit = 1 << 2;
+      constexpr base_int_t sm50_bit = 1 << 3;
+      constexpr base_int_t sm52_bit = 1 << 4;
+      constexpr base_int_t sm53_bit = 1 << 5;
+      constexpr base_int_t sm60_bit = 1 << 6;
+      constexpr base_int_t sm61_bit = 1 << 7;
+      constexpr base_int_t sm62_bit = 1 << 8;
+      constexpr base_int_t sm70_bit = 1 << 9;
+      constexpr base_int_t sm72_bit = 1 << 10;
+      constexpr base_int_t sm75_bit = 1 << 11;
+      constexpr base_int_t sm80_bit = 1 << 12;
+      constexpr base_int_t sm86_bit = 1 << 13;
+      constexpr base_int_t all_devices =
+          sm35_bit | sm37_bit |
+          sm50_bit | sm52_bit | sm53_bit |
+          sm60_bit | sm61_bit | sm62_bit |
+          sm70_bit | sm72_bit | sm75_bit |
+          sm80_bit | sm86_bit;
+
+      // Store a set of targets as a set of bits
+      enum class [[nv::target_bitset]] target_description : base_int_t {
+        none = 0,
+        max = all_hosts | all_devices,
+      };
+      void operator==(target_description, target_description) = delete;
+      void operator!=(target_description, target_description) = delete;
+      void operator< (target_description, target_description) = delete;
+      void operator<=(target_description, target_description) = delete;
+      void operator> (target_description, target_description) = delete;
+      void operator>=(target_description, target_description) = delete;
+
+      constexpr base_int_t toint(target_description a) {
+        return static_cast<base_int_t>(a);
+      }
+      constexpr target_description toenum(base_int_t a) {
+        return static_cast<target_description>(a);
+      }
+
+      // The type of the user-visible names of the NVIDIA GPU targets
+      enum class device_selector : base_int_t {
+        sm35 = 35, sm37 = 37,
+        sm50 = 50, sm52 = 52, sm53 = 53,
+        sm60 = 60, sm61 = 61, sm62 = 62,
+        sm70 = 70, sm72 = 72, sm75 = 75,
+        sm80 = 80, sm86 = 86,
+      };
+      void operator==(device_selector, device_selector) = delete;
+      void operator!=(device_selector, device_selector) = delete;
+      void operator< (device_selector, device_selector) = delete;
+      void operator<=(device_selector, device_selector) = delete;
+      void operator> (device_selector, device_selector) = delete;
+      void operator>=(device_selector, device_selector) = delete;
+      constexpr base_int_t toint(device_selector a) {
+        return static_cast<base_int_t>(a);
+      }
+      constexpr base_int_t bitexact(device_selector a) {
+        return toint(a) == 35 ? sm35_bit :
+               toint(a) == 37 ? sm37_bit :
+               toint(a) == 50 ? sm50_bit :
+               toint(a) == 52 ? sm52_bit :
+               toint(a) == 53 ? sm53_bit :
+               toint(a) == 60 ? sm60_bit :
+               toint(a) == 61 ? sm61_bit :
+               toint(a) == 62 ? sm62_bit :
+               toint(a) == 70 ? sm70_bit :
+               toint(a) == 72 ? sm72_bit :
+               toint(a) == 75 ? sm75_bit :
+               toint(a) == 80 ? sm80_bit :
+               toint(a) == 86 ? sm86_bit : 0;
+      }
+      constexpr base_int_t bitrounddown(device_selector a) {
+        return toint(a) >= 86 ? sm86_bit :
+               toint(a) >= 80 ? sm80_bit :
+               toint(a) >= 75 ? sm75_bit :
+               toint(a) >= 72 ? sm72_bit :
+               toint(a) >= 70 ? sm70_bit :
+               toint(a) >= 62 ? sm62_bit :
+               toint(a) >= 61 ? sm61_bit :
+               toint(a) >= 60 ? sm60_bit :
+               toint(a) >= 53 ? sm53_bit :
+               toint(a) >= 52 ? sm52_bit :
+               toint(a) >= 50 ? sm50_bit :
+               toint(a) >= 37 ? sm37_bit :
+               toint(a) >= 35 ? sm35_bit : 0;
+      }
+
+      // Public API for NVIDIA GPUs
+
+      constexpr target_description is_exactly(device_selector a) {
+        return toenum(bitexact(a));
+      }
+
+      constexpr target_description provides(device_selector a) {
+        return toenum(~(bitrounddown(a) - 1) & all_devices);
+      }
+
+      // Boolean operations on target sets
+
+      constexpr target_description operator&&(target_description a,
+                                              target_description b) {
+        return toenum(toint(a) & toint(b));
+      }
+
+      constexpr target_description operator||(target_description a,
+                                              target_description b) {
+        return toenum(toint(a) | toint(b));
+      }
+
+      constexpr target_description operator!(target_description a) {
+        return toenum(~toint(a) & (all_devices | all_hosts));
+      }
+    }
+
+    using detail::target_description;
+    using detail::device_selector;
+
+    // The predicates for basic host/device selection
+    constexpr target_description is_host =
+      detail::toenum(detail::all_hosts);
+    constexpr target_description is_device =
+      detail::toenum(detail::all_devices);
+
+    // The public names for NVIDIA GPU architectures
+    constexpr device_selector sm35 = device_selector::sm35;
+    constexpr device_selector sm37 = device_selector::sm37;
+    constexpr device_selector sm50 = device_selector::sm50;
+    constexpr device_selector sm52 = device_selector::sm52;
+    constexpr device_selector sm53 = device_selector::sm53;
+    constexpr device_selector sm60 = device_selector::sm60;
+    constexpr device_selector sm61 = device_selector::sm61;
+    constexpr device_selector sm62 = device_selector::sm62;
+    constexpr device_selector sm70 = device_selector::sm70;
+    constexpr device_selector sm72 = device_selector::sm72;
+    constexpr device_selector sm75 = device_selector::sm75;
+    constexpr device_selector sm80 = device_selector::sm80;
+    constexpr device_selector sm86 = device_selector::sm86;
+
+    using detail::is_exactly;
+    using detail::provides;
+  }
+}
+
+#endif
+
+#include "detail/__target_macros"
+

@@ -1,0 +1,22 @@
+#define _NV_IF_0(t, f) f
+#define _NV_IF_1(t, f) t
+
+#define _NV_IF_BIT(b) _NV_IF_##b
+#define _NV_IF__EVAL(fn, t, f) fn(t, f)
+#define _NV_IF_EVAL(cond, t, f) _NV_IF__EVAL(_NV_IF_BIT(cond), t, f)
+
+
+// USAGE:
+// #if (stuff)
+// #  define MY_VAL 0
+// #else
+// #  define MY_VAL 1
+// #endif
+// ...
+// _NV(MY_VAL, true_stuff, false_stuff)
+//
+// NOTE:
+// This will not evaluate conditionals, the given value must be 0 or 1
+//
+
+#define _NV_IF(cond, t, f) _NV_IF_EVAL(cond, t, f)
