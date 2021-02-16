@@ -26,7 +26,8 @@ namespace pmr = ::std::pmr;
 namespace pmr = ::std::experimental::pmr;
 #endif
 
-class derived_resource : public cuda::memory_resource<cuda::memory_kind::host> {
+template <cuda::memory_kind Kind>
+class derived_resource : public cuda::memory_resource<Kind> {
 public:
 private:
   void *do_allocate(cuda::std::size_t, cuda::std::size_t) override {
@@ -42,7 +43,8 @@ private:
   }
 };
 
-class more_derived : public derived_resource {
+template <cuda::memory_kind Kind>
+class more_derived : public derived_resource<Kind> {
 public:
 private:
   void *do_allocate(cuda::std::size_t, cuda::std::size_t) override {
@@ -75,14 +77,12 @@ void test_equal(cuda::pmr_adaptor<P1> const &lhs,
   assert_equal(*pmr_rhs, *pmr_lhs);
 }
 
-int main(int argc, char **argv) {
-
-#ifndef __CUDA_ARCH__
-#if defined(_LIBCUDACXX_STD_PMR_NS)
-  derived_resource d;
+template <cuda::memory_kind Kind>
+void test_pmr_adaptor_equality(){
+  derived_resource<Kind> d;
   cuda::pmr_adaptor a_raw{&d};
-  cuda::pmr_adaptor a_unique{std::make_unique<derived_resource>()};
-  cuda::pmr_adaptor a_shared{std::make_shared<derived_resource>()};
+  cuda::pmr_adaptor a_unique{std::make_unique<derived_resource<Kind>>()};
+  cuda::pmr_adaptor a_shared{std::make_shared<derived_resource<Kind>>()};
 
   test_equal(a_raw, a_unique);
   test_equal(a_raw, a_shared);
@@ -97,18 +97,26 @@ int main(int argc, char **argv) {
   test_equal(a_unique, m_raw);
   test_equal(a_shared, m_raw);
 
-  cuda::pmr_adaptor m_unique{std::make_unique<more_derived>()};
+  cuda::pmr_adaptor m_unique{std::make_unique<more_derived<Kind>>()};
   test_equal(a_raw, m_unique);
   test_equal(a_unique, m_unique);
   test_equal(a_shared, m_unique);
 
-  cuda::pmr_adaptor m_shared{std::make_shared<more_derived>()};
+  cuda::pmr_adaptor m_shared{std::make_shared<more_derived<Kind>>()};
   test_equal(a_raw, m_shared);
   test_equal(a_unique, m_shared);
   test_equal(a_shared, m_shared);
+}
 
+int main(int argc, char **argv) {
+
+#ifndef __CUDA_ARCH__
+#if defined(_LIBCUDACXX_STD_PMR_NS)
+  test_pmr_adaptor_equality<cuda::memory_kind::host>();
 #endif
 #endif
 
   return 0;
 }
+
+// /usr/local/cuda/bin/nvcc -o /home/jhemstad/libcudacxx/build/libcxx/test/cuda/memory_resource/pmr_adaptor/Output/pmr_adaptor_equal.pass.cpp.o -x cu /home/jhemstad/libcudacxx/.upstream-tests/test/cuda/memory_resource/pmr_adaptor/pmr_adaptor_equal.pass.cpp -c -v -ftemplate-depth=270 -ccbin=g++ -std=c++17 -include /home/jhemstad/libcudacxx/test/support/nasty_macros.h -I/home/jhemstad/libcudacxx/include -I/home/jhemstad/libcudacxx/build/libcxx/include/c++build -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -D__STDC_CONSTANT_MACROS -I/home/jhemstad/libcudacxx/test/support -include /home/jhemstad/libcudacxx/test/force_include.h -I/home/jhemstad/libcudacxx/include -I/home/jhemstad/libcudacxx/../cuda/tools/cooperative_groups -I/home/jhemstad/libcudacxx/../cuda/tools/libcudacxxext --extended-lambda -gencode=arch=compute_35,code=sm_35 -gencode=arch=compute_50,code=sm_50 -gencode=arch=compute_52,code=sm_52 -gencode=arch=compute_53,code=sm_53 -gencode=arch=compute_60,code=sm_60 -gencode=arch=compute_61,code=sm_61 -gencode=arch=compute_62,code=sm_62 -gencode=arch=compute_70,code=sm_70 -gencode=arch=compute_72,code=sm_72 -gencode=arch=compute_75,code=sm_75 -gencode=arch=compute_80,code=sm_80 -gencode=arch=compute_80,code=compute_80 -Xcudafe --display_error_number -Werror all-warnings -Xcompiler -Wall -Xcompiler -Wextra -Xcompiler -Werror -Xcompiler -Wno-literal-suffix -Xcompiler -Wno-unused-parameter -Xcompiler -Wno-deprecated-declarations -Xcompiler -Wno-noexcept-type -Xcompiler -Wno-unused-function -D_LIBCUDACXX_DISABLE_PRAGMA_GCC_SYSTEM_HEADER -c
