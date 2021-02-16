@@ -178,12 +178,18 @@ public:
 
 template <typename _Pointer>
 class pmr_adaptor final : public detail::__pmr_adaptor_base {
+
+  using resource_type = _CUDA_VSTD::remove_reference_t<decltype(*_CUDA_VSTD::declval<_Pointer>())>;
+
+  static constexpr bool __is_host_accessible_resource =
+      _CUDA_VSTD::is_base_of_v<cuda::memory_resource<memory_kind::host>,    resource_type> or
+      _CUDA_VSTD::is_base_of_v<cuda::memory_resource<memory_kind::unified>, resource_type> or
+      _CUDA_VSTD::is_base_of_v<cuda::memory_resource<memory_kind::pinned>,  resource_type>;
+
   static_assert(
-      _CUDA_VSTD::is_base_of_v<cuda::memory_resource<cuda::memory_kind::host>,
-                               _CUDA_VSTD::remove_reference_t<
-                                   decltype(*_CUDA_VSTD::declval<_Pointer>())>>,
-      "Pointer must be a pointer-like type to a type that is or derives from "
-      "memory_resource<memory_kind::host /* default context */>");
+      __is_host_accessible_resource,
+      "Pointer must be a pointer-like type to a type that is or derives"
+      "from cuda::memory_resource whose memory_kind is host accessible");
 
 public:
   pmr_adaptor(_Pointer __mr) : __mr_{std::move(__mr)} {}
