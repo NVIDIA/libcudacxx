@@ -27,15 +27,15 @@ void test()
   SHARED Latch * l;
   l = sel.construct(2);
 
-  _LIBCUDACXX_CUDA_DISPATCH(
-      DEVICE, _LIBCUDACXX_ARCH_BLOCK(
-          if (threadIdx.x == 0) {
+  NV_DISPATCH_TARGET(
+      NV_IS_DEVICE, (
+        if (threadIdx.x == 0) {
               l->count_down();
-          }
-          __syncthreads();
+        }
+        __syncthreads();
       ),
-      HOST, _LIBCUDACXX_ARCH_BLOCK(
-              l->count_down();
+      NV_IS_HOST, (
+        l->count_down();
       )
   )
 
@@ -52,8 +52,8 @@ void test()
 
 int main(int, char**)
 {
-    _LIBCUDACXX_CUDA_DISPATCH(
-      HOST, _LIBCUDACXX_ARCH_BLOCK(
+    NV_DISPATCH_TARGET(
+      NV_IS_HOST, (
         cuda_thread_count = 2;
 
         test<cuda::std::latch, local_memory_selector>();
@@ -61,7 +61,7 @@ int main(int, char**)
         test<cuda::latch<cuda::thread_scope_device>, local_memory_selector>();
         test<cuda::latch<cuda::thread_scope_system>, local_memory_selector>();
       ),
-      DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+      NV_IS_DEVICE, (
         test<cuda::std::latch, shared_memory_selector>();
         test<cuda::latch<cuda::thread_scope_block>, shared_memory_selector>();
         test<cuda::latch<cuda::thread_scope_device>, shared_memory_selector>();

@@ -145,8 +145,8 @@ template <class T,
 __host__ __device__ __noinline__
 void test_select_barrier()
 {
-    _LIBCUDACXX_CUDA_DISPATCH(
-        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+    NV_DISPATCH_TARGET(
+        NV_IS_DEVICE, (
             test_select_scope<T, SourceSelector, DestSelector, shared_memory_selector>();
             test_select_scope<T, SourceSelector, DestSelector, global_memory_selector>();
         )
@@ -159,8 +159,8 @@ template <class T,
 __host__ __device__ __noinline__
 void test_select_destination()
 {
-    _LIBCUDACXX_CUDA_DISPATCH(
-        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+    NV_DISPATCH_TARGET(
+        NV_IS_DEVICE, (
             test_select_barrier<T, SourceSelector, shared_memory_selector>();
             test_select_barrier<T, SourceSelector, global_memory_selector>();
         )
@@ -171,8 +171,8 @@ template <class T>
 __host__ __device__ __noinline__
 void test_select_source()
 {
-    _LIBCUDACXX_CUDA_DISPATCH(
-        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+    NV_DISPATCH_TARGET(
+        NV_IS_DEVICE, (
             test_select_destination<T, shared_memory_selector>();
             test_select_destination<T, global_memory_selector>();
         )
@@ -182,8 +182,8 @@ void test_select_source()
 
 int main(int argc, char ** argv)
 {
-    _LIBCUDACXX_CUDA_DISPATCH(
-        HOST, _LIBCUDACXX_ARCH_BLOCK(
+    NV_DISPATCH_TARGET(
+        NV_IS_HOST, (
             cuda_thread_count = 4;
         )
     )

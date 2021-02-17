@@ -224,15 +224,15 @@ void do_test()
     }
 #if __cplusplus > 201703L
     {
-        _LIBCUDACXX_CUDA_DISPATCH(
-            GREATER_THAN_SM62, _LIBCUDACXX_ARCH_BLOCK(
+        NV_DISPATCH_TARGET(
+            NV_PROVIDES_SM70, (
                 typedef Atomic<Scope> A;
                 TEST_ALIGNAS_TYPE(A) char storage[sizeof(A)] = {1};
                 A& zero = *new (storage) A();
                 assert(zero == false);
                 zero.~A();
             ),
-            HOST, _LIBCUDACXX_ARCH_BLOCK(
+            NV_IS_HOST, (
                 typedef Atomic<Scope> A;
                 TEST_ALIGNAS_TYPE(A) char storage[sizeof(A)] = {1};
                 A& zero = *new (storage) A();
@@ -253,20 +253,24 @@ using cuda_atomic = cuda::atomic<bool, Scope>;
 
 int main(int, char**)
 {
-    _LIBCUDACXX_CUDA_DISPATCH(
-        HOST, _LIBCUDACXX_ARCH_BLOCK(
+
+    NV_DISPATCH_TARGET(
+        NV_PROVIDES_SM70, (
+            do_test<cuda_std_atomic, cuda::thread_scope_system, local_memory_selector>();
+            do_test<cuda_atomic, cuda::thread_scope_system, local_memory_selector>();
+            do_test<cuda_atomic, cuda::thread_scope_device, local_memory_selector>();
+            do_test<cuda_atomic, cuda::thread_scope_block, local_memory_selector>();
+        )
+    )
+
+    NV_DISPATCH_TARGET(
+        NV_IS_HOST, (
             do_test<cuda_std_atomic, cuda::thread_scope_system, local_memory_selector>();
             do_test<cuda_atomic, cuda::thread_scope_system, local_memory_selector>();
             do_test<cuda_atomic, cuda::thread_scope_device, local_memory_selector>();
             do_test<cuda_atomic, cuda::thread_scope_block, local_memory_selector>();
         ),
-        GREATER_THAN_SM62, _LIBCUDACXX_ARCH_BLOCK(
-            do_test<cuda_std_atomic, cuda::thread_scope_system, local_memory_selector>();
-            do_test<cuda_atomic, cuda::thread_scope_system, local_memory_selector>();
-            do_test<cuda_atomic, cuda::thread_scope_device, local_memory_selector>();
-            do_test<cuda_atomic, cuda::thread_scope_block, local_memory_selector>();
-        ),
-        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+        NV_IS_DEVICE, (
             do_test<cuda_std_atomic, cuda::thread_scope_system, shared_memory_selector>();
             do_test<cuda_atomic, cuda::thread_scope_system, shared_memory_selector>();
             do_test<cuda_atomic, cuda::thread_scope_device, shared_memory_selector>();

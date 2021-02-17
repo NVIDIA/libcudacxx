@@ -19,8 +19,8 @@ template<typename... Fs>
 __host__ __device__
 void concurrent_agents_launch(Fs ...fs)
 {
-    _LIBCUDACXX_CUDA_DISPATCH(
-        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+    NV_DISPATCH_TARGET(
+        NV_IS_DEVICE, (
             assert(blockDim.x == sizeof...(Fs));
 
             using fptr = void (*)(void *);
@@ -42,7 +42,7 @@ void concurrent_agents_launch(Fs ...fs)
             __syncthreads();
 
         ),
-        HOST, _LIBCUDACXX_ARCH_BLOCK(
+        NV_IS_HOST, (
             std::thread threads[]{
                 std::thread{ std::forward<Fs>(fs) }...
             };

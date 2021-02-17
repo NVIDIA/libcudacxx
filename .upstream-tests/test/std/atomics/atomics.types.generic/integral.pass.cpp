@@ -154,14 +154,14 @@ do_test()
 
 #if __cplusplus > 201703L
     {
-        _LIBCUDACXX_CUDA_DISPATCH(
-            HOST, _LIBCUDACXX_ARCH_BLOCK(
+        NV_DISPATCH_TARGET(
+            NV_IS_HOST, (
                 TEST_ALIGNAS_TYPE(A) char storage[sizeof(A)] = {23};
                 A& zero = *new (storage) A();
                 assert(zero == 0);
                 zero.~A();
             ),
-            GREATER_THAN_SM62, _LIBCUDACXX_ARCH_BLOCK(
+            NV_PROVIDES_SM70, (
                 TEST_ALIGNAS_TYPE(A) char storage[sizeof(A)] = {23};
                 A& zero = *new (storage) A();
                 assert(zero == 0);
@@ -229,16 +229,20 @@ int main(int, char**)
     // a *reasonable* subset of all the possible combinations to provide enough
     // confidence that this all actually works
 
-    _LIBCUDACXX_CUDA_DISPATCH(
-        HOST, _LIBCUDACXX_ARCH_BLOCK(
+
+    NV_DISPATCH_TARGET(
+        NV_PROVIDES_SM70, (
+            test_for_all_types<cuda_std_atomic, cuda::thread_scope_system, local_memory_selector>();
+            test_for_all_types<cuda_atomic, cuda::thread_scope_system, local_memory_selector>();
+        )
+    )
+
+    NV_DISPATCH_TARGET(
+        NV_IS_HOST, (
             test_for_all_types<cuda_std_atomic, cuda::thread_scope_system, local_memory_selector>();
             test_for_all_types<cuda_atomic, cuda::thread_scope_system, local_memory_selector>();
         ),
-        GREATER_THAN_SM62, _LIBCUDACXX_ARCH_BLOCK(
-            test_for_all_types<cuda_std_atomic, cuda::thread_scope_system, local_memory_selector>();
-            test_for_all_types<cuda_atomic, cuda::thread_scope_system, local_memory_selector>();
-        ),
-        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+        NV_IS_DEVICE, (
             test_for_all_types<cuda_std_atomic, cuda::thread_scope_system, shared_memory_selector>();
             test_for_all_types<cuda_atomic, cuda::thread_scope_block, shared_memory_selector>();
 

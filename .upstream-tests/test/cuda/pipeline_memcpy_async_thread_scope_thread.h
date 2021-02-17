@@ -63,8 +63,8 @@ __host__ __device__ __noinline__
 void test_select_destination()
 {
     test_fully_specialized<T, SourceSelector, local_memory_selector>();
-    _LIBCUDACXX_CUDA_DISPATCH(
-        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+    NV_DISPATCH_TARGET(
+        NV_IS_DEVICE, (
             test_fully_specialized<T, SourceSelector, shared_memory_selector>();
             test_fully_specialized<T, SourceSelector, global_memory_selector>();
         )
@@ -76,8 +76,8 @@ __host__ __device__ __noinline__
 void test_select_source()
 {
     test_select_destination<T, local_memory_selector>();
-    _LIBCUDACXX_CUDA_DISPATCH(
-        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+    NV_DISPATCH_TARGET(
+        NV_IS_DEVICE, (
             test_select_destination<T, shared_memory_selector>();
             test_select_destination<T, global_memory_selector>();
         )

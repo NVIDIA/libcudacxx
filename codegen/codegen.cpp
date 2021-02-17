@@ -97,8 +97,8 @@ int main() {
         for(auto& sem : fence_semantics)
             out << "static inline __device__ void " << fencename(sem.first, s.first) << "() { asm volatile(\"fence" << sem.second << s.second << ";\":::\"memory\"); }\n";
         out << "static inline __device__ void __atomic_thread_fence_cuda(int __memorder, " << scopenametag(s.first) << ") {\n";
-        out << "  _LIBCUDACXX_CUDA_DISPATCH(\n";
-        out << "    GREATER_THAN_SM62, _LIBCUDACXX_ARCH_BLOCK(\n";
+        out << "  NV_DISPATCH_TARGET(\n";
+        out << "    NV_PROVIDES_SM70, (\n";
         out << "      switch (__memorder) {\n";
         out << "        case __ATOMIC_SEQ_CST: " << fencename("sc"s, s.first) << "(); break;\n";
         out << "        case __ATOMIC_CONSUME:\n";
@@ -109,7 +109,7 @@ int main() {
         out << "        default: assert(0);\n";
         out << "      }\n";
         out << "    ),\n";
-        out << "    LESS_THAN_SM70, _LIBCUDACXX_ARCH_BLOCK(\n";
+        out << "    NV_IS_DEVICE, (\n";
         out << "      switch (__memorder) {\n";
         out << "        case __ATOMIC_SEQ_CST:\n";
         out << "        case __ATOMIC_CONSUME:\n";
@@ -137,8 +137,8 @@ int main() {
                 out << "template<class _Type, typename _CUDA_VSTD::enable_if<sizeof(_Type)==" << sz/8 << ", int>::type = 0>\n";
                 out << "__device__ void __atomic_load_cuda(const " << cv << "_Type *__ptr, _Type *__ret, int __memorder, " << scopenametag(s.first) << ") {\n";
                 out << "    uint" << (registers[sz] == "r" ? 32 : sz) << "_t __tmp = 0;\n";
-                out << "    _LIBCUDACXX_CUDA_DISPATCH(\n";
-                out << "      GREATER_THAN_SM62, _LIBCUDACXX_ARCH_BLOCK(\n";
+                out << "    NV_DISPATCH_TARGET(\n";
+                out << "      NV_PROVIDES_SM70, (\n";
                 out << "        switch (__memorder) {\n";
                 out << "          case __ATOMIC_SEQ_CST: " << fencename("sc"s, s.first) << "();\n";
                 out << "          case __ATOMIC_CONSUME:\n";
@@ -147,7 +147,7 @@ int main() {
                 out << "          default: assert(0);\n";
                 out << "        }\n";
                 out << "      ),\n";
-                out << "      LESS_THAN_SM70, _LIBCUDACXX_ARCH_BLOCK(\n";
+                out << "      NV_IS_DEVICE, (\n";
                 out << "        switch (__memorder) {\n";
                 out << "          case __ATOMIC_SEQ_CST: __cuda_membar_" << s.first << "();\n";
                 out << "          case __ATOMIC_CONSUME:\n";
@@ -174,8 +174,8 @@ int main() {
                 out << "__device__ void __atomic_store_cuda(" << cv << "_Type *__ptr, _Type *__val, int __memorder, " << scopenametag(s.first) << ") {\n";
                 out << "    uint" << (registers[sz] == "r" ? 32 : sz) << "_t __tmp = 0;\n";
                 out << "    memcpy(&__tmp, __val, " << sz/8 << ");\n";
-                out << "    _LIBCUDACXX_CUDA_DISPATCH(\n";
-                out << "      GREATER_THAN_SM62, _LIBCUDACXX_ARCH_BLOCK(\n";
+                out << "    NV_DISPATCH_TARGET(\n";
+                out << "      NV_PROVIDES_SM70, (\n";
                 out << "        switch (__memorder) {\n";
                 out << "          case __ATOMIC_RELEASE: __cuda_store_release_" << sz << "_" << s.first << "(__ptr, __tmp); break;\n";
                 out << "          case __ATOMIC_SEQ_CST: " << fencename("sc"s, s.first) << "();\n";
@@ -183,7 +183,7 @@ int main() {
                 out << "          default: assert(0);\n";
                 out << "        }\n";
                 out << "      ),\n";
-                out << "      LESS_THAN_SM70, _LIBCUDACXX_ARCH_BLOCK(\n";
+                out << "      NV_IS_DEVICE, (\n";
                 out << "        switch (__memorder) {\n";
                 out << "          case __ATOMIC_RELEASE:\n";
                 out << "          case __ATOMIC_SEQ_CST: __cuda_membar_" << s.first << "();\n";
@@ -233,8 +233,8 @@ int main() {
                         out << "    memcpy(&__tmp, __desired, " << sz/8 << ");\n";
                         out << "    memcpy(&__old, __expected, " << sz/8 << ");\n";
                         out << "    __old_tmp = __old;\n";
-                        out << "    _LIBCUDACXX_CUDA_DISPATCH(\n";
-                        out << "      GREATER_THAN_SM62, _LIBCUDACXX_ARCH_BLOCK(\n";
+                        out << "    NV_DISPATCH_TARGET(\n";
+                        out << "      NV_PROVIDES_SM70, (\n";
                         out << "        switch (__stronger_order_cuda(__success_memorder, __failure_memorder)) {\n";
                         out << "          case __ATOMIC_SEQ_CST: " << fencename("sc"s, s.first) << "();\n";
                         out << "          case __ATOMIC_CONSUME:\n";
@@ -245,7 +245,7 @@ int main() {
                         out << "          default: assert(0);\n";
                         out << "        }\n";
                         out << "      ),\n";
-                        out << "      LESS_THAN_SM70, _LIBCUDACXX_ARCH_BLOCK(\n";
+                        out << "      NV_IS_DEVICE, (\n";
                         out << "        switch (__stronger_order_cuda(__success_memorder, __failure_memorder)) {\n";
                         out << "          case __ATOMIC_SEQ_CST:\n";
                         out << "          case __ATOMIC_ACQ_REL: __cuda_membar_" << s.first << "();\n";
@@ -275,8 +275,8 @@ int main() {
                             out << "    uint" << sz << "_t __tmp = 0;\n";
                             out << "    memcpy(&__tmp, &__val, " << sz/8 << ");\n";
                         }
-                        out << "    _LIBCUDACXX_CUDA_DISPATCH(\n";
-                        out << "      GREATER_THAN_SM62, _LIBCUDACXX_ARCH_BLOCK(\n";
+                        out << "    NV_DISPATCH_TARGET(\n";
+                        out << "      NV_PROVIDES_SM70, (\n";
                         out << "        switch (__memorder) {\n";
                         out << "          case __ATOMIC_SEQ_CST: " << fencename("sc"s, s.first) << "();\n";
                         out << "          case __ATOMIC_CONSUME:\n";
@@ -287,7 +287,7 @@ int main() {
                         out << "          default: assert(0);\n";
                         out << "        }\n";
                         out << "      ),\n";
-                        out << "      LESS_THAN_SM70, _LIBCUDACXX_ARCH_BLOCK(\n";
+                        out << "      NV_IS_DEVICE, (\n";
                         out << "        switch (__memorder) {\n";
                         out << "          case __ATOMIC_SEQ_CST:\n";
                         out << "          case __ATOMIC_ACQ_REL: __cuda_membar_" << s.first << "();\n";
@@ -321,8 +321,8 @@ int main() {
                 if(op == "sub")
                     out << "    __tmp = -__tmp;\n";
                 out << "    __tmp *= sizeof(_Type);\n";
-                out << "    _LIBCUDACXX_CUDA_DISPATCH(\n";
-                out << "      GREATER_THAN_SM62, _LIBCUDACXX_ARCH_BLOCK(\n";
+                out << "    NV_DISPATCH_TARGET(\n";
+                out << "      NV_PROVIDES_SM70, (\n";
                 out << "        switch (__memorder) {\n";
                 out << "          case __ATOMIC_SEQ_CST: " << fencename("sc"s, s.first) << "();\n";
                 out << "          case __ATOMIC_CONSUME:\n";
@@ -332,7 +332,7 @@ int main() {
                 out << "          case __ATOMIC_RELAXED: __cuda_fetch_add_relaxed_64_" << s.first << "(__ptr, __tmp, __tmp); break;\n";
                 out << "        }\n";
                 out << "      ),\n";
-                out << "      LESS_THAN_SM70, _LIBCUDACXX_ARCH_BLOCK(\n";
+                out << "      NV_IS_DEVICE, (\n";
                 out << "        switch (__memorder) {\n";
                 out << "          case __ATOMIC_SEQ_CST:\n";
                 out << "          case __ATOMIC_ACQ_REL: __cuda_membar_" << s.first << "();\n";

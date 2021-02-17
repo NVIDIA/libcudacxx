@@ -36,17 +36,28 @@ struct malloc_memory_provider {
     static const constexpr cuda::std::size_t shared_offset = prefix_size + sizeof(T *);
 
 private:
+
+    __device__ char* device_static_storage() {
+        __shared__ alignas(T*) char storage[shared_offset];
+        return storage;
+    }
+
+
+    __host__ char* host_static_storage() {
+        alignas(T*) static char storage[shared_offset];
+        return storage;
+    }
+
     __host__ __device__
     T *& get_pointer() {
-        alignas(T*)
-        _LIBCUDACXX_CUDA_DISPATCH(
-            DEVICE, _LIBCUDACXX_ARCH_BLOCK(
-                __shared__ char storage[shared_offset];
+        NV_DISPATCH_TARGET(
+            NV_IS_DEVICE, (
+                auto *storage = device_static_storage();
                 T *& allocated = *reinterpret_cast<T **>(storage + prefix_size);
                 return allocated;
             ),
-            HOST, _LIBCUDACXX_ARCH_BLOCK(
-                static char storage[shared_offset];
+            NV_IS_HOST, (
+                auto *storage = host_static_storage();
                 T *& allocated = *reinterpret_cast<T **>(storage + prefix_size);
                 return allocated;
             )
@@ -56,14 +67,14 @@ private:
 public:
     __host__ __device__
     T * get() {
-        _LIBCUDACXX_CUDA_DISPATCH(
-            DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+        NV_DISPATCH_TARGET(
+            NV_IS_DEVICE, (
                 if (threadIdx.x == 0) {
                     get_pointer() = reinterpret_cast<T *>(malloc(sizeof(T) + alignof(T)));
                 }
                 __syncthreads();
-            )
-            HOST, _LIBCUDACXX_ARCH_BLOCK(
+            ),
+            NV_IS_HOST, (
                 get_pointer() = reinterpret_cast<T *>(malloc(sizeof(T) + alignof(T)));
             )
         )
@@ -75,14 +86,14 @@ public:
 
     __host__ __device__
     ~malloc_memory_provider() {
-        _LIBCUDACXX_CUDA_DISPATCH(
-            DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+        NV_DISPATCH_TARGET(
+            NV_IS_DEVICE, (
                 if (threadIdx.x == 0) {
                     free((void*)get_pointer());
                 }
                 __syncthreads();
             ),
-            HOST, _LIBCUDACXX_ARCH_BLOCK(
+            NV_IS_HOST, (
                 free((void*)get_pointer());
             )
         )
@@ -166,14 +177,14 @@ public:
         ptr = provider.get();
         assert(ptr);
 
-        _LIBCUDACXX_CUDA_DISPATCH(
-            DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+        NV_DISPATCH_TARGET(
+            NV_IS_DEVICE, (
                 if (threadIdx.x == 0) {
                     Initializer::construct(*ptr, std::forward<Ts>(ts)...);
                 }
                 __syncthreads();
             ),
-            HOST, _LIBCUDACXX_ARCH_BLOCK(
+            NV_IS_HOST, (
                 Initializer::construct(*ptr, std::forward<Ts>(ts)...);
             )
         )
@@ -186,14 +197,14 @@ public:
 #endif
     __host__ __device__
     ~memory_selector() {
-        _LIBCUDACXX_CUDA_DISPATCH(
-            DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+        NV_DISPATCH_TARGET(
+            NV_IS_DEVICE, (
                 if (threadIdx.x == 0) {
                     ptr->~T();
                 }
                 __syncthreads();
             ),
-            HOST, _LIBCUDACXX_ARCH_BLOCK(
+            NV_IS_HOST, (
                 ptr->~T();
             )
         )

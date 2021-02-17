@@ -32,12 +32,12 @@ public:
     STATIC_MEMBER_VAR(allocate_called, bool);
 
     __device__ __host__ static cuda::std::pair<T*, cuda::std::size_t>& deallocate_called() {
-        _LIBCUDACXX_CUDA_DISPATCH(
-            DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+        NV_DISPATCH_TARGET(
+            NV_IS_DEVICE, (
                 __shared__ cuda::std::pair<T*, cuda::std::size_t> v;
                 return v;
             ),
-            HOST, _LIBCUDACXX_ARCH_BLOCK(
+            NV_IS_HOST, (
                 static cuda::std::pair<T*, cuda::std::size_t> v = 0;
                 return v;
             )

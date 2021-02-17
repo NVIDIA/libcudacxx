@@ -27,8 +27,8 @@ struct TestFn {
   void operator()() const {
     typedef cuda::std::atomic<T> A;
 
-    _LIBCUDACXX_CUDA_DISPATCH(
-        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+    NV_DISPATCH_TARGET(
+        NV_IS_DEVICE, (
             __shared__ A * t;
             if (threadIdx.x == 0) {
                 t = (A *)malloc(sizeof(A));
@@ -67,7 +67,7 @@ struct TestFn {
 
             concurrent_agents_launch(agent_notify_v, agent_wait_v);
         ),
-        HOST, _LIBCUDACXX_ARCH_BLOCK(
+        NV_IS_HOST, (
             A * t;
 
             t = (A *)malloc(sizeof(A));
@@ -108,9 +108,9 @@ struct TestFn {
 
 int main(int, char**)
 {
-#ifndef __CUDA_ARCH__
-    cuda_thread_count = 2;
-#endif
+    NV_IF_TARGET(
+        NV_IS_HOST, (cuda_thread_count = 2;)
+    )
 
     TestEachAtomicType<TestFn, shared_memory_selector>()();
 

@@ -24,8 +24,8 @@ template<template<typename, typename> class Selector>
 __host__ __device__
 void test()
 {
-    _LIBCUDACXX_CUDA_DISPATCH(
-        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+    NV_DISPATCH_TARGET(
+        NV_IS_DEVICE, (
             __shared__ cuda::std::atomic_flag * t;
             if (threadIdx.x == 0) {
                 t = new cuda::std::atomic_flag();
@@ -45,7 +45,7 @@ void test()
 
             concurrent_agents_launch(agent_notify, agent_wait);
         ),
-        HOST, _LIBCUDACXX_ARCH_BLOCK(
+        NV_IS_HOST, (
             t = new cuda::std::atomic_flag();
             cuda::std::atomic_flag_clear(t);
             cuda::std::atomic_flag_wait(t, true);
@@ -64,8 +64,8 @@ void test()
         )
     )
 
-    _LIBCUDACXX_CUDA_DISPATCH(
-        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+    NV_DISPATCH_TARGET(
+        NV_IS_DEVICE, (
             __shared__ volatile cuda::std::atomic_flag * vt;
             if (threadIdx.x == 0) {
                 vt = new cuda::std::atomic_flag();
@@ -85,7 +85,7 @@ void test()
 
             concurrent_agents_launch(agent_notify_v, agent_wait_v);
         ),
-        HOST, _LIBCUDACXX_ARCH_BLOCK(
+        NV_IS_HOST, (
             volatile cuda::std::atomic_flag * vt;
             vt = new cuda::std::atomic_flag();
             cuda::std::atomic_flag_clear(vt);
@@ -108,9 +108,10 @@ void test()
 
 int main(int, char**)
 {
-#ifndef __CUDA_ARCH__
-    cuda_thread_count = 2;
-#endif
+    NV_IF_TARGET(
+        NV_IS_HOST,
+        (cuda_thread_count = 2;)
+    )
 
     test<shared_memory_selector>();
 

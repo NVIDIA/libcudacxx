@@ -48,12 +48,12 @@ struct barrier_and_token_with_completion
             assert(completed.load() == false);
             completed.store(true);
 
-            _LIBCUDACXX_CUDA_DISPATCH(
-                DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+            NV_DISPATCH_TARGET(
+                NV_IS_DEVICE, (
                     completed_from_device = true;
                 ),
-                HOST, _LIBCUDACXX_ARCH_BLOCK(
-                completed_from_host = true;
+                NV_IS_HOST, (
+                    completed_from_host = true;
                 )
             )
         }
@@ -235,8 +235,8 @@ void kernel_invoker()
 
 int main(int arg, char ** argv)
 {
-    _LIBCUDACXX_CUDA_DISPATCH(
-        HOST, _LIBCUDACXX_ARCH_BLOCK(
+    NV_DISPATCH_TARGET(
+        NV_IS_HOST, (
             kernel_invoker();
 
             if (check_managed_memory_support(true))
