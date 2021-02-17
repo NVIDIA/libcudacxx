@@ -206,9 +206,10 @@ void arrive_on()
 
 int main(int argc, char ** argv)
 {
-#ifndef __CUDA_ARCH__
-    arrive_on();
-#endif
+    NV_IF_TARGET(
+        NV_IS_HOST,
+        (arrive_on();)
+    )
 
 #ifdef __CUDACC_RTC__
     int cuda_thread_count = 64;

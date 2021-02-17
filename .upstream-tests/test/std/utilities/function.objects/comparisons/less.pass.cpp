@@ -29,12 +29,12 @@ int main(int, char**)
     assert(!f(36, 36));
     assert(!f(36, 6));
     assert(f(6, 36));
-#ifndef __CUDA_ARCH__
-    {
-        // test total ordering of int* for less<int*> and less<void>.
-        do_pointer_comparison_test<int, cuda::std::less>();
-    }
-#endif
+    NV_IF_TARGET(
+        NV_IS_HOST, (
+            // test total ordering of int* for less<int*> and less<void>.
+            do_pointer_comparison_test<int, cuda::std::less>();
+        )
+    )
 #if TEST_STD_VER > 11
     typedef cuda::std::less<> F2;
     const F2 f2 = F2();

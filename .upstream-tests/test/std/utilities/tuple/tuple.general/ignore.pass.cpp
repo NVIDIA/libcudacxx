@@ -25,23 +25,27 @@ __host__ __device__
 constexpr bool test_ignore_constexpr()
 {
 // NVCC does not support constexpr non-integral types
-#if TEST_STD_VER > 11 && !defined(__CUDA_ARCH__)
-    { // Test that std::ignore provides constexpr converting assignment.
-        auto& res = (cuda::std::ignore = 42);
-        assert(&res == &cuda::std::ignore);
-    }
-    { // Test that cuda::std::ignore provides constexpr copy/move constructors
-        auto copy = cuda::std::ignore;
-        auto moved = cuda::std::move(copy);
-        unused(moved);
-    }
-    { // Test that cuda::std::ignore provides constexpr copy/move assignment
-        auto copy = cuda::std::ignore;
-        copy = cuda::std::ignore;
-        auto moved = cuda::std::ignore;
-        moved = cuda::std::move(copy);
-        unused(moved);
-    }
+#if TEST_STD_VER > 11
+    NV_IF_TARGET(
+        NV_IS_HOST, (
+            { // Test that std::ignore provides constexpr converting assignment.
+                auto& res = (cuda::std::ignore = 42);
+                assert(&res == &cuda::std::ignore);
+            }
+            { // Test that cuda::std::ignore provides constexpr copy/move constructors
+                auto copy = cuda::std::ignore;
+                auto moved = cuda::std::move(copy);
+                unused(moved);
+            }
+            { // Test that cuda::std::ignore provides constexpr copy/move assignment
+                auto copy = cuda::std::ignore;
+                copy = cuda::std::ignore;
+                auto moved = cuda::std::ignore;
+                moved = cuda::std::move(copy);
+                unused(moved);
+            }
+        )
+    )
 #endif
     return true;
 }

@@ -109,7 +109,8 @@ struct TestFn {
 int main(int, char**)
 {
     NV_IF_TARGET(
-        NV_IS_HOST, (cuda_thread_count = 2;)
+        NV_IS_HOST,
+        (cuda_thread_count = 2;)
     )
 
     TestEachAtomicType<TestFn, shared_memory_selector>()();

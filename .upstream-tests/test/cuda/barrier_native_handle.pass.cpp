@@ -18,19 +18,21 @@
 
 int main(int argc, char ** argv)
 {
-#if __CUDA_ARCH__ >= 800
-    __shared__ cuda::barrier<cuda::thread_scope_block> b;
-    init(&b, 2);
+    NV_IF_TARGET(
+        NV_PROVIDES_SM80, (
+            __shared__ cuda::barrier<cuda::thread_scope_block> b;
+            init(&b, 2);
 
-    uint64_t token;
-    asm volatile ("mbarrier.arrive.b64 %0, [%1];"
-        : "=l"(token)
-        : "l"(cuda::device::barrier_native_handle(b))
-        : "memory");
-    (void)token;
+            uint64_t token;
+            asm volatile ("mbarrier.arrive.b64 %0, [%1];"
+                : "=l"(token)
+                : "l"(cuda::device::barrier_native_handle(b))
+                : "memory");
+            (void)token;
 
-    b.arrive_and_wait();
-#endif
+            b.arrive_and_wait();
+        )
+    )
 
     return 0;
 }
