@@ -47,14 +47,13 @@ constexpr bool test_ignore_constexpr()
 }
 
 int main(int, char**) {
-    _LIBCUDACXX_CUDA_DISPATCH(
-        HOST, _LIBCUDACXX_ARCH_BLOCK(
-            {
-                constexpr auto& ignore_v = cuda::std::ignore;
-                ((void)ignore_v);
-            }
+    NV_IF_TARGET(
+        NV_IS_HOST, (            {
+            constexpr auto& ignore_v = cuda::std::ignore;
+            ((void)ignore_v);
         )
     )
+
     {
         static_assert(test_ignore_constexpr(), "");
     }

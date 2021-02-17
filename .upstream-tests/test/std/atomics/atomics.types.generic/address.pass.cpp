@@ -124,14 +124,14 @@ do_test()
     assert(obj == T(2*sizeof(X)));
 #if __cplusplus > 201703L
     {
-        _LIBCUDACXX_CUDA_DISPATCH(
-            HOST, _LIBCUDACXX_ARCH_BLOCK(
+        NV_DISPATCH_TARGET(
+            NV_IS_HOST, (
                 TEST_ALIGNAS_TYPE(A) char storage[sizeof(A)] = {23};
                 A& zero = *new (storage) A();
                 assert(zero == T(0));
                 zero.~A();
             ),
-            GREATER_THAN_SM62, _LIBCUDACXX_ARCH_BLOCK(
+            NV_PROVIDES_SM70, (
                 TEST_ALIGNAS_TYPE(A) char storage[sizeof(A)] = {23};
                 A& zero = *new (storage) A();
                 assert(zero == T(0));
@@ -174,20 +174,24 @@ void test_std()
 
 int main(int, char**)
 {
-    _LIBCUDACXX_CUDA_DISPATCH(
-        HOST, _LIBCUDACXX_ARCH_BLOCK(
+
+    NV_DISPATCH_TARGET(
+        NV_PROVIDES_SM70, (
             test_std<cuda::std::atomic<int*>, int*, local_memory_selector>();
             test<cuda::atomic<int*, cuda::thread_scope_system>, int*, local_memory_selector>();
             test<cuda::atomic<int*, cuda::thread_scope_device>, int*, local_memory_selector>();
             test<cuda::atomic<int*, cuda::thread_scope_block>, int*, local_memory_selector>();
         ),
-        GREATER_THAN_SM62, _LIBCUDACXX_ARCH_BLOCK(
+    )
+
+    NV_DISPATCH_TARGET(
+        NV_IS_HOST, (
             test_std<cuda::std::atomic<int*>, int*, local_memory_selector>();
             test<cuda::atomic<int*, cuda::thread_scope_system>, int*, local_memory_selector>();
             test<cuda::atomic<int*, cuda::thread_scope_device>, int*, local_memory_selector>();
             test<cuda::atomic<int*, cuda::thread_scope_block>, int*, local_memory_selector>();
         ),
-        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+        NV_IS_DEVICE, (
             test_std<cuda::std::atomic<int*>, int*, shared_memory_selector>();
             test<cuda::atomic<int*, cuda::thread_scope_system>, int*, shared_memory_selector>();
             test<cuda::atomic<int*, cuda::thread_scope_device>, int*, shared_memory_selector>();

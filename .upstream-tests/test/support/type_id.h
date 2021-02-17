@@ -51,12 +51,12 @@ private:
 // makeTypeID - Return the TypeID for the specified type 'T'.
 template <class T>
 __host__ __device__ inline TypeID const& makeTypeIDImp() {
-  _LIBCUDACXX_CUDA_DISPATCH(
-    DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+  NV_DISPATCH_TARGET(
+    NV_IS_DEVICE, (
       __constant__ static const TypeID id{__PRETTY_FUNCTION__};
       return id;
     ),
-    HOST, _LIBCUDACXX_ARCH_BLOCK(
+    NV_IS_HOST, (
       #if defined(_MSC_VER)
       static const TypeID id(__FUNCDNAME__);
       #else

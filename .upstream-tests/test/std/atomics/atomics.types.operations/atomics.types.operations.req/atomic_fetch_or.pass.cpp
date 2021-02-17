@@ -52,17 +52,20 @@ struct TestFn {
 
 int main(int, char**)
 {
-      _LIBCUDACXX_CUDA_DISPATCH(
-        GREATER_THAN_SM62, _LIBCUDACXX_ARCH_BLOCK(
-            TestEachIntegralType<TestFn, local_memory_selector>()();
-        ),
-        HOST, _LIBCUDACXX_ARCH_BLOCK(
-            TestEachIntegralType<TestFn, local_memory_selector>()();
-        ),
-        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
-            TestEachIntegralType<TestFn, shared_memory_selector>()();
-            TestEachIntegralType<TestFn, global_memory_selector>()();
-        )
+    NV_DISPATCH_TARGET(
+      NV_PROVIDES_SM70, (
+          TestEachIntegralType<TestFn, local_memory_selector>()();
+      )
+    )
+
+    NV_DISPATCH_TARGET(
+      NV_IS_HOST, (
+          TestEachIntegralType<TestFn, local_memory_selector>()();
+      ),
+      NV_IS_DEVICE, (
+          TestEachIntegralType<TestFn, shared_memory_selector>()();
+          TestEachIntegralType<TestFn, global_memory_selector>()();
+      )
     )
 
   return 0;

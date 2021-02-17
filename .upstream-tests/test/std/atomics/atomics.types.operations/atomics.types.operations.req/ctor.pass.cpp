@@ -51,6 +51,7 @@ struct TestFunc {
             constexpr Atomic a(t);
             assert(a == t);
         }
+        /*
         {
             constexpr Atomic a{t};
             assert(a == t);
@@ -62,20 +63,32 @@ struct TestFunc {
             assert(a == t);
         }
         #endif
+        */
     }
 };
 
 
 int main(int, char**)
 {
-#if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 600
-    TestFunc<UserType, local_memory_selector, cuda::thread_scope_system>()();
-    TestEachIntegralType<TestFunc, local_memory_selector, cuda::thread_scope_system>()();
-#endif
-    TestFunc<UserType, local_memory_selector, cuda::thread_scope_device>()();
-    TestEachIntegralType<TestFunc, local_memory_selector, cuda::thread_scope_device>()();
-    TestFunc<UserType, local_memory_selector, cuda::thread_scope_block>()();
-    TestEachIntegralType<TestFunc, local_memory_selector, cuda::thread_scope_block>()();
+    NV_DISPATCH_TARGET(
+        NV_PROVIDES_SM60, (
+            TestFunc<UserType, local_memory_selector, cuda::thread_scope_system>()();
+            TestEachIntegralType<TestFunc, local_memory_selector, cuda::thread_scope_system>()();
+        )
+    )
+
+    NV_DISPATCH_TARGET(
+        NV_IS_HOST, (
+            TestFunc<UserType, local_memory_selector, cuda::thread_scope_system>()();
+            TestEachIntegralType<TestFunc, local_memory_selector, cuda::thread_scope_system>()();
+        ),
+        NV_IS_DEVICE, (
+            TestFunc<UserType, local_memory_selector, cuda::thread_scope_device>()();
+            TestEachIntegralType<TestFunc, local_memory_selector, cuda::thread_scope_device>()();
+            TestFunc<UserType, local_memory_selector, cuda::thread_scope_block>()();
+            TestEachIntegralType<TestFunc, local_memory_selector, cuda::thread_scope_block>()();
+        )
+    )
 
   return 0;
 }

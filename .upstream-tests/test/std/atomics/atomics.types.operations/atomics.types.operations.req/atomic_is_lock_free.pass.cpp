@@ -47,7 +47,7 @@ struct A
 int main(int, char**)
 {
     TestFn<A, local_memory_selector, cuda::thread_scope_system>()();
-    TestEachAtomicType<TestFn, local_memory_selector>()();
+    (TestEachAtomicType<TestFn, local_memory_selector>())();
 
   return 0;
 }

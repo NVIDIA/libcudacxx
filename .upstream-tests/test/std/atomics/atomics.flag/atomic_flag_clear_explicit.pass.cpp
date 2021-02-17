@@ -78,17 +78,21 @@ void test()
 
 int main(int, char**)
 {
-    _LIBCUDACXX_CUDA_DISPATCH(
-        HOST, _LIBCUDACXX_ARCH_BLOCK(
+    NV_DISPATCH_TARGET(
+        NV_IS_HOST, (
             test<local_memory_selector>();
         ),
-        GREATER_THAN_SM62, _LIBCUDACXX_ARCH_BLOCK(
-            test<local_memory_selector>();
-        ),
-        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+        NV_IS_DEVICE, (
             test<shared_memory_selector>();
             test<global_memory_selector>();
         )
     )
+
+    NV_DISPATCH_TARGET(
+        NV_PROVIDES_SM70, (
+            test<local_memory_selector>();
+        )
+    )
+
   return 0;
 }

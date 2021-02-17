@@ -29,8 +29,8 @@ void test()
   b = sel.construct(2);
 
 
-  _LIBCUDACXX_CUDA_DISPATCH(
-      DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+  NV_DISPATCH_TARGET(
+      NV_IS_DEVICE, (
         auto * tok = threadIdx.x == 0 ? new auto(b->arrive()) : nullptr;
 
         auto awaiter = LAMBDA (){
@@ -47,7 +47,7 @@ void test()
         }
         __syncthreads();
       ),
-      HOST, _LIBCUDACXX_ARCH_BLOCK(
+      NV_IS_HOST, (
           auto * tok = new auto(b->arrive());
 
           auto awaiter = LAMBDA (){
@@ -67,8 +67,8 @@ void test()
 
 int main(int, char**)
 {
-    _LIBCUDACXX_CUDA_DISPATCH(
-      DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+    NV_DISPATCH_TARGET(
+      NV_IS_DEVICE, (
         test<cuda::std::barrier<>, shared_memory_selector>();
         test<cuda::barrier<cuda::thread_scope_block>, shared_memory_selector>();
         test<cuda::barrier<cuda::thread_scope_device>, shared_memory_selector>();
@@ -79,7 +79,7 @@ int main(int, char**)
         test<cuda::barrier<cuda::thread_scope_device>, global_memory_selector>();
         test<cuda::barrier<cuda::thread_scope_system>, global_memory_selector>();
       ),
-      HOST, _LIBCUDACXX_ARCH_BLOCK(
+      NV_IS_HOST, (
         cuda_thread_count = 2;
 
         test<cuda::std::barrier<>, local_memory_selector>();

@@ -350,12 +350,12 @@ inline void DoNotOptimize(Tp const& value) {
 // a function returning a reference will result in the same thing
 #define STATIC_MEMBER_VAR(name, type) \
   __host__ __device__ static type& name() { \
-    _LIBCUDACXX_CUDA_DISPATCH( \
-      HOST, _LIBCUDACXX_ARCH_BLOCK( \
+    NV_DISPATCH_TARGET( \
+      NV_IS_HOST, \
         static type v; \
         return v; \
       ), \
-      DEVICE, _LIBCUDACXX_ARCH_BLOCK( \
+      NV_IS_DEVICE, \
         __shared__ type v; \
         return v; \
       ) \

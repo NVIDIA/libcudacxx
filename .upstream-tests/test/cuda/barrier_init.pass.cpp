@@ -33,8 +33,8 @@ __host__ __device__
 void test_select_barrier()
 {
     test<Sco, local_memory_selector>();
-    _LIBCUDACXX_CUDA_DISPATCH(
-        DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+    NV_DISPATCH_TARGET(
+        NV_IS_DEVICE, (
             test<Sco, shared_memory_selector>();
             test<Sco, global_memory_selector>();
         )

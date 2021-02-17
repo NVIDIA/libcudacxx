@@ -26,8 +26,8 @@ void test()
 {
   Selector<Semaphore, Initializer> sel;
 
-  _LIBCUDACXX_CUDA_DISPATCH(
-    DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+  NV_DISPATCH_TARGET(
+    NV_IS_DEVICE, (
       __shared__ Semaphore * s;
       s = sel.construct(0);
 
@@ -36,7 +36,7 @@ void test()
         assert(!s->try_acquire_until(start + cuda::std::chrono::milliseconds(250)));
         assert(!s->try_acquire_for(cuda::std::chrono::milliseconds(250)));
       }
-    __syncthreads();
+      __syncthreads();
 
       auto releaser = LAMBDA (){
         //cuda::std::this_thread::sleep_for(cuda::std::chrono::milliseconds(250));
@@ -57,7 +57,7 @@ void test()
         assert(end - start < cuda::std::chrono::seconds(10));
       }
     ),
-    HOST, _LIBCUDACXX_ARCH_BLOCK(
+    NV_IS_HOST, (
       Semaphore * s;
       s = sel.construct(0);
 
@@ -88,15 +88,15 @@ void test()
 
 int main(int, char**)
 {
-  _LIBCUDACXX_CUDA_DISPATCH(
-    HOST, _LIBCUDACXX_ARCH_BLOCK(
+  NV_DISPATCH_TARGET(
+    NV_IS_HOST, (
         cuda_thread_count = 2;
 
         test<cuda::std::counting_semaphore<>, local_memory_selector>();
         test<cuda::counting_semaphore<cuda::thread_scope_block>, local_memory_selector>();
         test<cuda::counting_semaphore<cuda::thread_scope_device>, local_memory_selector>();
         test<cuda::counting_semaphore<cuda::thread_scope_system>, local_memory_selector>();
-    DEVICE, _LIBCUDACXX_ARCH_BLOCK(
+    NV_IS_DEVICE, (
         test<cuda::std::counting_semaphore<>, shared_memory_selector>();
         test<cuda::counting_semaphore<cuda::thread_scope_block>, shared_memory_selector>();
         test<cuda::counting_semaphore<cuda::thread_scope_device>, shared_memory_selector>();
