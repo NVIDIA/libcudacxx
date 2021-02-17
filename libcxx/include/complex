@@ -668,8 +668,8 @@ operator*(const complex<_Tp>& __z, const complex<_Tp>& __w)
         }
         if (__recalc)
         {
-            __x = _Tp(cuda::std::numeric_limits<_Tp>::infinity()) * (__a * __c - __b * __d);
-            __y = _Tp(cuda::std::numeric_limits<_Tp>::infinity()) * (__a * __d + __b * __c);
+            __x = _Tp(INFINITY) * (__a * __c - __b * __d);
+            __y = _Tp(INFINITY) * (__a * __d + __b * __c);
         }
     }
     return complex<_Tp>(__x, __y);
@@ -746,15 +746,15 @@ operator/(const complex<_Tp>& __z, const complex<_Tp>& __w)
     {
         if ((__denom == _Tp(0)) && (!__libcpp_isnan_or_builtin(__a) || !__libcpp_isnan_or_builtin(__b)))
         {
-            __x = copysign(_Tp(cuda::std::numeric_limits<_Tp>::infinity()), __c) * __a;
-            __y = copysign(_Tp(cuda::std::numeric_limits<_Tp>::infinity()), __c) * __b;
+            __x = copysign(_Tp(INFINITY), __c) * __a;
+            __y = copysign(_Tp(INFINITY), __c) * __b;
         }
         else if ((__libcpp_isinf_or_builtin(__a) || __libcpp_isinf_or_builtin(__b)) && __libcpp_isfinite_or_builtin(__c) && __libcpp_isfinite_or_builtin(__d))
         {
             __a = copysign(__libcpp_isinf_or_builtin(__a) ? _Tp(1) : _Tp(0), __a);
             __b = copysign(__libcpp_isinf_or_builtin(__b) ? _Tp(1) : _Tp(0), __b);
-            __x = _Tp(cuda::std::numeric_limits<_Tp>::infinity()) * (__a * __c + __b * __d);
-            __y = _Tp(cuda::std::numeric_limits<_Tp>::infinity()) * (__b * __c - __a * __d);
+            __x = _Tp(INFINITY) * (__a * __c + __b * __d);
+            __y = _Tp(INFINITY) * (__b * __c - __a * __d);
         }
         else if (__libcpp_isinf_or_builtin(__logbw) && __logbw > _Tp(0) && __libcpp_isfinite_or_builtin(__a) && __libcpp_isfinite_or_builtin(__b))
         {
@@ -1016,7 +1016,7 @@ proj(const complex<_Tp>& __c)
 {
     std::complex<_Tp> __r = __c;
     if (__libcpp_isinf_or_builtin(__c.real()) || __libcpp_isinf_or_builtin(__c.imag()))
-        __r = complex<_Tp>(cuda::std::numeric_limits<_Tp>::infinity(), copysign(_Tp(0), __c.imag()));
+        __r = complex<_Tp>(INFINITY, copysign(_Tp(0), __c.imag()));
     return __r;
 }
 
@@ -1054,7 +1054,7 @@ _LIBCUDACXX_INLINE_VISIBILITY complex<_Tp>
 polar(const _Tp& __rho, const _Tp& __theta = _Tp())
 {
     if (__libcpp_isnan_or_builtin(__rho) || signbit(__rho))
-        return complex<_Tp>(_Tp(cuda::std::numeric_limits<_Tp>::quiet_NaN()), _Tp(cuda::std::numeric_limits<_Tp>::quiet_NaN()));
+        return complex<_Tp>(_Tp(NAN), _Tp(NAN));
     if (__libcpp_isnan_or_builtin(__theta))
     {
         if (__libcpp_isinf_or_builtin(__rho))
@@ -1064,8 +1064,8 @@ polar(const _Tp& __rho, const _Tp& __theta = _Tp())
     if (__libcpp_isinf_or_builtin(__theta))
     {
         if (__libcpp_isinf_or_builtin(__rho))
-            return complex<_Tp>(__rho, _Tp(cuda::std::numeric_limits<_Tp>::quiet_NaN()));
-        return complex<_Tp>(_Tp(cuda::std::numeric_limits<_Tp>::quiet_NaN()), _Tp(cuda::std::numeric_limits<_Tp>::quiet_NaN()));
+            return complex<_Tp>(__rho, _Tp(NAN));
+        return complex<_Tp>(_Tp(NAN), _Tp(NAN));
     }
     _Tp __x = __rho * cos(__theta);
     if (__libcpp_isnan_or_builtin(__x))
@@ -1103,7 +1103,7 @@ _LIBCUDACXX_INLINE_VISIBILITY complex<_Tp>
 sqrt(const complex<_Tp>& __x)
 {
     if (__libcpp_isinf_or_builtin(__x.imag()))
-        return complex<_Tp>(_Tp(cuda::std::numeric_limits<_Tp>::infinity()), __x.imag());
+        return complex<_Tp>(_Tp(INFINITY), __x.imag());
     if (__libcpp_isinf_or_builtin(__x.real()))
     {
         if (__x.real() > _Tp(0))
@@ -1130,7 +1130,7 @@ exp(const complex<_Tp>& __x)
         else if (__i == 0 || !__libcpp_isfinite_or_builtin(__i))
         {
             if (__libcpp_isinf_or_builtin(__i))
-                __i = _Tp(cuda::std::numeric_limits<_Tp>::quiet_NaN());
+                __i = _Tp(NAN);
             return complex<_Tp>(__x.real(), __i);
         }
     }
@@ -1286,7 +1286,7 @@ atanh(const complex<_Tp>& __x)
     }
     if (abs(__x.real()) == _Tp(1) && __x.imag() == _Tp(0))
     {
-        return complex<_Tp>(copysign(_Tp(cuda::std::numeric_limits<_Tp>::infinity()), __x.real()), copysign(_Tp(0), __x.imag()));
+        return complex<_Tp>(copysign(_Tp(INFINITY), __x.real()), copysign(_Tp(0), __x.imag()));
     }
     complex<_Tp> __z = log((_Tp(1) + __x) / (_Tp(1) - __x)) / _Tp(2);
     return complex<_Tp>(copysign(__z.real(), __x.real()), copysign(__z.imag(), __x.imag()));
@@ -1299,9 +1299,9 @@ _LIBCUDACXX_INLINE_VISIBILITY complex<_Tp>
 sinh(const complex<_Tp>& __x)
 {
     if (__libcpp_isinf_or_builtin(__x.real()) && !__libcpp_isfinite_or_builtin(__x.imag()))
-        return complex<_Tp>(__x.real(), _Tp(cuda::std::numeric_limits<_Tp>::quiet_NaN()));
+        return complex<_Tp>(__x.real(), _Tp(NAN));
     if (__x.real() == 0 && !__libcpp_isfinite_or_builtin(__x.imag()))
-        return complex<_Tp>(__x.real(), _Tp(cuda::std::numeric_limits<_Tp>::quiet_NaN()));
+        return complex<_Tp>(__x.real(), _Tp(NAN));
     if (__x.imag() == 0 && !__libcpp_isfinite_or_builtin(__x.real()))
         return __x;
     return complex<_Tp>(sinh(__x.real()) * cos(__x.imag()), cosh(__x.real()) * sin(__x.imag()));
@@ -1314,9 +1314,9 @@ _LIBCUDACXX_INLINE_VISIBILITY complex<_Tp>
 cosh(const complex<_Tp>& __x)
 {
     if (__libcpp_isinf_or_builtin(__x.real()) && !__libcpp_isfinite_or_builtin(__x.imag()))
-        return complex<_Tp>(abs(__x.real()), _Tp(cuda::std::numeric_limits<_Tp>::quiet_NaN()));
+        return complex<_Tp>(abs(__x.real()), _Tp(NAN));
     if (__x.real() == 0 && !__libcpp_isfinite_or_builtin(__x.imag()))
-        return complex<_Tp>(_Tp(cuda::std::numeric_limits<_Tp>::quiet_NaN()), __x.real());
+        return complex<_Tp>(_Tp(NAN), __x.real());
     if (__x.real() == 0 && __x.imag() == 0)
         return complex<_Tp>(_Tp(1), __x.imag());
     if (__x.imag() == 0 && !__libcpp_isfinite_or_builtin(__x.real()))
