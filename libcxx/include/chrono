@@ -1013,7 +1013,7 @@ round(const duration<_Rep, _Period>& __d)
         return __upper;
     return __lower.count() & 1 ? __upper : __lower;
 }
-#endif // _LIBCUDACXX_STD_VER > 11 
+#endif // _LIBCUDACXX_STD_VER > 11
 
 // duration
 
@@ -2539,7 +2539,7 @@ inline constexpr days year_month_day::__to_days() const noexcept
     static_assert(std::numeric_limits<unsigned>::digits >= 18, "");
     static_assert(std::numeric_limits<int>::digits >= 20     , "");
 
-    // nvcc doesn't allow ODR using constexpr globals. Therefore, 
+    // nvcc doesn't allow ODR using constexpr globals. Therefore,
     // make a temporary initialized from the global
     auto constexpr __Feb = February;
     const int      __yr  = static_cast<int>(__y) - (__m <= __Feb);
@@ -2705,7 +2705,7 @@ chrono::day year_month_day_last::day() const noexcept
         chrono::day(31), chrono::day(30), chrono::day(31)
     };
 
-    // nvcc doesn't allow ODR using constexpr globals. Therefore, 
+    // nvcc doesn't allow ODR using constexpr globals. Therefore,
     // make a temporary initialized from the global
     auto constexpr __Feb = February;
     return month() != __Feb || !__y.is_leap() ?
@@ -3116,8 +3116,8 @@ private:
     }
 
 public:
-    static unsigned constexpr fractional_width = __width(__CommonType::period::den) < 19 ?
-                                                 __width(__CommonType::period::den) : 6u;
+    static unsigned constexpr fractional_width = __width(__CommonType::period::den, 10, 0) < 19 ?
+                                                 __width(__CommonType::period::den, 10, 0) : 6u;
     using precision = duration<typename __CommonType::rep, ratio<1, __pow10(fractional_width)>>;
 
     _LIBCUDACXX_INLINE_VISIBILITY
