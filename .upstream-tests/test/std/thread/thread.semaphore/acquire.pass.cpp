@@ -59,6 +59,7 @@ int main(int, char**)
         test<cuda::counting_semaphore<cuda::thread_scope_block>, local_memory_selector>();
         test<cuda::counting_semaphore<cuda::thread_scope_device>, local_memory_selector>();
         test<cuda::counting_semaphore<cuda::thread_scope_system>, local_memory_selector>();
+    ),
     NV_IS_DEVICE, (
         test<cuda::std::counting_semaphore<>, shared_memory_selector>();
         test<cuda::counting_semaphore<cuda::thread_scope_block>, shared_memory_selector>();

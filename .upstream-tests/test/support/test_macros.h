@@ -351,11 +351,11 @@ inline void DoNotOptimize(Tp const& value) {
 #define STATIC_MEMBER_VAR(name, type) \
   __host__ __device__ static type& name() { \
     NV_DISPATCH_TARGET( \
-      NV_IS_HOST, \
+      NV_IS_HOST, ( \
         static type v; \
         return v; \
       ), \
-      NV_IS_DEVICE, \
+      NV_IS_DEVICE, ( \
         __shared__ type v; \
         return v; \
       ) \

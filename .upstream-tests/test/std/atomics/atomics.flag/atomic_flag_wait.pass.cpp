@@ -46,10 +46,9 @@ void test()
             concurrent_agents_launch(agent_notify, agent_wait);
         ),
         NV_IS_HOST, (
-            t = new cuda::std::atomic_flag();
+            cuda::std::atomic_flag * t = new cuda::std::atomic_flag();
             cuda::std::atomic_flag_clear(t);
             cuda::std::atomic_flag_wait(t, true);
-            cuda::std::atomic_flag * t;
 
             auto agent_notify = LAMBDA (){
                 assert(cuda::std::atomic_flag_test_and_set(t) == false);
