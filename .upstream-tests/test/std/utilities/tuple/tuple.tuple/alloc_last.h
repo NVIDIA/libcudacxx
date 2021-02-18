@@ -13,6 +13,9 @@
 
 #include "allocators.h"
 
+#pragma diag_suppress 941
+#pragma diag_suppress 1057
+
 struct alloc_last
 {
     STATIC_MEMBER_VAR(allocator_constructed, bool);

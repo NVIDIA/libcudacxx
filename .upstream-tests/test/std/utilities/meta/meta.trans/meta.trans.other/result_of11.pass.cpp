@@ -96,7 +96,7 @@ int main(int, char**)
     test_result_of_imp<PMD(FD volatile       ), char &&>();
     test_result_of_imp<PMD(FD const volatile ), char &&>();
 
-#if !(defined(__NVCC__) || defined(__CUDACC_RTC__))
+#if !(defined(__PGIC__) || defined(__NVCC__) || defined(__CUDACC_RTC__))
     test_result_of_imp<PMD(cuda::std::unique_ptr<F>),        char &>();
     test_result_of_imp<PMD(cuda::std::unique_ptr<F const>),  const char &>();
     test_result_of_imp<PMD(cuda::std::unique_ptr<FD>),       char &>();
@@ -171,7 +171,7 @@ int main(int, char**)
     test_result_of_imp<int (F::* (FD const volatile )) () const volatile &&, int> ();
     }
     {
-#if !(defined(__NVCC__) || defined(__CUDACC_RTC__))
+#if !(defined(__PGIC__) || defined(__NVCC__) || defined(__CUDACC_RTC__))
     test_result_of_imp<int (F::* (cuda::std::reference_wrapper<F>))       (),       int>();
     test_result_of_imp<int (F::* (cuda::std::reference_wrapper<const F>)) () const, int>();
     test_result_of_imp<int (F::* (cuda::std::unique_ptr<F>       ))       (),       int>();

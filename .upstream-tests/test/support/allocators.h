@@ -14,6 +14,9 @@
 
 #include "test_macros.h"
 
+#pragma diag_suppress 941
+#pragma diag_suppress 1057
+
 #if TEST_STD_VER >= 11
 
 template <class T>

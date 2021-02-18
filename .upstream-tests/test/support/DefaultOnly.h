@@ -11,6 +11,9 @@
 
 #include <cuda/std/cassert>
 
+#pragma diag_suppress 941
+#pragma diag_suppress 1057
+
 class DefaultOnly
 {
     int data_;
