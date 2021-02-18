@@ -52,7 +52,7 @@ constexpr bool test_ignore_constexpr()
 
 int main(int, char**) {
     NV_IF_TARGET(
-        NV_IS_HOST, (            {
+        NV_IS_HOST, (
             constexpr auto& ignore_v = cuda::std::ignore;
             ((void)ignore_v);
         )
