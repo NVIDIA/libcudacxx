@@ -51,8 +51,13 @@
 #    define _NV_TARGET_DEF __CUDA_ARCH__
 #endif
 
-#  define _NV_TARGET_IS_HOST !defined(__CUDA_ARCH__)
-#  define _NV_TARGET_IS_DEVICE !_NV_TARGET_IS_HOST
+#if defined(__CUDA_ARCH__)
+#  define _NV_TARGET_IS_HOST   0
+#  define _NV_TARGET_IS_DEVICE 1
+#else
+#  define _NV_TARGET_IS_HOST   1
+#  define _NV_TARGET_IS_DEVICE 0
+#endif
 
 #if defined(_NV_TARGET_VAL)
 #  define _NV_DEVICE_CHECK(q) (q)
@@ -206,7 +211,7 @@
 #  define _NV_TARGET_BOOL_IS_EXACTLY_SM80 0
 #endif
 
-#if _NV_TARGET_IS_HOST
+#if (_NV_TARGET_IS_HOST)
 #  define _NV_TARGET_BOOL_IS_HOST   1
 #  define _NV_TARGET_BOOL_IS_DEVICE 0
 #else

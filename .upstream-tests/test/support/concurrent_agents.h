@@ -11,7 +11,7 @@
     #include <thread>
 #endif
 
-#if defined(_LIBCUDACXX_CUDA_ARCH_DEF) && _LIBCUDACXX_CUDA_ARCH_DEF < 350
+#if defined(_NV_TARGET_DEF) && _NV_TARGET_DEF < 350
     #error "This test requires CUDA dynamic parallelism to work."
 #endif
 

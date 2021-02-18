@@ -181,7 +181,7 @@ int main(int, char**)
             test<cuda::atomic<int*, cuda::thread_scope_system>, int*, local_memory_selector>();
             test<cuda::atomic<int*, cuda::thread_scope_device>, int*, local_memory_selector>();
             test<cuda::atomic<int*, cuda::thread_scope_block>, int*, local_memory_selector>();
-        ),
+        )
     )
 
     NV_DISPATCH_TARGET(

@@ -2,13 +2,13 @@
 #define _NV__CONCAT_EVAL(l, r) l ## r
 #define _NV_CONCAT_EVAL(l, r) _NV__CONCAT_EVAL(l, r)
 
-#define _NV_EV_PAREN_R_Y
-#define _NV_EV_PAREN_L_Y
-#define _NV_EV_PAREN_R_N )
-#define _NV_EV_PAREN_L_N (
+#define _NV_EV_PAREN_R_YES
+#define _NV_EV_PAREN_L_YES
+#define _NV_EV_PAREN_R_NO )
+#define _NV_EV_PAREN_L_NO (
 
-#define _NV_PAREN_TAGS(...) Y, __VA_ARGS__
-#define __NV_PAREN_TAGS _N,
+#define _NV_PAREN_TAGS(...) YES, __VA_ARGS__
+#define __NV_PAREN_TAGS _NO,
 
 #define _NV__CONSUME_TAG(tag, ...) tag
 #define _NV_CONSUME_TAG(...) _NV__CONSUME_TAG(__VA_ARGS__)
@@ -17,7 +17,7 @@
 
 #define _NV_FORCE_PAREN(...) \
     _NV_CONCAT_EVAL(_NV_EV_PAREN_L, _NV_TEST_PAREN(_NV_PAREN_TAGS __VA_ARGS__)) \
-    __VA_ARGS__                                                                                                 \
+    __VA_ARGS__                                                                 \
     _NV_CONCAT_EVAL(_NV_EV_PAREN_R, _NV_TEST_PAREN(_NV_PAREN_TAGS __VA_ARGS__))
 
 #define _NV__STRIP_PAREN(...) __VA_ARGS__

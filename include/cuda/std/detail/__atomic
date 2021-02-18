@@ -7,7 +7,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-#if defined(_LIBCUDACXX_CUDA_ARCH_DEF) && ((!defined(_MSC_VER) && _LIBCUDACXX_CUDA_ARCH_DEF < 600) || (defined(_MSC_VER) && _LIBCUDACXX_CUDA_ARCH_DEF < 700))
+#if defined(_NV_TARGET_DEF) && ((!defined(_MSC_VER) && _NV_TARGET_DEF < 600) || (defined(_MSC_VER) && _NV_TARGET_DEF < 700))
 #  error "CUDA atomics are only supported for sm_60 and up on *nix and sm_70 and up on Windows."
 #endif
 

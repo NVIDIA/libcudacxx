@@ -21,11 +21,14 @@
 #define LAMBDA [=] __host__ __device__
 #endif
 
-#ifdef _LIBCUDACXX_CUDA_ARCH_DEF
+#ifdef _NV_TARGET_DEF
 #define SHARED __shared__
 #else
 #define SHARED
 #endif
+
+#pragma diag_suppress 941
+#pragma diag_suppress 1057
 
 template<typename T, cuda::std::size_t SharedOffset>
 struct malloc_memory_provider {

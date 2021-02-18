@@ -4,6 +4,8 @@
 #include <cuda/std/type_traits>
 #include <cuda/std/cassert>
 
+#include <initializer_list>
+
 #include "test_macros.h"
 #include "test_workarounds.h"
 
