@@ -11,6 +11,10 @@
 
 #if TEST_STD_VER >= 11
 
+#pragma diag_suppress 837
+#pragma diag_suppress 941
+#pragma diag_suppress 1057
+
 namespace ArchetypeBases {
 
 template <bool, class T>

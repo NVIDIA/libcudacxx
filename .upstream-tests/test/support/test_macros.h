@@ -349,17 +349,23 @@ inline void DoNotOptimize(Tp const& value) {
 // NVCC can't handle static member variables, so with a little care
 // a function returning a reference will result in the same thing
 #define STATIC_MEMBER_VAR(name, type) \
+  __device__ static type& name##_device() { \
+    __shared__ type v;                      \
+    return v;                               \
+  }                                         \
+  __host__   static type& name##_host()   { \
+    static type v;                          \
+    return v;                               \
+  }                                         \
   __host__ __device__ static type& name() { \
-    NV_DISPATCH_TARGET( \
-      NV_IS_HOST, ( \
-        static type v; \
-        return v; \
-      ), \
-      NV_IS_DEVICE, ( \
-        __shared__ type v; \
-        return v; \
-      ) \
-    ) \
+    NV_DISPATCH_TARGET(                     \
+      NV_IS_DEVICE, (                       \
+        return name##_device();             \
+      ),                                    \
+      NV_IS_HOST, (                         \
+        return name##_host();               \
+      )                                     \
+    )                                       \
   }
 
 #if defined(__GNUC__)

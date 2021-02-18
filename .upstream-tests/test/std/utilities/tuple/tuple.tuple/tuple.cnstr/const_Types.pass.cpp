@@ -14,12 +14,15 @@
 
 // explicit tuple(const T&...);
 
-// UNSUPPORTED: c++98, c++03 
+// UNSUPPORTED: c++98, c++03
 
 #include <cuda/std/tuple>
 #include <cuda/std/cassert>
 
 #include "test_macros.h"
+
+#pragma diag_suppress 941
+#pragma diag_suppress 1057
 
 template <class ...>
 struct never {

@@ -21,6 +21,8 @@
 
 #include "test_macros.h"
 
+#pragma diag_suppress 941
+#pragma diag_suppress 1057
 
 struct NonAssignable {
   NonAssignable& operator=(NonAssignable const&) = delete;

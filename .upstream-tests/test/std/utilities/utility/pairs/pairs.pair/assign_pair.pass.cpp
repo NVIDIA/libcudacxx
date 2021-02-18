@@ -22,6 +22,9 @@
 
 #include "test_macros.h"
 
+#pragma diag_suppress 941
+#pragma diag_suppress 1057
+
 template <typename T>
 __host__ __device__
 constexpr bool unused(T &&) {return true;}

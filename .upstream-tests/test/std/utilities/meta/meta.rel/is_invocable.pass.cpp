@@ -9,6 +9,7 @@
 // UNSUPPORTED: c++98, c++03, c++11
 
 // XFAIL: nvcc
+// XFAIL: pgi
 // FIXME: Triage and fix this.
 
 // type_traits

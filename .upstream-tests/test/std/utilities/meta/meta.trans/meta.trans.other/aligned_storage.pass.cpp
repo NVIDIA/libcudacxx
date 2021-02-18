@@ -286,7 +286,7 @@ int main(int, char**)
     static_assert(sizeof(T1) == 16, "");
     }
 // NVCC doesn't support types that are _this_ overaligned, it seems
-#if !defined(TEST_COMPILER_NVCC) && !defined(TEST_COMPILER_NVRTC)
+#if !(defined(__PGIC__) || defined(__NVCC__) || defined(__CUDACC_RTC__))
   {
     const int Align = 65536;
     typedef typename cuda::std::aligned_storage<1, Align>::type T1;
