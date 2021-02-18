@@ -104,6 +104,7 @@ struct TestFn {
             concurrent_agents_launch(agent_notify_v, agent_wait_v);
         )
     )
+  }
 };
 
 int main(int, char**)

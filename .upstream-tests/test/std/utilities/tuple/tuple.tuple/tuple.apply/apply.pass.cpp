@@ -239,7 +239,7 @@ void test_noexcept()
 }
 
 namespace ReturnTypeTest {
-    #ifdef _LIBCUDACXX_CUDA_ARCH_DEF
+    #ifdef _NV_TARGET_DEF
     __constant__ int my_int = 42;
     #else
     static int my_int = 42;

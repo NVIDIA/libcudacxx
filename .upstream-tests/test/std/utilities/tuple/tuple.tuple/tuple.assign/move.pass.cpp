@@ -41,7 +41,7 @@ struct MoveAssignable {
   MoveAssignable& operator=(MoveAssignable&&) = default;
 };
 
-#ifdef _LIBCUDACXX_CUDA_ARCH_DEF
+#ifdef _NV_TARGET_DEF
 __device__ static int copied = 0;
 __device__ static int moved = 0;
 #else

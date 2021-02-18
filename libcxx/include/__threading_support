@@ -75,7 +75,7 @@ _LIBCUDACXX_BEGIN_NAMESPACE_STD
 _LIBCUDACXX_INLINE_VISIBILITY
 inline void __libcpp_thread_yield_processor()
 {
-#if defined(_LIBCUDACXX_CUDA_ARCH_DEF)
+#if defined(_NV_TARGET_DEF)
   ;
 #elif defined(__aarch64__)
   asm volatile ("yield" :::);

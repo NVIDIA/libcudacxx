@@ -596,7 +596,7 @@ _LIBCUDACXX_INLINE_VISIBILITY
 _LIBCUDACXX_CONSTEXPR typename enable_if<is_floating_point<_A1>::value, bool>::type
 __libcpp_isnan_or_builtin(_A1 __lcpp_x) _NOEXCEPT
 {
-#if defined(_LIBCUDACXX_CUDA_ARCH_DEF)
+#if defined(_NV_TARGET_DEF)
     return __isnan(__lcpp_x);
 #elif __has_builtin(__builtin_isnan)
     return __builtin_isnan(__lcpp_x);
@@ -618,7 +618,7 @@ _LIBCUDACXX_INLINE_VISIBILITY
 _LIBCUDACXX_CONSTEXPR typename enable_if<is_floating_point<_A1>::value, bool>::type
 __libcpp_isinf_or_builtin(_A1 __lcpp_x) _NOEXCEPT
 {
-#if defined(_LIBCUDACXX_CUDA_ARCH_DEF)
+#if defined(_NV_TARGET_DEF)
     return __isinf(__lcpp_x);
 #elif __has_builtin(__builtin_isinf)
     return __builtin_isinf(__lcpp_x);
@@ -640,7 +640,7 @@ _LIBCUDACXX_INLINE_VISIBILITY
 _LIBCUDACXX_CONSTEXPR typename enable_if<is_floating_point<_A1>::value, bool>::type
 __libcpp_isfinite_or_builtin(_A1 __lcpp_x) _NOEXCEPT
 {
-#if defined(_LIBCUDACXX_CUDA_ARCH_DEF)
+#if defined(_NV_TARGET_DEF)
     return __finite(__lcpp_x);
 #elif __has_builtin(__builtin_isfinite)
     return __builtin_isfinite(__lcpp_x);

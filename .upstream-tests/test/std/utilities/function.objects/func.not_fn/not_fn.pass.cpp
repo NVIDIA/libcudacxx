@@ -166,11 +166,11 @@ inline constexpr CallType operator|(CallType LHS, CallType RHS) {
 
 #if 0
 
-#ifdef _LIBCUDACXX_CUDA_ARCH_DEF
+#ifdef _NV_TARGET_DEF
 __device__
 #endif
 CallType      ForwardingCallObject_last_call_type = CT_None;
-#ifdef _LIBCUDACXX_CUDA_ARCH_DEF
+#ifdef _NV_TARGET_DEF
 __device__
 #endif
 TypeID const* ForwardingCallObject_last_call_args = nullptr;
@@ -235,7 +235,7 @@ struct ForwardingCallObject {
 //                        BOOL TEST TYPES
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifdef _LIBCUDACXX_CUDA_ARCH_DEF
+#ifdef _NV_TARGET_DEF
 __device__
 #endif
 int EvilBool_bang_called = 0;

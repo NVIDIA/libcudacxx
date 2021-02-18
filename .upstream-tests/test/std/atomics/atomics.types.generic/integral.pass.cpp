@@ -168,7 +168,6 @@ do_test()
                 zero.~A();
             )
         )
-#endif
     }
 #endif
 }
