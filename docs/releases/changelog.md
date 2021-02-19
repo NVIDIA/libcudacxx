@@ -1,7 +1,5 @@
 # Changelog
-
 <!--
-
 ## libcu++ 2.0.0
 
 libcu++ 2.0.0 is the first release of libcu++ as a complete standalone Standard
@@ -11,15 +9,27 @@ It adds `cuda::[std::]atomic_ref`, `<cuda/std/mutex>`, and
 It pulls in the latest version of upstream libc++ and marks the beginning of
   automatic tracking of upstream.
 
+!-->
+
+## libcu++ 1.4.1 (CUDA Toolkit 11.3)
+
+libcu++ 1.4.1 is a minor bugfix release.
+
 Supported ABI versions: 3 (default) and 2.
 
-### New Features
+Included in: CUDA Toolkit 11.3.
 
 ### Other Enhancements
 
+- [Documentation](https://nvidia.github.io/libcudacxx): Several enhancements and fixed a few broken links.
+- #108: Added `constexpr` to synchronization object constructors.
+  - Thanks to Olivier Giroux for this contribution.
+
 ### Issues Fixed
 
--->
+- #106: Fixed host code atomics on VS 2019 Version 16.5 / MSVC 1925 and above.
+- #101: Fixed `cuda::std::complex` for NVRTC.
+- #118: Renamed `__is_convertible`, which NVCC treats as a context sensitive keyword.
 
 ## libcu++ 1.4.0
 
@@ -69,7 +79,7 @@ It also adds [documentation](https://nvidia.github.io/libcudacxx).
 
 Supported ABI versions: 3 (default) and 2.
 
-Included in: CUDA 11.2.
+Included in: CUDA Toolkit 11.2.
 
 ### New Features
 
@@ -101,7 +111,7 @@ This release introduces ABI version 3, which is now the default.
 
 Supported ABI versions: 3 (default) and 2.
 
-Included in: CUDA 11.1.
+Included in: CUDA Toolkit 11.1.
 
 ### ABI Breaking Changes
 
@@ -146,6 +156,10 @@ An extension for managing asynchronous local copies, `cuda::memcpy_async` is
   introduced as well.
 It also adds `<cuda/std/chrono>`, `<cuda/std/ratio>`, and most of
   `<cuda/std/functional>`.
+
+Supported ABI versions: 2.
+
+Included in: CUDA Toolkit 11.0.
 
 ### ABI Breaking Changes
 
@@ -199,6 +213,10 @@ libcu++ 1.0.0 is the first release of libcu++, the C++ Standard Library for your
 It brings C++ atomics to CUDA: `<cuda/[std/]atomic>`.
 It also introduces `<cuda/std/type_traits>`, `<cuda/std/cassert>`,
 `<cuda/std/cfloat>`, `<cuda/std/cstddef>`, and `<cuda/std/cstdint>`.
+
+Supported ABI versions: 1.
+
+Included in: CUDA Toolkit 10.2.
 
 ### New Features
 
