@@ -88,7 +88,7 @@ void test_pmr_adaptor_equality(){
   test_equal(a_raw, a_shared);
   test_equal(a_unique, a_shared);
 
-  more_derived m;
+  more_derived<Kind> m;
   assert(d.is_equal(m));
   assert(m.is_equal(d));
 
