@@ -369,6 +369,9 @@ using ::atanhf;
 using ::log;
 using ::logf;
 
+using ::hypot;
+using ::hypotf;
+
 #ifndef _AIX
 using ::abs;
 #endif
@@ -455,8 +458,6 @@ using ::fmax;
 using ::fmaxf;
 using ::fmin;
 using ::fminf;
-using ::hypot;
-using ::hypotf;
 using ::ilogb;
 using ::ilogbf;
 using ::lgamma;
