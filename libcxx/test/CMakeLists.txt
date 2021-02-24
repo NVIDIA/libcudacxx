@@ -86,6 +86,29 @@ if (LIBCXX_INCLUDE_TESTS)
   add_custom_target(check-libcxx DEPENDS check-cxx)
 endif()
 
+if (LIBCXX_INCLUDE_DEVICE_TESTS)
+  set(CMAKE_CXX_COMPILER_ARG1 "${LIBCXX_COMPILER} -stdpar -gpu=cc${LIBCXX_COMPUTE_ARCHS}")
+  set(LIBCXX_COMPILER "${CMAKE_CURRENT_SOURCE_DIR}/../utils/nvhpc/nvhpc_device_tests.sh")
+
+  set(LIBCXX_TEST_COMPILER_FLAGS
+    "${LIBCXX_TEST_COMPILER_FLAGS}"
+    )
+
+  include(AddLLVM) # for configure_lit_site_cfg and add_lit_testsuit
+
+  configure_lit_site_cfg(
+    ${CMAKE_CURRENT_SOURCE_DIR}/lit.site.cfg.in
+    ${CMAKE_CURRENT_BINARY_DIR}/lit.site.cfg)
+
+  add_lit_testsuite(check-cxx
+    "Running libcxx tests"
+    ${CMAKE_CURRENT_BINARY_DIR}
+    DEPENDS cxx ${LIBCXX_TEST_DEPS})
+
+  add_custom_target(check-libcxx-device DEPENDS check-cxx)
+endif()
+
+
 if (LIBCXX_GENERATE_COVERAGE)
   include(CodeCoverage)
   set(output_dir "${CMAKE_CURRENT_BINARY_DIR}/coverage")

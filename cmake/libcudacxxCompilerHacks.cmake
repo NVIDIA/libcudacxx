@@ -72,7 +72,7 @@ if ((NOT "NVCXX" STREQUAL "${CMAKE_CUDA_COMPILER_ID}"))
     set(tmp "${CMAKE_CUDA_HOST_COMPILER}")
     unset(CMAKE_CUDA_HOST_COMPILER CACHE)
     message(FATAL_ERROR
-      "For convenience, Thrust's test harness uses CMAKE_CXX_COMPILER for the "
+      "For convenience, libcudacxx's test harness uses CMAKE_CXX_COMPILER for the "
       "CUDA host compiler. Refusing to overwrite specified "
       "CMAKE_CUDA_HOST_COMPILER -- please reconfigure without setting this "
       "variable. Currently:\n"

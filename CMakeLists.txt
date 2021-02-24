@@ -26,6 +26,7 @@ option(LIBCUDACXX_ENABLE_STATIC_LIBRARY "Enable building the full C++ stdlib sta
     ${_libcudacxx_enable_static_library})
 option(LIBCUDACXX_ENABLE_LIBCUDACXX_TESTS "Enable libcu++ tests." ON)
 option(LIBCUDACXX_ENABLE_LIBCXX_TESTS "Enable upstream libc++ tests." OFF)
+option(LIBCUDACXX_ENABLE_LIBCXX_DEVICE_TESTS "Enable upstream device libc++ tests." OFF)
 option(LIBCUDACXX_ENABLE_LIBCXXABI_TESTS "Enable upstream libc++abi tests." OFF)
 option(LIBCUDACXX_ENABLE_LIBUNWIND_TESTS "Enable upstream libunwind tests." OFF)
 
@@ -46,6 +47,7 @@ endif ()
 
 set(_libcudacxx_enable_upstream_tests OFF)
 if (LIBCUDACXX_ENABLE_LIBCXX_TESTS
+    OR LIBCUDACXX_ENABLE_LIBCXX_DEVICE_TESTS
     OR LIBCUDACXX_ENABLE_LIBCXXABI_TESTS
     OR LIBCUDACXX_ENABLE_LIBUNWIND_TESTS)
   set(_libcudacxx_enable_upstream_tests ON)
@@ -150,10 +152,21 @@ if (_libcudacxx_enable_tests)
     add_subdirectory(test)
   endif ()
 
+  if (LIBCUDACXX_ENABLE_LIBCXX_DEVICE_TESTS)
+    option(LIBCXX_INCLUDE_DEVICE_TESTS "" ON)
+    set(_libcudacxx_add_libcxx  ON)
+    set(LIBCXX_ENABLE_FILESYSTEM OFF CACHE BOOL "" FORCE)
+
+    foreach (COMPUTE_ARCH ${LIBCUDACXX_COMPUTE_ARCHS})
+      # Only build for one architecture, pick last in string
+      set(LIBCXX_COMPUTE_ARCHS "${COMPUTE_ARCH}")
+    endforeach ()
+  endif()
+
   if (LIBCUDACXX_ENABLE_LIBCXX_TESTS)
     option(LIBCXX_INCLUDE_TESTS "" ON)
 
-    set(_libcudacxx_add_libcxx ON)
+    set(_libcudacxx_add_libcxx  ON)
   endif ()
 
   if (LIBCUDACXX_ENABLE_LIBCXXABI_TESTS)

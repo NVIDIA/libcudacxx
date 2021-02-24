@@ -756,6 +756,7 @@ isunordered(_A1 __lcpp_x, _A2 __lcpp_y) _NOEXCEPT
 #endif  // isunordered
 
 // abs
+#if !defined(_LIBCUDACXX_COMPILER_PGI)
 
 #undef abs
 #undef labs
@@ -1552,6 +1553,8 @@ template <class _A1>
 inline _LIBCUDACXX_INLINE_VISIBILITY
 typename std::enable_if<std::is_integral<_A1>::value, double>::type
 trunc(_A1 __lcpp_x) _NOEXCEPT {return ::trunc((double)__lcpp_x);}
+
+#endif // _LIBCUDACXX_COMPILER_PGIC
 
 } // extern "C++"
 
