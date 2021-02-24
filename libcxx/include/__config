@@ -1000,6 +1000,10 @@ typedef __char32_t char32_t;
 #endif // _LIBCUDACXX_COMPILER_[CLANG|GCC|MSVC|IBM|NVRTC]
 
 #if defined(_LIBCUDACXX_COMPILER_PGI) && !defined(__cuda_std__)
+// Prevent math_functions.h or other CUDART utilities from searching for libstdc++ by the non-existence of libc++
+#if defined(CUDA_VERSION)
+#define _LIBCPP_VERSION 100
+#endif
 // Forcefully disable visibility controls when used as the standard library with NVC++.
 // TODO: reevaluate.
 #define _LIBCUDACXX_HIDE_FROM_ABI
