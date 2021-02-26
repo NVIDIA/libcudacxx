@@ -23,7 +23,7 @@ Feature availability:
   -  duration functions e.g., `floor`, `ceil`, `round`
   -  Note: Timezone and clocks added in C++20 are not available
 - C++17 features from `<type_traits>` available in C++14:
-  - Convenience `_v` aliases such is `is_same_v`
+  - Convenience `_v` aliases such as `is_same_v`
   - `void_t`
   - Trait operations: `conjunction`,`negation`,`disjunction`
   - `invoke_result`
