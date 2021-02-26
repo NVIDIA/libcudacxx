@@ -15,9 +15,19 @@ Typically, library features are only available in the particular C++ Standard ve
 
 In effort to make library features available to a broader set of users, the NVIDIA C++ Standard Library relaxes this restriction. 
 libcu++ makes a best-effort to provide access to C++ Standard Library features in older C++ Standard versions than they were introduced. 
-For example, the Calendar functionality added to `<chrono>` in C++20 is made available in C++14. 
+For example, the calendar functionality added to `<chrono>` in C++20 is made available in C++14. 
 
-TODO: List exactly what is backported
+Feature availability:
+- C++17 an C++20 features of`<chrono>` available in C++14:
+  -  calendar functionality e.g., `year`,`month`,`day`,`year_month_day`
+  -  duration functions e.g., `floor`, `ceil`, `round`
+  -  Note: Timezone and clocks added in C++20 are not available
+- C++17 features from `<type_traits>` available in C++14:
+  - Convenience `_v` aliases such is `is_same_v`
+  - `void_t`
+  - Trait operations: `conjunction`,`negation`,`disjunction`
+  - `invoke_result`
+
 
 
 ## Synchronization Library
