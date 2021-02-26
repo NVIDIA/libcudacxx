@@ -19,8 +19,8 @@ For example, the calendar functionality added to `<chrono>` in C++20 is made ava
 
 Feature availability:
 - C++17 an C++20 features of`<chrono>` available in C++14:
-  -  calendar functionality e.g., `year`,`month`,`day`,`year_month_day`
-  -  duration functions e.g., `floor`, `ceil`, `round`
+  -  calendar functionality, e.g., `year`,`month`,`day`,`year_month_day`
+  -  duration functions, e.g., `floor`, `ceil`, `round`
   -  Note: Timezone and clocks added in C++20 are not available
 - C++17 features from `<type_traits>` available in C++14:
   - Convenience `_v` aliases such as `is_same_v`
