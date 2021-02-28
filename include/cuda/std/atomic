@@ -159,7 +159,11 @@ struct atomic<_Tp*, _Sco>
     _Tp* operator-=(ptrdiff_t __op) noexcept          {return fetch_sub(__op) - __op;}
 };
 
-inline __host__ __device__ void atomic_thread_fence(memory_order __m, thread_scope _Scope = thread_scope_system) {
+inline __host__ __device__ void atomic_thread_fence(memory_order __m, thread_scope
+#ifdef __CUDA_ARCH__
+_Scope
+#endif
+= thread_scope_system) {
 #ifdef __CUDA_ARCH__
     switch(_Scope) {
     case thread_scope_system:
