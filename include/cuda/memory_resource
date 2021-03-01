@@ -24,7 +24,7 @@
 
 _LIBCUDACXX_BEGIN_NAMESPACE_CUDA
 
-/**
+/*!
  * @brief Specifies the kind of memory of an allocation.
  *
  * Memory allocation kind determines where memory can be accessed and the
@@ -38,7 +38,7 @@ enum class memory_kind {
   host     ///< System memory only accessible from host code
 };
 
-/**
+/*!
  * @brief Tag type for the default context of `memory_resource`.
  *
  * Default context in which storage may be used immediately on any thread or any
@@ -65,7 +65,7 @@ struct __get_context_impl<any_context> {
 
 } // namespace detail
 
-/**
+/*!
  * @brief Abstract interface for context specific memory allocation.
  *
  * @tparam _Kind The `memory_kind` of the allocated memory.
@@ -82,7 +82,7 @@ public:
 
   virtual ~memory_resource() = default;
 
-  /**
+  /*!
    * @brief Returns the resource's execution context
    *
    * Inherited from base class
@@ -90,7 +90,7 @@ public:
    * context get_context() const noexcept;
    */
 
-  /**
+  /*!
    * @brief Allocates storage of size at least `__bytes` bytes.
    *
    * The returned storage is aligned to the specified `__alignment` if such
@@ -110,7 +110,7 @@ public:
     return do_allocate(__bytes, __alignment);
   }
 
-  /**
+  /*!
    * @brief Deallocates the storage pointed to by `__p`.
    *
    * `__p` must have been returned by a prior call to `allocate(__bytes,
@@ -133,7 +133,7 @@ public:
     do_deallocate(__p, __bytes, __alignment);
   }
 
-  /**
+  /*!
    * @brief Compare this resource to another.
    *
    * Two resources compare equal if and only if memory allocated from one
@@ -219,7 +219,7 @@ private:
 #endif // defined(_LIBCUDACXX_STD_PMR_NS)
 #endif // _LIBCUDACXX_STD_VER > 14
 
-/**
+/*!
  * @brief Abstract interface for CUDA stream-ordered memory allocation.
  *
  * "Stream-ordered memory allocation" extends the CUDA programming model to
@@ -252,7 +252,7 @@ public:
   using memory_resource<_Kind>::kind;
   using memory_resource<_Kind>::default_alignment;
 
-  /**
+  /*!
    * @brief Allocates storage of size at least `__bytes` bytes in stream order
    * on `__stream`.
    *
@@ -273,7 +273,7 @@ public:
     return do_allocate_async(__bytes, default_alignment, __stream);
   }
 
-  /**
+  /*!
    * @brief Allocates storage of size at least `__bytes` bytes in stream order
    * on `__stream`.
    *
@@ -297,7 +297,7 @@ public:
     return do_allocate_async(__bytes, __alignment, __stream);
   }
 
-  /**
+  /*!
    * @brief Deallocates the storage pointed to by `__p` in stream order on
    * `__stream`.
    *
@@ -328,7 +328,7 @@ public:
     do_deallocate_async(__p, __bytes, default_alignment, __stream);
   }
 
-  /**
+  /*!
    * @brief Deallocates the storage pointed to by `__p` in stream order on
    * `__stream`.
    *
