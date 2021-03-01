@@ -31,6 +31,9 @@ _LIBCUDACXX_BEGIN_NAMESPACE_CUDA
  */
 class stream_view {
 public:
+
+  using value_type = cudaStream_t;
+
   /**
    * \brief Constructs a `stream_view` of the "default" CUDA stream.
    *
