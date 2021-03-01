@@ -41,7 +41,9 @@ public:
   constexpr stream_view() noexcept = default;
 
   /**
-   * \brief Constructs a `stream_view` from a `cudaStream_t` handle
+   * \brief Constructs a `stream_view` from a `cudaStream_t` handle.
+   * 
+   * This constructor provides implicit conversion from `cudaStream_t`.
    *
    * \note: It is the callers responsibilty to ensure the `stream_view` does not
    * outlive the stream identified by the `cudaStream_t` handle.
