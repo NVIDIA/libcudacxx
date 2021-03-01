@@ -20,7 +20,7 @@
 _LIBCUDACXX_BEGIN_NAMESPACE_CUDA
 
 /**
- * @brief Exception thrown when a CUDA runtime error is encountered.
+ * \brief Exception thrown when a CUDA runtime error is encountered.
  *
  */
 struct cuda_error : ::std::runtime_error {
