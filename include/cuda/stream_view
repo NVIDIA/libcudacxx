@@ -24,6 +24,10 @@ _LIBCUDACXX_BEGIN_NAMESPACE_CUDA
 /**
  * \brief A non-owning wrapper for a `cudaStream_t`.
  *
+ * `stream_view` is a non-owning "view" type similar to `std::span` or `std::string_view`. 
+ * \see https://en.cppreference.com/w/cpp/container/span and 
+ * \see https://en.cppreference.com/w/cpp/string/basic_string_view
+ *
  */
 class stream_view {
 public:
@@ -48,10 +52,10 @@ public:
   /// Disallow construction from an `int`, e.g., `0`.
   stream_view(int) = delete;
 
-  /// Disallow construction from `nullptr`
+  /// Disallow construction from `nullptr`.
   stream_view(std::nullptr_t) = delete;
 
-  /// Returns the wrapped `cudaStream_t` handle
+  /// Returns the wrapped `cudaStream_t` handle.
   constexpr cudaStream_t get() const noexcept { return __stream; }
 
   /**
