@@ -94,7 +94,7 @@ public:
    * @brief Allocates storage of size at least `__bytes` bytes.
    *
    * The returned storage is aligned to the specified `__alignment` if such
-   * alignment is supported.
+   * alignment is supported. Otherwise throws.
    *
    * Storage may be accessed immediately within the execution context returned
    * by `get_context()`, otherwise synchronization is required.
@@ -254,7 +254,8 @@ public:
    * it on any other stream (or the host) requires first synchronizing with
    * `__stream`.
    *
-   * @throws If the storage of the requested size cannot be obtained.
+   * @throws If the storage of the requested size and `default_alignment` cannot
+   * be obtained.
    *
    * @param __bytes The size in bytes of the allocation.
    * @param __stream The stream on which to perform the allocation.
@@ -275,7 +276,8 @@ public:
    * on any other stream (or the host) requires first synchronizing with
    * `__stream`.
    *
-   * @throws If the storage of the requested size cannot be obtained.
+   * @throws If the storage of the requested size and alignment cannot be
+   * obtained.
    *
    * @param __bytes The size in bytes of the allocation.
    * @param __alignment The alignment of the allocation
