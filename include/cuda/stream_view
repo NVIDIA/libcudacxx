@@ -52,7 +52,7 @@ public:
    * outlive the stream identified by the `cudaStream_t` handle.
    *
    */
-  constexpr stream_view(cudaStream_t stream) : __stream{stream} {}
+  constexpr stream_view(value_type stream) : __stream{stream} {}
 
   /// Disallow construction from an `int`, e.g., `0`.
   stream_view(int) = delete;
@@ -61,7 +61,7 @@ public:
   stream_view(std::nullptr_t) = delete;
 
   /// Returns the wrapped `cudaStream_t` handle.
-  constexpr cudaStream_t get() const noexcept { return __stream; }
+  constexpr value_type get() const noexcept { return __stream; }
 
   /**
    * \brief Synchronizes the wrapped stream.
@@ -74,7 +74,7 @@ public:
   }
 
 private:
-  cudaStream_t __stream{0}; ///< Handle of the viewed stream
+  value_type __stream{0}; ///< Handle of the viewed stream
 };
 
 /**
