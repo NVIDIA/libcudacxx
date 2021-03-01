@@ -38,7 +38,7 @@ public:
    * \see https://docs.nvidia.com/cuda/cuda-runtime-api/stream-sync-behavior.html
    *
    */
-  constexpr stream_view() = default;
+  constexpr stream_view() noexcept = default;
 
   /**
    * \brief Constructs a `stream_view` from a `cudaStream_t` handle
