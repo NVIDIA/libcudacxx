@@ -173,6 +173,7 @@ inline __host__ __device__ void atomic_thread_fence(memory_order __m, thread_sco
         break;
     }
 #else
+    (void) _Scope;
     ::std::atomic_thread_fence((::std::memory_order)__m);
 #endif
 }
