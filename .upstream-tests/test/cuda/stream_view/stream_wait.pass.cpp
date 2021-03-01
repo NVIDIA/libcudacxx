@@ -21,6 +21,7 @@ int main(int argc, char** argv){
   } catch(...) {
       assert(false && "Should not have thrown");
   }
+  cudaStreamDestroy(s);
 #endif
 
   return 0;
