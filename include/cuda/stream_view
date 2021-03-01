@@ -69,7 +69,7 @@ public:
    * \throws cuda::cuda_error if synchronization fails.
    *
    */
-  void synchronize() const {
+  void wait() const {
     detail::__throw_on_cuda_error(::cudaStreamSynchronize(get()), "Failed to synchronize");
   }
 

@@ -368,7 +368,7 @@ private:
   void *do_allocate(std::size_t __bytes, std::size_t __alignment) override {
     auto const __default_stream = stream_view{};
     auto __p = do_allocate_async(__bytes, __alignment, __default_stream);
-    __default_stream.synchronize();
+    __default_stream.wait();
     return __p;
   }
 
@@ -376,7 +376,7 @@ private:
   void do_deallocate(void *__p, std::size_t __bytes,
                      std::size_t __alignment) override {
     auto const __default_stream = stream_view{};
-    __default_stream.synchronize();
+    __default_stream.wait();
     do_deallocate_async(__p, __bytes, __alignment, __default_stream);
   }
 
