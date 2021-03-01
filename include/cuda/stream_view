@@ -70,7 +70,26 @@ public:
    *
    */
   void wait() const {
-    detail::__throw_on_cuda_error(::cudaStreamSynchronize(get()), "Failed to synchronize");
+    detail::__throw_on_cuda_error(::cudaStreamSynchronize(get()),
+                                  "Failed to synchronize stream.");
+  }
+
+  /**
+   * \brief Queries if all operations on the wrapped stream have completed.
+   * 
+   * \throws cuda::cuda_error if the query fails.
+   *
+   * \return `true` if all operations have completed, or `false` if not.
+   */
+  bool ready() const{
+    auto const __result = ::cudaStreamQuery(get());
+    if(__result == ::cudaSuccess){
+        return true;
+    } else if (__result == ::cudaErrorNotReady){
+        return false;
+    }
+    detail::__throw_on_cuda_error(__result);
+    return false;
   }
 
 private:
