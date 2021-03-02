@@ -98,6 +98,7 @@ if (LIBCUDACXX_ENABLE_STATIC_LIBRARY)
   if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "PGI" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "NVCXX")
     option(LIBUNWIND_ENABLE_PEDANTIC OFF)
     add_definitions(-D__USER_LABEL_PREFIX__=)
+    add_compile_options(--gnu_version=70501)
   endif()
 
   option(LIBUNWIND_ENABLE_STATIC "" ON)
