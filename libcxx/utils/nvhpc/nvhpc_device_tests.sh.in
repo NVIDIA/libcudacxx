@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+# Get utils path
+SCRIPT_ROOT=@CMAKE_CURRENT_SOURCE_DIR@/../utils/nvhpc
+
+# Compiler arguments with filename reparsed
+ARGUMENTS=$(echo @CMAKE_CURRENT_SOURCE_DIR@/../utils/nvhpc/launch_main_as_device.cpp $@ | awk -f $SCRIPT_ROOT/parse_args.awk)
+
+echo "@LIBCXX_COMPILER@ \
+  -cuda \
+  -gpu=cc@LIBCXX_COMPUTE_ARCHS@ $ARGUMENTS" >&2
+
+# Compiler invocation:
+@LIBCXX_COMPILER@ \
+  -cuda \
+  -gpu=cc@LIBCXX_COMPUTE_ARCHS@ $ARGUMENTS
+

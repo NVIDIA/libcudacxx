@@ -87,12 +87,13 @@ if (LIBCXX_INCLUDE_TESTS)
 endif()
 
 if (LIBCXX_INCLUDE_DEVICE_TESTS)
-  set(CMAKE_CXX_COMPILER_ARG1 "${LIBCXX_COMPILER} -stdpar -gpu=cc${LIBCXX_COMPUTE_ARCHS}")
-  set(LIBCXX_COMPILER "${CMAKE_CURRENT_SOURCE_DIR}/../utils/nvhpc/nvhpc_device_tests.sh")
+  configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../utils/nvhpc/nvhpc_device_tests.sh.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/nvhpc_device_tests.sh"
+    @ONLY)
 
-  set(LIBCXX_TEST_COMPILER_FLAGS
-    "${LIBCXX_TEST_COMPILER_FLAGS}"
-    )
+  set(LIBCXX_LIT_SUPP_MODE ".device")
+  set(LIBCXX_COMPILER "${CMAKE_CURRENT_BINARY_DIR}/nvhpc_device_tests.sh")
 
   include(AddLLVM) # for configure_lit_site_cfg and add_lit_testsuit
 

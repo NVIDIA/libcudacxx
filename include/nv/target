@@ -36,9 +36,9 @@ namespace nv {
           sm80_bit | sm86_bit;
 
       // Store a set of targets as a set of bits
-      enum class [[nv::target_bitset]] target_description : base_int_t {
-        none = 0,
-        max = all_hosts | all_devices,
+      struct [[nv::__target_bitset]] target_description {
+        base_int_t targets;
+        constexpr target_description(base_int_t a) : targets(a) { }
       };
       void operator==(target_description, target_description) = delete;
       void operator!=(target_description, target_description) = delete;
@@ -46,13 +46,6 @@ namespace nv {
       void operator<=(target_description, target_description) = delete;
       void operator> (target_description, target_description) = delete;
       void operator>=(target_description, target_description) = delete;
-
-      constexpr base_int_t toint(target_description a) {
-        return static_cast<base_int_t>(a);
-      }
-      constexpr target_description toenum(base_int_t a) {
-        return static_cast<target_description>(a);
-      }
 
       // The type of the user-visible names of the NVIDIA GPU targets
       enum class device_selector : base_int_t {
@@ -105,27 +98,27 @@ namespace nv {
       // Public API for NVIDIA GPUs
 
       constexpr target_description is_exactly(device_selector a) {
-        return toenum(bitexact(a));
+        return target_description(bitexact(a));
       }
 
       constexpr target_description provides(device_selector a) {
-        return toenum(~(bitrounddown(a) - 1) & all_devices);
+        return target_description(~(bitrounddown(a) - 1) & all_devices);
       }
 
       // Boolean operations on target sets
 
       constexpr target_description operator&&(target_description a,
                                               target_description b) {
-        return toenum(toint(a) & toint(b));
+        return target_description(a.targets & b.targets);
       }
 
       constexpr target_description operator||(target_description a,
                                               target_description b) {
-        return toenum(toint(a) | toint(b));
+        return target_description(a.targets | b.targets);
       }
 
       constexpr target_description operator!(target_description a) {
-        return toenum(~toint(a) & (all_devices | all_hosts));
+        return target_description(~a.targets & (all_devices | all_hosts));
       }
     }
 
@@ -134,9 +127,9 @@ namespace nv {
 
     // The predicates for basic host/device selection
     constexpr target_description is_host =
-      detail::toenum(detail::all_hosts);
+      target_description(detail::all_hosts);
     constexpr target_description is_device =
-      detail::toenum(detail::all_devices);
+      target_description(detail::all_devices);
 
     // The public names for NVIDIA GPU architectures
     constexpr device_selector sm35 = device_selector::sm35;

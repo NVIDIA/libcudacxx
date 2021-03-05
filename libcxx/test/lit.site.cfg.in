@@ -41,4 +41,4 @@ config.libcxx_gdb               = "@LIBCXX_GDB@"
 
 # Let the main config do the real work.
 config.loaded_site_config = True
-lit_config.load_config(config, "@LIBCXX_SOURCE_DIR@/test/lit.cfg")
+lit_config.load_config(config, "@LIBCXX_SOURCE_DIR@/test/lit@LIBCXX_LIT_SUPP_MODE@.cfg")
