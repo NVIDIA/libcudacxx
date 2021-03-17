@@ -1,26 +1,28 @@
 //
-#define _NV__CONCAT_EVAL(l, r) l ## r
-#define _NV_CONCAT_EVAL(l, r) _NV__CONCAT_EVAL(l, r)
+#define _NV_CONCAT_EVAL1(l, r) _NV_EVAL(l ## r)
+#define _NV_CONCAT_EVAL2(l, r) _NV_CONCAT_EVAL2(l, r)
+#define _NV_CONCAT_EVAL(l, r) _NV_CONCAT_EVAL1(l, r)
 
-#define _NV_EV_PAREN_R_YES
-#define _NV_EV_PAREN_L_YES
-#define _NV_EV_PAREN_R_NO )
-#define _NV_EV_PAREN_L_NO (
+#define _NV_EVAL2(...) __VA_ARGS__
+#define _NV_EVAL(...) _NV_EVAL2(__VA_ARGS__)
 
-#define _NV_PAREN_TAGS(...) YES, __VA_ARGS__
-#define __NV_PAREN_TAGS _NO,
+#define _NV_REMOVE_PAREN(...) _NV_REMOVE_PAREN1(__VA_ARGS__)
+#define _NV_REMOVE_PAREN1(...) _NV_STRIP_PAREN(_NV_IF(_NV_TEST_PAREN(__VA_ARGS__), (_NV_STRIP_PAREN(__VA_ARGS__)), (__VA_ARGS__)))
 
-#define _NV__CONSUME_TAG(tag, ...) tag
-#define _NV_CONSUME_TAG(...) _NV__CONSUME_TAG(__VA_ARGS__)
-#define _NV__TEST_PAREN(tag, ...) _NV_CONSUME_TAG(_##tag)
-#define _NV_TEST_PAREN(...) _NV__TEST_PAREN(__VA_ARGS__)
+#define _NV_STRIP_PAREN2(...) __VA_ARGS__
+#define _NV_STRIP_PAREN1(...) _NV_STRIP_PAREN2 __VA_ARGS__
+#define _NV_STRIP_PAREN(...) _NV_STRIP_PAREN1(__VA_ARGS__)
 
-#define _NV_FORCE_PAREN(...) \
-    _NV_CONCAT_EVAL(_NV_EV_PAREN_L, _NV_TEST_PAREN(_NV_PAREN_TAGS __VA_ARGS__)) \
-    __VA_ARGS__                                                                 \
-    _NV_CONCAT_EVAL(_NV_EV_PAREN_R, _NV_TEST_PAREN(_NV_PAREN_TAGS __VA_ARGS__))
+#define _NV_TEST_PAREN(...) _NV_TEST_PAREN1(__VA_ARGS__)
+#define _NV_TEST_PAREN1(...) _NV_TEST_PAREN2(_NV_TEST_PAREN_DUMMY __VA_ARGS__)
+#define _NV_TEST_PAREN2(...) _NV_TEST_PAREN3(_NV_CONCAT_EVAL(_, __VA_ARGS__))
+#define _NV_TEST_PAREN3(...) _NV_EVAL(_NV_FIRST_ARG(__VA_ARGS__))
 
-#define _NV__STRIP_PAREN(...) __VA_ARGS__
-#define _NV_STRIP_PAREN(...) _NV__STRIP_PAREN __VA_ARGS__
+#define __NV_PAREN_YES 1
+#define __NV_PAREN_NO 0
 
-#define _NV_REMOVE_PAREN(...) _NV_STRIP_PAREN(_NV_FORCE_PAREN(__VA_ARGS__))
+#define _NV_TEST_PAREN_DUMMY(...) _NV_PAREN_YES
+#define __NV_TEST_PAREN_DUMMY     __NV_PAREN_NO,
+
+#define _NV_FIRST_ARG1(x) x
+#define _NV_FIRST_ARG(x, ...) _NV_FIRST_ARG1(x)

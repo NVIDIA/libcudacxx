@@ -136,7 +136,7 @@
 /// \endcode
 ///
 #define _NV_PP_EXPAND(x) _NV_PP_EXPAND_IMPL0(x)
-#define _NV_PP_EXPAND_IMPL0(x) x
+#define _NV_PP_EXPAND_IMPL0(...) __VA_ARGS__
 
 #define _NV_PP_EXPAND_ARGS(...) _NV_PP_EXPAND_ARGS_IMPL0(__VA_ARGS__)
 #define _NV_PP_EXPAND_ARGS_IMPL0(...) __VA_ARGS__
