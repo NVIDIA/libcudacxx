@@ -28,7 +28,7 @@ int main(int, char**)
       cuda::std::atomic_flag f = ATOMIC_FLAG_INIT;
       assert(f.test_and_set() == 0);
     ),
-    NV_PROVIDES_SM70, (
+    NV_PROVIDES_SM_70, (
       cuda::std::atomic_flag f = ATOMIC_FLAG_INIT;
       assert(f.test_and_set() == 0);
     )

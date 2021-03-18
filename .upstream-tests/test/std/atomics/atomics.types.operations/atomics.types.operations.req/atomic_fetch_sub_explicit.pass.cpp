@@ -91,7 +91,7 @@ void testp()
 int main(int, char**)
 {
     NV_DISPATCH_TARGET(
-        NV_PROVIDES_SM70, (
+        NV_PROVIDES_SM_70, (
             TestEachIntegralType<TestFn, local_memory_selector>()();
             testp<int*, local_memory_selector>();
             testp<const int*, local_memory_selector>();

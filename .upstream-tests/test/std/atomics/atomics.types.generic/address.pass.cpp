@@ -131,7 +131,7 @@ do_test()
                 assert(zero == T(0));
                 zero.~A();
             ),
-            NV_PROVIDES_SM70, (
+            NV_PROVIDES_SM_70, (
                 TEST_ALIGNAS_TYPE(A) char storage[sizeof(A)] = {23};
                 A& zero = *new (storage) A();
                 assert(zero == T(0));
@@ -176,7 +176,7 @@ int main(int, char**)
 {
 
     NV_DISPATCH_TARGET(
-        NV_PROVIDES_SM70, (
+        NV_PROVIDES_SM_70, (
             test_std<cuda::std::atomic<int*>, int*, local_memory_selector>();
             test<cuda::atomic<int*, cuda::thread_scope_system>, int*, local_memory_selector>();
             test<cuda::atomic<int*, cuda::thread_scope_device>, int*, local_memory_selector>();

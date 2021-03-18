@@ -133,7 +133,7 @@ void test()
 int main(int, char**)
 {
     NV_DISPATCH_TARGET(
-        NV_PROVIDES_SM70, (
+        NV_PROVIDES_SM_70, (
             test<local_memory_selector>();
         )
     )

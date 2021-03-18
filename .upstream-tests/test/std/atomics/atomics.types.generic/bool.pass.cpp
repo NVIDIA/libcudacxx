@@ -225,7 +225,7 @@ void do_test()
 #if __cplusplus > 201703L
     {
         NV_DISPATCH_TARGET(
-            NV_PROVIDES_SM70, (
+            NV_PROVIDES_SM_70, (
                 typedef Atomic<Scope> A;
                 TEST_ALIGNAS_TYPE(A) char storage[sizeof(A)] = {1};
                 A& zero = *new (storage) A();
@@ -255,7 +255,7 @@ int main(int, char**)
 {
 
     NV_DISPATCH_TARGET(
-        NV_PROVIDES_SM70, (
+        NV_PROVIDES_SM_70, (
             do_test<cuda_std_atomic, cuda::thread_scope_system, local_memory_selector>();
             do_test<cuda_atomic, cuda::thread_scope_system, local_memory_selector>();
             do_test<cuda_atomic, cuda::thread_scope_device, local_memory_selector>();

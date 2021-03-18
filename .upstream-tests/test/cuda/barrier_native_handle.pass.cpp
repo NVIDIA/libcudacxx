@@ -19,7 +19,7 @@
 int main(int argc, char ** argv)
 {
     NV_IF_TARGET(
-        NV_PROVIDES_SM80, (
+        NV_PROVIDES_SM_80, (
             __shared__ cuda::barrier<cuda::thread_scope_block> b;
             init(&b, 2);
 

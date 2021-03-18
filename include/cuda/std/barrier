@@ -109,7 +109,7 @@ private:
     _LIBCUDACXX_INLINE_VISIBILITY
     bool __try_wait(arrival_token __phase) const {
         NV_DISPATCH_TARGET(
-            NV_PROVIDES_SM80, (
+            NV_PROVIDES_SM_80, (
                 if (__isShared(&__barrier)) {
                     int __ready = 0;
                     asm volatile ("{\n\t"
@@ -147,7 +147,7 @@ public:
     _LIBCUDACXX_INLINE_VISIBILITY
     ~barrier() {
         NV_DISPATCH_TARGET(
-            NV_PROVIDES_SM80, (
+            NV_PROVIDES_SM_80, (
                 if (__isShared(&__barrier)) {
                     asm volatile ("mbarrier.inval.shared.b64 [%0];"
                         :: "r"(static_cast<std::uint32_t>(__cvta_generic_to_shared(&__barrier)))
@@ -160,7 +160,7 @@ public:
     _LIBCUDACXX_INLINE_VISIBILITY
     friend void init(barrier * __b, std::ptrdiff_t __expected, std::__empty_completion __completion = std::__empty_completion()) {
         NV_DISPATCH_TARGET(
-            NV_PROVIDES_SM80, (
+            NV_PROVIDES_SM_80, (
                 if (__isShared(&__b->__barrier)) {
                     asm volatile ("mbarrier.init.shared.b64 [%0], %1;"
                         :: "r"(static_cast<std::uint32_t>(__cvta_generic_to_shared(&__b->__barrier))),
@@ -179,7 +179,7 @@ public:
     arrival_token arrive(std::ptrdiff_t __update = 1)
     {
         NV_DISPATCH_TARGET(
-            NV_PROVIDES_SM80, (
+            NV_PROVIDES_SM_80, (
                 if (__isShared(&__barrier)) {
                     arrival_token __token;
                     if (__update > 1) {
@@ -239,7 +239,7 @@ public:
     void arrive_and_drop()
     {
         NV_DISPATCH_TARGET(
-            NV_PROVIDES_SM80, (
+            NV_PROVIDES_SM_80, (
                 if (__isShared(&__barrier)) {
                     asm volatile ("mbarrier.arrive_drop.shared.b64 _, [%0];"
                         :: "r"(static_cast<std::uint32_t>(__cvta_generic_to_shared(&__barrier)))
@@ -360,7 +360,7 @@ template<thread_scope _Sco, typename _CompF, bool _Is_mbarrier = (_Sco >= thread
 _LIBCUDACXX_INLINE_VISIBILITY
 inline void __memcpy_async_synchronize(barrier<_Sco, _CompF> & __barrier, bool __is_async) {
     NV_DISPATCH_TARGET(
-        NV_PROVIDES_SM80, (
+        NV_PROVIDES_SM_80, (
             if (__is_async) {
                 if (_Is_mbarrier && __isShared(&__barrier)) {
                     asm volatile ("cp.async.mbarrier.arrive.shared.b64 [%0];"
@@ -382,7 +382,7 @@ void inline __memcpy_async(_Group const & __group, char * __destination, char co
     bool __is_async = false;
 
     NV_DISPATCH_TARGET(
-        NV_PROVIDES_SM80, (
+        NV_PROVIDES_SM_80, (
             __is_async = __isShared(__destination) && __isGlobal(__source);
 
             if (__is_async) {

@@ -50,7 +50,7 @@ struct TestFn {
 int main(int, char**)
 {
     NV_DISPATCH_TARGET(
-        NV_PROVIDES_SM70, (
+        NV_PROVIDES_SM_70, (
             TestEachAtomicType<TestFn, local_memory_selector>()();
         )
     )

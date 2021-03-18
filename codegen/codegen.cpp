@@ -98,7 +98,7 @@ int main() {
             out << "static inline __device__ void " << fencename(sem.first, s.first) << "() { asm volatile(\"fence" << sem.second << s.second << ";\":::\"memory\"); }\n";
         out << "static inline __device__ void __atomic_thread_fence_cuda(int __memorder, " << scopenametag(s.first) << ") {\n";
         out << "  NV_DISPATCH_TARGET(\n";
-        out << "    NV_PROVIDES_SM70, (\n";
+        out << "    NV_PROVIDES_SM_70, (\n";
         out << "      switch (__memorder) {\n";
         out << "        case __ATOMIC_SEQ_CST: " << fencename("sc"s, s.first) << "(); break;\n";
         out << "        case __ATOMIC_CONSUME:\n";
@@ -138,7 +138,7 @@ int main() {
                 out << "__device__ void __atomic_load_cuda(const " << cv << "_Type *__ptr, _Type *__ret, int __memorder, " << scopenametag(s.first) << ") {\n";
                 out << "    uint" << (registers[sz] == "r" ? 32 : sz) << "_t __tmp = 0;\n";
                 out << "    NV_DISPATCH_TARGET(\n";
-                out << "      NV_PROVIDES_SM70, (\n";
+                out << "      NV_PROVIDES_SM_70, (\n";
                 out << "        switch (__memorder) {\n";
                 out << "          case __ATOMIC_SEQ_CST: " << fencename("sc"s, s.first) << "();\n";
                 out << "          case __ATOMIC_CONSUME:\n";
@@ -175,7 +175,7 @@ int main() {
                 out << "    uint" << (registers[sz] == "r" ? 32 : sz) << "_t __tmp = 0;\n";
                 out << "    memcpy(&__tmp, __val, " << sz/8 << ");\n";
                 out << "    NV_DISPATCH_TARGET(\n";
-                out << "      NV_PROVIDES_SM70, (\n";
+                out << "      NV_PROVIDES_SM_70, (\n";
                 out << "        switch (__memorder) {\n";
                 out << "          case __ATOMIC_RELEASE: __cuda_store_release_" << sz << "_" << s.first << "(__ptr, __tmp); break;\n";
                 out << "          case __ATOMIC_SEQ_CST: " << fencename("sc"s, s.first) << "();\n";
@@ -234,7 +234,7 @@ int main() {
                         out << "    memcpy(&__old, __expected, " << sz/8 << ");\n";
                         out << "    __old_tmp = __old;\n";
                         out << "    NV_DISPATCH_TARGET(\n";
-                        out << "      NV_PROVIDES_SM70, (\n";
+                        out << "      NV_PROVIDES_SM_70, (\n";
                         out << "        switch (__stronger_order_cuda(__success_memorder, __failure_memorder)) {\n";
                         out << "          case __ATOMIC_SEQ_CST: " << fencename("sc"s, s.first) << "();\n";
                         out << "          case __ATOMIC_CONSUME:\n";
@@ -276,7 +276,7 @@ int main() {
                             out << "    memcpy(&__tmp, &__val, " << sz/8 << ");\n";
                         }
                         out << "    NV_DISPATCH_TARGET(\n";
-                        out << "      NV_PROVIDES_SM70, (\n";
+                        out << "      NV_PROVIDES_SM_70, (\n";
                         out << "        switch (__memorder) {\n";
                         out << "          case __ATOMIC_SEQ_CST: " << fencename("sc"s, s.first) << "();\n";
                         out << "          case __ATOMIC_CONSUME:\n";
@@ -322,7 +322,7 @@ int main() {
                     out << "    __tmp = -__tmp;\n";
                 out << "    __tmp *= sizeof(_Type);\n";
                 out << "    NV_DISPATCH_TARGET(\n";
-                out << "      NV_PROVIDES_SM70, (\n";
+                out << "      NV_PROVIDES_SM_70, (\n";
                 out << "        switch (__memorder) {\n";
                 out << "          case __ATOMIC_SEQ_CST: " << fencename("sc"s, s.first) << "();\n";
                 out << "          case __ATOMIC_CONSUME:\n";

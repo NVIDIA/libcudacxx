@@ -35,7 +35,7 @@ void test()
     assert(f.test_and_set() == 0);
     {
         NV_DISPATCH_TARGET(
-            NV_PROVIDES_SM70, (
+            NV_PROVIDES_SM_70, (
                 typedef cuda::std::atomic_flag A;
                 TEST_ALIGNAS_TYPE(A) char storage[sizeof(A)] = {1};
                 A& zero = *new (storage) A();
@@ -64,7 +64,7 @@ void test()
 int main(int, char**)
 {
     NV_DISPATCH_TARGET(
-        NV_PROVIDES_SM70, (
+        NV_PROVIDES_SM_70, (
             test<local_memory_selector>();
         )
     )

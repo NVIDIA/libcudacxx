@@ -71,7 +71,7 @@ struct TestFunc {
 int main(int, char**)
 {
     NV_DISPATCH_TARGET(
-        NV_PROVIDES_SM60, (
+        NV_PROVIDES_SM_60, (
             TestFunc<UserType, local_memory_selector, cuda::thread_scope_system>()();
             TestEachIntegralType<TestFunc, local_memory_selector, cuda::thread_scope_system>()();
         )

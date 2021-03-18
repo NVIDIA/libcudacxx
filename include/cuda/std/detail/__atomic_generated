@@ -16,7 +16,7 @@ static inline __device__ void __cuda_fence_acq_rel_block() { asm volatile("fence
 static inline __device__ void __cuda_fence_sc_block() { asm volatile("fence.sc.cta;":::"memory"); }
 static inline __device__ void __atomic_thread_fence_cuda(int __memorder, __thread_scope_block_tag) {
   NV_DISPATCH_TARGET(
-    NV_PROVIDES_SM70, (
+    NV_PROVIDES_SM_70, (
       switch (__memorder) {
         case __ATOMIC_SEQ_CST: __cuda_fence_sc_block(); break;
         case __ATOMIC_CONSUME:
@@ -47,7 +47,7 @@ template<class _Type, typename _CUDA_VSTD::enable_if<sizeof(_Type)==4, int>::typ
 __device__ void __atomic_load_cuda(const volatile _Type *__ptr, _Type *__ret, int __memorder, __thread_scope_block_tag) {
     uint32_t __tmp = 0;
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_block();
           case __ATOMIC_CONSUME:
@@ -75,7 +75,7 @@ template<class _Type, typename _CUDA_VSTD::enable_if<sizeof(_Type)==8, int>::typ
 __device__ void __atomic_load_cuda(const volatile _Type *__ptr, _Type *__ret, int __memorder, __thread_scope_block_tag) {
     uint64_t __tmp = 0;
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_block();
           case __ATOMIC_CONSUME:
@@ -104,7 +104,7 @@ __device__ void __atomic_store_cuda(volatile _Type *__ptr, _Type *__val, int __m
     uint32_t __tmp = 0;
     memcpy(&__tmp, __val, 4);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_RELEASE: __cuda_store_release_32_block(__ptr, __tmp); break;
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_block();
@@ -130,7 +130,7 @@ __device__ void __atomic_store_cuda(volatile _Type *__ptr, _Type *__val, int __m
     uint64_t __tmp = 0;
     memcpy(&__tmp, __val, 8);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_RELEASE: __cuda_store_release_64_block(__ptr, __tmp); break;
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_block();
@@ -160,7 +160,7 @@ __device__ bool __atomic_compare_exchange_cuda(volatile _Type *__ptr, _Type *__e
     memcpy(&__old, __expected, 4);
     __old_tmp = __old;
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__stronger_order_cuda(__success_memorder, __failure_memorder)) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_block();
           case __ATOMIC_CONSUME:
@@ -197,7 +197,7 @@ __device__ void __atomic_exchange_cuda(volatile _Type *__ptr, _Type *__val, _Typ
     uint32_t __tmp = 0;
     memcpy(&__tmp, __val, 4);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_block();
           case __ATOMIC_CONSUME:
@@ -233,7 +233,7 @@ __device__ _Type __atomic_fetch_add_cuda(volatile _Type *__ptr, _Type __val, int
     uint32_t __tmp = 0;
     memcpy(&__tmp, &__val, 4);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_block();
           case __ATOMIC_CONSUME:
@@ -270,7 +270,7 @@ __device__ _Type __atomic_fetch_and_cuda(volatile _Type *__ptr, _Type __val, int
     uint32_t __tmp = 0;
     memcpy(&__tmp, &__val, 4);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_block();
           case __ATOMIC_CONSUME:
@@ -307,7 +307,7 @@ __device__ _Type __atomic_fetch_max_cuda(volatile _Type *__ptr, _Type __val, int
     uint32_t __tmp = 0;
     memcpy(&__tmp, &__val, 4);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_block();
           case __ATOMIC_CONSUME:
@@ -344,7 +344,7 @@ __device__ _Type __atomic_fetch_min_cuda(volatile _Type *__ptr, _Type __val, int
     uint32_t __tmp = 0;
     memcpy(&__tmp, &__val, 4);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_block();
           case __ATOMIC_CONSUME:
@@ -381,7 +381,7 @@ __device__ _Type __atomic_fetch_or_cuda(volatile _Type *__ptr, _Type __val, int 
     uint32_t __tmp = 0;
     memcpy(&__tmp, &__val, 4);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_block();
           case __ATOMIC_CONSUME:
@@ -423,7 +423,7 @@ __device__ _Type __atomic_fetch_sub_cuda(volatile _Type *__ptr, _Type __val, int
     uint32_t __tmp = 0;
     memcpy(&__tmp, &__val, 4);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_block();
           case __ATOMIC_CONSUME:
@@ -460,7 +460,7 @@ __device__ _Type __atomic_fetch_xor_cuda(volatile _Type *__ptr, _Type __val, int
     uint32_t __tmp = 0;
     memcpy(&__tmp, &__val, 4);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_block();
           case __ATOMIC_CONSUME:
@@ -498,7 +498,7 @@ __device__ bool __atomic_compare_exchange_cuda(volatile _Type *__ptr, _Type *__e
     memcpy(&__old, __expected, 8);
     __old_tmp = __old;
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__stronger_order_cuda(__success_memorder, __failure_memorder)) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_block();
           case __ATOMIC_CONSUME:
@@ -535,7 +535,7 @@ __device__ void __atomic_exchange_cuda(volatile _Type *__ptr, _Type *__val, _Typ
     uint64_t __tmp = 0;
     memcpy(&__tmp, __val, 8);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_block();
           case __ATOMIC_CONSUME:
@@ -571,7 +571,7 @@ __device__ _Type __atomic_fetch_add_cuda(volatile _Type *__ptr, _Type __val, int
     uint64_t __tmp = 0;
     memcpy(&__tmp, &__val, 8);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_block();
           case __ATOMIC_CONSUME:
@@ -608,7 +608,7 @@ __device__ _Type __atomic_fetch_and_cuda(volatile _Type *__ptr, _Type __val, int
     uint64_t __tmp = 0;
     memcpy(&__tmp, &__val, 8);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_block();
           case __ATOMIC_CONSUME:
@@ -645,7 +645,7 @@ __device__ _Type __atomic_fetch_max_cuda(volatile _Type *__ptr, _Type __val, int
     uint64_t __tmp = 0;
     memcpy(&__tmp, &__val, 8);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_block();
           case __ATOMIC_CONSUME:
@@ -682,7 +682,7 @@ __device__ _Type __atomic_fetch_min_cuda(volatile _Type *__ptr, _Type __val, int
     uint64_t __tmp = 0;
     memcpy(&__tmp, &__val, 8);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_block();
           case __ATOMIC_CONSUME:
@@ -719,7 +719,7 @@ __device__ _Type __atomic_fetch_or_cuda(volatile _Type *__ptr, _Type __val, int 
     uint64_t __tmp = 0;
     memcpy(&__tmp, &__val, 8);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_block();
           case __ATOMIC_CONSUME:
@@ -761,7 +761,7 @@ __device__ _Type __atomic_fetch_sub_cuda(volatile _Type *__ptr, _Type __val, int
     uint64_t __tmp = 0;
     memcpy(&__tmp, &__val, 8);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_block();
           case __ATOMIC_CONSUME:
@@ -798,7 +798,7 @@ __device__ _Type __atomic_fetch_xor_cuda(volatile _Type *__ptr, _Type __val, int
     uint64_t __tmp = 0;
     memcpy(&__tmp, &__val, 8);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_block();
           case __ATOMIC_CONSUME:
@@ -831,7 +831,7 @@ __device__ _Type* __atomic_fetch_add_cuda(_Type *volatile *__ptr, ptrdiff_t __va
     memcpy(&__tmp, &__val, 8);
     __tmp *= sizeof(_Type);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_block();
           case __ATOMIC_CONSUME:
@@ -864,7 +864,7 @@ __device__ _Type* __atomic_fetch_sub_cuda(_Type *volatile *__ptr, ptrdiff_t __va
     __tmp = -__tmp;
     __tmp *= sizeof(_Type);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_block();
           case __ATOMIC_CONSUME:
@@ -894,7 +894,7 @@ static inline __device__ void __cuda_fence_acq_rel_device() { asm volatile("fenc
 static inline __device__ void __cuda_fence_sc_device() { asm volatile("fence.sc.gpu;":::"memory"); }
 static inline __device__ void __atomic_thread_fence_cuda(int __memorder, __thread_scope_device_tag) {
   NV_DISPATCH_TARGET(
-    NV_PROVIDES_SM70, (
+    NV_PROVIDES_SM_70, (
       switch (__memorder) {
         case __ATOMIC_SEQ_CST: __cuda_fence_sc_device(); break;
         case __ATOMIC_CONSUME:
@@ -925,7 +925,7 @@ template<class _Type, typename _CUDA_VSTD::enable_if<sizeof(_Type)==4, int>::typ
 __device__ void __atomic_load_cuda(const volatile _Type *__ptr, _Type *__ret, int __memorder, __thread_scope_device_tag) {
     uint32_t __tmp = 0;
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_device();
           case __ATOMIC_CONSUME:
@@ -953,7 +953,7 @@ template<class _Type, typename _CUDA_VSTD::enable_if<sizeof(_Type)==8, int>::typ
 __device__ void __atomic_load_cuda(const volatile _Type *__ptr, _Type *__ret, int __memorder, __thread_scope_device_tag) {
     uint64_t __tmp = 0;
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_device();
           case __ATOMIC_CONSUME:
@@ -982,7 +982,7 @@ __device__ void __atomic_store_cuda(volatile _Type *__ptr, _Type *__val, int __m
     uint32_t __tmp = 0;
     memcpy(&__tmp, __val, 4);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_RELEASE: __cuda_store_release_32_device(__ptr, __tmp); break;
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_device();
@@ -1008,7 +1008,7 @@ __device__ void __atomic_store_cuda(volatile _Type *__ptr, _Type *__val, int __m
     uint64_t __tmp = 0;
     memcpy(&__tmp, __val, 8);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_RELEASE: __cuda_store_release_64_device(__ptr, __tmp); break;
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_device();
@@ -1038,7 +1038,7 @@ __device__ bool __atomic_compare_exchange_cuda(volatile _Type *__ptr, _Type *__e
     memcpy(&__old, __expected, 4);
     __old_tmp = __old;
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__stronger_order_cuda(__success_memorder, __failure_memorder)) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_device();
           case __ATOMIC_CONSUME:
@@ -1075,7 +1075,7 @@ __device__ void __atomic_exchange_cuda(volatile _Type *__ptr, _Type *__val, _Typ
     uint32_t __tmp = 0;
     memcpy(&__tmp, __val, 4);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_device();
           case __ATOMIC_CONSUME:
@@ -1111,7 +1111,7 @@ __device__ _Type __atomic_fetch_add_cuda(volatile _Type *__ptr, _Type __val, int
     uint32_t __tmp = 0;
     memcpy(&__tmp, &__val, 4);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_device();
           case __ATOMIC_CONSUME:
@@ -1148,7 +1148,7 @@ __device__ _Type __atomic_fetch_and_cuda(volatile _Type *__ptr, _Type __val, int
     uint32_t __tmp = 0;
     memcpy(&__tmp, &__val, 4);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_device();
           case __ATOMIC_CONSUME:
@@ -1185,7 +1185,7 @@ __device__ _Type __atomic_fetch_max_cuda(volatile _Type *__ptr, _Type __val, int
     uint32_t __tmp = 0;
     memcpy(&__tmp, &__val, 4);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_device();
           case __ATOMIC_CONSUME:
@@ -1222,7 +1222,7 @@ __device__ _Type __atomic_fetch_min_cuda(volatile _Type *__ptr, _Type __val, int
     uint32_t __tmp = 0;
     memcpy(&__tmp, &__val, 4);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_device();
           case __ATOMIC_CONSUME:
@@ -1259,7 +1259,7 @@ __device__ _Type __atomic_fetch_or_cuda(volatile _Type *__ptr, _Type __val, int 
     uint32_t __tmp = 0;
     memcpy(&__tmp, &__val, 4);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_device();
           case __ATOMIC_CONSUME:
@@ -1301,7 +1301,7 @@ __device__ _Type __atomic_fetch_sub_cuda(volatile _Type *__ptr, _Type __val, int
     uint32_t __tmp = 0;
     memcpy(&__tmp, &__val, 4);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_device();
           case __ATOMIC_CONSUME:
@@ -1338,7 +1338,7 @@ __device__ _Type __atomic_fetch_xor_cuda(volatile _Type *__ptr, _Type __val, int
     uint32_t __tmp = 0;
     memcpy(&__tmp, &__val, 4);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_device();
           case __ATOMIC_CONSUME:
@@ -1376,7 +1376,7 @@ __device__ bool __atomic_compare_exchange_cuda(volatile _Type *__ptr, _Type *__e
     memcpy(&__old, __expected, 8);
     __old_tmp = __old;
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__stronger_order_cuda(__success_memorder, __failure_memorder)) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_device();
           case __ATOMIC_CONSUME:
@@ -1413,7 +1413,7 @@ __device__ void __atomic_exchange_cuda(volatile _Type *__ptr, _Type *__val, _Typ
     uint64_t __tmp = 0;
     memcpy(&__tmp, __val, 8);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_device();
           case __ATOMIC_CONSUME:
@@ -1449,7 +1449,7 @@ __device__ _Type __atomic_fetch_add_cuda(volatile _Type *__ptr, _Type __val, int
     uint64_t __tmp = 0;
     memcpy(&__tmp, &__val, 8);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_device();
           case __ATOMIC_CONSUME:
@@ -1486,7 +1486,7 @@ __device__ _Type __atomic_fetch_and_cuda(volatile _Type *__ptr, _Type __val, int
     uint64_t __tmp = 0;
     memcpy(&__tmp, &__val, 8);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_device();
           case __ATOMIC_CONSUME:
@@ -1523,7 +1523,7 @@ __device__ _Type __atomic_fetch_max_cuda(volatile _Type *__ptr, _Type __val, int
     uint64_t __tmp = 0;
     memcpy(&__tmp, &__val, 8);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_device();
           case __ATOMIC_CONSUME:
@@ -1560,7 +1560,7 @@ __device__ _Type __atomic_fetch_min_cuda(volatile _Type *__ptr, _Type __val, int
     uint64_t __tmp = 0;
     memcpy(&__tmp, &__val, 8);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_device();
           case __ATOMIC_CONSUME:
@@ -1597,7 +1597,7 @@ __device__ _Type __atomic_fetch_or_cuda(volatile _Type *__ptr, _Type __val, int 
     uint64_t __tmp = 0;
     memcpy(&__tmp, &__val, 8);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_device();
           case __ATOMIC_CONSUME:
@@ -1639,7 +1639,7 @@ __device__ _Type __atomic_fetch_sub_cuda(volatile _Type *__ptr, _Type __val, int
     uint64_t __tmp = 0;
     memcpy(&__tmp, &__val, 8);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_device();
           case __ATOMIC_CONSUME:
@@ -1676,7 +1676,7 @@ __device__ _Type __atomic_fetch_xor_cuda(volatile _Type *__ptr, _Type __val, int
     uint64_t __tmp = 0;
     memcpy(&__tmp, &__val, 8);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_device();
           case __ATOMIC_CONSUME:
@@ -1709,7 +1709,7 @@ __device__ _Type* __atomic_fetch_add_cuda(_Type *volatile *__ptr, ptrdiff_t __va
     memcpy(&__tmp, &__val, 8);
     __tmp *= sizeof(_Type);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_device();
           case __ATOMIC_CONSUME:
@@ -1742,7 +1742,7 @@ __device__ _Type* __atomic_fetch_sub_cuda(_Type *volatile *__ptr, ptrdiff_t __va
     __tmp = -__tmp;
     __tmp *= sizeof(_Type);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_device();
           case __ATOMIC_CONSUME:
@@ -1772,7 +1772,7 @@ static inline __device__ void __cuda_fence_acq_rel_system() { asm volatile("fenc
 static inline __device__ void __cuda_fence_sc_system() { asm volatile("fence.sc.sys;":::"memory"); }
 static inline __device__ void __atomic_thread_fence_cuda(int __memorder, __thread_scope_system_tag) {
   NV_DISPATCH_TARGET(
-    NV_PROVIDES_SM70, (
+    NV_PROVIDES_SM_70, (
       switch (__memorder) {
         case __ATOMIC_SEQ_CST: __cuda_fence_sc_system(); break;
         case __ATOMIC_CONSUME:
@@ -1803,7 +1803,7 @@ template<class _Type, typename _CUDA_VSTD::enable_if<sizeof(_Type)==4, int>::typ
 __device__ void __atomic_load_cuda(const volatile _Type *__ptr, _Type *__ret, int __memorder, __thread_scope_system_tag) {
     uint32_t __tmp = 0;
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_system();
           case __ATOMIC_CONSUME:
@@ -1831,7 +1831,7 @@ template<class _Type, typename _CUDA_VSTD::enable_if<sizeof(_Type)==8, int>::typ
 __device__ void __atomic_load_cuda(const volatile _Type *__ptr, _Type *__ret, int __memorder, __thread_scope_system_tag) {
     uint64_t __tmp = 0;
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_system();
           case __ATOMIC_CONSUME:
@@ -1860,7 +1860,7 @@ __device__ void __atomic_store_cuda(volatile _Type *__ptr, _Type *__val, int __m
     uint32_t __tmp = 0;
     memcpy(&__tmp, __val, 4);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_RELEASE: __cuda_store_release_32_system(__ptr, __tmp); break;
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_system();
@@ -1886,7 +1886,7 @@ __device__ void __atomic_store_cuda(volatile _Type *__ptr, _Type *__val, int __m
     uint64_t __tmp = 0;
     memcpy(&__tmp, __val, 8);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_RELEASE: __cuda_store_release_64_system(__ptr, __tmp); break;
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_system();
@@ -1916,7 +1916,7 @@ __device__ bool __atomic_compare_exchange_cuda(volatile _Type *__ptr, _Type *__e
     memcpy(&__old, __expected, 4);
     __old_tmp = __old;
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__stronger_order_cuda(__success_memorder, __failure_memorder)) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_system();
           case __ATOMIC_CONSUME:
@@ -1953,7 +1953,7 @@ __device__ void __atomic_exchange_cuda(volatile _Type *__ptr, _Type *__val, _Typ
     uint32_t __tmp = 0;
     memcpy(&__tmp, __val, 4);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_system();
           case __ATOMIC_CONSUME:
@@ -1989,7 +1989,7 @@ __device__ _Type __atomic_fetch_add_cuda(volatile _Type *__ptr, _Type __val, int
     uint32_t __tmp = 0;
     memcpy(&__tmp, &__val, 4);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_system();
           case __ATOMIC_CONSUME:
@@ -2026,7 +2026,7 @@ __device__ _Type __atomic_fetch_and_cuda(volatile _Type *__ptr, _Type __val, int
     uint32_t __tmp = 0;
     memcpy(&__tmp, &__val, 4);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_system();
           case __ATOMIC_CONSUME:
@@ -2063,7 +2063,7 @@ __device__ _Type __atomic_fetch_max_cuda(volatile _Type *__ptr, _Type __val, int
     uint32_t __tmp = 0;
     memcpy(&__tmp, &__val, 4);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_system();
           case __ATOMIC_CONSUME:
@@ -2100,7 +2100,7 @@ __device__ _Type __atomic_fetch_min_cuda(volatile _Type *__ptr, _Type __val, int
     uint32_t __tmp = 0;
     memcpy(&__tmp, &__val, 4);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_system();
           case __ATOMIC_CONSUME:
@@ -2137,7 +2137,7 @@ __device__ _Type __atomic_fetch_or_cuda(volatile _Type *__ptr, _Type __val, int 
     uint32_t __tmp = 0;
     memcpy(&__tmp, &__val, 4);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_system();
           case __ATOMIC_CONSUME:
@@ -2179,7 +2179,7 @@ __device__ _Type __atomic_fetch_sub_cuda(volatile _Type *__ptr, _Type __val, int
     uint32_t __tmp = 0;
     memcpy(&__tmp, &__val, 4);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_system();
           case __ATOMIC_CONSUME:
@@ -2216,7 +2216,7 @@ __device__ _Type __atomic_fetch_xor_cuda(volatile _Type *__ptr, _Type __val, int
     uint32_t __tmp = 0;
     memcpy(&__tmp, &__val, 4);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_system();
           case __ATOMIC_CONSUME:
@@ -2254,7 +2254,7 @@ __device__ bool __atomic_compare_exchange_cuda(volatile _Type *__ptr, _Type *__e
     memcpy(&__old, __expected, 8);
     __old_tmp = __old;
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__stronger_order_cuda(__success_memorder, __failure_memorder)) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_system();
           case __ATOMIC_CONSUME:
@@ -2291,7 +2291,7 @@ __device__ void __atomic_exchange_cuda(volatile _Type *__ptr, _Type *__val, _Typ
     uint64_t __tmp = 0;
     memcpy(&__tmp, __val, 8);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_system();
           case __ATOMIC_CONSUME:
@@ -2327,7 +2327,7 @@ __device__ _Type __atomic_fetch_add_cuda(volatile _Type *__ptr, _Type __val, int
     uint64_t __tmp = 0;
     memcpy(&__tmp, &__val, 8);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_system();
           case __ATOMIC_CONSUME:
@@ -2364,7 +2364,7 @@ __device__ _Type __atomic_fetch_and_cuda(volatile _Type *__ptr, _Type __val, int
     uint64_t __tmp = 0;
     memcpy(&__tmp, &__val, 8);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_system();
           case __ATOMIC_CONSUME:
@@ -2401,7 +2401,7 @@ __device__ _Type __atomic_fetch_max_cuda(volatile _Type *__ptr, _Type __val, int
     uint64_t __tmp = 0;
     memcpy(&__tmp, &__val, 8);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_system();
           case __ATOMIC_CONSUME:
@@ -2438,7 +2438,7 @@ __device__ _Type __atomic_fetch_min_cuda(volatile _Type *__ptr, _Type __val, int
     uint64_t __tmp = 0;
     memcpy(&__tmp, &__val, 8);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_system();
           case __ATOMIC_CONSUME:
@@ -2475,7 +2475,7 @@ __device__ _Type __atomic_fetch_or_cuda(volatile _Type *__ptr, _Type __val, int 
     uint64_t __tmp = 0;
     memcpy(&__tmp, &__val, 8);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_system();
           case __ATOMIC_CONSUME:
@@ -2517,7 +2517,7 @@ __device__ _Type __atomic_fetch_sub_cuda(volatile _Type *__ptr, _Type __val, int
     uint64_t __tmp = 0;
     memcpy(&__tmp, &__val, 8);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_system();
           case __ATOMIC_CONSUME:
@@ -2554,7 +2554,7 @@ __device__ _Type __atomic_fetch_xor_cuda(volatile _Type *__ptr, _Type __val, int
     uint64_t __tmp = 0;
     memcpy(&__tmp, &__val, 8);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_system();
           case __ATOMIC_CONSUME:
@@ -2587,7 +2587,7 @@ __device__ _Type* __atomic_fetch_add_cuda(_Type *volatile *__ptr, ptrdiff_t __va
     memcpy(&__tmp, &__val, 8);
     __tmp *= sizeof(_Type);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_system();
           case __ATOMIC_CONSUME:
@@ -2620,7 +2620,7 @@ __device__ _Type* __atomic_fetch_sub_cuda(_Type *volatile *__ptr, ptrdiff_t __va
     __tmp = -__tmp;
     __tmp *= sizeof(_Type);
     NV_DISPATCH_TARGET(
-      NV_PROVIDES_SM70, (
+      NV_PROVIDES_SM_70, (
         switch (__memorder) {
           case __ATOMIC_SEQ_CST: __cuda_fence_sc_system();
           case __ATOMIC_CONSUME:
