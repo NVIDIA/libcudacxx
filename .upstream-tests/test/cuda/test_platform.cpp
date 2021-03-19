@@ -22,8 +22,8 @@ __host__ __device__ void test() {
 
   NV_DISPATCH_TARGET(
     NV_IS_EXACTLY_SM_80, (printf("==sm80 "); printf("invoked"); printf("\n"); test_comma<short, int, float>();),
-    NV_IS_DEVICE,       (printf("device "); printf("invoked"); printf("\n"); test_comma<short, int, float>();),
     NV_PROVIDES_SM_60,   (printf(">=sm60 "); printf("invoked"); printf("\n"); test_comma<short, int, float>();)
+    NV_IS_DEVICE,       (printf("device "); printf("invoked"); printf("\n"); test_comma<short, int, float>();),
   )
 
   NV_DISPATCH_TARGET(
