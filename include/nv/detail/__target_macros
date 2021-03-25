@@ -80,6 +80,36 @@
 #  define _NV_TARGET_PROVIDES(q)   _NV_DEVICE_CHECK(_NV_TARGET_VAL >= q)
 #  define _NV_TARGET_IS_EXACTLY(q) _NV_DEVICE_CHECK(_NV_TARGET_VAL == q)
 
+// NVCC/NVCXX not being used, only host dispatches allowed
+#else
+
+#  define _NV_COMPILER_NVCC
+
+#  define _NV_TARGET_VAL_SM_35 350
+#  define _NV_TARGET_VAL_SM_37 370
+#  define _NV_TARGET_VAL_SM_50 500
+#  define _NV_TARGET_VAL_SM_52 520
+#  define _NV_TARGET_VAL_SM_53 530
+#  define _NV_TARGET_VAL_SM_60 600
+#  define _NV_TARGET_VAL_SM_61 610
+#  define _NV_TARGET_VAL_SM_62 620
+#  define _NV_TARGET_VAL_SM_70 700
+#  define _NV_TARGET_VAL_SM_72 720
+#  define _NV_TARGET_VAL_SM_75 750
+#  define _NV_TARGET_VAL_SM_80 800
+
+// There is a case where __CUDA_ARCH__ is 0 while undefined that can cause host code paths to emit a device code dispatch entry
+#  define _NV_TARGET_VAL 0
+#  define _NV_TARGET_DEF 0
+
+#  define _NV_TARGET_IS_HOST   1
+#  define _NV_TARGET_IS_DEVICE 0
+
+#  define _NV_DEVICE_CHECK(q) (false)
+
+#  define _NV_TARGET_PROVIDES(q)   _NV_DEVICE_CHECK(_NV_TARGET_VAL >= q)
+#  define _NV_TARGET_IS_EXACTLY(q) _NV_DEVICE_CHECK(_NV_TARGET_VAL == q)
+
 #endif
 
 #define _NV_TARGET___NV_PROVIDES_SM_35 (_NV_TARGET_PROVIDES(_NV_TARGET_VAL_SM_35))
