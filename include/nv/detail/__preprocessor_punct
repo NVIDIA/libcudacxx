@@ -32,5 +32,5 @@
 #define _NV_TEST_PAREN_DUMMY(...) _NV_PAREN_YES
 #define __NV_TEST_PAREN_DUMMY     __NV_PAREN_NO,
 
-#define _NV_FIRST_ARG1(x) x
+#define _NV_FIRST_ARG1(x, ...) x
 #define _NV_FIRST_ARG(x, ...) _NV_FIRST_ARG1(x)

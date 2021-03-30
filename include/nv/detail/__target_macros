@@ -36,7 +36,8 @@
 #  define _NV_TARGET___NV_NO_TARGET !_NV_TARGET___NV_ANY_TARGET
 
 #if defined(__NVCOMPILER_CUDA_ARCH__)
-#  define _NV_TARGET_DEF __NVCOMPILER_CUDA_ARCH__
+#    define _NV_TARGET_DEF __NVCOMPILER_CUDA_ARCH__
+#    define _NV_TARGET_MINIMUM_VAL _NV_FIRST_ARG(NV_TARGET_SM_INTEGER_LIST)
 #endif
 
 #  define _NV_TARGET_PROVIDES(q)   nv::target::provides(q)
@@ -61,6 +62,7 @@
 #if defined(__CUDA_ARCH__)
 #    define _NV_TARGET_VAL __CUDA_ARCH__
 #    define _NV_TARGET_DEF __CUDA_ARCH__
+#    define _NV_TARGET_MINIMUM_VAL __CUDA_ARCH__
 #endif
 
 #if defined(__CUDA_ARCH__)
