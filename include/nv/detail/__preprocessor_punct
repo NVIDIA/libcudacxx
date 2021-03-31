@@ -1,4 +1,12 @@
+//===----------------------------------------------------------------------===//
 //
+// Part of libcu++, the C++ Standard Library for your entire system,
+// under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+//
+//===----------------------------------------------------------------------===//
+
 #define _NV_CONCAT_EVAL1(l, r) _NV_EVAL(l ## r)
 #define _NV_CONCAT_EVAL2(l, r) _NV_CONCAT_EVAL2(l, r)
 #define _NV_CONCAT_EVAL(l, r) _NV_CONCAT_EVAL1(l, r)
@@ -24,5 +32,5 @@
 #define _NV_TEST_PAREN_DUMMY(...) _NV_PAREN_YES
 #define __NV_TEST_PAREN_DUMMY     __NV_PAREN_NO,
 
-#define _NV_FIRST_ARG1(x) x
+#define _NV_FIRST_ARG1(x, ...) x
 #define _NV_FIRST_ARG(x, ...) _NV_FIRST_ARG1(x)

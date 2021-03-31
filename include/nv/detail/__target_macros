@@ -1,3 +1,12 @@
+//===----------------------------------------------------------------------===//
+//
+// Part of libcu++, the C++ Standard Library for your entire system,
+// under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+//
+//===----------------------------------------------------------------------===//
+
 #ifndef _NV__TARGET_MACROS
 #define _NV__TARGET_MACROS
 
@@ -17,6 +26,7 @@
 #  define _NV_TARGET_VAL_SM_72 nv::target::sm_72
 #  define _NV_TARGET_VAL_SM_75 nv::target::sm_75
 #  define _NV_TARGET_VAL_SM_80 nv::target::sm_80
+#  define _NV_TARGET_VAL_SM_86 nv::target::sm_86
 
 #  define _NV_TARGET_VAL nv::target::device
 
@@ -27,7 +37,8 @@
 #  define _NV_TARGET___NV_NO_TARGET !_NV_TARGET___NV_ANY_TARGET
 
 #if defined(__NVCOMPILER_CUDA_ARCH__)
-#  define _NV_TARGET_DEF __NVCOMPILER_CUDA_ARCH__
+#    define _NV_TARGET_DEF __NVCOMPILER_CUDA_ARCH__
+#    define _NV_TARGET_MINIMUM_VAL (_NV_FIRST_ARG(NV_TARGET_SM_INTEGER_LIST) * 10)
 #endif
 
 #  define _NV_TARGET_PROVIDES(q)   nv::target::provides(q)
@@ -47,11 +58,13 @@
 #  define _NV_TARGET_VAL_SM_72 720
 #  define _NV_TARGET_VAL_SM_75 750
 #  define _NV_TARGET_VAL_SM_80 800
+#  define _NV_TARGET_VAL_SM_86 860
 
 // There is a case where __CUDA_ARCH__ is 0 while undefined that can cause host code paths to emit a device code dispatch entry
 #if defined(__CUDA_ARCH__)
 #    define _NV_TARGET_VAL __CUDA_ARCH__
 #    define _NV_TARGET_DEF __CUDA_ARCH__
+#    define _NV_TARGET_MINIMUM_VAL __CUDA_ARCH__
 #endif
 
 #if defined(__CUDA_ARCH__)
@@ -71,6 +84,37 @@
 #  define _NV_TARGET_PROVIDES(q)   _NV_DEVICE_CHECK(_NV_TARGET_VAL >= q)
 #  define _NV_TARGET_IS_EXACTLY(q) _NV_DEVICE_CHECK(_NV_TARGET_VAL == q)
 
+// NVCC/NVCXX not being used, only host dispatches allowed
+#else
+
+#  define _NV_COMPILER_NVCC
+
+#  define _NV_TARGET_VAL_SM_35 350
+#  define _NV_TARGET_VAL_SM_37 370
+#  define _NV_TARGET_VAL_SM_50 500
+#  define _NV_TARGET_VAL_SM_52 520
+#  define _NV_TARGET_VAL_SM_53 530
+#  define _NV_TARGET_VAL_SM_60 600
+#  define _NV_TARGET_VAL_SM_61 610
+#  define _NV_TARGET_VAL_SM_62 620
+#  define _NV_TARGET_VAL_SM_70 700
+#  define _NV_TARGET_VAL_SM_72 720
+#  define _NV_TARGET_VAL_SM_75 750
+#  define _NV_TARGET_VAL_SM_80 800
+#  define _NV_TARGET_VAL_SM_86 860
+
+// There is a case where __CUDA_ARCH__ is 0 while undefined that can cause host code paths to emit a device code dispatch entry
+#  define _NV_TARGET_VAL 0
+#  define _NV_TARGET_DEF 0
+
+#  define _NV_TARGET_IS_HOST   1
+#  define _NV_TARGET_IS_DEVICE 0
+
+#  define _NV_DEVICE_CHECK(q) (false)
+
+#  define _NV_TARGET_PROVIDES(q)   _NV_DEVICE_CHECK(_NV_TARGET_VAL >= q)
+#  define _NV_TARGET_IS_EXACTLY(q) _NV_DEVICE_CHECK(_NV_TARGET_VAL == q)
+
 #endif
 
 #define _NV_TARGET___NV_PROVIDES_SM_35 (_NV_TARGET_PROVIDES(_NV_TARGET_VAL_SM_35))
@@ -85,6 +129,7 @@
 #define _NV_TARGET___NV_PROVIDES_SM_72 (_NV_TARGET_PROVIDES(_NV_TARGET_VAL_SM_72))
 #define _NV_TARGET___NV_PROVIDES_SM_75 (_NV_TARGET_PROVIDES(_NV_TARGET_VAL_SM_75))
 #define _NV_TARGET___NV_PROVIDES_SM_80 (_NV_TARGET_PROVIDES(_NV_TARGET_VAL_SM_80))
+#define _NV_TARGET___NV_PROVIDES_SM_86 (_NV_TARGET_PROVIDES(_NV_TARGET_VAL_SM_86))
 
 #define _NV_TARGET___NV_IS_EXACTLY_SM_35 (_NV_TARGET_IS_EXACTLY(_NV_TARGET_VAL_SM_35))
 #define _NV_TARGET___NV_IS_EXACTLY_SM_37 (_NV_TARGET_IS_EXACTLY(_NV_TARGET_VAL_SM_37))
@@ -98,6 +143,7 @@
 #define _NV_TARGET___NV_IS_EXACTLY_SM_72 (_NV_TARGET_IS_EXACTLY(_NV_TARGET_VAL_SM_72))
 #define _NV_TARGET___NV_IS_EXACTLY_SM_75 (_NV_TARGET_IS_EXACTLY(_NV_TARGET_VAL_SM_75))
 #define _NV_TARGET___NV_IS_EXACTLY_SM_80 (_NV_TARGET_IS_EXACTLY(_NV_TARGET_VAL_SM_80))
+#define _NV_TARGET___NV_IS_EXACTLY_SM_86 (_NV_TARGET_IS_EXACTLY(_NV_TARGET_VAL_SM_86))
 
 #define NV_PROVIDES_SM_35   __NV_PROVIDES_SM_35
 #define NV_PROVIDES_SM_37   __NV_PROVIDES_SM_37
@@ -111,6 +157,7 @@
 #define NV_PROVIDES_SM_72   __NV_PROVIDES_SM_72
 #define NV_PROVIDES_SM_75   __NV_PROVIDES_SM_75
 #define NV_PROVIDES_SM_80   __NV_PROVIDES_SM_80
+#define NV_PROVIDES_SM_86   __NV_PROVIDES_SM_86
 
 #define NV_IS_EXACTLY_SM_35 __NV_IS_EXACTLY_SM_35
 #define NV_IS_EXACTLY_SM_37 __NV_IS_EXACTLY_SM_37
@@ -124,6 +171,7 @@
 #define NV_IS_EXACTLY_SM_72 __NV_IS_EXACTLY_SM_72
 #define NV_IS_EXACTLY_SM_75 __NV_IS_EXACTLY_SM_75
 #define NV_IS_EXACTLY_SM_80 __NV_IS_EXACTLY_SM_80
+#define NV_IS_EXACTLY_SM_86 __NV_IS_EXACTLY_SM_86
 
 #define NV_IS_HOST         __NV_IS_HOST
 #define NV_IS_DEVICE       __NV_IS_DEVICE
@@ -217,6 +265,13 @@
 #  define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_80 0
 #endif
 
+
+#if (_NV_TARGET___NV_IS_EXACTLY_SM_86)
+#  define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_86 1
+#else
+#  define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_86 0
+#endif
+
 #if (_NV_TARGET_IS_HOST)
 #  define _NV_TARGET_BOOL___NV_IS_HOST   1
 #  define _NV_TARGET_BOOL___NV_IS_DEVICE 0
@@ -300,6 +355,12 @@
 #  define _NV_TARGET_BOOL___NV_PROVIDES_SM_80 1
 #else
 #  define _NV_TARGET_BOOL___NV_PROVIDES_SM_80 0
+#endif
+
+#if (_NV_TARGET___NV_PROVIDES_SM_86)
+#  define _NV_TARGET_BOOL___NV_PROVIDES_SM_86 1
+#else
+#  define _NV_TARGET_BOOL___NV_PROVIDES_SM_86 0
 #endif
 
 #define _NV_INNER_BLOCK_EXPAND(...) __VA_ARGS__
