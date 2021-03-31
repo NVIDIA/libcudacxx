@@ -46,10 +46,12 @@ private:
     }
 
 
+#if !defined(__CUDACC_RTC__)
     __host__ char* host_static_storage() {
         alignas(T*) static char storage[shared_offset];
         return storage;
     }
+#endif
 
     __host__ __device__
     T *& get_pointer() {
