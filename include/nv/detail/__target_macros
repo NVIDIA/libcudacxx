@@ -61,25 +61,25 @@
 #  define _NV_TARGET_VAL_SM_86 860
 
 // There is a case where __CUDA_ARCH__ is 0 while undefined that can cause host code paths to emit a device code dispatch entry
-#if defined(__CUDA_ARCH__)
+#  if defined(__CUDA_ARCH__)
 #    define _NV_TARGET_VAL __CUDA_ARCH__
 #    define _NV_TARGET_DEF __CUDA_ARCH__
 #    define _NV_TARGET_MINIMUM_VAL __CUDA_ARCH__
-#endif
+#  endif
 
-#if defined(__CUDA_ARCH__)
-#  define _NV_TARGET_IS_HOST   0
-#  define _NV_TARGET_IS_DEVICE 1
-#else
-#  define _NV_TARGET_IS_HOST   1
-#  define _NV_TARGET_IS_DEVICE 0
-#endif
+#  if defined(__CUDA_ARCH__)
+#    define _NV_TARGET_IS_HOST   0
+#    define _NV_TARGET_IS_DEVICE 1
+#  else
+#    define _NV_TARGET_IS_HOST   1
+#    define _NV_TARGET_IS_DEVICE 0
+#  endif
 
-#if defined(_NV_TARGET_VAL)
-#  define _NV_DEVICE_CHECK(q) (q)
-#else
-#  define _NV_DEVICE_CHECK(q) (false)
-#endif
+#  if defined(_NV_TARGET_VAL)
+#    define _NV_DEVICE_CHECK(q) (q)
+#  else
+#    define _NV_DEVICE_CHECK(q) (false)
+#  endif
 
 #  define _NV_TARGET_PROVIDES(q)   _NV_DEVICE_CHECK(_NV_TARGET_VAL >= q)
 #  define _NV_TARGET_IS_EXACTLY(q) _NV_DEVICE_CHECK(_NV_TARGET_VAL == q)
@@ -193,181 +193,181 @@
 
 #elif defined(_NV_COMPILER_NVCC)
 
-#if (_NV_TARGET___NV_IS_EXACTLY_SM_35)
-#  define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_35 1
-#else
-#  define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_35 0
-#endif
+#  if (_NV_TARGET___NV_IS_EXACTLY_SM_35)
+#    define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_35 1
+#  else
+#    define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_35 0
+#  endif
 
-#if (_NV_TARGET___NV_IS_EXACTLY_SM_37)
-#  define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_37 1
-#else
-#  define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_37 0
-#endif
+#  if (_NV_TARGET___NV_IS_EXACTLY_SM_37)
+#    define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_37 1
+#  else
+#    define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_37 0
+#  endif
 
-#if (_NV_TARGET___NV_IS_EXACTLY_SM_50)
-#  define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_50 1
-#else
-#  define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_50 0
-#endif
+#  if (_NV_TARGET___NV_IS_EXACTLY_SM_50)
+#    define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_50 1
+#  else
+#    define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_50 0
+#  endif
 
-#if (_NV_TARGET___NV_IS_EXACTLY_SM_52)
-#  define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_52 1
-#else
-#  define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_52 0
-#endif
+#  if (_NV_TARGET___NV_IS_EXACTLY_SM_52)
+#    define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_52 1
+#  else
+#    define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_52 0
+#  endif
 
-#if (_NV_TARGET___NV_IS_EXACTLY_SM_53)
-#  define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_53 1
-#else
-#  define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_53 0
-#endif
+#  if (_NV_TARGET___NV_IS_EXACTLY_SM_53)
+#    define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_53 1
+#  else
+#    define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_53 0
+#  endif
 
-#if (_NV_TARGET___NV_IS_EXACTLY_SM_60)
-#  define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_60 1
-#else
-#  define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_60 0
-#endif
+#  if (_NV_TARGET___NV_IS_EXACTLY_SM_60)
+#    define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_60 1
+#  else
+#    define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_60 0
+#  endif
 
-#if (_NV_TARGET___NV_IS_EXACTLY_SM_61)
-#  define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_61 1
-#else
-#  define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_61 0
-#endif
+#  if (_NV_TARGET___NV_IS_EXACTLY_SM_61)
+#    define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_61 1
+#  else
+#    define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_61 0
+#  endif
 
-#if (_NV_TARGET___NV_IS_EXACTLY_SM_62)
-#  define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_62 1
-#else
-#  define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_62 0
-#endif
+#  if (_NV_TARGET___NV_IS_EXACTLY_SM_62)
+#    define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_62 1
+#  else
+#    define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_62 0
+#  endif
 
-#if (_NV_TARGET___NV_IS_EXACTLY_SM_70)
-#  define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_70 1
-#else
-#  define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_70 0
-#endif
+#  if (_NV_TARGET___NV_IS_EXACTLY_SM_70)
+#    define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_70 1
+#  else
+#    define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_70 0
+#  endif
 
-#if (_NV_TARGET___NV_IS_EXACTLY_SM_72)
-#  define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_72 1
-#else
-#  define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_72 0
-#endif
+#  if (_NV_TARGET___NV_IS_EXACTLY_SM_72)
+#    define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_72 1
+#  else
+#    define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_72 0
+#  endif
 
-#if (_NV_TARGET___NV_IS_EXACTLY_SM_75)
-#  define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_75 1
-#else
-#  define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_75 0
-#endif
+#  if (_NV_TARGET___NV_IS_EXACTLY_SM_75)
+#    define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_75 1
+#  else
+#    define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_75 0
+#  endif
 
-#if (_NV_TARGET___NV_IS_EXACTLY_SM_80)
-#  define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_80 1
-#else
-#  define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_80 0
-#endif
+#  if (_NV_TARGET___NV_IS_EXACTLY_SM_80)
+#    define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_80 1
+#  else
+#    define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_80 0
+#  endif
 
 
-#if (_NV_TARGET___NV_IS_EXACTLY_SM_86)
-#  define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_86 1
-#else
-#  define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_86 0
-#endif
+#  if (_NV_TARGET___NV_IS_EXACTLY_SM_86)
+#    define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_86 1
+#  else
+#    define _NV_TARGET_BOOL___NV_IS_EXACTLY_SM_86 0
+#  endif
 
-#if (_NV_TARGET_IS_HOST)
-#  define _NV_TARGET_BOOL___NV_IS_HOST   1
-#  define _NV_TARGET_BOOL___NV_IS_DEVICE 0
-#else
-#  define _NV_TARGET_BOOL___NV_IS_HOST   0
-#  define _NV_TARGET_BOOL___NV_IS_DEVICE 1
-#endif
+#  if (_NV_TARGET_IS_HOST)
+#    define _NV_TARGET_BOOL___NV_IS_HOST   1
+#    define _NV_TARGET_BOOL___NV_IS_DEVICE 0
+#  else
+#    define _NV_TARGET_BOOL___NV_IS_HOST   0
+#    define _NV_TARGET_BOOL___NV_IS_DEVICE 1
+#  endif
 
-#  define _NV_TARGET_BOOL___NV_ANY_TARGET 1
-#  define _NV_TARGET_BOOL___NV_NO_TARGET 0
+#    define _NV_TARGET_BOOL___NV_ANY_TARGET 1
+#    define _NV_TARGET_BOOL___NV_NO_TARGET 0
 
 // NVCC Greater than stuff
 
-#if (_NV_TARGET___NV_PROVIDES_SM_35)
-#  define _NV_TARGET_BOOL___NV_PROVIDES_SM_35 1
-#else
-#  define _NV_TARGET_BOOL___NV_PROVIDES_SM_35 0
-#endif
+#  if (_NV_TARGET___NV_PROVIDES_SM_35)
+#    define _NV_TARGET_BOOL___NV_PROVIDES_SM_35 1
+#  else
+#    define _NV_TARGET_BOOL___NV_PROVIDES_SM_35 0
+#  endif
 
-#if (_NV_TARGET___NV_PROVIDES_SM_37)
-#  define _NV_TARGET_BOOL___NV_PROVIDES_SM_37 1
-#else
-#  define _NV_TARGET_BOOL___NV_PROVIDES_SM_37 0
-#endif
+#  if (_NV_TARGET___NV_PROVIDES_SM_37)
+#    define _NV_TARGET_BOOL___NV_PROVIDES_SM_37 1
+#  else
+#    define _NV_TARGET_BOOL___NV_PROVIDES_SM_37 0
+#  endif
 
-#if (_NV_TARGET___NV_PROVIDES_SM_50)
-#  define _NV_TARGET_BOOL___NV_PROVIDES_SM_50 1
-#else
-#  define _NV_TARGET_BOOL___NV_PROVIDES_SM_50 0
-#endif
+#  if (_NV_TARGET___NV_PROVIDES_SM_50)
+#    define _NV_TARGET_BOOL___NV_PROVIDES_SM_50 1
+#  else
+#    define _NV_TARGET_BOOL___NV_PROVIDES_SM_50 0
+#  endif
 
-#if (_NV_TARGET___NV_PROVIDES_SM_52)
-#  define _NV_TARGET_BOOL___NV_PROVIDES_SM_52 1
-#else
-#  define _NV_TARGET_BOOL___NV_PROVIDES_SM_52 0
-#endif
+#  if (_NV_TARGET___NV_PROVIDES_SM_52)
+#    define _NV_TARGET_BOOL___NV_PROVIDES_SM_52 1
+#  else
+#    define _NV_TARGET_BOOL___NV_PROVIDES_SM_52 0
+#  endif
 
-#if (_NV_TARGET___NV_PROVIDES_SM_53)
-#  define _NV_TARGET_BOOL___NV_PROVIDES_SM_53 1
-#else
-#  define _NV_TARGET_BOOL___NV_PROVIDES_SM_53 0
-#endif
+#  if (_NV_TARGET___NV_PROVIDES_SM_53)
+#    define _NV_TARGET_BOOL___NV_PROVIDES_SM_53 1
+#  else
+#    define _NV_TARGET_BOOL___NV_PROVIDES_SM_53 0
+#  endif
 
-#if (_NV_TARGET___NV_PROVIDES_SM_60)
-#  define _NV_TARGET_BOOL___NV_PROVIDES_SM_60 1
-#else
-#  define _NV_TARGET_BOOL___NV_PROVIDES_SM_60 0
-#endif
+#  if (_NV_TARGET___NV_PROVIDES_SM_60)
+#    define _NV_TARGET_BOOL___NV_PROVIDES_SM_60 1
+#  else
+#    define _NV_TARGET_BOOL___NV_PROVIDES_SM_60 0
+#  endif
 
-#if (_NV_TARGET___NV_PROVIDES_SM_61)
-#  define _NV_TARGET_BOOL___NV_PROVIDES_SM_61 1
-#else
-#  define _NV_TARGET_BOOL___NV_PROVIDES_SM_61 0
-#endif
+#  if (_NV_TARGET___NV_PROVIDES_SM_61)
+#    define _NV_TARGET_BOOL___NV_PROVIDES_SM_61 1
+#  else
+#    define _NV_TARGET_BOOL___NV_PROVIDES_SM_61 0
+#  endif
 
-#if (_NV_TARGET___NV_PROVIDES_SM_62)
-#  define _NV_TARGET_BOOL___NV_PROVIDES_SM_62 1
-#else
-#  define _NV_TARGET_BOOL___NV_PROVIDES_SM_62 0
-#endif
+#  if (_NV_TARGET___NV_PROVIDES_SM_62)
+#    define _NV_TARGET_BOOL___NV_PROVIDES_SM_62 1
+#  else
+#    define _NV_TARGET_BOOL___NV_PROVIDES_SM_62 0
+#  endif
 
-#if (_NV_TARGET___NV_PROVIDES_SM_70)
-#  define _NV_TARGET_BOOL___NV_PROVIDES_SM_70 1
-#else
-#  define _NV_TARGET_BOOL___NV_PROVIDES_SM_70 0
-#endif
+#  if (_NV_TARGET___NV_PROVIDES_SM_70)
+#    define _NV_TARGET_BOOL___NV_PROVIDES_SM_70 1
+#  else
+#    define _NV_TARGET_BOOL___NV_PROVIDES_SM_70 0
+#  endif
 
-#if (_NV_TARGET___NV_PROVIDES_SM_72)
-#  define _NV_TARGET_BOOL___NV_PROVIDES_SM_72 1
-#else
-#  define _NV_TARGET_BOOL___NV_PROVIDES_SM_72 0
-#endif
+#  if (_NV_TARGET___NV_PROVIDES_SM_72)
+#    define _NV_TARGET_BOOL___NV_PROVIDES_SM_72 1
+#  else
+#    define _NV_TARGET_BOOL___NV_PROVIDES_SM_72 0
+#  endif
 
-#if (_NV_TARGET___NV_PROVIDES_SM_75)
-#  define _NV_TARGET_BOOL___NV_PROVIDES_SM_75 1
-#else
-#  define _NV_TARGET_BOOL___NV_PROVIDES_SM_75 0
-#endif
+#  if (_NV_TARGET___NV_PROVIDES_SM_75)
+#    define _NV_TARGET_BOOL___NV_PROVIDES_SM_75 1
+#  else
+#    define _NV_TARGET_BOOL___NV_PROVIDES_SM_75 0
+#  endif
 
-#if (_NV_TARGET___NV_PROVIDES_SM_80)
-#  define _NV_TARGET_BOOL___NV_PROVIDES_SM_80 1
-#else
-#  define _NV_TARGET_BOOL___NV_PROVIDES_SM_80 0
-#endif
+#  if (_NV_TARGET___NV_PROVIDES_SM_80)
+#    define _NV_TARGET_BOOL___NV_PROVIDES_SM_80 1
+#  else
+#    define _NV_TARGET_BOOL___NV_PROVIDES_SM_80 0
+#  endif
 
-#if (_NV_TARGET___NV_PROVIDES_SM_86)
-#  define _NV_TARGET_BOOL___NV_PROVIDES_SM_86 1
-#else
-#  define _NV_TARGET_BOOL___NV_PROVIDES_SM_86 0
-#endif
+#  if (_NV_TARGET___NV_PROVIDES_SM_86)
+#    define _NV_TARGET_BOOL___NV_PROVIDES_SM_86 1
+#  else
+#    define _NV_TARGET_BOOL___NV_PROVIDES_SM_86 0
+#  endif
 
-#define _NV_INNER_BLOCK_EXPAND(...) __VA_ARGS__
-#define _NV_BLOCK_EXPAND(...) { _NV_REMOVE_PAREN(__VA_ARGS__) }
-#define _NV_ARCH_COND_CAT1(cond) _NV_TARGET_BOOL_##cond
-#define _NV_ARCH_COND_CAT(cond) _NV_EVAL(_NV_ARCH_COND_CAT1(cond))
-#define _NV_TARGET_IF(cond, t, ...) _NV_IF(_NV_ARCH_COND_CAT(cond), t, __VA_ARGS__)
+#  define _NV_INNER_BLOCK_EXPAND(...) __VA_ARGS__
+#  define _NV_BLOCK_EXPAND(...) { _NV_REMOVE_PAREN(__VA_ARGS__) }
+#  define _NV_ARCH_COND_CAT1(cond) _NV_TARGET_BOOL_##cond
+#  define _NV_ARCH_COND_CAT(cond) _NV_EVAL(_NV_ARCH_COND_CAT1(cond))
+#  define _NV_TARGET_IF(cond, t, ...) _NV_IF(_NV_ARCH_COND_CAT(cond), t, __VA_ARGS__)
 
 #endif // _NV_COMPILER_NVCC
 
