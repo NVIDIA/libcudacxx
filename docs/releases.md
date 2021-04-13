@@ -6,9 +6,9 @@ nav_order: 4
 
 # Releases
 
-* The latest ABI version is always the default.
+The latest ABI version is always the default.
 
-| API Version | ABI Version(s)* | Included In            | Summary                               |
+| API Version | ABI Version(s)  | Included In            | Summary                               |
 |-------------|-----------------|------------------------|---------------------------------------|
 | 1.0.0       | 1               | CUDA 10.2              | Atomics, type traits                  |
 | 1.1.0       | 2               | CUDA 11.0 Early Access | Barriers, latches, semaphores, clocks |
