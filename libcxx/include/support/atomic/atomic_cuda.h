@@ -45,21 +45,19 @@
 #define __ATOMIC_THREAD 10
 #endif //__ATOMIC_BLOCK
 
-_LIBCUDACXX_BEGIN_NAMESPACE_CUDA
+// TODO:
+// How to get this into cuda::???
 
-namespace detail {
-
-    inline __host__ __device__ int __stronger_order_cuda(int __a, int __b) {
-        int const __max = __a > __b ? __a : __b;
-        if(__max != __ATOMIC_RELEASE)
-            return __max;
-        static int const __xform[] = {
-            __ATOMIC_RELEASE,
-            __ATOMIC_ACQ_REL,
-            __ATOMIC_ACQ_REL,
-            __ATOMIC_RELEASE };
-        return __xform[__a < __b ? __a : __b];
-    }
+inline __host__ __device__ int __stronger_order_cuda(int __a, int __b) {
+    int const __max = __a > __b ? __a : __b;
+    if(__max != __ATOMIC_RELEASE)
+        return __max;
+    static int const __xform[] = {
+        __ATOMIC_RELEASE,
+        __ATOMIC_ACQ_REL,
+        __ATOMIC_ACQ_REL,
+        __ATOMIC_RELEASE };
+    return __xform[__a < __b ? __a : __b];
 }
 
 enum thread_scope {
@@ -72,45 +70,46 @@ enum thread_scope {
 #define _LIBCUDACXX_ATOMIC_SCOPE_TYPE ::cuda::thread_scope
 #define _LIBCUDACXX_ATOMIC_SCOPE_DEFAULT ::cuda::thread_scope::system
 
-namespace detail {
+struct __thread_scope_thread_tag { };
+struct __thread_scope_block_tag { };
+struct __thread_scope_device_tag { };
+struct __thread_scope_system_tag { };
 
-    struct __thread_scope_thread_tag { };
-    struct __thread_scope_block_tag { };
-    struct __thread_scope_device_tag { };
-    struct __thread_scope_system_tag { };
+template<int _Scope>  struct __scope_enum_to_tag { };
+/* This would be the implementation once an actual thread-scope backend exists.
+template<> struct __scope_enum_to_tag<(int)thread_scope_thread> {
+    using type = __thread_scope_thread_tag; };
+Until then: */
+template<> struct __scope_enum_to_tag<(int)thread_scope_thread> {
+    using type = __thread_scope_block_tag; };
+template<> struct __scope_enum_to_tag<(int)thread_scope_block> {
+    using type = __thread_scope_block_tag; };
+template<> struct __scope_enum_to_tag<(int)thread_scope_device> {
+    using type = __thread_scope_device_tag; };
+template<> struct __scope_enum_to_tag<(int)thread_scope_system> {
+    using type = __thread_scope_system_tag; };
 
-    template<int _Scope>  struct __scope_enum_to_tag { };
-    /* This would be the implementation once an actual thread-scope backend exists.
-    template<> struct __scope_enum_to_tag<(int)thread_scope_thread> {
-        using type = __thread_scope_thread_tag; };
-    Until then: */
-    template<> struct __scope_enum_to_tag<(int)thread_scope_thread> {
-        using type = __thread_scope_block_tag; };
-    template<> struct __scope_enum_to_tag<(int)thread_scope_block> {
-        using type = __thread_scope_block_tag; };
-    template<> struct __scope_enum_to_tag<(int)thread_scope_device> {
-        using type = __thread_scope_device_tag; };
-    template<> struct __scope_enum_to_tag<(int)thread_scope_system> {
-        using type = __thread_scope_system_tag; };
+template<int _Scope>
+__host__ __device__ auto constexpr __scope_tag() ->
+        typename __scope_enum_to_tag<_Scope>::type {
+    return typename __scope_enum_to_tag<_Scope>::type();
+}
+// END TODO
 
-    template<int _Scope>
-    __host__ __device__ auto constexpr __scope_tag() ->
-            typename __scope_enum_to_tag<_Scope>::type {
-        return typename __scope_enum_to_tag<_Scope>::type();
-    }
+// Wrap atomic implementations into a sub-namespace
+namespace host {
+#if defined(_LIBCUDACXX_COMPILER_MSVC)
+#  include "atomic_msvc.h"
+#elif defined (_LIBCUDACXX_HAS_GCC_ATOMIC_IMP)
+#  include "atomic_gcc.h"
+#elif defined (_LIBCUDACXX_HAS_C11_ATOMIC_IMP)
+//TODO
+// #  include "atomic_c11.h"
+#endif
 }
 
-_LIBCUDACXX_END_NAMESPACE_CUDA
-
-#if defined(_LIBCUDACXX_COMPILER_MSVC)
-    // Inject atomic intrinsics built from MSVC compiler intrinsics
-    #include "libcxx/include/support/win32/atomic_msvc.h"
-#endif
-
-#include "__atomic_generated"
-#include "__atomic_derived"
-
-_LIBCUDACXX_BEGIN_NAMESPACE_STD
+#include "atomic_cuda_generated.h"
+#include "atomic_cuda_derived.h"
 
 template <typename _Tp>
 struct __skip_amt { enum {value = 1}; };
@@ -137,7 +136,7 @@ __host__ __device__ inline void __cxx_atomic_thread_fence(int __order) {
             detail::__atomic_thread_fence_cuda(__order, detail::__thread_scope_system_tag());
         ),
         NV_IS_HOST, (
-            __atomic_thread_fence(__order);
+            host::__atomic_thread_fence(__order);
         )
     )
 }
@@ -148,7 +147,7 @@ __host__ __device__ inline void __cxx_atomic_signal_fence(int __order) {
             detail::__atomic_signal_fence_cuda(__order);
         ),
         NV_IS_HOST, (
-            __atomic_signal_fence(__order);
+            host::__atomic_signal_fence(__order);
         )
     )
 }
@@ -230,7 +229,7 @@ __host__ __device__ inline void __cxx_atomic_store(__cxx_atomic_base_impl_defaul
         ),
         NV_IS_HOST, (
             auto __t = __cxx_atomic_alignment_wrap(__val);
-            __atomic_store(&__a->__a_value, &__t, __order);
+            host::__atomic_store(&__a->__a_value, &__t, __order);
         )
     )
 }
@@ -244,7 +243,7 @@ __host__ __device__ inline _Tp __cxx_atomic_load(__cxx_atomic_base_impl_default<
         NV_IS_HOST, (
             alignas(_Tp) unsigned char __buf[sizeof(_Tp)];
             auto* __dest = reinterpret_cast<_Tp*>(__buf);
-            __atomic_load(&__a->__a_value, __dest, __order);
+            host::__atomic_load(&__a->__a_value, __dest, __order);
             return __cxx_atomic_alignment_unwrap(*__dest);
         )
     )
@@ -260,7 +259,7 @@ __host__ __device__ inline _Tp __cxx_atomic_exchange(__cxx_atomic_base_impl_defa
             alignas(_Tp) unsigned char __buf[sizeof(_Tp)];
             auto* __dest = reinterpret_cast<_Tp*>(__buf);
             auto __t = __cxx_atomic_alignment_wrap(__val);
-            __atomic_exchange(&__a->__a_value, &__t, __dest, __order);
+            host::__atomic_exchange(&__a->__a_value, &__t, __dest, __order);
             return __cxx_atomic_alignment_unwrap(*__dest);
         )
     )
@@ -275,7 +274,7 @@ __host__ __device__ inline bool __cxx_atomic_compare_exchange_strong(__cxx_atomi
             __result = detail::__atomic_compare_exchange_n_cuda(&__a->__a_value, &__tmp, __cxx_atomic_alignment_wrap(__val), false, __success, __failure, detail::__scope_tag<_Sco>());
         ),
         NV_IS_HOST, (
-            __result = __atomic_compare_exchange(&__a->__a_value, &__tmp, &__val, false, __success, __failure);
+            __result = host::__atomic_compare_exchange(&__a->__a_value, &__tmp, &__val, false, __success, __failure);
         )
     )
     *__expected = __cxx_atomic_alignment_unwrap(__tmp);
@@ -291,7 +290,7 @@ __host__ __device__ inline bool __cxx_atomic_compare_exchange_weak(__cxx_atomic_
             __result = detail::__atomic_compare_exchange_n_cuda(&__a->__a_value, &__tmp, __cxx_atomic_alignment_wrap(__val), true, __success, __failure, detail::__scope_tag<_Sco>());
         ),
         NV_IS_HOST, (
-            __result = __atomic_compare_exchange(&__a->__a_value, &__tmp, &__val, true, __success, __failure);
+            __result = host::__atomic_compare_exchange(&__a->__a_value, &__tmp, &__val, true, __success, __failure);
         )
     )
     *__expected = __cxx_atomic_alignment_unwrap(__tmp);
@@ -305,7 +304,7 @@ __host__ __device__ inline _Tp __cxx_atomic_fetch_add(__cxx_atomic_base_impl_def
             return detail::__atomic_fetch_add_cuda(&__a->__a_value, __delta, __order, detail::__scope_tag<_Sco>());
         ),
         NV_IS_HOST, (
-            return __atomic_fetch_add(&__a->__a_value, __delta, __order);
+            return host::__atomic_fetch_add(&__a->__a_value, __delta, __order);
         )
     )
 }
@@ -317,7 +316,7 @@ __host__ __device__ inline _Tp* __cxx_atomic_fetch_add(__cxx_atomic_base_impl_de
             return detail::__atomic_fetch_add_cuda(&__a->__a_value, __delta, __order, detail::__scope_tag<_Sco>());
         ),
         NV_IS_HOST, (
-            return __atomic_fetch_add(&__a->__a_value, __delta * __skip_amt<_Tp*>::value, __order);
+            return host::__atomic_fetch_add(&__a->__a_value, __delta * __skip_amt<_Tp*>::value, __order);
         )
     )
 }
@@ -329,7 +328,7 @@ __host__ __device__ inline _Tp __cxx_atomic_fetch_sub(__cxx_atomic_base_impl_def
             return detail::__atomic_fetch_sub_cuda(&__a->__a_value, __delta, __order, detail::__scope_tag<_Sco>());
         ),
         NV_IS_HOST, (
-            return __atomic_fetch_sub(&__a->__a_value, __delta, __order);
+            return host::__atomic_fetch_sub(&__a->__a_value, __delta, __order);
         )
     )
 }
@@ -341,7 +340,7 @@ __host__ __device__ inline _Tp* __cxx_atomic_fetch_sub(__cxx_atomic_base_impl_de
             return detail::__atomic_fetch_sub_cuda(&__a->__a_value, __delta, __order, detail::__scope_tag<_Sco>());
         ),
         NV_IS_HOST, (
-            return __atomic_fetch_sub(&__a->__a_value, __delta * __skip_amt<_Tp*>::value, __order);
+            return host::__atomic_fetch_sub(&__a->__a_value, __delta * __skip_amt<_Tp*>::value, __order);
         )
     )
 }
@@ -353,7 +352,7 @@ __host__ __device__ inline _Tp __cxx_atomic_fetch_and(__cxx_atomic_base_impl_def
             return detail::__atomic_fetch_and_cuda(&__a->__a_value, __pattern, __order, detail::__scope_tag<_Sco>());
         ),
         NV_IS_HOST, (
-            return __atomic_fetch_and(&__a->__a_value, __pattern, __order);
+            return host::__atomic_fetch_and(&__a->__a_value, __pattern, __order);
         )
     )
 }
@@ -365,7 +364,7 @@ __host__ __device__ inline _Tp __cxx_atomic_fetch_or(__cxx_atomic_base_impl_defa
             return detail::__atomic_fetch_or_cuda(&__a->__a_value, __pattern, __order, detail::__scope_tag<_Sco>());
         ),
         NV_IS_HOST, (
-            return __atomic_fetch_or(&__a->__a_value, __pattern, __order);
+            return host::__atomic_fetch_or(&__a->__a_value, __pattern, __order);
         )
     )
 }
@@ -377,7 +376,7 @@ __host__ __device__ inline _Tp __cxx_atomic_fetch_xor(__cxx_atomic_base_impl_def
             return detail::__atomic_fetch_xor_cuda(&__a->__a_value, __pattern, __order, detail::__scope_tag<_Sco>());
         ),
         NV_IS_HOST, (
-            return __atomic_fetch_xor(&__a->__a_value, __pattern, __order);
+            return host::__atomic_fetch_xor(&__a->__a_value, __pattern, __order);
         )
     )
 }
@@ -508,5 +507,3 @@ template <typename _Tp, int _Sco>
 using __cxx_atomic_base_impl = typename conditional<sizeof(_Tp) < 4,
                                     __cxx_atomic_base_impl_small<_Tp, _Sco>,
                                     __cxx_atomic_base_impl_default<_Tp, _Sco> >::type;
-
-_LIBCUDACXX_END_NAMESPACE_STD
