@@ -127,6 +127,10 @@ namespace nv {
       target_description(detail::all_hosts);
     constexpr target_description is_device =
       target_description(detail::all_devices);
+    constexpr target_description any_target =
+      target_description(detail::all_hosts | detail::all_devices);
+    constexpr target_description no_target =
+      target_description(detail::all_hosts & detail::all_devices);
 
     // The public names for NVIDIA GPU architectures
     constexpr sm_selector sm_35 = sm_selector::sm_35;

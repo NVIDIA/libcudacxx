@@ -31,8 +31,8 @@
 #  define _NV_TARGET___NV_IS_HOST nv::target::is_host
 #  define _NV_TARGET___NV_IS_DEVICE nv::target::is_device
 
-#  define _NV_TARGET___NV_ANY_TARGET (nv::target::is_host || nv::target::is_device)
-#  define _NV_TARGET___NV_NO_TARGET !_NV_TARGET___NV_ANY_TARGET
+#  define _NV_TARGET___NV_ANY_TARGET (nv::target::any_target)
+#  define _NV_TARGET___NV_NO_TARGET (nv::target::no_target)
 
 #  if defined(NV_TARGET_SM_INTEGER_LIST)
 #    define _NV_TARGET_MINIMUM_VAL (_NV_FIRST_ARG(NV_TARGET_SM_INTEGER_LIST) * 10)
@@ -273,8 +273,8 @@
 #    define _NV_TARGET_BOOL___NV_IS_DEVICE 1
 #  endif
 
-#    define _NV_TARGET_BOOL___NV_ANY_TARGET 1
-#    define _NV_TARGET_BOOL___NV_NO_TARGET 0
+#  define _NV_TARGET_BOOL___NV_ANY_TARGET 1
+#  define _NV_TARGET_BOOL___NV_NO_TARGET 0
 
 // NVCC Greater than stuff
 
