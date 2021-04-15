@@ -13,7 +13,7 @@
 
 #if defined(__NVCC__)
 #  define TEST_NVCC
-#elif defined(__PGIC__)
+#elif defined(__NVCOMPILER)
 #  define TEST_NVCXX
 #else
 #  define TEST_HOST
@@ -65,20 +65,20 @@ __host__ __device__ void test() {
 
   NV_IF_TARGET(
     NV_IS_HOST,
-      (static_assert(arch_val == 0);),
-      (static_assert(arch_val != 0);)
+      (static_assert(arch_val == 0, "cuda arch expected 0");),
+      (static_assert(arch_val != 0, "cuda arch expected !0");)
   )
 
   // Some additional tests, but briefly exercise the parenthesis hacks on NVCC
   NV_IF_TARGET(
     NV_IS_DEVICE,
-      static_assert(arch_val != 0);,
-      static_assert(arch_val == 0);
+      static_assert(arch_val != 0, "cuda arch expected !0");,
+      static_assert(arch_val == 0, "cuda arch expected 0");
   )
 
   NV_DISPATCH_TARGET(
-    NV_IS_DEVICE, static_assert(arch_val != 0);,
-    NV_IS_HOST,   static_assert(arch_val == 0);
+    NV_IS_DEVICE, static_assert(arch_val != 0, "cuda arch expected !0");,
+    NV_IS_HOST,   static_assert(arch_val == 0, "cuda arch expected 0");
   )
 
   NV_IF_TARGET(
@@ -201,20 +201,20 @@ void test() {
 
   NV_IF_TARGET(
     NV_IS_HOST,
-      (static_assert(arch_val == 0);),
-      (static_assert(arch_val != 0);)
+      (static_assert(arch_val == 0, "cuda arch expected 0");),
+      (static_assert(arch_val != 0, "cuda arch expected !0");)
   )
 
-  // Some additional tests, but briefly exercise the parenthesis hacks on NVCC
+  // Some additional tests, but briefly exercise the parenthesis hacks on host compilers
   NV_IF_TARGET(
     NV_IS_DEVICE,
-      static_assert(arch_val != 0);,
-      static_assert(arch_val == 0);
+      static_assert(arch_val != 0, "cuda arch expected !0");,
+      static_assert(arch_val == 0, "cuda arch expected 0");
   )
 
   NV_DISPATCH_TARGET(
-    NV_IS_DEVICE, static_assert(arch_val != 0);,
-    NV_IS_HOST,   static_assert(arch_val == 0);
+    NV_IS_DEVICE, static_assert(arch_val != 0, "cuda arch expected !0");,
+    NV_IS_HOST,   static_assert(arch_val == 0, "cuda arch expected 0");
   )
 
   NV_IF_TARGET(

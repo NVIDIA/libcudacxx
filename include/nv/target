@@ -11,7 +11,7 @@
 
 #if defined(__NVCC__) || defined(__CUDACC_RTC__)
 #  define _NV_COMPILER_NVCC
-#elif defined(__PGIC__)
+#elif defined(__NVCOMPILER)
 #  define _NV_COMPILER_NVCXX
 
 namespace nv {

@@ -28,18 +28,15 @@
 #  define _NV_TARGET_VAL_SM_80 nv::target::sm_80
 #  define _NV_TARGET_VAL_SM_86 nv::target::sm_86
 
-#  define _NV_TARGET_VAL nv::target::device
-
 #  define _NV_TARGET___NV_IS_HOST nv::target::is_host
 #  define _NV_TARGET___NV_IS_DEVICE nv::target::is_device
 
 #  define _NV_TARGET___NV_ANY_TARGET (nv::target::is_host || nv::target::is_device)
 #  define _NV_TARGET___NV_NO_TARGET !_NV_TARGET___NV_ANY_TARGET
 
-#if defined(__NVCOMPILER_CUDA_ARCH__)
-#    define _NV_TARGET_DEF __NVCOMPILER_CUDA_ARCH__
+#  if defined(NV_TARGET_SM_INTEGER_LIST)
 #    define _NV_TARGET_MINIMUM_VAL (_NV_FIRST_ARG(NV_TARGET_SM_INTEGER_LIST) * 10)
-#endif
+#  endif
 
 #  define _NV_TARGET_PROVIDES(q)   nv::target::provides(q)
 #  define _NV_TARGET_IS_EXACTLY(q) nv::target::is_exactly(q)
@@ -60,10 +57,8 @@
 #  define _NV_TARGET_VAL_SM_80 800
 #  define _NV_TARGET_VAL_SM_86 860
 
-// There is a case where __CUDA_ARCH__ is 0 while undefined that can cause host code paths to emit a device code dispatch entry
 #  if defined(__CUDA_ARCH__)
 #    define _NV_TARGET_VAL __CUDA_ARCH__
-#    define _NV_TARGET_DEF __CUDA_ARCH__
 #    define _NV_TARGET_MINIMUM_VAL __CUDA_ARCH__
 #  endif
 
@@ -103,9 +98,7 @@
 #  define _NV_TARGET_VAL_SM_80 800
 #  define _NV_TARGET_VAL_SM_86 860
 
-// There is a case where __CUDA_ARCH__ is 0 while undefined that can cause host code paths to emit a device code dispatch entry
 #  define _NV_TARGET_VAL 0
-#  define _NV_TARGET_DEF 0
 
 #  define _NV_TARGET_IS_HOST   1
 #  define _NV_TARGET_IS_DEVICE 0
@@ -182,11 +175,11 @@
 // Platform invoke mechanisms
 #if defined(_NV_COMPILER_NVCXX)
 
-#define _NV_ARCH_COND(q) (_NV_TARGET_##q)
+#  define _NV_ARCH_COND(q) (_NV_TARGET_##q)
 
-#define _NV_BLOCK_EXPAND(...) _NV_REMOVE_PAREN(__VA_ARGS__)
+#  define _NV_BLOCK_EXPAND(...) _NV_REMOVE_PAREN(__VA_ARGS__)
 
-#define _NV_TARGET_IF(cond, t, ...) \
+#  define _NV_TARGET_IF(cond, t, ...) \
     (if target _NV_ARCH_COND(cond) {    \
       _NV_BLOCK_EXPAND(t)        \
     } else { _NV_BLOCK_EXPAND(__VA_ARGS__) })
