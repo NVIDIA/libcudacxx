@@ -11,6 +11,26 @@ It pulls in the latest version of upstream libc++ and marks the beginning of
 
 !-->
 
+## libcu++ 1.5.0 (CUDA Toolkit 11.4)
+
+libcu++ 1.5.0 is a major release.  It adds `<nv/target>`, 
+the library support header for the new `if target`
+target specialization mechanism.
+
+Supported ABI Versions: 3 (default) and 2.
+
+Included in: CUDA Toolkit 11.4.
+
+### New Features
+
+- `<nv/target>` - Portability macros for NVCC/NVC++ and other compilers.
+
+### Issues Fixed
+
+- [Documentation](https://nvidia.github.io/libcudacxx): Several typo fixes.
+- #126: Compiler warnings in <cuda/atomic>.
+    - Thanks to anstellaire for this contribution.
+
 ## libcu++ 1.4.1 (CUDA Toolkit 11.3)
 
 libcu++ 1.4.1 is a minor bugfix release.
