@@ -12,6 +12,34 @@
 
 #include "__preprocessor"
 
+#  define _NV_TARGET_ARCH_TO_SELECTOR_350 nv::target::sm_35
+#  define _NV_TARGET_ARCH_TO_SELECTOR_370 nv::target::sm_37
+#  define _NV_TARGET_ARCH_TO_SELECTOR_500 nv::target::sm_50
+#  define _NV_TARGET_ARCH_TO_SELECTOR_520 nv::target::sm_52
+#  define _NV_TARGET_ARCH_TO_SELECTOR_530 nv::target::sm_53
+#  define _NV_TARGET_ARCH_TO_SELECTOR_600 nv::target::sm_60
+#  define _NV_TARGET_ARCH_TO_SELECTOR_610 nv::target::sm_61
+#  define _NV_TARGET_ARCH_TO_SELECTOR_620 nv::target::sm_62
+#  define _NV_TARGET_ARCH_TO_SELECTOR_700 nv::target::sm_70
+#  define _NV_TARGET_ARCH_TO_SELECTOR_720 nv::target::sm_72
+#  define _NV_TARGET_ARCH_TO_SELECTOR_750 nv::target::sm_75
+#  define _NV_TARGET_ARCH_TO_SELECTOR_800 nv::target::sm_80
+#  define _NV_TARGET_ARCH_TO_SELECTOR_860 nv::target::sm_86
+
+#  define _NV_TARGET_ARCH_TO_SM_350 35
+#  define _NV_TARGET_ARCH_TO_SM_370 37
+#  define _NV_TARGET_ARCH_TO_SM_500 50
+#  define _NV_TARGET_ARCH_TO_SM_520 52
+#  define _NV_TARGET_ARCH_TO_SM_530 53
+#  define _NV_TARGET_ARCH_TO_SM_600 60
+#  define _NV_TARGET_ARCH_TO_SM_610 61
+#  define _NV_TARGET_ARCH_TO_SM_620 62
+#  define _NV_TARGET_ARCH_TO_SM_700 70
+#  define _NV_TARGET_ARCH_TO_SM_720 72
+#  define _NV_TARGET_ARCH_TO_SM_750 75
+#  define _NV_TARGET_ARCH_TO_SM_800 80
+#  define _NV_TARGET_ARCH_TO_SM_860 86
+
 #if defined(_NV_COMPILER_NVCXX)
 
 #  define _NV_TARGET_VAL_SM_35 nv::target::sm_35
@@ -36,10 +64,11 @@
 #  define _NV_TARGET___NV_ANY_TARGET (nv::target::is_host || nv::target::is_device)
 #  define _NV_TARGET___NV_NO_TARGET !_NV_TARGET___NV_ANY_TARGET
 
-#if defined(__NVCOMPILER_CUDA_ARCH__)
-#    define _NV_TARGET_DEF __NVCOMPILER_CUDA_ARCH__
-#    define _NV_TARGET_MINIMUM_VAL (_NV_FIRST_ARG(NV_TARGET_SM_INTEGER_LIST) * 10)
-#endif
+#  if defined(NV_TARGET_SM_INTEGER_LIST)
+#    define NV_TARGET_MINIMUM_SM_SELECTOR _NV_FIRST_ARG(NV_TARGET_SM_SELECTOR_LIST)
+#    define NV_TARGET_MINIMUM_SM_INTEGER _NV_FIRST_ARG(NV_TARGET_SM_INTEGER_LIST)
+#    define __CUDA_MINIMUM_ARCH__ _NV_CONCAT_EVAL(_NV_FIRST_ARG(NV_TARGET_SM_INTEGER_LIST), 0)
+#  endif
 
 #  define _NV_TARGET_PROVIDES(q)   nv::target::provides(q)
 #  define _NV_TARGET_IS_EXACTLY(q) nv::target::is_exactly(q)
@@ -63,8 +92,9 @@
 // There is a case where __CUDA_ARCH__ is 0 while undefined that can cause host code paths to emit a device code dispatch entry
 #  if defined(__CUDA_ARCH__)
 #    define _NV_TARGET_VAL __CUDA_ARCH__
-#    define _NV_TARGET_DEF __CUDA_ARCH__
-#    define _NV_TARGET_MINIMUM_VAL __CUDA_ARCH__
+#    define NV_TARGET_MINIMUM_SM_SELECTOR _NV_CONCAT_EVAL(_NV_TARGET_ARCH_TO_SELECTOR_, __CUDA_ARCH__)
+#    define NV_TARGET_MINIMUM_SM_INTEGER _NV_CONCAT_EVAL(_NV_TARGET_ARCH_TO_SM_, __CUDA_ARCH__)
+#    define __CUDA_MINIMUM_ARCH__ __CUDA_ARCH__
 #  endif
 
 #  if defined(__CUDA_ARCH__)
