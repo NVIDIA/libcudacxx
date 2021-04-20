@@ -8,3 +8,7 @@
 libcudacxx/.git
 libcudacxx/libcxx/.git
 libcudacxx/.upstream-tests/.git
+!pgi
+!icc
+!clang
+
