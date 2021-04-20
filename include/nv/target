@@ -13,6 +13,14 @@
 #  define _NV_COMPILER_NVCC
 #elif defined(__NVCOMPILER)
 #  define _NV_COMPILER_NVCXX
+#else
+#endif
+
+#if defined(_NV_COMPILER_NVCXX)
+#  define _NV_BITSET_ATTRIBUTE [[nv::__target_bitset]]
+#else
+#  define _NV_BITSET_ATTRIBUTE
+#endif
 
 namespace nv {
   namespace target {
@@ -45,7 +53,7 @@ namespace nv {
           sm_80_bit | sm_86_bit;
 
       // Store a set of targets as a set of bits
-      struct [[nv::__target_bitset]] target_description {
+      struct _NV_BITSET_ATTRIBUTE target_description {
         base_int_t targets;
         constexpr target_description(base_int_t a) : targets(a) { }
       };
@@ -151,8 +159,6 @@ namespace nv {
     using detail::provides;
   }
 }
-
-#endif
 
 #include "detail/__target_macros"
 
