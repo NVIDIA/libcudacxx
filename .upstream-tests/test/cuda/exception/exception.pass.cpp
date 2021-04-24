@@ -15,7 +15,9 @@
 
 #include <cuda_runtime_api.h>
 
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
 void test_throw() { throw cuda::cuda_error{cudaErrorInvalidKernelImage}; }
+#endif
 
 int main(int argc, char **argv) {
 
@@ -32,6 +34,7 @@ int main(int argc, char **argv) {
   assert(e2.what() == msg + ": cudaErrorMemoryAllocation: out of memory");
   assert(e2.code() == cudaErrorMemoryAllocation);
 
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
   try {
     test_throw();
   } catch (cuda::cuda_error const &e) {
@@ -48,6 +51,7 @@ int main(int argc, char **argv) {
            std::string{
                "cudaErrorInvalidKernelImage: device kernel image is invalid"});
   }
+#endif // _LIBCUDACXX_NO_EXCEPTIONS
 #endif // __CUDA_ARCH__
 
   return 0;

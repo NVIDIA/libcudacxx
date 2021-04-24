@@ -9,6 +9,7 @@
 
 #include <cuda/stream_view>
 #include <cassert>
+#include "../exception_helper.h"
 
 int main(int argc, char** argv){
 
@@ -16,10 +17,10 @@ int main(int argc, char** argv){
   cudaStream_t s;
   cudaStreamCreate(&s);
   cuda::stream_view sv{s};
-  try{
+  _LIBCUDACXX_TEST_TRY {
     sv.wait();
-  } catch(...) {
-      assert(false && "Should not have thrown");
+  } _LIBCUDACXX_TEST_CATCH(...) {
+    assert(false && "Should not have thrown");
   }
   cudaStreamDestroy(s);
 #endif

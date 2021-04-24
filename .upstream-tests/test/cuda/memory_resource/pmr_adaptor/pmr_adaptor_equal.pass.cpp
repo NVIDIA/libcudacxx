@@ -26,7 +26,7 @@ namespace pmr = ::std::pmr;
 namespace pmr = ::std::experimental::pmr;
 #endif
 
-template <cuda::memory_kind Kind>
+template <typename Kind>
 class derived_resource : public cuda::memory_resource<Kind> {
 public:
 private:
@@ -43,7 +43,7 @@ private:
   }
 };
 
-template <cuda::memory_kind Kind>
+template <typename Kind>
 class more_derived : public derived_resource<Kind> {
 public:
 private:
@@ -77,7 +77,7 @@ void test_equal(cuda::pmr_adaptor<P1> const &lhs,
   assert_equal(*pmr_rhs, *pmr_lhs);
 }
 
-template <cuda::memory_kind Kind>
+template <typename Kind>
 void test_pmr_adaptor_equality(){
   derived_resource<Kind> d;
   cuda::pmr_adaptor a_raw{&d};

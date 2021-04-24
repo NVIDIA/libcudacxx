@@ -16,8 +16,8 @@
 struct custom_context {};
 
 
-template <cuda::memory_kind Kind>
-class derived_resource : public cuda::memory_resource<Kind, custom_context> {
+template <typename MemoryKind>
+class derived_resource : public cuda::memory_resource<MemoryKind, custom_context> {
 public:
 private:
   void *do_allocate(cuda::std::size_t, cuda::std::size_t) override {
@@ -28,14 +28,14 @@ private:
   custom_context do_get_context() const noexcept override { return custom_context{}; }
 };
 
-template <cuda::memory_kind Kind> void test_derived_resource() {
-  using derived = derived_resource<Kind>;
+template <typename MemoryKind> void test_derived_resource() {
+  using derived = derived_resource<MemoryKind>;
   static_assert(std::is_same<typename derived::context, custom_context>::value, "");
   derived d;
   auto context = d.get_context();
   static_assert(std::is_same<decltype(context), custom_context>::value, "");
 
-  using base = cuda::memory_resource<Kind, custom_context>;
+  using base = cuda::memory_resource<MemoryKind, custom_context>;
   static_assert(std::is_same<typename base::context, custom_context>::value, "");
   base* b = &d;
   auto base_context = b->get_context();
@@ -48,7 +48,7 @@ int main(int argc, char **argv) {
 #ifndef __CUDA_ARCH__
   test_derived_resource<cuda::memory_kind::host>();
   test_derived_resource<cuda::memory_kind::device>();
-  test_derived_resource<cuda::memory_kind::unified>();
+  test_derived_resource<cuda::memory_kind::managed>();
   test_derived_resource<cuda::memory_kind::pinned>();
 #endif
 

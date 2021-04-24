@@ -10,21 +10,32 @@
 #ifndef _LIBCUDACXX_CUDA_UTIL
 #define _LIBCUDACXX_CUDA_UTIL
 
-#include "../exception"
-#include "../std/detail/__config"
-#include "../std/detail/__pragma_push"
-#include "../std/version"
+#include "cuda/std/detail/__config"
+#include "cuda/std/detail/__pragma_push"
+
+#include <iosfwd>  // for string forward decl
+
+#include <cuda/exception>
+
+#ifdef _LIBCUDACXX_NO_EXCEPTIONS
+#include <cstdlib>
+#endif
+#include "cuda/std/detail/__pragma_push"
 
 #include <cuda_runtime_api.h>
-#include <string>
 
 _LIBCUDACXX_BEGIN_NAMESPACE_CUDA
 
 namespace detail {
+inline _LIBCUDACXX_INLINE_VISIBILITY
 void __throw_on_cuda_error(::cudaError_t __error, char const *__msg) {
   if (::cudaSuccess != __error) {
     ::cudaGetLastError(); // Clear CUDA error state
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
     throw cuda::cuda_error{__error, __msg};
+#else
+    ::std::abort();
+#endif
   }
 }
 

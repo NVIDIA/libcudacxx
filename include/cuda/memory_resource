@@ -10,6 +10,7 @@
 #ifndef _CUDA_MEMORY_RESOURCE
 #define _CUDA_MEMORY_RESOURCE
 
+#include <memory>
 #include "std/cstddef"
 #include "std/detail/__config"
 #include "std/detail/__pragma_push"
@@ -25,17 +26,33 @@
 _LIBCUDACXX_BEGIN_NAMESPACE_CUDA
 
 /*!
- * \brief Specifies the kind of memory of an allocation.
+ * \brief Groups the tag types denoting the kind of memory of an allocation.
  *
  * Memory allocation kind determines where memory can be accessed and the
  * performance characteristics of accesses.
  *
+ * This is not a closed set, the user code can define custom memory kinds.
  */
-enum class memory_kind {
-  device,  ///< Device memory accessible only from device
-  unified, ///< Unified memory accessible from both host and device
-  pinned,  ///< Page-locked system memory accessible from both host and device
-  host     ///< System memory only accessible from host code
+namespace memory_kind {
+  /*!
+   * \brief Ordinary host memory
+   */
+  struct host;
+
+  /*!
+   * \brief Device memory, as allocated by cudaMalloc.
+   */
+  struct device;
+
+  /*!
+   * \brief Device-accessible host memory.
+   */
+  struct pinned;
+
+  /*!
+   * \brief Virtual memory that is automatically migrated between the host and devices.
+   */
+  struct managed;
 };
 
 /*!
@@ -47,38 +64,239 @@ enum class memory_kind {
 struct any_context{};
 
 namespace detail {
-struct __empty {};
-
-template <typename _Context> 
-struct __get_context_impl {
-  _Context get_context() const noexcept { return do_get_context(); }
-private:
+template <typename _Context>
+class __get_context_impl {
+protected:
   virtual _Context do_get_context() const noexcept = 0;
 };
 
-// Specialization for the default `any_context` returns a default constructed
-// object and removes the virtual `do_get_context` from the class
 template<>
-struct __get_context_impl<any_context> {
-  any_context get_context() const noexcept { return any_context{}; }
+class __get_context_impl<any_context> {
+protected:
+  virtual any_context do_get_context() const noexcept { return any_context{}; }
 };
 
-} // namespace detail
+}  // namespace detail
+
+template <typename _ResourcePointer, typename... _Properties>
+class basic_resource_view;
+
+/*!
+ * \brief Groups the tag types denoting the execution environment in which the memory can be accessed
+ *
+ * This is not a closed set, the user code can define custom accessibility.
+ */
+namespace memory_access {
+    struct host;
+    struct device;
+}
+
+/*!
+ * \brief A memory property tag type indicating that the memory can be oversubscribed.
+ *
+ * Oversubscribable memory doesn't need to have backing physical storage at all times.
+ */
+struct oversubscribable;
+
+/*!
+ * \brief A memory property tag type indicating that the memory has a backing physical
+ *        storage in the target location at all times.
+ */
+struct resident;
+
+/*!
+ * \brief Groups the tag types that denote the actual location of the physical storage
+ *
+ * Memory kinds which can be migrated between locations can define multiple locations.
+ */
+namespace memory_location {
+    /*!
+     * \brief A memory property tag type indicating that the memory is located on a device
+     */
+    struct device;
+
+    /*!
+    * \brief A memory property tag type indicating that the memory is located in the host memory
+    */
+    struct host;
+}
+
+
+class memory_resource_base {
+public:
+  static constexpr _CUDA_VSTD::size_t default_alignment = alignof(_CUDA_VSTD::max_align_t);
+
+  /*!
+   * \brief Allocates storage of size at least `__bytes` bytes.
+   *
+   * The returned storage is aligned to the specified `__alignment` if such
+   * alignment is supported. Otherwise throws.
+   *
+   * Storage may be accessed immediately within the execution context returned
+   * by `get_context()`, otherwise synchronization is required.
+   *
+   * \throws If storage of the requested size and alignment cannot be obtained.
+   *
+   * \param __bytes The size in bytes of the allocation
+   * \param __alignment The alignment of the allocation
+   * \return Pointer to the requested storage
+   */
+  void *allocate(size_t __bytes, size_t __alignment = default_alignment) {
+    return do_allocate(__bytes, __alignment);
+  }
+
+  /*!
+   * \brief Deallocates the storage pointed to by `__p`.
+   *
+   * `__p` must have been returned by a prior call to `allocate(__bytes,
+   * __alignment)` on a `memory_resource` that compares equal to `*this`, and
+   * the storage it points to must not yet have been deallocated, otherwise
+   * behavior is undefined.
+   *
+   * \throws Nothing.
+   *
+   * \param __p Pointer to storage to be deallocated
+   * \param __bytes The size in bytes of the allocation. This must be equal to
+   * the value of `__bytes` that was specified to the `allocate` call that
+   * returned `__p`.
+   * \param __alignment The alignment of the allocation. This must be equal to
+   * the value of `__alignment` that was specified to the `allocate` call that
+   * returned `__p`.
+   */
+  void deallocate(void *__mem, size_t __bytes, size_t __alignment = default_alignment) {
+    do_deallocate(__mem, __bytes, __alignment);
+  }
+
+  virtual void *do_allocate(size_t __bytes, size_t __alignment) = 0;
+  virtual void do_deallocate(void *__mem, size_t __bytes, size_t __alignment) = 0;
+};
+
+class stream_ordered_memory_resource_base : public virtual memory_resource_base {
+public:
+  /*!
+   * \brief Allocates storage of size at least `__bytes` bytes in stream order
+   * on `__stream`.
+   *
+   * The returned storage is aligned to `default_alignment`.
+   *
+   * The returned storage may be used immediately only on `__stream`. Accessing
+   * it on any other stream (or the host) requires first synchronizing with
+   * `__stream`.
+   *
+   * \throws If the storage of the requested size and `default_alignment` cannot
+   * be obtained.
+   *
+   * \param __bytes The size in bytes of the allocation.
+   * \param __stream The stream on which to perform the allocation.
+   * \return Pointer to the requested storage.
+   */
+  void *allocate_async(size_t bytes, stream_view stream) {
+    return allocate_async(bytes, default_alignment, stream);
+  }
+  /*!
+   * \brief Allocates storage of size at least `__bytes` bytes in stream order
+   * on `__stream`.
+   *
+   * The returned storage is aligned to the specified `__alignment` if such
+   * alignment is supported.
+   *
+   * The returned storage may be used immediately only on `__stream`. Using it
+   * on any other stream (or the host) requires first synchronizing with
+   * `__stream`.
+   *
+   * \throws If the storage of the requested size and alignment cannot be
+   * obtained.
+   *
+   * \param __bytes The size in bytes of the allocation.
+   * \param __alignment The alignment of the allocation
+   * \param __stream The stream on which to perform the allocation.
+   * \return Pointer to the requested storage.
+   */
+  void *allocate_async(size_t bytes, size_t alignment, stream_view stream) {
+    return do_allocate_async(bytes, alignment, stream);
+  }
+
+  /*!
+   * \brief Deallocates the storage pointed to by `__p` in stream order on
+   * `__stream`.
+   *
+   * `__p` must have been returned by a prior call to
+   * `allocate_async(__bytes, default_alignment)` or `allocate(__bytes,
+   * default_alignment)` on a `stream_ordered_memory_resource` that compares
+   * equal to `*this`, and the storage it points to must not yet have been
+   * deallocated, otherwise behavior is undefined.
+   *
+   * Asynchronous, stream-ordered operations on `__stream` initiated before
+   * `deallocate_async(__p, __bytes, __stream)` may still access the storage
+   * pointed to by `__p` after `deallocate_async` returns.
+   *
+   * Storage deallocated on `__stream` may be reused by a future
+   * call to `allocate_async` on the same stream without synchronizing
+   * `__stream`. Therefore,  `__stream` is typically the last stream on which
+   * `__p` was last used. It is the caller's responsibility to ensure the
+   * storage pointed to by `__p` is not in use on any other stream (or the
+   * host), or behavior is undefined.
+   *
+   * \param __p Pointer to storage to be deallocated.
+   * \param __bytes The size in bytes of the allocation. This must be equal to
+   * the value of `__bytes` that was specified to the `allocate` or
+   * `allocate_async` call that returned `__p`.
+   * \param __stream The stream on which to perform the deallocation.
+   */
+  void deallocate_async(void *__mem, size_t __bytes, stream_view __stream) {
+    deallocate_async(__mem, __bytes, default_alignment, __stream);
+  }
+
+  /*!
+   * \brief Deallocates the storage pointed to by `__p` in stream order on
+   * `__stream`.
+   *
+   * `__p` must have been returned by a prior call to
+   * `allocate_async(__bytes, __alignment)` or `allocate(__bytes,
+   * __alignment)` on a `stream_ordered_memory_resource` that compares
+   * equal to `*this`, and the storage it points to must not yet have been
+   * deallocated, otherwise behavior is undefined.
+   *
+   * Asynchronous, stream-ordered operations on `__stream` initiated before
+   * `deallocate_async(__p, __bytes, __stream)` may still access the storage
+   * pointed to by `__p` after `deallocate_async` returns.
+   *
+   * Storage deallocated on `__stream` may be reused by a future
+   * call to `allocate_async` on the same stream without synchronizing
+   * `__stream`. Therefore,  `__stream` is typically the last stream on which
+   * `__p` was last used. It is the caller's responsibility to ensure the
+   * storage pointed to by `__p` is not in use on any other stream (or the
+   * host), or behavior is undefined.
+   *
+   * \param __p Pointer to storage to be deallocated.
+   * \param __bytes The size in bytes of the allocation. This must be equal to
+   * the value of `__bytes` that was specified to the `allocate` or
+   * `allocate_async` call that returned `__p`.
+   * \param __alignment The alignment of the allocation. This must be equal to
+   * the value of `__alignment` that was specified to the `allocate` or
+   * `allocate_async` call that returned `__p`.
+   * \param __stream The stream on which to perform the deallocation.
+   */
+  void deallocate_async(void *__mem, size_t __bytes, size_t __alignment, stream_view __stream) {
+    do_deallocate_async(__mem, __bytes, __alignment, __stream);
+  }
+  virtual void *do_allocate_async(size_t __bytes, size_t __alignment, stream_view __stream) = 0;
+  virtual void do_deallocate_async(void *__mem, size_t __bytes, size_t __alignment, stream_view __stream) = 0;
+};
 
 /*!
  * \brief Abstract interface for context specific memory allocation.
  *
- * \tparam _Kind The `memory_kind` of the allocated memory.
+ * \tparam _MemoryKind The kind of the allocated memory.
  * \tparam _Context The execution context on which the storage may be used
  * without synchronization
  */
-template <memory_kind _Kind, typename _Context = any_context>
-class memory_resource : public detail::__get_context_impl<_Context> {
+template <typename _MemoryKind, typename _Context = any_context>
+class memory_resource : private virtual memory_resource_base, private detail::__get_context_impl<_Context> {
 public:
-  static constexpr memory_kind kind = _Kind;
+  using memory_kind = _MemoryKind;
   using context = _Context;
-
-  static constexpr std::size_t default_alignment = alignof(_CUDA_VSTD::max_align_t);
+  static constexpr _CUDA_VSTD::size_t default_alignment = memory_resource_base::default_alignment;
 
   virtual ~memory_resource() = default;
 
@@ -89,6 +307,7 @@ public:
    *
    * context get_context() const noexcept;
    */
+  context get_context() const noexcept { return this->do_get_context(); }
 
   /*!
    * \brief Allocates storage of size at least `__bytes` bytes.
@@ -181,15 +400,10 @@ class pmr_adaptor final : public detail::__pmr_adaptor_base {
 
   using resource_type = _CUDA_VSTD::remove_reference_t<decltype(*_CUDA_VSTD::declval<_Pointer>())>;
 
-  static constexpr bool __is_host_accessible_resource =
-      _CUDA_VSTD::is_base_of_v<cuda::memory_resource<memory_kind::host>,    resource_type> or
-      _CUDA_VSTD::is_base_of_v<cuda::memory_resource<memory_kind::unified>, resource_type> or
-      _CUDA_VSTD::is_base_of_v<cuda::memory_resource<memory_kind::pinned>,  resource_type>;
-
+  static constexpr bool __is_host_accessible_resource = has_memory_property<resource_type, memory_acess::host>;
   static_assert(
       __is_host_accessible_resource,
-      "Pointer must be a pointer-like type to a type that is or derives"
-      "from cuda::memory_resource whose memory_kind is host accessible");
+      "Pointer must be a pointer-like type to a type that allocates host-accessible memory.");
 
 public:
   pmr_adaptor(_Pointer __mr) : __mr_{std::move(__mr)} {}
@@ -244,13 +458,14 @@ private:
  * respectively, but requires synchronization between `s0` and `s1` before the
  * deallocation occurs.
  *
- * \tparam _Kind The `memory_kind` of the allocated memory.
+ * \tparam _MemoryKind The kind of the allocated memory.
  */
-template <memory_kind _Kind>
-class stream_ordered_memory_resource : public memory_resource<_Kind /* default context */> {
+template <typename _MemoryKind>
+class stream_ordered_memory_resource : public virtual memory_resource<_MemoryKind>,
+                                       private virtual stream_ordered_memory_resource_base {
 public:
-  using memory_resource<_Kind>::kind;
-  using memory_resource<_Kind>::default_alignment;
+  using memory_kind = _MemoryKind;
+  static constexpr _CUDA_VSTD::size_t default_alignment = memory_resource<_MemoryKind>::default_alignment;
 
   /*!
    * \brief Allocates storage of size at least `__bytes` bytes in stream order
@@ -387,6 +602,196 @@ private:
                                    std::size_t __alignment,
                                    stream_view __stream) = 0;
 };
+
+
+/*!
+ * \brief Indicates whether a memory kind `_MemoryKind` has a property `__property`.
+ */
+template <typename _MemoryKind, typename __property>
+struct kind_has_property : std::false_type {};
+
+/*!
+ * \brief A special property telling that given resource/resource view allocates
+ *        memory of specific kind.
+ *
+ * When a view defines this property, it implicitly has all properties of this
+ * memory kind.
+ * This property is also a property in itself and views defining properties of
+ * the underlying memory kind cannot be converted to a view defining this property.
+ * This allows for future extension of the set of properties.
+ */
+template <typename _MemoryKind>
+struct is_kind;
+
+template <typename _MemoryKind>
+struct kind_has_property<_MemoryKind, is_kind<_MemoryKind>> : _CUDA_VSTD::true_type {};
+
+#define _LIBCUDACXX_MEMORY_KIND_PROPERTY(__kind, __property)\
+template <> struct kind_has_property<__kind, __property> : _CUDA_VSTD::true_type {};
+
+_LIBCUDACXX_MEMORY_KIND_PROPERTY(memory_kind::host, memory_access::host);
+_LIBCUDACXX_MEMORY_KIND_PROPERTY(memory_kind::host, oversubscribable);
+_LIBCUDACXX_MEMORY_KIND_PROPERTY(memory_kind::host, memory_location::host);
+
+_LIBCUDACXX_MEMORY_KIND_PROPERTY(memory_kind::pinned, memory_access::host);
+_LIBCUDACXX_MEMORY_KIND_PROPERTY(memory_kind::pinned, memory_access::device);
+_LIBCUDACXX_MEMORY_KIND_PROPERTY(memory_kind::pinned, resident);
+_LIBCUDACXX_MEMORY_KIND_PROPERTY(memory_kind::pinned, memory_location::host);
+
+_LIBCUDACXX_MEMORY_KIND_PROPERTY(memory_kind::device, memory_access::device);
+_LIBCUDACXX_MEMORY_KIND_PROPERTY(memory_kind::device, resident);
+_LIBCUDACXX_MEMORY_KIND_PROPERTY(memory_kind::device, memory_location::device);
+
+_LIBCUDACXX_MEMORY_KIND_PROPERTY(memory_kind::managed, memory_access::host);
+_LIBCUDACXX_MEMORY_KIND_PROPERTY(memory_kind::managed, memory_access::device);
+_LIBCUDACXX_MEMORY_KIND_PROPERTY(memory_kind::managed, oversubscribable);
+_LIBCUDACXX_MEMORY_KIND_PROPERTY(memory_kind::managed, memory_location::host);
+_LIBCUDACXX_MEMORY_KIND_PROPERTY(memory_kind::managed, memory_location::device);
+
+namespace detail {
+    template <typename _Property>
+    _CUDA_VSTD::false_type Has_Property(...);
+    template <typename _Property, typename _MemoryKind, typename _Context>
+    kind_has_property<_MemoryKind, _Property> Has_Property(memory_resource<_MemoryKind, _Context> *);
+    template <typename _Property, typename _MemoryKind>
+    kind_has_property<_MemoryKind, _Property> Has_Property(stream_ordered_memory_resource<_MemoryKind> *);
+}  // namespace detail
+
+template <typename _Target, typename _Property>
+struct has_property : decltype(detail::Has_Property<_Property>(_CUDA_VSTD::declval<_CUDA_VSTD::remove_reference_t<_Target>*>())) {};
+
+namespace detail {
+template <typename _Property, typename... _Properties>
+struct is_property_in : _CUDA_VSTD::false_type {};
+
+template <typename _Property, typename... Tail>
+struct is_property_in<_Property, _Property, Tail...> : _CUDA_VSTD::true_type {};
+
+template <typename _Property, typename _MemoryKind, typename... Tail>
+struct is_property_in<_Property, is_kind<_MemoryKind>, Tail...> : kind_has_property<_MemoryKind, _Property> {};
+
+template <typename _MemoryKind, typename... Tail>
+struct is_property_in<is_kind<_MemoryKind>, is_kind<_MemoryKind>, Tail...> : _CUDA_VSTD::true_type {};
+
+template <typename _FromPointer, typename _ToPointer>
+struct is_resource_pointer_convertible : _CUDA_VSTD::is_convertible<_FromPointer, _ToPointer> {};
+// Private inheritance from (stream_ordered_)memory_resource_base* requires explicit partial specializations as `is_convertible` will return false
+
+template <typename _FromPointer>
+struct is_resource_pointer_convertible<_FromPointer, memory_resource_base*>
+   : _CUDA_VSTD::conjunction<_CUDA_VSTD::is_pointer<_FromPointer>,
+                             _CUDA_VSTD::is_base_of<memory_resource_base,
+                                                    typename ::std::pointer_traits<_FromPointer>::element_type>> {};
+
+template <typename _FromPointer>
+struct is_resource_pointer_convertible<_FromPointer, stream_ordered_memory_resource_base*>
+   : _CUDA_VSTD::conjunction<_CUDA_VSTD::is_pointer<_FromPointer>,
+                              _CUDA_VSTD::is_base_of<stream_ordered_memory_resource_base,
+                                                    typename ::std::pointer_traits<_FromPointer>::element_type>> {};
+
+}  // namespace detail
+
+template <typename Pointer, typename... Properties, typename Property>
+struct has_property<basic_resource_view<Pointer, Properties...>, Property> : detail::is_property_in<Property, Properties...> {};
+
+template <typename from, typename to>
+struct is_view_convertible;
+
+template <typename _FromPointer, typename... _FromProperties, typename _ToPointer, typename... _ToProperties>
+struct is_view_convertible<
+    basic_resource_view<_FromPointer, _FromProperties...>,
+    basic_resource_view<_ToPointer, _ToProperties...>>
+ : _CUDA_VSTD::conjunction<detail::is_resource_pointer_convertible<_FromPointer, _ToPointer>,
+    has_property<basic_resource_view<_FromPointer, _FromProperties...>, _ToProperties>...> {};
+
+/*!
+ * \brief A pointer-like object to a memory resource based on resource.
+ *
+ * Resource view is an object that acts as a memory resource pointer, but provides
+ * enhanced implicit conversions. The idea behind this type is that a user of
+ * a memory resource may be interested in many kinds of resources as long as they
+ * have certain properties - for example, a function may work with any resource
+ * that can provide host-accessible memory - be it plain host memory, pinned memory
+ * or managed memory or some future kind of memory, not yet defined.
+ *
+ * A resource view can be created from a memory resource pointer or from another
+ * resource view, which defines a superset of the target properties.
+ *
+ * The resource view exposes ther underlying resource's interface via `operator->`.
+ *
+ * The `basic_resource_view` class can be parameterized with te resource pointer type,
+ * which can be either one of the base resource classes or a concrete resource type.
+ *
+ * \tparam _ResourcePointer a pointer-like object to the underlying memory resource
+ * \tparam _Properies properties of a memory resource required by resource view
+ */
+template <typename _ResourcePointer, typename... _Properties>
+class basic_resource_view {
+public:
+    static_assert(
+        _CUDA_VSTD::is_base_of<memory_resource_base, typename ::std::pointer_traits<_ResourcePointer>::element_type>::value ||
+        _CUDA_VSTD::is_base_of<stream_ordered_memory_resource_base, typename ::std::pointer_traits<_ResourcePointer>::element_type>::value,
+        "ResourcePointer must be a pointer to a memory_resource_base, stream_ordered_memory_resource_base  or a derived class");
+
+    basic_resource_view() = default;
+
+    basic_resource_view(nullptr_t) {}
+
+    /*!
+     * \brief Constructs a resource view from a compatible memory resource pointer.
+     *
+     * The memory resource is considered compatible if a pointer to it can be converted to
+     * `_ResourcePointer` and the resource type has the required properties listed
+     * in `_Properties`.
+     *
+     * \tparam _Resource Type of a mmeory resource object.
+     * \param __p pointer to a memory resource object.
+     */
+    template <typename _Resource, typename = _CUDA_VSTD::enable_if_t<
+        detail::is_resource_pointer_convertible<_Resource*, _ResourcePointer>::value &&
+        _CUDA_VSTD::conjunction<has_property<_Resource, _Properties>...>::value
+    >>
+    basic_resource_view(_Resource *__p) : __pointer(__p) {}
+
+    /*!
+     * \brief Constructs a resource view by copying the resource pointer from a compatible resource view.
+     *
+     * A resource view is considered compatible if it defines all properties required by this
+     * view in `_Properties`.
+     *
+     * \tparam _OtherPointer The resource pointer type of the source resource view
+     * \tparam _OtherProperties The properties defined byt the source resource view
+     */
+    template <typename _OtherPointer, typename... _OtherProperties, typename = _CUDA_VSTD::enable_if_t<
+        is_view_convertible<basic_resource_view<_OtherPointer, _OtherProperties...>, basic_resource_view>::value
+    >>
+    basic_resource_view(basic_resource_view<_OtherPointer, _OtherProperties...> v) : __pointer(v.__pointer) {}
+
+    /*!
+     * \brief Exposes the interface of the underlying memory resource.
+     *
+     * \note This method should not be used to obtain the pointer to the memory resource.
+     */
+    _ResourcePointer operator->() const { return __pointer; }
+
+private:
+    template <typename, typename...>
+    friend class basic_resource_view;
+
+    _ResourcePointer __pointer{};
+};
+
+template <typename... _Properties, typename _ResourcePointer>
+basic_resource_view<_ResourcePointer, _Properties...> view_resource(_ResourcePointer __rsrc_ptr) {
+    return __rsrc_ptr;
+}
+
+template <typename... _Properties>
+using resource_view = basic_resource_view<memory_resource_base*, _Properties...>;
+
+template <typename... _Properties>
+using stream_ordered_resource_view = basic_resource_view<stream_ordered_memory_resource_base*, _Properties...>;
+
 
 _LIBCUDACXX_END_NAMESPACE_CUDA
 
