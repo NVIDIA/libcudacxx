@@ -365,6 +365,9 @@ public:
   }
 
 private:
+  template <typename, typename...>
+  friend class basic_resource_view;
+
   virtual void *do_allocate(std::size_t __bytes, std::size_t __alignment) = 0;
 
   virtual void do_deallocate(void *__p, std::size_t __bytes,
@@ -579,6 +582,9 @@ public:
   }
 
 private:
+  template <typename, typename...>
+  friend class basic_resource_view;
+
   /// Default synchronous implementation of `memory_resource::do_allocate`
   void *do_allocate(std::size_t __bytes, std::size_t __alignment) override {
     auto const __default_stream = stream_view{};
@@ -664,8 +670,11 @@ namespace detail {
 template <typename _Property, typename... _Properties>
 struct is_property_in : _CUDA_VSTD::false_type {};
 
-template <typename _Property, typename... Tail>
-struct is_property_in<_Property, _Property, Tail...> : _CUDA_VSTD::true_type {};
+template <typename _Property, typename _Mismatch, typename... _Tail>
+struct is_property_in<_Property, _Mismatch, _Tail...> : is_property_in<_Property, _Tail...> {};
+
+template <typename _Property, typename... _Tail>
+struct is_property_in<_Property, _Property, _Tail...> : _CUDA_VSTD::true_type {};
 
 template <typename _Property, typename _MemoryKind, typename... Tail>
 struct is_property_in<_Property, is_kind<_MemoryKind>, Tail...> : kind_has_property<_MemoryKind, _Property> {};
@@ -691,10 +700,10 @@ struct is_resource_pointer_convertible<_FromPointer, stream_ordered_memory_resou
 
 }  // namespace detail
 
-template <typename Pointer, typename... Properties, typename Property>
-struct has_property<basic_resource_view<Pointer, Properties...>, Property> : detail::is_property_in<Property, Properties...> {};
+template <typename _Pointer, typename... _Properties, typename _Property>
+struct has_property<basic_resource_view<_Pointer, _Properties...>, _Property> : detail::is_property_in<_Property, _Properties...> {};
 
-template <typename from, typename to>
+template <typename __from, typename __to>
 struct is_view_convertible;
 
 template <typename _FromPointer, typename... _FromProperties, typename _ToPointer, typename... _ToProperties>
