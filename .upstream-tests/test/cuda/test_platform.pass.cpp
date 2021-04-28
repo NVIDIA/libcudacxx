@@ -91,6 +91,15 @@ __host__ __device__ void test() {
       printf("Host success\r\n");,
       printf("Device success\r\n");
   )
+
+  NV_DISPATCH_TARGET(
+    NV_IS_HOST, (),
+    NV_IS_DEVICE, (
+      static_assert(NV_TARGET_MINIMUM_SM_INTEGER == (__CUDA_ARCH__ / 10), "arch mismatch");
+      static_assert(nv::target::detail::toint(NV_TARGET_MINIMUM_SM_SELECTOR) == (__CUDA_ARCH__ / 10), "arch mismatch");
+      static_assert(__CUDA_MINIMUM_ARCH__ == __CUDA_ARCH__, "arch mismatch");
+    )
+  )
 }
 
 #elif defined(TEST_NVCXX)
@@ -170,6 +179,14 @@ __host__ __device__ void test() {
       printf("Host success\r\n");,
       printf("Device success\r\n");
   )
+
+  NV_DISPATCH_TARGET(
+    NV_IS_HOST, (),
+    NV_IS_DEVICE, (
+      static_assert(NV_TARGET_MINIMUM_SM_INTEGER == (__CUDA_MINIMUM_ARCH__ / 10), "arch mismatch");
+      static_assert(nv::target::detail::toint(NV_TARGET_MINIMUM_SM_SELECTOR) == (__CUDA_MINIMUM_ARCH__ / 10), "arch mismatch");
+    )
+  )
 }
 
 #elif defined(TEST_HOST)
@@ -239,6 +256,15 @@ void test() {
     NV_IS_HOST,
       printf("Host success\r\n");,
       printf("Device success\r\n");
+  )
+
+  NV_DISPATCH_TARGET(
+    NV_IS_HOST, (),
+    NV_IS_DEVICE, (
+      static_assert(NV_TARGET_MINIMUM_SM_INTEGER == (__CUDA_ARCH__ / 10), "arch mismatch");
+      static_assert(nv::target::detail::toint(NV_TARGET_MINIMUM_SM_SELECTOR) == (__CUDA_ARCH__ / 10), "arch mismatch");
+      static_assert(__CUDA_MINIMUM_ARCH__ == __CUDA_ARCH__, "arch mismatch");
+    )
   )
 }
 
