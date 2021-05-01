@@ -21,12 +21,6 @@
 #define LAMBDA [=] __host__ __device__
 #endif
 
-#ifdef _NV_TARGET_DEF
-#define SHARED __shared__
-#else
-#define SHARED
-#endif
-
 #pragma diag_suppress 941
 #pragma diag_suppress 1057
 

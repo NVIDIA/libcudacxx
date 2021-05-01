@@ -239,11 +239,9 @@ void test_noexcept()
 }
 
 namespace ReturnTypeTest {
-    #ifdef _NV_TARGET_DEF
-    __constant__ int my_int = 42;
-    #else
-    static int my_int = 42;
-    #endif
+    struct global {
+        STATIC_MEMBER_VAR(my_int, int)
+    };
 
     template <int N> struct index {};
 
@@ -254,31 +252,31 @@ namespace ReturnTypeTest {
     int f(index<1>) { return 0; }
 
     __host__ __device__
-    int & f(index<2>) { return static_cast<int &>(my_int); }
+    int & f(index<2>) { return static_cast<int &>(global::my_int()); }
     __host__ __device__
-    int const & f(index<3>) { return static_cast<int const &>(my_int); }
+    int const & f(index<3>) { return static_cast<int const &>(global::my_int()); }
     __host__ __device__
-    int volatile & f(index<4>) { return static_cast<int volatile &>(my_int); }
+    int volatile & f(index<4>) { return static_cast<int volatile &>(global::my_int()); }
     __host__ __device__
-    int const volatile & f(index<5>) { return static_cast<int const volatile &>(my_int); }
+    int const volatile & f(index<5>) { return static_cast<int const volatile &>(global::my_int()); }
 
     __host__ __device__
-    int && f(index<6>) { return static_cast<int &&>(my_int); }
+    int && f(index<6>) { return static_cast<int &&>(global::my_int()); }
     __host__ __device__
-    int const && f(index<7>) { return static_cast<int const &&>(my_int); }
+    int const && f(index<7>) { return static_cast<int const &&>(global::my_int()); }
     __host__ __device__
-    int volatile && f(index<8>) { return static_cast<int volatile &&>(my_int); }
+    int volatile && f(index<8>) { return static_cast<int volatile &&>(global::my_int()); }
     __host__ __device__
-    int const volatile && f(index<9>) { return static_cast<int const volatile &&>(my_int); }
+    int const volatile && f(index<9>) { return static_cast<int const volatile &&>(global::my_int()); }
 
     __host__ __device__
-    int * f(index<10>) { return static_cast<int *>(&my_int); }
+    int * f(index<10>) { return static_cast<int *>(&global::my_int()); }
     __host__ __device__
-    int const * f(index<11>) { return static_cast<int const *>(&my_int); }
+    int const * f(index<11>) { return static_cast<int const *>(&global::my_int()); }
     __host__ __device__
-    int volatile * f(index<12>) { return static_cast<int volatile *>(&my_int); }
+    int volatile * f(index<12>) { return static_cast<int volatile *>(&global::my_int()); }
     __host__ __device__
-    int const volatile * f(index<13>) { return static_cast<int const volatile *>(&my_int); }
+    int const volatile * f(index<13>) { return static_cast<int const volatile *>(&global::my_int()); }
 
     template <int Func, class Expect>
     __host__ __device__
