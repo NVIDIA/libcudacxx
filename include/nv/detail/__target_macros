@@ -135,7 +135,6 @@
 
 // There is a case where __CUDA_ARCH__ is 0 while undefined that can cause host code paths to emit a device code dispatch entry
 #  define _NV_TARGET_VAL 0
-#  define _NV_TARGET_DEF 0
 
 #  define _NV_TARGET_IS_HOST   1
 #  define _NV_TARGET_IS_DEVICE 0
