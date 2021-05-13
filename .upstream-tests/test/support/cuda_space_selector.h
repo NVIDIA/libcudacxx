@@ -191,6 +191,17 @@ public:
         return ptr;
     }
 
+    __device__ void destruct_device() {
+        if (threadIdx.x == 0) {
+            ptr->~T();
+        }
+        __syncthreads();
+    }
+
+    __host__ void destruct_host() {
+        ptr->~T();
+    }
+
 #ifndef __CUDACC_RTC__
     __exec_check_disable__
 #endif
@@ -198,13 +209,10 @@ public:
     ~memory_selector() {
         NV_DISPATCH_TARGET(
             NV_IS_DEVICE, (
-                if (threadIdx.x == 0) {
-                    ptr->~T();
-                }
-                __syncthreads();
+                destruct_device();
             ),
             NV_IS_HOST, (
-                ptr->~T();
+                destruct_host();
             )
         )
     }
