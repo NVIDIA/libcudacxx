@@ -13,8 +13,8 @@ ARG LIBCUDACXX_COMPUTE_ARCHS
 SHELL ["/usr/bin/env", "bash", "-c"]
 
 RUN apt-get -y update\
- && apt-get -y install g++-8 clang-6.0 python python-pip cmake\
- && pip install lit\
+ && apt-get -y install g++-8 clang-6.0 python3 python3-pip cmake\
+ && pip3 install lit\
  && mkdir -p /sw/gpgpu/libcudacxx/build\
  && mkdir -p /sw/gpgpu/libcudacxx/libcxx/build
 
