@@ -13,8 +13,8 @@ ARG LIBCUDACXX_COMPUTE_ARCHS
 SHELL ["/usr/bin/env", "bash", "-c"]
 
 RUN yum -y updateinfo\
- && yum -y install which findutils make gcc-c++ libstdc++-static llvm-devel clang python python-pip cmake\
- && pip install lit\
+ && yum -y install which findutils make gcc-c++ libstdc++-static llvm-devel clang python3 python3-pip cmake\
+ && pip3 install lit\
  && mkdir -p /sw/gpgpu/libcudacxx/build\
  && mkdir -p /sw/gpgpu/libcudacxx/libcxx/build
 
