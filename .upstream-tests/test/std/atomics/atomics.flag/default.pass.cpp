@@ -25,10 +25,19 @@
 #endif
 #include "cuda_space_selector.h"
 
+
 template<template<typename, typename> class Selector>
 __host__ __device__
 void test()
 {
+// cudafe crashes on trying to interpret the line below when compiling with Clang
+// TODO: file a compiler bug
+#if !(defined(__clang__) && defined(__CUDACC__))
+# define _TEST_NO_DESTRUCT_ZERO
+#else
+# define _TEST_NO_DESTRUCT_ZERO zero.~A()
+#endif
+
     Selector<cuda::std::atomic_flag, default_initializer> sel;
     cuda::std::atomic_flag & f = *sel.construct();
     f.clear();
@@ -40,22 +49,14 @@ void test()
                 TEST_ALIGNAS_TYPE(A) char storage[sizeof(A)] = {1};
                 A& zero = *new (storage) A();
                 assert(!zero.test_and_set());
-#if !(defined(__clang__) && defined(__CUDACC__))
-                // cudafe crashes on trying to interpret the line below when compiling with Clang
-                // TODO: file a compiler bug
-                zero.~A();
-#endif
+                _TEST_NO_DESTRUCT_ZERO;
             ),
             NV_IS_HOST, (
                 typedef cuda::std::atomic_flag A;
                 TEST_ALIGNAS_TYPE(A) char storage[sizeof(A)] = {1};
                 A& zero = *new (storage) A();
                 assert(!zero.test_and_set());
-#if !(defined(__clang__) && defined(__CUDACC__))
-                // cudafe crashes on trying to interpret the line below when compiling with Clang
-                // TODO: file a compiler bug
-                zero.~A();
-#endif
+                _TEST_NO_DESTRUCT_ZERO;
             )
         )
     }
