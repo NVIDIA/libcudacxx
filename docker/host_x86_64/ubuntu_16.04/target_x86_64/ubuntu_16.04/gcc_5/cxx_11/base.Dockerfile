@@ -13,7 +13,7 @@ ARG LIBCUDACXX_COMPUTE_ARCHS
 SHELL ["/usr/bin/env", "bash", "-c"]
 
 RUN apt-get -y update\
- && apt-get -y install g++-5 clang-5.0 python3 python-pip\
+ && apt-get -y install g++-5 clang-5.0 python3 python3-pip\
  && pip3 install lit\
  && mkdir -p /sw/gpgpu/libcudacxx/build\
  && mkdir -p /sw/gpgpu/libcudacxx/libcxx/build

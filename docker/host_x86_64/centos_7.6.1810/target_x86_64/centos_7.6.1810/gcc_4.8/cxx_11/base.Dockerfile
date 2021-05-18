@@ -14,7 +14,7 @@ SHELL ["/usr/bin/env", "bash", "-c"]
 
 RUN yum -y --enablerepo=extras install epel-release\
  && yum -y updateinfo\
- && yum -y install which make gcc-c++ libstdc++-static llvm-devel clang python3 python-pip\
+ && yum -y install which make gcc-c++ libstdc++-static llvm-devel clang python3 python3-pip\
  && pip3 install lit\
  && mkdir -p /sw/gpgpu/libcudacxx/build\
  && mkdir -p /sw/gpgpu/libcudacxx/libcxx/build
