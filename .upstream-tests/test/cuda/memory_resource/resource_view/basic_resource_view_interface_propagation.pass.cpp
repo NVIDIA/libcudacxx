@@ -16,8 +16,6 @@
 #include <memory>
 #include <tuple>
 #include <vector>
-#include "resource_hierarchy.h"
-
 
 class sync_resource : public cuda::memory_resource<cuda::memory_kind::pinned> {
 public:

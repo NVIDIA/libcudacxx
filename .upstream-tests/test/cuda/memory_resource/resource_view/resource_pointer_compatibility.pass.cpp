@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
   static_assert(cuda::detail::is_resource_pointer_convertible<derived2*,cuda::memory_resource<cuda::memory_kind::managed>*>::value,
                 "A pointer to a derived class should be convertible to a pointer of public a base class");
 
-  static_assert(cuda::detail::is_resource_pointer_convertible<derived2*, cuda::memory_resource_base*>::value,
+  static_assert(cuda::detail::is_resource_pointer_convertible<derived2*, cuda::detail::memory_resource_base*>::value,
                 "A pointer to a derived memory resource should be convertible to a pointer to the common base.");
 
   static_assert(cuda::detail::is_resource_pointer_convertible<derived_async2*, derived_async1*>::value,
@@ -35,7 +35,7 @@ int main(int argc, char **argv) {
   static_assert(cuda::detail::is_resource_pointer_convertible<derived_async2*, cuda::stream_ordered_memory_resource<cuda::memory_kind::managed>*>::value,
                 "A pointer to a derived class should be convertible to a pointer of public a base class");
 
-  static_assert(cuda::detail::is_resource_pointer_convertible<derived_async2*, cuda::stream_ordered_memory_resource_base*>::value,
+  static_assert(cuda::detail::is_resource_pointer_convertible<derived_async2*, cuda::detail::stream_ordered_memory_resource_base*>::value,
                 "A pointer to a derived memory resource should be convertible to a pointer to the common base.");
 
 
@@ -51,13 +51,13 @@ int main(int argc, char **argv) {
   static_assert(!cuda::detail::is_resource_pointer_convertible<derived2*, cuda::stream_ordered_memory_resource<cuda::memory_kind::managed>*>::value,
                 "A pointer to a synchronous resource should not be convertible to a stream ordered one");
 
-  static_assert(!cuda::detail::is_resource_pointer_convertible<derived2*, cuda::stream_ordered_memory_resource_base*>::value,
+  static_assert(!cuda::detail::is_resource_pointer_convertible<derived2*, cuda::detail::stream_ordered_memory_resource_base*>::value,
                 "A pointer to a synchronous resource should not be convertible to a stream ordered one");
 
-  static_assert(!cuda::detail::is_resource_pointer_convertible<cuda::stream_ordered_memory_resource_base*, cuda::stream_ordered_memory_resource<cuda::memory_kind::managed>*>::value,
+  static_assert(!cuda::detail::is_resource_pointer_convertible<cuda::detail::stream_ordered_memory_resource_base*, cuda::stream_ordered_memory_resource<cuda::memory_kind::managed>*>::value,
                 "A pointer to a commnon base class should not be convertible to a pointer to a kind-qualified resource.");
 
-  static_assert(!cuda::detail::is_resource_pointer_convertible<cuda::memory_resource_base*, cuda::memory_resource<cuda::memory_kind::managed>*>::value,
+  static_assert(!cuda::detail::is_resource_pointer_convertible<cuda::detail::memory_resource_base*, cuda::memory_resource<cuda::memory_kind::managed>*>::value,
                 "A pointer to a commnon base class should not be convertible to a pointer to a kind-qualified resource.");
 
   static_assert(!cuda::detail::is_resource_pointer_convertible<
