@@ -31,7 +31,7 @@ __global__ void example_kernel() {
 }
 ```
 
-[See it on Godbolt](https://godbolt.org/z/6v8G36){: .btn }
+[See it on Godbolt](https://godbolt.org/z/rexn5T78G){: .btn }
 
 
 [`cuda::std::max`]: https://en.cppreference.com/w/cpp/algorithm/max

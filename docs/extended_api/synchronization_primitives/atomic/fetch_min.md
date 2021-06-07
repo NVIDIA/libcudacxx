@@ -31,7 +31,7 @@ __global__ void example_kernel() {
 }
 ```
 
-[See it on Godbolt](https://godbolt.org/z/q1s8WW){: .btn }
+[See it on Godbolt](https://godbolt.org/z/vMj9e5hdv){: .btn }
 
 
 [`cuda::std::min`]: https://en.cppreference.com/w/cpp/algorithm/min

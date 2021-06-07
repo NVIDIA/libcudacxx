@@ -31,6 +31,6 @@ __global__ void example_kernel(int* data) {
 ```
 
 
-[See it on Godbolt](https://godbolt.org/z/GYbfcq){: .btn }
+[See it on Godbolt](https://godbolt.org/z/nfcoTW1Kz){: .btn }
 
 [`cuda::std::atomic_thread_fence`]: https://en.cppreference.com/w/cpp/atomic/atomic_thread_fence

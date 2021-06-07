@@ -118,7 +118,7 @@ __global__ void example_kernel() {
 }
 ```
 
-[See it on Godbolt](https://godbolt.org/z/M3rYqa){: .btn }
+[See it on Godbolt](https://godbolt.org/z/aPcGEr64j){: .btn }
 
 
 [_ThreadGroup_]: ../thread_groups.md

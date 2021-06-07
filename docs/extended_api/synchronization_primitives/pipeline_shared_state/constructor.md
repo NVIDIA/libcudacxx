@@ -33,6 +33,6 @@ __global__ void example_kernel() {
 }
 ```
 
-[See it on Godbolt](https://godbolt.org/z/n1zoea){: .btn }
+[See it on Godbolt](https://godbolt.org/z/K4vKq4vd3){: .btn }
 
 

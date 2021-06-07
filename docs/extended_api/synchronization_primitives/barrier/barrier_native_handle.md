@@ -41,7 +41,7 @@ __global__ void example_kernel(cuda::barrier<cuda::thread_scope_block>& bar) {
 }
 ```
 
-[See it on Godbolt](https://godbolt.org/z/5zKxxq){: .btn }
+[See it on Godbolt](https://godbolt.org/z/dr4798Y76){: .btn }
 
 
 [`cuda::thread_scope`]: ./thread_scopes.md

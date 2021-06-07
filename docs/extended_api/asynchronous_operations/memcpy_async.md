@@ -104,7 +104,7 @@ __global__ void example_kernel(char* dst, char* src) {
 }
 ```
 
-[See it on Godbolt](https://godbolt.org/z/7nqq9j){: .btn }
+[See it on Godbolt](https://godbolt.org/z/od6q9s8fq){: .btn }
 
 
 [`std::memcpy`]: https://en.cppreference.com/w/cpp/string/byte/memcpy

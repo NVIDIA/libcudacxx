@@ -91,7 +91,7 @@ __global__ void example_kernel() {
 }
 ```
 
-[See it on Godbolt](https://godbolt.org/z/cqqnzs){: .btn }
+[See it on Godbolt](https://godbolt.org/z/ehdrY8Kae){: .btn }
 
 
 [`cuda::thread_scope`]: ../thread_scopes.md

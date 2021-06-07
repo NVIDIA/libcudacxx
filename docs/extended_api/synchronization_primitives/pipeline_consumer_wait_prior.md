@@ -57,7 +57,7 @@ __global__ void example_kernel(uint64_t* global, cuda::std::size_t element_count
 }
 ```
 
-[See it on Godbolt](https://godbolt.org/z/1ofosT){: .btn }
+[See it on Godbolt](https://godbolt.org/z/aT5hb84PY){: .btn }
 
 
 [`cuda::pipeline::quit`]: ./pipeline/quit.md

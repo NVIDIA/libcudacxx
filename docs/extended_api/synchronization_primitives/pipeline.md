@@ -108,7 +108,7 @@ __global__ void example_kernel(T* global0, T* global1, cuda::std::size_t subset_
   cuda::memcpy_async(group, shared[0],
                      &global0[0], sizeof(T) * group.size(), pipeline);
   cuda::memcpy_async(group, shared[0] + group.size(),
-                     &global2[0], sizeof(T) * group.size(), pipeline);
+                     &global1[0], sizeof(T) * group.size(), pipeline);
   pipeline.producer_commit();
 
   // Pipelined copy/compute.
@@ -135,7 +135,7 @@ __global__ void example_kernel(T* global0, T* global1, cuda::std::size_t subset_
 template void __global__ example_kernel<int>(int*, int*, cuda::std::size_t);
 ```
 
-[See it on Godbolt](https://godbolt.org/z/43dr9e){: .btn }
+[See it on Godbolt](https://godbolt.org/z/zc41bWvja){: .btn }
 
 
 [asynchronous operations]: ../asynchronous_operations.md

@@ -60,7 +60,7 @@ __global__ void example_kernel(void* dst, void* src, size_t size) {
 }
 ```
 
-[See it on Godbolt](https://godbolt.org/z/jr8GqT){: .btn }
+[See it on Godbolt](https://godbolt.org/z/PWGdfTd7d){: .btn }
 
 
 [valid alignment]: https://en.cppreference.com/w/c/language/object#Alignment

@@ -49,7 +49,7 @@ struct single_thread_group {
 };
 ```
 
-[See it on Godbolt](https://godbolt.org/z/eooK3c){: .btn }
+[See it on Godbolt](https://godbolt.org/z/6c16KxqY7){: .btn }
 
 
 [CUDA Cooperative Groups Library]: https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#group-types-cg
