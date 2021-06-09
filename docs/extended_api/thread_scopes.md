@@ -66,8 +66,9 @@ Each program thread is related to each other program thread by one or more
   by the *device* thread scope, specified with `thread_scope_device`.
 - Each GPU thread is related to each other GPU thread in the same CUDA block
   by the *block* thread scope, specified with `thread_scope_block`.
-- Each thread (CPU or GPU) is related to itself by the `thread` thread scope,
-  specified with `thread_scope_thread`.
+- Each thread (CPU or GPU) is related to itself and to the threads executing its
+  [asynchronous operations] by the `thread` thread scope, specified with
+  `thread_scope_thread`.
 
 Objects in namespace `cuda::std::` have the same behavior as corresponding
   objects in namespace `cuda::` when instantiated with a scope of
@@ -152,3 +153,4 @@ Modify [atomics.fences paragraph 2 through 4] of ISO/IEC IS 14882 (the C++
 [CUDA programming guide]: https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html
 [`concurrentManagedAccess` property]: https://docs.nvidia.com/cuda/cuda-runtime-api/structcudaDeviceProp.html#structcudaDeviceProp_116f9619ccc85e93bc456b8c69c80e78b
 [`hostNativeAtomicSupported` property]: https://docs.nvidia.com/cuda/cuda-runtime-api/structcudaDeviceProp.html#structcudaDeviceProp_1ef82fd7d1d0413c7d6f33287e5b6306f
+[asynchronous operations]: {{ "asynchronous_operations.html" | relative_url }}
