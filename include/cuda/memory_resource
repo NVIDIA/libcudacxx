@@ -409,63 +409,6 @@ private:
 
 };
 
-#if _LIBCUDACXX_STD_VER > 14
-
-#if __has_include(<memory_resource>)
-#include <memory_resource>
-#define _LIBCUDACXX_STD_PMR_NS ::std::pmr
-#elif __has_include(<experimental/memory_resource>)
-#include <experimental/memory_resource>
-#define _LIBCUDACXX_STD_PMR_NS ::std::experimental::pmr
-#endif // __has_include(<experimental/memory_resource>)
-
-#if defined(_LIBCUDACXX_STD_PMR_NS)
-
-namespace detail{
-class __pmr_adaptor_base : public _LIBCUDACXX_STD_PMR_NS::memory_resource {
-public:
-  virtual cuda::memory_resource<cuda::memory_kind::host>* resource() const noexcept = 0;
-};
-}
-
-template <typename _Pointer>
-class pmr_adaptor final : public detail::__pmr_adaptor_base {
-
-  using resource_type = _CUDA_VSTD::remove_reference_t<decltype(*_CUDA_VSTD::declval<_Pointer>())>;
-
-  static constexpr bool __is_host_accessible_resource = has_memory_property<resource_type, memory_acess::host>;
-  static_assert(
-      __is_host_accessible_resource,
-      "Pointer must be a pointer-like type to a type that allocates host-accessible memory.");
-
-public:
-  pmr_adaptor(_Pointer __mr) : __mr_{std::move(__mr)} {}
-
-  using raw_pointer = _CUDA_VSTD::remove_reference_t<decltype(&*_CUDA_VSTD::declval<_Pointer>())>;
-
-  raw_pointer resource() const noexcept override { return &*__mr_; }
-
-private:
-  void *do_allocate(std::size_t __bytes, std::size_t __alignment) override {
-    return __mr_->allocate(__bytes, __alignment);
-  }
-
-  void do_deallocate(void *__p, std::size_t __bytes,
-                     std::size_t __alignment) override {
-    return __mr_->deallocate(__p, __bytes, __alignment);
-  }
-
-  bool do_is_equal(_LIBCUDACXX_STD_PMR_NS::memory_resource const &__other) const noexcept override {
-    auto __other_p = dynamic_cast<detail::__pmr_adaptor_base const *>(&__other);
-    return __other_p and (__other_p->resource() == resource() or
-                          __other_p->resource()->is_equal(*resource()));
-  }
-
-  _Pointer __mr_;
-};
-#endif // defined(_LIBCUDACXX_STD_PMR_NS)
-#endif // _LIBCUDACXX_STD_VER > 14
-
 /*!
  * \brief Abstract interface for CUDA stream-ordered memory allocation.
  *
@@ -856,6 +799,62 @@ using resource_view = basic_resource_view<detail::memory_resource_base*, _Proper
 template <typename... _Properties>
 using stream_ordered_resource_view = basic_resource_view<detail::stream_ordered_memory_resource_base*, _Properties...>;
 
+#if _LIBCUDACXX_STD_VER > 14
+
+#if __has_include(<memory_resource>)
+#include <memory_resource>
+#define _LIBCUDACXX_STD_PMR_NS ::std::pmr
+#elif __has_include(<experimental/memory_resource>)
+#include <experimental/memory_resource>
+#define _LIBCUDACXX_STD_PMR_NS ::std::experimental::pmr
+#endif // __has_include(<experimental/memory_resource>)
+
+#if defined(_LIBCUDACXX_STD_PMR_NS)
+
+namespace detail{
+class __pmr_adaptor_base : public _LIBCUDACXX_STD_PMR_NS::memory_resource {
+public:
+  virtual cuda::memory_resource<cuda::memory_kind::host>* resource() const noexcept = 0;
+};
+}
+
+template <typename _Pointer>
+class pmr_adaptor final : public detail::__pmr_adaptor_base {
+
+  using resource_type = _CUDA_VSTD::remove_reference_t<decltype(*_CUDA_VSTD::declval<_Pointer>())>;
+
+  static constexpr bool __is_host_accessible_resource = has_property<resource_type, memory_access::host>::value;
+  static_assert(
+      __is_host_accessible_resource,
+      "Pointer must be a pointer-like type to a type that allocates host-accessible memory.");
+
+public:
+  pmr_adaptor(_Pointer __mr) : __mr_{std::move(__mr)} {}
+
+  using raw_pointer = _CUDA_VSTD::remove_reference_t<decltype(&*_CUDA_VSTD::declval<_Pointer>())>;
+
+  raw_pointer resource() const noexcept override { return &*__mr_; }
+
+private:
+  void *do_allocate(std::size_t __bytes, std::size_t __alignment) override {
+    return __mr_->allocate(__bytes, __alignment);
+  }
+
+  void do_deallocate(void *__p, std::size_t __bytes,
+                     std::size_t __alignment) override {
+    return __mr_->deallocate(__p, __bytes, __alignment);
+  }
+
+  bool do_is_equal(_LIBCUDACXX_STD_PMR_NS::memory_resource const &__other) const noexcept override {
+    auto __other_p = dynamic_cast<detail::__pmr_adaptor_base const *>(&__other);
+    return __other_p and (__other_p->resource() == resource() or
+                          __other_p->resource()->is_equal(*resource()));
+  }
+
+  _Pointer __mr_;
+};
+#endif // defined(_LIBCUDACXX_STD_PMR_NS)
+#endif // _LIBCUDACXX_STD_VER > 14
 
 _LIBCUDACXX_END_NAMESPACE_CUDA
 
