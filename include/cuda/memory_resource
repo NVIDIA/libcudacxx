@@ -386,10 +386,10 @@ private:
   template <typename, typename...>
   friend class basic_resource_view;
 
-  virtual void *do_allocate(std::size_t __bytes, std::size_t __alignment) = 0;
+  void *do_allocate(std::size_t __bytes, std::size_t __alignment) override = 0;
 
-  virtual void do_deallocate(void *__p, std::size_t __bytes,
-                             std::size_t __alignment) = 0;
+  void do_deallocate(void *__p, std::size_t __bytes,
+                     std::size_t __alignment) override = 0;
 
   // Default to identity comparison
   virtual bool do_is_equal(memory_resource const &__other) const noexcept {
@@ -574,12 +574,12 @@ private:
     do_deallocate_async(__p, __bytes, __alignment, __default_stream);
   }
 
-  virtual void *do_allocate_async(std::size_t __bytes, std::size_t __alignment,
-                                  stream_view __stream) = 0;
+  void *do_allocate_async(std::size_t __bytes, std::size_t __alignment,
+                          stream_view __stream) override = 0;
 
-  virtual void do_deallocate_async(void *__p, std::size_t __bytes,
-                                   std::size_t __alignment,
-                                   stream_view __stream) = 0;
+  void do_deallocate_async(void *__p, std::size_t __bytes,
+                           std::size_t __alignment,
+                           stream_view __stream) override = 0;
 };
 
 
@@ -718,7 +718,7 @@ public:
 
     basic_resource_view() = default;
 
-    basic_resource_view(nullptr_t) {}
+    basic_resource_view(std::nullptr_t) {}
 
     /*!
      * \brief Constructs a resource view from a compatible memory resource pointer.
