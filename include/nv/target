@@ -15,7 +15,7 @@
 
 #if defined(__NVCC__) || defined(__CUDACC_RTC__)
 #  define _NV_COMPILER_NVCC
-#elif defined(__NVCOMPILER)
+#elif defined(__NVCOMPILER) && __cplusplus >= 201103L
 #  define _NV_COMPILER_NVCXX
 #else
 #endif
@@ -25,6 +25,8 @@
 #else
 #  define _NV_BITSET_ATTRIBUTE
 #endif
+
+#if __cplusplus >= 201103L
 
 namespace nv {
   namespace target {
@@ -163,6 +165,8 @@ namespace nv {
     using detail::provides;
   }
 }
+
+#endif // C++11
 
 #include "detail/__target_macros"
 
