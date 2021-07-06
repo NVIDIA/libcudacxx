@@ -10,16 +10,17 @@
 // UNSUPPORTED: libcpp-no-deduction-guides
 // UNSUPPORTED: apple-clang-9
 // UNSUPPORTED: msvc
+// UNSUPPORTED: nvcc-10.3, nvcc-11.0, nvcc-11.1, nvcc-11.2, nvcc-11.3, nvcc-11.4
 
 // GCC's implementation of class template deduction is still immature and runs
 // into issues with libc++. However GCC accepts this code when compiling
 // against libstdc++.
-// XFAIL: gcc-5, gcc-6, gcc-7, gcc-8, gcc-9, gcc-10
+// XFAIL: gcc-5, gcc-6, gcc-7, gcc-10
 
 // UNSUPPORTED: nvrtc
 
 // Currently broken with Clang + NVCC.
-// XFAIL: clang
+// XFAIL: clang-6, clang-7, clang-9, clang-10
 
 // <cuda/std/tuple>
 
