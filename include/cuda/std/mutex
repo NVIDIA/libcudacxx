@@ -1,0 +1,52 @@
+//===----------------------------------------------------------------------===//
+//
+// Part of libcu++, the C++ Standard Library for your entire system,
+// under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+//
+//===----------------------------------------------------------------------===//
+
+#if defined(__CUDA_ARCH__) && __CUDA_ARCH__ < 700
+#  error "CUDA synchronization primitives are only supported for sm_70 and up."
+#endif
+
+#ifndef _CUDA_MUTEX
+#define _CUDA_MUTEX
+
+#include "detail/__config"
+#include "detail/__threading_support"
+#include "detail/__mutex_base"
+
+#include "cstdint"
+#include "functional"
+#include "tuple"
+#include "version"
+
+#include "detail/__pragma_push"
+
+#include "detail/libcxx/include/mutex"
+
+_LIBCUDACXX_BEGIN_NAMESPACE_CUDA
+
+template<thread_scope _Sco>
+using mutex = std::__mutex_base<_Sco>;
+
+template<thread_scope _Sco>
+using timed_mutex = std::__mutex_base<_Sco>;
+
+template<thread_scope _Sco>
+using once_flag = std::__once_flag_base<_Sco>;
+
+template<class... _Args>
+inline _LIBCUDACXX_INLINE_VISIBILITY
+void call_once(_Args&&... __args)
+{
+    call_once(std::forward<_Args&&>(__args)...);
+}
+
+_LIBCUDACXX_END_NAMESPACE_CUDA
+
+#include "detail/__pragma_pop"
+
+#endif //_CUDA_MUTEX

@@ -49,10 +49,11 @@
 #define _LIBCUDACXX_HAS_NO_PLATFORM_WAIT
 #define _LIBCUDACXX_HAS_NO_MONOTONIC_CLOCK
 #define _LIBCUDACXX_HAS_NO_TREE_BARRIER
+#define _LIBCUDACXX_HAS_THREAD_API_EXTERNAL
+#define _LIBCUDACXX_INLINE_THREADING
 #ifdef __CUDACC_RTC__
     #define __ELF__
     #define _LIBCUDACXX_DISABLE_PRAGMA_GCC_SYSTEM_HEADER
-    #define _LIBCUDACXX_HAS_THREAD_API_EXTERNAL
     #define __alignof(x) alignof(x)
     #define _LIBCUDACXX_LITTLE_ENDIAN
     #define _LIBCUDACXX_DISABLE_VISIBILITY_ANNOTATIONS
@@ -69,9 +70,8 @@
 
 #include "libcxx/include/__config"
 
-#if defined(__CUDA_ARCH__)
-    #define _LIBCUDACXX_HAS_THREAD_API_CUDA
-#elif defined(_LIBCUDACXX_COMPILER_MSVC)
+#define _LIBCUDACXX_HAS_THREAD_API_CUDA
+#if defined(_LIBCUDACXX_COMPILER_MSVC)
     #define _LIBCUDACXX_HAS_THREAD_API_WIN32
 #endif
 
@@ -157,5 +157,15 @@
 #define _LIBCUDACXX_BEGIN_NAMESPACE_STD_NOVERSION namespace cuda { namespace std {
 #undef _LIBCUDACXX_END_NAMESPACE_STD_NOVERSION
 #define _LIBCUDACXX_END_NAMESPACE_STD_NOVERSION } }
+
+_LIBCUDACXX_INLINE_VISIBILITY
+inline void __throw_system_error(int, const char*)
+{
+#ifdef __CUDA_ARCH__
+    asm volatile("trap;");
+#else
+    abort();
+#endif
+}
 
 #endif //__cuda_std__
