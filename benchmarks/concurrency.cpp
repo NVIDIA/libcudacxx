@@ -172,10 +172,10 @@ struct ticket_mutex {
 };
 
 struct sem_mutex {
-    void lock() noexcept {
+    __host__ __device__ void lock() noexcept {
         c.acquire();
     }
-    void unlock() noexcept {
+    __host__ __device__ void unlock() noexcept {
         c.release();
     }
     sem_mutex() : c(1) { }
