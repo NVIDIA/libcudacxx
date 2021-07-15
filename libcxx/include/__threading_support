@@ -75,17 +75,19 @@ _LIBCUDACXX_BEGIN_NAMESPACE_STD
 _LIBCUDACXX_INLINE_VISIBILITY
 inline void __libcpp_thread_yield_processor()
 {
-#if defined(__CUDA_ARCH__)
-  ;
-#elif defined(__aarch64__)
-  asm volatile ("yield" :::);
+#if defined(__aarch64__)
+# define __LIBCUDACXX_ASM_THREAD_YIELD (asm volatile ("yield" :::);)
 #elif defined(__x86_64__)
-  asm volatile ("pause" :::);
+# define __LIBCUDACXX_ASM_THREAD_YIELD (asm volatile ("pause" :::);)
 #elif defined (__powerpc__)
-  asm volatile ("or 27,27,27":::);
+# define __LIBCUDACXX_ASM_THREAD_YIELD (asm volatile ("or 27,27,27":::);)
 #else
-  ;
+# define __LIBCUDACXX_ASM_THREAD_YIELD (;)
 #endif
+    NV_DISPATCH_TARGET(
+        NV_IS_HOST,
+            __LIBCUDACXX_ASM_THREAD_YIELD
+    )
 }
 
 _LIBCUDACXX_THREAD_ABI_VISIBILITY
