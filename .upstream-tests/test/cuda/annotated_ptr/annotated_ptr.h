@@ -194,17 +194,34 @@ void test_annotated_ptr_basic() {
     cuda::annotated_ptr<int, cuda::access_property> array0_anno_ptr1 = array0_anno_ptr0;
     cuda::annotated_ptr<int, cuda::access_property> array0_anno_ptr2{array0_anno_ptr0};
     cuda::annotated_ptr<int, cuda::access_property> array1_anno_ptr{array1, ap};
+    cuda::annotated_ptr<const int, cuda::access_property> array_anno_const_ptr{array0, ap};
+    cuda::annotated_ptr<const int, cuda::access_property> array0_anno_const_ptr0{array0, ap};
+    cuda::annotated_ptr<const int, cuda::access_property> array0_anno_const_ptr1 = array0_anno_ptr0;
+    cuda::annotated_ptr<const int, cuda::access_property> array0_anno_const_ptr2{array0_anno_ptr0};
+    cuda::annotated_ptr<const int, cuda::access_property> array0_anno_const_ptr3 = array0_anno_const_ptr0;
+    cuda::annotated_ptr<const int, cuda::access_property> array0_anno_const_ptr4{array0_anno_const_ptr0};
+    cuda::annotated_ptr<const int, cuda::access_property> array1_anno_const_ptr{array1, ap};
+    unused(array0_anno_const_ptr3);
+    unused(array0_anno_const_ptr4);
+
 #ifndef __CUDA_ARCH__
     cuda::annotated_ptr<int, cuda::access_property::shared> shared_ptr1;
     cuda::annotated_ptr<int, cuda::access_property::shared> shared_ptr2;
+    cuda::annotated_ptr<const int, cuda::access_property::shared> shared_const_ptr1;
+    cuda::annotated_ptr<const int, cuda::access_property::shared> shared_const_ptr2;
 
     shared_ptr1 = shared_ptr2;
+    shared_const_ptr1 = shared_const_ptr2;
+    shared_const_ptr1 = shared_ptr2;
     unused(shared_ptr1);
+    unused(shared_const_ptr1);
 
     //Check on host the arrays through annotated_ptr ops
     std::array<int, 3> a1{3, 2, 1};
     cuda::annotated_ptr<std::array<int, 3>, cuda::access_property> anno_ptr{&a1, ap};
     assert(anno_ptr->at(0) == 3);
+    cuda::annotated_ptr<const std::array<int, 3>, cuda::access_property> anno_const_ptr{&a1, ap};
+    assert(anno_const_ptr->at(0) == 3);
 #endif
 
     //Fill the arrays
@@ -214,13 +231,17 @@ void test_annotated_ptr_basic() {
     }
 
     assert((bool)array0_anno_ptr0 == true);
+    assert((bool)array0_anno_const_ptr0 == true);
     assert(array0_anno_ptr0.get() == array0);
+    assert(array0_anno_const_ptr0.get() == array0);
 
     for (size_t i = 0; i < ARR_SZ; ++i) {
         assert(array0_anno_ptr0[i] == static_cast<int>(i));
         assert(array0_anno_ptr2[i] == static_cast<int>(i));
         assert(&array0[i] == &array0_anno_ptr0[i]);
+	assert(&array0[i] == &array0_anno_const_ptr0[i]);
         assert(&array0[i] == &array0_anno_ptr1[i]);
+	assert(&array0[i] == &array0_anno_const_ptr1[i]);
     }
 
     for (size_t i = 0; i < ARR_SZ; ++i) {
@@ -374,6 +395,7 @@ void test_annotated_ptr_functions() {
 
     cuda::annotated_ptr<int, cuda::access_property> ann0{arr0, ap};
     cuda::annotated_ptr<int, cuda::access_property> ann1{arr1, ap};
+    cuda::annotated_ptr<const int, cuda::access_property> cann0{arr0, ap};
 
     for (size_t i = 0; i < ARR_SZ; ++i) {
         arr0[i] = static_cast<int>(i);
@@ -381,6 +403,7 @@ void test_annotated_ptr_functions() {
     }
 
     cuda::memcpy_async(ann1, ann0, ARR_SZ * sizeof(int), bar0);
+    cuda::memcpy_async(ann1, cann0, ARR_SZ * sizeof(int), bar0);
     bar0.arrive_and_wait();
 
     for (size_t i = 0; i < ARR_SZ; ++i) {
@@ -393,6 +416,7 @@ void test_annotated_ptr_functions() {
     }
 
     cuda::memcpy_async(arr1, ann0, ARR_SZ * sizeof(int), bar1);
+    cuda::memcpy_async(arr1, cann0, ARR_SZ * sizeof(int), bar1);
     bar1.arrive_and_wait();
 
     for (size_t i = 0; i < ARR_SZ; ++i) {
@@ -406,6 +430,7 @@ void test_annotated_ptr_functions() {
 
 #ifdef __CUDA_ARCH__
     cuda::memcpy_async(group, ann1, ann0, ARR_SZ * sizeof(int), bar2);
+    cuda::memcpy_async(group, ann1, cann0, ARR_SZ * sizeof(int), bar2);
     bar2.arrive_and_wait();
 
     for (size_t i = 0; i < ARR_SZ; ++i) {
@@ -418,6 +443,7 @@ void test_annotated_ptr_functions() {
     }
 
     cuda::memcpy_async(group, arr1, ann0, ARR_SZ * sizeof(int), bar3);
+    cuda::memcpy_async(group, arr1, cann0, ARR_SZ * sizeof(int), bar3);
     bar3.arrive_and_wait();
 
     for (size_t i = 0; i < ARR_SZ; ++i) {

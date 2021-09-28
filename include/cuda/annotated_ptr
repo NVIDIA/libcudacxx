@@ -207,7 +207,7 @@ class annotated_ptr: public __detail_ap::__annotated_ptr_base<_Property> {
     __host__ __device__ pointer __get(bool __skip_prop = false, difference_type __n = 0) const {
 #ifdef __CUDA_ARCH__
       if (__skip_prop == false) {
-        return static_cast<pointer>(this->__apply_prop(static_cast<void*>(__repr + __n)));
+        return static_cast<pointer>(this->__apply_prop(const_cast<void*>(static_cast<const void*>(__repr + __n))));
       } else {
         return __repr + __n;
       }
@@ -267,14 +267,7 @@ class annotated_ptr: public __detail_ap::__annotated_ptr_base<_Property> {
     }
 
     template<class _TTp, class _Prop>
-      __host__ __device__ annotated_ptr(const annotated_ptr<_TTp,_Prop>& __other)
-      : annotated_ptr<_TTp, _Prop>(__other.prop_), __repr(__other.__repr)
-      {
-      static_assert(std::is_assignable<pointer, _TTp*>::value, "pointer must be assignable from other pointer");
-      static_assert((std::is_same<_Property, access_property>::value && !std::is_same<_Prop, access_property::shared>::value) ||
-                    std::is_same<_Property, _Prop>::value, "Property must be either access_property or other property, and both properties must have same address space");
-      // note: precondition "__other.__rep must be compatible with _Property" currently always holds
-    }
+    __host__ __device__ annotated_ptr(const annotated_ptr<_TTp,_Prop>& __other);
 
     __host__ __device__ constexpr explicit operator bool() const noexcept {
       return __repr != nullptr;
@@ -284,7 +277,23 @@ class annotated_ptr: public __detail_ap::__annotated_ptr_base<_Property> {
       constexpr bool __is_shared = std::is_same<_Property, access_property::shared>::value;
       return __is_shared ? __repr : &(*annotated_ptr<value_type, access_property::global>(__repr));
     }
+
+    __host__ __device__ _Property __property() const noexcept {
+      return this->__get_property();
+    }
 };
+
+
+template<class _Tp, class _Property>
+template<class _TTp, class _Prop>
+__host__ __device__ annotated_ptr<_Tp, _Property>::annotated_ptr(const annotated_ptr<_TTp,_Prop>& __other)
+  : __detail_ap::__annotated_ptr_base<_Property>(__other.__property()), __repr(__other.get())
+{
+  static_assert(std::is_assignable<pointer&, _TTp*>::value, "pointer must be assignable from other pointer");
+  static_assert((std::is_same<_Property, access_property>::value && !std::is_same<_Prop, access_property::shared>::value) ||
+		std::is_same<_Property, _Prop>::value, "Property must be either access_property or other property, and both properties must have same address space");
+  // note: precondition "__other.__rep must be compatible with _Property" currently always holds
+}
 
 template<class _Dst, class _Src, class _SrcProperty, class _Shape, class _Sync>
 __host__ __device__
