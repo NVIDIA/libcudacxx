@@ -153,6 +153,7 @@ void test_access_property_functions() {
     size_t ARR_SZ = 1 << 10;
     int* arr0 = nullptr;
     int* arr1 = nullptr;
+    int const* arr2 = nullptr;
     cuda::access_property ap(cuda::access_property::persisting{});
     cuda::access_property a;
     unused(a);
@@ -161,6 +162,7 @@ void test_access_property_functions() {
 #ifdef __CUDA_ARCH__
     arr0 = (int*)malloc(ARR_SZ * sizeof(int));
     arr1 = (int*)malloc(ARR_SZ * sizeof(int));
+    arr1 = (int const*)malloc(ARR_SZ * sizeof(int));
 #else
     assert_rt(cudaMallocManaged((void**) &arr0, ARR_SZ * sizeof(int)));
     assert_rt(cudaMallocManaged((void**) &arr1, ARR_SZ * sizeof(int)));
@@ -170,6 +172,7 @@ void test_access_property_functions() {
     cuda::discard_memory(arr0, ARR_SZ);
     arr0 = cuda::associate_access_property(arr0, ap);
     arr1 = cuda::associate_access_property(arr1, as);
+    arr2 = cuda::associate_access_property(arr2, ap);
     cuda::apply_access_property(arr0, ARR_SZ, cuda::access_property::persisting{});
     cuda::apply_access_property(arr1, ARR_SZ, cuda::access_property::normal{});
 

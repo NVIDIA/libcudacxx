@@ -105,7 +105,9 @@ namespace __detail_ap {
   __host__ __device__
   _Type* __associate(_Type* __ptr, _Property __prop) {
 #ifdef __CUDA_ARCH__
-    return static_cast<_Type*>(__associate_descriptor(__associate_address_space(__ptr, __prop), __prop));
+    return static_cast<_Type*>(__associate_descriptor(
+	    __associate_address_space(const_cast<void*>(static_cast<const void*>(__ptr)), __prop),
+	    __prop));
 #else
     return __ptr;
 #endif
