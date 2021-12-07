@@ -153,7 +153,7 @@ template <typename _MemoryKind>
 class memory_resource;
 
 template <typename _ResourcePointer, typename... _Properties>
-class basic_resource_view;
+class basic_resource_ptr;
 
 namespace detail {
 
@@ -235,7 +235,7 @@ protected:
   }
 
   template <typename _ResourcePointer, typename... _Properties>
-  friend class cuda::basic_resource_view;
+  friend class cuda::basic_resource_ptr;
 
   virtual void *__do_as_kind(const ::std::type_info *__tag_type_id, const void *__tag_type_fallback_id) const noexcept = 0;
 };
@@ -355,7 +355,7 @@ protected:
   virtual void do_deallocate_async(void *__mem, size_t __bytes, size_t __alignment, stream_view __stream) = 0;
 
   template <typename _ResourcePointer, typename... _Properties>
-  friend class cuda::basic_resource_view;
+  friend class cuda::basic_resource_ptr;
 };
 
 }  // namespace detail
@@ -430,7 +430,7 @@ public:
 
 private:
   template <typename, typename...>
-  friend class basic_resource_view;
+  friend class basic_resource_ptr;
 
   void *do_allocate(std::size_t __bytes, std::size_t __alignment) override = 0;
 
@@ -616,7 +616,7 @@ public:
 
 private:
   template <typename, typename...>
-  friend class basic_resource_view;
+  friend class basic_resource_ptr;
 
   /// Default synchronous implementation of `memory_resource::do_allocate`
   void *do_allocate(std::size_t __bytes, std::size_t __alignment) override {
@@ -808,17 +808,17 @@ template <typename _Property, typename... _Properties>
 struct kind_has_property<property_list<_Properties...>, _Property> : detail::is_property_in<_Property, _Properties...> {};
 
 template <typename _Pointer, typename... _Properties, typename _Property>
-struct has_property<basic_resource_view<_Pointer, _Properties...>, _Property> : detail::is_property_in<_Property, _Properties...> {};
+struct has_property<basic_resource_ptr<_Pointer, _Properties...>, _Property> : detail::is_property_in<_Property, _Properties...> {};
 
 template <typename __from, typename __to>
 struct is_view_convertible;
 
 template <typename _FromPointer, typename... _FromProperties, typename _ToPointer, typename... _ToProperties>
 struct is_view_convertible<
-    basic_resource_view<_FromPointer, _FromProperties...>,
-    basic_resource_view<_ToPointer, _ToProperties...>>
+    basic_resource_ptr<_FromPointer, _FromProperties...>,
+    basic_resource_ptr<_ToPointer, _ToProperties...>>
  : _CUDA_VSTD::conjunction<detail::is_resource_pointer_convertible<_FromPointer, _ToPointer>,
-    has_properties<basic_resource_view<_FromPointer, _FromProperties...>, _ToProperties...>> {};
+    has_properties<basic_resource_ptr<_FromPointer, _FromProperties...>, _ToProperties...>> {};
 
 /*!
  * \brief A pointer-like object to a memory resource based on resource.
@@ -836,29 +836,29 @@ struct is_view_convertible<
  *
  * The resource view exposes the underlying resource's interface via `operator->`.
  *
- * The `basic_resource_view` class can be parameterized with the resource pointer type,
+ * The `basic_resource_ptr` class can be parameterized with the resource pointer type,
  * which can be either one of the base resource classes or a concrete resource type.
  *
  * \tparam _ResourcePointer a pointer-like object to the underlying memory resource
  * \tparam _Properies properties of a memory resource required by resource view
  */
 template <typename _ResourcePointer, typename... _Properties>
-class basic_resource_view<_ResourcePointer, property_list<_Properties...>> {
+class basic_resource_ptr<_ResourcePointer, property_list<_Properties...>> {
 public:
     static_assert(
         _CUDA_VSTD::is_base_of<detail::memory_resource_base, typename ::std::pointer_traits<_ResourcePointer>::element_type>::value ||
         _CUDA_VSTD::is_base_of<detail::stream_ordered_memory_resource_base, typename ::std::pointer_traits<_ResourcePointer>::element_type>::value,
         "ResourcePointer must be a pointer to a memory_resource_base, stream_ordered_memory_resource_base or a derived class");
 
-    basic_resource_view() = default;
+    basic_resource_ptr() = default;
 
-    basic_resource_view(int) = delete;
+    basic_resource_ptr(int) = delete;
 
-    basic_resource_view(std::nullptr_t) {}
+    basic_resource_ptr(std::nullptr_t) {}
 
-    basic_resource_view(const basic_resource_view &) = default;
+    basic_resource_ptr(const basic_resource_ptr &) = default;
 
-    basic_resource_view(basic_resource_view &&) = default;
+    basic_resource_ptr(basic_resource_ptr &&) = default;
 
     using properties = property_list<_Properties...>;
 
@@ -876,7 +876,7 @@ public:
         detail::is_resource_pointer_convertible<_Resource*, _ResourcePointer>::value &&
         _CUDA_VSTD::conjunction<has_property<_Resource, _Properties>...>::value
     >>
-    basic_resource_view(_Resource *__p) : __pointer(__p) {}
+    basic_resource_ptr(_Resource *__p) : __pointer(__p) {}
 
     /*!
      * \brief Constructs a resource view by copying the resource pointer from a compatible resource view.
@@ -888,17 +888,17 @@ public:
      * \tparam _OtherProperties The properties defined byt the source resource view
      */
     template <typename _OtherPointer, typename... _OtherProperties, typename = _CUDA_VSTD::enable_if_t<
-        is_view_convertible<basic_resource_view<_OtherPointer, _OtherProperties...>, basic_resource_view>::value
+        is_view_convertible<basic_resource_ptr<_OtherPointer, _OtherProperties...>, basic_resource_ptr>::value
     >>
-    basic_resource_view(basic_resource_view<_OtherPointer, _OtherProperties...> v) : __pointer(v.__pointer) {}
+    basic_resource_ptr(basic_resource_ptr<_OtherPointer, _OtherProperties...> v) : __pointer(v.__pointer) {}
 
-    basic_resource_view &operator=(const basic_resource_view &)=default;
-    basic_resource_view &operator=(basic_resource_view &&)=default;
+    basic_resource_ptr &operator=(const basic_resource_ptr &)=default;
+    basic_resource_ptr &operator=(basic_resource_ptr &&)=default;
 
     template <typename _OtherPointer, typename... _OtherProperties, typename = _CUDA_VSTD::enable_if_t<
-        is_view_convertible<basic_resource_view<_OtherPointer, _OtherProperties...>, basic_resource_view>::value
+        is_view_convertible<basic_resource_ptr<_OtherPointer, _OtherProperties...>, basic_resource_ptr>::value
     >>
-    basic_resource_view &operator=(basic_resource_view<_OtherPointer, _OtherProperties...> v) {
+    basic_resource_ptr &operator=(basic_resource_ptr<_OtherPointer, _OtherProperties...> v) {
       __pointer = std::move(v.__pointer);
       return *this;
     }
@@ -912,14 +912,14 @@ public:
     _ResourcePointer operator->() const noexcept { return __pointer; }
 
     template <typename _Ptr2, typename... _Props2>
-    bool operator==(const cuda::basic_resource_view<_Ptr2, _Props2...> &__v2) const noexcept {
+    bool operator==(const cuda::basic_resource_ptr<_Ptr2, _Props2...> &__v2) const noexcept {
       if (__pointer == nullptr || __v2.__pointer == nullptr)
         return __pointer == nullptr && __v2.__pointer == nullptr;
       return static_cast<const detail::memory_resource_base*>(__pointer)->is_equal(*__v2.__pointer);
     }
 
     template <typename _Ptr2, typename... _Props2>
-    bool operator!=(const cuda::basic_resource_view<_Ptr2, _Props2...> &__v2) const noexcept {
+    bool operator!=(const cuda::basic_resource_ptr<_Ptr2, _Props2...> &__v2) const noexcept {
       return !(*this == __v2);
     }
 
@@ -932,15 +932,15 @@ public:
 
 private:
     template <typename, typename...>
-    friend class basic_resource_view;
+    friend class basic_resource_ptr;
 
     _ResourcePointer __pointer{};
 };
 
 template <typename _ResourcePointer, typename... _Properties>
-class basic_resource_view : public basic_resource_view<_ResourcePointer, property_list<_Properties...>> {
+class basic_resource_ptr : public basic_resource_ptr<_ResourcePointer, property_list<_Properties...>> {
 public:
-    using __base = basic_resource_view<_ResourcePointer, property_list<_Properties...>>;
+    using __base = basic_resource_ptr<_ResourcePointer, property_list<_Properties...>>;
     using __base::__base;
     using __base::operator=;
     using __base::operator==;
@@ -963,7 +963,7 @@ public:
         detail::is_resource_pointer_convertible<_Resource*, _ResourcePointer>::value &&
         _CUDA_VSTD::conjunction<has_property<_Resource, _Properties>...>::value
     >>
-    basic_resource_view(_Resource *__p) : __base(__p) {}
+    basic_resource_ptr(_Resource *__p) : __base(__p) {}
 
     /*!
      * \brief Constructs a resource view by copying the resource pointer from a compatible resource view.
@@ -975,49 +975,49 @@ public:
      * \tparam _OtherProperties The properties defined byt the source resource view
      */
     template <typename _OtherPointer, typename... _OtherProperties, typename = _CUDA_VSTD::enable_if_t<
-        is_view_convertible<basic_resource_view<_OtherPointer, _OtherProperties...>, basic_resource_view>::value
+        is_view_convertible<basic_resource_ptr<_OtherPointer, _OtherProperties...>, basic_resource_ptr>::value
     >>
-    basic_resource_view(basic_resource_view<_OtherPointer, _OtherProperties...> v) : __base(v) {}
+    basic_resource_ptr(basic_resource_ptr<_OtherPointer, _OtherProperties...> v) : __base(v) {}
 };
 
 template <typename _FirstProperty, typename... _Properties, typename _ResourcePointer>
-basic_resource_view<_ResourcePointer, _FirstProperty, _Properties...>
+basic_resource_ptr<_ResourcePointer, _FirstProperty, _Properties...>
 view_resource(_ResourcePointer __rsrc_ptr) {
     return __rsrc_ptr;
 }
 
 template <typename _ResourcePointer>
-basic_resource_view<_ResourcePointer, kind_to_properties<typename std::remove_pointer_t<_ResourcePointer>::memory_kind>>
+basic_resource_ptr<_ResourcePointer, kind_to_properties<typename std::remove_pointer_t<_ResourcePointer>::memory_kind>>
 view_resource(_ResourcePointer __rsrc_ptr) {
     return __rsrc_ptr;
 }
 
 
 template <typename _ResourcePointer, typename... _Properties, typename _Kind>
-bool operator==(const basic_resource_view<_ResourcePointer, _Properties...> &__view, const memory_resource<_Kind> *__mr) {
+bool operator==(const basic_resource_ptr<_ResourcePointer, _Properties...> &__view, const memory_resource<_Kind> *__mr) {
   return __view == view_resource(__mr);
 }
 
 template <typename _ResourcePointer, typename... _Properties, typename _Kind>
-bool operator!=(const basic_resource_view<_ResourcePointer, _Properties...> &__view, const memory_resource<_Kind> *__mr) {
+bool operator!=(const basic_resource_ptr<_ResourcePointer, _Properties...> &__view, const memory_resource<_Kind> *__mr) {
   return __view != view_resource(__mr);
 }
 
 template <typename _ResourcePointer, typename... _Properties, typename _Kind>
-bool operator==(const memory_resource<_Kind> *__mr, const basic_resource_view<_ResourcePointer, _Properties...> &__view) {
+bool operator==(const memory_resource<_Kind> *__mr, const basic_resource_ptr<_ResourcePointer, _Properties...> &__view) {
   return view_resource(__mr) == __view;
 }
 
 template <typename _ResourcePointer, typename... _Properties, typename _Kind>
-bool operator!=(const memory_resource<_Kind> *__mr, const basic_resource_view<_ResourcePointer, _Properties...> &__view) {
+bool operator!=(const memory_resource<_Kind> *__mr, const basic_resource_ptr<_ResourcePointer, _Properties...> &__view) {
   return view_resource(__mr) != __view;
 }
 
 template <typename... _Properties>
-using resource_view = basic_resource_view<detail::memory_resource_base*, _Properties...>;
+using resource_ptr = basic_resource_ptr<detail::memory_resource_base*, _Properties...>;
 
 template <typename... _Properties>
-using stream_ordered_resource_view = basic_resource_view<detail::stream_ordered_memory_resource_base*, _Properties...>;
+using stream_ordered_resource_ptr = basic_resource_ptr<detail::stream_ordered_memory_resource_base*, _Properties...>;
 
 #if _LIBCUDACXX_STD_VER > 14
 

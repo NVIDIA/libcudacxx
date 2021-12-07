@@ -18,23 +18,9 @@
 
 int main(int argc, char **argv) {
 #ifndef __CUDA_ARCH__
-  cuda::resource_view<cuda::memory_access::host,
-                      cuda::oversubscribable,
-                      cuda::memory_location::host> props_only;
-
-  // test copy constructor
-  cuda::resource_view<cuda::memory_access::host,
-                      cuda::oversubscribable,
-                      cuda::memory_location::host> same_props = props_only;
-
-  // test converting constructor
-  cuda::resource_view<cuda::memory_access::host,
-                      cuda::oversubscribable,
-                      cuda::memory_location::host> subset = props_only;
-
-  // test asisgnment
-  same_props = props_only;
-  subset = props_only;
+  cuda::resource_ptr<cuda::memory_access::host, cuda::oversubscribable, cuda::memory_location::host> props_only;
+  cuda::resource_ptr<cuda::of_kind<d<cuda::memory_kind::host>> kind_only;
+  kind_only = props_only;  // no conversion from a list of properties back to memory kind
 #endif
   return 0;
 }

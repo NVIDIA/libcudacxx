@@ -120,7 +120,7 @@ int main(int argc, char **argv) {
   }
   {
     sync_resource rsrc;
-    cuda::resource_view<cuda::memory_access::host> view = &rsrc;
+    cuda::resource_ptr<cuda::memory_access::host> view = &rsrc;
     void *ptr = view->allocate(23, 32);
     assert(ptr == rsrc.allocated_pointer);
     assert(23 == rsrc.allocated_size);
@@ -167,7 +167,7 @@ int main(int argc, char **argv) {
   {
     cuda::stream_view stream((cudaStream_t)0x1234);
     async_resource rsrc;
-    cuda::stream_ordered_resource_view<cuda::memory_access::device> view = &rsrc;
+    cuda::stream_ordered_resource_ptr<cuda::memory_access::device> view = &rsrc;
 
     void *ptr = view->allocate(23, 32);
     assert(ptr == rsrc.allocated_pointer);

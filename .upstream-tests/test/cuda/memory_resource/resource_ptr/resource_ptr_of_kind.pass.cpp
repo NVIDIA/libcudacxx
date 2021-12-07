@@ -18,9 +18,19 @@
 
 int main(int argc, char **argv) {
 #ifndef __CUDA_ARCH__
-  cuda::resource_view<cuda::memory_access::host, cuda::oversubscribable, cuda::memory_location::host> props_only;
-  cuda::resource_view<cuda::of_kind<d<cuda::memory_kind::host>> kind_only;
-  kind_only = props_only;  // no conversion from a list of properties back to memory kind
+  cuda::resource_ptr<cuda::memory_access::host,
+                      cuda::oversubscribable,
+                      cuda::memory_location::host> props_only;
+
+  cuda::resource_ptr<cuda::of_kind<cuda::memory_kind::host>> kind_only;
+
+  cuda::resource_ptr<cuda::of_kind<cuda::memory_kind::host>,
+                      cuda::memory_access::host,
+                      cuda::oversubscribable,
+                      cuda::memory_location::host> props_and_kind;
+
+  props_only = kind_only;  // the source properties should be propagated form of_kind
+  props_and_kind = kind_only;  // the additional properties should be propagated form of_kind
 #endif
   return 0;
 }

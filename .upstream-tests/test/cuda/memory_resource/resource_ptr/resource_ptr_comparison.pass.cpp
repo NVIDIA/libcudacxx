@@ -56,8 +56,8 @@ int main(int argc, char **argv) {
 #if !defined(__CUDA_ARCH__) && defined(_LIBCUDACXX_EXT_RTTI_ENABLED)
   resource<tag1> r1, r2, r3;
   resource<tag2> r4;
-  cuda::basic_resource_view<resource<tag1>*, cuda::kind_to_properties<cuda::memory_kind::managed>> v1_null;
-  cuda::resource_view<cuda::memory_access::host> v2_null;
+  cuda::basic_resource_ptr<resource<tag1>*, cuda::kind_to_properties<cuda::memory_kind::managed>> v1_null;
+  cuda::resource_ptr<cuda::memory_access::host> v2_null;
   assert(v1_null == v2_null);
   r1.value = 42;
   r2.value = 42;
@@ -69,10 +69,10 @@ int main(int argc, char **argv) {
   assert(view_resource(&r1) == view_resource(&r2));
   assert(view_resource(&r1) != view_resource(&r3));
   assert(view_resource(&r4) == view_resource(&r4));
-  cuda::resource_view<cuda::memory_access::host, cuda::memory_access::device>   v1 = &r1;
-  cuda::stream_ordered_resource_view<cuda::memory_access::device> v2 = &r2;
-  cuda::resource_view<cuda::memory_access::host> v3 = &r3;
-  cuda::resource_view<cuda::memory_access::device, cuda::memory_access::host> v4 = &r4;
+  cuda::resource_ptr<cuda::memory_access::host, cuda::memory_access::device>   v1 = &r1;
+  cuda::stream_ordered_resource_ptr<cuda::memory_access::device> v2 = &r2;
+  cuda::resource_ptr<cuda::memory_access::host> v3 = &r3;
+  cuda::resource_ptr<cuda::memory_access::device, cuda::memory_access::host> v4 = &r4;
   // compare views
   assert(v1 == v2);
   assert(v1 != v3);

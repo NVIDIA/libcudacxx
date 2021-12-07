@@ -18,7 +18,7 @@
 namespace memory_kind = cuda::memory_kind;
 namespace memory_access = cuda::memory_access;
 using cuda::memory_resource;
-using cuda::resource_view;
+using cuda::resource_ptr;
 using cuda::property_list;
 
 struct event {
@@ -59,7 +59,7 @@ private:
 template <typename... Properties>
 struct resource_adaptor : public memory_resource<memory_kind::with_properties<Properties...>> {
  public:
-  resource_adaptor(resource_view<Properties...> upstream) : upstream(upstream) {
+  resource_adaptor(resource_ptr<Properties...> upstream) : upstream(upstream) {
   }
 
  private:
@@ -71,11 +71,11 @@ struct resource_adaptor : public memory_resource<memory_kind::with_properties<Pr
     upstream->deallocate(ptr, size, alignment);
   }
 
-  resource_view<Properties...> upstream;
+  resource_ptr<Properties...> upstream;
 };
 
 template <typename Pointer, typename... Properties>
-resource_adaptor<Properties...> adapt(cuda::basic_resource_view<Pointer, Properties...> v) {
+resource_adaptor<Properties...> adapt(cuda::basic_resource_ptr<Pointer, Properties...> v) {
   return resource_adaptor<Properties...>(v);
 }
 
@@ -83,10 +83,10 @@ int main(int argc, char **argv) {
 #ifndef __CUDA_ARCH__
 
   dummy_resource<memory_kind::managed> res;
-  resource_view<cuda::of_kind<memory_kind::managed>> v1 = &res;
-  resource_view<cuda::kind_to_properties<memory_kind::managed>> v2 = &res;
-  resource_view<memory_access::device, memory_access::host> v3 = &res;
-  cuda::resource_view<property_list<memory_access::device, memory_access::host>> v4 = &res;
+  resource_ptr<cuda::of_kind<memory_kind::managed>> v1 = &res;
+  resource_ptr<cuda::kind_to_properties<memory_kind::managed>> v2 = &res;
+  resource_ptr<memory_access::device, memory_access::host> v3 = &res;
+  cuda::resource_ptr<property_list<memory_access::device, memory_access::host>> v4 = &res;
 
   (void)adapt(v1);
   (void)adapt(v2);

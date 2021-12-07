@@ -20,10 +20,10 @@
 int main(int argc, char **argv) {
 #ifndef __CUDA_ARCH__
   derived_async2 *res = nullptr;
-  using expected_view_type = cuda::basic_resource_view<derived_async2*, cuda::property_list<cuda::of_kind<cuda::memory_kind::managed>>>;
+  using expected_view_type = cuda::basic_resource_ptr<derived_async2*, cuda::property_list<cuda::of_kind<cuda::memory_kind::managed>>>;
   auto view = cuda::view_resource<cuda::kind_to_properties<cuda::memory_kind::managed>>(res);
   static_assert(std::is_base_of<expected_view_type, decltype(view)>::value,
-                "Unexpected return type of `view_resource` - expected a basic_resource_view with is_kind and concrete pointer type");
+                "Unexpected return type of `view_resource` - expected a basic_resource_ptr with is_kind and concrete pointer type");
   view_DA2 vda2(res);
   vda2 = view;
   view_DA1 vda1(res);
