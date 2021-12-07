@@ -18,19 +18,12 @@
 
 int main(int argc, char **argv) {
 #ifndef __CUDA_ARCH__
-  cuda::resource_view<cuda::memory_access::host,
-                      cuda::oversubscribable,
-                      cuda::memory_location::host> props_only;
+  cuda::resource_view<cuda::of_kind<d<cuda::memory_kind::managed> managed;
+  cuda::resource_view<cuda::of_kind<cuda::memory_kind::host>> host;
 
-  cuda::resource_view<cuda::is_kind<cuda::memory_kind::host>> kind_only;
-
-  cuda::resource_view<cuda::is_kind<cuda::memory_kind::host>,
-                      cuda::memory_access::host,
-                      cuda::oversubscribable,
-                      cuda::memory_location::host> props_and_kind;
-
-  props_only = kind_only;  // the source properties should be propagated form is_kind
-  props_and_kind = kind_only;  // the additional properties should be propagated form is_kind
+  // Despite managed having a superset of properties of host,
+  // this should fail because the kind is a property in itself.
+  host = managed;
 #endif
   return 0;
 }

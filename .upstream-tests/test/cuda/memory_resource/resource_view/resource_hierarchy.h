@@ -39,6 +39,7 @@ to--v
     B        X    X    X   X   X   X  X   X
 */
 
+// NOTE - some views are parameterized with separate properties and some with property_list<...>
 
 using view_D2 = cuda::basic_resource_view<
     derived2*,
@@ -53,19 +54,22 @@ using view_D1 = cuda::basic_resource_view<
 
 using view_DA2 = cuda::basic_resource_view<
     derived_async2*,
-    cuda::memory_access::host,
-    cuda::oversubscribable,
-    cuda::memory_location::host>;
+    cuda::property_list<
+        cuda::memory_access::host,
+        cuda::oversubscribable,
+        cuda::memory_location::host>>;
 
 using view_DA1 = cuda::basic_resource_view<
     derived_async1*,
-    cuda::memory_access::host,
-    cuda::memory_location::host>;
+    cuda::property_list<
+        cuda::memory_access::host,
+        cuda::memory_location::host>>;
 
 using view_M = cuda::basic_resource_view<
     cuda::memory_resource<cuda::memory_kind::managed>*,
-    cuda::memory_access::host,
-    cuda::memory_location::host>;
+    cuda::property_list<
+        cuda::memory_access::host,
+        cuda::memory_location::host>>;
 
 using view_MA = cuda::basic_resource_view<
     cuda::stream_ordered_memory_resource<cuda::memory_kind::managed>*,

@@ -18,12 +18,9 @@
 
 int main(int argc, char **argv) {
 #ifndef __CUDA_ARCH__
-  cuda::resource_view<cuda::is_kind<cuda::memory_kind::managed> managed;
-  cuda::resource_view<cuda::is_kind<cuda::memory_kind::host>> host;
-
-  // Despite managed having a superset of properties of host,
-  // this should fail because the kind is a property in itself.
-  host = managed;
+  cuda::resource_view<cuda::memory_access::host, cuda::oversubscribable, cuda::memory_location::host> props_only;
+  cuda::resource_view<cuda::of_kind<d<cuda::memory_kind::host>> kind_only;
+  kind_only = props_only;  // no conversion from a list of properties back to memory kind
 #endif
   return 0;
 }

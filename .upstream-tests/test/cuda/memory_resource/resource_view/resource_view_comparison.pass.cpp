@@ -49,16 +49,14 @@ private:
 #endif
 };
 
-
 struct tag1;
 struct tag2;
-
 
 int main(int argc, char **argv) {
 #if !defined(__CUDA_ARCH__) && defined(_LIBCUDACXX_EXT_RTTI_ENABLED)
   resource<tag1> r1, r2, r3;
   resource<tag2> r4;
-  cuda::basic_resource_view<resource<tag1>*, cuda::is_kind<cuda::memory_kind::managed>> v1_null;
+  cuda::basic_resource_view<resource<tag1>*, cuda::kind_to_properties<cuda::memory_kind::managed>> v1_null;
   cuda::resource_view<cuda::memory_access::host> v2_null;
   assert(v1_null == v2_null);
   r1.value = 42;

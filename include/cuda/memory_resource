@@ -109,47 +109,6 @@ bool __is_type(const ::std::type_info *__ti1, const void *__fallback_ti1) {
 
 }  // namespace detail
 
-template <typename _ResourcePointer, typename... _Properties>
-class basic_resource_view;
-
-template <typename... _Properties>
-struct properties;
-
-
-namespace detail {
-  template <typename... _Properties>
-  struct __kind_from_properties_helper {
-    using type = void;
-  };
-
-  template <typename... _Properties>
-  using __kind_from_properties_helper_t = typename __kind_from_properties_helper<_Properties...>::type;
-
-  template <typename _Kind, typename... _Tail>
-  struct __kind_from_properties_helper<is_kind<_Kind>, _Tail...> {
-    using type = _Kind;
-  };
-
-  template <typename _FirstProp, typename... _Tail>
-  struct __kind_from_properties_helper<_FirstProp, _Tail...> {
-    using type = __kind_from_properties_helper_t<_Tail...>;
-  };
-}
-
-
-/*!
- * \brief Evaluaes to the a memory kind tag form _Properties (if listed as is_kind)
- *        or to a list of properties otherwise.
- */
-template <typename... _Properties>
-struct kind_from_properties {
-  using type = _CUDA_VSTD::conditional_t<
-    _CUDA_VSTD::is_same<detail::__kind_from_properties_helper_t<_Properties...>, void>,
-    detail::__kind_from_properties_helper_t<_Properties...>
-  >;
-};
-
-
 /*!
  * \brief Groups the tag types denoting the execution environment in which the memory can be accessed
  *
@@ -192,6 +151,9 @@ namespace memory_location {
 
 template <typename _MemoryKind>
 class memory_resource;
+
+template <typename _ResourcePointer, typename... _Properties>
+class basic_resource_view;
 
 namespace detail {
 
@@ -501,6 +463,12 @@ bool operator==(const memory_resource<_Kind> &__a, const memory_resource<_Kind> 
   return __a.is_equal(__b);
 }
 
+template <typename _Kind>
+inline _LIBCUDACXX_INLINE_VISIBILITY
+bool operator!=(const memory_resource<_Kind> &__a, const memory_resource<_Kind> &__b) {
+  return !__a.is_equal(__b);
+}
+
 /*!
  * \brief Abstract interface for CUDA stream-ordered memory allocation.
  *
@@ -692,13 +660,73 @@ struct kind_has_property : std::false_type {};
  * This allows for future extension of the set of properties.
  */
 template <typename _MemoryKind>
-struct is_kind;
+struct of_kind;
 
 template <typename _MemoryKind>
-struct kind_has_property<_MemoryKind, is_kind<_MemoryKind>> : _CUDA_VSTD::true_type {};
+struct kind_has_property<_MemoryKind, of_kind<_MemoryKind>> : _CUDA_VSTD::true_type {};
+
+
+template <typename... _Properties>
+struct property_list {};
+
+namespace detail {
+  template <typename... _Properties>
+  struct __kind_from_properties_helper {
+    using type = void;
+  };
+
+  template <typename... _Properties>
+  using __kind_from_properties_helper_t = typename __kind_from_properties_helper<_Properties...>::type;
+
+  template <typename _Kind>
+  struct __kind_from_properties_helper<of_kind<_Kind>> {
+    using type = _Kind;
+  };
+
+  template <typename _FirstProp, typename... _Tail>
+  struct __kind_from_properties_helper<_FirstProp, _Tail...> {
+    using type = __kind_from_properties_helper_t<_Tail...>;
+  };
+
+  /*!
+  * \brief Evaluaes to the a memory kind tag form _Properties (if listed as of_kind)
+  *        or to a list of properties otherwise.
+  */
+  template <typename... _Properties>
+  struct kind_from_properties {
+    using type = _CUDA_VSTD::conditional_t<
+      _CUDA_VSTD::is_same<detail::__kind_from_properties_helper_t<_Properties...>, void>::value,
+      property_list<_Properties...>,
+      detail::__kind_from_properties_helper_t<_Properties...>
+    >;
+  };
+
+  template <typename _Kind>
+  struct kind_to_properties {
+    using type = property_list<of_kind<_Kind>>;
+  };
+
+  template <typename... _Properties>
+  struct kind_to_properties<property_list<_Properties...>> {
+    using type = property_list<_Properties...>;
+  };
+}
+
+
+namespace memory_kind {
+  /*!
+   * \brief A pseudokind
+   */
+  template <typename... _Properties>
+  using with_properties = typename detail::kind_from_properties<_Properties...>::type;
+};
+
+template <typename _Kind>
+using kind_to_properties = typename detail::kind_to_properties<_Kind>::type;
 
 #define _LIBCUDACXX_MEMORY_KIND_PROPERTY(__kind, __property)\
 template <> struct kind_has_property<__kind, __property> : _CUDA_VSTD::true_type {};
+
 
 _LIBCUDACXX_MEMORY_KIND_PROPERTY(memory_kind::host, memory_access::host);
 _LIBCUDACXX_MEMORY_KIND_PROPERTY(memory_kind::host, oversubscribable);
@@ -731,9 +759,21 @@ namespace detail {
 template <typename _Target, typename _Property>
 struct has_property : decltype(detail::Has_Property<_Property>(_CUDA_VSTD::declval<_CUDA_VSTD::remove_reference_t<_Target>*>())) {};
 
+template <typename _Target, typename... _Properties>
+struct has_properties : _CUDA_VSTD::conjunction<has_property<_Target, _Properties>...> {};
+
+template <typename _Target, typename... _Properties>
+struct has_properties<_Target, property_list<_Properties...>> : has_properties<_Target, _Properties...> {};
+
+template <typename _Target, typename... _Properties>
+struct has_property<_Target, property_list<_Properties...>> : has_properties<_Target, _Properties...> {};
+
 namespace detail {
 template <typename _Property, typename... _Properties>
 struct is_property_in : _CUDA_VSTD::false_type {};
+
+template <typename _Property, typename... _Properties>
+struct is_property_in<_Property, property_list<_Properties...>> : is_property_in<_Property, _Properties...> {};
 
 template <typename _Property, typename _Mismatch, typename... _Tail>
 struct is_property_in<_Property, _Mismatch, _Tail...> : is_property_in<_Property, _Tail...> {};
@@ -742,10 +782,10 @@ template <typename _Property, typename... _Tail>
 struct is_property_in<_Property, _Property, _Tail...> : _CUDA_VSTD::true_type {};
 
 template <typename _Property, typename _MemoryKind, typename... Tail>
-struct is_property_in<_Property, is_kind<_MemoryKind>, Tail...> : kind_has_property<_MemoryKind, _Property> {};
+struct is_property_in<_Property, of_kind<_MemoryKind>, Tail...> : kind_has_property<_MemoryKind, _Property> {};
 
 template <typename _MemoryKind, typename... Tail>
-struct is_property_in<is_kind<_MemoryKind>, is_kind<_MemoryKind>, Tail...> : _CUDA_VSTD::true_type {};
+struct is_property_in<of_kind<_MemoryKind>, of_kind<_MemoryKind>, Tail...> : _CUDA_VSTD::true_type {};
 
 template <typename _FromPointer, typename _ToPointer>
 struct is_resource_pointer_convertible : _CUDA_VSTD::is_convertible<_FromPointer, _ToPointer> {};
@@ -762,8 +802,10 @@ struct is_resource_pointer_convertible<_FromPointer, detail::stream_ordered_memo
    : _CUDA_VSTD::conjunction<_CUDA_VSTD::is_pointer<_FromPointer>,
                               _CUDA_VSTD::is_base_of<detail::stream_ordered_memory_resource_base,
                                                     typename ::std::pointer_traits<_FromPointer>::element_type>> {};
-
 }  // namespace detail
+
+template <typename _Property, typename... _Properties>
+struct kind_has_property<property_list<_Properties...>, _Property> : detail::is_property_in<_Property, _Properties...> {};
 
 template <typename _Pointer, typename... _Properties, typename _Property>
 struct has_property<basic_resource_view<_Pointer, _Properties...>, _Property> : detail::is_property_in<_Property, _Properties...> {};
@@ -776,7 +818,7 @@ struct is_view_convertible<
     basic_resource_view<_FromPointer, _FromProperties...>,
     basic_resource_view<_ToPointer, _ToProperties...>>
  : _CUDA_VSTD::conjunction<detail::is_resource_pointer_convertible<_FromPointer, _ToPointer>,
-    has_property<basic_resource_view<_FromPointer, _FromProperties...>, _ToProperties>...> {};
+    has_properties<basic_resource_view<_FromPointer, _FromProperties...>, _ToProperties...>> {};
 
 /*!
  * \brief A pointer-like object to a memory resource based on resource.
@@ -801,7 +843,7 @@ struct is_view_convertible<
  * \tparam _Properies properties of a memory resource required by resource view
  */
 template <typename _ResourcePointer, typename... _Properties>
-class basic_resource_view {
+class basic_resource_view<_ResourcePointer, property_list<_Properties...>> {
 public:
     static_assert(
         _CUDA_VSTD::is_base_of<detail::memory_resource_base, typename ::std::pointer_traits<_ResourcePointer>::element_type>::value ||
@@ -813,6 +855,12 @@ public:
     basic_resource_view(int) = delete;
 
     basic_resource_view(std::nullptr_t) {}
+
+    basic_resource_view(const basic_resource_view &) = default;
+
+    basic_resource_view(basic_resource_view &&) = default;
+
+    using properties = property_list<_Properties...>;
 
     /*!
      * \brief Constructs a resource view from a compatible memory resource pointer.
@@ -843,6 +891,18 @@ public:
         is_view_convertible<basic_resource_view<_OtherPointer, _OtherProperties...>, basic_resource_view>::value
     >>
     basic_resource_view(basic_resource_view<_OtherPointer, _OtherProperties...> v) : __pointer(v.__pointer) {}
+
+    basic_resource_view &operator=(const basic_resource_view &)=default;
+    basic_resource_view &operator=(basic_resource_view &&)=default;
+
+    template <typename _OtherPointer, typename... _OtherProperties, typename = _CUDA_VSTD::enable_if_t<
+        is_view_convertible<basic_resource_view<_OtherPointer, _OtherProperties...>, basic_resource_view>::value
+    >>
+    basic_resource_view &operator=(basic_resource_view<_OtherPointer, _OtherProperties...> v) {
+      __pointer = std::move(v.__pointer);
+      return *this;
+    }
+
 
     /*!
      * \brief Exposes the interface of the underlying memory resource.
@@ -877,15 +937,57 @@ private:
     _ResourcePointer __pointer{};
 };
 
+template <typename _ResourcePointer, typename... _Properties>
+class basic_resource_view : public basic_resource_view<_ResourcePointer, property_list<_Properties...>> {
+public:
+    using __base = basic_resource_view<_ResourcePointer, property_list<_Properties...>>;
+    using __base::__base;
+    using __base::operator=;
+    using __base::operator==;
+    using __base::operator!=;
+    using __base::operator->;
+    using __base::operator bool;
+    using properties = property_list<_Properties...>;
+
+    /*!
+     * \brief Constructs a resource view from a compatible memory resource pointer.
+     *
+     * The memory resource is considered compatible if a pointer to it can be converted to
+     * `_ResourcePointer` and the resource type has the required properties listed
+     * in `_Properties`.
+     *
+     * \tparam _Resource Type of a mmeory resource object.
+     * \param __p pointer to a memory resource object.
+     */
+    template <typename _Resource, typename = _CUDA_VSTD::enable_if_t<
+        detail::is_resource_pointer_convertible<_Resource*, _ResourcePointer>::value &&
+        _CUDA_VSTD::conjunction<has_property<_Resource, _Properties>...>::value
+    >>
+    basic_resource_view(_Resource *__p) : __base(__p) {}
+
+    /*!
+     * \brief Constructs a resource view by copying the resource pointer from a compatible resource view.
+     *
+     * A resource view is considered compatible if it defines all properties required by this
+     * view in `_Properties`.
+     *
+     * \tparam _OtherPointer The resource pointer type of the source resource view
+     * \tparam _OtherProperties The properties defined byt the source resource view
+     */
+    template <typename _OtherPointer, typename... _OtherProperties, typename = _CUDA_VSTD::enable_if_t<
+        is_view_convertible<basic_resource_view<_OtherPointer, _OtherProperties...>, basic_resource_view>::value
+    >>
+    basic_resource_view(basic_resource_view<_OtherPointer, _OtherProperties...> v) : __base(v) {}
+};
+
 template <typename _FirstProperty, typename... _Properties, typename _ResourcePointer>
 basic_resource_view<_ResourcePointer, _FirstProperty, _Properties...>
 view_resource(_ResourcePointer __rsrc_ptr) {
     return __rsrc_ptr;
 }
 
-
 template <typename _ResourcePointer>
-basic_resource_view<_ResourcePointer, is_kind<typename std::remove_pointer_t<_ResourcePointer>::memory_kind>>
+basic_resource_view<_ResourcePointer, kind_to_properties<typename std::remove_pointer_t<_ResourcePointer>::memory_kind>>
 view_resource(_ResourcePointer __rsrc_ptr) {
     return __rsrc_ptr;
 }
