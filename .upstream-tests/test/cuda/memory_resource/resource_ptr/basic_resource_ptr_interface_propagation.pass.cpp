@@ -17,7 +17,7 @@
 #include <tuple>
 #include <vector>
 
-class sync_resource : public cuda::memory_resource<cuda::memory_kind::pinned> {
+class sync_resource : public cuda::pmr::memory_resource<cuda::pmr::memory_kind::pinned> {
 public:
   int extra_sync() {
     return 42;
@@ -25,7 +25,7 @@ public:
 
   size_t allocated_size = 0, allocated_alignment = 0;
   void *allocated_pointer = nullptr;
-  mutable const cuda::memory_resource<cuda::memory_kind::pinned> *compared_resource = nullptr;
+  mutable const cuda::pmr::memory_resource<cuda::pmr::memory_kind::pinned> *compared_resource = nullptr;
 private:
   void *do_allocate(size_t size, size_t alignment) override {
     allocated_size = size;
@@ -42,13 +42,13 @@ private:
     allocated_alignment = 0;
   }
 
-  bool do_is_equal(const cuda::memory_resource<cuda::memory_kind::pinned> &other) const noexcept override {
+  bool do_is_equal(const cuda::pmr::memory_resource<cuda::pmr::memory_kind::pinned> &other) const noexcept override {
     compared_resource = &other;
     return this == &other;
   }
 };
 
-class async_resource : public cuda::stream_ordered_memory_resource<cuda::memory_kind::device> {
+class async_resource : public cuda::pmr::stream_ordered_resource<cuda::pmr::memory_kind::device> {
 public:
   int extra_async() {
     return 42;
@@ -57,7 +57,7 @@ public:
   size_t allocated_size = 0, allocated_alignment = 0;
   void *allocated_pointer = nullptr;
   cuda::stream_view allocation_stream = {};
-  mutable const cuda::memory_resource<cuda::memory_kind::device> *compared_resource = nullptr;
+  mutable const cuda::pmr::memory_resource<cuda::pmr::memory_kind::device> *compared_resource = nullptr;
 private:
   void *do_allocate(size_t size, size_t alignment) override {
     allocated_size = size;
@@ -93,7 +93,7 @@ private:
     allocation_stream = {};
   }
 
-  bool do_is_equal(const cuda::memory_resource<cuda::memory_kind::device> &other) const noexcept override {
+  bool do_is_equal(const cuda::pmr::memory_resource<cuda::pmr::memory_kind::device> &other) const noexcept override {
     compared_resource = &other;
     return this == &other;
   }
@@ -104,7 +104,7 @@ int main(int argc, char **argv) {
   // syncrhonous resource
   {
     sync_resource rsrc;
-    auto view = cuda::view_resource<cuda::memory_access::host>(&rsrc);
+    auto view = cuda::pmr::view_resource<cuda::pmr::memory_access::host>(&rsrc);
     assert(view->extra_sync() == 42);
     void *ptr = view->allocate(23, 32);
     assert(ptr == view->allocated_pointer);
@@ -120,7 +120,7 @@ int main(int argc, char **argv) {
   }
   {
     sync_resource rsrc;
-    cuda::resource_ptr<cuda::memory_access::host> view = &rsrc;
+    cuda::pmr::resource_ptr<cuda::pmr::memory_access::host> view = &rsrc;
     void *ptr = view->allocate(23, 32);
     assert(ptr == rsrc.allocated_pointer);
     assert(23 == rsrc.allocated_size);
@@ -134,7 +134,7 @@ int main(int argc, char **argv) {
   {
     cuda::stream_view stream((cudaStream_t)0x1234);
     async_resource rsrc;
-    auto view = cuda::view_resource<cuda::memory_access::device>(&rsrc);
+    auto view = cuda::pmr::view_resource<cuda::pmr::memory_access::device>(&rsrc);
 
     assert(view->extra_async() == 42);
 
@@ -167,7 +167,7 @@ int main(int argc, char **argv) {
   {
     cuda::stream_view stream((cudaStream_t)0x1234);
     async_resource rsrc;
-    cuda::stream_ordered_resource_ptr<cuda::memory_access::device> view = &rsrc;
+    cuda::pmr::stream_ordered_resource_ptr<cuda::pmr::memory_access::device> view = &rsrc;
 
     void *ptr = view->allocate(23, 32);
     assert(ptr == rsrc.allocated_pointer);

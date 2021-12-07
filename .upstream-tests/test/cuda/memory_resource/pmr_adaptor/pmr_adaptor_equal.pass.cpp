@@ -27,7 +27,7 @@ namespace pmr = ::std::experimental::pmr;
 #endif
 
 template <typename Kind>
-class derived_resource : public cuda::memory_resource<Kind> {
+class derived_resource : public cuda::pmr::memory_resource<Kind> {
 public:
 private:
   void *do_allocate(cuda::std::size_t, cuda::std::size_t) override {
@@ -37,7 +37,7 @@ private:
   void do_deallocate(void *, cuda::std::size_t, cuda::std::size_t) override {}
 
   bool
-  do_is_equal(cuda::memory_resource<cuda::memory_kind::host> const &other) const
+  do_is_equal(cuda::pmr::memory_resource<cuda::pmr::memory_kind::host> const &other) const
       noexcept override {
     return dynamic_cast<derived_resource const *>(&other) != nullptr;
   }
@@ -112,7 +112,7 @@ int main(int argc, char **argv) {
 
 #ifndef __CUDA_ARCH__
 #if defined(_LIBCUDACXX_STD_PMR_NS)
-  test_pmr_adaptor_equality<cuda::memory_kind::host>();
+  test_pmr_adaptor_equality<cuda::pmr::memory_kind::host>();
 #endif
 #endif
 

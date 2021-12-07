@@ -34,6 +34,7 @@
 #endif // _LIBCUDACXX_STD_VER > 14
 
 _LIBCUDACXX_BEGIN_NAMESPACE_CUDA
+namespace pmr {
 
 /*!
  * \brief Groups the tag types denoting the kind of memory of an allocation.
@@ -63,7 +64,7 @@ namespace memory_kind {
    * \brief Virtual memory that is automatically migrated between the host and devices.
    */
   struct managed;
-};
+}  // namespace memory_kind
 
 namespace detail {
 
@@ -117,7 +118,7 @@ bool __is_type(const ::std::type_info *__ti1, const void *__fallback_ti1) {
 namespace memory_access {
     struct host;
     struct device;
-}
+}  // namespace memory_access
 
 /*!
  * \brief A memory property tag type indicating that the memory can be oversubscribed.
@@ -147,7 +148,7 @@ namespace memory_location {
     * \brief A memory property tag type indicating that the memory is located in the host memory
     */
     struct host;
-}
+}  // namespace memory_location
 
 template <typename _MemoryKind>
 class memory_resource;
@@ -235,12 +236,12 @@ protected:
   }
 
   template <typename _ResourcePointer, typename... _Properties>
-  friend class cuda::basic_resource_ptr;
+  friend class cuda::pmr::basic_resource_ptr;
 
   virtual void *__do_as_kind(const ::std::type_info *__tag_type_id, const void *__tag_type_fallback_id) const noexcept = 0;
 };
 
-class stream_ordered_memory_resource_base : public virtual memory_resource_base {
+class stream_ordered_resource_base : public virtual memory_resource_base {
 public:
   /*!
    * \brief Allocates storage of size at least `__bytes` bytes in stream order
@@ -291,7 +292,7 @@ public:
    *
    * `__p` must have been returned by a prior call to
    * `allocate_async(__bytes, default_alignment)` or `allocate(__bytes,
-   * default_alignment)` on a `stream_ordered_memory_resource` that compares
+   * default_alignment)` on a `stream_ordered_resource` that compares
    * equal to `*this`, and the storage it points to must not yet have been
    * deallocated, otherwise behavior is undefined.
    *
@@ -322,7 +323,7 @@ public:
    *
    * `__p` must have been returned by a prior call to
    * `allocate_async(__bytes, __alignment)` or `allocate(__bytes,
-   * __alignment)` on a `stream_ordered_memory_resource` that compares
+   * __alignment)` on a `stream_ordered_resource` that compares
    * equal to `*this`, and the storage it points to must not yet have been
    * deallocated, otherwise behavior is undefined.
    *
@@ -355,7 +356,7 @@ protected:
   virtual void do_deallocate_async(void *__mem, size_t __bytes, size_t __alignment, stream_view __stream) = 0;
 
   template <typename _ResourcePointer, typename... _Properties>
-  friend class cuda::basic_resource_ptr;
+  friend class cuda::pmr::basic_resource_ptr;
 };
 
 }  // namespace detail
@@ -497,8 +498,8 @@ bool operator!=(const memory_resource<_Kind> &__a, const memory_resource<_Kind> 
  * \tparam _MemoryKind The kind of the allocated memory.
  */
 template <typename _MemoryKind>
-class stream_ordered_memory_resource : public virtual memory_resource<_MemoryKind>,
-                                       private virtual detail::stream_ordered_memory_resource_base {
+class stream_ordered_resource : public virtual memory_resource<_MemoryKind>,
+                                       private virtual detail::stream_ordered_resource_base {
 public:
   using memory_kind = _MemoryKind;
   static constexpr _CUDA_VSTD::size_t default_alignment = memory_resource<_MemoryKind>::default_alignment;
@@ -554,7 +555,7 @@ public:
    *
    * `__p` must have been returned by a prior call to
    * `allocate_async(__bytes, default_alignment)` or `allocate(__bytes,
-   * default_alignment)` on a `stream_ordered_memory_resource` that compares
+   * default_alignment)` on a `stream_ordered_resource` that compares
    * equal to `*this`, and the storage it points to must not yet have been
    * deallocated, otherwise behavior is undefined.
    *
@@ -585,7 +586,7 @@ public:
    *
    * `__p` must have been returned by a prior call to
    * `allocate_async(__bytes, __alignment)` or `allocate(__bytes,
-   * __alignment)` on a `stream_ordered_memory_resource` that compares
+   * __alignment)` on a `stream_ordered_resource` that compares
    * equal to `*this`, and the storage it points to must not yet have been
    * deallocated, otherwise behavior is undefined.
    *
@@ -753,7 +754,7 @@ namespace detail {
     template <typename _Property, typename _MemoryKind>
     kind_has_property<_MemoryKind, _Property> Has_Property(const memory_resource<_MemoryKind> *);
     template <typename _Property, typename _MemoryKind>
-    kind_has_property<_MemoryKind, _Property> Has_Property(const stream_ordered_memory_resource<_MemoryKind> *);
+    kind_has_property<_MemoryKind, _Property> Has_Property(const stream_ordered_resource<_MemoryKind> *);
 }  // namespace detail
 
 template <typename _Target, typename _Property>
@@ -798,9 +799,9 @@ struct is_resource_pointer_convertible<_FromPointer, detail::memory_resource_bas
                                                     typename ::std::pointer_traits<_FromPointer>::element_type>> {};
 
 template <typename _FromPointer>
-struct is_resource_pointer_convertible<_FromPointer, detail::stream_ordered_memory_resource_base*>
+struct is_resource_pointer_convertible<_FromPointer, detail::stream_ordered_resource_base*>
    : _CUDA_VSTD::conjunction<_CUDA_VSTD::is_pointer<_FromPointer>,
-                              _CUDA_VSTD::is_base_of<detail::stream_ordered_memory_resource_base,
+                              _CUDA_VSTD::is_base_of<detail::stream_ordered_resource_base,
                                                     typename ::std::pointer_traits<_FromPointer>::element_type>> {};
 }  // namespace detail
 
@@ -847,8 +848,8 @@ class basic_resource_ptr<_ResourcePointer, property_list<_Properties...>> {
 public:
     static_assert(
         _CUDA_VSTD::is_base_of<detail::memory_resource_base, typename ::std::pointer_traits<_ResourcePointer>::element_type>::value ||
-        _CUDA_VSTD::is_base_of<detail::stream_ordered_memory_resource_base, typename ::std::pointer_traits<_ResourcePointer>::element_type>::value,
-        "ResourcePointer must be a pointer to a memory_resource_base, stream_ordered_memory_resource_base or a derived class");
+        _CUDA_VSTD::is_base_of<detail::stream_ordered_resource_base, typename ::std::pointer_traits<_ResourcePointer>::element_type>::value,
+        "ResourcePointer must be a pointer to a memory_resource_base, stream_ordered_resource_base or a derived class");
 
     basic_resource_ptr() = default;
 
@@ -912,14 +913,14 @@ public:
     _ResourcePointer operator->() const noexcept { return __pointer; }
 
     template <typename _Ptr2, typename... _Props2>
-    bool operator==(const cuda::basic_resource_ptr<_Ptr2, _Props2...> &__v2) const noexcept {
+    bool operator==(const cuda::pmr::basic_resource_ptr<_Ptr2, _Props2...> &__v2) const noexcept {
       if (__pointer == nullptr || __v2.__pointer == nullptr)
         return __pointer == nullptr && __v2.__pointer == nullptr;
       return static_cast<const detail::memory_resource_base*>(__pointer)->is_equal(*__v2.__pointer);
     }
 
     template <typename _Ptr2, typename... _Props2>
-    bool operator!=(const cuda::basic_resource_ptr<_Ptr2, _Props2...> &__v2) const noexcept {
+    bool operator!=(const cuda::pmr::basic_resource_ptr<_Ptr2, _Props2...> &__v2) const noexcept {
       return !(*this == __v2);
     }
 
@@ -1017,7 +1018,7 @@ template <typename... _Properties>
 using resource_ptr = basic_resource_ptr<detail::memory_resource_base*, _Properties...>;
 
 template <typename... _Properties>
-using stream_ordered_resource_ptr = basic_resource_ptr<detail::stream_ordered_memory_resource_base*, _Properties...>;
+using stream_ordered_resource_ptr = basic_resource_ptr<detail::stream_ordered_resource_base*, _Properties...>;
 
 #if _LIBCUDACXX_STD_VER > 14
 
@@ -1026,7 +1027,7 @@ using stream_ordered_resource_ptr = basic_resource_ptr<detail::stream_ordered_me
 namespace detail{
 class __pmr_adaptor_base : public _LIBCUDACXX_STD_PMR_NS::memory_resource {
 public:
-  virtual cuda::memory_resource<cuda::memory_kind::host>* resource() const noexcept = 0;
+  virtual cuda::pmr::memory_resource<cuda::pmr::memory_kind::host>* resource() const noexcept = 0;
 };
 }
 
@@ -1068,6 +1069,7 @@ private:
 #endif // defined(_LIBCUDACXX_STD_PMR_NS)
 #endif // _LIBCUDACXX_STD_VER > 14
 
+}  // namespace pmr
 _LIBCUDACXX_END_NAMESPACE_CUDA
 
 #include "std/detail/__pragma_pop"

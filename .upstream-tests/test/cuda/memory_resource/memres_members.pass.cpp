@@ -15,20 +15,20 @@
 
 template <typename Kind>
 constexpr bool test_memory_kind() {
-  using mr = cuda::memory_resource<Kind>;
+  using mr = cuda::pmr::memory_resource<Kind>;
   return std::is_same<typename mr::memory_kind, Kind>::value;
 }
 
 template <typename Kind, std::size_t Alignment>
 constexpr bool test_alignment() {
-  using mr = cuda::memory_resource<Kind>;
+  using mr = cuda::pmr::memory_resource<Kind>;
   return mr::default_alignment == Alignment;
 }
 
 int main(int argc, char **argv) {
 
 #ifndef __CUDA_ARCH__
-  namespace memory_kind = cuda::memory_kind;
+  namespace memory_kind = cuda::pmr::memory_kind;
   static_assert(test_memory_kind<memory_kind::host>(), "");
   static_assert(test_memory_kind<memory_kind::device>(), "");
   static_assert(test_memory_kind<memory_kind::managed>(), "");

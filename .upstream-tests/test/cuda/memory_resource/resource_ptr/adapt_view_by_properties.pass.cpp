@@ -15,11 +15,11 @@
 #include <memory>
 #include <vector>
 
-namespace memory_kind = cuda::memory_kind;
-namespace memory_access = cuda::memory_access;
-using cuda::memory_resource;
-using cuda::resource_ptr;
-using cuda::property_list;
+namespace memory_kind = cuda::pmr::memory_kind;
+namespace memory_access = cuda::pmr::memory_access;
+using cuda::pmr::memory_resource;
+using cuda::pmr::resource_ptr;
+using cuda::pmr::property_list;
 
 struct event {
   enum action { ALLOCATE, DEALLOCATE };
@@ -35,7 +35,7 @@ bool operator==(event const& lhs, event const& rhs){
 }
 
 template <typename MemoryKind>
-class dummy_resource : public cuda::memory_resource<MemoryKind> {
+class dummy_resource : public cuda::pmr::memory_resource<MemoryKind> {
 public:
   std::vector<event> &events() { return events_; }
 private:
@@ -75,7 +75,7 @@ struct resource_adaptor : public memory_resource<memory_kind::with_properties<Pr
 };
 
 template <typename Pointer, typename... Properties>
-resource_adaptor<Properties...> adapt(cuda::basic_resource_ptr<Pointer, Properties...> v) {
+resource_adaptor<Properties...> adapt(cuda::pmr::basic_resource_ptr<Pointer, Properties...> v) {
   return resource_adaptor<Properties...>(v);
 }
 
@@ -83,10 +83,10 @@ int main(int argc, char **argv) {
 #ifndef __CUDA_ARCH__
 
   dummy_resource<memory_kind::managed> res;
-  resource_ptr<cuda::of_kind<memory_kind::managed>> v1 = &res;
-  resource_ptr<cuda::kind_to_properties<memory_kind::managed>> v2 = &res;
+  resource_ptr<cuda::pmr::of_kind<memory_kind::managed>> v1 = &res;
+  resource_ptr<cuda::pmr::kind_to_properties<memory_kind::managed>> v2 = &res;
   resource_ptr<memory_access::device, memory_access::host> v3 = &res;
-  cuda::resource_ptr<property_list<memory_access::device, memory_access::host>> v4 = &res;
+  cuda::pmr::resource_ptr<property_list<memory_access::device, memory_access::host>> v4 = &res;
 
   (void)adapt(v1);
   (void)adapt(v2);

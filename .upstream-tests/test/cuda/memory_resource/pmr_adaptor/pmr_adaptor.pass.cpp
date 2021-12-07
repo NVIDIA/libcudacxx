@@ -25,7 +25,7 @@ namespace pmr = ::std::pmr;
 #elif __has_include(<experimental/memory_resource>)
 #include <experimental/memory_resource>
 namespace pmr = ::std::experimental::pmr;
-#endif 
+#endif
 
 
 struct event {
@@ -41,7 +41,7 @@ bool operator==(event const& lhs, event const& rhs){
          std::tie(rhs.act, rhs.pointer, rhs.bytes, rhs.alignment);
 }
 
-class derived_resource : public cuda::memory_resource<cuda::memory_kind::host> {
+class derived_resource : public cuda::pmr::memory_resource<cuda::pmr::memory_kind::host> {
 public:
   std::vector<event> &events() { return events_; }
 private:

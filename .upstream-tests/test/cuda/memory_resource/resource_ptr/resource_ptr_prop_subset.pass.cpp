@@ -18,19 +18,19 @@
 
 int main(int argc, char **argv) {
 #ifndef __CUDA_ARCH__
-  cuda::resource_ptr<cuda::memory_access::host,
-                      cuda::oversubscribable,
-                      cuda::memory_location::host> props_only;
+  cuda::pmr::resource_ptr<cuda::pmr::memory_access::host,
+                      cuda::pmr::oversubscribable,
+                      cuda::pmr::memory_location::host> props_only;
 
   // test copy constructor
-  cuda::resource_ptr<cuda::memory_access::host,
-                      cuda::oversubscribable,
-                      cuda::memory_location::host> same_props = props_only;
+  cuda::pmr::resource_ptr<cuda::pmr::memory_access::host,
+                      cuda::pmr::oversubscribable,
+                      cuda::pmr::memory_location::host> same_props = props_only;
 
   // test converting constructor
-  cuda::resource_ptr<cuda::memory_access::host,
-                      cuda::oversubscribable,
-                      cuda::memory_location::host> subset = props_only;
+  cuda::pmr::resource_ptr<cuda::pmr::memory_access::host,
+                      cuda::pmr::oversubscribable,
+                      cuda::pmr::memory_location::host> subset = props_only;
 
   // test asisgnment
   same_props = props_only;

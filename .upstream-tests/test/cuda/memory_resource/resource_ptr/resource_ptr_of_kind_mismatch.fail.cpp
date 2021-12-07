@@ -18,8 +18,8 @@
 
 int main(int argc, char **argv) {
 #ifndef __CUDA_ARCH__
-  cuda::resource_ptr<cuda::of_kind<d<cuda::memory_kind::managed> managed;
-  cuda::resource_ptr<cuda::of_kind<cuda::memory_kind::host>> host;
+  cuda::pmr::resource_ptr<cuda::pmr::of_kind<d<cuda::pmr::memory_kind::managed> managed;
+  cuda::pmr::resource_ptr<cuda::pmr::of_kind<cuda::pmr::memory_kind::host>> host;
 
   // Despite managed having a superset of properties of host,
   // this should fail because the kind is a property in itself.

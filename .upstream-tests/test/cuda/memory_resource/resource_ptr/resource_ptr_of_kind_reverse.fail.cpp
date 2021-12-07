@@ -18,8 +18,8 @@
 
 int main(int argc, char **argv) {
 #ifndef __CUDA_ARCH__
-  cuda::resource_ptr<cuda::memory_access::host, cuda::oversubscribable, cuda::memory_location::host> props_only;
-  cuda::resource_ptr<cuda::of_kind<d<cuda::memory_kind::host>> kind_only;
+  cuda::pmr::resource_ptr<cuda::pmr::memory_access::host, cuda::pmr::oversubscribable, cuda::pmr::memory_location::host> props_only;
+  cuda::pmr::resource_ptr<cuda::pmr::of_kind<d<cuda::pmr::memory_kind::host>> kind_only;
   kind_only = props_only;  // no conversion from a list of properties back to memory kind
 #endif
   return 0;

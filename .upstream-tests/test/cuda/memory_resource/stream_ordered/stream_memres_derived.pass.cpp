@@ -31,7 +31,7 @@ bool operator==(event const &lhs, event const &rhs) {
 }
 
 template <typename Kind>
-class derived_resource : public cuda::stream_ordered_memory_resource<Kind> {
+class derived_resource : public cuda::pmr::stream_ordered_resource<Kind> {
 public:
   std::vector<event> &events() { return events_; }
 
@@ -56,7 +56,7 @@ private:
 
 template <typename Kind> void test_derived_resource() {
   using derived = derived_resource<Kind>;
-  using base = cuda::stream_ordered_memory_resource<Kind>;
+  using base = cuda::pmr::stream_ordered_resource<Kind>;
 
   derived d;
   base *b = &d;
@@ -120,10 +120,10 @@ template <typename Kind> void test_derived_resource() {
 int main(int argc, char **argv) {
 
 #ifndef __CUDA_ARCH__
-  test_derived_resource<cuda::memory_kind::host>();
-  test_derived_resource<cuda::memory_kind::device>();
-  test_derived_resource<cuda::memory_kind::managed>();
-  test_derived_resource<cuda::memory_kind::pinned>();
+  test_derived_resource<cuda::pmr::memory_kind::host>();
+  test_derived_resource<cuda::pmr::memory_kind::device>();
+  test_derived_resource<cuda::pmr::memory_kind::managed>();
+  test_derived_resource<cuda::pmr::memory_kind::pinned>();
 #endif
 
   return 0;
