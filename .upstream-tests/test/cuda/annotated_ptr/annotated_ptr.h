@@ -31,30 +31,33 @@ template <typename ... T>
 __host__ __device__ constexpr bool unused(T...) {return true;}
 
 // ************************ Device code ***************************************
+template <typename T>
 static __device__
 void shared_mem_test_dev() {
     __shared__ int smem[42];
     smem[10] = 42;
     assert(smem[10] == 42);
 
-    cuda::annotated_ptr<int, cuda::access_property::shared> p{smem + 10};
+    cuda::annotated_ptr<T, cuda::access_property::shared> p{smem + 10};
 
     assert(*p == 42);
 }
 
+template <typename T>
 static __global__
 void shared_mem_test() {
-    shared_mem_test_dev();
+    shared_mem_test_dev<T>();
 };
 
+template <typename In, typename Out>
 static __device__
-void annotated_ptr_timing_dev(int * in, int * out) {
+void annotated_ptr_timing_dev(In* in, Out* out) {
     cuda::access_property ap(cuda::access_property::persisting{});
     // Retrieve global id
     int i = blockIdx.x * blockDim.x + threadIdx.x;
 
-    cuda::annotated_ptr<int, cuda::access_property> in_ann{in, ap};
-    cuda::annotated_ptr<int, cuda::access_property> out_ann{out, ap};
+    cuda::annotated_ptr<In, cuda::access_property> in_ann{in, ap};
+    cuda::annotated_ptr<Out, cuda::access_property> out_ann{out, ap};
 
     DPRINTF("&out[i]:%p = &in[i]:%p for i = %d\n", &out[i], &in[i], i);
     DPRINTF("&out[i]:%p = &in_ann[i]:%p for i = %d\n", &out_ann[i], &in_ann[i], i);
@@ -62,21 +65,24 @@ void annotated_ptr_timing_dev(int * in, int * out) {
     out_ann[i] = in_ann[i];
 };
 
+template <typename In, typename Out>
 static __global__
-void annotated_ptr_timing(int * in, int * out) {
+void annotated_ptr_timing(In* in, Out* out) {
     annotated_ptr_timing_dev(in, out);
 }
 
+template <typename In, typename Out>
 static __device__
-void ptr_timing_dev(int * in, int * out) {
+void ptr_timing_dev(In * in, Out * out) {
     // Retrieve global id
     int i = blockIdx.x * blockDim.x + threadIdx.x;
     DPRINTF("&out[i]:%p = &in[i]:%p for i = %d\n", &out[i], &in[i], i);
     out[i] = in[i];
 };
 
+template <typename In, typename Out>
 static __global__
-void ptr_timing(int * in, int * out) {
+void ptr_timing(In * in, Out * out) {
     ptr_timing_dev(in, out);
 };
 
@@ -148,31 +154,26 @@ void test_access_property_block() {
     }
 }
 
+template <typename T>
 __device__ __host__ __noinline__
 void test_access_property_functions() {
     size_t ARR_SZ = 1 << 10;
-    int* arr0 = nullptr;
-    int* arr1 = nullptr;
-    int const* arr2 = nullptr;
+    T* arr = nullptr;
     cuda::access_property ap(cuda::access_property::persisting{});
     cuda::access_property a;
     unused(a);
     cuda::access_property as(cuda::access_property::streaming{});
 
 #ifdef __CUDA_ARCH__
-    arr0 = (int*)malloc(ARR_SZ * sizeof(int));
-    arr1 = (int*)malloc(ARR_SZ * sizeof(int));
-    arr1 = (int const*)malloc(ARR_SZ * sizeof(int));
+    arr = (T*)malloc(ARR_SZ * sizeof(int));
 #else
     assert_rt(cudaMallocManaged((void**) &arr0, ARR_SZ * sizeof(int)));
-    assert_rt(cudaMallocManaged((void**) &arr1, ARR_SZ * sizeof(int)));
     assert_rt(cudaDeviceSynchronize());
 #endif
 
     cuda::discard_memory(arr0, ARR_SZ);
     arr0 = cuda::associate_access_property(arr0, ap);
     arr1 = cuda::associate_access_property(arr1, as);
-    arr2 = cuda::associate_access_property(arr2, ap);
     cuda::apply_access_property(arr0, ARR_SZ, cuda::access_property::persisting{});
     cuda::apply_access_property(arr1, ARR_SZ, cuda::access_property::normal{});
 
@@ -186,73 +187,138 @@ void test_access_property_functions() {
 
 }
 
+template <typename T, typename U, typename V>
+__device__ __host__ __noinline__
+void test_constructors() {
+      T* p = nullptr;
+      cuda::access_property ap(cuda::access_property::persisting{});
+      using P = cuda::access_property;
+      // construct U from T
+      cuda::annotated_ptr<U, P> q0{array0, ap};
+      cuda::annotated_ptr<U, P> q1 = q0;
+      cuda::annotated_ptr<U, P> q2{a2};
+      // construct V from U
+      cuda::annotated_ptr<V, P> q3 = q1;
+      cuda::annotated_ptr<V, P> q4{q1};
+      
+      assert(q0 == q1);
+      assert(q1 == q2);
+      unused(q0);
+      unused(q1);
+      unused(q2);
+      unused(q3);
+      unused(q4);
+}
+
+template <typename In, typename Out, typename P>
+__device__ __host__ __noinline__
+void test_access(In* i, Out* o, size_t N) {
+  cuda::annotated_ptr<In, P> ai{i};
+  cuda::annotated_ptr<Out, P> ao{o};
+
+  assert((i && (bool)ai) || (!i && !(bool)ai));
+  assert((o && (bool)ao) || (!o && !(bool)ao));
+
+  for (int n = 0; n < N; ++n) {
+    assert(i[n] == n);
+    assert(o[n] == 0);
+    assert(&i[n] == &i[n]);
+    assert(&o[n] == &o[n]);
+    o[n] = i[n];
+    assert(o[n] == n);
+    o[n] = 0;
+  }
+}
+
+template <typename In, typename Out, typename P>
+__device__ __host__ __noinline__
+void test_const_access(In* i, Out* o, size_t N) {
+  const cuda::annotated_ptr<In, P> ai{i};
+  const cuda::annotated_ptr<Out, P> ao{o};
+
+  assert((i && (bool)ai) || (!i && !(bool)ai));
+  assert((o && (bool)ao) || (!o && !(bool)ao));
+
+  for (int n = 0; n < N; ++n) {
+    assert(i[n] == n);
+    assert(o[n] == 0);
+    assert(&i[n] == &i[n]);
+    assert(&o[n] == &o[n]);
+    o[n] = i[n];
+    assert(o[n] == n);
+    o[n] = 0;
+  }
+}
+
 __device__ __host__ __noinline__
 void test_annotated_ptr_basic() {
-    cuda::access_property ap(cuda::access_property::persisting{});
-    static const size_t ARR_SZ = 1 << 10;
-    int* array0 = new int[ARR_SZ];
-    int* array1 = new int[ARR_SZ];
-    cuda::annotated_ptr<int, cuda::access_property> array_anno_ptr{array0, ap};
-    cuda::annotated_ptr<int, cuda::access_property> array0_anno_ptr0{array0, ap};
-    cuda::annotated_ptr<int, cuda::access_property> array0_anno_ptr1 = array0_anno_ptr0;
-    cuda::annotated_ptr<int, cuda::access_property> array0_anno_ptr2{array0_anno_ptr0};
-    cuda::annotated_ptr<int, cuda::access_property> array1_anno_ptr{array1, ap};
-    cuda::annotated_ptr<const int, cuda::access_property> array_anno_const_ptr{array0, ap};
-    cuda::annotated_ptr<const int, cuda::access_property> array0_anno_const_ptr0{array0, ap};
-    cuda::annotated_ptr<const int, cuda::access_property> array0_anno_const_ptr1 = array0_anno_ptr0;
-    cuda::annotated_ptr<const int, cuda::access_property> array0_anno_const_ptr2{array0_anno_ptr0};
-    cuda::annotated_ptr<const int, cuda::access_property> array0_anno_const_ptr3 = array0_anno_const_ptr0;
-    cuda::annotated_ptr<const int, cuda::access_property> array0_anno_const_ptr4{array0_anno_const_ptr0};
-    cuda::annotated_ptr<const int, cuda::access_property> array1_anno_const_ptr{array1, ap};
-    unused(array0_anno_const_ptr3);
-    unused(array0_anno_const_ptr4);
+  {
+    test_constructors<int, int, int>();
+    test_constructors<int, const int, const volatile int>();
+    test_constructors<int, volatile int, const volatile int>();
+    test_constructors<int, const volatile int, const volatile int>();
 
-#ifndef __CUDA_ARCH__
-    cuda::annotated_ptr<int, cuda::access_property::shared> shared_ptr1;
-    cuda::annotated_ptr<int, cuda::access_property::shared> shared_ptr2;
-    cuda::annotated_ptr<const int, cuda::access_property::shared> shared_const_ptr1;
-    cuda::annotated_ptr<const int, cuda::access_property::shared> shared_const_ptr2;
+    using S = cuda::access_property::shared;
+    #ifdef __CUDA_ARCH__
+    __shared__ int q;
+    cuda::annotated_ptr<int, S> s0{q};
+    cuda::annotated_ptr<const int, S> s1{q};
+    cuda::annotated_ptr<volatile int, S> s2{q};
+    cuda::annotated_ptr<const volatile int, S> s3{q};
+    #else
+    cuda::annotated_ptr<int, S> s0{};
+    cuda::annotated_ptr<const int, S> s1{};
+    cuda::annotated_ptr<volatile int, S> s2{};
+    cuda::annotated_ptr<const volatile int, S> s3{};
+    #endif
+    s3 = s1;
+    s1 = s0;
+    s2 = s1;
+    unused(s0);
+    unused(s1);
+    unused(s2);
+    unused(s3);
 
-    shared_ptr1 = shared_ptr2;
-    shared_const_ptr1 = shared_const_ptr2;
-    shared_const_ptr1 = shared_ptr2;
-    unused(shared_ptr1);
-    unused(shared_const_ptr1);
+  }
+  cuda::access_property ap(cuda::access_property::persisting{});
+  static const size_t ARR_SZ = 1 << 10;
 
+  {
+    #ifndef __CUDA_ARCH__
     //Check on host the arrays through annotated_ptr ops
-    std::array<int, 3> a1{3, 2, 1};
-    cuda::annotated_ptr<std::array<int, 3>, cuda::access_property> anno_ptr{&a1, ap};
-    assert(anno_ptr->at(0) == 3);
-    cuda::annotated_ptr<const std::array<int, 3>, cuda::access_property> anno_const_ptr{&a1, ap};
-    assert(anno_const_ptr->at(0) == 3);
-#endif
+    using A = std::array<int, 3>;
+    A a{3, 2, 1};
+    cuda::annotated_ptr<A, cuda::access_property> p{&a, ap};
+    assert(p->at(0) == 3);
+    cuda::annotated_ptr<const A, cuda::access_property> q{&a, ap};
+    assert(q->at(0) == 3);
+    const A b{3, 2, 1};
+    cuda::annotated_ptr<const A, cuda::access_property> r{&b, ap};
+    assert(r->at(1) == 2);
+    #endif
+  }
 
-    //Fill the arrays
-    for (size_t i = 0; i < ARR_SZ; ++i) {
-        array0[i] = static_cast<int>(i);
-        array1[i] = static_cast<int>(ARR_SZ - i);
-    }
+  //Fill the arrays
+  int* a0 = new int[ARR_SZ];
+  int* a1 = new int[ARR_SZ];
 
-    assert((bool)array0_anno_ptr0 == true);
-    assert((bool)array0_anno_const_ptr0 == true);
-    assert(array0_anno_ptr0.get() == array0);
-    assert(array0_anno_const_ptr0.get() == array0);
+  for (size_t i = 0; i < ARR_SZ; ++i) {
+    a0[i] = static_cast<int>(i);
+    a1[i] = 0;
+  }
+  using P = cuda::access_property::persisting;
+  test_access<int, int, P>(a0, a1, ARR_SZ);
+  test_access<const int, int, P>((const int*)a0, a1, ARR_SZ);
+  test_access<const volatile int, int, P>((const volatile int*)a0, a1, ARR_SZ);
+  test_access<const volatile int, volatile int, P>((const volatile int*)a0, (volatile int*)a1);
 
-    for (size_t i = 0; i < ARR_SZ; ++i) {
-        assert(array0_anno_ptr0[i] == static_cast<int>(i));
-        assert(array0_anno_ptr2[i] == static_cast<int>(i));
-        assert(&array0[i] == &array0_anno_ptr0[i]);
-	assert(&array0[i] == &array0_anno_const_ptr0[i]);
-        assert(&array0[i] == &array0_anno_ptr1[i]);
-	assert(&array0[i] == &array0_anno_const_ptr1[i]);
-    }
-
-    for (size_t i = 0; i < ARR_SZ; ++i) {
-        assert(array1_anno_ptr[i] == array1[i]);
-    }
-
-    delete[] array0;
-    delete[] array1;
+  test_const_access<int, int, P>(a0, a1, ARR_SZ);
+  test_const_access<const int, int, P>((const int*)a0, a1, ARR_SZ);
+  test_const_access<const volatile int, int, P>((const volatile int*)a0, a1, ARR_SZ);
+  test_const_access<const volatile int, volatile int, P>((const volatile int*)a0, (volatile int*)a1, ARR_SZ);
+  
+  delete[] a0;
+  delete[] a1;
 }
 
 __device__ __host__ __noinline__
