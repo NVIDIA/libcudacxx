@@ -16,12 +16,12 @@ ENV COMPILER_CXX_DIALECT=$COMPILER_CXX_DIALECT
 SHELL ["/usr/bin/env", "bash", "-c"]
 
 RUN apt-get -y update\
- && apt-get -y install g++-8 clang-6.0 python3 python3-pip \
+ && apt-get -y install g++-8 clang-6.0 python3 python3-pip curl \
  && pip3 install lit\
  && mkdir -p /sw/gpgpu/libcudacxx/build\
  && mkdir -p /sw/gpgpu/libcudacxx/libcxx/build
 
-ADD https://github.com/Kitware/CMake/releases/download/v3.21.4/cmake-3.21.4-linux-aarch64.sh /tmp/cmake.sh
+ADD https://github.com/Kitware/CMake/releases/download/v3.22.3/cmake-3.22.3-linux-aarch64.sh /tmp/cmake.sh
 RUN sh /tmp/cmake.sh --skip-license --prefix=/usr
 
 # For debugging.
@@ -39,7 +39,9 @@ ADD cuda/common/*.h* /sw/gpgpu/cuda/common/
 ADD cuda/tools/ /sw/gpgpu/cuda/tools/
 ADD opencl/import/cl_rel/CL/*.h* /sw/gpgpu/opencl/import/cl_rel/CL/
 
+
 # Copy libcu++ sources from the source tree.
+ADD cuda/tools/libcudacxxext /sw/gpgpu/cuda/tools/libcudacxxext
 ADD libcudacxx /sw/gpgpu/libcudacxx
 
 # List out everything in /sw before the build.
