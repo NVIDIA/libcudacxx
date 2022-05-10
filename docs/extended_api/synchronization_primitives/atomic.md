@@ -44,7 +44,7 @@ Under CUDA Compute Capability 6 (Pascal), an object of type `atomic` may not be
 - if `is_always_lock_free()` is `false`.
 
 Under CUDA Compute Capability prior to 6 (Pascal), objects of type
-  `cuda::atomic` or [`cuda::std::atomic`] may not be used.
+  [`cuda::atomic`] or [`cuda::std::atomic`] may not be used.
 
 ## Implementation-Defined Behavior
 
@@ -86,6 +86,8 @@ __global__ void example_kernel() {
 [`cuda::atomic::fetch_max`]: ./atomic/fetch_max.md
 
 [`cuda::std::atomic`]: https://en.cppreference.com/w/cpp/atomic/atomic
+
+[`cuda::atomic`]: ./atomic.md
 
 [atomics.types.int]: https://eel.is/c++draft/atomics.types.int
 [atomics.types.pointer]: https://eel.is/c++draft/atomics.types.pointer
