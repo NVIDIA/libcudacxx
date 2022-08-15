@@ -16,7 +16,6 @@ To account for non-uniform thread synchronization costs that are not always low,
 
 In CUDA C++, memory can only be modified by threads, so any operation that modifies memory is being executed by a thread.
 
-Examples of threads of execution in CUDA C++ programs: GPU or CPU threads, threads in DMA engines executing asynchronous operations like [`memcpy_async`] or [`cudaMemcpyAsync`], threads in NICs executing RDMA operations, etc.
 
 [`memcpy_async`]: asynchronous_operations/memcpy_async.md
 [`cudaMemcpyAsync`]: https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__MEMORY.html#group__CUDART__MEMORY_1g85073372f776b4c4d5f89f7124b7bf79
