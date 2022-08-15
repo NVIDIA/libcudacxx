@@ -79,7 +79,7 @@ Refer to the [CUDA programming guide] for more information on [unified memory], 
 ## Data Races
 
 Modify [intro.races paragraph 21] of ISO/IEC IS 14882 (the C++ Standard) as follows:
-> The execution of a program contains a data race if it contains two potentially concurrent conflicting actions, at least one of which is not atomic ***at a scope that includes the thread that performed the other operation***, and neither happens before the other, except for the special case for signal handlers described below. Any such data race results inundefined behavior. [...]
+> The execution of a program contains a data race if it contains two potentially concurrent conflicting actions, at least one of which is not atomic ***at a scope that includes the thread that performed the other operation***, and neither happens before the other, except for the special case for signal handlers described below. Any such data race results in undefined behavior. [...]
 
 Modify [thread.barrier.class paragraph 4] of ISO/IEC IS 14882 (the C++ Standard) as follows:
 > 4. Concurrent invocations of the member functions of `barrier`, other than its destructor, do not introduce data races ***as if they were atomic operations***. [...]
