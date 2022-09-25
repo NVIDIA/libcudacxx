@@ -148,11 +148,9 @@ LIBCUDACXX_PATH=$(realpath ${SCRIPT_PATH}/../../../../)
 # Command Line Processing.
 
 LIT_PREFIX="time"
-
-LIBCXX_LIT_SITE_CONFIG=${LIBCUDACXX_PATH}/libcxx/build/libcxx/test/lit.site.cfg
-LIBCUDACXX_LIT_SITE_CONFIG=${LIBCUDACXX_PATH}/build/test/lit.site.cfg
-
 RAW_TEST_TARGETS=""
+# Default assumes in-tree build
+LIBCUDACXX_BUILD_PATH=${LIBCUDACXX_PATH}/build
 
 while test ${#} != 0
 do
@@ -170,13 +168,9 @@ do
     shift # The next argument is the list of archs.
     LIBCUDACXX_COMPUTE_ARCHS=${1}
     ;;
-  --libcxx-lit-site-config)
+  --libcudacxx-build-path)
     shift # The next argument is the file.
-    LIBCXX_LIT_SITE_CONFIG=${1}
-    ;;
-  --libcudacxx-lit-site-config)
-    shift # The next argument is the file.
-    LIBCUDACXX_LIT_SITE_CONFIG=${1}
+    LIBCUDACXX_BUILD_PATH=${1}
     ;;
   --verbose) VERBOSE=1 ;;
   *)
@@ -185,6 +179,9 @@ do
   esac
   shift
 done
+
+LIBCUDACXX_LIT_SITE_CONFIG=${LIBCUDACXX_BUILD_PATH}/test/lit.site.cfg
+LIBCXX_LIT_SITE_CONFIG=${LIBCUDACXX_BUILD_PATH}/libcxx/test/lit.site.cfg
 
 LIBCXX_TEST_TARGETS="${LIBCUDACXX_PATH}/libcxx/test"
 LIBCUDACXX_TEST_TARGETS="${LIBCUDACXX_PATH}/test"

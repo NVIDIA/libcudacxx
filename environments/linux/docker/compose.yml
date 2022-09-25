@@ -1,0 +1,266 @@
+## Baseline images ##
+services:
+  ubuntu22.04:
+    image: "local/cccl-ubuntu22.04"
+    build:
+      context: .
+      dockerfile: ubuntu.base.Dockerfile
+      target: devenv
+      args: &ubuntu22-args
+        ROOT_IMAGE: "nvcr.io/nvidia/cuda:11.7.1-devel-ubuntu22.04"
+        COMPILERS: "g++-11 g++-12 clang-12 clang-13 clang-11 clang-14"
+    deploy: &deploy-template
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  ubuntu20.04:
+    image: "local/cccl-ubuntu20.04"
+    build:
+      context: .
+      dockerfile: ubuntu.base.Dockerfile
+      target: devenv
+      args: &ubuntu20-args
+        ROOT_IMAGE: "nvcr.io/nvidia/cuda:11.7.1-devel-ubuntu20.04"
+        COMPILERS: "g++-10 g++-9 g++-8 clang-9 clang-8 clang-10"
+    deploy: *deploy-template
+
+  ubuntu18.04:
+    image: "local/cccl-ubuntu18.04"
+    build:
+      context: .
+      dockerfile: ubuntu.base.Dockerfile
+      target: devenv
+      args: &ubuntu18-args
+        ROOT_IMAGE: "nvcr.io/nvidia/cuda:11.7.1-devel-ubuntu18.04"
+        COMPILERS: "g++-5 g++-7 g++-6 clang-7"
+    deploy: *deploy-template
+
+  nvhpc-ubuntu22.04:
+    image: "local/cccl-nvhpc-ubuntu22.04"
+    build:
+      context: .
+      dockerfile: ubuntu.base.Dockerfile
+      target: devenv
+      args:
+        ROOT_IMAGE: "nvcr.io/nvidia/nvhpc:22.7-devel-cuda11.7-ubuntu22.04"
+    deploy: *deploy-template
+
+## Configured images ##
+### Ubuntu 22.04 images:
+
+  gcc-11:
+    image: "local/cccl-ubuntu22.04"
+    container_name: gcc-11
+    profiles: ["gcc-11"]
+    build:
+      context: ../../../
+      target: libcudacxx-configured
+      args:
+        <<: *ubuntu22-args
+        HOST_CXX: "g++-11"
+    deploy: *deploy-template
+
+  gcc-12:
+    image: "local/cccl-ubuntu22.04"
+    container_name: gcc-12
+    profiles: ["gcc-12"]
+    build:
+      context: ../../../
+      dockerfile: environments/linux/docker/ubuntu.base.Dockerfile
+      target: libcudacxx-configured
+      args:
+        <<: *ubuntu22-args
+        HOST_CXX: "g++-12"
+    deploy: *deploy-template
+
+  clang-12:
+    image: "local/cccl-ubuntu22.04"
+    container_name: clang-12
+    profiles: ["clang-12"]
+    build:
+      context: ../../../
+      dockerfile: environments/linux/docker/ubuntu.base.Dockerfile
+      target: libcudacxx-configured
+      args:
+        <<: *ubuntu22-args
+        HOST_CXX: "clang++-12"
+    deploy: *deploy-template
+
+  clang-13:
+    image: "local/cccl-ubuntu22.04"
+    container_name: clang-13
+    profiles: ["clang-13"]
+    build:
+      context: ../../../
+      dockerfile: environments/linux/docker/ubuntu.base.Dockerfile
+      target: libcudacxx-configured
+      args:
+        <<: *ubuntu22-args
+        HOST_CXX: "clang++-13"
+    deploy: *deploy-template
+
+  clang-11:
+    image: "local/cccl-ubuntu22.04"
+    container_name: clang-11
+    profiles: ["clang-11"]
+    build:
+      context: ../../../
+      dockerfile: environments/linux/docker/ubuntu.base.Dockerfile
+      target: libcudacxx-configured
+      args:
+        <<: *ubuntu22-args
+        HOST_CXX: "clang++-11"
+    deploy: *deploy-template
+
+  clang-14:
+    image: "local/cccl-ubuntu22.04"
+    container_name: clang-14
+    profiles: ["clang-14"]
+    build:
+      context: ../../../
+      dockerfile: environments/linux/docker/ubuntu.base.Dockerfile
+      target: libcudacxx-configured
+      args:
+        <<: *ubuntu22-args
+        HOST_CXX: "clang++-14"
+    deploy: *deploy-template
+
+
+### Ubuntu 20.04 images:
+
+  gcc-10:
+    image: "local/cccl-ubuntu20.04"
+    container_name: gcc-10
+    profiles: ["gcc-10"]
+    build:
+      context: ../../../
+      dockerfile: environments/linux/docker/ubuntu.base.Dockerfile
+      target: libcudacxx-configured
+      args:
+        <<: *ubuntu20-args
+        HOST_CXX: "g++-10"
+    deploy: *deploy-template
+
+  gcc-9:
+    image: "local/cccl-ubuntu20.04"
+    container_name: gcc-9
+    profiles: ["gcc-9"]
+    build:
+      context: ../../../
+      dockerfile: environments/linux/docker/ubuntu.base.Dockerfile
+      target: libcudacxx-configured
+      args:
+        <<: *ubuntu20-args
+        HOST_CXX: "g++-9"
+    deploy: *deploy-template
+
+  gcc-8:
+    image: "local/cccl-ubuntu20.04"
+    container_name: gcc-8
+    profiles: ["gcc-8"]
+    build:
+      context: ../../../
+      dockerfile: environments/linux/docker/ubuntu.base.Dockerfile
+      target: libcudacxx-configured
+      args:
+        <<: *ubuntu20-args
+        HOST_CXX: "g++-8"
+    deploy: *deploy-template
+
+  clang-9:
+    image: "local/cccl-ubuntu20.04"
+    container_name: clang-9
+    profiles: ["clang-9"]
+    build:
+      context: ../../../
+      dockerfile: environments/linux/docker/ubuntu.base.Dockerfile
+      target: libcudacxx-configured
+      args:
+        <<: *ubuntu20-args
+        HOST_CXX: "clang++-9"
+    deploy: *deploy-template
+
+  clang-8:
+    image: "local/cccl-ubuntu20.04"
+    container_name: clang-8
+    profiles: ["clang-8"]
+    build:
+      context: ../../../
+      dockerfile: environments/linux/docker/ubuntu.base.Dockerfile
+      target: libcudacxx-configured
+      args:
+        <<: *ubuntu20-args
+        HOST_CXX: "clang++-8"
+    deploy: *deploy-template
+
+  clang-10:
+    image: "local/cccl-ubuntu20.04"
+    container_name: clang-10
+    profiles: ["clang-10"]
+    build:
+      context: ../../../
+      dockerfile: environments/linux/docker/ubuntu.base.Dockerfile
+      target: libcudacxx-configured
+      args:
+        <<: *ubuntu20-args
+        HOST_CXX: "clang++-10"
+    deploy: *deploy-template
+
+
+### Ubuntu 18.04 images:
+
+  gcc-5:
+    image: "local/cccl-ubuntu18.04"
+    container_name: gcc-5
+    profiles: ["gcc-5"]
+    build:
+      context: ../../../
+      dockerfile: environments/linux/docker/ubuntu.base.Dockerfile
+      target: libcudacxx-configured
+      args:
+        <<: *ubuntu18-args
+        HOST_CXX: "g++-5"
+    deploy: *deploy-template
+
+  gcc-7:
+    image: "local/cccl-ubuntu18.04"
+    container_name: gcc-7
+    profiles: ["gcc-7"]
+    build:
+      context: ../../../
+      dockerfile: environments/linux/docker/ubuntu.base.Dockerfile
+      target: libcudacxx-configured
+      args:
+        <<: *ubuntu18-args
+        HOST_CXX: "g++-7"
+    deploy: *deploy-template
+
+  gcc-6:
+    image: "local/cccl-ubuntu18.04"
+    container_name: gcc-6
+    profiles: ["gcc-6"]
+    build:
+      context: ../../../
+      dockerfile: environments/linux/docker/ubuntu.base.Dockerfile
+      target: libcudacxx-configured
+      args:
+        <<: *ubuntu18-args
+        HOST_CXX: "g++-6"
+    deploy: *deploy-template
+
+  clang-7:
+    image: "local/cccl-ubuntu18.04"
+    container_name: clang-7
+    profiles: ["clang-7"]
+    build:
+      context: ../../../
+      dockerfile: environments/linux/docker/ubuntu.base.Dockerfile
+      target: libcudacxx-configured
+      args:
+        <<: *ubuntu18-args
+        HOST_CXX: "clang++-7"
+    deploy: *deploy-template
