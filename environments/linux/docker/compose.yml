@@ -134,7 +134,7 @@ services:
 
   gcc-10:
     extends:
-      service: ubuntu22.04
+      service: ubuntu20.04
     image: "libcudacxx/gcc-10"
     container_name: gcc-10
     profiles: ["gcc-10"]
@@ -147,7 +147,7 @@ services:
 
   gcc-9:
     extends:
-      service: ubuntu22.04
+      service: ubuntu20.04
     image: "libcudacxx/gcc-9"
     container_name: gcc-9
     profiles: ["gcc-9"]
@@ -160,7 +160,7 @@ services:
 
   gcc-8:
     extends:
-      service: ubuntu22.04
+      service: ubuntu20.04
     image: "libcudacxx/gcc-8"
     container_name: gcc-8
     profiles: ["gcc-8"]
@@ -173,7 +173,7 @@ services:
 
   clang-9:
     extends:
-      service: ubuntu22.04
+      service: ubuntu20.04
     image: "libcudacxx/clang-9"
     container_name: clang-9
     profiles: ["clang-9"]
@@ -186,7 +186,7 @@ services:
 
   clang-8:
     extends:
-      service: ubuntu22.04
+      service: ubuntu20.04
     image: "libcudacxx/clang-8"
     container_name: clang-8
     profiles: ["clang-8"]
@@ -199,7 +199,7 @@ services:
 
   clang-10:
     extends:
-      service: ubuntu22.04
+      service: ubuntu20.04
     image: "libcudacxx/clang-10"
     container_name: clang-10
     profiles: ["clang-10"]
@@ -215,7 +215,7 @@ services:
 
   gcc-5:
     extends:
-      service: ubuntu22.04
+      service: ubuntu18.04
     image: "libcudacxx/gcc-5"
     container_name: gcc-5
     profiles: ["gcc-5"]
@@ -228,7 +228,7 @@ services:
 
   gcc-7:
     extends:
-      service: ubuntu22.04
+      service: ubuntu18.04
     image: "libcudacxx/gcc-7"
     container_name: gcc-7
     profiles: ["gcc-7"]
@@ -241,7 +241,7 @@ services:
 
   gcc-6:
     extends:
-      service: ubuntu22.04
+      service: ubuntu18.04
     image: "libcudacxx/gcc-6"
     container_name: gcc-6
     profiles: ["gcc-6"]
@@ -254,7 +254,7 @@ services:
 
   clang-7:
     extends:
-      service: ubuntu22.04
+      service: ubuntu18.04
     image: "libcudacxx/clang-7"
     container_name: clang-7
     profiles: ["clang-7"]
