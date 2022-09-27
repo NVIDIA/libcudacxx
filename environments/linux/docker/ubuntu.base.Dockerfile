@@ -73,7 +73,6 @@ ARG CXX_DIALECT=11
 
 # Attempt to load env from cccl/cuda
 ARG TEST_WITH_NVRTC=OFF
-ARG LIBCXX_BUILD_ARG
 
 # Docker on Windows can't follow symlinks???
 ADD .                                        /libcudacxx
