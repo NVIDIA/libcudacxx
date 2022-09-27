@@ -2,6 +2,8 @@
 services:
   ubuntu22.04:
     image: "local/cccl-ubuntu22.04"
+    tty: true
+    profiles: ["base"]
     build:
       context: .
       dockerfile: ubuntu.base.Dockerfile
@@ -19,6 +21,8 @@ services:
 
   ubuntu20.04:
     image: "local/cccl-ubuntu20.04"
+    tty: true
+    profiles: ["base"]
     build:
       context: .
       dockerfile: ubuntu.base.Dockerfile
@@ -30,6 +34,8 @@ services:
 
   ubuntu18.04:
     image: "local/cccl-ubuntu18.04"
+    tty: true
+    profiles: ["base"]
     build:
       context: .
       dockerfile: ubuntu.base.Dockerfile
@@ -41,6 +47,8 @@ services:
 
   nvhpc-ubuntu22.04:
     image: "local/cccl-nvhpc-ubuntu22.04"
+    tty: true
+    profiles: ["base"]
     build:
       context: .
       dockerfile: ubuntu.base.Dockerfile

@@ -97,5 +97,3 @@ RUN make -j -C /build/libcxx
 
 ENV LIBCUDACXX_SITE_CONFIG=/build/test/lit.site.cfg
 ENV LIBCXX_SITE_CONFIG=/build/libcxx/test/lit.site.cfg
-
-CMD ["sleep", "10m"]
