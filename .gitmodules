@@ -1,0 +1,5 @@
+[submodule "llvm-project"]
+	path = llvm-project
+	url = git@github.com:miscco/llvm-project.git
+	shallow = true
+	branch = libcudacxx_base

@@ -30,7 +30,7 @@ function usage {
   echo "                                 : Overrides \${LIBCUDACXX_COMPUTE_ARCHS}."
   echo
   echo "--libcxx-lit-site-config <file>     : Use <file> as the libc++ lit site config"
-  echo "                                    : (default: \${LIBCUDACXX_PATH}/libcxx/build/test/lit.site.cfg)."
+  echo "                                    : (default: \${LIBCUDACXX_PATH}/llvm-project/libcxx/build/test/lit.site.cfg)."
   echo "--libcudacxx-lit-site-config <file> : Use <file> as the libcu++ lit site config"
   echo "                                    : (default: \${LIBCUDACXX_PATH}/build/libcxx/test/lit.site.cfg)."
   echo
@@ -149,7 +149,7 @@ LIBCUDACXX_PATH=$(realpath ${SCRIPT_PATH}/../../../../)
 
 LIT_PREFIX="time"
 
-LIBCXX_LIT_SITE_CONFIG=${LIBCUDACXX_PATH}/libcxx/build/libcxx/test/lit.site.cfg
+LIBCXX_LIT_SITE_CONFIG=${LIBCUDACXX_PATH}/llvm-project/libcxx/build/libcxx/test/lit.site.cfg
 LIBCUDACXX_LIT_SITE_CONFIG=${LIBCUDACXX_PATH}/build/test/lit.site.cfg
 
 RAW_TEST_TARGETS=""
@@ -186,7 +186,7 @@ do
   shift
 done
 
-LIBCXX_TEST_TARGETS="${LIBCUDACXX_PATH}/libcxx/test"
+LIBCXX_TEST_TARGETS="${LIBCUDACXX_PATH}/llvm-project/libcxx/test"
 LIBCUDACXX_TEST_TARGETS="${LIBCUDACXX_PATH}/test"
 
 if [ "${RAW_TEST_TARGETS:-all}" != "all" ]
@@ -195,7 +195,7 @@ then
   LIBCUDACXX_TEST_TARGETS=""
   for test in ${RAW_TEST_TARGETS}
   do
-    LIBCXX_TEST_TARGETS="${LIBCXX_TEST_TARGETS:+${LIBCXX_TEST_TARGETS} }${LIBCUDACXX_PATH}/libcxx/test/${test}"
+    LIBCXX_TEST_TARGETS="${LIBCXX_TEST_TARGETS:+${LIBCXX_TEST_TARGETS} }${LIBCUDACXX_PATH}/llvm-project/libcxx/test/${test}"
     LIBCUDACXX_TEST_TARGETS="${LIBCUDACXX_TEST_TARGETS:+${LIBCUDACXX_TEST_TARGETS} }${LIBCUDACXX_PATH}/test/${test}"
   done
 fi

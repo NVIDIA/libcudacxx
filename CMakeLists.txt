@@ -144,7 +144,7 @@ if (LIBCUDACXX_ENABLE_STATIC_LIBRARY)
   endif ()
 
   set(LIBCXX_CXX_ABI "libcxxabi" CACHE STRING "")
-  set(LIBCXX_CXX_ABI_INCLUDE_PATHS "${CMAKE_CURRENT_SOURCE_DIR}/libcxxabi/include" CACHE STRING "")
+  set(LIBCXX_CXX_ABI_INCLUDE_PATHS "${CMAKE_CURRENT_SOURCE_DIR}/llvm-project/libcxxabi/include" CACHE STRING "")
   set(LIBCXX_CXX_ABI_INTREE 1)
 
   set(_libcudacxx_add_libcxx ON)
@@ -193,11 +193,11 @@ endif ()
 
 # Configure the common options for the subdirections and add them.
 if (_libcudacxx_add_libunwind)
-  add_subdirectory(libunwind)
+  add_subdirectory(llvm-project/libunwind)
 endif ()
 
 if (_libcudacxx_add_libcxxabi)
-  add_subdirectory(libcxxabi)
+  add_subdirectory(llvm-project/libcxxabi)
 endif ()
 
 if (_libcudacxx_add_libcxx)
@@ -206,7 +206,7 @@ if (_libcudacxx_add_libcxx)
 
   set(LIBCXX_HAVE_CXX_ATOMICS_WITHOUT_LIB ON)
 
-  add_subdirectory(libcxx)
+  add_subdirectory(llvm-project/libcxx)
 endif ()
 
 # Add a global check rule now that all subdirectories have been traversed

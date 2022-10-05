@@ -132,7 +132,7 @@ echo "@@@@@@"
 
 # TODO: We need to also run the tests for libc++abi.
 echo "@@@ Running tests for libc++ @@@"
-"${LLVM_BUILD_DIR}/bin/llvm-lit" -sv "${MONOREPO_ROOT}/libcxx/test" \
+"${LLVM_BUILD_DIR}/bin/llvm-lit" -sv "${MONOREPO_ROOT}/llvm-project/libcxx/test" \
                                  --param=enable_experimental=false \
                                  ${LIT_ARCH_STRING} \
                                  --param=cxx_headers="${LLVM_INSTALL_DIR}/include/c++/v1" \
