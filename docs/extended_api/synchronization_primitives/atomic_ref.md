@@ -26,7 +26,7 @@ This class additionally deviates from the standard by being backported to C++11.
 
 Constructing multiple `cuda::std::atomic_ref<T, Sco>` with the same reference, but different values for `Sco` is illegal.
 
-`cuda::std::atomic_ref<T>` may be used with structures, however padded objects will result in undefined behaviour.
+`cuda::std::atomic_ref<T>` may be used with structures, but the behavior of performing atomic operations through it on objects with padding bytes is undefined.
 
 ## Atomic Extrema Operations
 
