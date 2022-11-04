@@ -51,10 +51,10 @@ void test_atomic_ref_copy_ctor() {
   T t0(val);
   T t1(t0);
 
-  // t0++;
-  // t1++;
+  t0++;
+  t1++;
 
-  // assert(t1.load() == 2);
+  assert(t1.load() == 2);
 }
 
 template <class T, class A>
