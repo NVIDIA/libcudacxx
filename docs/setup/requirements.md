@@ -100,7 +100,7 @@ To build and test libcu++ yourself, you will need the following in addition to
 
 [Standard API section]: ../standard_api.md
 [Extended API section]: ../extended_api.md
-[synchronization library section]: ../extended_api/synchronization_primitives.md
+[synchronization primitives section]: ../extended_api/synchronization_primitives.md
 [changelog]: ../releases/changelog.md
 
 [NVIDIA HPC SDK]: https://developer.nvidia.com/hpc-sdk
