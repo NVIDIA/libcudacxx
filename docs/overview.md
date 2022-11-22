@@ -123,9 +123,9 @@ We recommend that you always recompile your code and dependencies with the
 
 [GitHub]: https://github.com/nvidia/libcudacxx
 
-[Standard API section]: https://nvidia.github.io/libcudacxx/standard_api.html
-[synchronization primitives section]: https://nvidia.github.io/libcudacxx/extended_api/synchronization_primitives.html
-[versioning section]: https://nvidia.github.io/libcudacxx/releases/versioning.html
+[Standard API section]: standard_api.md
+[synchronization library section]: extended_api/synchronization_primitives.md
+[versioning section]: releases/versioning.md
 
 [documentation]: https://nvidia.github.io/libcudacxx
 
