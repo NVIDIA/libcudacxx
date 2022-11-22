@@ -5,7 +5,7 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-// UNSUPPORTED: c++98, c++03, c++11
+// UNSUPPORTED: c++98, c++03, c++11, nvrtc
 
 // <chrono>
 // class month;
@@ -24,6 +24,13 @@
 #include <cassert>
 
 #include "test_macros.h"
+
+// MSVC warns about unsigned/signed comparisons and addition/subtraction
+// Silence these warnings, but not the ones within the header itself.
+#if defined(_MSC_VER)
+# pragma warning( disable: 4307 )
+# pragma warning( disable: 4308 )
+#endif
 
 template <typename M, typename Ms>
 __host__ __device__

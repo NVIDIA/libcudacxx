@@ -5,7 +5,7 @@ set -e
 nvrtcdir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 libcudacxxdir="$(cd "${nvrtcdir}/../../.." && pwd)"
 
-logdir=${FAUX_NVRTC_LOG_DIR:-.}
+logdir=$(mktemp --tmpdir=${XDG_RUNTIME_DIR} -d libcudacxx.build.XXXXXXXXXX)
 
 nvcc=$(echo $1 | sed 's/^[[:space:]]*//')
 shift
@@ -100,11 +100,6 @@ cudart_include_dir=$(
         | ${nvcc} -x cu - -M -E "${includes[@]}" \
         | grep -e ' /.*/cuda_pipeline_primitives\.h' -o \
         | xargs dirname)
-cg_include_dir=$(
-    echo '#include <cooperative_groups.h>' \
-        | ${nvcc} -x cu - -M -E "${includes[@]}" \
-        | grep -e ' /.*/cooperative_groups\.h' -o \
-        | xargs dirname)
 ext_include_dir=$(
     echo '#include <cuda/pipeline>' \
         | ${nvcc} -x cu - -M -E "${includes[@]}" -arch sm_70 -std=c++11 \
@@ -138,7 +133,6 @@ echo '        // BEGIN SCRIPT GENERATED OPTIONS' >> "${tempfile}"
 echo '        "-I'"${libcudacxxdir}/include"'",' >> "${tempfile}"
 echo '        "-I'"${libcudacxxdir}/test/support"'",' >> "${tempfile}"
 echo '        "-I'"${cudart_include_dir}"'",' >> "${tempfile}"
-echo '        "-I'"${cg_include_dir}"'",' >> "${tempfile}"
 echo '        "-I'"${ext_include_dir}"'",' >> "${tempfile}"
 echo '        "--pre-include='"${libcudacxxdir}/test/support/nvrtc_limit_macros.h"'",' >> "${tempfile}"
 echo '        "--device-int128",' >> "${tempfile}"
@@ -158,3 +152,8 @@ input_dir=$(dirname "${input}")
 
 echo "invoking: ${nvcc} -c ${input_type} ${tempfile} -I${input_dir} ${modified_flags[@]}" >> ${logdir}/log
 "${nvcc}" -c ${input_type} "${tempfile}" "-I${input_dir}" "${modified_flags[@]}" 2> >(tee -a ${logdir}/error_log)
+
+if [[ "${LIBCUDACXX_NVRTC_KEEP_LOG}" != "YES" ]]
+then
+    rm -rf $logdir
+fi

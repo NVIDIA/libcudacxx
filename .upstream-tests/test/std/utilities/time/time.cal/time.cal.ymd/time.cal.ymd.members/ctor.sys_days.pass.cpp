@@ -5,14 +5,14 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
-// UNSUPPORTED: c++98, c++03, c++11
+// UNSUPPORTED: c++98, c++03, c++11, nvrtc
 
 // <chrono>
 // class year_month_day;
 
 //  constexpr year_month_day(const sys_days& dp) noexcept;
 //
-//  Effects:  Constructs an object of type year_month_day that corresponds 
+//  Effects:  Constructs an object of type year_month_day that corresponds
 //                to the date represented by dp.
 //
 //  Remarks: For any value ymd of type year_month_day for which ymd.ok() is true,
@@ -27,6 +27,13 @@
 #include <cassert>
 
 #include "test_macros.h"
+
+// MSVC warns about unsigned/signed comparisons and addition/subtraction
+// Silence these warnings, but not the ones within the header itself.
+#if defined(_MSC_VER)
+# pragma warning( disable: 4307 )
+# pragma warning( disable: 4308 )
+#endif
 
 int main(int, char**)
 {

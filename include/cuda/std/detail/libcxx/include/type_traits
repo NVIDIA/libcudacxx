@@ -4,6 +4,7 @@
 // Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
 // See https://llvm.org/LICENSE.txt for license information.
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+// SPDX-FileCopyrightText: Copyright (c) 2022 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 //
 //===----------------------------------------------------------------------===//
 
@@ -1125,8 +1126,12 @@ template <class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS add_rvalue_reference
 template <class _Tp> using add_rvalue_reference_t = typename add_rvalue_reference<_Tp>::type;
 #endif
 
+// Suppress deprecation notice for volatile-qualified return type resulting
+// from volatile-qualified types _Tp.
+_LIBCUDACXX_SUPPRESS_DEPRECATED_PUSH
 template <class _Tp> _LIBCUDACXX_INLINE_VISIBILITY _Tp&& __declval(int);
 template <class _Tp> _LIBCUDACXX_INLINE_VISIBILITY _Tp   __declval(long);
+_LIBCUDACXX_SUPPRESS_DEPRECATED_POP
 
 template <class _Tp>
 _LIBCUDACXX_INLINE_VISIBILITY
@@ -4396,6 +4401,14 @@ struct __invoke_of
         __invokable<_Fp, _Args...>::value,
         typename __invokable_r<void, _Fp, _Args...>::_Result>
 {
+#if defined(__NVCC__) && defined(__CUDACC_EXTENDED_LAMBDA__) && \
+   !defined(__CUDA_ARCH__)
+  static_assert(!__nv_is_extended_device_lambda_closure_type(_Fp),
+                "Attempt to use an extended __device__ lambda in a context "
+                "that requires querying its return type in host code. Use a "
+                "named function object, a __host__ __device__ lambda, or "
+                "cuda::proclaim_return_type instead.");
+#endif
 };
 
 // result_of

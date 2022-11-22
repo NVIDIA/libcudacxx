@@ -6,9 +6,10 @@
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++98, c++03, c++11, c++14 
+// UNSUPPORTED: c++98, c++03, c++11, c++14
 // UNSUPPORTED: nvrtc
-
+// Internal compiler error in 14.24
+// XFAIL: msvc-19.20, msvc-19.21, msvc-19.22, msvc-19.23, msvc-19.24, msvc-19.25
 // <cuda/std/tuple>
 
 // template <class F, class T> constexpr decltype(auto) apply(F &&, T &&)
@@ -33,7 +34,7 @@
 
 template <typename T>
 __host__ __device__
-constexpr void unused(T &&) {}
+constexpr bool unused(T &&) {return true;}
 
 __host__ __device__
 constexpr int constexpr_sum_fn() { return 0; }

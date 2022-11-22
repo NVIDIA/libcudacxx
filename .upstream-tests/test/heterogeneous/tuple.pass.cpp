@@ -7,6 +7,8 @@
 //===----------------------------------------------------------------------===//
 
 // UNSUPPORTED: nvrtc
+// Internal compiler error in 14.24
+// XFAIL: msvc-19.20, msvc-19.21, msvc-19.22, msvc-19.23, msvc-19.24, msvc-19.25
 
 // uncomment for a really verbose output detailing what test steps are being launched
 // #define DEBUG_TESTERS
@@ -23,7 +25,7 @@ struct pod {
 using tuple_t = cuda::std::tuple<int, pod, unsigned long long>;
 
 template<int N>
-struct write
+struct Write
 {
     using async = cuda::std::false_type;
 
@@ -38,7 +40,7 @@ struct write
 };
 
 template<int N>
-struct read
+struct Read
 {
     using async = cuda::std::false_type;
 
@@ -53,10 +55,10 @@ struct read
 };
 
 using w_r_w_r = performer_list<
-  write<10>,
-  read<10>,
-  write<30>,
-  read<30>
+  Write<10>,
+  Read<10>,
+  Write<30>,
+  Read<30>
 >;
 
 void kernel_invoker()

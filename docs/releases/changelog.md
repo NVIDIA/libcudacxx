@@ -8,19 +8,95 @@ It adds `cuda::[std::]atomic_ref`, `<cuda/std/mutex>`, and
   `cuda::[std::]atomic` support for padding bits.
 It pulls in the latest version of upstream libc++ and marks the beginning of
   automatic tracking of upstream.
+-->
 
-## libcu++ 1.8.0
+## libcu++ 1.9.0
 
-libcu++ 1.8.0 is a major release.
+Adds `float` and `double` support to `cuda::std::atomic` and `cuda::atomic`.
+This release also adds workflows for contributors based on Docker to improve testing and coverage.
 
 Supported ABI Versions: 4 (default), 3, and 2.
 
 ### New Features
 
+- #286: Add atomics for floating point types.
+  - Thanks Daniel Jünger for this contribution.
+- #284: `cuda::proclaim_return_type` for use with extended lambda support in NVCC.
+- #267: Docker refactor, parameterizes OS and compiler versions.
 
 ### Issues Fixed
 
-!-->
+- #280: NVHPC: Disable <nv/target> macro code paths when compiled without `-stdpar`.
+- #282: Prevent usage of cuda::atomic::fetch_max/min for non-integral types.
+- #288: Fix shortcut in fetch_min CAS loop.
+  - Thanks Daniel Jünger for this contribution.
+- #291: Remove usage of find_path to locate cuda/std/detail/__config.
+  - Thanks Robert Maynard for this contribution.
+- #276: Delete tests for unsupported header `<compare>`.
+- #293: Fix failures in several tests unsupportable by NVRTC.
+- #303: Move the emission of atomic errors on unsupported platforms to `<atomic>`.
+- #305: Add workflow to add issues/PRs to Project.
+- #314: Remove SM_35 from testing.
+- #312: Use escape hook for removal of `<ciso646>`.
+- #310: `<atomics>` Remove defaulted copy constructor from __cxx_atomic_lock_impl.
+- #300: Soundness bugfix for `barrier<thread_scope_block>` on sm_70.
+- #319: Fix ubuntu18 failing in CI due to missing lit prereqs.
+- #318: Fix gcc12 issues.
+- #320: Use cache_from to speed up builds if local versions exist.
+- #304: Fix `<chrono>` and `<atomic>` build errors with clang-cuda.
+- #324: Also disable tests on `windows && pre-sm-70`.
+
+## libcu++ 1.8.1
+
+libcu++ 1.8.1 is a minor release. It fixes minor issues in source, tests, and documentation.
+
+Supported ABI Versions: 4 (default), 3, and 2.
+
+### Issues Fixed
+
+- #268: Remove NVIDIA internal paths from CMake includes.
+- #265: Move pipeline into libcudacxx. Previously was a seperate CTK component.
+- #264: Fix builds using NVHPC by adding a new line.
+    - Thanks Chengjie Wang and Royil Damer for this contribution.
+- #261: Fix extra line in perform_tests.bash causing invalid test results.
+    - Thanks Chengjie Wang and Royil Damer for this contribution.
+- #246: Documentation fixes regarding atomics in GPU memory.
+    - Thanks Daniel Lustig for this contribution.
+- #258: Lock contrast of our documenation's search text field.
+    - Thanks Bradley Dice for this contribution.
+- #259: Add system_header pragma to portions of <nv/target>
+- #249: Documentation update for building libcudacxx.
+- #247: Update godbolt links in examples.
+    - Thanks Asher Mancinelli for this contribution.
+
+## libcu++ 1.8.0
+
+libcu++ 1.8.0 is a major release. It adds several `constexpr` bit manipulation
+functions from C++20's `<bit>` to C++11 and up. Also added is `cuda::std::array`
+providing fixed size arrays and iterators for both host and device code.
+
+Supported ABI Versions: 4 (default), 3, and 2.
+
+### New Features
+
+- #237: Add `<cuda/std/bit>` and enable backports to C++11.
+- #243: Add `<cuda/std/array>` and `<cuda/std/iterator>`.
+
+### Issues Fixed
+
+- #234: Fix building with GCC/Clang when NVCC was not being used.
+- #240: Create a config for lit to generate a JSON output of the build status.
+  - Thanks Royil Damer for this contribution.
+- #241: Fix octal notation of libcudacxx version number.
+- #242: Add support for `find_package` and `add_subdirectory` in CMake.
+- #244: Merge build system improvements from NVC++ branch.
+- #250: Fix pragma typo on MSVC.
+- #251: Add several new compilers versions to our docker suite.
+- #252: Fix several deprecations in Clang 13.
+- #253: Fix truncations and warnings in numerics.
+- #254: Fix warnings in `<array>` tests and move `__cuda_std__` escapes in `<algorithm>`
+- #255: Fix deprecated copy ctor warnings in `__annotated_ptr` for Clang 13.
+- #256: Fix SM detection in the `perform_tests` script.
 
 ## libcu++ 1.7.0
 
@@ -333,4 +409,3 @@ Included in: CUDA Toolkit 10.2.
   This makes libcu++ unusable if installed from the NVIDIA-provided Debian
     packages and may interfere with the operation of your host C++ Standard
     Library.
-

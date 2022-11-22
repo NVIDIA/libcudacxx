@@ -66,8 +66,8 @@ The following NVIDIA device architectures are partially supported:
     - Synchronization facilities are supported.
 - Pascall: SM 60, 61 and 62.
     - Blocking synchronization facilities (e.g. most of the synchronization
-          library) are not supported.
-        Please see the [synchronization library section] for details.
+          primitives) are not supported.
+        Please see the [synchronization primitives section] for details.
 
 ### Host Architectures
 
@@ -98,10 +98,10 @@ To build and test libcu++ yourself, you will need the following in addition to
   - We recommend installing lit using Python's pip package manager.
 
 
-[Standard API section]: ./standard_api.md
-[Extended API section]: ./extended_api.md
-[synchronization library section]: ./standard_api/synchronization_library.html
-[changelog]: ./releases/changelog.md
+[Standard API section]: ../standard_api.md
+[Extended API section]: ../extended_api.md
+[synchronization primitives section]: ../extended_api/synchronization_primitives.md
+[changelog]: ../releases/changelog.md
 
 [NVIDIA HPC SDK]: https://developer.nvidia.com/hpc-sdk
 [CUDA Toolkit]: https://developer.nvidia.com/cuda-toolkit

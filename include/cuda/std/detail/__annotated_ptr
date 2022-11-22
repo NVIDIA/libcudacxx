@@ -86,7 +86,7 @@ namespace __detail_ap {
   }
 
   template <>
-  __device__
+  inline __device__
   void* __associate_descriptor(void* __ptr, std::uint64_t __prop) {
 #if __CUDA_ARCH__ >= 800
     return __nv_associate_access_property(__ptr, __prop);
@@ -96,7 +96,7 @@ namespace __detail_ap {
   }
 
   template<>
-  __device__
+  inline __device__
   void* __associate_descriptor(void* __ptr, access_property::shared) {
     return __ptr;
   }
@@ -105,7 +105,9 @@ namespace __detail_ap {
   __host__ __device__
   _Type* __associate(_Type* __ptr, _Property __prop) {
 #ifdef __CUDA_ARCH__
-    return static_cast<_Type*>(__associate_descriptor(__associate_address_space(__ptr, __prop), __prop));
+    return static_cast<_Type*>(__associate_descriptor(
+	    __associate_address_space(const_cast<void*>(static_cast<const void*>(__ptr)), __prop),
+	    __prop));
 #else
     return __ptr;
 #endif
@@ -124,8 +126,13 @@ namespace __detail_ap {
 
       constexpr __annotated_ptr_base() noexcept = default;
       constexpr __annotated_ptr_base(__annotated_ptr_base const&) = default;
-      __device__ void* __apply_prop(void* __p) const {
+      _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 __annotated_ptr_base& operator=(const __annotated_ptr_base&) = default;
+      __host__ __device__ constexpr __annotated_ptr_base(access_property::shared) noexcept {}
+      inline __device__ void* __apply_prop(void* __p) const {
         return __associate(__p, access_property::shared{});
+      }
+      __host__ __device__ constexpr access_property::shared __get_property() const noexcept {
+	return access_property::shared{};
       }
   };
 
@@ -136,8 +143,13 @@ namespace __detail_ap {
 
       constexpr __annotated_ptr_base() noexcept = default;
       constexpr __annotated_ptr_base(__annotated_ptr_base const&) = default;
-      __device__ void* __apply_prop(void* __p) const {
+      _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 __annotated_ptr_base& operator=(const __annotated_ptr_base&) = default;
+      __host__ __device__ constexpr __annotated_ptr_base(access_property::global) noexcept {}
+      inline __device__ void* __apply_prop(void* __p) const {
         return __associate(__p, access_property::global{});
+      }
+      __host__ __device__ constexpr access_property::global __get_property() const noexcept {
+	return access_property::global{};
       }
   };
 
@@ -148,8 +160,13 @@ namespace __detail_ap {
 
       constexpr __annotated_ptr_base() noexcept = default;
       constexpr __annotated_ptr_base(__annotated_ptr_base const&) = default;
-      __device__ void* __apply_prop(void* __p) const {
+      _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 __annotated_ptr_base& operator=(const __annotated_ptr_base&) = default;
+      __host__ __device__ constexpr __annotated_ptr_base(access_property::normal) noexcept {}
+      inline __device__ void* __apply_prop(void* __p) const {
         return __associate(__p, access_property::normal{});
+      }
+      __host__ __device__ constexpr access_property::normal __get_property() const noexcept {
+	return access_property::normal{};
       }
   };
 
@@ -160,8 +177,13 @@ namespace __detail_ap {
 
       constexpr __annotated_ptr_base() noexcept = default;
       constexpr __annotated_ptr_base(__annotated_ptr_base const&) = default;
-      __device__ void* __apply_prop(void* __p) const {
+      _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 __annotated_ptr_base& operator=(const __annotated_ptr_base&) = default;
+      __host__ __device__ constexpr __annotated_ptr_base(access_property::persisting) noexcept {}
+      inline __device__ void* __apply_prop(void* __p) const {
         return __associate(__p, access_property::persisting{});
+      }
+      __host__ __device__ constexpr access_property::persisting __get_property() const noexcept {
+	return access_property::persisting{};
       }
   };
 
@@ -172,8 +194,13 @@ namespace __detail_ap {
 
       constexpr __annotated_ptr_base() noexcept = default;
       constexpr __annotated_ptr_base(__annotated_ptr_base const&) = default;
-      __device__ void* __apply_prop(void* __p) const {
+      _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 __annotated_ptr_base& operator=(const __annotated_ptr_base&) = default;
+      __host__ __device__ constexpr __annotated_ptr_base(access_property::streaming) noexcept {}
+      inline __device__ void* __apply_prop(void* __p) const {
         return __associate(__p, access_property::streaming{});
+      }
+      __host__ __device__ constexpr access_property::streaming __get_property() const noexcept {
+	return access_property::streaming{};
       }
   };
 
@@ -184,9 +211,15 @@ namespace __detail_ap {
 
       __host__ __device__ constexpr __annotated_ptr_base() noexcept : __prop(access_property()) {}
       __host__ __device__ constexpr __annotated_ptr_base(std::uint64_t __property) noexcept : __prop(__property) {}
+      __host__ __device__ constexpr __annotated_ptr_base(access_property __property) noexcept
+        : __annotated_ptr_base(static_cast<std::uint64_t>(__property)) {}
       constexpr __annotated_ptr_base(__annotated_ptr_base const&) = default;
-      __device__ void* __apply_prop(void* __p) const {
+      _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 __annotated_ptr_base& operator=(const __annotated_ptr_base&) = default;
+      inline __device__ void* __apply_prop(void* __p) const {
         return __associate(__p, __prop);
+      }
+      __host__ __device__ access_property __get_property() const noexcept {
+	return reinterpret_cast<access_property&>(const_cast<std::uint64_t&>(__prop));
       }
   };
 } // namespace __detail_ap

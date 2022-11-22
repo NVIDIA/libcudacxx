@@ -2,7 +2,7 @@
 
 <table><tr>
 <th><b><a href="https://github.com/nvidia/libcudacxx/tree/main/examples">Examples</a></b></th>
-<th><b><a href="https://godbolt.org/z/shc8sG">Godbolt</a></b></th>
+<th><b><a href="https://godbolt.org/z/Kns9vhPEr">Godbolt</a></b></th>
 <th><b><a href="https://nvidia.github.io/libcudacxx">Documentation</a></b></th>
 </tr></table>
 
@@ -76,7 +76,7 @@ Unless otherwise noted, any libcu++ object which is copyable or movable can be
 Synchronization objects work across host and device code, and can be used to
   synchronize between host and device threads.
 However, there are some restrictions to be aware of; please see the
-  [synchronization library section] for more details.
+  [synchronization primitives section] for more details.
 
 ### `cuda::device::`
 
@@ -123,9 +123,9 @@ We recommend that you always recompile your code and dependencies with the
 
 [GitHub]: https://github.com/nvidia/libcudacxx
 
-[Standard API section]: https://nvidia.github.io/libcudacxx/standard_api.html
-[synchronization library section]: https://nvidia.github.io/libcudacxx/standard_api/synchronization_library.html
-[versioning section]: https://nvidia.github.io/libcudacxx/releases/versioning.html
+[Standard API section]: standard_api.md
+[synchronization primitives section]: extended_api/synchronization_primitives.md
+[versioning section]: releases/versioning.md
 
 [documentation]: https://nvidia.github.io/libcudacxx
 

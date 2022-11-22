@@ -71,6 +71,8 @@ function section_separator {
 LIBCXX_LOG=$(mktemp)
 LIBCUDACXX_LOG=$(mktemp)
 
+KNOWN_COMPUTE_ARCHS="50 52 53 60 61 62 70 72 75 80 86 87 90"
+
 function report_and_exit {
   # If any of the lines searched for below aren't present in the log files, the
   # grep commands will return nothing, and the variables will be empty. Bash
@@ -147,8 +149,8 @@ LIBCUDACXX_PATH=$(realpath ${SCRIPT_PATH}/../../../../)
 
 LIT_PREFIX="time"
 
-LIBCXX_LIT_SITE_CONFIG=${LIBCUDACXX_PATH}/libcxx/build/test/lit.site.cfg
-LIBCUDACXX_LIT_SITE_CONFIG=${LIBCUDACXX_PATH}/build/libcxx/test/lit.site.cfg
+LIBCXX_LIT_SITE_CONFIG=${LIBCUDACXX_PATH}/libcxx/build/libcxx/test/lit.site.cfg
+LIBCUDACXX_LIT_SITE_CONFIG=${LIBCUDACXX_PATH}/build/test/lit.site.cfg
 
 RAW_TEST_TARGETS=""
 
@@ -223,6 +225,14 @@ then
   LIT_FLAGS="${LIT_FLAGS:+${LIT_FLAGS} }-Dexecutor=\"NoopExecutor()\""
 fi
 
+JSON_OUTPUT_TARGET="0"
+
+if [ "${JSON_OUTPUT_PATH:-0}" != "0" ]
+then
+  JSON_OUTPUT_TARGET="${JSON_OUTPUT_PATH}/testlog_$(basename $(mktemp))"
+  mkdir -p "${JSON_OUTPUT_TARGET}"
+fi
+
 ################################################################################
 # SM Architecture Detection
 
@@ -235,10 +245,17 @@ then
   echo "# TEST SM Architecture Detection"
 
   ARCH_DETECTION_LOG=$(mktemp)
+  DETECTION_LIT_FLAGS="-vv -a"
+  if [ "${JSON_OUTPUT_TARGET}" != "0" ]
+  then
+    DETECTION_LIT_FLAGS="${DETECTION_LIT_FLAGS} -o ${JSON_OUTPUT_TARGET}/detect_sm.log"
+  fi
 
-  LIBCXX_SITE_CONFIG=${LIBCUDACXX_LIT_SITE_CONFIG} \
-  bash -c "lit -vv -a ${LIBCUDACXX_PATH}/test/nothing_to_do.pass.cpp" \
-  > ${ARCH_DETECTION_LOG} 2>&1
+
+  LIBCUDACXX_SITE_CONFIG=${LIBCUDACXX_LIT_SITE_CONFIG} \
+  bash -c "lit ${DETECTION_LIT_FLAGS} ${LIBCUDACXX_PATH}/test/nothing_to_do.pass.cpp -Dcompute_archs=\"${KNOWN_COMPUTE_ARCHS}\"" \
+    > ${ARCH_DETECTION_LOG} 2>&1
+
   if [ "${PIPESTATUS[0]}" != "0" ]
   then
     cat ${ARCH_DETECTION_LOG}
@@ -251,7 +268,7 @@ then
 
   echo "# DETECTION SM Architecture : Device 0, ${DEVICE_0_COMPUTE_ARCH}"
 
-  if (( 35 <= ${DEVICE_0_COMPUTE_ARCH:-0} ))
+  if (( 50 <= ${DEVICE_0_COMPUTE_ARCH:-0} ))
   then
     LIBCUDACXX_COMPUTE_ARCHS=${DEVICE_0_COMPUTE_ARCH}
   fi
@@ -290,6 +307,7 @@ VARIABLES="
   RAW_TEST_TARGETS
   LIBCUDACXX_COMPUTE_ARCHS
   DEVICE_0_COMPUTE_ARCH
+  JSON_OUTPUT_TARGET
 "
 
 section_separator
@@ -304,12 +322,20 @@ done
 
 section_separator
 
+OUTPUT_STREAM_FLAG=""
+
+if [ "${JSON_OUTPUT_TARGET}" != "0" ]
+then
+  LIT_FLAGS="${LIT_FLAGS} -o ${JSON_OUTPUT_TARGET}/test_results.log"
+  OUTPUT_STREAM_FLAG="> /dev/null"
+fi
+
 if [ "${LIBCUDACXX_SKIP_LIBCXX_TESTS:-0}" == "0" ]
 then
   echo "# TEST libc++"
   TIMEFORMAT="# WALLTIME libc++ : %R [sec]" \
   LIBCXX_SITE_CONFIG=${LIBCXX_LIT_SITE_CONFIG} \
-  bash -c "${LIT_PREFIX} lit ${LIT_FLAGS} ${LIBCXX_TEST_TARGETS}" \
+  bash -c "${LIT_PREFIX} lit ${LIT_FLAGS} ${LIBCXX_TEST_TARGETS} ${OUTPUT_STREAM_FLAG}" \
   2>&1 | tee "${LIBCXX_LOG}"
   if [ "${PIPESTATUS[0]}" != "0" ]; then report_and_exit 1; fi
 else
@@ -332,8 +358,9 @@ then
 
   echo "# TEST libcu++"
   TIMEFORMAT="# WALLTIME libcu++: %R [sec]" \
-  LIBCXX_SITE_CONFIG=${LIBCUDACXX_LIT_SITE_CONFIG} \
-  bash -c "${LIT_PREFIX} lit ${LIT_FLAGS} ${LIT_COMPUTE_ARCHS_FLAG}${LIBCUDACXX_COMPUTE_ARCHS}${LIT_COMPUTE_ARCHS_SUFFIX} ${LIBCUDACXX_TEST_TARGETS}" \
+
+  LIBCUDACXX_SITE_CONFIG=${LIBCUDACXX_LIT_SITE_CONFIG} \
+  bash -c "${LIT_PREFIX} lit ${LIT_FLAGS} ${LIT_COMPUTE_ARCHS_FLAG}${LIBCUDACXX_COMPUTE_ARCHS}${LIT_COMPUTE_ARCHS_SUFFIX} ${LIBCUDACXX_TEST_TARGETS} ${OUTPUT_STREAM_FLAG}" \
   2>&1 | tee "${LIBCUDACXX_LOG}"
   if [ "${PIPESTATUS[0]}" != "0" ]; then report_and_exit 1; fi
 else
