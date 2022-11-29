@@ -37,26 +37,21 @@ For `cuda::atomic_ref<T>` and `cuda::std::atomic_ref<T>` the type `T` must satis
 
 ## Concurrency Restrictions
 
-An object of type `cuda::atomic_ref` or [`cuda::std::atomic_ref`] shall not be accessed
-  concurrently by CPU and GPU threads unless:
-- it is in unified memory and the [`concurrentManagedAccess` property] is 1, or
-- it is in CPU memory and the [`hostNativeAtomicSupported` property] is 1.
+See [`memory model`] documentation for general restrictions on atomicity.
 
-Note, for objects of scopes other than `cuda::thread_scope_system` this is a
-  data-race, and thefore also prohibited regardless of memory characteristics.
-
-Under CUDA Compute Capability 6 (Pascal), an object of type `atomic_ref` may not be
+With CUDA Compute Capability 6 (Pascal), an object of type `atomic_ref` may not be
   used:
-- with automatic storage duration, or
+- with a reference to an object with a automatic storage duration in a GPU thread, or
 - if `is_always_lock_free()` is `false`.
 
-Under CUDA Compute Capability prior to 6 (Pascal), objects of type
+For CUDA Compute Capability prior to 6 (Pascal), objects of type
   `cuda::atomic_ref` or [`cuda::std::atomic_ref`] may not be used.
 
 ## Implementation-Defined Behavior
 
 For each type `T` and [`cuda::thread_scope`] `S`, the value of
-  `cuda::atomic_ref<T, S>::is_always_lock_free()` is as follows:
+  `cuda::atomic_ref<T, S>::is_always_lock_free()` and 
+  `cuda::std::atomic_ref<T>::is_always_lock_free()` is as follows:
 
 | Type `T` | [`cuda::thread_scope`] `S` | `cuda::atomic_ref<T, S>::is_always_lock_free()` |
 |----------|----------------------------|---------------------------------------------|
@@ -87,6 +82,7 @@ __global__ void example_kernel(int *gmem, int *pinned_mem) {
 
 
 [`cuda::thread_scope`]: ../thread_scopes.md
+[`memory model`]: ../memory_model.md
 
 [`cuda::atomic_thread_fence`]: ./atomic/atomic_thread_fence.md
 
