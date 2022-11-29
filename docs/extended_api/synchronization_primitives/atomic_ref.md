@@ -24,7 +24,7 @@ This class additionally deviates from the standard by being backported to C++11.
 
 `cuda::atomic_ref<T>` and `cuda::std::atomic_ref<T>` may only be instantiated with types sized between 4 and 8 bytes.
 
-Constructing multiple `cuda::std::atomic_ref<T, Sco>` with the same reference, but different values for `Sco` is illegal.
+No object or subobject of an object referenced by an `atomic_­ref` shall be concurrently referenced by any other `atomic_­ref` that has a different `Scope`. 
 
 For `cuda::atomic_ref<T>` and `cuda::std::atomic_ref<T>` the type `T` must satisfy the following:
 - `4 <= sizeof(T) <= 8`
