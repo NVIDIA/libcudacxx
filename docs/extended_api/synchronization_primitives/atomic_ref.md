@@ -27,8 +27,8 @@ This class additionally deviates from the standard by being backported to C++11.
 No object or subobject of an object referenced by an `atomic_­ref` shall be concurrently referenced by any other `atomic_­ref` that has a different `Scope`. 
 
 For `cuda::atomic_ref<T>` and `cuda::std::atomic_ref<T>` the type `T` must satisfy the following:
-- `4 <= sizeof(T) <= 8`
-- `T` must not have "padding bits", i.e., 'T`'s [object representation](https://en.cppreference.com/w/cpp/language/object#Object_representation_and_value_representation) must not have bits that do not participate in it's value representation  
+- `4 <= sizeof(T) <= 8`.
+- `T` must not have "padding bits", i.e., 'T`'s [object representation](https://en.cppreference.com/w/cpp/language/object#Object_representation_and_value_representation) must not have bits that do not participate in it's value representation.
 
 ## Atomic Extrema Operations
 
