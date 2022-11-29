@@ -42,6 +42,8 @@ namespace __host {
 #endif
 }
 
+using __host::__cxx_atomic_underlying_t;
+
 #include "atomic_cuda_generated.h"
 #include "atomic_cuda_derived.h"
 
@@ -79,6 +81,9 @@ struct __cxx_atomic_base_heterogeneous_impl {
       __cxx_atomic_base_heterogeneous_impl(_Tp __value) : __a_value(__value) {
     }
 
+    using __underlying_t = _Tp;
+    static constexpr int __sco = _Sco;
+
     __host::__cxx_atomic_base_impl<_Tp, _Sco> __a_value;
 };
 
@@ -92,6 +97,9 @@ struct __cxx_atomic_base_heterogeneous_impl<_Tp, _Sco, true> {
     _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR explicit
       __cxx_atomic_base_heterogeneous_impl(_Tp& __value) : __a_value(__value) {
     }
+
+    using __underlying_t = _Tp;
+    static constexpr int __sco = _Sco;
 
     __host::__cxx_atomic_ref_base_impl<_Tp, _Sco> __a_value;
 };
