@@ -11,7 +11,8 @@
 #define _CUDA_TUPLE
 
 #if !defined(__CUDACC_RTC__)
-// Fetch utility to populate tuple_size
+// Fetch utility to get primary template for ::std::tuple_size necessary for the specialization of
+// ::std::tuple_size<cuda::std::tuple> to enable structured bindings. See https://github.com/NVIDIA/libcudacxx/issues/316 
 #include <utility>
 #endif
 
