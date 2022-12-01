@@ -1143,7 +1143,7 @@ template <class _Tp, int _Sco, typename enable_if<!__libcpp_platform_wait_uses_t
 _LIBCUDACXX_INLINE_VISIBILITY void __cxx_atomic_notify_one(__cxx_atomic_impl<_Tp, _Sco> const volatile* __a) {
     __cxx_atomic_notify_all(__a);
 }
-template <class _Ty, class _Tp = __detail::__cxx_atomic_underlying_t<_Tp>, int _Sco = _Ty::__sco, typename enable_if<!__libcpp_platform_wait_uses_type<_Tp>::__value, int>::type = 1>
+template <class _Ty, class _Tp = __detail::__cxx_atomic_underlying_t<_Ty>, int _Sco = _Ty::__sco, typename enable_if<!__libcpp_platform_wait_uses_type<_Tp>::__value, int>::type = 1>
 _LIBCUDACXX_INLINE_VISIBILITY void __cxx_atomic_try_wait_slow(_Ty const volatile* __a, _Tp const __val, memory_order __order) {
 #ifndef _LIBCUDACXX_HAS_NO_THREAD_CONTENTION_TABLE
     auto * const __c = __libcpp_contention_state(__a);
