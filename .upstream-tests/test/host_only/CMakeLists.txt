@@ -76,6 +76,7 @@ function(libcudacxx_add_standalone_header_test test_file_output_var header_under
     string(REPLACE "/" "_" executable_name ${header_under_test})
     add_executable(${executable_name} ${test_cpp})
     target_include_directories(${executable_name} PRIVATE ${CMAKE_SOURCE_DIR}/include)
+    set_target_properties(${executable_name} PROPERTIES CXX_STANDARD 11)
 endfunction()
 
 # Don't generate CUDA targets, they fail currently.
