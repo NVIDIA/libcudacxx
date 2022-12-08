@@ -318,12 +318,76 @@ long double    truncl(long double x);
 #define NAN      __builtin_nan()
 #endif
 
-_LIBCUDACXX_BEGIN_NAMESPACE_STD
+// Forward to these functions to circumvent macro hackery in some compilers
+namespace {
+    template <typename _Ty>
+    _LIBCUDACXX_INLINE_VISIBILITY _Ty __libcudacxx_abs(_Ty __v) {
+#if defined(__cuda_std__) && defined(_LIBCUDACXX_COMPILER_GCC)
+        return ::std::abs(__v);
+#else
+        return abs(__v);
+#endif
+    }
+    template <>
+    inline _LIBCUDACXX_INLINE_VISIBILITY float __libcudacxx_abs<float>(float __v) {
+        return fabsf(__v);
+    }
+    template <>
+    inline _LIBCUDACXX_INLINE_VISIBILITY double __libcudacxx_abs<double>(double __v) {
+        return fabs(__v);
+    }
+    template <typename _Ty>
+    _LIBCUDACXX_INLINE_VISIBILITY bool __libcudacxx_signbit(_Ty __v) {
+        return signbit(__v);
+    }
+    template <typename _Ty>
+    _LIBCUDACXX_INLINE_VISIBILITY bool __libcudacxx_isnan(_Ty __v) {
+        return isnan(__v);
+    }
+    template <typename _Ty>
+    _LIBCUDACXX_INLINE_VISIBILITY bool __libcudacxx_isfinite(_Ty __v) {
+        return isfinite(__v);
+    }
+    template <typename _Ty>
+    _LIBCUDACXX_INLINE_VISIBILITY bool __libcudacxx_isinf(_Ty __v) {
+        return isinf(__v);
+    }
 
-using ::signbit;
-using ::isfinite;
-using ::isinf;
-using ::isnan;
+    template <typename _Ty>
+    _LIBCUDACXX_INLINE_VISIBILITY int __libcudacxx_fpclassify(_Ty __v) {
+        return fpclassify(__v);
+    }
+    template <typename _Ty>
+    _LIBCUDACXX_INLINE_VISIBILITY bool __libcudacxx_isnormal(_Ty __v) {
+        return isnormal(__v);
+    }
+    template <typename _Ty>
+    _LIBCUDACXX_INLINE_VISIBILITY bool __libcudacxx_isgreater(_Ty __l, _Ty __r) {
+        return isgreater(__l, __r);
+    }
+    template <typename _Ty>
+    _LIBCUDACXX_INLINE_VISIBILITY bool __libcudacxx_isgreaterequal(_Ty __l, _Ty __r) {
+        return isgreaterequal(__l, __r);
+    }
+    template <typename _Ty>
+    _LIBCUDACXX_INLINE_VISIBILITY bool __libcudacxx_isless(_Ty __l, _Ty __r) {
+        return isless(__l, __r);
+    }
+    template <typename _Ty>
+    _LIBCUDACXX_INLINE_VISIBILITY bool __libcudacxx_islessequal(_Ty __l, _Ty __r) {
+        return islessequal(__l, __r);
+    }
+    template <typename _Ty>
+    _LIBCUDACXX_INLINE_VISIBILITY bool __libcudacxx_islessgreater(_Ty __l, _Ty __r) {
+        return islessgreater(__l, __r);
+    }
+    template <typename _Ty>
+    _LIBCUDACXX_INLINE_VISIBILITY bool __libcudacxx_isunordered(_Ty __l, _Ty __r) {
+        return isunordered(__l, __r);
+    }
+}
+
+_LIBCUDACXX_BEGIN_NAMESPACE_STD
 
 using ::acos;
 using ::acosf;
@@ -372,23 +436,97 @@ using ::logf;
 using ::hypot;
 using ::hypotf;
 
-#ifndef _AIX
-using ::abs;
-#endif
+template <typename _Ty>
+_LIBCUDACXX_INLINE_VISIBILITY _Ty abs(_Ty __v) {
+    return ::__libcudacxx_abs(__v);
+}
 
 #ifndef _LIBCUDACXX_COMPILER_NVRTC
-// GCC <= 50X is missing some math intrinsics in the global namespace
-#if !defined(_LIBCUDACXX_MISSING_GCC_MATH_INTRINSICS)
-using ::fpclassify;
-using ::isnormal;
-using ::isgreater;
-using ::isgreaterequal;
-using ::isless;
-using ::islessequal;
-using ::islessgreater;
-using ::isunordered;
-using ::isunordered;
-#endif
+
+#if defined(fpclassify)
+#pragma push_macro("fpclassify")
+#undef fpclassify
+template <typename _Ty>
+_LIBCUDACXX_INLINE_VISIBILITY int fpclassify(_Ty __v) {
+    return ::__libcudacxx_fpclassify(__v);
+}
+#pragma pop_macro("fpclassify")
+#endif // defined(fpclassify)
+
+#if defined(isgreater)
+#pragma push_macro("isgreater")
+#undef isgreater
+template <typename _Ty>
+_LIBCUDACXX_INLINE_VISIBILITY bool isgreater(_Ty __l, _Ty __r) {
+    return ::__libcudacxx_isgreater(__l, __r);
+}
+#pragma pop_macro("isgreater")
+#endif // defined(isgreater)
+
+#if defined(isgreaterequal)
+#pragma push_macro("isgreaterequal")
+#undef isgreaterequal
+template <typename _Ty>
+_LIBCUDACXX_INLINE_VISIBILITY bool isgreaterequal(_Ty __l, _Ty __r) {
+    return ::__libcudacxx_isgreaterequal(__l, __r);
+}
+#pragma pop_macro("isgreaterequal")
+#endif // defined(isgreaterequal)
+
+#if defined(isless)
+#pragma push_macro("isless")
+#undef isless
+template <typename _Ty>
+_LIBCUDACXX_INLINE_VISIBILITY bool isless(_Ty __l, _Ty __r) {
+    return ::__libcudacxx_isless(__l, __r);
+}
+#pragma pop_macro("isless")
+#endif // defined(isless)
+
+#if defined(islessequal)
+#pragma push_macro("islessequal")
+#undef islessequal
+template <typename _Ty>
+_LIBCUDACXX_INLINE_VISIBILITY bool islessequal(_Ty __l, _Ty __r) {
+    return ::__libcudacxx_islessequal(__l, __r);
+}
+#pragma pop_macro("islessequal")
+#endif // defined(islessequal)
+
+#if defined(islessgreater)
+#pragma push_macro("islessgreater")
+#undef islessgreater
+template <typename _Ty>
+_LIBCUDACXX_INLINE_VISIBILITY bool islessgreater(_Ty __l, _Ty __r) {
+    return ::__libcudacxx_islessgreater(__l, __r);
+}
+#pragma pop_macro("islessgreater")
+#endif // defined(islessgreater)
+
+template <typename _Ty>
+_LIBCUDACXX_INLINE_VISIBILITY bool signbit(_Ty __v) {
+    return ::__libcudacxx_signbit(__v);
+}
+template <typename _Ty>
+_LIBCUDACXX_INLINE_VISIBILITY bool isnan(_Ty __v) {
+    return ::__libcudacxx_isnan(__v);
+}
+template <typename _Ty>
+_LIBCUDACXX_INLINE_VISIBILITY bool isfinite(_Ty __v) {
+    return ::__libcudacxx_isfinite(__v);
+}
+template <typename _Ty>
+_LIBCUDACXX_INLINE_VISIBILITY bool isinf(_Ty __v) {
+    return ::__libcudacxx_isinf(__v);
+}
+template <typename _Ty>
+_LIBCUDACXX_INLINE_VISIBILITY bool isnormal(_Ty __v) {
+    return ::__libcudacxx_isnormal(__v);
+}
+template <typename _Ty>
+_LIBCUDACXX_INLINE_VISIBILITY bool isunordered(_Ty __l, _Ty __r) {
+    return ::__libcudacxx_isunordered(__l, __r);
+}
 
 using ::float_t;
 using ::double_t;
