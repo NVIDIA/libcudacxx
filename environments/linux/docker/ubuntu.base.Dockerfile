@@ -87,6 +87,7 @@ RUN cmake -S /libcudacxx -B /build \
         -DCMAKE_CUDA_FLAGS="-allow-unsupported-compiler"
 
 RUN make -j -C /build/libcxx
+RUN make -j -C /build/test/host_only
 
 ENV LIBCUDACXX_SITE_CONFIG=/build/test/lit.site.cfg
 ENV LIBCXX_SITE_CONFIG=/build/libcxx/test/lit.site.cfg
