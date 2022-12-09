@@ -11,7 +11,6 @@
 
 #ifndef __CUDACC_RTC__
 #include <math.h>
-#include <cmath>
 #endif
 
 #include "limits"
