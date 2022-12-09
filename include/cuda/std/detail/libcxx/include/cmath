@@ -368,11 +368,11 @@ using ::logf;
 using ::hypot;
 using ::hypotf;
 
-#ifndef _LIBCUDACXX_COMPILER_NVRTC
-
-#  ifndef _AIX
+#ifndef _AIX
 using ::abs;
-#  endif
+#endif
+
+#ifndef _LIBCUDACXX_COMPILER_NVRTC
 
 using ::fpclassify;
 using ::isgreater;
