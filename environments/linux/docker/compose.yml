@@ -57,7 +57,7 @@ services:
         BUILDKIT_INLINE_CACHE: "1"
         USE_LLVM_INSTALLER: 0
         ROOT_IMAGE: "nvcr.io/nvidia/cuda:11.8.0-devel-ubuntu18.04"
-        COMPILERS: "g++-5 g++-6 g++-7 clang-7"
+        COMPILERS: "g++-6 g++-7 clang-7"
     deploy: *deploy-template
 
 ##### Not used yet
@@ -249,20 +249,6 @@ services:
 
 
 ### Ubuntu 18.04 images:
-
-  gcc-5:
-    extends:
-      service: ubuntu18.04
-    image: "libcudacxx/gcc-5"
-    container_name: gcc-5
-    profiles: ["gcc-5"]
-    build:
-      context: ../../../
-      dockerfile: environments/linux/docker/ubuntu.base.Dockerfile
-      target: libcudacxx-configured
-      args:
-        HOST_CXX: "g++-5"
-
   gcc-6:
     extends:
       service: ubuntu18.04
