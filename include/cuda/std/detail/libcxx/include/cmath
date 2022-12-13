@@ -321,6 +321,11 @@ long double    truncl(long double x);
 
 _LIBCUDACXX_BEGIN_NAMESPACE_STD
 
+using ::signbit;
+using ::isfinite;
+using ::isinf;
+using ::isnan;
+
 using ::acos;
 using ::acosf;
 using ::asin;
@@ -375,17 +380,13 @@ using ::abs;
 #ifndef _LIBCUDACXX_COMPILER_NVRTC
 
 using ::fpclassify;
+using ::isnormal;
 using ::isgreater;
 using ::isgreaterequal;
 using ::isless;
 using ::islessequal;
 using ::islessgreater;
 
-using ::signbit;
-using ::isnan;
-using ::isfinite;
-using ::isinf;
-using ::isnormal;
 using ::isunordered;
 
 using ::float_t;
@@ -561,7 +562,8 @@ using ::scalblnl;
 using ::scalbnl;
 using ::tgammal;
 using ::truncl;
-#endif
+
+#endif // _LIBCUDACXX_COMPILER_NVRTC
 
 #if _LIBCUDACXX_STD_VER > 14 && !defined(__cuda_std__)
 inline _LIBCUDACXX_INLINE_VISIBILITY float       hypot(       float x,       float y,       float z ) { return sqrt(x*x + y*y + z*z); }
