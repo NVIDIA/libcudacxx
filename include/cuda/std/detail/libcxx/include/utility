@@ -197,16 +197,7 @@ template <size_t I>
 
 #ifndef __cuda_std__
 #include <__config>
-#include <__functional/binary_function.h>
-#include <__functional/reference_wrapper.h>
-#include <__functional/unary_function.h>
-#include <__functional/weak_result_type.h>
 #include <__tuple>
-#include <__utility/convert_to_integral.h>
-#include <__utility/declval.h>
-#include <__utility/forward.h>
-#include <__utility/move.h>
-#include <__utility/swap.h>
 #include <type_traits>
 #include <initializer_list>
 #include <cstddef>
@@ -215,7 +206,8 @@ template <size_t I>
 #include <version>
 #include <__debug>
 #include <__pragma_push>
-#else
+#endif //__cuda_std__
+
 #include "__functional/binary_function.h"
 #include "__functional/reference_wrapper.h"
 #include "__functional/unary_function.h"
@@ -226,7 +218,6 @@ template <size_t I>
 #include "__utility/forward.h"
 #include "__utility/move.h"
 #include "__utility/swap.h"
-#endif //__cuda_std__
 
 #if defined(_LIBCUDACXX_USE_PRAGMA_GCC_SYSTEM_HEADER)
 #pragma GCC system_header
