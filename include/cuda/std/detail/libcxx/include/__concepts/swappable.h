@@ -24,6 +24,7 @@
 #include "../__type_traits/is_nothrow_move_assignable.h"
 #include "../__type_traits/is_nothrow_move_constructible.h"
 #include "../__type_traits/remove_cvref.h"
+#include "../__type_traits/type_identity.h"
 #include "../__type_traits/void_t.h"
 #include "../__utility/declval.h"
 #include "../__utility/exchange.h"
@@ -99,6 +100,9 @@ _LIBCUDACXX_BEGIN_NAMESPACE_CPO(__swap)
   _LIBCUDACXX_CONCEPT __exchangeable = _LIBCUDACXX_FRAGMENT(__exchangeable_, _Tp);
 #endif // _LIBCUDACXX_STD_VER < 20
 
+  template<class _Tp, class _Up, class = void>
+  _LIBCUDACXX_INLINE_VAR constexpr bool __noexcept_swappable_arrays = false;
+
   struct __fn {
     // 2.1   `S` is `(void)swap(E1, E2)`* if `E1` or `E2` has class or enumeration type and...
     // *The name `swap` is used here unqualified.
@@ -114,7 +118,7 @@ _LIBCUDACXX_BEGIN_NAMESPACE_CPO(__swap)
     _LIBCUDACXX_TEMPLATE(class _Tp, class _Up, size_t _Size)
       (requires __swappable_arrays<_Tp, _Up, _Size>)      
     _LIBCUDACXX_INLINE_VISIBILITY constexpr void operator()(_Tp(& __t)[_Size], _Up(& __u)[_Size]) const
-      noexcept(noexcept((*this)(__t[0], __u[0])))
+      noexcept(__noexcept_swappable_arrays<_Tp, _Up>)
     {
       // TODO(cjdb): replace with `ranges::swap_ranges`.
       for (size_t __i = 0; __i < _Size; ++__i) {
@@ -143,9 +147,13 @@ template<class _Tp, class _Up, class _Size>
     ));
     
   template<class _Tp, class _Up, size_t _Size>
-  _LIBCUDACXX_INLINE_VAR constexpr bool __swappable_arrays<_Tp, _Up, _Size, void_t<int>> =
+  _LIBCUDACXX_INLINE_VAR constexpr bool __swappable_arrays<_Tp, _Up, _Size, void_t<type_identity_t<_Tp>>> =
     _LIBCUDACXX_FRAGMENT(__swappable_arrays_, _Tp, _Up, _CUDA_VSTD::integral_constant<size_t, _Size>);
 #endif // _LIBCUDACXX_STD_VER < 20
+
+  template<class _Tp, class _Up>
+  _LIBCUDACXX_INLINE_VAR constexpr bool __noexcept_swappable_arrays<_Tp, _Up, void_t<type_identity_t<_Tp>>> =
+    noexcept(__swap::__fn{}(_CUDA_VSTD::declval<_Tp&>(), _CUDA_VSTD::declval<_Up&>()));
 
 _LIBCUDACXX_END_NAMESPACE_CPO
 
