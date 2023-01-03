@@ -1,3 +1,12 @@
+add_custom_target(libcudacxx_tu_tests)
+
+set(cpp_std_versions 11 14 17 20)
+
+set(cpp_11_exclusions)
+set(cpp_14_exclusions)
+set(cpp_17_exclusions)
+set(cpp_20_exclusions)
+
 function(libcudacxx_add_standalone_header_test test_file_output_var header_under_test)
     # ex: build/.../header_tests/cuda/std/version.cpp
     set(test_cpp "${CMAKE_CURRENT_BINARY_DIR}/header_tests/${header_under_test}.cpp")
@@ -9,15 +18,25 @@ function(libcudacxx_add_standalone_header_test test_file_output_var header_under
 
     set(${test_file_output_var} ${test_cpp} PARENT_SCOPE)
     # ex: cuda/std/version -> cuda_std_version
-    string(REPLACE "/" "_" executable_name ${header_under_test})
-    add_executable(${executable_name} ${test_cpp})
-    target_include_directories(${executable_name} PRIVATE ${CMAKE_SOURCE_DIR}/include)
-    target_compile_options(${executable_name} PRIVATE
-        $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:
-            -Wall -Werror>
-        $<$<CXX_COMPILER_ID:MSVC>:
-            /W4 /WX>)
-    set_target_properties(${executable_name} PROPERTIES CXX_STANDARD 11)
+
+    foreach(version IN LISTS cpp_std_versions)
+        string(REPLACE "/" "_" executable_name "${header_under_test}-${version}")
+        list(FIND cpp_${version}_exclusions ${header_under_test} header_excluded)
+        string(FIND ${CMAKE_CXX_COMPILER} "${cpp_${version}_exclusions}" compiler_excluded)
+        if ("${header_excluded}" EQUAL "-1" AND "${compiler_excluded}" EQUAL "-1")
+            add_library(${executable_name} OBJECT ${test_cpp})
+            target_include_directories(${executable_name} PRIVATE ${CMAKE_SOURCE_DIR}/include)
+            target_compile_options(${executable_name} PRIVATE
+            $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:
+                -Wall -Werror>
+            $<$<CXX_COMPILER_ID:MSVC>:
+                /W4 /WX>)
+            set_target_properties(${executable_name} PROPERTIES CXX_STANDARD ${version})
+            set_target_properties(${executable_name} PROPERTIES CXX_STANDARD_REQUIRED OFF)
+            set_target_properties(${executable_name} PROPERTIES CXX_EXTENSIONS OFF)
+            add_dependencies(libcudacxx_tu_tests ${executable_name})
+        endif()
+    endforeach()
 endfunction()
 
 # Don't generate CUDA targets, they fail currently.
