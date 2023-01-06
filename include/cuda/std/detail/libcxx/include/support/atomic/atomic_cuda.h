@@ -121,7 +121,7 @@ const volatile _Tp* __cxx_get_underlying_device_atomic(__cxx_atomic_base_heterog
 }
 
 template <typename _Tp>
-using __cxx_atomic_small_to_32 = __conditional_t<is_signed<_Tp>::value, int32_t, uint32_t>;
+using __cxx_atomic_small_to_32 = _If<is_signed<_Tp>::value, int32_t, uint32_t>;
 
 // Arithmetic conversions to/from proxy types
 template<class _Tp, _EnableIf<is_arithmetic<_Tp>::value, int> = 0>
