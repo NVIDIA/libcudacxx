@@ -26,7 +26,7 @@
 #include "test_macros.h"
 
 #if TEST_STD_VER > 11
-__host__ __device__ TEST_CONSTEXPR bool test_constexpr() {
+__host__ __device__ TEST_CONSTEXPR_CXX14 bool test_constexpr() {
     int v = 12;
 
     if (12 != cuda::std::exchange(v,23) || v != 23)
@@ -50,7 +50,7 @@ struct TestNoexcept {
     __host__ __device__ TestNoexcept& operator=(TestNoexcept&&) noexcept(Assign);
 };
 
-__host__ __device__ constexpr bool test_noexcept() {
+__host__ __device__ TEST_CONSTEXPR_CXX14 bool test_noexcept() {
   {
     int x = 42;
     ASSERT_NOEXCEPT(cuda::std::exchange(x, 42));
@@ -114,7 +114,7 @@ int main(int, char**)
 #endif
 
 #if TEST_STD_VER > 11
-    static_assert(test_constexpr());
+    static_assert(test_constexpr(), "");
 #endif
 
     static_assert(test_noexcept(), "");
