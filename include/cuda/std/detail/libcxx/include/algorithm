@@ -657,6 +657,7 @@ _LIBCUDACXX_PUSH_MACROS
 #include <__undef_macros>
 #endif
 
+#include "__algorithm/unwrap_iter.h"
 
 _LIBCUDACXX_BEGIN_NAMESPACE_STD
 
@@ -1646,68 +1647,6 @@ search_n(_ForwardIterator __first, _ForwardIterator __last, _Size __count, const
 }
 
 // copy
-template <class _Iter>
-inline _LIBCUDACXX_INLINE_VISIBILITY
-_Iter
-__unwrap_iter(_Iter __i)
-{
-    return __i;
-}
-
-template <class _Tp>
-inline _LIBCUDACXX_INLINE_VISIBILITY
-typename enable_if
-<
-    is_trivially_copy_assignable<_Tp>::value,
-    _Tp*
->::type
-__unwrap_iter(move_iterator<_Tp*> __i)
-{
-    return __i.base();
-}
-
-#if _LIBCUDACXX_DEBUG_LEVEL < 2
-
-template <class _Tp>
-inline _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_IF_NODEBUG
-typename enable_if
-<
-    is_trivially_copy_assignable<_Tp>::value,
-    _Tp*
->::type
-__unwrap_iter(__wrap_iter<_Tp*> __i)
-{
-    return __i.base();
-}
-
-template <class _Tp>
-inline _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_IF_NODEBUG
-typename enable_if
-<
-    is_trivially_copy_assignable<_Tp>::value,
-    const _Tp*
->::type
-__unwrap_iter(__wrap_iter<const _Tp*> __i)
-{
-    return __i.base();
-}
-
-#else
-
-template <class _Tp>
-inline _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_IF_NODEBUG
-typename enable_if
-<
-    is_trivially_copy_assignable<_Tp>::value,
-    __wrap_iter<_Tp*>
->::type
-__unwrap_iter(__wrap_iter<_Tp*> __i)
-{
-    return __i;
-}
-
-#endif  // _LIBCUDACXX_DEBUG_LEVEL < 2
-
 template <class _InputIterator, class _OutputIterator>
 inline _LIBCUDACXX_INLINE_VISIBILITY
 _OutputIterator
