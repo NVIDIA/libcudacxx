@@ -32,6 +32,7 @@ set(files
   __functional/hash.h
   __functional/identity.h
   __functional/invoke.h
+  __functional/operations.h
   __functional/reference_wrapper.h
   __functional/unary_function.h
   __functional/unwrap_ref.h
