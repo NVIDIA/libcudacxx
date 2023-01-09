@@ -38,6 +38,7 @@ set(files
   __functional/invoke.h
   __functional/mem_fn.h
   __functional/mem_fun_ref.h
+  __functional/not_fn.h
   __functional/operations.h
   __functional/perfect_forward.h
   __functional/pointer_to_binary_function.h

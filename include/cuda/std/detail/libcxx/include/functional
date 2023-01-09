@@ -520,6 +520,7 @@ POLICY:  For non-variadic implementations, the number of arguments is limited
 #include "__functional/invoke.h"
 #include "__functional/mem_fn.h"
 #include "__functional/mem_fun_ref.h"
+#include "__functional/not_fn.h"
 #include "__functional/operations.h"
 #include "__functional/perfect_forward.h"
 #include "__functional/pointer_to_binary_function.h"
@@ -1666,64 +1667,6 @@ swap(function<_Rp(_ArgTypes...)>& __x, function<_Rp(_ArgTypes...)>& __y) _NOEXCE
 #endif
 
 #endif // __cuda_std__
-
-#if _LIBCUDACXX_STD_VER > 14
-
-template <class _DecayFunc>
-class _LIBCUDACXX_TEMPLATE_VIS __not_fn_imp {
-  _DecayFunc __fd;
-
-public:
-    __not_fn_imp() = delete;
-
-    template <class ..._Args>
-    _LIBCUDACXX_INLINE_VISIBILITY
-    auto operator()(_Args&& ...__args) &
-            noexcept(noexcept(!_CUDA_VSTD::invoke(__fd, _CUDA_VSTD::forward<_Args>(__args)...)))
-        -> decltype(          !_CUDA_VSTD::invoke(__fd, _CUDA_VSTD::forward<_Args>(__args)...))
-        { return              !_CUDA_VSTD::invoke(__fd, _CUDA_VSTD::forward<_Args>(__args)...); }
-
-    template <class ..._Args>
-    _LIBCUDACXX_INLINE_VISIBILITY
-    auto operator()(_Args&& ...__args) &&
-            noexcept(noexcept(!_CUDA_VSTD::invoke(_CUDA_VSTD::move(__fd), _CUDA_VSTD::forward<_Args>(__args)...)))
-        -> decltype(          !_CUDA_VSTD::invoke(_CUDA_VSTD::move(__fd), _CUDA_VSTD::forward<_Args>(__args)...))
-        { return              !_CUDA_VSTD::invoke(_CUDA_VSTD::move(__fd), _CUDA_VSTD::forward<_Args>(__args)...); }
-
-    template <class ..._Args>
-    _LIBCUDACXX_INLINE_VISIBILITY
-    auto operator()(_Args&& ...__args) const&
-            noexcept(noexcept(!_CUDA_VSTD::invoke(__fd, _CUDA_VSTD::forward<_Args>(__args)...)))
-        -> decltype(          !_CUDA_VSTD::invoke(__fd, _CUDA_VSTD::forward<_Args>(__args)...))
-        { return              !_CUDA_VSTD::invoke(__fd, _CUDA_VSTD::forward<_Args>(__args)...); }
-
-
-    template <class ..._Args>
-    _LIBCUDACXX_INLINE_VISIBILITY
-    auto operator()(_Args&& ...__args) const&&
-            noexcept(noexcept(!_CUDA_VSTD::invoke(_CUDA_VSTD::move(__fd), _CUDA_VSTD::forward<_Args>(__args)...)))
-        -> decltype(          !_CUDA_VSTD::invoke(_CUDA_VSTD::move(__fd), _CUDA_VSTD::forward<_Args>(__args)...))
-        { return              !_CUDA_VSTD::invoke(_CUDA_VSTD::move(__fd), _CUDA_VSTD::forward<_Args>(__args)...); }
-
-private:
-    template <class _RawFunc,
-              class = enable_if_t<!is_same<decay_t<_RawFunc>, __not_fn_imp>::value>>
-    _LIBCUDACXX_INLINE_VISIBILITY
-    explicit __not_fn_imp(_RawFunc&& __rf)
-        : __fd(_CUDA_VSTD::forward<_RawFunc>(__rf)) {}
-
-    template <class _RawFunc>
-    friend inline _LIBCUDACXX_INLINE_VISIBILITY
-    __not_fn_imp<decay_t<_RawFunc>> not_fn(_RawFunc&&);
-};
-
-template <class _RawFunc>
-inline _LIBCUDACXX_INLINE_VISIBILITY
-__not_fn_imp<decay_t<_RawFunc>> not_fn(_RawFunc&& __fn) {
-    return __not_fn_imp<decay_t<_RawFunc>>(_CUDA_VSTD::forward<_RawFunc>(__fn));
-}
-
-#endif
 
 // struct hash<T*> in <memory>
 
