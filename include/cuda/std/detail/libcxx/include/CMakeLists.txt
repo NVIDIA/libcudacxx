@@ -29,6 +29,7 @@ set(files
   __concepts/totally_ordered.h
   __debug
   __functional/binary_function.h
+  __functional/binary_negate.h
   __functional/hash.h
   __functional/identity.h
   __functional/invoke.h
