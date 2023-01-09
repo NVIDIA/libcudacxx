@@ -1023,7 +1023,7 @@ public:
     _LIBCUDACXX_METHOD_TEMPLATE_IMPLICIT_INSTANTIATION_VIS
     typename enable_if
         <
-            __is_cpp17_exactly_input_iterator<_InputIterator>::value
+            __is_exactly_cpp17_input_iterator<_InputIterator>::value
                 || !__libcpp_string_gets_noexcept_iterator<_InputIterator>::value,
             basic_string&
         >::type
@@ -1091,7 +1091,7 @@ public:
     _LIBCUDACXX_METHOD_TEMPLATE_IMPLICIT_INSTANTIATION_VIS
     typename enable_if
         <
-           __is_cpp17_exactly_input_iterator<_InputIterator>::value
+           __is_exactly_cpp17_input_iterator<_InputIterator>::value
                 || !__libcpp_string_gets_noexcept_iterator<_InputIterator>::value,
             basic_string&
         >::type
@@ -1142,7 +1142,7 @@ public:
     _LIBCUDACXX_METHOD_TEMPLATE_IMPLICIT_INSTANTIATION_VIS
     typename enable_if
         <
-           __is_cpp17_exactly_input_iterator<_InputIterator>::value
+           __is_exactly_cpp17_input_iterator<_InputIterator>::value
                 || !__libcpp_string_gets_noexcept_iterator<_InputIterator>::value,
             iterator
         >::type
@@ -1547,7 +1547,7 @@ private:
     inline
     typename enable_if
     <
-        __is_cpp17_exactly_input_iterator<_InputIterator>::value,
+        __is_exactly_cpp17_input_iterator<_InputIterator>::value,
         void
     >::type
     __init(_InputIterator __first, _InputIterator __last);
@@ -2012,7 +2012,7 @@ template <class _CharT, class _Traits, class _Allocator>
 template <class _InputIterator>
 typename enable_if
 <
-    __is_cpp17_exactly_input_iterator<_InputIterator>::value,
+    __is_exactly_cpp17_input_iterator<_InputIterator>::value,
     void
 >::type
 basic_string<_CharT, _Traits, _Allocator>::__init(_InputIterator __first, _InputIterator __last)
@@ -2312,7 +2312,7 @@ template <class _CharT, class _Traits, class _Allocator>
 template<class _InputIterator>
 typename enable_if
 <
-     __is_cpp17_exactly_input_iterator <_InputIterator>::value
+     __is_exactly_cpp17_input_iterator <_InputIterator>::value
           || !__libcpp_string_gets_noexcept_iterator<_InputIterator>::value,
     basic_string<_CharT, _Traits, _Allocator>&
 >::type
@@ -2640,7 +2640,7 @@ template <class _CharT, class _Traits, class _Allocator>
 template<class _InputIterator>
 typename enable_if
 <
-   __is_cpp17_exactly_input_iterator<_InputIterator>::value
+   __is_exactly_cpp17_input_iterator<_InputIterator>::value
         || !__libcpp_string_gets_noexcept_iterator<_InputIterator>::value,
    typename basic_string<_CharT, _Traits, _Allocator>::iterator
 >::type
