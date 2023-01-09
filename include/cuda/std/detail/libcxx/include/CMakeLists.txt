@@ -30,6 +30,7 @@ set(files
   __debug
   __functional/binary_function.h
   __functional/binary_negate.h
+  __functional/binder1st.h
   __functional/hash.h
   __functional/identity.h
   __functional/invoke.h
