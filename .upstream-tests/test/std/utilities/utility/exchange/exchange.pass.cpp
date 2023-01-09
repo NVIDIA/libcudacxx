@@ -25,6 +25,10 @@
 
 #include "test_macros.h"
 
+template <typename T>
+__host__ __device__
+constexpr bool unused(T &&) {return true;}
+
 #if TEST_STD_VER > 11
 __host__ __device__ TEST_CONSTEXPR_CXX14 bool test_constexpr() {
     int v = 12;
@@ -57,17 +61,20 @@ __host__ __device__ TEST_CONSTEXPR_CXX14 bool test_noexcept() {
     assert(x == 42);
   }
   {
-    TestNoexcept<true, true> x;
+    TestNoexcept<true, true> x{};
     ASSERT_NOEXCEPT(cuda::std::exchange(x, cuda::std::move(x)));
     ASSERT_NOT_NOEXCEPT(cuda::std::exchange(x, x)); // copy-assignment is not noexcept
+    unused(x);
   }
   {
-    TestNoexcept<true, false> x;
+    TestNoexcept<true, false> x{};
     ASSERT_NOT_NOEXCEPT(cuda::std::exchange(x, cuda::std::move(x)));
+    unused(x);
   }
   {
-    TestNoexcept<false, true> x;
+    TestNoexcept<false, true> x{};
     ASSERT_NOT_NOEXCEPT(cuda::std::exchange(x, cuda::std::move(x)));
+    unused(x);
   }
 
   return true;

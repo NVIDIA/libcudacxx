@@ -24,6 +24,10 @@
 
 #include "test_macros.h"
 
+template <typename T>
+__host__ __device__
+constexpr bool unused(T &&) {return true;}
+
 class A
 {
     __host__ __device__ A(const A&);
@@ -44,10 +48,15 @@ int main(int, char**)
 {
     int i = 0;
     const int ci = 0;
+    unused(i);
+    unused(ci);
 
     legacy l;
     A a;
     const A ca;
+    unused(l);
+    unused(a);
+    unused(ca);
 
     static_assert((cuda::std::is_same<decltype(cuda::std::move_if_noexcept(i)), int&&>::value), "");
     static_assert((cuda::std::is_same<decltype(cuda::std::move_if_noexcept(ci)), const int&&>::value), "");
@@ -60,8 +69,6 @@ int main(int, char**)
     constexpr int i2 = cuda::std::move_if_noexcept(i1);
     static_assert(i2 == 23, "" );
 #endif
-
-    ++i;
 
   return 0;
 }

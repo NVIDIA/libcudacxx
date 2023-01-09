@@ -24,7 +24,7 @@ class A
 
 int main(int, char**)
 {
-    static_assert((std::is_same<decltype(std::declval<A>()), A&&>::value), "");
+    static_assert((cuda::std::is_same<decltype(cuda::std::declval<A>()), A&&>::value), "");
 
   return 0;
 }

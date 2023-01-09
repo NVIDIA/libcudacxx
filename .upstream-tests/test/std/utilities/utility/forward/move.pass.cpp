@@ -37,24 +37,14 @@ __device__ const int& cx = x;
 template <class QualInt>
 __host__ __device__ QualInt get() TEST_NOEXCEPT { return static_cast<QualInt>(x); }
 
-int copy_ctor = 0;
-int move_ctor = 0;
+_LIBCUDACXX_CPO_ACCESSIBILITY int copy_ctor = 0;
+_LIBCUDACXX_CPO_ACCESSIBILITY int move_ctor = 0;
 
 struct A {
-    A() {}
-    A(const A&) {++copy_ctor;}
-    A(A&&) {++move_ctor;}
-    A& operator=(const A&) = delete;
-};
-
-__device__ int device_copy_ctor = 0;
-__device__ int device_move_ctor = 0;
-
-struct D {
-    __device__ D() {}
-    __device__ D(const D&) {++device_copy_ctor;}
-    __device__ D(D&&) {++device_move_ctor;}
-    __device__ D& operator=(const D&) = delete;
+    __host__ __device__ A() {}
+    __host__ __device__ A(const A&) {++copy_ctor;}
+    __host__ __device__ A(A&&) {++move_ctor;}
+    __host__ __device__ A& operator=(const A&) = delete;
 };
 
 #if TEST_STD_VER > 11
@@ -79,7 +69,6 @@ int main(int, char**)
         static_assert(cuda::std::is_same<decltype(cuda::std::move(get<const int&&>())), const int&&>::value, "");
         ASSERT_NOEXCEPT(cuda::std::move(get<int const&&>()));
     }
-#ifndef __CUDA_ARCH__
     { // test copy and move semantics
         A a;
         const A ca = A();
@@ -103,31 +92,6 @@ int main(int, char**)
         assert(copy_ctor == 3);
         assert(move_ctor == 1);
     }
-#else
-    { // test copy and move semantics
-        D d;
-        const D cd = D();
-
-        assert(device_copy_ctor == 0);
-        assert(device_move_ctor == 0);
-
-        D d2 = d; (void)d2;
-        assert(device_copy_ctor == 1);
-        assert(device_move_ctor == 0);
-
-        D d3 = cuda::std::move(d); (void)d3;
-        assert(device_copy_ctor == 1);
-        assert(device_move_ctor == 1);
-
-        D d4 = cd; (void)d4;
-        assert(device_copy_ctor == 2);
-        assert(device_move_ctor == 1);
-
-        D d5 = cuda::std::move(cd); (void)d5;
-        assert(device_copy_ctor == 3);
-        assert(device_move_ctor == 1);
-    }
-#endif
     { // test on a move only type
         move_only mo;
         test(cuda::std::move(mo));
