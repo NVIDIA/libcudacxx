@@ -15,7 +15,7 @@
 
 #include <cuda/std/iterator>
 
-class not_incrementable{}
+class not_incrementable{};
 
 __host__ __device__ void proper_constraints() {
   not_incrementable p{};
