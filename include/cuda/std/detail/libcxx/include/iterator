@@ -677,16 +677,15 @@ template <class E> constexpr const E* data(initializer_list<E> il) noexcept;    
 
 #ifndef __cuda_std__
 #include <__config>
-#include <iosfwd> // for forward declarations of vector and string.
-#include <type_traits>
+#include <cassert> // all public C++ headers provide the assertion handler
+#ifndef _LIBCUDACXX_HAS_NO_SPACESHIP_OPERATOR
+#include <compare>
+#endif // _LIBCUDACXX_HAS_NO_SPACESHIP_OPERATOR
+#include <concepts> // Mandated by the Standard.
 #include <cstddef>
 #include <initializer_list>
 #include <version>
-#ifdef __APPLE__
-#include <Availability.h>
-#endif
-#include <__pragma_push>
-#endif //__cuda_std__
+#endif // __cuda_std__
 
 #include "__iterator/access.h"
 #include "__iterator/advance.h"
@@ -726,6 +725,9 @@ template <class E> constexpr const E* data(initializer_list<E> il) noexcept;    
 #include "__iterator/wrap_iter.h"
 #include "__memory/addressof.h"
 #include "__memory/pointer_traits.h"
+#ifndef _LIBCUDACXX_HAS_NO_SPACESHIP_OPERATOR
+#include "compare"
+#endif // _LIBCUDACXX_HAS_NO_SPACESHIP_OPERATOR
 
 #if defined(_LIBCUDACXX_USE_PRAGMA_GCC_SYSTEM_HEADER)
 #pragma GCC system_header
@@ -751,8 +753,4 @@ struct __libcpp_is_trivial_iterator<__wrap_iter<_Iter> >
 
 _LIBCUDACXX_END_NAMESPACE_STD
 
-#ifndef __cuda_std__
-#include <__pragma_pop>
-#endif //__cuda_std__
-
-#endif  // _LIBCUDACXX_ITERATOR
+#endif // _LIBCUDACXX_ITERATOR
