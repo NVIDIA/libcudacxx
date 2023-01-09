@@ -35,6 +35,7 @@ set(files
   __functional/bind.h
   __functional/binder1st.h
   __functional/binder2nd.h
+  __functional/compose.h
   __functional/hash.h
   __functional/identity.h
   __functional/invoke.h
