@@ -91,15 +91,19 @@ void *aligned_alloc(size_t alignment, size_t size);                       // C11
 #pragma GCC system_header
 #endif
 
+#ifndef _LIBCUDACXX_UNREACHABLE
 #ifdef __GNUC__
-#define _LIBCUDACXX_UNREACHABLE() __builtin_unreachable()
+#  define _LIBCUDACXX_UNREACHABLE() __builtin_unreachable()
+#elif __has_builtin(__builtin_unreachable)
+#  define _LIBCUDACXX_UNREACHABLE() __builtin_unreachable()
 #else
-#if defined(__CUDA_ARCH__)
+#ifdef __CUDA_ARCH__
 #  define _LIBCUDACXX_UNREACHABLE() __trap()
 #else
 #  define _LIBCUDACXX_UNREACHABLE() _CUDA_VSTD::abort()
 #endif
-#endif
+#endif // has_builtin
+#endif // !_LIBCUDACXX_UNREACHABLE
 
 #ifdef _LIBCUDACXX_COMPILER_PGI
 #define _LIBCUDACXX_UNREACHABLE_AFTER_SWITCH()
