@@ -120,7 +120,7 @@ _LIBCUDACXX_BEGIN_NAMESPACE_CPO(__swap)
     _LIBCUDACXX_INLINE_VISIBILITY constexpr void operator()(_Tp(& __t)[_Size], _Up(& __u)[_Size]) const
       noexcept(__noexcept_swappable_arrays<_Tp, _Up>)
     {
-      // TODO(cjdb): replace with `ranges::swap_ranges`.
+      // TODO(cjdb): replace with `_CUDA_VRANGES::swap_ranges`.
       for (size_t __i = 0; __i < _Size; ++__i) {
         (*this)(__t[__i], __u[__i]);
       }
@@ -166,23 +166,23 @@ _LIBCUDACXX_BEGIN_NAMESPACE_STD
 
 #if _LIBCUDACXX_STD_VER > 17
 template<class _Tp>
-concept swappable = requires(_Tp& __a, _Tp& __b) { ranges::swap(__a, __b); };
+concept swappable = requires(_Tp& __a, _Tp& __b) { _CUDA_VRANGES::swap(__a, __b); };
 
 template<class _Tp, class _Up>
 concept swappable_with =
   common_reference_with<_Tp, _Up> &&
   requires(_Tp&& __t, _Up&& __u) {
-    ranges::swap(_CUDA_VSTD::forward<_Tp>(__t), _CUDA_VSTD::forward<_Tp>(__t));
-    ranges::swap(_CUDA_VSTD::forward<_Up>(__u), _CUDA_VSTD::forward<_Up>(__u));
-    ranges::swap(_CUDA_VSTD::forward<_Tp>(__t), _CUDA_VSTD::forward<_Up>(__u));
-    ranges::swap(_CUDA_VSTD::forward<_Up>(__u), _CUDA_VSTD::forward<_Tp>(__t));
+    _CUDA_VRANGES::swap(_CUDA_VSTD::forward<_Tp>(__t), _CUDA_VSTD::forward<_Tp>(__t));
+    _CUDA_VRANGES::swap(_CUDA_VSTD::forward<_Up>(__u), _CUDA_VSTD::forward<_Up>(__u));
+    _CUDA_VRANGES::swap(_CUDA_VSTD::forward<_Tp>(__t), _CUDA_VSTD::forward<_Up>(__u));
+    _CUDA_VRANGES::swap(_CUDA_VSTD::forward<_Up>(__u), _CUDA_VSTD::forward<_Tp>(__t));
   };
 #else
 template<class _Tp>
 _LIBCUDACXX_CONCEPT_FRAGMENT(
   __swappable_,
   requires(_Tp& __a, _Tp& __b) //
-  (ranges::swap(__a, __b)));
+  (_CUDA_VRANGES::swap(__a, __b)));
 
 template<class _Tp>
 _LIBCUDACXX_CONCEPT swappable = _LIBCUDACXX_FRAGMENT(__swappable_, _Tp);
@@ -192,10 +192,10 @@ _LIBCUDACXX_CONCEPT_FRAGMENT(
   __swappable_with_,
   requires(_Tp&& __t, _Up&& __u) //
   (requires(common_reference_with<_Tp, _Up>),
-   ranges::swap(_CUDA_VSTD::forward<_Tp>(__t), _CUDA_VSTD::forward<_Tp>(__t)),
-   ranges::swap(_CUDA_VSTD::forward<_Up>(__u), _CUDA_VSTD::forward<_Up>(__u)),
-   ranges::swap(_CUDA_VSTD::forward<_Tp>(__t), _CUDA_VSTD::forward<_Up>(__u)),
-   ranges::swap(_CUDA_VSTD::forward<_Up>(__u), _CUDA_VSTD::forward<_Tp>(__t))));
+   _CUDA_VRANGES::swap(_CUDA_VSTD::forward<_Tp>(__t), _CUDA_VSTD::forward<_Tp>(__t)),
+   _CUDA_VRANGES::swap(_CUDA_VSTD::forward<_Up>(__u), _CUDA_VSTD::forward<_Up>(__u)),
+   _CUDA_VRANGES::swap(_CUDA_VSTD::forward<_Tp>(__t), _CUDA_VSTD::forward<_Up>(__u)),
+   _CUDA_VRANGES::swap(_CUDA_VSTD::forward<_Up>(__u), _CUDA_VSTD::forward<_Tp>(__t))));
 
 template<class _Tp, class _Up>
 _LIBCUDACXX_CONCEPT swappable_with = _LIBCUDACXX_FRAGMENT(__swappable_with_, _Tp, _Up);
