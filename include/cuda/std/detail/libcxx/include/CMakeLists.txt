@@ -202,6 +202,7 @@ set(files
   __tuple
   __type_traits/is_constant_evaluated.h
   __undef_macros
+  __utility/auto_cast.h
   __utility/convert_to_integral.h
   __utility/declval.h
   __utility/exchange.h
