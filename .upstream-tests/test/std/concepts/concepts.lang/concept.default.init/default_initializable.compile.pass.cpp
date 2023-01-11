@@ -175,8 +175,8 @@ __host__ __device__ void test()
 
     test_true     <OperatorNewDeleted>();
 
+#if !defined(__GNUC__) || (__GNUC__ > 11) // type qualifiers ignored on cast result type [-Werror=ignored-qualifiers]
     test_not_const<void(*)(const int&)>();
-#if !defined(__GNUC__) || (__GNUC__ > 11) || TEST_STD_VER < 20 // type qualifiers ignored on cast result type [-Werror=ignored-qualifiers]
     test_not_const<void(Empty::*)(const int&)               >();
     test_not_const<void(Empty::*)(const int&) const         >();
     test_not_const<void(Empty::*)(const int&)       volatile>();
