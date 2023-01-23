@@ -1052,6 +1052,7 @@ static_assert(
     cuda::std::common_reference_with<one_way_ne const&, explicit_operators const&> &&
     !check_totally_ordered_with<one_way_ne, explicit_operators>(), "");
 
+#ifndef TEST_HAS_NO_SPACESHIP_OPERATOR
 static_assert(
     check_totally_ordered_with<totally_ordered_with_others,
                                partial_ordering_totally_ordered_with>(), "");
@@ -1060,6 +1061,7 @@ static_assert(check_totally_ordered_with<totally_ordered_with_others,
 static_assert(
     check_totally_ordered_with<totally_ordered_with_others,
                                strong_ordering_totally_ordered_with>(), "");
+#endif
 
 static_assert(!check_totally_ordered_with<totally_ordered_with_others,
                                           eq_returns_explicit_bool>(), "");

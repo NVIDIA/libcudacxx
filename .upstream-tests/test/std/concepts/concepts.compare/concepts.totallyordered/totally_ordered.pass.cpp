@@ -166,9 +166,11 @@ static_assert(!totally_ordered<ge_returns_explicit_bool>, "");
 static_assert(totally_ordered<returns_true_type>, "");
 static_assert(totally_ordered<returns_int_ptr>, "");
 
+#ifndef TEST_HAS_NO_SPACESHIP_OPERATOR
 static_assert(totally_ordered<partial_ordering_totally_ordered_with>, "");
 static_assert(totally_ordered<weak_ordering_totally_ordered_with>, "");
 static_assert(totally_ordered<strong_ordering_totally_ordered_with>, "");
+#endif // TEST_HAS_NO_SPACESHIP_OPERATOR
 #endif // TEST_STD_VER > 17
 } // namespace types_fit_for_purpose
 

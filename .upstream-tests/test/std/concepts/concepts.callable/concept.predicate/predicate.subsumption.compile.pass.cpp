@@ -30,9 +30,16 @@ __host__ __device__ constexpr bool check_subsumption(F)
   return true;
 }
 // clang-format on
+struct not_predicate {
+  __host__ __device__ constexpr void operator()() const {}
+};
 
-static_assert(!check_subsumption([] {}), "");
-static_assert(check_subsumption([] { return true; }), "");
+struct predicate {
+  __host__ __device__ constexpr bool operator()() const { return true; }
+};
+
+static_assert(!check_subsumption(not_predicate{}), "");
+static_assert(check_subsumption(predicate{}), "");
 
 #endif // TEST_STD_VER > 17
 

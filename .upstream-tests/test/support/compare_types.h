@@ -24,7 +24,7 @@ struct cxx20_member_eq {
 };
 
 struct cxx20_friend_eq {
-  friend bool operator==(cxx20_friend_eq const&, cxx20_friend_eq const&) = default;
+  __host__ __device__ friend bool operator==(cxx20_friend_eq const&, cxx20_friend_eq const&) = default;
 };
 
 struct member_three_way_comparable {
@@ -33,7 +33,7 @@ struct member_three_way_comparable {
 
 #ifndef __NVCC__  // nvbug3908399
 struct friend_three_way_comparable {
-  friend auto operator<=>(friend_three_way_comparable const&, friend_three_way_comparable const&) = default;
+  __host__ __device__ friend auto operator<=>(friend_three_way_comparable const&, friend_three_way_comparable const&) = default;
 };
 #endif // !__NVCC__
 #endif // TEST_STD_VER > 17
@@ -206,46 +206,46 @@ struct wrong_return_type {
 #if TEST_STD_VER > 17
 struct cxx20_member_eq_operator_with_deleted_ne {
   bool operator==(cxx20_member_eq_operator_with_deleted_ne const&) const = default;
-  bool operator!=(cxx20_member_eq_operator_with_deleted_ne const&) const = delete;
+  __host__ __device__ bool operator!=(cxx20_member_eq_operator_with_deleted_ne const&) const = delete;
 };
 
 struct cxx20_friend_eq_operator_with_deleted_ne {
-  friend bool operator==(cxx20_friend_eq_operator_with_deleted_ne const&,
-                         cxx20_friend_eq_operator_with_deleted_ne const&) = default;
-  friend bool operator!=(cxx20_friend_eq_operator_with_deleted_ne const&,
-                         cxx20_friend_eq_operator_with_deleted_ne const&) = delete;
+  __host__ __device__ friend bool operator==(cxx20_friend_eq_operator_with_deleted_ne const&,
+                                             cxx20_friend_eq_operator_with_deleted_ne const&) = default;
+  __host__ __device__ friend bool operator!=(cxx20_friend_eq_operator_with_deleted_ne const&,
+                                             cxx20_friend_eq_operator_with_deleted_ne const&) = delete;
 };
 
 struct member_three_way_comparable_with_deleted_eq {
   auto operator<=>(member_three_way_comparable_with_deleted_eq const&) const = default;
-  bool operator==(member_three_way_comparable_with_deleted_eq const&) const = delete;
+  __host__ __device__ bool operator==(member_three_way_comparable_with_deleted_eq const&) const = delete;
 };
 
 struct member_three_way_comparable_with_deleted_ne {
   auto operator<=>(member_three_way_comparable_with_deleted_ne const&) const = default;
-  bool operator!=(member_three_way_comparable_with_deleted_ne const&) const = delete;
+  __host__ __device__ bool operator!=(member_three_way_comparable_with_deleted_ne const&) const = delete;
 };
 
 struct friend_three_way_comparable_with_deleted_eq {
-  friend auto operator<=>(friend_three_way_comparable_with_deleted_eq const&,
-                          friend_three_way_comparable_with_deleted_eq const&) = default;
-  friend bool operator==(friend_three_way_comparable_with_deleted_eq const&,
-                         friend_three_way_comparable_with_deleted_eq const&) = delete;
+  __host__ __device__ friend auto operator<=>(friend_three_way_comparable_with_deleted_eq const&,
+                                              friend_three_way_comparable_with_deleted_eq const&) = default;
+  __host__ __device__ friend bool operator==(friend_three_way_comparable_with_deleted_eq const&,
+                                             friend_three_way_comparable_with_deleted_eq const&) = delete;
 };
 
 #ifndef __NVCC__  // nvbug3908399
 struct friend_three_way_comparable_with_deleted_ne {
-  friend auto operator<=>(friend_three_way_comparable_with_deleted_ne const&,
-                          friend_three_way_comparable_with_deleted_ne const&) = default;
-  friend bool operator!=(friend_three_way_comparable_with_deleted_ne const&,
-                         friend_three_way_comparable_with_deleted_ne const&) = delete;
+  __host__ __device__ friend auto operator<=>(friend_three_way_comparable_with_deleted_ne const&,
+                                              friend_three_way_comparable_with_deleted_ne const&) = default;
+  __host__ __device__ friend bool operator!=(friend_three_way_comparable_with_deleted_ne const&,
+                                             friend_three_way_comparable_with_deleted_ne const&) = delete;
 };
 #endif
 
 struct one_way_eq {
   bool operator==(one_way_eq const&) const = default;
   __host__ __device__ friend bool operator==(one_way_eq, explicit_operators);
-  friend bool operator==(explicit_operators, one_way_eq) = delete;
+  __host__ __device__ friend bool operator==(explicit_operators, one_way_eq) = delete;
 
   __host__ __device__ operator explicit_operators() const;
 };
@@ -253,7 +253,7 @@ struct one_way_eq {
 struct one_way_ne {
   bool operator==(one_way_ne const&) const = default;
   __host__ __device__ friend bool operator==(one_way_ne, explicit_operators);
-  friend bool operator!=(one_way_ne, explicit_operators) = delete;
+  __host__ __device__ friend bool operator!=(one_way_ne, explicit_operators) = delete;
 
   __host__ __device__ operator explicit_operators() const;
 };
@@ -309,26 +309,28 @@ struct no_ge_not_totally_ordered_with {
   __host__ __device__ auto operator>=(totally_ordered_with_others const&) const;
 };
 
+#ifndef TEST_HAS_NO_SPACESHIP_OPERATOR
 struct partial_ordering_totally_ordered_with {
-  auto operator<=>(partial_ordering_totally_ordered_with const&) const noexcept = default;
+  __host__ __device__ auto operator<=>(partial_ordering_totally_ordered_with const&) const noexcept = default;
   __host__ __device__ std::partial_ordering operator<=>(totally_ordered_with_others const&) const noexcept;
 
   __host__ __device__ operator totally_ordered_with_others() const;
 };
 
 struct weak_ordering_totally_ordered_with {
-  auto operator<=>(weak_ordering_totally_ordered_with const&) const noexcept = default;
+  __host__ __device__ auto operator<=>(weak_ordering_totally_ordered_with const&) const noexcept = default;
   __host__ __device__ std::weak_ordering operator<=>(totally_ordered_with_others const&) const noexcept;
 
   __host__ __device__ operator totally_ordered_with_others() const;
 };
 
 struct strong_ordering_totally_ordered_with {
-  auto operator<=>(strong_ordering_totally_ordered_with const&) const noexcept = default;
+  __host__ __device__ auto operator<=>(strong_ordering_totally_ordered_with const&) const noexcept = default;
   __host__ __device__ std::strong_ordering operator<=>(totally_ordered_with_others const&) const noexcept;
 
   __host__ __device__ operator totally_ordered_with_others() const;
 };
+#endif
 
 struct eq_returns_explicit_bool {
   __host__ __device__ friend explicit_bool operator==(eq_returns_explicit_bool, eq_returns_explicit_bool);
