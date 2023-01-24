@@ -106,9 +106,11 @@ template<class T>
 __host__ __device__ void test_not_const()
 {
     static_assert( cuda::std::default_initializable<               T>, "");
-    static_assert(!cuda::std::default_initializable<const          T>, "");
     static_assert( cuda::std::default_initializable<      volatile T>, "");
+#if !defined(TEST_COMPILER_C1XX) // nvbug3953465
+    static_assert(!cuda::std::default_initializable<const          T>, "");
     static_assert(!cuda::std::default_initializable<const volatile T>, "");
+#endif
 }
 
 template<class T>
