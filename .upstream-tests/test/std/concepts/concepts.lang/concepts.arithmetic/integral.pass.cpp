@@ -62,7 +62,7 @@ static_assert(CheckIntegralQualifiers<long long>(), "");
 static_assert(CheckIntegralQualifiers<unsigned long long>(), "");
 
 // extended integers
-#ifndef TEST_HAS_NO_INT128
+#ifndef TEST_HAS_NO_INT128_T
 static_assert(CheckIntegralQualifiers<__int128_t>(), "");
 static_assert(CheckIntegralQualifiers<__uint128_t>(), "");
 #endif

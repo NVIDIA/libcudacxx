@@ -330,6 +330,12 @@ struct is_same<T, T> { enum {value = 1}; };
 #endif
 #endif
 
+#ifndef TEST_HAS_NO_INT128_T
+#ifdef _LIBCUDACXX_HAS_NO_INT128
+#define TEST_HAS_NO_INT128_T
+#endif
+#endif
+
 #if defined(__GNUC__) || defined(__clang__) || defined(__CUDACC_RTC__)
 template <class Tp>
 inline _LIBCUDACXX_INLINE_VISIBILITY
