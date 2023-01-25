@@ -311,21 +311,21 @@ struct no_ge_not_totally_ordered_with {
 
 #ifndef TEST_HAS_NO_SPACESHIP_OPERATOR
 struct partial_ordering_totally_ordered_with {
-  __host__ __device__ auto operator<=>(partial_ordering_totally_ordered_with const&) const noexcept = default;
+  auto operator<=>(partial_ordering_totally_ordered_with const&) const noexcept = default;
   __host__ __device__ std::partial_ordering operator<=>(totally_ordered_with_others const&) const noexcept;
 
   __host__ __device__ operator totally_ordered_with_others() const;
 };
 
 struct weak_ordering_totally_ordered_with {
-  __host__ __device__ auto operator<=>(weak_ordering_totally_ordered_with const&) const noexcept = default;
+  auto operator<=>(weak_ordering_totally_ordered_with const&) const noexcept = default;
   __host__ __device__ std::weak_ordering operator<=>(totally_ordered_with_others const&) const noexcept;
 
   __host__ __device__ operator totally_ordered_with_others() const;
 };
 
 struct strong_ordering_totally_ordered_with {
-  __host__ __device__ auto operator<=>(strong_ordering_totally_ordered_with const&) const noexcept = default;
+  auto operator<=>(strong_ordering_totally_ordered_with const&) const noexcept = default;
   __host__ __device__ std::strong_ordering operator<=>(totally_ordered_with_others const&) const noexcept;
 
   __host__ __device__ operator totally_ordered_with_others() const;
