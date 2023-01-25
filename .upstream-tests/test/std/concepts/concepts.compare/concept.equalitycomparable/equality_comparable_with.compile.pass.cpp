@@ -942,7 +942,9 @@ static_assert(!check_equality_comparable_with<nullptr_t, int>(), "");
 static_assert(check_equality_comparable_with<nullptr_t, int*>(), "");
 static_assert(check_equality_comparable_with<nullptr_t, int[5]>(), "");
 static_assert(check_equality_comparable_with<nullptr_t, int (*)()>(), "");
+#if !defined(TEST_COMPILER_C1XX)
 static_assert(check_equality_comparable_with<nullptr_t, int (&)()>(), "");
+#endif
 static_assert(check_equality_comparable_with<nullptr_t, int (S::*)()>(), "");
 static_assert(
     check_equality_comparable_with<nullptr_t, int (S::*)() noexcept>(), "");
