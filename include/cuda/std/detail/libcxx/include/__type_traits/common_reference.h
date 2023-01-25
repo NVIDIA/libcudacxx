@@ -4,6 +4,7 @@
 // See https://llvm.org/LICENSE.txt for license information.
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 // SPDX-FileCopyrightText: Copyright (c) 2022 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+// SPDX-FileCopyrightText: Copyright (c) Microsoft Corporation.
 //
 //===----------------------------------------------------------------------===//
 
@@ -15,11 +16,16 @@
 #endif // __cuda_std__
 
 #include "../__type_traits/common_type.h"
+#include "../__type_traits/conditional.h"
 #include "../__type_traits/copy_cv.h"
 #include "../__type_traits/copy_cvref.h"
+#include "../__type_traits/disjunction.h"
 #include "../__type_traits/enable_if.h"
+#include "../__type_traits/is_array.h"
 #include "../__type_traits/is_convertible.h"
 #include "../__type_traits/is_reference.h"
+#include "../__type_traits/is_same.h"
+#include "../__type_traits/is_scalar.h"
 #include "../__type_traits/remove_reference.h"
 #include "../__type_traits/remove_cvref.h"
 #include "../__type_traits/void_t.h"
@@ -35,9 +41,30 @@ _LIBCUDACXX_BEGIN_NAMESPACE_STD
 #if _LIBCUDACXX_STD_VER > 11
 
 // Let COND_RES(X, Y) be:
+#ifdef _LIBCUDACXX_COMPILER_MSVC // Workaround for DevCom-1627396
+template <class _Xp, class _Yp>
+using __cond_res_if_right =
+    decltype(false ? _CUDA_VSTD::declval<_Xp(&)()>()() : _CUDA_VSTD::declval<_Yp(&)()>()());
+
+template <class _Tp, class _Up, class = void>
+struct __cond_res_workaround {};
+
+template <class _Tp, class _Up>
+struct __cond_res_workaround<_Tp, _Up, void_t<__cond_res_if_right<_Tp, _Up>>> {
+    using _RTp = remove_cvref_t<_Tp>;
+    using type = conditional_t<is_same_v<_RTp, remove_cvref_t<_Up>> && 
+                               (is_scalar_v<_RTp> || is_array_v<_RTp>) &&
+                               ((is_lvalue_reference_v<_Tp> && is_rvalue_reference_v<_Up>) || (is_rvalue_reference_v<_Tp> && is_lvalue_reference_v<_Up>)),
+                 decay_t<__copy_cv_t<remove_reference_t<_Tp>, remove_reference_t<_Up>>>, __cond_res_if_right<_Tp, _Up>>;
+};
+
+template <class _Xp, class _Yp>
+using __cond_res = typename __cond_res_workaround<_Xp, _Yp>::type;
+#else // ^^^ MSVC ^^^ / vvv !MSVC vvv
 template <class _Xp, class _Yp>
 using __cond_res =
     decltype(false ? _CUDA_VSTD::declval<_Xp(&)()>()() : _CUDA_VSTD::declval<_Yp(&)()>()());
+#endif // !MSVC
 
 // Let `XREF(A)` denote a unary alias template `T` such that `T<U>` denotes the same type as `U`
 // with the addition of `A`'s cv and reference qualifiers, for a non-reference cv-unqualified type
