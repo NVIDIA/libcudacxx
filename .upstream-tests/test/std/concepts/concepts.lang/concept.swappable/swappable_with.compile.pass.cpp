@@ -22,6 +22,7 @@
 #include <cuda/std/concepts>
 #include <cuda/std/cassert>
 
+#include "test_macros.h"
 #include "type_classification/moveconstructible.h"
 #include "type_classification/swappable.h"
 
@@ -568,29 +569,24 @@ static_assert(
                         s3 volatile&&>, "");
 
 struct swappable_with_rvalue_ref_to_cv_s3 {
-  __host__ __device__ swappable_with_rvalue_ref_to_cv_s3(
-      swappable_with_rvalue_ref_to_cv_s3 const volatile&);
-  __host__ __device__ swappable_with_rvalue_ref_to_cv_s3(
-      swappable_with_rvalue_ref_to_cv_s3 const volatile&&);
-  __host__ __device__ swappable_with_rvalue_ref_to_cv_s3&
-  operator=(swappable_with_rvalue_ref_to_cv_s3 const volatile&);
-  __host__ __device__ swappable_with_rvalue_ref_to_cv_s3&
-  operator=(swappable_with_rvalue_ref_to_cv_s3 const volatile&&);
+  __host__ __device__ swappable_with_rvalue_ref_to_cv_s3(swappable_with_rvalue_ref_to_cv_s3 const volatile&);
+  __host__ __device__ swappable_with_rvalue_ref_to_cv_s3(swappable_with_rvalue_ref_to_cv_s3 const volatile&&);
+  __host__ __device__ swappable_with_rvalue_ref_to_cv_s3& operator=(swappable_with_rvalue_ref_to_cv_s3 const volatile&);
+  __host__ __device__ swappable_with_rvalue_ref_to_cv_s3& operator=(swappable_with_rvalue_ref_to_cv_s3 const volatile&&);
 
-  __host__ __device__ friend void swap(swappable_with_rvalue_ref_to_cv_s3 const volatile&&,
-                   swappable_with_rvalue_ref_to_cv_s3 const volatile&&);
-  __host__ __device__ friend void swap(s3 const volatile&&,
-                   swappable_with_rvalue_ref_to_cv_s3 const volatile&&);
-  __host__ __device__ friend void swap(swappable_with_rvalue_ref_to_cv_s3 const volatile&&,
-                   s3 const volatile&&);
+  __host__ __device__ friend void swap(swappable_with_rvalue_ref_to_cv_s3 const volatile&&, swappable_with_rvalue_ref_to_cv_s3 const volatile&&);
+  __host__ __device__ friend void swap(s3 const volatile&&, swappable_with_rvalue_ref_to_cv_s3 const volatile&&);
+  __host__ __device__ friend void swap(swappable_with_rvalue_ref_to_cv_s3 const volatile&&, s3 const volatile&&);
 
   __host__ __device__ operator s3 const volatile &&() const volatile;
 };
+#if !defined(TEST_COMPILER_C1XX)
 static_assert(cuda::std::common_reference_with<swappable_with_rvalue_ref_to_cv_s3 const volatile&&,
                         s3 const volatile&&>, "");
 static_assert(
     swappable_with<swappable_with_rvalue_ref_to_cv_s3 const volatile&&,
                         s3 const volatile&&>, "");
+#endif
 
 namespace union_swap {
 union adl_swappable {
