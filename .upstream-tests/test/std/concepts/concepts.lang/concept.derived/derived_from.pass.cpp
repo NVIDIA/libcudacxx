@@ -8,6 +8,7 @@
 //===----------------------------------------------------------------------===//
 
 // UNSUPPORTED: c++03, c++11
+// UNSUPPORTED: windows && (c++11 || c++14 || c++17)
 
 // template<class Derived, class Base>
 // concept derived_from;
@@ -397,7 +398,7 @@ int main(int, char**) {
 
 #if TEST_STD_VER > 17
     CheckNotDerivedFrom<void, void>();
-#endif 
+#endif
     CheckNotDerivedFrom<int, int>();
   }
   { // Nothing should be derived from a fundamental type

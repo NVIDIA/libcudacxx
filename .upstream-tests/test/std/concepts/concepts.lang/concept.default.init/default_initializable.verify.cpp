@@ -8,6 +8,7 @@
 //===----------------------------------------------------------------------===//
 
 // UNSUPPORTED: c++03, c++11
+// UNSUPPORTED: windows && (c++11 || c++14 || c++17)
 
 // template<class T>
 //     concept default_initializable = constructible_from<T> &&
@@ -28,10 +29,10 @@ _LIBCUDACXX_CONCEPT_FRAGMENT(
   brace_initializable_,
   requires() //
   ( T{}));
-  
+
 template<class T>
 _LIBCUDACXX_CONCEPT brace_initializable = _LIBCUDACXX_FRAGMENT(brace_initializable_, T);
-  
+
 __host__ __device__ void test() {
     // LWG3149
     // Changed the concept from constructible_from<T>

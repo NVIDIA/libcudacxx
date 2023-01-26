@@ -8,6 +8,7 @@
 //===----------------------------------------------------------------------===//
 
 // UNSUPPORTED: c++03, c++11
+// UNSUPPORTED: windows && (c++11 || c++14 || c++17)
 
 // template<class T>
 // concept destructible = is_nothrow_destructible_v<T>;

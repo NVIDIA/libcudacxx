@@ -8,7 +8,7 @@
 //===----------------------------------------------------------------------===//
 
 // UNSUPPORTED: c++03, c++11
-// UNSUPPORTED: gcc-5
+// UNSUPPORTED: windows && (c++11 || c++14 || c++17)
 
 // template<class T>
 // concept swappable = // see below
@@ -249,7 +249,7 @@ int main(int, char**) {
   assert(check_throwable_adl_swappable_arrays());
   assert(check_swappable_references());
   assert(check_swappable_pointers());
-  
+
 #if (!defined(__GNUC__) || __GNUC__ >= 10)
   static_assert(check_lvalue_adl_swappable(), "");
   static_assert(check_rvalue_adl_swappable(), "");

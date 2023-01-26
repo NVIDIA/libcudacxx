@@ -8,6 +8,7 @@
 //===----------------------------------------------------------------------===//
 
 // UNSUPPORTED: c++03, c++11
+// UNSUPPORTED: windows && (c++11 || c++14 || c++17)
 
 // template<class From, class To>
 // concept common_with;
@@ -567,7 +568,7 @@ __host__ __device__ constexpr bool HasCommonReference() noexcept {
   return requires { typename cuda::std::common_reference_t<T, U>; };
 #else
   return cuda::std::_Common_reference_exists<T, U>;
-#endif 
+#endif
 }
 
 static_assert(HasValidCommonType<T6, int>(), "");

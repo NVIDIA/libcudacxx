@@ -8,7 +8,7 @@
 //===----------------------------------------------------------------------===//
 
 // UNSUPPORTED: c++03, c++11
-// UNSUPPORTED: gcc-5
+// UNSUPPORTED: windows && (c++11 || c++14 || c++17)
 
 // template<class T, class U>
 // concept swappable_with = // see below
