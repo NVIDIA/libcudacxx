@@ -1055,6 +1055,7 @@ static_assert(
 static_assert(
     !check_equality_comparable_with<cxx20_member_eq, cxx20_friend_eq>(), "");
 
+#ifndef TEST_HAS_NO_SPACESHIP_OPERATOR
 static_assert(check_equality_comparable_with<member_three_way_comparable,
                                              member_three_way_comparable>(), "");
 #ifndef __NVCC__  // nvbug3908399
@@ -1063,6 +1064,7 @@ static_assert(check_equality_comparable_with<friend_three_way_comparable,
 static_assert(!check_equality_comparable_with<member_three_way_comparable,
                                               friend_three_way_comparable>(), "");
 #endif // !__NVCC__
+#endif // TEST_HAS_NO_SPACESHIP_OPERATOR
 #endif // TEST_STD_VER > 17
 
 static_assert(

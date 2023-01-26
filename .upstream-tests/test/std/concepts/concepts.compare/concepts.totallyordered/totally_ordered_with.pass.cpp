@@ -1021,6 +1021,7 @@ static_assert(!check_totally_ordered_with<cxx20_member_eq, cxx20_member_eq>(), "
 static_assert(!check_totally_ordered_with<cxx20_friend_eq, cxx20_friend_eq>(), "");
 static_assert(!check_totally_ordered_with<cxx20_member_eq, cxx20_friend_eq>(), "");
 
+#ifndef TEST_HAS_NO_SPACESHIP_OPERATOR
 static_assert(check_totally_ordered_with<member_three_way_comparable,
                                          member_three_way_comparable>(), "");
 #ifndef __NVCC__  // nvbug3908399
@@ -1029,6 +1030,7 @@ static_assert(check_totally_ordered_with<friend_three_way_comparable,
 static_assert(!check_totally_ordered_with<member_three_way_comparable,
                                           friend_three_way_comparable>(), "");
 #endif // !__NVCC__
+#endif // TEST_HAS_NO_SPACESHIP_OPERATOR
 #endif // TEST_STD_VER > 17
 
 static_assert(
@@ -1053,6 +1055,7 @@ static_assert(
     cuda::std::common_reference_with<one_way_ne const&, explicit_operators const&> &&
     !check_totally_ordered_with<one_way_ne, explicit_operators>(), "");
 
+#ifndef TEST_HAS_NO_SPACESHIP_OPERATOR
 #ifndef TEST_HAS_NO_SPACESHIP_OPERATOR
 static_assert(
     check_totally_ordered_with<totally_ordered_with_others,
@@ -1113,6 +1116,7 @@ static_assert(
                                       no_ge_not_totally_ordered_with> &&
     !check_totally_ordered_with<totally_ordered_with_others,
                                 no_ge_not_totally_ordered_with>(), "");
+#endif // TEST_HAS_NO_SPACESHIP_OPERATOR
 #endif // TEST_STD_VER > 17
 } // namespace types_fit_for_purpose
 

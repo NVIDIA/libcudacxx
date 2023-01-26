@@ -12,6 +12,12 @@
 #include <cuda/std/concepts>
 #include <cuda/std/type_traits>
 
+#include "test_macros.h"
+
+#ifndef TEST_HAS_NO_SPACESHIP_OPERATOR
+#include <compare>
+#endif // TEST_HAS_NO_SPACESHIP_OPERATOR
+
 // `noexcept` specifiers deliberately imperfect since not all programmers bother to put the
 // specifiers on their overloads.
 
@@ -27,6 +33,7 @@ struct cxx20_friend_eq {
   __host__ __device__ friend bool operator==(cxx20_friend_eq const&, cxx20_friend_eq const&) = default;
 };
 
+#ifndef TEST_HAS_NO_SPACESHIP_OPERATOR
 struct member_three_way_comparable {
   auto operator<=>(member_three_way_comparable const&) const = default;
 };
@@ -36,6 +43,7 @@ struct friend_three_way_comparable {
   __host__ __device__ friend auto operator<=>(friend_three_way_comparable const&, friend_three_way_comparable const&) = default;
 };
 #endif // !__NVCC__
+#endif // TEST_HAS_NO_SPACESHIP_OPERATOR
 #endif // TEST_STD_VER > 17
 
 struct explicit_operators {
@@ -216,6 +224,7 @@ struct cxx20_friend_eq_operator_with_deleted_ne {
                                              cxx20_friend_eq_operator_with_deleted_ne const&) = delete;
 };
 
+#ifndef TEST_HAS_NO_SPACESHIP_OPERATOR
 struct member_three_way_comparable_with_deleted_eq {
   auto operator<=>(member_three_way_comparable_with_deleted_eq const&) const = default;
   __host__ __device__ bool operator==(member_three_way_comparable_with_deleted_eq const&) const = delete;
@@ -240,7 +249,8 @@ struct friend_three_way_comparable_with_deleted_ne {
   __host__ __device__ friend bool operator!=(friend_three_way_comparable_with_deleted_ne const&,
                                              friend_three_way_comparable_with_deleted_ne const&) = delete;
 };
-#endif
+#endif // !__NVCC__
+#endif // TEST_HAS_NO_SPACESHIP_OPERATOR
 
 struct one_way_eq {
   bool operator==(one_way_eq const&) const = default;
@@ -258,13 +268,12 @@ struct one_way_ne {
   __host__ __device__ operator explicit_operators() const;
 };
 static_assert(requires(explicit_operators const x, one_way_ne const y) { x != y; });
-#endif // TEST_STD_VER > 17
 
 struct explicit_bool {
   __host__ __device__ explicit operator bool() const noexcept;
 };
 
-#if TEST_STD_VER > 17
+#ifndef TEST_HAS_NO_SPACESHIP_OPERATOR
 struct totally_ordered_with_others {
   auto operator<=>(totally_ordered_with_others const&) const = default;
 };
@@ -309,7 +318,6 @@ struct no_ge_not_totally_ordered_with {
   __host__ __device__ auto operator>=(totally_ordered_with_others const&) const;
 };
 
-#ifndef TEST_HAS_NO_SPACESHIP_OPERATOR
 struct partial_ordering_totally_ordered_with {
   auto operator<=>(partial_ordering_totally_ordered_with const&) const noexcept = default;
   __host__ __device__ std::partial_ordering operator<=>(totally_ordered_with_others const&) const noexcept;
@@ -330,7 +338,6 @@ struct strong_ordering_totally_ordered_with {
 
   __host__ __device__ operator totally_ordered_with_others() const;
 };
-#endif
 
 struct eq_returns_explicit_bool {
   __host__ __device__ friend explicit_bool operator==(eq_returns_explicit_bool, eq_returns_explicit_bool);
@@ -518,6 +525,7 @@ struct returns_int_ptr {
   __host__ __device__ friend int* operator>=(returns_int_ptr, totally_ordered_with_others);
   __host__ __device__ friend int* operator>=(totally_ordered_with_others, returns_int_ptr);
 };
+#endif // TEST_HAS_NO_SPACESHIP_OPERATOR
 #endif // TEST_STD_VER > 17
 
 struct ForwardingTestObject {
