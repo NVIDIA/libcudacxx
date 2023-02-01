@@ -3,10 +3,11 @@
 // Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
 // See https://llvm.org/LICENSE.txt for license information.
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+// SPDX-FileCopyrightText: Copyright (c) 2022 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 //
 //===----------------------------------------------------------------------===//
 
-// UNSUPPORTED: c++98, c++03, c++11, c++14
+// UNSUPPORTED: c++98, c++03, c++11
 
 // <cuda/std/iterator>
 // template <class C> constexpr auto empty(const C& c) -> decltype(c.empty());       // C++17
@@ -44,7 +45,7 @@ template<typename T>
 __host__ __device__
 void test_const_container( const cuda::std::initializer_list<T>& c )
 {
-    assert ( cuda::std::empty(c)   == (c.size() == 0));
+    assert (!cuda::std::empty(c));
 }
 
 template<typename C>
@@ -60,7 +61,7 @@ __host__ __device__
 void test_container( cuda::std::initializer_list<T>& c )
 {
     ASSERT_NOEXCEPT(cuda::std::empty(c));
-    assert ( cuda::std::empty(c)   == (c.size() == 0));
+    assert (!cuda::std::empty(c));
 }
 
 template<typename T, size_t Sz>
@@ -70,6 +71,8 @@ void test_const_array( const T (&array)[Sz] )
     ASSERT_NOEXCEPT(cuda::std::empty(array));
     assert (!cuda::std::empty(array));
 }
+
+__device__ static constexpr int arrA [] { 1, 2, 3 };
 
 int main(int, char**)
 {
@@ -108,7 +111,6 @@ int main(int, char**)
 #endif
 #endif
 
-    static constexpr int arrA [] { 1, 2, 3 };
     test_const_array ( arrA );
 
   return 0;

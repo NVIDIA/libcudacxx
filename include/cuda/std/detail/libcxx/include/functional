@@ -499,6 +499,14 @@ POLICY:  For non-variadic implementations, the number of arguments is limited
 
 #ifndef __cuda_std__
 #include <__config>
+#include <__functional/binary_function.h>
+#include <__functional/identity.h>
+#include <__functional/invoke.h>
+#include <__functional/reference_wrapper.h>
+#include <__functional/unary_function.h>
+#include <__functional/weak_result_type.h>
+#include <__memory/addressof.h>
+#include <__memory/pointer_traits.h>
 #include <type_traits>
 #include <typeinfo>
 #include <exception>
@@ -508,6 +516,15 @@ POLICY:  For non-variadic implementations, the number of arguments is limited
 #include <version>
 #include <__functional_base>
 #include <__pragma_push>
+#else
+#include "__functional/binary_function.h"
+#include "__functional/identity.h"
+#include "__functional/invoke.h"
+#include "__functional/reference_wrapper.h"
+#include "__functional/unary_function.h"
+#include "__functional/weak_result_type.h"
+#include "__memory/addressof.h"
+#include "__memory/pointer_traits.h"
 #endif
 
 #if defined(_LIBCUDACXX_USE_PRAGMA_GCC_SYSTEM_HEADER)
@@ -521,7 +538,7 @@ template <class _Tp = void>
 #else
 template <class _Tp>
 #endif
-struct _LIBCUDACXX_TEMPLATE_VIS plus : binary_function<_Tp, _Tp, _Tp>
+struct _LIBCUDACXX_TEMPLATE_VIS plus : __binary_function<_Tp, _Tp, _Tp>
 {
     _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     _Tp operator()(const _Tp& __x, const _Tp& __y) const
@@ -548,7 +565,7 @@ template <class _Tp = void>
 #else
 template <class _Tp>
 #endif
-struct _LIBCUDACXX_TEMPLATE_VIS minus : binary_function<_Tp, _Tp, _Tp>
+struct _LIBCUDACXX_TEMPLATE_VIS minus : __binary_function<_Tp, _Tp, _Tp>
 {
     _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     _Tp operator()(const _Tp& __x, const _Tp& __y) const
@@ -575,7 +592,7 @@ template <class _Tp = void>
 #else
 template <class _Tp>
 #endif
-struct _LIBCUDACXX_TEMPLATE_VIS multiplies : binary_function<_Tp, _Tp, _Tp>
+struct _LIBCUDACXX_TEMPLATE_VIS multiplies : __binary_function<_Tp, _Tp, _Tp>
 {
     _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     _Tp operator()(const _Tp& __x, const _Tp& __y) const
@@ -602,7 +619,7 @@ template <class _Tp = void>
 #else
 template <class _Tp>
 #endif
-struct _LIBCUDACXX_TEMPLATE_VIS divides : binary_function<_Tp, _Tp, _Tp>
+struct _LIBCUDACXX_TEMPLATE_VIS divides : __binary_function<_Tp, _Tp, _Tp>
 {
     _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     _Tp operator()(const _Tp& __x, const _Tp& __y) const
@@ -629,7 +646,7 @@ template <class _Tp = void>
 #else
 template <class _Tp>
 #endif
-struct _LIBCUDACXX_TEMPLATE_VIS modulus : binary_function<_Tp, _Tp, _Tp>
+struct _LIBCUDACXX_TEMPLATE_VIS modulus : __binary_function<_Tp, _Tp, _Tp>
 {
     _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     _Tp operator()(const _Tp& __x, const _Tp& __y) const
@@ -656,7 +673,7 @@ template <class _Tp = void>
 #else
 template <class _Tp>
 #endif
-struct _LIBCUDACXX_TEMPLATE_VIS negate : unary_function<_Tp, _Tp>
+struct _LIBCUDACXX_TEMPLATE_VIS negate : __unary_function<_Tp, _Tp>
 {
     _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     _Tp operator()(const _Tp& __x) const
@@ -683,7 +700,7 @@ template <class _Tp = void>
 #else
 template <class _Tp>
 #endif
-struct _LIBCUDACXX_TEMPLATE_VIS equal_to : binary_function<_Tp, _Tp, bool>
+struct _LIBCUDACXX_TEMPLATE_VIS equal_to : __binary_function<_Tp, _Tp, bool>
 {
     _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     bool operator()(const _Tp& __x, const _Tp& __y) const
@@ -710,7 +727,7 @@ template <class _Tp = void>
 #else
 template <class _Tp>
 #endif
-struct _LIBCUDACXX_TEMPLATE_VIS not_equal_to : binary_function<_Tp, _Tp, bool>
+struct _LIBCUDACXX_TEMPLATE_VIS not_equal_to : __binary_function<_Tp, _Tp, bool>
 {
     _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     bool operator()(const _Tp& __x, const _Tp& __y) const
@@ -737,7 +754,7 @@ template <class _Tp = void>
 #else
 template <class _Tp>
 #endif
-struct _LIBCUDACXX_TEMPLATE_VIS greater : binary_function<_Tp, _Tp, bool>
+struct _LIBCUDACXX_TEMPLATE_VIS greater : __binary_function<_Tp, _Tp, bool>
 {
     _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     bool operator()(const _Tp& __x, const _Tp& __y) const
@@ -766,7 +783,7 @@ template <class _Tp = void>
 #else
 template <class _Tp>
 #endif
-struct _LIBCUDACXX_TEMPLATE_VIS greater_equal : binary_function<_Tp, _Tp, bool>
+struct _LIBCUDACXX_TEMPLATE_VIS greater_equal : __binary_function<_Tp, _Tp, bool>
 {
     _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     bool operator()(const _Tp& __x, const _Tp& __y) const
@@ -793,7 +810,7 @@ template <class _Tp = void>
 #else
 template <class _Tp>
 #endif
-struct _LIBCUDACXX_TEMPLATE_VIS less_equal : binary_function<_Tp, _Tp, bool>
+struct _LIBCUDACXX_TEMPLATE_VIS less_equal : __binary_function<_Tp, _Tp, bool>
 {
     _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     bool operator()(const _Tp& __x, const _Tp& __y) const
@@ -820,7 +837,7 @@ template <class _Tp = void>
 #else
 template <class _Tp>
 #endif
-struct _LIBCUDACXX_TEMPLATE_VIS logical_and : binary_function<_Tp, _Tp, bool>
+struct _LIBCUDACXX_TEMPLATE_VIS logical_and : __binary_function<_Tp, _Tp, bool>
 {
     _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     bool operator()(const _Tp& __x, const _Tp& __y) const
@@ -847,7 +864,7 @@ template <class _Tp = void>
 #else
 template <class _Tp>
 #endif
-struct _LIBCUDACXX_TEMPLATE_VIS logical_or : binary_function<_Tp, _Tp, bool>
+struct _LIBCUDACXX_TEMPLATE_VIS logical_or : __binary_function<_Tp, _Tp, bool>
 {
     _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     bool operator()(const _Tp& __x, const _Tp& __y) const
@@ -874,7 +891,7 @@ template <class _Tp = void>
 #else
 template <class _Tp>
 #endif
-struct _LIBCUDACXX_TEMPLATE_VIS logical_not : unary_function<_Tp, bool>
+struct _LIBCUDACXX_TEMPLATE_VIS logical_not : __unary_function<_Tp, bool>
 {
     _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     bool operator()(const _Tp& __x) const
@@ -901,7 +918,7 @@ template <class _Tp = void>
 #else
 template <class _Tp>
 #endif
-struct _LIBCUDACXX_TEMPLATE_VIS bit_and : binary_function<_Tp, _Tp, _Tp>
+struct _LIBCUDACXX_TEMPLATE_VIS bit_and : __binary_function<_Tp, _Tp, _Tp>
 {
     _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     _Tp operator()(const _Tp& __x, const _Tp& __y) const
@@ -928,7 +945,7 @@ template <class _Tp = void>
 #else
 template <class _Tp>
 #endif
-struct _LIBCUDACXX_TEMPLATE_VIS bit_or : binary_function<_Tp, _Tp, _Tp>
+struct _LIBCUDACXX_TEMPLATE_VIS bit_or : __binary_function<_Tp, _Tp, _Tp>
 {
     _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     _Tp operator()(const _Tp& __x, const _Tp& __y) const
@@ -955,7 +972,7 @@ template <class _Tp = void>
 #else
 template <class _Tp>
 #endif
-struct _LIBCUDACXX_TEMPLATE_VIS bit_xor : binary_function<_Tp, _Tp, _Tp>
+struct _LIBCUDACXX_TEMPLATE_VIS bit_xor : __binary_function<_Tp, _Tp, _Tp>
 {
     _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     _Tp operator()(const _Tp& __x, const _Tp& __y) const
@@ -979,7 +996,7 @@ struct _LIBCUDACXX_TEMPLATE_VIS bit_xor<void>
 
 #if _LIBCUDACXX_STD_VER > 11
 template <class _Tp = void>
-struct _LIBCUDACXX_TEMPLATE_VIS bit_not : unary_function<_Tp, _Tp>
+struct _LIBCUDACXX_TEMPLATE_VIS bit_not : __unary_function<_Tp, _Tp>
 {
     _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY
     _Tp operator()(const _Tp& __x) const
@@ -1001,7 +1018,7 @@ struct _LIBCUDACXX_TEMPLATE_VIS bit_not<void>
 
 template <class _Predicate>
 class _LIBCUDACXX_TEMPLATE_VIS _LIBCUDACXX_DEPRECATED_IN_CXX17 unary_negate
-    : public unary_function<typename _Predicate::argument_type, bool>
+    : public __unary_function<typename _Predicate::argument_type, bool>
 {
     _Predicate __pred_;
 public:
@@ -1020,7 +1037,7 @@ not1(const _Predicate& __pred) {return unary_negate<_Predicate>(__pred);}
 
 template <class _Predicate>
 class _LIBCUDACXX_TEMPLATE_VIS _LIBCUDACXX_DEPRECATED_IN_CXX17 binary_negate
-    : public binary_function<typename _Predicate::first_argument_type,
+    : public __binary_function<typename _Predicate::first_argument_type,
                              typename _Predicate::second_argument_type,
                              bool>
 {
@@ -1043,7 +1060,7 @@ not2(const _Predicate& __pred) {return binary_negate<_Predicate>(__pred);}
 #if _LIBCUDACXX_STD_VER <= 14 || defined(_LIBCUDACXX_ENABLE_CXX17_REMOVED_BINDERS)
 template <class __Operation>
 class _LIBCUDACXX_TEMPLATE_VIS _LIBCUDACXX_DEPRECATED_IN_CXX11 binder1st
-    : public unary_function<typename __Operation::second_argument_type,
+    : public __unary_function<typename __Operation::second_argument_type,
                             typename __Operation::result_type>
 {
 protected:
@@ -1069,7 +1086,7 @@ bind1st(const __Operation& __op, const _Tp& __x)
 
 template <class __Operation>
 class _LIBCUDACXX_TEMPLATE_VIS _LIBCUDACXX_DEPRECATED_IN_CXX11 binder2nd
-    : public unary_function<typename __Operation::first_argument_type,
+    : public __unary_function<typename __Operation::first_argument_type,
                             typename __Operation::result_type>
 {
 protected:
@@ -1095,7 +1112,7 @@ bind2nd(const __Operation& __op, const _Tp& __x)
 
 template <class _Arg, class _Result>
 class _LIBCUDACXX_TEMPLATE_VIS _LIBCUDACXX_DEPRECATED_IN_CXX11 pointer_to_unary_function
-    : public unary_function<_Arg, _Result>
+    : public __unary_function<_Arg, _Result>
 {
     _Result (*__f_)(_Arg);
 public:
@@ -1113,7 +1130,7 @@ ptr_fun(_Result (*__f)(_Arg))
 
 template <class _Arg1, class _Arg2, class _Result>
 class _LIBCUDACXX_TEMPLATE_VIS _LIBCUDACXX_DEPRECATED_IN_CXX11 pointer_to_binary_function
-    : public binary_function<_Arg1, _Arg2, _Result>
+    : public __binary_function<_Arg1, _Arg2, _Result>
 {
     _Result (*__f_)(_Arg1, _Arg2);
 public:
@@ -1131,7 +1148,7 @@ ptr_fun(_Result (*__f)(_Arg1,_Arg2))
 
 template<class _Sp, class _Tp>
 class _LIBCUDACXX_TEMPLATE_VIS _LIBCUDACXX_DEPRECATED_IN_CXX11 mem_fun_t
-    : public unary_function<_Tp*, _Sp>
+    : public __unary_function<_Tp*, _Sp>
 {
     _Sp (_Tp::*__p_)();
 public:
@@ -1143,7 +1160,7 @@ public:
 
 template<class _Sp, class _Tp, class _Ap>
 class _LIBCUDACXX_TEMPLATE_VIS _LIBCUDACXX_DEPRECATED_IN_CXX11 mem_fun1_t
-    : public binary_function<_Tp*, _Ap, _Sp>
+    : public __binary_function<_Tp*, _Ap, _Sp>
 {
     _Sp (_Tp::*__p_)(_Ap);
 public:
@@ -1167,7 +1184,7 @@ mem_fun(_Sp (_Tp::*__f)(_Ap))
 
 template<class _Sp, class _Tp>
 class _LIBCUDACXX_TEMPLATE_VIS _LIBCUDACXX_DEPRECATED_IN_CXX11 mem_fun_ref_t
-    : public unary_function<_Tp, _Sp>
+    : public __unary_function<_Tp, _Sp>
 {
     _Sp (_Tp::*__p_)();
 public:
@@ -1179,7 +1196,7 @@ public:
 
 template<class _Sp, class _Tp, class _Ap>
 class _LIBCUDACXX_TEMPLATE_VIS _LIBCUDACXX_DEPRECATED_IN_CXX11 mem_fun1_ref_t
-    : public binary_function<_Tp, _Ap, _Sp>
+    : public __binary_function<_Tp, _Ap, _Sp>
 {
     _Sp (_Tp::*__p_)(_Ap);
 public:
@@ -1203,7 +1220,7 @@ mem_fun_ref(_Sp (_Tp::*__f)(_Ap))
 
 template <class _Sp, class _Tp>
 class _LIBCUDACXX_TEMPLATE_VIS _LIBCUDACXX_DEPRECATED_IN_CXX11 const_mem_fun_t
-    : public unary_function<const _Tp*, _Sp>
+    : public __unary_function<const _Tp*, _Sp>
 {
     _Sp (_Tp::*__p_)() const;
 public:
@@ -1215,7 +1232,7 @@ public:
 
 template <class _Sp, class _Tp, class _Ap>
 class _LIBCUDACXX_TEMPLATE_VIS _LIBCUDACXX_DEPRECATED_IN_CXX11 const_mem_fun1_t
-    : public binary_function<const _Tp*, _Ap, _Sp>
+    : public __binary_function<const _Tp*, _Ap, _Sp>
 {
     _Sp (_Tp::*__p_)(_Ap) const;
 public:
@@ -1239,7 +1256,7 @@ mem_fun(_Sp (_Tp::*__f)(_Ap) const)
 
 template <class _Sp, class _Tp>
 class _LIBCUDACXX_TEMPLATE_VIS _LIBCUDACXX_DEPRECATED_IN_CXX11 const_mem_fun_ref_t
-    : public unary_function<_Tp, _Sp>
+    : public __unary_function<_Tp, _Sp>
 {
     _Sp (_Tp::*__p_)() const;
 public:
@@ -1251,7 +1268,7 @@ public:
 
 template <class _Sp, class _Tp, class _Ap>
 class _LIBCUDACXX_TEMPLATE_VIS _LIBCUDACXX_DEPRECATED_IN_CXX11 const_mem_fun1_ref_t
-    : public binary_function<_Tp, _Ap, _Sp>
+    : public __binary_function<_Tp, _Ap, _Sp>
 {
     _Sp (_Tp::*__p_)(_Ap) const;
 public:
@@ -1452,7 +1469,7 @@ struct __maybe_derive_from_unary_function
 
 template<class _Rp, class _A1>
 struct __maybe_derive_from_unary_function<_Rp(_A1)>
-    : public unary_function<_A1, _Rp>
+    : public __unary_function<_A1, _Rp>
 {
 };
 
@@ -1463,7 +1480,7 @@ struct __maybe_derive_from_binary_function
 
 template<class _Rp, class _A1, class _A2>
 struct __maybe_derive_from_binary_function<_Rp(_A1, _A2)>
-    : public binary_function<_A1, _A2, _Rp>
+    : public __binary_function<_A1, _A2, _Rp>
 {
 };
 
@@ -1790,7 +1807,7 @@ template <class _Rp, class... _ArgTypes> class __value_func<_Rp(_ArgTypes...)>
     }
 
     template <class _Fp,
-        class = typename enable_if<!is_same<typename decay<_Fp>::type, __value_func>::value>::type>
+        class = typename enable_if<!is_same<__decay_t<_Fp>, __value_func>::value>::type>
     _LIBCUDACXX_INLINE_VISIBILITY explicit __value_func(_Fp&& __f)
         : __value_func(std::forward<_Fp>(__f), allocator<_Fp>()) {}
 
@@ -2133,7 +2150,7 @@ template <class _Rp, class... _ArgTypes> class __policy_func<_Rp(_ArgTypes...)>
         }
     }
 
-    template <class _Fp, class = typename enable_if<!is_same<typename decay<_Fp>::type, __policy_func>::value>::type>
+    template <class _Fp, class = typename enable_if<!is_same<__decay_t<_Fp>, __policy_func>::value>::type>
     _LIBCUDACXX_INLINE_VISIBILITY explicit __policy_func(_Fp&& __f)
         : __policy_(__policy::__create_empty()) {
       typedef __default_alloc_func<_Fp, _Rp(_ArgTypes...)> _Fun;
@@ -2260,7 +2277,7 @@ class _LIBCUDACXX_TEMPLATE_VIS function<_Rp(_ArgTypes...)>
     __func __f_;
 
     template <class _Fp, bool = _And<
-        _IsNotSame<__uncvref_t<_Fp>, function>,
+        _IsNotSame<__remove_cvref_t<_Fp>, function>,
         __invokable<_Fp&, _ArgTypes...>
     >::value>
     struct __callable;
@@ -2550,7 +2567,7 @@ swap(function<_Rp(_ArgTypes...)>& __x, function<_Rp(_ArgTypes...)>& __y) _NOEXCE
 
 template<class _Tp> struct __is_bind_expression : public false_type {};
 template<class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_bind_expression
-    : public __is_bind_expression<typename remove_cv<_Tp>::type> {};
+    : public __is_bind_expression<__remove_cv_t<_Tp>> {};
 
 #if _LIBCUDACXX_STD_VER > 14
 template <class _Tp>
@@ -2559,7 +2576,7 @@ _LIBCUDACXX_INLINE_VAR constexpr size_t is_bind_expression_v = is_bind_expressio
 
 template<class _Tp> struct __is_placeholder : public integral_constant<int, 0> {};
 template<class _Tp> struct _LIBCUDACXX_TEMPLATE_VIS is_placeholder
-    : public __is_placeholder<typename remove_cv<_Tp>::type> {};
+    : public __is_placeholder<__remove_cv_t<_Tp>> {};
 
 #if _LIBCUDACXX_STD_VER > 14
 template <class _Tp>
@@ -2784,11 +2801,11 @@ __apply_functor(_Fp& __f, _BoundArgs& __bound_args, __tuple_indices<_Indx...>,
 
 template<class _Fp, class ..._BoundArgs>
 class __bind
-    : public __weak_result_type<typename decay<_Fp>::type>
+    : public __weak_result_type<__decay_t<_Fp>>
 {
 protected:
-    typedef typename decay<_Fp>::type _Fd;
-    typedef tuple<typename decay<_BoundArgs>::type...> _Td;
+    typedef __decay_t<_Fp> _Fd;
+    typedef tuple<__decay_t<_BoundArgs>...> _Td;
 private:
     _Fd __f_;
     _Td __bound_args_;
@@ -2799,7 +2816,7 @@ public:
               class = typename enable_if
                                <
                                   is_constructible<_Fd, _Gp>::value &&
-                                  !is_same<typename remove_reference<_Gp>::type,
+                                  !is_same<__libcpp_remove_reference_t<_Gp>,
                                            __bind>::value
                                >::type>
       _LIBCUDACXX_INLINE_VISIBILITY
@@ -2844,7 +2861,7 @@ public:
               class = typename enable_if
                                <
                                   is_constructible<_Fd, _Gp>::value &&
-                                  !is_same<typename remove_reference<_Gp>::type,
+                                  !is_same<__libcpp_remove_reference_t<_Gp>,
                                            __bind_r>::value
                                >::type>
       _LIBCUDACXX_INLINE_VISIBILITY
@@ -2907,15 +2924,6 @@ bind(_Fp&& __f, _BoundArgs&&... __bound_args)
 #endif // __cuda_std__
 
 #if _LIBCUDACXX_STD_VER > 14
-
-template <class _Fn, class ..._Args>
-_LIBCUDACXX_INLINE_VISIBILITY
-invoke_result_t<_Fn, _Args...>
-invoke(_Fn&& __f, _Args&&... __args)
-    noexcept(is_nothrow_invocable_v<_Fn, _Args...>)
-{
-    return _CUDA_VSTD::__invoke(_CUDA_VSTD::forward<_Fn>(__f), _CUDA_VSTD::forward<_Args>(__args)...);
-}
 
 template <class _DecayFunc>
 class _LIBCUDACXX_TEMPLATE_VIS __not_fn_imp {
@@ -3100,22 +3108,6 @@ using unwrap_reference_t = typename unwrap_reference<_Tp>::type;
 template <class _Tp>
 using unwrap_ref_decay_t = typename unwrap_ref_decay<_Tp>::type;
 #endif // > C++17
-
-#ifndef __cuda_std__
-
-template <class _Container, class _Predicate>
-inline void __libcpp_erase_if_container( _Container& __c, _Predicate __pred)
-{
-	for (typename _Container::iterator __iter = __c.begin(), __last = __c.end(); __iter != __last;)
-	{
-		if (__pred(*__iter))
-			__iter = __c.erase(__iter);
-		else
-			++__iter;
-	}
-}
-
-#endif
 
 _LIBCUDACXX_END_NAMESPACE_STD
 

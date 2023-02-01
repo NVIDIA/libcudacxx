@@ -69,11 +69,16 @@ struct aggregate {
     double b;
 };
 
+struct small_aggregate {
+    uint8_t a;
+    uint8_t b;
+};
+
 template <class T>
 __host__ __device__
 void test() {
-    cuda::atomic<T> a({42, 1337});
-    cuda::std::atomic<T> b({42, 1337});
+    cuda::atomic<T> a({42, 137});
+    cuda::std::atomic<T> b({42, 137});
     unused(a);
     unused(b);
 }
@@ -84,6 +89,7 @@ int main(int, char**)
   test<cuda::std::pair<double, double>>();
   test<cuda::std::tuple<double, double>>();
   test<aggregate>();
+  test<small_aggregate>();
 
   return 0;
 }

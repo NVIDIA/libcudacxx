@@ -3,6 +3,7 @@
 // Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
 // See https://llvm.org/LICENSE.txt for license information.
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+// SPDX-FileCopyrightText: Copyright (c) 2022 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 //
 //===----------------------------------------------------------------------===//
 
@@ -144,6 +145,11 @@ void test_const_array( const T (&array)[Sz] ) {
 #endif
     }
 
+__device__ static constexpr int arrA [] { 1, 2, 3 };
+#if TEST_STD_VER > 14
+__device__ static constexpr const int c[] = {0,1,2,3,4};
+#endif
+
 int main(int, char**) {
 #if defined(_LIBCUDACXX_HAS_VECTOR)
     cuda::std::vector<int> v; v.push_back(1);
@@ -172,7 +178,6 @@ int main(int, char**) {
     test_const_container ( a, 3 );
     test_const_container ( il, 4 );
 
-    static constexpr int arrA [] { 1, 2, 3 };
     test_const_array ( arrA );
 #if TEST_STD_VER > 11
     constexpr const int *b = cuda::std::cbegin(arrA);
@@ -210,7 +215,6 @@ int main(int, char**) {
     }
 
     {
-        static constexpr const int c[] = {0,1,2,3,4};
 
         static_assert ( *cuda::std::begin(c)   == 0, "" );
         static_assert ( *cuda::std::cbegin(c)  == 0, "" );

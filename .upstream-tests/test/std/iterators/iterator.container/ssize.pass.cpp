@@ -3,6 +3,7 @@
 // Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
 // See https://llvm.org/LICENSE.txt for license information.
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+// SPDX-FileCopyrightText: Copyright (c) 2022 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 //
 //===----------------------------------------------------------------------===//
 
@@ -36,7 +37,7 @@
 struct short_container {
 __host__ __device__
     uint16_t size() const { return 60000; } // not noexcept
-    };
+};
 
 
 template<typename C>
@@ -84,6 +85,8 @@ void test_const_array(const T (&array)[Sz])
     assert ( cuda::std::ssize(array) == Sz );
 }
 
+__device__ static constexpr int arrA [] { 1, 2, 3 };
+
 int main(int, char**)
 {
 #if defined(_LIBCUDACXX_HAS_VECTOR)
@@ -124,7 +127,6 @@ int main(int, char**)
     test_const_container ( sv );
 #endif
 
-    static constexpr int arrA [] { 1, 2, 3 };
     ASSERT_SAME_TYPE(ptrdiff_t, decltype(cuda::std::ssize(arrA)));
     static_assert( cuda::std::is_signed_v<decltype(cuda::std::ssize(arrA))>, "");
     test_const_array ( arrA );
@@ -142,7 +144,9 @@ int main(int, char**)
     static_assert( cuda::std::is_signed_v<                      decltype(cuda::std::ssize(sc))>, "");
     static_assert( cuda::std::numeric_limits<                   decltype(cuda::std::ssize(sc))>::max()  > 60000, "");
     static_assert( cuda::std::numeric_limits<cuda::std::make_signed_t<decltype(cuda::std:: size(sc))>>::max() < 60000, "");
+#ifdef __CUDA_ARCH__
     assert (cuda::std::ssize(sc) == 60000);
+#endif
     LIBCPP_ASSERT_NOT_NOEXCEPT(cuda::std::ssize(sc));
 
   return 0;

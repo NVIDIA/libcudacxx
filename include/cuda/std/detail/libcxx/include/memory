@@ -649,6 +649,8 @@ void* align(size_t alignment, size_t size, void*& ptr, size_t& space);
 */
 #ifndef __cuda_std__
 #include <__config>
+#include <__memory/addressof.h>
+#include <__memory/pointer_traits.h>
 #include <type_traits>
 #include <typeinfo>
 #include <cstddef>
@@ -667,6 +669,9 @@ void* align(size_t alignment, size_t size, void*& ptr, size_t& space);
 #endif
 #include <version>
 #include <__pragma_push>
+#else
+#include "__memory/addressof.h"
+#include "__memory/pointer_traits.h"
 #endif //__cuda_std__
 
 #if defined(_LIBCUDACXX_USE_PRAGMA_GCC_SYSTEM_HEADER)
@@ -725,276 +730,6 @@ public:
     template <class _Up> struct rebind {typedef allocator<_Up> other;};
 };
 
-// pointer_traits
-
-template <class _Tp, class = void>
-struct __has_element_type : false_type {};
-
-template <class _Tp>
-struct __has_element_type<_Tp,
-              typename __void_t<typename _Tp::element_type>::type> : true_type {};
-
-template <class _Ptr, bool = __has_element_type<_Ptr>::value>
-struct __pointer_traits_element_type;
-
-template <class _Ptr>
-struct __pointer_traits_element_type<_Ptr, true>
-{
-    typedef _LIBCUDACXX_NODEBUG_TYPE typename _Ptr::element_type type;
-};
-
-#ifndef _LIBCUDACXX_HAS_NO_VARIADICS
-
-template <template <class, class...> class _Sp, class _Tp, class ..._Args>
-struct __pointer_traits_element_type<_Sp<_Tp, _Args...>, true>
-{
-    typedef _LIBCUDACXX_NODEBUG_TYPE typename _Sp<_Tp, _Args...>::element_type type;
-};
-
-template <template <class, class...> class _Sp, class _Tp, class ..._Args>
-struct __pointer_traits_element_type<_Sp<_Tp, _Args...>, false>
-{
-    typedef _LIBCUDACXX_NODEBUG_TYPE _Tp type;
-};
-
-#else  // _LIBCUDACXX_HAS_NO_VARIADICS
-
-template <template <class> class _Sp, class _Tp>
-struct __pointer_traits_element_type<_Sp<_Tp>, true>
-{
-    typedef typename _Sp<_Tp>::element_type type;
-};
-
-template <template <class> class _Sp, class _Tp>
-struct __pointer_traits_element_type<_Sp<_Tp>, false>
-{
-    typedef _Tp type;
-};
-
-template <template <class, class> class _Sp, class _Tp, class _A0>
-struct __pointer_traits_element_type<_Sp<_Tp, _A0>, true>
-{
-    typedef typename _Sp<_Tp, _A0>::element_type type;
-};
-
-template <template <class, class> class _Sp, class _Tp, class _A0>
-struct __pointer_traits_element_type<_Sp<_Tp, _A0>, false>
-{
-    typedef _Tp type;
-};
-
-template <template <class, class, class> class _Sp, class _Tp, class _A0, class _A1>
-struct __pointer_traits_element_type<_Sp<_Tp, _A0, _A1>, true>
-{
-    typedef typename _Sp<_Tp, _A0, _A1>::element_type type;
-};
-
-template <template <class, class, class> class _Sp, class _Tp, class _A0, class _A1>
-struct __pointer_traits_element_type<_Sp<_Tp, _A0, _A1>, false>
-{
-    typedef _Tp type;
-};
-
-template <template <class, class, class, class> class _Sp, class _Tp, class _A0,
-                                                           class _A1, class _A2>
-struct __pointer_traits_element_type<_Sp<_Tp, _A0, _A1, _A2>, true>
-{
-    typedef typename _Sp<_Tp, _A0, _A1, _A2>::element_type type;
-};
-
-template <template <class, class, class, class> class _Sp, class _Tp, class _A0,
-                                                           class _A1, class _A2>
-struct __pointer_traits_element_type<_Sp<_Tp, _A0, _A1, _A2>, false>
-{
-    typedef _Tp type;
-};
-
-#endif  // _LIBCUDACXX_HAS_NO_VARIADICS
-
-template <class _Tp, class = void>
-struct __has_difference_type : false_type {};
-
-template <class _Tp>
-struct __has_difference_type<_Tp,
-            typename __void_t<typename _Tp::difference_type>::type> : true_type {};
-
-template <class _Ptr, bool = __has_difference_type<_Ptr>::value>
-struct __pointer_traits_difference_type
-{
-    typedef _LIBCUDACXX_NODEBUG_TYPE ptrdiff_t type;
-};
-
-template <class _Ptr>
-struct __pointer_traits_difference_type<_Ptr, true>
-{
-    typedef _LIBCUDACXX_NODEBUG_TYPE typename _Ptr::difference_type type;
-};
-
-template <class _Tp, class _Up>
-struct __has_rebind
-{
-private:
-    struct __two {char __lx; char __lxx;};
-    template <class _Xp> static __two __test(...);
-    template <class _Xp> static char __test(typename _Xp::template rebind<_Up>* = 0);
-public:
-    static const bool value = sizeof(__test<_Tp>(0)) == 1;
-};
-
-template <class _Tp, class _Up, bool = __has_rebind<_Tp, _Up>::value>
-struct __pointer_traits_rebind
-{
-#ifndef _LIBCUDACXX_CXX03_LANG
-    typedef _LIBCUDACXX_NODEBUG_TYPE typename _Tp::template rebind<_Up> type;
-#else
-    typedef _LIBCUDACXX_NODEBUG_TYPE typename _Tp::template rebind<_Up>::other type;
-#endif
-};
-
-#ifndef _LIBCUDACXX_HAS_NO_VARIADICS
-
-template <template <class, class...> class _Sp, class _Tp, class ..._Args, class _Up>
-struct __pointer_traits_rebind<_Sp<_Tp, _Args...>, _Up, true>
-{
-#ifndef _LIBCUDACXX_CXX03_LANG
-    typedef _LIBCUDACXX_NODEBUG_TYPE typename _Sp<_Tp, _Args...>::template rebind<_Up> type;
-#else
-    typedef _LIBCUDACXX_NODEBUG_TYPE typename _Sp<_Tp, _Args...>::template rebind<_Up>::other type;
-#endif
-};
-
-template <template <class, class...> class _Sp, class _Tp, class ..._Args, class _Up>
-struct __pointer_traits_rebind<_Sp<_Tp, _Args...>, _Up, false>
-{
-    typedef _Sp<_Up, _Args...> type;
-};
-
-#else  // _LIBCUDACXX_HAS_NO_VARIADICS
-
-template <template <class> class _Sp, class _Tp, class _Up>
-struct __pointer_traits_rebind<_Sp<_Tp>, _Up, true>
-{
-#ifndef _LIBCUDACXX_CXX03_LANG
-    typedef typename _Sp<_Tp>::template rebind<_Up> type;
-#else
-    typedef typename _Sp<_Tp>::template rebind<_Up>::other type;
-#endif
-};
-
-template <template <class> class _Sp, class _Tp, class _Up>
-struct __pointer_traits_rebind<_Sp<_Tp>, _Up, false>
-{
-    typedef _Sp<_Up> type;
-};
-
-template <template <class, class> class _Sp, class _Tp, class _A0, class _Up>
-struct __pointer_traits_rebind<_Sp<_Tp, _A0>, _Up, true>
-{
-#ifndef _LIBCUDACXX_CXX03_LANG
-    typedef typename _Sp<_Tp, _A0>::template rebind<_Up> type;
-#else
-    typedef typename _Sp<_Tp, _A0>::template rebind<_Up>::other type;
-#endif
-};
-
-template <template <class, class> class _Sp, class _Tp, class _A0, class _Up>
-struct __pointer_traits_rebind<_Sp<_Tp, _A0>, _Up, false>
-{
-    typedef _Sp<_Up, _A0> type;
-};
-
-template <template <class, class, class> class _Sp, class _Tp, class _A0,
-                                         class _A1, class _Up>
-struct __pointer_traits_rebind<_Sp<_Tp, _A0, _A1>, _Up, true>
-{
-#ifndef _LIBCUDACXX_CXX03_LANG
-    typedef typename _Sp<_Tp, _A0, _A1>::template rebind<_Up> type;
-#else
-    typedef typename _Sp<_Tp, _A0, _A1>::template rebind<_Up>::other type;
-#endif
-};
-
-template <template <class, class, class> class _Sp, class _Tp, class _A0,
-                                         class _A1, class _Up>
-struct __pointer_traits_rebind<_Sp<_Tp, _A0, _A1>, _Up, false>
-{
-    typedef _Sp<_Up, _A0, _A1> type;
-};
-
-template <template <class, class, class, class> class _Sp, class _Tp, class _A0,
-                                                class _A1, class _A2, class _Up>
-struct __pointer_traits_rebind<_Sp<_Tp, _A0, _A1, _A2>, _Up, true>
-{
-#ifndef _LIBCUDACXX_CXX03_LANG
-    typedef typename _Sp<_Tp, _A0, _A1, _A2>::template rebind<_Up> type;
-#else
-    typedef typename _Sp<_Tp, _A0, _A1, _A2>::template rebind<_Up>::other type;
-#endif
-};
-
-template <template <class, class, class, class> class _Sp, class _Tp, class _A0,
-                                                class _A1, class _A2, class _Up>
-struct __pointer_traits_rebind<_Sp<_Tp, _A0, _A1, _A2>, _Up, false>
-{
-    typedef _Sp<_Up, _A0, _A1, _A2> type;
-};
-
-#endif  // _LIBCUDACXX_HAS_NO_VARIADICS
-
-template <class _Ptr>
-struct _LIBCUDACXX_TEMPLATE_VIS pointer_traits
-{
-    typedef _Ptr                                                     pointer;
-    typedef typename __pointer_traits_element_type<pointer>::type    element_type;
-    typedef typename __pointer_traits_difference_type<pointer>::type difference_type;
-
-#ifndef _LIBCUDACXX_CXX03_LANG
-    template <class _Up> using rebind = typename __pointer_traits_rebind<pointer, _Up>::type;
-#else
-    template <class _Up> struct rebind
-        {typedef typename __pointer_traits_rebind<pointer, _Up>::type other;};
-#endif  // _LIBCUDACXX_CXX03_LANG
-
-private:
-    struct __nat {};
-public:
-    _LIBCUDACXX_INLINE_VISIBILITY
-    static pointer pointer_to(typename conditional<is_void<element_type>::value,
-                                           __nat, element_type>::type& __r)
-        {return pointer::pointer_to(__r);}
-};
-
-template <class _Tp>
-struct _LIBCUDACXX_TEMPLATE_VIS pointer_traits<_Tp*>
-{
-    typedef _Tp*      pointer;
-    typedef _Tp       element_type;
-    typedef ptrdiff_t difference_type;
-
-#ifndef _LIBCUDACXX_CXX03_LANG
-    template <class _Up> using rebind = _Up*;
-#else
-    template <class _Up> struct rebind {typedef _Up* other;};
-#endif
-
-private:
-    struct __nat {};
-public:
-    _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX17
-    static pointer pointer_to(typename conditional<is_void<element_type>::value,
-                                      __nat, element_type>::type& __r) _NOEXCEPT
-        {return _CUDA_VSTD::addressof(__r);}
-};
-
-template <class _From, class _To>
-struct __rebind_pointer {
-#ifndef _LIBCUDACXX_CXX03_LANG
-    typedef typename pointer_traits<_From>::template rebind<_To>        type;
-#else
-    typedef typename pointer_traits<_From>::template rebind<_To>::other type;
-#endif
-};
-
 // allocator_traits
 
 template <class _Tp, class = void>
@@ -1002,7 +737,7 @@ struct __has_pointer_type : false_type {};
 
 template <class _Tp>
 struct __has_pointer_type<_Tp,
-          typename __void_t<typename _Tp::pointer>::type> : true_type {};
+          __void_t<typename _Tp::pointer>> : true_type {};
 
 namespace __pointer_type_imp
 {
@@ -1024,7 +759,7 @@ struct __pointer_type<_Tp, _Dp, false>
 template <class _Tp, class _Dp>
 struct __pointer_type
 {
-    typedef _LIBCUDACXX_NODEBUG_TYPE typename __pointer_type_imp::__pointer_type<_Tp, typename remove_reference<_Dp>::type>::type type;
+    typedef _LIBCUDACXX_NODEBUG_TYPE typename __pointer_type_imp::__pointer_type<_Tp, __libcpp_remove_reference_t<_Dp>>::type type;
 };
 
 template <class _Tp, class = void>
@@ -1032,7 +767,7 @@ struct __has_const_pointer : false_type {};
 
 template <class _Tp>
 struct __has_const_pointer<_Tp,
-            typename __void_t<typename _Tp::const_pointer>::type> : true_type {};
+            __void_t<typename _Tp::const_pointer>> : true_type {};
 
 template <class _Tp, class _Ptr, class _Alloc, bool = __has_const_pointer<_Alloc>::value>
 struct __const_pointer
@@ -1055,7 +790,7 @@ struct __has_void_pointer : false_type {};
 
 template <class _Tp>
 struct __has_void_pointer<_Tp,
-               typename __void_t<typename _Tp::void_pointer>::type> : true_type {};
+               __void_t<typename _Tp::void_pointer>> : true_type {};
 
 template <class _Ptr, class _Alloc, bool = __has_void_pointer<_Alloc>::value>
 struct __void_pointer
@@ -1078,7 +813,7 @@ struct __has_const_void_pointer : false_type {};
 
 template <class _Tp>
 struct __has_const_void_pointer<_Tp,
-            typename __void_t<typename _Tp::const_void_pointer>::type> : true_type {};
+            __void_t<typename _Tp::const_void_pointer>> : true_type {};
 
 template <class _Ptr, class _Alloc, bool = __has_const_void_pointer<_Alloc>::value>
 struct __const_void_pointer
@@ -1129,7 +864,9 @@ __to_raw_pointer(const _Pointer& __p, _None...) _NOEXCEPT
 {
     return _CUDA_VSTD::__to_raw_pointer(__p.operator->());
 }
+#endif
 
+#if _LIBCUDACXX_STD_VER > 11
 template <class _Tp>
 inline _LIBCUDACXX_INLINE_VISIBILITY constexpr
 _Tp*
@@ -1153,7 +890,7 @@ struct __has_size_type : false_type {};
 
 template <class _Tp>
 struct __has_size_type<_Tp,
-               typename __void_t<typename _Tp::size_type>::type> : true_type {};
+               __void_t<typename _Tp::size_type>> : true_type {};
 
 template <class _Alloc, class _DiffType, bool = __has_size_type<_Alloc>::value>
 struct __size_type
@@ -1172,7 +909,7 @@ struct __has_propagate_on_container_copy_assignment : false_type {};
 
 template <class _Tp>
 struct __has_propagate_on_container_copy_assignment<_Tp,
-    typename __void_t<typename _Tp::propagate_on_container_copy_assignment>::type>
+    __void_t<typename _Tp::propagate_on_container_copy_assignment>>
         : true_type {};
 
 template <class _Alloc, bool = __has_propagate_on_container_copy_assignment<_Alloc>::value>
@@ -1192,7 +929,7 @@ struct __has_propagate_on_container_move_assignment : false_type {};
 
 template <class _Tp>
 struct __has_propagate_on_container_move_assignment<_Tp,
-           typename __void_t<typename _Tp::propagate_on_container_move_assignment>::type>
+           __void_t<typename _Tp::propagate_on_container_move_assignment>>
                : true_type {};
 
 template <class _Alloc, bool = __has_propagate_on_container_move_assignment<_Alloc>::value>
@@ -1212,7 +949,7 @@ struct __has_propagate_on_container_swap : false_type {};
 
 template <class _Tp>
 struct __has_propagate_on_container_swap<_Tp,
-           typename __void_t<typename _Tp::propagate_on_container_swap>::type>
+           __void_t<typename _Tp::propagate_on_container_swap>>
                : true_type {};
 
 template <class _Alloc, bool = __has_propagate_on_container_swap<_Alloc>::value>
@@ -1232,7 +969,7 @@ struct __has_is_always_equal : false_type {};
 
 template <class _Tp>
 struct __has_is_always_equal<_Tp,
-           typename __void_t<typename _Tp::is_always_equal>::type>
+           __void_t<typename _Tp::is_always_equal>>
                : true_type {};
 
 template <class _Alloc, bool = __has_is_always_equal<_Alloc>::value>
@@ -1460,17 +1197,17 @@ template <class _Alloc, class _Pointer, class _Tp, class = void>
 struct __has_construct : std::false_type {};
 
 template <class _Alloc, class _Pointer, class _Tp>
-struct __has_construct<_Alloc, _Pointer, _Tp, typename __void_t<
-    decltype(_CUDA_VSTD::declval<_Alloc>().construct(_CUDA_VSTD::declval<_Pointer>(), _CUDA_VSTD::declval<_Tp>()))
->::type> : std::true_type {};
+struct __has_construct<_Alloc, _Pointer, _Tp, __void_t<
+    decltype(_CUDA_VSTD::declval<_Alloc>().construct(_CUDA_VSTD::declval<_Pointer>(), _CUDA_VSTD::declval<_Tp>()))>> 
+    : std::true_type {};
 
 template <class _Alloc, class _Pointer, class = void>
 struct __has_destroy : false_type {};
 
 template <class _Alloc, class _Pointer>
-struct __has_destroy<_Alloc, _Pointer, typename __void_t<
-    decltype(_CUDA_VSTD::declval<_Alloc>().destroy(_CUDA_VSTD::declval<_Pointer>()))
->::type> : std::true_type {};
+struct __has_destroy<_Alloc, _Pointer, __void_t<
+    decltype(_CUDA_VSTD::declval<_Alloc>().destroy(_CUDA_VSTD::declval<_Pointer>()))>> 
+    : std::true_type {};
 
 template <class _Alloc>
 struct __has_max_size
@@ -1676,8 +1413,8 @@ struct _LIBCUDACXX_TEMPLATE_VIS allocator_traits
         }
 
     template <class _SourceTp, class _DestTp,
-              class _RawSourceTp = typename remove_const<_SourceTp>::type,
-              class _RawDestTp = typename remove_const<_DestTp>::type>
+              class _RawSourceTp = __remove_const_t<_SourceTp>,
+              class _RawDestTp = __remove_const_t<_DestTp>>
         _LIBCUDACXX_INLINE_VISIBILITY
         static
         typename enable_if
@@ -2177,7 +1914,7 @@ struct __compressed_pair_elem {
   _LIBCUDACXX_INLINE_VISIBILITY constexpr __compressed_pair_elem() : __value_() {}
 
   template <class _Up, class = typename enable_if<
-      !is_same<__compressed_pair_elem, typename decay<_Up>::type>::value
+      !is_same<__compressed_pair_elem, __decay_t<_Up>>::value
   >::type>
   _LIBCUDACXX_INLINE_VISIBILITY
   constexpr explicit
@@ -2216,7 +1953,7 @@ struct __compressed_pair_elem<_Tp, _Idx, true> : private _Tp {
   _LIBCUDACXX_INLINE_VISIBILITY constexpr __compressed_pair_elem() = default;
 
   template <class _Up, class = typename enable_if<
-        !is_same<__compressed_pair_elem, typename decay<_Up>::type>::value
+        !is_same<__compressed_pair_elem, __decay_t<_Up>>::value
   >::type>
   _LIBCUDACXX_INLINE_VISIBILITY
   constexpr explicit
@@ -2270,7 +2007,7 @@ public:
   _LIBCUDACXX_INLINE_VISIBILITY
   constexpr __compressed_pair() {}
 
-  template <class _Tp, typename enable_if<!is_same<typename decay<_Tp>::type,
+  template <class _Tp, typename enable_if<!is_same<__decay_t<_Tp>,
                                                    __compressed_pair>::value,
                                           bool>::type = true>
   _LIBCUDACXX_INLINE_VISIBILITY constexpr explicit
@@ -2460,7 +2197,7 @@ private:
       typename __dependent_type<_DeleterSFINAE, _Dummy>::__bad_rval_ref_type;
 
   template <bool _Dummy, class _Deleter = typename __dependent_type<
-                             __identity<deleter_type>, _Dummy>::type>
+                             __type_identity<deleter_type>, _Dummy>::type>
   using _EnableIfDeleterDefaultConstructible _LIBCUDACXX_NODEBUG_TYPE =
       typename enable_if<is_default_constructible<_Deleter>::value &&
                          !is_pointer<_Deleter>::value>::type;
@@ -2591,7 +2328,7 @@ public:
   }
 
   _LIBCUDACXX_INLINE_VISIBILITY
-  typename add_lvalue_reference<_Tp>::type
+  __add_lvalue_reference_t<_Tp>
   operator*() const {
     return *__ptr_.first();
   }
@@ -2675,7 +2412,7 @@ private:
       typename __dependent_type<_DeleterSFINAE, _Dummy>::__bad_rval_ref_type;
 
   template <bool _Dummy, class _Deleter = typename __dependent_type<
-                             __identity<deleter_type>, _Dummy>::type>
+                             __type_identity<deleter_type>, _Dummy>::type>
   using _EnableIfDeleterDefaultConstructible _LIBCUDACXX_NODEBUG_TYPE  =
       typename enable_if<is_default_constructible<_Deleter>::value &&
                          !is_pointer<_Deleter>::value>::type;
@@ -2814,7 +2551,7 @@ public:
   }
 
   _LIBCUDACXX_INLINE_VISIBILITY
-  typename add_lvalue_reference<_Tp>::type
+  __add_lvalue_reference_t<_Tp>
   operator[](size_t __i) const {
     return __ptr_.first()[__i];
   }
@@ -3837,7 +3574,7 @@ public:
     _LIBCUDACXX_INLINE_VISIBILITY
     element_type* get() const _NOEXCEPT {return __ptr_;}
     _LIBCUDACXX_INLINE_VISIBILITY
-    typename add_lvalue_reference<element_type>::type operator*() const _NOEXCEPT
+    __add_lvalue_reference_t<element_type> operator*() const _NOEXCEPT
         {return *__ptr_;}
     _LIBCUDACXX_INLINE_VISIBILITY
     element_type* operator->() const _NOEXCEPT {return __ptr_;}
@@ -3901,7 +3638,7 @@ private:
         __enable_weak_this(const enable_shared_from_this<_Yp>* __e,
                            _OrigPtr* __ptr) _NOEXCEPT
         {
-            typedef typename remove_cv<_Yp>::type _RawYp;
+            typedef __remove_cv_t<_Yp> _RawYp;
             if (__e && __e->__weak_this_.expired())
             {
                 __e->__weak_this_ = shared_ptr<_RawYp>(*this,
@@ -4183,7 +3920,7 @@ shared_ptr<_Tp>::shared_ptr(unique_ptr<_Yp, _Dp> __r,
     {
         typedef typename __shared_ptr_default_allocator<_Yp>::type _AllocT;
         typedef __shared_ptr_pointer<_Yp*,
-                                     reference_wrapper<typename remove_reference<_Dp>::type>,
+                                     reference_wrapper<__libcpp_remove_reference_t<_Dp>>,
                                      _AllocT > _CntrlBlk;
         __cntrl_ = new _CntrlBlk(__r.get(), ref(__r.get_deleter()), _AllocT());
         __enable_weak_this(__r.get(), __r.get());
@@ -5374,16 +5111,6 @@ struct __temp_value {
     };
 #endif
 
-template<typename _Alloc, typename = void, typename = void>
-struct __is_allocator : false_type {};
-
-template<typename _Alloc>
-struct __is_allocator<_Alloc,
-       typename __void_t<typename _Alloc::value_type>::type,
-       typename __void_t<decltype(_CUDA_VSTD::declval<_Alloc&>().allocate(size_t(0)))>::type
-     >
-   : true_type {};
-
 // __builtin_new_allocator -- A non-templated helper for allocating and
 // deallocating memory using __builtin_operator_new and
 // __builtin_operator_delete. It should be used in preference to
@@ -5417,13 +5144,13 @@ struct __builtin_new_allocator {
   }
 
   template <class _Tp>
-  _LIBCUDACXX_NODEBUG _LIBCUDACXX_ALWAYS_INLINE
+  _LIBCUDACXX_NODEBUG_TYPE _LIBCUDACXX_ALWAYS_INLINE
   static __holder_t __allocate_type(size_t __n) {
       return __allocate_bytes(__n * sizeof(_Tp), _LIBCUDACXX_ALIGNOF(_Tp));
   }
 
   template <class _Tp>
-  _LIBCUDACXX_NODEBUG _LIBCUDACXX_ALWAYS_INLINE
+  _LIBCUDACXX_NODEBUG_TYPE _LIBCUDACXX_ALWAYS_INLINE
   static void __deallocate_type(void* __p, size_t __n) _NOEXCEPT {
       __deallocate_bytes(__p, __n * sizeof(_Tp), _LIBCUDACXX_ALIGNOF(_Tp));
   }

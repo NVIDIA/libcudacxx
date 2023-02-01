@@ -544,7 +544,7 @@ template <class ..._Args>
 struct __is_tree_value_type : false_type {};
 
 template <class _One>
-struct __is_tree_value_type<_One> : __is_tree_value_type_imp<typename __uncvref<_One>::type> {};
+struct __is_tree_value_type<_One> : __is_tree_value_type_imp<__remove_cvref_t<_One>> {};
 #endif
 
 template <class _Tp>
@@ -1289,7 +1289,7 @@ public:
     }
 
     template <class _Vp, class = typename enable_if<
-            !is_same<typename __unconstref<_Vp>::type,
+            !is_same<__remove_const_t<_Vp>,
                      __container_value_type
             >::value
         >::type>
@@ -1299,7 +1299,7 @@ public:
     }
 
     template <class _Vp, class = typename enable_if<
-            !is_same<typename __unconstref<_Vp>::type,
+            !is_same<__remove_const_t<_Vp>,
                      __container_value_type
             >::value
         >::type>
@@ -1657,7 +1657,7 @@ __tree<_Tp, _Compare, _Allocator>::__assign_unique(_ForwardIterator __first, _Fo
     typedef typename _ITraits::value_type _ItValueType;
     static_assert((is_same<_ItValueType, __container_value_type>::value),
                   "__assign_unique may only be called with the containers value type");
-    static_assert(__is_forward_iterator<_ForwardIterator>::value,
+    static_assert(__is_cpp17_forward_iterator<_ForwardIterator>::value,
                   "__assign_unique requires a forward iterator");
     if (size() != 0)
     {

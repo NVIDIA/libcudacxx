@@ -10,6 +10,9 @@
 
 // is_literal_type
 
+// is_literal_type has been deprecated in C++17
+#pragma nv_diag_suppress 1215
+
 #include <cuda/std/type_traits>
 #include <cuda/std/cstddef>       // for cuda::std::nullptr_t
 #include "test_macros.h"
