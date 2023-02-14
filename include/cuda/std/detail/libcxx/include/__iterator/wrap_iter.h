@@ -15,6 +15,7 @@
 #include <__config>
 #endif // __cuda_std__
 
+#include "../__assert"
 #include "../__debug"
 #include "../__iterator/iterator_traits.h"
 #include "../__memory/addressof.h"

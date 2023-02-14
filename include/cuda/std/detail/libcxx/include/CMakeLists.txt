@@ -1,4 +1,6 @@
 set(files
+  __assert
+  __availability
   __bit_reference
   __bsd_locale_defaults.h
   __bsd_locale_fallbacks.h
@@ -226,6 +228,7 @@ set(files
   __utility/forward.h
   __utility/move.h
   __utility/swap.h
+  __verbose_abort
   algorithm
   any
   array
