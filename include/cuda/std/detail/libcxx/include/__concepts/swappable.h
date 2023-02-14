@@ -56,7 +56,13 @@ _LIBCUDACXX_BEGIN_NAMESPACE_CPO(__swap)
 
   struct __fn;
 
-#pragma nv_diag_suppress 2642
+#if defined(_LIBCUDACXX_COMPILER_NVCC)
+#  if (CUDART_VERSION >= 11050)
+#    pragma nv_diag_suppress 2642
+#  else
+#    pragma diag_suppress 2642
+#  endif
+#endif
   template<class _Tp, class _Up, size_t _Size>
   concept __swappable_arrays =
     !__unqualified_swappable_with<_Tp(&)[_Size], _Up(&)[_Size]> &&
@@ -64,7 +70,13 @@ _LIBCUDACXX_BEGIN_NAMESPACE_CPO(__swap)
     requires(_Tp(& __t)[_Size], _Up(& __u)[_Size], const __fn& __swap) {
       __swap(__t[0], __u[0]);
     };
-#pragma nv_diag_default 2642
+#if defined(_LIBCUDACXX_COMPILER_NVCC)
+#  if (CUDART_VERSION >= 11050)
+#    pragma nv_diag_default 2642
+#  else
+#    pragma diag_default 2642
+#  endif
+#endif
 
   template<class _Tp>
   concept __exchangeable =
