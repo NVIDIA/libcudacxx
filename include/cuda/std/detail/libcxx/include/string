@@ -501,6 +501,7 @@ basic_string<char32_t> operator "" s( const char32_t *str, size_t len ); // C++1
 */
 
 #include <__config>
+#include "__fwd/string.h"
 #include <string_view>
 #include <iosfwd>
 #include <cstring>
