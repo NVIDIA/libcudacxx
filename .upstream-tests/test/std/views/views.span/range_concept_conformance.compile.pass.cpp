@@ -18,14 +18,11 @@
 
 using range = cuda::std::span<int>;
 
-#ifdef _LIBCUDACXX_HAS_RANGES
 static_assert(cuda::std::same_as<cuda::std::ranges::iterator_t<range>, range::iterator>);
 static_assert(cuda::std::ranges::common_range<range>);
 static_assert(cuda::std::ranges::random_access_range<range>);
 static_assert(cuda::std::ranges::contiguous_range<range>);
-#endif
 static_assert(cuda::std::ranges::view<range> && cuda::std::ranges::enable_view<range>);
-#ifdef _LIBCUDACXX_HAS_RANGES
 static_assert(cuda::std::ranges::sized_range<range>);
 static_assert(cuda::std::ranges::borrowed_range<range>);
 static_assert(cuda::std::ranges::viewable_range<range>);
@@ -34,13 +31,10 @@ static_assert(cuda::std::same_as<cuda::std::ranges::iterator_t<range const>, ran
 static_assert(cuda::std::ranges::common_range<range const>);
 static_assert(cuda::std::ranges::random_access_range<range const>);
 static_assert(cuda::std::ranges::contiguous_range<range const>);
-#endif
 static_assert(!cuda::std::ranges::view<range const> && !cuda::std::ranges::enable_view<range const>);
-#ifdef _LIBCUDACXX_HAS_RANGES
 static_assert(cuda::std::ranges::sized_range<range const>);
 static_assert(cuda::std::ranges::borrowed_range<range const>);
 static_assert(cuda::std::ranges::viewable_range<range const>);
-#endif
 
 int main(int, char**)
 {
