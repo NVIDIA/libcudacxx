@@ -152,6 +152,7 @@ set(files
   __ranges/empty_view.h
   __ranges/enable_borrowed_range.h
   __ranges/enable_view.h
+  __ranges/iota_view.h
   __ranges/owning_view.h
   __ranges/range_adaptor.h
   __ranges/ranges_operations.h
