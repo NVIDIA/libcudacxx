@@ -392,6 +392,10 @@ inline void DoNotOptimize(Tp const& value) {
     return v; \
   }
 
+template <typename T>
+__host__ __device__
+constexpr bool unused(T &&) { return true; }  
+
 #if defined(__GNUC__)
 #pragma GCC diagnostic pop
 #endif
