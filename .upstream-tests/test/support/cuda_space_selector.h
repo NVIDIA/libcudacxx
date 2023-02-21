@@ -7,6 +7,7 @@
 //
 //===----------------------------------------------------------------------===//
 
+#include <cuda/std/cassert>
 #include <cuda/std/cstddef>
 
 #if defined(__CUDACC__) && !defined(__NVCOMPILER)
