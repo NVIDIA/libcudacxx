@@ -1,5 +1,11 @@
 set(files
   __assert
+  __algorithm/comp_ref_type.h
+  __algorithm/comp.h
+  __algorithm/min_element.h
+  __algorithm/min.h
+  __algorithm/ranges_min_element.h
+  __algorithm/ranges_min.h
   __algorithm/swap_ranges.h
   __algorithm/unwrap_iter.h
   __availability
