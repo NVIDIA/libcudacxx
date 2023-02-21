@@ -24,9 +24,7 @@
 #include <cuda/std/tuple>
 #include <cuda/std/cassert>
 
-template <typename T>
-__host__ __device__
-constexpr bool unused(T &&) {return true;}
+#include "test_macros.h"
 
 class MoveOnly
 {

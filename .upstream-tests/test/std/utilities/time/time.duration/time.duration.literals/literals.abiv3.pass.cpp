@@ -19,10 +19,6 @@
 #include <cuda/std/cassert>
 
 #include "test_macros.h"
-template <typename T>
-__host__ __device__
-constexpr bool unused(T &&) {return true;}
-
 int main(int, char**)
 {
     using namespace cuda::std::literals::chrono_literals;
