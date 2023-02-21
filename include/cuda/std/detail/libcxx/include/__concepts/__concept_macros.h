@@ -244,11 +244,15 @@
 #define _LIBCUDACXX_TEMPLATE(...)                                              \
   template <__VA_ARGS__> _LIBCUDACXX_PP_EXPAND /**/
 #define _LIBCUDACXX_AND &&                     /**/
+#define _LIBCUDACXX_TRAILING_REQUIRES(...)                                     \
+  -> __VA_ARGS__ _LIBCUDACXX_PP_EXPAND
 #else
 #define _LIBCUDACXX_TEMPLATE(...)                                              \
   template <__VA_ARGS__ _LIBCUDACXX_TEMPLATE_SFINAE_AUX_ /**/
 #define _LIBCUDACXX_AND                                                        \
   &&_LIBCUDACXX_true_, int > = 0, _Concept::_Enable_if_t < /**/
+#define _LIBCUDACXX_TRAILING_REQUIRES(...)                                     \
+  -> _Concept::_Requires_t<__VA_ARGS__ _LIBCUDACXX_TRAILING_REQUIRES_AUX_
 #endif
 
 #define _LIBCUDACXX_TEMPLATE_SFINAE(...)                                       \
@@ -260,6 +264,8 @@
                                     __VA_ARGS__) &&                            \
              _LIBCUDACXX_true_,                                                \
          int > = 0 > /**/
+#define _LIBCUDACXX_TRAILING_REQUIRES_AUX_(...)                                \
+  , _LIBCUDACXX_PP_CAT(_LIBCUDACXX_TEMPLATE_SFINAE_AUX_3_, __VA_ARGS__)> /**/
 #define _LIBCUDACXX_TEMPLATE_SFINAE_AUX_3_requires
 
 namespace _Concept {
@@ -269,6 +275,9 @@ template <> struct _Select<true> { template <class _Tp> using type = _Tp; };
 
 template <bool _Bp, class _Tp = void>
 using _Enable_if_t = typename _Select<_Bp>::template type<_Tp>;
+
+template <class _Tp, bool _Bp>
+using _Requires_t = typename _Select<_Bp>::template type<_Tp>;
 
 template <typename...> struct _Tag;
 template <class>

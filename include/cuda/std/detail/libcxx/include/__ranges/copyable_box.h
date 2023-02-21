@@ -79,7 +79,7 @@ _LIBCUDACXX_BEGIN_NAMESPACE_RANGES_ABI
 
     template<class ..._Args>
     _LIBCUDACXX_HIDE_FROM_ABI _LIBCUDACXX_INLINE_VISIBILITY
-    constexpr explicit __copyable_box_destruct_base(in_place_t, _Args&& ...__args)
+    constexpr __copyable_box_destruct_base(in_place_t, _Args&& ...__args)
       noexcept(is_nothrow_constructible_v<_Tp, _Args...>)
       : __val_(_CUDA_VSTD::forward<_Args>(__args)...), __engaged_(true)
     { }
@@ -110,7 +110,7 @@ _LIBCUDACXX_BEGIN_NAMESPACE_RANGES_ABI
 
     template<class ..._Args>
     _LIBCUDACXX_HIDE_FROM_ABI _LIBCUDACXX_INLINE_VISIBILITY
-    constexpr explicit __copyable_box_destruct_base(in_place_t, _Args&& ...__args)
+    constexpr __copyable_box_destruct_base(in_place_t, _Args&& ...__args)
       noexcept(is_nothrow_constructible_v<_Tp, _Args...>)
       : __val_(_CUDA_VSTD::forward<_Args>(__args)...), __engaged_(true)
     { }
