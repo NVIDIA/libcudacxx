@@ -36,6 +36,7 @@ set(files
   __functional/identity.h
   __functional/invoke.h
   __functional/operations.h
+  __functional/pointer_to_unary_function.h
   __functional/reference_wrapper.h
   __functional/unary_function.h
   __functional/unary_negate.h
