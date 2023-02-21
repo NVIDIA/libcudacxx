@@ -517,6 +517,7 @@ POLICY:  For non-variadic implementations, the number of arguments is limited
 #include "__functional/bind.h"
 #include "__functional/binder1st.h"
 #include "__functional/binder2nd.h"
+#include "__functional/compose.h"
 #include "__functional/hash.h"
 #include "__functional/identity.h"
 #include "__functional/invoke.h"
