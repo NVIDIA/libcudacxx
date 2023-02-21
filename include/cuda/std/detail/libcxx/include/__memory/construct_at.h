@@ -57,6 +57,9 @@ _LIBCUDACXX_BEGIN_NAMESPACE_STD
 
 #if _LIBCUDACXX_STD_VER > 14
 
+#if defined(__CUDACC__) && !defined(__NVCOMPILER)
+#pragma nv_exec_check_disable
+#endif
 template <class _Tp, class... _Args, class = decltype(::new(_CUDA_VSTD::declval<void*>()) _Tp(_CUDA_VSTD::declval<_Args>()...))>
 _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX17 _Tp* construct_at(_Tp* __location, _Args&&... __args) {
   _LIBCUDACXX_ASSERT(__location != nullptr, "null pointer given to construct_at");
