@@ -25,11 +25,11 @@
 #endif
 
 template <class It>
-class output_iterator
+class cpp17_output_iterator
 {
     It it_;
 
-    template <class U> friend class output_iterator;
+    template <class U> friend class cpp17_output_iterator;
 public:
     typedef          cuda::std::output_iterator_tag                  iterator_category;
     typedef void                                               value_type;
@@ -41,21 +41,21 @@ __host__ __device__
     It base() const {return it_;}
 
 __host__ __device__
-    output_iterator () {}
+    cpp17_output_iterator () {}
 __host__ __device__
-    explicit output_iterator(It it) : it_(it) {}
+    explicit cpp17_output_iterator(It it) : it_(it) {}
     template <class U>
 __host__ __device__
-        output_iterator(const output_iterator<U>& u) :it_(u.it_) {}
+        cpp17_output_iterator(const cpp17_output_iterator<U>& u) :it_(u.it_) {}
 
 __host__ __device__
     reference operator*() const {return *it_;}
 
 __host__ __device__
-    output_iterator& operator++() {++it_; return *this;}
+    cpp17_output_iterator& operator++() {++it_; return *this;}
 __host__ __device__
-    output_iterator operator++(int)
-        {output_iterator tmp(*this); ++(*this); return tmp;}
+    cpp17_output_iterator operator++(int)
+        {cpp17_output_iterator tmp(*this); ++(*this); return tmp;}
 
     template <class T>
 __host__ __device__
@@ -64,12 +64,12 @@ __host__ __device__
 
 template <class It,
     class ItTraits = It>
-class input_iterator
+class cpp17_input_iterator
 {
     typedef cuda::std::iterator_traits<ItTraits> Traits;
     It it_;
 
-    template <class U, class T> friend class input_iterator;
+    template <class U, class T> friend class cpp17_input_iterator;
 public:
     typedef          cuda::std::input_iterator_tag                   iterator_category;
     typedef typename Traits::value_type                        value_type;
@@ -81,12 +81,12 @@ __host__ __device__
     TEST_CONSTEXPR_CXX14 It base() const {return it_;}
 
 __host__ __device__
-    TEST_CONSTEXPR_CXX14 input_iterator() : it_() {}
+    TEST_CONSTEXPR_CXX14 cpp17_input_iterator() : it_() {}
 __host__ __device__
-    explicit TEST_CONSTEXPR_CXX14 input_iterator(It it) : it_(it) {}
+    explicit TEST_CONSTEXPR_CXX14 cpp17_input_iterator(It it) : it_(it) {}
     template <class U, class T>
 __host__ __device__
-        TEST_CONSTEXPR_CXX14 input_iterator(const input_iterator<U, T>& u) :it_(u.it_) {}
+        TEST_CONSTEXPR_CXX14 cpp17_input_iterator(const cpp17_input_iterator<U, T>& u) :it_(u.it_) {}
 
 __host__ __device__
     TEST_CONSTEXPR_CXX14 reference operator*() const {return *it_;}
@@ -94,16 +94,16 @@ __host__ __device__
     TEST_CONSTEXPR_CXX14 pointer operator->() const {return it_;}
 
 __host__ __device__
-    TEST_CONSTEXPR_CXX14 input_iterator& operator++() {++it_; return *this;}
+    TEST_CONSTEXPR_CXX14 cpp17_input_iterator& operator++() {++it_; return *this;}
 __host__ __device__
-    TEST_CONSTEXPR_CXX14 input_iterator operator++(int)
-        {input_iterator tmp(*this); ++(*this); return tmp;}
+    TEST_CONSTEXPR_CXX14 cpp17_input_iterator operator++(int)
+        {cpp17_input_iterator tmp(*this); ++(*this); return tmp;}
 
 __host__ __device__
-    friend TEST_CONSTEXPR_CXX14 bool operator==(const input_iterator& x, const input_iterator& y)
+    friend TEST_CONSTEXPR_CXX14 bool operator==(const cpp17_input_iterator& x, const cpp17_input_iterator& y)
         {return x.it_ == y.it_;}
 __host__ __device__
-    friend TEST_CONSTEXPR_CXX14 bool operator!=(const input_iterator& x, const input_iterator& y)
+    friend TEST_CONSTEXPR_CXX14 bool operator!=(const cpp17_input_iterator& x, const cpp17_input_iterator& y)
         {return !(x == y);}
 
     template <class T>
@@ -114,7 +114,7 @@ template <class T, class TV, class U, class UV>
 __host__ __device__
 inline
 bool
-operator==(const input_iterator<T, TV>& x, const input_iterator<U, UV>& y)
+operator==(const cpp17_input_iterator<T, TV>& x, const cpp17_input_iterator<U, UV>& y)
 {
     return x.base() == y.base();
 }
@@ -123,7 +123,7 @@ template <class T, class TV, class U, class UV>
 __host__ __device__
 inline
 bool
-operator!=(const input_iterator<T, TV>& x, const input_iterator<U, UV>& y)
+operator!=(const cpp17_input_iterator<T, TV>& x, const cpp17_input_iterator<U, UV>& y)
 {
     return !(x == y);
 }
@@ -383,11 +383,11 @@ operator-(const random_access_iterator<T>& x, const random_access_iterator<U>& y
 
 template <class Iter>
 __host__ __device__
-inline TEST_CONSTEXPR_CXX14 Iter base(output_iterator<Iter> i) { return i.base(); }
+inline TEST_CONSTEXPR_CXX14 Iter base(cpp17_output_iterator<Iter> i) { return i.base(); }
 
 template <class Iter>
 __host__ __device__
-inline TEST_CONSTEXPR_CXX14 Iter base(input_iterator<Iter> i) { return i.base(); }
+inline TEST_CONSTEXPR_CXX14 Iter base(cpp17_input_iterator<Iter> i) { return i.base(); }
 
 template <class Iter>
 __host__ __device__
