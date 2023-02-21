@@ -26,6 +26,7 @@
 
 #include "../__fwd/array.h"
 #include "../__fwd/pair.h"
+#include "../__fwd/subrange.h"
 #include "../__fwd/tuple.h"
 #include "../__tuple/tuple_element.h"
 #include "../__tuple/tuple_size.h"
@@ -72,6 +73,21 @@ namespace std {
     template<size_t _Ip, class... _Tp>
     struct tuple_element<_Ip, _CUDA_VSTD::tuple<_Tp...>>
       : _CUDA_VSTD::tuple_element<_Ip, _CUDA_VSTD::tuple<_Tp...>>
+    {};
+
+    template<class _Ip, class _Sp, _CUDA_VRANGES::subrange_kind _Kp>
+    struct tuple_size<_CUDA_VRANGES::subrange<_Ip, _Sp, _Kp>>
+      : _CUDA_VSTD::tuple_size<_CUDA_VRANGES::subrange<_Ip, _Sp, _Kp>>
+    {};
+
+    template<size_t _Idx, class _Ip, class _Sp, _CUDA_VRANGES::subrange_kind _Kp>
+    struct tuple_element<_Idx, _CUDA_VRANGES::subrange<_Ip, _Sp, _Kp>>
+      : _CUDA_VSTD::tuple_element<_Idx, _CUDA_VRANGES::subrange<_Ip, _Sp, _Kp>>
+    {};
+
+    template<size_t _Idx, class _Ip, class _Sp, _CUDA_VRANGES::subrange_kind _Kp>
+    struct tuple_element<_Idx, const _CUDA_VRANGES::subrange<_Ip, _Sp, _Kp>>
+      : _CUDA_VSTD::tuple_element<_Idx, _CUDA_VRANGES::subrange<_Ip, _Sp, _Kp>>
     {};
 }
 #endif // _LIBCUDACXX_STD_VER > 14

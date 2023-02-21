@@ -36,7 +36,7 @@ concept convertible_to =
   };
 
 #elif _LIBCUDACXX_STD_VER > 11
-
+#pragma nv_diag_suppress 171 
 // We cannot put this conversion check with the other constraint, as types with deleted operator will break here
 template<class _From, class _To>
 _LIBCUDACXX_CONCEPT_FRAGMENT(
@@ -44,6 +44,7 @@ _LIBCUDACXX_CONCEPT_FRAGMENT(
   requires()(
     static_cast<_To>(_CUDA_VSTD::declval<_From>())
   ));
+#pragma nv_diag_default 171
 
 template<class _From, class _To>
 _LIBCUDACXX_CONCEPT __test_conversion = _LIBCUDACXX_FRAGMENT(__test_conversion_, _From, _To);

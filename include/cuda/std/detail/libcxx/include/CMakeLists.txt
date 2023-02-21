@@ -75,6 +75,7 @@ set(files
   __fwd/get.h
   __fwd/hash.h
   __fwd/pair.h
+  __fwd/subrange.h
   __fwd/tuple.h
   __hash_table
   __iterator/access.h
@@ -148,6 +149,7 @@ set(files
   __ranges/rbegin.h
   __ranges/rend.h
   __ranges/size.h
+  __ranges/subrange.h
   __ranges/view_interface.h
   __split_buffer
   __sso_allocator
@@ -161,6 +163,7 @@ set(files
   __tuple/structured_bindings.h
   __tuple/tuple_element.h
   __tuple/tuple_indices.h
+  __tuple/tuple_like_ext.h
   __tuple/tuple_like.h
   __tuple/tuple_size.h
   __tuple/tuple_types.h
