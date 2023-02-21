@@ -35,6 +35,7 @@ set(files
   __functional/operations.h
   __functional/reference_wrapper.h
   __functional/unary_function.h
+  __functional/unary_negate.h
   __functional/unwrap_ref.h
   __functional/weak_result_type.h
   __functional_03
