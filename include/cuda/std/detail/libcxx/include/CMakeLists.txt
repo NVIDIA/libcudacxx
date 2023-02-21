@@ -147,6 +147,7 @@ set(files
   __ranges/enable_borrowed_range.h
   __ranges/enable_view.h
   __ranges/ranges_operations.h
+  __ranges/ref_view.h
   __ranges/rbegin.h
   __ranges/rend.h
   __ranges/size.h
