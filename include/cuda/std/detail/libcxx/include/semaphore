@@ -447,6 +447,8 @@ _LIBCUDACXX_END_NAMESPACE_STD
 
 #ifndef __cuda_std__
 #include <__pragma_pop>
+#else
+#include "__cuda/semaphore.h"
 #endif //__cuda_std__
 
 #endif //_LIBCUDACXX_SEMAPHORE
