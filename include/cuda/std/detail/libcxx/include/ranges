@@ -312,6 +312,7 @@ namespace std {
 #include <version>
 #endif // __cuda_std__
 
+#include "__ranges/access.h"
 #include "__ranges/enable_borrowed_range.h"
 #include "__ranges/enable_view.h"
 
