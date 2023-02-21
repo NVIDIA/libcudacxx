@@ -314,6 +314,7 @@ namespace std {
 
 #include "__ranges/access.h"
 #include "__ranges/all.h"
+#include "__ranges/common_view.h"
 #include "__ranges/concepts.h"
 #include "__ranges/counted.h"
 #include "__ranges/dangling.h"

@@ -12,6 +12,11 @@
 // template<input_iterator I, class S>
 //   struct iterator_traits<common_iterator<I, S>>;
 
+// clang complains about _LIBCUDACXX_NO_CFI on addressoff for builtin pointer types
+#if defined(__clang__)
+#pragma clang diagnostic ignored "-Wignored-attributes"
+#endif
+
 #include <cuda/std/iterator>
 
 #include <cuda/std/cstddef>
