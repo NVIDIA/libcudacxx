@@ -141,6 +141,7 @@ set(files
   __ranges/enable_borrowed_range.h
   __ranges/enable_view.h
   __ranges/ranges_operations.h
+  __ranges/rbegin.h
   __split_buffer
   __sso_allocator
   __std_stream
