@@ -1,16 +1,18 @@
-// -*- C++ -*-
 //===----------------------------------------------------------------------===//
 //
 // Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
 // See https://llvm.org/LICENSE.txt for license information.
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+// SPDX-FileCopyrightText: Copyright (c) 2022 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 //
+//===----------------------------------------------------------------------===//
 //===----------------------------------------------------------------------===//
 #ifndef SUPPORT_POISONED_HASH_HELPER_H
 #define SUPPORT_POISONED_HASH_HELPER_H
 
-#include <type_traits>
 #include <cassert>
+#include <type_traits>
+#include <utility>
 
 #include "test_macros.h"
 #include "test_workarounds.h"
@@ -23,10 +25,10 @@ template <class ...Args> struct TypeList;
 
 // Test that the specified Hash meets the requirements of an enabled hash
 template <class Hash, class Key, class InputKey = Key>
-void test_hash_enabled(InputKey const& key = InputKey{});
+TEST_CONSTEXPR_CXX20 void test_hash_enabled(InputKey const& key = InputKey{});
 
 template <class T, class InputKey = T>
-void test_hash_enabled_for_type(InputKey const& key = InputKey{}) {
+TEST_CONSTEXPR_CXX20 void test_hash_enabled_for_type(InputKey const& key = InputKey{}) {
   return test_hash_enabled<std::hash<T>, T, InputKey>(key);
 }
 
@@ -56,7 +58,9 @@ using LibraryHashTypes = TypeList<
       char,
       signed char,
       unsigned char,
+#ifndef TEST_HAS_NO_WIDE_CHARACTERS
       wchar_t,
+#endif
 #ifndef _LIBCUDACXX_HAS_NO_UNICODE_CHARS
       char16_t,
       char32_t,
@@ -76,12 +80,8 @@ using LibraryHashTypes = TypeList<
       float,
       double,
       long double,
-#if TEST_STD_VER >= 14
-      // Enum types
       PoisonedHashDetail::Enum,
       PoisonedHashDetail::EnumClass,
-#endif
-      // pointer types
       void*,
       void const*,
       PoisonedHashDetail::Class*
@@ -117,18 +117,22 @@ struct ConvertibleTo {
   operator To const&&() const && { return std::move(to); }
 };
 
-template <class HashExpr,
-         class Res = typename std::result_of<HashExpr>::type>
+template <class Hasher, class Key, class Res = decltype(std::declval<Hasher&>()(std::declval<Key>()))>
 constexpr bool can_hash(int) {
   return std::is_same<Res, size_t>::value;
 }
-template <class> constexpr bool can_hash(long) { return false; }
-template <class T> constexpr bool can_hash() { return can_hash<T>(0); }
-
+template <class, class>
+constexpr bool can_hash(long) {
+  return false;
+}
+template <class Hasher, class Key>
+constexpr bool can_hash() {
+  return can_hash<Hasher, Key>(0);
+}
 } // namespace PoisonedHashDetail
 
 template <class Hash, class Key, class InputKey>
-void test_hash_enabled(InputKey const& key) {
+TEST_CONSTEXPR_CXX20 void test_hash_enabled(InputKey const& key) {
   using namespace PoisonedHashDetail;
 
   static_assert(std::is_destructible<Hash>::value, "");
@@ -146,21 +150,21 @@ void test_hash_enabled(InputKey const& key) {
 #endif
 
   // Hashable requirements
-  static_assert(can_hash<Hash(Key&)>(), "");
-  static_assert(can_hash<Hash(Key const&)>(), "");
-  static_assert(can_hash<Hash(Key&&)>(), "");
-  static_assert(can_hash<Hash const&(Key&)>(), "");
-  static_assert(can_hash<Hash const&(Key const&)>(), "");
-  static_assert(can_hash<Hash const&(Key&&)>(), "");
+  static_assert(can_hash<Hash, Key&>(), "");
+  static_assert(can_hash<Hash, Key const&>(), "");
+  static_assert(can_hash<Hash, Key&&>(), "");
+  static_assert(can_hash<Hash const, Key&>(), "");
+  static_assert(can_hash<Hash const, Key const&>(), "");
+  static_assert(can_hash<Hash const, Key&&>(), "");
 
-  static_assert(can_hash<Hash(ConvertibleToSimple<Key>&)>(), "");
-  static_assert(can_hash<Hash(ConvertibleToSimple<Key> const&)>(), "");
-  static_assert(can_hash<Hash(ConvertibleToSimple<Key>&&)>(), "");
+  static_assert(can_hash<Hash, ConvertibleToSimple<Key>&>(), "");
+  static_assert(can_hash<Hash, ConvertibleToSimple<Key> const&>(), "");
+  static_assert(can_hash<Hash, ConvertibleToSimple<Key>&&>(), "");
 
-  static_assert(can_hash<Hash(ConvertibleTo<Key>&)>(), "");
-  static_assert(can_hash<Hash(ConvertibleTo<Key> const&)>(), "");
-  static_assert(can_hash<Hash(ConvertibleTo<Key> &&)>(), "");
-  static_assert(can_hash<Hash(ConvertibleTo<Key> const&&)>(), "");
+  static_assert(can_hash<Hash, ConvertibleTo<Key>&>(), "");
+  static_assert(can_hash<Hash, ConvertibleTo<Key> const&>(), "");
+  static_assert(can_hash<Hash, ConvertibleTo<Key>&&>(), "");
+  static_assert(can_hash<Hash, ConvertibleTo<Key> const&&>(), "");
 
   const Hash h{};
   assert(h(key) == h(key));
@@ -185,21 +189,21 @@ void test_hash_disabled() {
     >::value, "");
 
   // Hashable requirements
-  static_assert(!can_hash<Hash(Key&)>(), "");
-  static_assert(!can_hash<Hash(Key const&)>(), "");
-  static_assert(!can_hash<Hash(Key&&)>(), "");
-  static_assert(!can_hash<Hash const&(Key&)>(), "");
-  static_assert(!can_hash<Hash const&(Key const&)>(), "");
-  static_assert(!can_hash<Hash const&(Key&&)>(), "");
+  static_assert(!can_hash<Hash, Key&>(), "");
+  static_assert(!can_hash<Hash, Key const&>(), "");
+  static_assert(!can_hash<Hash, Key&&>(), "");
+  static_assert(!can_hash<Hash const, Key&>(), "");
+  static_assert(!can_hash<Hash const, Key const&>(), "");
+  static_assert(!can_hash<Hash const, Key&&>(), "");
 
-  static_assert(!can_hash<Hash(ConvertibleToSimple<Key>&)>(), "");
-  static_assert(!can_hash<Hash(ConvertibleToSimple<Key> const&)>(), "");
-  static_assert(!can_hash<Hash(ConvertibleToSimple<Key>&&)>(), "");
+  static_assert(!can_hash<Hash, ConvertibleToSimple<Key>&>(), "");
+  static_assert(!can_hash<Hash, ConvertibleToSimple<Key> const&>(), "");
+  static_assert(!can_hash<Hash, ConvertibleToSimple<Key>&&>(), "");
 
-  static_assert(!can_hash<Hash(ConvertibleTo<Key>&)>(), "");
-  static_assert(!can_hash<Hash(ConvertibleTo<Key> const&)>(), "");
-  static_assert(!can_hash<Hash(ConvertibleTo<Key> &&)>(), "");
-  static_assert(!can_hash<Hash(ConvertibleTo<Key> const&&)>(), "");
+  static_assert(!can_hash<Hash, ConvertibleTo<Key>&>(), "");
+  static_assert(!can_hash<Hash, ConvertibleTo<Key> const&>(), "");
+  static_assert(!can_hash<Hash, ConvertibleTo<Key>&&>(), "");
+  static_assert(!can_hash<Hash, ConvertibleTo<Key> const&&>(), "");
 }
 
 
