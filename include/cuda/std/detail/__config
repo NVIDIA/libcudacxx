@@ -227,4 +227,6 @@
 #  define _LIBCUDACXX_CPO_ACCESSIBILITY
 #endif
 
+#define _LIBCUDACXX_HAS_NO_INCOMPLETE_RANGES
+
 #endif //__cuda_std__
