@@ -138,6 +138,7 @@ set(files
   __node_handle
   __nullptr
   __ranges/enable_borrowed_range.h
+  __ranges/enable_view.h
   __ranges/ranges_operations.h
   __split_buffer
   __sso_allocator
@@ -402,6 +403,7 @@ set(files
   ostream
   queue
   random
+  ranges
   ratio
   regex
   scoped_allocator
