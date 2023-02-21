@@ -215,6 +215,17 @@
 #undef _LIBCUDACXX_END_NAMESPACE_RANGES_ABI
 #define _LIBCUDACXX_END_NAMESPACE_RANGES_ABI }
 
+// redefine namespace std::ranges::views
+#undef _LIBCUDACXX_BEGIN_NAMESPACE_VIEWS
+#define _LIBCUDACXX_BEGIN_NAMESPACE_VIEWS \
+   namespace cuda { namespace std { namespace ranges { namespace views { inline namespace _LIBCUDACXX_CUDA_ABI_NAMESPACE {
+
+#undef _LIBCUDACXX_END_NAMESPACE_VIEWS
+#define _LIBCUDACXX_END_NAMESPACE_VIEWS } } } } }
+
+#undef _CUDA_VIEWS
+#define _CUDA_VIEWS ::cuda::std::ranges::views::_LIBCUDACXX_CUDA_ABI_NAMESPACE
+
 #undef _LIBCUDACXX_BEGIN_NAMESPACE_CPO
 #define _LIBCUDACXX_BEGIN_NAMESPACE_CPO(_CPO) namespace _CPO { _LIBCUDACXX_BEGIN_NAMESPACE_RANGES_ABI
 
