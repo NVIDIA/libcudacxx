@@ -1,6 +1,7 @@
 set(files
   __assert
   __algorithm/swap_ranges.h
+  __algorithm/unwrap_iter.h
   __availability
   __bit_reference
   __bsd_locale_defaults.h
