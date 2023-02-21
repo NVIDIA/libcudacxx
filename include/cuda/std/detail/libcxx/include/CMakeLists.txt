@@ -90,6 +90,7 @@ set(files
   __iterator/advance.h
   __iterator/back_insert_iterator.h
   __iterator/bounded_iterator.h
+  __iterator/common_iterator.h
   __iterator/concepts.h
   __iterator/counted_iterator.h
   __iterator/data.h
@@ -122,6 +123,7 @@ set(files
   __iterator/size.h
   __iterator/sortable.h
   __iterator/unreachable_sentinel.h
+  __iterator/variant_like.h
   __iterator/wrap_iter.h
   __libcpp_version
   __locale
