@@ -61,6 +61,7 @@ set(files
   __functional/perfect_forward.h
   __functional/pointer_to_binary_function.h
   __functional/pointer_to_unary_function.h
+  __functional/ranges_operations.h
   __functional/reference_wrapper.h
   __functional/unary_function.h
   __functional/unary_negate.h
@@ -130,6 +131,7 @@ set(files
   __mutex_base
   __node_handle
   __nullptr
+  __ranges/ranges_operations.h
   __split_buffer
   __sso_allocator
   __std_stream
