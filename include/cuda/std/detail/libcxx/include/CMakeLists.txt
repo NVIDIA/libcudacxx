@@ -134,13 +134,16 @@ set(files
   __mdspan/submdspan.hpp
   __mdspan/type_list.hpp
   __memory/addressof.h
+  __memory/construct_at.h
   __memory/pointer_traits.h
+  __memory/voidify.h
   __mutex_base
   __node_handle
   __nullptr
   __ranges/access.h
   __ranges/all.h
   __ranges/concepts.h
+  __ranges/copyable_box.h
   __ranges/dangling.h
   __ranges/data.h
   __ranges/empty.h
@@ -153,6 +156,7 @@ set(files
   __ranges/ref_view.h
   __ranges/rbegin.h
   __ranges/rend.h
+  __ranges/single_view.h
   __ranges/size.h
   __ranges/subrange.h
   __ranges/view_interface.h
