@@ -521,6 +521,7 @@ POLICY:  For non-variadic implementations, the number of arguments is limited
 #include "__functional/mem_fn.h"
 #include "__functional/mem_fun_ref.h"
 #include "__functional/operations.h"
+#include "__functional/perfect_forward.h"
 #include "__functional/pointer_to_binary_function.h"
 #include "__functional/pointer_to_unary_function.h"
 #include "__functional/reference_wrapper.h"
