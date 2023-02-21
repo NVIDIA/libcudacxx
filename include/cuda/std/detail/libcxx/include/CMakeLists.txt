@@ -30,6 +30,7 @@ set(files
   __debug
   __functional/binary_function.h
   __functional/binary_negate.h
+  __functional/bind_front.h
   __functional/bind.h
   __functional/binder1st.h
   __functional/binder2nd.h
