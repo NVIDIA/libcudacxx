@@ -4,6 +4,8 @@ set(files
   __algorithm/comp.h
   __algorithm/min_element.h
   __algorithm/min.h
+  __algorithm/ranges_find_if_not.h
+  __algorithm/ranges_find_if.h
   __algorithm/ranges_min_element.h
   __algorithm/ranges_min.h
   __algorithm/swap_ranges.h

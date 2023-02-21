@@ -645,6 +645,8 @@ template <class BidirectionalIterator, class Compare>
 #include "__algorithm/unwrap_iter.h"
 #include "__algorithm/min_element.h"
 #include "__algorithm/min.h"
+#include "__algorithm/ranges_find_if_not.h"
+#include "__algorithm/ranges_find_if.h"
 #include "__algorithm/ranges_min_element.h"
 #include "__algorithm/ranges_min.h"
 #include "__algorithm/swap_ranges.h"

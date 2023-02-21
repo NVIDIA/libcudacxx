@@ -312,6 +312,8 @@ namespace std {
 #include <version>
 #endif // __cuda_std__
 
+#include "__algorithm/ranges_find_if_not.h"
+#include "__algorithm/ranges_find_if.h"
 #include "__ranges/access.h"
 #include "__ranges/all.h"
 #include "__ranges/concepts.h"
