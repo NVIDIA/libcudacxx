@@ -18,6 +18,7 @@
 #include "../__type_traits/is_arithmetic.h"
 #include "../__type_traits/is_floating_point.h"
 #include "../__type_traits/is_integral.h"
+#include "../__type_traits/is_signed.h"
 #include "../__type_traits/is_signed_integer.h"
 #include "../__type_traits/is_signed.h"
 #include "../__type_traits/is_unsigned_integer.h"
@@ -36,13 +37,13 @@ template<class _Tp>
 _LIBCUDACXX_CONCEPT integral = is_integral_v<_Tp>;
 
 template<class _Tp>
-_LIBCUDACXX_CONCEPT signed_integral = integral<_Tp> && is_signed_v<_Tp>;
+_LIBCUDACXX_CONCEPT signed_integral = integral<_Tp> && is_signed<_Tp>::value;
 
 template<class _Tp>
 _LIBCUDACXX_CONCEPT unsigned_integral = integral<_Tp> && !signed_integral<_Tp>;
 
 template<class _Tp>
-_LIBCUDACXX_CONCEPT floating_point = is_floating_point_v<_Tp>;
+_LIBCUDACXX_CONCEPT floating_point = is_floating_point<_Tp>::value;
 
 // Concept helpers for the internal type traits for the fundamental types.
 template <class _Tp>
