@@ -137,6 +137,7 @@ set(files
   __mutex_base
   __node_handle
   __nullptr
+  __ranges/enable_borrowed_range.h
   __ranges/ranges_operations.h
   __split_buffer
   __sso_allocator
