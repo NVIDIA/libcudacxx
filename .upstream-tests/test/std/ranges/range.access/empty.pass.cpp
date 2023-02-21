@@ -73,9 +73,9 @@ struct BoolConvertibleReturnType {
   __host__ __device__ constexpr BoolConvertible empty() noexcept { return {}; }
 };
 // old GCC seems to fall over the chaining of the noexcept clauses here
-#if (!defined(__GNUC__) || __GNUC__ >= 9)
+#if (!defined(TEST_COMPILER_GCC) || __GNUC__ >= 9)
 static_assert(!noexcept(cuda::std::ranges::empty(BoolConvertibleReturnType())));
-#endif // (!defined(__GNUC__) || __GNUC__ >= 9)
+#endif // (!defined(TEST_COMPILER_GCC) || __GNUC__ >= 9)
 
 struct InputIterators {
   __host__ __device__ cpp17_input_iterator<int*> begin() const;
