@@ -11,10 +11,7 @@
 
 // move_iterator
 
-// requires RandomAccessIterator<Iter>
-//   unspecified operator[](difference_type n) const;
-//
-//  constexpr in C++17
+// constexpr reference operator[](difference_type n) const; // Return type unspecified until C++20
 
 #include <cuda/std/iterator>
 #include <cuda/std/cassert>
@@ -73,6 +70,21 @@ int main(int, char**)
     static_assert(it1[0] == '1', "");
     static_assert(it1[5] == '6', "");
     }
+#endif
+
+#if TEST_STD_VER > 14
+  // Ensure the `iter_move` customization point is being used.
+  {
+    int a[] = {0, 1, 2};
+
+    int iter_moves = 0;
+    adl::Iterator i = adl::Iterator::TrackMoves(a, iter_moves);
+    cuda::std::move_iterator<adl::Iterator> mi(i);
+
+    auto x = mi[0];
+    assert(x == 0);
+    assert(iter_moves == 1);
+  }
 #endif
 
   return 0;

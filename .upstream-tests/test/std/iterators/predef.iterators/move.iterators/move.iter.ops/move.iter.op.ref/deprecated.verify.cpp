@@ -7,8 +7,15 @@
 //
 //===----------------------------------------------------------------------===//
 
-int main(int, char**)
-{
+// UNSUPPORTED: c++03, c++11, c++14, c++17
+
+// move_iterator
+
+#include <cuda/std/iterator>
+
+int main(int, char**) {
+  (void)cuda::std::move_iterator<int*>().operator->();
+  // expected-warning@-1{{'operator->' is deprecated}}
 
   return 0;
 }

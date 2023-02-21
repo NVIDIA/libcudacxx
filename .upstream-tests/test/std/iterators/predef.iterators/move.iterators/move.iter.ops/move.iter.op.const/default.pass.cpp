@@ -20,6 +20,15 @@
 #include "test_macros.h"
 #include "test_iterators.h"
 
+#if TEST_STD_VER > 14
+struct NoDefaultCtr : forward_iterator<int*> {
+  NoDefaultCtr() = delete;
+};
+
+static_assert( cuda::std::is_default_constructible_v<cuda::std::move_iterator<forward_iterator<int*>>>, "");
+static_assert(!cuda::std::is_default_constructible_v<cuda::std::move_iterator<NoDefaultCtr>>, "");
+#endif
+
 template <class It>
 __host__ __device__
 void test() {
