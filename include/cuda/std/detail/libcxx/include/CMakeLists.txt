@@ -36,6 +36,7 @@ set(files
   __functional/hash.h
   __functional/identity.h
   __functional/invoke.h
+  __functional/is_transparent.h
   __functional/mem_fn.h
   __functional/mem_fun_ref.h
   __functional/not_fn.h

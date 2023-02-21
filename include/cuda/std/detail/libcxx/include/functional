@@ -518,6 +518,7 @@ POLICY:  For non-variadic implementations, the number of arguments is limited
 #include "__functional/hash.h"
 #include "__functional/identity.h"
 #include "__functional/invoke.h"
+#include "__functional/is_transparent.h"
 #include "__functional/mem_fn.h"
 #include "__functional/mem_fun_ref.h"
 #include "__functional/not_fn.h"
