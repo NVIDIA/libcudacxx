@@ -164,6 +164,9 @@ struct __cxx_atomic_base_small_impl {
       __cxx_atomic_base_small_impl(_Tp __value) : __a_value(__cxx_small_to_32(__value)) {
     }
 
+    using __underlying_t = _Tp;
+    static constexpr int __sco = _Sco;
+
     __cxx_atomic_base_heterogeneous_impl<__cxx_atomic_small_to_32<_Tp>, _Sco, false> __a_value;
 };
 
