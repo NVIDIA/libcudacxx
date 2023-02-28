@@ -72,13 +72,13 @@ __search(_RandomAccessIterator1 __first1, _RandomAccessIterator1 __last1,
          _RandomAccessIterator2 __first2, _RandomAccessIterator2 __last2, _BinaryPredicate __pred,
            random_access_iterator_tag, random_access_iterator_tag)
 {
-    typedef typename iterator_traits<_RandomAccessIterator1>::difference_type _D1;
-    typedef typename iterator_traits<_RandomAccessIterator2>::difference_type _D2;
+    typedef typename iterator_traits<_RandomAccessIterator1>::difference_type _Diff1;
+    typedef typename iterator_traits<_RandomAccessIterator2>::difference_type _Diff2;
     // Take advantage of knowing source and pattern lengths.  Stop short when source is smaller than pattern
-    const _D2 __len2 = __last2 - __first2;
+    const _Diff2 __len2 = __last2 - __first2;
     if (__len2 == 0)
         return _CUDA_VSTD::make_pair(__first1, __first1);
-    const _D1 __len1 = __last1 - __first1;
+    const _Diff1 __len1 = __last1 - __first1;
     if (__len1 < __len2)
         return _CUDA_VSTD::make_pair(__last1, __last1);
     const _RandomAccessIterator1 __s = __last1 - (__len2 - 1);  // Start of pattern match can't go beyond here
