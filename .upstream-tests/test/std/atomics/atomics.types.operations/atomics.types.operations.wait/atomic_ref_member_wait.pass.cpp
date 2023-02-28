@@ -31,29 +31,36 @@ struct TestFn {
     __shared__
 #endif
     T * t;
+    {
 #ifdef __CUDA_ARCH__
-    if (threadIdx.x == 0) {
+        if (threadIdx.x == 0) {
 #endif
-    t = (T *)malloc(sizeof(A));
-    A a(*t);
-    a.store(T(1));
-    assert(a.load() == T(1));
-    a.wait(T(0));
+        t = (T *)malloc(sizeof(A));
+        A a(*t);
+        a.store(T(1));
+        assert(a.load() == T(1));
+        a.wait(T(0));
 #ifdef __CUDA_ARCH__
-    }
+        }
     __syncthreads();
 #endif
+    }
 
-    auto agent_notify = LAMBDA (){
-      a.store(T(3));
-      a.notify_one();;
-    };
 
-    auto agent_wait = LAMBDA (){
-      a.wait(T(1));
-    };
+    {
+        A a(*t);
 
-    concurrent_agents_launch(agent_notify, agent_wait);
+        auto agent_notify = LAMBDA (){
+        a.store(T(3));
+        a.notify_one();
+        };
+
+        auto agent_wait = LAMBDA (){
+        a.wait(T(1));
+        };
+
+        concurrent_agents_launch(agent_notify, agent_wait);
+    }
   }
 };
 
