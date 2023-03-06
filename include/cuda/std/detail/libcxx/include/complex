@@ -326,6 +326,15 @@ public:
     _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 void real(value_type __re) {__re_ = __re;}
     _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 void imag(value_type __im) {__im_ = __im;}
 
+#if defined(__cuda_std__) && !defined(__CUDACC_RTC__)
+    // Those additional volatile overloads are meant to help with reductions in thrust
+    _LIBCUDACXX_INLINE_VISIBILITY value_type real() const volatile {return __re_;}
+    _LIBCUDACXX_INLINE_VISIBILITY value_type imag() const volatile {return __im_;}
+
+    _LIBCUDACXX_INLINE_VISIBILITY void real(value_type __re) volatile {__re_ = __re;}
+    _LIBCUDACXX_INLINE_VISIBILITY void imag(value_type __im) volatile {__im_ = __im;}
+#endif // defined(__cuda_std__) && !defined(__CUDACC_RTC__)
+
     _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
     complex& operator= (const value_type& __re) {__re_ = __re; __im_ = value_type(); return *this;}
     _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
@@ -417,6 +426,15 @@ public:
     _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 void real(value_type __re) {__re_ = __re;}
     _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 void imag(value_type __im) {__im_ = __im;}
 
+#if defined(__cuda_std__) && !defined(__CUDACC_RTC__)
+    // Those additional volatile overloads are meant to help with reductions in thrust
+    _LIBCUDACXX_INLINE_VISIBILITY float real() const volatile {return __re_;}
+    _LIBCUDACXX_INLINE_VISIBILITY float imag() const volatile {return __im_;}
+
+    _LIBCUDACXX_INLINE_VISIBILITY void real(value_type __re) volatile {__re_ = __re;}
+    _LIBCUDACXX_INLINE_VISIBILITY void imag(value_type __im) volatile {__im_ = __im;}
+#endif // defined(__cuda_std__) && !defined(__CUDACC_RTC__)
+
     _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
     complex& operator= (float __re) { __re_ = __re; __im_ = value_type(); return *this;}
     _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
@@ -502,6 +520,15 @@ public:
 
     _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 void real(value_type __re) {__re_ = __re;}
     _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 void imag(value_type __im) {__im_ = __im;}
+
+#if defined(__cuda_std__) && !defined(__CUDACC_RTC__)
+    // Those additional volatile overloads are meant to help with reductions in thrust
+    _LIBCUDACXX_INLINE_VISIBILITY double real() const volatile {return __re_;}
+    _LIBCUDACXX_INLINE_VISIBILITY double imag() const volatile {return __im_;}
+
+    _LIBCUDACXX_INLINE_VISIBILITY void real(value_type __re) volatile {__re_ = __re;}
+    _LIBCUDACXX_INLINE_VISIBILITY void imag(value_type __im) volatile {__im_ = __im;}
+#endif // defined(__cuda_std__) && !defined(__CUDACC_RTC__)
 
     _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
     complex& operator= (double __re) {__re_ = __re; __im_ = value_type(); return *this;}
@@ -599,6 +626,15 @@ public:
 
     _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 void real(value_type __re) {__re_ = __re;}
     _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 void imag(value_type __im) {__im_ = __im;}
+
+#if defined(__cuda_std__) && !defined(__CUDACC_RTC__)
+    // Those additional volatile overloads are meant to help with reductions in thrust
+    _LIBCUDACXX_INLINE_VISIBILITY long double real() const volatile {return __re_;}
+    _LIBCUDACXX_INLINE_VISIBILITY long double imag() const volatile {return __im_;}
+
+    _LIBCUDACXX_INLINE_VISIBILITY void real(value_type __re) volatile {__re_ = __re;}
+    _LIBCUDACXX_INLINE_VISIBILITY void imag(value_type __im) volatile {__im_ = __im;}
+#endif // defined(__cuda_std__) && !defined(__CUDACC_RTC__)
 
     _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_CONSTEXPR_AFTER_CXX11
     complex& operator= (long double __re) {__re_ = __re; __im_ = value_type(); return *this;}
