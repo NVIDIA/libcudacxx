@@ -3,10 +3,11 @@
 // Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
 // See https://llvm.org/LICENSE.txt for license information.
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+// SPDX-FileCopyrightText: Copyright (c) 2022 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 //
 //===----------------------------------------------------------------------===//
 
-// <complex>
+// <cuda/std/complex>
 
 // test cases
 
@@ -284,4 +285,4 @@ __host__ __device__ void is_about(long double x, long double y)
     assert(cuda::std::abs((x-y)/(x+y)) < 1.e-14);
 }
 */
-#endif  // CASES_H
+#endif // CASES_H

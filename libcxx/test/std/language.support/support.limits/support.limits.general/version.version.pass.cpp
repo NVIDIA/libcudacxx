@@ -177,6 +177,10 @@
 #   error "__cpp_lib_complex_udls should not be defined before c++14"
 # endif
 
+# ifdef __cpp_lib_constexpr_complex
+#   error "__cpp_lib_constexpr_complex should not be defined before c++14"
+# endif
+
 # ifdef __cpp_lib_concepts
 #   error "__cpp_lib_concepts should not be defined before c++2a"
 # endif
@@ -522,6 +526,13 @@
 # endif
 # if __cpp_lib_concepts != 202002L
 #   error "__cpp_lib_concepts should have the value 202002L in c++14"
+# endif
+
+# ifndef __cpp_lib_constexpr_complex
+#   error "__cpp_lib_constexpr_complex should be defined in c++14"
+# endif
+# if __cpp_lib_constexpr_complex != 201711L
+#   error "__cpp_lib_constexpr_complex should have the value 201711L in c++14"
 # endif
 
 # ifdef __cpp_lib_constexpr_misc
@@ -982,6 +993,13 @@
 # endif
 # if __cpp_lib_concepts != 202002L
 #   error "__cpp_lib_concepts should have the value 202002L in c++17"
+# endif
+
+# ifndef __cpp_lib_constexpr_complex
+#   error "__cpp_lib_constexpr_complex should be defined in c++17"
+# endif
+# if __cpp_lib_constexpr_complex != 201711L
+#   error "__cpp_lib_constexpr_complex should have the value 201711L in c++17"
 # endif
 
 # ifdef __cpp_lib_constexpr_misc
@@ -1631,6 +1649,13 @@
 # endif
 # if __cpp_lib_concepts != 202002L
 #   error "__cpp_lib_concepts should have the value 202002L in c++2a"
+# endif
+
+# ifndef __cpp_lib_constexpr_complex
+#   error "__cpp_lib_constexpr_complex should be defined in c++2a"
+# endif
+# if __cpp_lib_constexpr_complex != 201711L
+#   error "__cpp_lib_constexpr_complex should have the value 201711L in c++2a"
 # endif
 
 # if !defined(_LIBCUDACXX_VERSION)

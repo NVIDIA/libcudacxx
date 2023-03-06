@@ -3,6 +3,7 @@
 // Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
 // See https://llvm.org/LICENSE.txt for license information.
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+// SPDX-FileCopyrightText: Copyright (c) 2022 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 //
 //===----------------------------------------------------------------------===//
 
@@ -60,7 +61,7 @@ __host__ __device__ void test_edges()
         {
             assert(r.real() == (testcases[i].real() > 0 ? 1 : -1));
             assert(r.imag() == 0);
-            assert(cuda::std::signbit(r.imag()) == cuda::std::signbit(sin(2*testcases[i].imag())));
+            assert(cuda::std::signbit(r.imag()) == cuda::std::signbit(sin(2 * testcases[i].imag())));
         }
         else if (cuda::std::isinf(testcases[i].real()) && cuda::std::isinf(testcases[i].imag()))
         {

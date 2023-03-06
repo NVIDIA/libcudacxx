@@ -3,6 +3,7 @@
 // Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
 // See https://llvm.org/LICENSE.txt for license information.
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+// SPDX-FileCopyrightText: Copyright (c) 2022 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 //
 //===----------------------------------------------------------------------===//
 
@@ -19,11 +20,13 @@
 #include "../cases.h"
 
 template <class T>
-__host__ __device__ void
+__host__ __device__ TEST_CONSTEXPR_CXX14 bool
 test()
 {
     cuda::std::complex<T> z(3, 4);
     assert(norm(z) == 25);
+
+    return true;
 }
 
 __host__ __device__ void test_edges()
@@ -60,7 +63,14 @@ int main(int, char**)
     test<float>();
     test<double>();
 // CUDA treats long double as double
-//  test<long double>();();
+//  test<long double>();
+#if TEST_STD_VER > 11 && !defined(__CUDA_ARCH__)
+    static_assert(test<float>(), "");
+    static_assert(test<double>(), "");
+// CUDA treats long double as double
+//  static_assert(test<long double>(), "");
+#endif
+
     test_edges();
 
   return 0;

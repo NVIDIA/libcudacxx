@@ -3,39 +3,29 @@
 // Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
 // See https://llvm.org/LICENSE.txt for license information.
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+// SPDX-FileCopyrightText: Copyright (c) 2022 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 //
 //===----------------------------------------------------------------------===//
 
-// .fail. expects compilation to fail, but this would only fail at runtime with NVRTC
 // UNSUPPORTED: nvrtc
 
 // <cuda/std/complex>
 
-// template<class T>
-// class complex
+// template<> class complex<float>
 // {
 // public:
-//   typedef T value_type;
-//   ...
+//     explicit constexpr complex(const complex<double>&);
 // };
 
 #include <cuda/std/complex>
-#include <cuda/std/type_traits>
-
-#include "test_macros.h"
-
-template <class T>
-__host__ __device__ void
-test()
-{
-    typedef cuda::std::complex<T> C;
-    static_assert((cuda::std::is_same<typename C::value_type, T>::value), "");
-    C c;
-}
+#include <cuda/std/cassert>
 
 int main(int, char**)
 {
-  test<long double>();
+    const cuda::std::complex<double> cd(2.5, 3.5);
+    cuda::std::complex<float> cf = cd;
+    assert(cf.real() == cd.real());
+    assert(cf.imag() == cd.imag());
 
   return 0;
 }

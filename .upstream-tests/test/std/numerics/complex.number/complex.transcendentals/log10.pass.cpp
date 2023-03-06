@@ -3,6 +3,7 @@
 // Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
 // See https://llvm.org/LICENSE.txt for license information.
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+// SPDX-FileCopyrightText: Copyright (c) 2022 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 //
 //===----------------------------------------------------------------------===//
 
@@ -39,7 +40,7 @@ __host__ __device__ void test_edges()
     for (unsigned i = 0; i < N; ++i)
     {
         cuda::std::complex<double> r = log10(testcases[i]);
-        cuda::std::complex<double> z = log(testcases[i]) / cuda::std::log(10.0);
+        cuda::std::complex<double> z = log(testcases[i])/cuda::std::log(10.0);
         if (cuda::std::isnan(real(r)))
             assert(cuda::std::isnan(real(z)));
         else
