@@ -63,7 +63,6 @@ RUN set -o pipefail; cd /sw/gpgpu/libcudacxx/build\
  2>&1 | tee /sw/gpgpu/libcudacxx/build/cmake_libcudacxx.log
 
 
-
 # Build tests for sm6x if requested.
 RUN set -o pipefail; cd /sw/gpgpu/libcudacxx\
  && LIBCUDACXX_COMPUTE_ARCHS="60 61 62"\
