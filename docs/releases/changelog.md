@@ -10,6 +10,58 @@ It pulls in the latest version of upstream libc++ and marks the beginning of
   automatic tracking of upstream.
 -->
 
+## libcu++ 2.1.0
+
+### New Features
+
+- #313: Add `cuda/std/span`.
+- #299: Add `mdspan` reference implementation.
+  - Thanks Yu You for this contribution.
+- #349: Adds concepts and several backports of ranges' CPOs to C++14.
+
+### Issues Fixed
+
+- #328: Docs: Fix broken links.
+  - Thanks chaosink for this contribution.
+- #329: Block local memory tests on pascal.
+- #332: Add support for clang-15.
+- #317: Fix structured binding support.
+- #333: Fix tuple structured bindings.
+- #331: Correct issues with CMake install rules.
+- #301: Move and update "memory model" docs.
+- #323: Fix broken links in documentation.
+- #232: Document `<nv/target>` in an example.
+- #257: Add documentation for atomic_ref.
+- #336: Fetch host `<utility>` to populate `tuple_size`.
+- #340: Add tests for host only TUs and fix several found issues.
+- #335: Modularize `<type_traits>``.
+- #330: Modularize `<iterator>``.
+- #345: Fix warning about unqualified move.
+- #342: Silence deprecation and attribute warnings when building libcu++.
+- #344: Remove invalid qualification of `initializer_list`.
+- #347: Fix errors in atomic with small aggregates and enum classes.
+- #352: Make lerp usable on device.
+- #346: Add more dialects to host only TU tests.
+- #360: Add check for deduction guides macro to functional/reference_wrapper.h.
+- #359: Fix definition of `disjunction` for MSVC.
+- #364: Split memcpy_async tests into a few other tests.
+- #365: Remove gcc-6 from the compose file.
+- #350: Modularize `<utility>`.
+- #107: Description of policy for backporting Standard C++ features.
+- #128: Fix a typo in the `cuda::` heterogeneous policy.
+- #369: Fix cuda::atomic_thread_fence example.
+- #110: Fixed rename errors.
+- #353: Update thread scope for synchronization domains.
+- #367: Fix warnings in several headers.
+- #379: Update atomics backend to be compatible with `atomic_ref`.
+- #378: Prevent conflict with MSVC macros in 14.35.
+- #355: Modularize `<functional>`.
+- #309: Implement `{async_}resource_ref`.
+- #372: Improve handling of internal headers and modularization.
+- #381: Drop libcxx testing from DVS.
+- #383: Fix various issues in CPOs and `tuple`.
+- #386: Fix proclaim_return_type copy constructor.
+
 ## libcu++ 1.9.0
 
 Adds `float` and `double` support to `cuda::std::atomic` and `cuda::atomic`.
