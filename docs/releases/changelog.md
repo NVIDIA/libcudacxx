@@ -40,8 +40,8 @@ Supported ABI Versions: 4 (default), 3, and 2.
 - #257: Add documentation for atomic_ref.
 - #336: Fetch host `<utility>` to populate `tuple_size`.
 - #340: Add tests for host only TUs and fix several found issues.
-- #335: Modularize `<type_traits>``.
-- #330: Modularize `<iterator>``.
+- #335: Modularize `<type_traits>`.
+- #330: Modularize `<iterator>`.
 - #345: Fix warning about unqualified move.
 - #342: Silence deprecation and attribute warnings when building libcu++.
 - #344: Remove invalid qualification of `initializer_list`.
