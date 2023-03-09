@@ -21,10 +21,6 @@
 
 #include "test_macros.h"
 
-template <typename T>
-__host__ __device__
-constexpr bool unused(T &&) {return true;}
-
 struct Empty {};
 
 int main(int, char**)
