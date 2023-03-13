@@ -55,8 +55,8 @@ int main(int, char**)
 
     // constraint: extents_­type?::?rank() > 0
     {
-        ext0d_t e{};
-        cuda::std::layout_stride::mapping<ext0d_t> m{ e, cuda::std::array<index_t,0>{} };
+        ext0d_t e0d{};
+        cuda::std::layout_stride::mapping<ext0d_t> m{ e0d, cuda::std::array<index_t,0>{} };
 
         unused( m );
 
