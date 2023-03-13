@@ -14,6 +14,10 @@
 #include <cuda/std/cassert>
 #include "../mdspan.extents.util/extents_util.hpp"
 
+template <typename T>
+__host__ __device__
+constexpr bool unused(T &&) {return true;}
+
 template <class> struct TestExtentsRank;
 template <size_t... Extents, size_t... DynamicSizes>
 struct TestExtentsRank< TEST_TYPE >
@@ -37,6 +41,7 @@ struct TestExtentsRank< TEST_TYPE >
 
         // Makes sure that `rank()` returns a constexpr
         cuda::std::array<int,_exts.rank()> a;
+        unused(a);
     }
 };
 
