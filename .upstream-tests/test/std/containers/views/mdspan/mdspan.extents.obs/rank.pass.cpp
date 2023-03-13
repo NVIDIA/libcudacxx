@@ -10,13 +10,10 @@
 // UNSUPPORTED: c++11, nvrtc && nvcc-12.0, nvrtc && nvcc-12.1
 // UNSUPPORTED: msvc && c++14, msvc && c++17
 
+#include <test_macros.h>
 #include <cuda/std/mdspan>
 #include <cuda/std/cassert>
 #include "../mdspan.extents.util/extents_util.hpp"
-
-template <typename T>
-__host__ __device__
-constexpr bool unused(T &&) {return true;}
 
 template <class> struct TestExtentsRank;
 template <size_t... Extents, size_t... DynamicSizes>
