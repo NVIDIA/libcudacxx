@@ -64,7 +64,7 @@ Supported ABI Versions: 4 (default), 3, and 2.
 - #379: Update atomics backend to be compatible with `atomic_ref`.
 - #378: Prevent conflict with MSVC macros in 14.35.
 - #355: Modularize `<functional>`.
-- #309: Implement `{async_}resource_ref`.
+- #309: Add an experimental `{async_}resource_ref`.
 - #372: Improve handling of internal headers and modularization.
 - #383: Fix various issues in CPOs and `tuple`.
 - #386: Fix proclaim_return_type copy constructor.
