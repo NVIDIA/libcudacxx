@@ -67,6 +67,11 @@ Supported ABI Versions: 4 (default), 3, and 2.
 - #381: Drop libcxx testing from DVS.
 - #383: Fix various issues in CPOs and `tuple`.
 - #386: Fix proclaim_return_type copy constructor.
+- #389: Fix atomic_ref example in docs
+  - Thanks Daniel Jünger for this contribution.
+- #388: Fix `_EnableConstructor` in `cuda::std::tuple` to be dependent on a template argument.
+- #384: Move the `unused` helper function into `test_macros.h`.
+- #391: Fix issues in mdspan found on MSVC.
 
 ## libcu++ 1.9.0
 
