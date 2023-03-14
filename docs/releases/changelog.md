@@ -26,7 +26,8 @@ Supported ABI Versions: 4 (default), 3, and 2.
 - #299: Add `cuda/std/mdspan` and backport it to C++14.
   - Thanks Yu You for this contribution.
 - #349: Add `cuda/std/concepts` and backport them to C++14. You will be able to utilize C++20 concepts already in C++14/17 through existing SFINAE techniques.
-
+ - #333: Add support for structured bindings for `cuda::std::tuple`, `cuda::std::pair` and `cuda::std::array`
+ 
 ### Issues Fixed
 
 - #328: Docs: Fix broken links.
