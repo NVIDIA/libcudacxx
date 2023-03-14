@@ -34,7 +34,6 @@ Supported ABI Versions: 4 (default), 3, and 2.
 - #329: Block local memory tests on pascal.
 - #332: Add support for clang-15.
 - #317: Fix structured binding support.
-- #333: Fix tuple structured bindings.
 - #331: Correct issues with CMake install rules.
 - #301: Move and update "memory model" docs.
 - #323: Fix broken links in documentation.
