@@ -66,7 +66,6 @@ Supported ABI Versions: 4 (default), 3, and 2.
 - #355: Modularize `<functional>`.
 - #309: Implement `{async_}resource_ref`.
 - #372: Improve handling of internal headers and modularization.
-- #381: Drop libcxx testing from DVS.
 - #383: Fix various issues in CPOs and `tuple`.
 - #386: Fix proclaim_return_type copy constructor.
 - #389: Fix atomic_ref example in docs
