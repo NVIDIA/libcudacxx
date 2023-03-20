@@ -142,7 +142,7 @@ _LIBCUDACXX_BEGIN_NAMESPACE_CPO(__swap)
     _LIBCUDACXX_TEMPLATE(class _Tp)
       (requires __exchangeable<_Tp>)
     _LIBCUDACXX_INLINE_VISIBILITY constexpr void operator()(_Tp& __x, _Tp& __y) const
-      noexcept(is_nothrow_move_constructible_v<_Tp> && is_nothrow_move_assignable_v<_Tp>)
+      noexcept(_LIBCUDACXX_TRAIT(is_nothrow_move_constructible, _Tp) && _LIBCUDACXX_TRAIT(is_nothrow_move_assignable, _Tp))
     {
       __y = _CUDA_VSTD::exchange(__x, _CUDA_VSTD::move(__y));
     }
@@ -154,7 +154,7 @@ template<class _Tp, class _Up, class _Size>
     __swappable_arrays_,
     requires(_Tp(& __t)[_Size::value], _Up(& __u)[_Size::value], const __fn& __swap)(
       requires(!__unqualified_swappable_with<_Tp(&)[_Size::value], _Up(&)[_Size::value]>),
-      requires(extent_v<_Tp> == extent_v<_Up>),
+      requires(_LIBCUDACXX_TRAIT(extent, _Tp) == _LIBCUDACXX_TRAIT(extent, _Up)),
       typename(decltype(__swap(__t[0], __u[0])))
     ));
 
