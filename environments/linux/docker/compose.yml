@@ -78,7 +78,7 @@ services:
       service: ubuntu22.04
     image: "libcudacxx/gcc-11"
     container_name: gcc-11
-    profiles: ["all", "base", "gcc-11"]
+    profiles: ["gcc-11", "all", "base"]
     build:
       context: ../../../
       dockerfile: environments/linux/docker/ubuntu.base.Dockerfile
@@ -91,7 +91,7 @@ services:
       service: ubuntu22.04
     image: "libcudacxx/gcc-12"
     container_name: gcc-12
-    profiles: ["all", "base", "gcc-12"]
+    profiles: ["gcc-12", "all", "base"]
     build:
       context: ../../../
       dockerfile: environments/linux/docker/ubuntu.base.Dockerfile
@@ -104,7 +104,7 @@ services:
       service: ubuntu22.04
     image: "libcudacxx/clang-11"
     container_name: clang-11
-    profiles: ["all", "base", "clang-11"]
+    profiles: ["clang-11", "all", "base"]
     build:
       context: ../../../
       dockerfile: environments/linux/docker/ubuntu.base.Dockerfile
@@ -117,7 +117,7 @@ services:
       service: ubuntu22.04
     image: "libcudacxx/clang-12"
     container_name: clang-12
-    profiles: ["all", "base", "clang-12"]
+    profiles: ["clang-12", "all", "base"]
     build:
       context: ../../../
       dockerfile: environments/linux/docker/ubuntu.base.Dockerfile
@@ -130,7 +130,7 @@ services:
       service: ubuntu22.04
     image: "libcudacxx/clang-13"
     container_name: clang-13
-    profiles: ["all", "base", "clang-13"]
+    profiles: ["clang-13", "all", "base"]
     build:
       context: ../../../
       dockerfile: environments/linux/docker/ubuntu.base.Dockerfile
@@ -143,7 +143,7 @@ services:
       service: ubuntu22.04
     image: "libcudacxx/clang-14"
     container_name: clang-14
-    profiles: ["all", "base", "clang-14"]
+    profiles: ["clang-14", "all", "base"]
     build:
       context: ../../../
       dockerfile: environments/linux/docker/ubuntu.base.Dockerfile
@@ -156,7 +156,7 @@ services:
       service: ubuntu22.04
     image: "libcudacxx/clang-15"
     container_name: clang-15
-    profiles: ["all", "base", "clang-15"]
+    profiles: ["clang-15", "all", "base"]
     build:
       context: ../../../
       dockerfile: environments/linux/docker/ubuntu.base.Dockerfile
@@ -171,7 +171,7 @@ services:
       service: ubuntu20.04
     image: "libcudacxx/gcc-8"
     container_name: gcc-8
-    profiles: ["all", "base", "gcc-8"]
+    profiles: ["gcc-8", "all", "base"]
     build:
       context: ../../../
       dockerfile: environments/linux/docker/ubuntu.base.Dockerfile
@@ -184,7 +184,7 @@ services:
       service: ubuntu20.04
     image: "libcudacxx/gcc-9"
     container_name: gcc-9
-    profiles: ["all", "base", "gcc-9"]
+    profiles: ["gcc-9", "all", "base"]
     build:
       context: ../../../
       dockerfile: environments/linux/docker/ubuntu.base.Dockerfile
@@ -197,7 +197,7 @@ services:
       service: ubuntu20.04
     image: "libcudacxx/gcc-10"
     container_name: gcc-10
-    profiles: ["all", "base", "gcc-10"]
+    profiles: ["gcc-10", "all", "base"]
     build:
       context: ../../../
       dockerfile: environments/linux/docker/ubuntu.base.Dockerfile
@@ -210,7 +210,7 @@ services:
       service: ubuntu20.04
     image: "libcudacxx/clang-8"
     container_name: clang-8
-    profiles: ["all", "base", "clang-8"]
+    profiles: ["clang-8", "all", "base"]
     build:
       context: ../../../
       dockerfile: environments/linux/docker/ubuntu.base.Dockerfile
@@ -223,7 +223,7 @@ services:
       service: ubuntu20.04
     image: "libcudacxx/clang-9"
     container_name: clang-9
-    profiles: ["all", "base", "clang-9"]
+    profiles: ["clang-9", "all", "base"]
     build:
       context: ../../../
       dockerfile: environments/linux/docker/ubuntu.base.Dockerfile
@@ -236,7 +236,7 @@ services:
       service: ubuntu20.04
     image: "libcudacxx/clang-10"
     container_name: clang-10
-    profiles: ["all", "base", "clang-10"]
+    profiles: ["clang-10", "all", "base"]
     build:
       context: ../../../
       dockerfile: environments/linux/docker/ubuntu.base.Dockerfile
@@ -251,7 +251,7 @@ services:
       service: ubuntu18.04
     image: "libcudacxx/gcc-7"
     container_name: gcc-7
-    profiles: ["all", "base", "gcc-7"]
+    profiles: ["gcc-7", "all", "base"]
     build:
       context: ../../../
       dockerfile: environments/linux/docker/ubuntu.base.Dockerfile
@@ -264,7 +264,7 @@ services:
       service: ubuntu18.04
     image: "libcudacxx/clang-7"
     container_name: clang-7
-    profiles: ["all", "base", "clang-7"]
+    profiles: ["clang-7", "all", "base"]
     build:
       context: ../../../
       dockerfile: environments/linux/docker/ubuntu.base.Dockerfile
