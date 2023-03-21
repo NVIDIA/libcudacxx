@@ -18,7 +18,7 @@
 #include "test_macros.h"
 
 template <class T>
-__host__ __device__ void TEST_CONSTEXPR_CXX14
+__host__ __device__ TEST_CONSTEXPR_CXX14 void
 test_constexpr()
 {
 #if TEST_STD_VER > 11
@@ -59,6 +59,22 @@ test()
     return true;
 }
 
+template <class T>
+__host__ __device__ void
+test_volatile()
+{
+    volatile cuda::std::complex<T> cv;
+    assert(cv.real() == 0);
+    assert(cv.imag() == 0);
+    cv.real(3.5);
+    assert(cv.real() == 3.5);
+    assert(cv.imag() == 0);
+    cv.imag(4.5);
+    assert(cv.real() == 3.5);
+    assert(cv.imag() == 4.5);
+
+}
+
 int main(int, char**)
 {
     test<float>();
@@ -72,6 +88,10 @@ int main(int, char**)
 //  static_assert(test<long double>(), "");
 #endif
     test_constexpr<int> ();
+
+    // test volatile extensions
+    test_volatile<float>();
+    test_volatile<double>();
 
   return 0;
 }
