@@ -723,6 +723,7 @@ operator*(const complex<_Tp>& __z, const complex<_Tp>& __w)
     _Tp __bc = __b * __c;
     _Tp __x = __ac - __bd;
     _Tp __y = __ad + __bc;
+#ifndef LIBCUDACXX_ENABLE_SIMPLIFIED_COMPLEX_MULTIPLICATION
     if (__constexpr_isnan(__x) && __constexpr_isnan(__y))
     {
         bool __recalc = false;
@@ -765,6 +766,7 @@ operator*(const complex<_Tp>& __z, const complex<_Tp>& __w)
             __y = _Tp(INFINITY) * (__a * __d + __b * __c);
         }
     }
+#endif // LIBCUDACXX_ENABLE_SIMPLIFIED_COMPLEX_MULTIPLICATION
     return complex<_Tp>(__x, __y);
 }
 
