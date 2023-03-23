@@ -3,3 +3,4 @@ Invoke-WebRequest -Uri "https://developer.download.nvidia.com/compute/cuda/12.1.
 ./cuda_network.exe -s nvcc_12.1 cudart_12.1
 
 $env:PATH="$env:PATH;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.1\bin;"
+$env:CUDA_PATH="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.1"

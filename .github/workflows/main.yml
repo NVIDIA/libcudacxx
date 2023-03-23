@@ -35,6 +35,6 @@ jobs:
 
       - name: Configure CMake project
         run: |
-          cmake -S ./ -B ../build -DLIBCUDACXX_ENABLE_LIBCUDACXX_TESTS=ON -G Ninja
-          lit -sv .upstream-tests/test -Dcompute_archs="70 80 90" -Dexecutor="NoopExecutor()" -Dstd=c++20
+          cmake -S ./ -B ../build -DLIBCUDACXX_ENABLE_LIBCUDACXX_TESTS=ON -DCMAKE_CUDA_COMPILER=nvcc -G Ninja
+          py -m lit -sv .upstream-tests/test -Dcompute_archs="70 80 90" -Dexecutor="NoopExecutor()" -Dstd=c++20
         shell: powershell
