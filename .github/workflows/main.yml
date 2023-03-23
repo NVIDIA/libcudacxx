@@ -30,6 +30,7 @@ jobs:
         run: .github\action-scripts\install-cuda-msvc.ps1
         run: .github\action-scripts\install-ninja.ps1
         run: py -m pip install lit
+        shell: powershell
 
       - name: Configure CMake project
         run: |
