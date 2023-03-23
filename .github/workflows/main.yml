@@ -5,9 +5,7 @@ on:
     
 permissions:
   contents: read
-  # Needed for the 'trilom/file-changes-action' action
   pull-requests: read
-  
   
 # This allows a subsequently queued workflow run to interrupt previous runs
 concurrency:
@@ -38,5 +36,5 @@ jobs:
       - name: Configure CMake project
         run: |
           cmake -S ./ -B ../build -DLIBCUDACXX_ENABLE_LIBCUDACXX_TESTS=ON -G Ninja
-          lit -sv .upstream-tests/test -Dcompute_archs=70,80,90 -Dexecutor="NoopExecutor()" -Dstd=c++20
+          lit -sv .upstream-tests/test -Dcompute_archs="70 80 90" -Dexecutor="NoopExecutor()" -Dstd=c++20
         shell: powershell
