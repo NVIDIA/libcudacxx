@@ -1,4 +1,4 @@
-$msvcPath = "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+$msvcPath = "C:\Program Files\Microsoft Visual Studio\2022\VC\Auxiliary\Build\vcvars64.bat"
 
 Write-Output "Loading VC from: $msvcPath"
 

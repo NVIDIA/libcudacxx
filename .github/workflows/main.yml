@@ -38,6 +38,6 @@ jobs:
       - name: Configure CMake project
         run: |
           echo "$CUDA_PATH"
-          cmake -S ./ -B ../build -DLIBCUDACXX_ENABLE_LIBCUDACXX_TESTS=ON -DCMAKE_CXX_COMPILER=cl.exe -DCMAKE_CUDA_COMPILER=nvcc -G Ninja
+          cmake -S ./ -B ../build -DLIBCUDACXX_ENABLE_LIBCUDACXX_TESTS=ON -DCMAKE_CXX_COMPILER=cl -DCMAKE_CUDA_COMPILER=nvcc -G Ninja
           lit -sv .upstream-tests/test -Dcompute_archs="70 80 90" -Dexecutor="NoopExecutor()" -Dstd=c++20
         shell: powershell
