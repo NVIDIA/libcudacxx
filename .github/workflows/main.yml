@@ -19,16 +19,19 @@ jobs:
   Lit-NoExecutor:
     runs-on: windows-latest
     steps:
-      - name: Get utilities
-        uses: actions/checkout@master
-        uses: actions/setup-python@v4
-        uses: microsoft/setup-msbuild@v1.0.2
-        with:
-          vs-version: 'latest'
+      - uses: actions/checkout@master
+      - uses: actions/setup-python@v4
+      - uses: microsoft/setup-msbuild@v1.0.2
+          with:
+            vs-version: 'latest'
 
-      - name: Install utilities
+      - name: Install CTK
         run: .github\action-scripts\install-cuda-msvc.ps1
+        shell: powershell
+      - name: Install Ninja
         run: .github\action-scripts\install-ninja.ps1
+        shell: powershell
+      - name: Install Lit
         run: py -m pip install lit
         shell: powershell
 
@@ -36,3 +39,4 @@ jobs:
         run: |
           cmake -S ./ -B ../build -DLIBCUDACXX_ENABLE_LIBCUDACXX_TESTS=ON -G Ninja
           lit -sv .upstream-tests/test -Dcompute_archs=70,80,90 -Dexecutor="NoopExecutor()" -Dstd=c++20
+        shell: powershell
