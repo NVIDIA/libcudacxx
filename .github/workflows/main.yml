@@ -31,6 +31,9 @@ jobs:
       - name: Install Lit
         run: py -m pip install wheel; py -m pip install lit
         shell: powershell
+      - name: Configure env for vsdev prompt
+        run: .github\action-scripts\configure-vcvars.ps1
+        shell: powershell
 
       - name: Configure CMake project
         run: |
