@@ -22,8 +22,8 @@ jobs:
       - uses: actions/checkout@master
       - uses: actions/setup-python@v4
       - uses: microsoft/setup-msbuild@v1.0.2
-          with:
-            vs-version: 'latest'
+        with:
+          vs-version: 'latest'
 
       - name: Install CTK
         run: .github\action-scripts\install-cuda-msvc.ps1
