@@ -73,8 +73,8 @@ services:
 ## Configured images ##
 ### Ubuntu 22.04 images:
   icc-2023:
-    image: "libcudacxx/icc-2022.2.1"
-    profiles: ["icc-2022.2.1", "icc-2022", "all", "base"]
+    image: "libcudacxx/icc-2022"
+    profiles: ["icc-2022", "all", "base"]
     tty: true
     build:
       context: ../../../
