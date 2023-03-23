@@ -1,0 +1,37 @@
+on:
+  pull_request:
+    branches:
+    - main
+    
+permissions:
+  contents: read
+  # Needed for the 'trilom/file-changes-action' action
+  pull-requests: read
+  
+  
+# This allows a subsequently queued workflow run to interrupt previous runs
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: true
+  
+  
+jobs:
+  Lit-NoExecutor:
+    runs-on: windows-latest
+    steps:
+      - name: Get utilities
+      - uses: actions/checkout@master
+      - uses: actions/setup-python@v4
+      - uses: microsoft/setup-msbuild@v1.0.2
+        with:
+          vs-version: 'latest'
+
+      - name: Install utilities
+        run: .github\action-scripts\install-cuda-msvc.ps1
+        run: .github\action-scripts\install-ninja.ps1
+        run: py -m pip install lit
+
+      - name: Configure CMake project
+        run: |
+          cmake -S ./ -B ../build -DLIBCUDACXX_ENABLE_LIBCUDACXX_TESTS=ON -G Ninja
+          lit -sv .upstream-tests/test -Dcompute_archs=70,80,90 -Dexecutor="NoopExecutor()" -Dstd=c++20
