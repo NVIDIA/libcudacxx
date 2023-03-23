@@ -18,7 +18,6 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@master
-      - uses: actions/setup-python@v4
       - uses: microsoft/setup-msbuild@v1.0.2
         with:
           vs-version: 'latest'
@@ -30,11 +29,12 @@ jobs:
         run: .github\action-scripts\fetch-ninja.ps1
         shell: powershell
       - name: Install Lit
-        run: py -m pip install lit
+        run: py -m pip install wheel; py -m pip install lit
         shell: powershell
 
       - name: Configure CMake project
         run: |
-          cmake -S ./ -B ../build -DLIBCUDACXX_ENABLE_LIBCUDACXX_TESTS=ON -DCMAKE_CUDA_COMPILER=nvcc -G Ninja
-          py -m lit -sv .upstream-tests/test -Dcompute_archs="70 80 90" -Dexecutor="NoopExecutor()" -Dstd=c++20
+          echo "$CUDA_PATH"
+          cmake -S ./ -B ../build -DLIBCUDACXX_ENABLE_LIBCUDACXX_TESTS=ON -DCMAKE_CXX_COMPILER=cl.exe -DCMAKE_CUDA_COMPILER=nvcc -G Ninja
+          lit -sv .upstream-tests/test -Dcompute_archs="70 80 90" -Dexecutor="NoopExecutor()" -Dstd=c++20
         shell: powershell
