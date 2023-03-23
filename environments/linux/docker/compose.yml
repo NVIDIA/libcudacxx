@@ -82,7 +82,7 @@ services:
       target: libcudacxx-configured
       args:
         ICC_TOOLKIT_VER: "2022.2.1"
-        HOST_CXX: "icx"
+        HOST_CXX: "icpx"
         BUILDKIT_INLINE_CACHE: "1"
         ROOT_IMAGE: "nvcr.io/nvidia/cuda:12.1.0-devel-ubuntu22.04"
     deploy: *deploy-template
