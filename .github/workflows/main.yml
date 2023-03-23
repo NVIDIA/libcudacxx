@@ -26,10 +26,10 @@ jobs:
           vs-version: 'latest'
 
       - name: Install CTK
-        run: .github\action-scripts\install-cuda-msvc.ps1
+        run: .github\action-scripts\fetch-cuda.ps1
         shell: powershell
       - name: Install Ninja
-        run: .github\action-scripts\install-ninja.ps1
+        run: .github\action-scripts\fetch-ninja.ps1
         shell: powershell
       - name: Install Lit
         run: py -m pip install lit
