@@ -1,8 +1,8 @@
-$msvcPath = "C:\Program Files\Microsoft Visual Studio\2022\VC\Auxiliary\Build\vcvars64.bat"
+$msvcPath = "$(vswhere -products * -latest -property installationPath)"
 
-Write-Output "Loading VC from: $msvcPath"
+Write-Output "Loading VC from: $msvcPath\VC\Auxiliary\Build"
 
-Push-Location "$msvcPath"
+Push-Location "$msvcPath\VC\Auxiliary\Build"
 cmd /c "vcvars64.bat & set" |
     foreach {
         if ($_ -match "=") {
