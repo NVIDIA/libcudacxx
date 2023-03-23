@@ -64,7 +64,7 @@ extern "C++" {
 #    elif _MSVC_LANG <= 202002L
 #      define _LIBCUDACXX_STD_VER 20
 #    else
-#      define _LIBCUDACXX_STD_VER 22 // current year, or date of c++2b ratification
+#      define _LIBCUDACXX_STD_VER 23 // current year, or date of c++2b ratification
 #    endif
 #  else
 #    if __cplusplus <= 201103L
@@ -76,7 +76,7 @@ extern "C++" {
 #    elif __cplusplus <= 202002L
 #      define _LIBCUDACXX_STD_VER 20
 #    else
-#      define _LIBCUDACXX_STD_VER 22 // current year, or date of c++2b ratification
+#      define _LIBCUDACXX_STD_VER 23 // current year, or date of c++2b ratification
 #    endif
 #  endif
 #endif  // _LIBCUDACXX_STD_VER
