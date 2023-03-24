@@ -1,4 +1,4 @@
-$LIT_PATH = "$((gi $((gcm python).path)).Directory.FullName)\Scripts"
+$LIT_PATH = "$((gi $((gcm py).path)).Directory.FullName)\Scripts"
 
 py -m pip install wheel
 py -m pip install lit
