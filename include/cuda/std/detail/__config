@@ -45,7 +45,6 @@
 #endif
 
 // request these outcomes
-#define _LIBCUDACXX_NO_AUTO_LINK
 #ifndef _LIBCUDACXX_NO_EXCEPTIONS
     #define _LIBCUDACXX_NO_EXCEPTIONS
 #endif

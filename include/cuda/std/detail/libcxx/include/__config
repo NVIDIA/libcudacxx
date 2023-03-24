@@ -1919,7 +1919,7 @@ extern "C" _LIBCUDACXX_FUNC_VIS void __sanitizer_annotate_contiguous_container(
 #  endif
 #endif // defined(_LIBCUDACXX_HAS_NO_PRAGMA_PUSH_POP_MACRO)
 
-#ifndef _LIBCUDACXX_NO_AUTO_LINK
+#if !defined(_LIBCUDACXX_NO_AUTO_LINK) || defined(__cuda_std__)
 #  if defined(_LIBCUDACXX_ABI_MICROSOFT) && !defined(_LIBCUDACXX_BUILDING_LIBRARY)
 #    if defined(_DLL)
 #      pragma comment(lib, "c++.lib")
@@ -1927,7 +1927,7 @@ extern "C" _LIBCUDACXX_FUNC_VIS void __sanitizer_annotate_contiguous_container(
 #      pragma comment(lib, "libc++.lib")
 #    endif
 #  endif // defined(_LIBCUDACXX_ABI_MICROSOFT) && !defined(_LIBCUDACXX_BUILDING_LIBRARY)
-#endif // _LIBCUDACXX_NO_AUTO_LINK
+#endif // !defined(_LIBCUDACXX_NO_AUTO_LINK) || defined(__cuda_std__)
 
 #define _LIBCUDACXX_UNUSED_VAR(x) ((void)(x))
 
