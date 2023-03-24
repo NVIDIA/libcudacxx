@@ -1030,6 +1030,12 @@ typedef __char32_t char32_t;
 #endif
 #endif // !_LIBCUDACXX_FREESTANDING
 
+#ifndef _LIBCUDACXX_HAS_CUDA_ATOMIC_EXT
+#if defined(__cuda_std__)
+#  define _LIBCUDACXX_HAS_CUDA_ATOMIC_EXT
+#endif
+#endif // _LIBCUDACXX_HAS_CUDA_ATOMIC_EXT
+
 #ifndef _LIBCUDACXX_HAS_NO_ASAN
 #if defined(_LIBCUDACXX_COMPILER_GCC)
 #  if !defined(__SANITIZE_ADDRESS__)
