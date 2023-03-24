@@ -48,10 +48,6 @@
     #define _LIBCUDACXX_HAS_THREAD_API_WIN32
 #endif
 
-#if _GNUC_VER <= 409
-    #define _LIBCUDACXX_CUDA_HAS_NO_HOST_STD_ATOMIC_INIT
-#endif
-
 // force this outcome
 #undef _LIBCUDACXX_EXECUTION_SPACE_SPECIFIER
 #define _LIBCUDACXX_EXECUTION_SPACE_SPECIFIER __host__ __device__
