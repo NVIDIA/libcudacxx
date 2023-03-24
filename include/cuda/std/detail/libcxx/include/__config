@@ -1048,6 +1048,15 @@ typedef __char32_t char32_t;
 #endif // __cuda_std__
 #endif // _LIBCUDACXX_HAS_NO_CXX20_CHRONO_LITERALS
 
+#ifndef _LIBCUDACXX_HAS_NO_INT128
+#if defined(_LIBCUDACXX_COMPILER_MSVC)                                          \
+ || (defined(_LIBCUDACXX_COMPILER_NVRTC) && !defined(__CUDACC_RTC_INT128__))    \
+ || (defined(_LIBCUDACXX_COMPILER_NVCC)  && (_LIBCUDACXX_CUDACC_VER < 1105000)) \
+ || !defined(__SIZEOF_INT128__)
+#  define _LIBCUDACXX_HAS_NO_INT128
+#endif
+#endif // !_LIBCUDACXX_HAS_NO_INT128
+
 #ifndef _LIBCUDACXX_NO_EXCEPTIONS
 #if defined(__cuda_std__)                                                     \
  || (defined(_LIBCUDACXX_COMPILER_CLANG) && !(__has_feature(cxx_exceptions))) \
@@ -1333,10 +1342,6 @@ _LIBCUDACXX_BEGIN_NAMESPACE_RANGES _LIBCUDACXX_END_NAMESPACE_RANGES
 typedef unsigned short char16_t;
 typedef unsigned int   char32_t;
 #endif  // _LIBCUDACXX_HAS_NO_UNICODE_CHARS
-
-#ifndef __SIZEOF_INT128__
-#define _LIBCUDACXX_HAS_NO_INT128
-#endif
 
 #ifdef _LIBCUDACXX_CXX03_LANG
 # define static_assert(...) _Static_assert(__VA_ARGS__)
