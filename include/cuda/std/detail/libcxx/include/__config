@@ -1245,7 +1245,9 @@ typedef __char32_t char32_t;
 #endif
 
 #ifndef _LIBCUDACXX_FUNC_VIS
-#  if !defined(_LIBCUDACXX_DISABLE_VISIBILITY_ANNOTATIONS)
+#  if defined(__cuda_std__)
+#    define _LIBCUDACXX_FUNC_VIS __host__ __device__
+#  elif !defined(_LIBCUDACXX_DISABLE_VISIBILITY_ANNOTATIONS)
 #    define _LIBCUDACXX_FUNC_VIS __attribute__ ((__visibility__("default")))
 #  else
 #    define _LIBCUDACXX_FUNC_VIS
