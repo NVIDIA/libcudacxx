@@ -12,7 +12,6 @@ concurrency:
   group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
   cancel-in-progress: true
   
-  
 jobs:
   Lit-NoExecutor:
     runs-on: windows-latest
@@ -33,5 +32,5 @@ jobs:
           .github\action-scripts\configure-vcvars.ps1
           echo "$CUDA_PATH"
           cmake -S ./ -B ../build -DLIBCUDACXX_ENABLE_LIBCUDACXX_TESTS=ON -DCMAKE_CXX_COMPILER=cl -DCMAKE_CUDA_COMPILER=nvcc -G Ninja
-          lit -sv .upstream-tests/test -Dcompute_archs="70 80 90" -Dexecutor="NoopExecutor()" -Dstd=c++20
+          lit -sv .upstream-tests/test -Dcompute_archs=90 -Dexecutor="NoopExecutor()" -Dstd=c++20
         shell: powershell

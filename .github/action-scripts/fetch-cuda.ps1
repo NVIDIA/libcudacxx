@@ -5,5 +5,5 @@ Invoke-WebRequest -Uri "https://developer.download.nvidia.com/compute/cuda/12.1.
 $env:PATH="$env:PATH;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.1\bin;"
 $env:CUDA_PATH="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.1"
 
-echo "$env:PATH"      >> $env:GITHUB_ENV
-echo "$env:CUDA_PATH" >> $env:GITHUB_ENV
+echo "PATH=$env:PATH"      >> $env:GITHUB_ENV
+echo "CUDA_PATH=$env:CUDA_PATH" >> $env:GITHUB_ENV
