@@ -77,7 +77,8 @@ extern "C++" {
 #define _LIBCUDACXX_CXX03_LANG
 #endif
 
-#if defined(__NVCOMPILER) && defined(__linux__)
+#if (defined(__NVCOMPILER) && defined(__linux__)) \
+ || defined(__CUDACC_RTC__)
     #define __ELF__
 #endif
 

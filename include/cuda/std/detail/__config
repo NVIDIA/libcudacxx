@@ -46,7 +46,6 @@
 
 // request these outcomes
 #if defined(__CUDACC_RTC__)
-    #define __ELF__
     #define _LIBCUDACXX_DISABLE_PRAGMA_GCC_SYSTEM_HEADER
     #define _LIBCUDACXX_HAS_THREAD_API_EXTERNAL
     #define __alignof(x) alignof(x)
@@ -56,10 +55,6 @@
 #endif
 #if defined(__EMSCRIPTEN__)
     #define _LIBCUDACXX_HAS_THREAD_API_EXTERNAL
-#endif
-
-#if defined(__NVCOMPILER) && defined(__linux__)
-    #define __ELF__
 #endif
 
 #define _LIBCUDACXX_ENABLE_BIT_BACKPORT
