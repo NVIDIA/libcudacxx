@@ -1364,12 +1364,13 @@ typedef __char32_t char32_t;
 #endif
 
 // Just so we can migrate to the new macros gradually.
-#define _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_HIDE_FROM_ABI
 
 #ifdef __cuda_std__
 #  define _LIBCUDACXX_EXECUTION_SPACE_SPECIFIER __host__ __device__
+#  define _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_EXECUTION_SPACE_SPECIFIER
 #else
 #  define _LIBCUDACXX_EXECUTION_SPACE_SPECIFIER
+#  define _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_HIDE_FROM_ABI
 #endif // __cuda_std__
 
 // Inline namespaces are available in Clang/GCC/MSVC regardless of C++ dialect.
