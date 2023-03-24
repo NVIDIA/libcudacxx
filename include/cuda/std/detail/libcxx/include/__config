@@ -805,12 +805,6 @@ typedef __char32_t char32_t;
 #define _LIBCUDACXX_REMOVE_VOLATILE(...) __remove_volatile(__VA_ARGS__)
 #endif
 
-
-// Literal operators ""d and ""y are supported starting with LLVM Clang 8 and AppleClang 10.0.1
-#if (defined(_LIBCUDACXX_CLANG_VER) && _LIBCUDACXX_CLANG_VER < 800) ||         \
-    (defined(__apple_build_version__) && __apple_build_version__ < 10010000)
-#define _LIBCUDACXX_HAS_NO_CXX20_CHRONO_LITERALS
-#endif
 #define _LIBCUDACXX_DISABLE_EXTENSION_WARNING __extension__
 
 #elif defined(_LIBCUDACXX_COMPILER_GCC)
@@ -1136,6 +1130,13 @@ typedef __char32_t char32_t;
 #endif
 #define _LIBCUDACXX_DISABLE_VISIBILITY_ANNOTATIONS
 #endif
+
+#ifndef _LIBCUDACXX_HAS_NO_CXX20_CHRONO_LITERALS
+#if defined(__cuda_std__) \
+ || (defined(_LIBCUDACXX_COMPILER_CLANG) && _LIBCUDACXX_CLANG_VER < 800)
+#  define _LIBCUDACXX_HAS_NO_CXX20_CHRONO_LITERALS
+#endif // __cuda_std__
+#endif // _LIBCUDACXX_HAS_NO_CXX20_CHRONO_LITERALS
 
 #if defined(_LIBCUDACXX_OBJECT_FORMAT_COFF)
 
