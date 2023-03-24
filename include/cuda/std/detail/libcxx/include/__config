@@ -842,12 +842,6 @@ typedef __char32_t char32_t;
 #define _LIBCUDACXX_HAS_NO_STRONG_ENUMS
 #endif
 
-#if __has_feature(cxx_attributes)
-#  define _LIBCUDACXX_NORETURN [[noreturn]]
-#else
-#  define _LIBCUDACXX_NORETURN __attribute__ ((noreturn))
-#endif
-
 #if !(__has_feature(cxx_lambdas))
 #define _LIBCUDACXX_HAS_NO_LAMBDAS
 #endif
@@ -909,8 +903,6 @@ typedef __char32_t char32_t;
 #define _LIBCUDACXX_DISABLE_EXTENSION_WARNING __extension__
 
 #elif defined(_LIBCUDACXX_COMPILER_GCC)
-
-#define _LIBCUDACXX_NORETURN __attribute__((noreturn))
 
 // FIXME: GCC 8.0 supports this trait, but it has a bug.
 // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=91592
@@ -1007,7 +999,6 @@ typedef __char32_t char32_t;
 #endif
 
 #define __alignof__ __alignof
-#define _LIBCUDACXX_NORETURN __declspec(noreturn)
 
 #if _LIBCUDACXX_STD_VER < 14
 #define _LIBCUDACXX_HAS_NO_CXX14_CONSTEXPR
@@ -1025,7 +1016,6 @@ typedef __char32_t char32_t;
 #elif defined(_LIBCUDACXX_COMPILER_IBM)
 
 #define _ATTRIBUTE(x) __attribute__((x))
-#define _LIBCUDACXX_NORETURN __attribute__((noreturn))
 
 #define _LIBCUDACXX_HAS_NO_UNICODE_CHARS
 #define _LIBCUDACXX_IS_BASE_OF(...) __is_base_of(__VA_ARGS__)
@@ -1054,8 +1044,6 @@ typedef __char32_t char32_t;
 
 #define _LIBCUDACXX_HAS_NO_ASAN
 
-#define _LIBCUDACXX_NORETURN __attribute__ ((noreturn))
-
 #endif // _LIBCUDACXX_COMPILER_[CLANG|GCC|MSVC|IBM|NVRTC]
 
 #if defined(_LIBCUDACXX_COMPILER_NVHPC) && !defined(__cuda_std__)
@@ -1074,6 +1062,14 @@ typedef __char32_t char32_t;
 #  define _LIBCUDACXX_HAS_NO_CXX20_CHRONO_LITERALS
 #endif // __cuda_std__
 #endif // _LIBCUDACXX_HAS_NO_CXX20_CHRONO_LITERALS
+
+#if defined(_LIBCUDACXX_COMPILER_MSVC)
+#  define _LIBCUDACXX_NORETURN __declspec(noreturn)
+#elif __has_feature(cxx_attributes)
+#  define _LIBCUDACXX_NORETURN [[noreturn]]
+#else
+#  define _LIBCUDACXX_NORETURN __attribute__ ((noreturn))
+#endif
 
 #if defined(_LIBCUDACXX_OBJECT_FORMAT_COFF)
 
