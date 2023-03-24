@@ -23,6 +23,12 @@
 #pragma GCC system_header
 #endif
 
+#if defined(_LIBCUDACXX_COMPILER_NVRTC)
+#define _LIBCUDACXX_OFFSET_IS_ZERO(type, member) !(&(((type *)0)->member))
+#else
+#define _LIBCUDACXX_OFFSET_IS_ZERO(type, member) !offsetof(type, member)
+#endif
+
 _LIBCUDACXX_BEGIN_NAMESPACE_CUDA
 
 // foward declaration required for memcpy_async, pipeline "sync" defined here
