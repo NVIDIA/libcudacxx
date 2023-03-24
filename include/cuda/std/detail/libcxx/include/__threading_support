@@ -669,10 +669,6 @@ bool __libcpp_thread_poll_with_backoff(_Fn && __f, chrono::nanoseconds __max)
     }
 }
 
-#if _LIBCUDACXX_STD_VER < 11
-# define _LIBCUDACXX_HAS_NO_THREAD_CONTENTION_TABLE
-#endif
-
 #ifndef _LIBCUDACXX_HAS_NO_THREAD_CONTENTION_TABLE
 
 struct alignas(64) __libcpp_contention_t {
