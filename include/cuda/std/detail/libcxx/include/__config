@@ -2003,8 +2003,12 @@ extern "C" _LIBCUDACXX_FUNC_VIS void __sanitizer_annotate_contiguous_container(
 #  endif
 
 #ifndef _LIBCUDACXX_SYS_CLOCK_DURATION
+#if defined(__cuda_std__)
+#  define _LIBCUDACXX_SYS_CLOCK_DURATION nanoseconds
+#else
 #  define _LIBCUDACXX_SYS_CLOCK_DURATION microseconds
 #endif
+#endif // _LIBCUDACXX_SYS_CLOCK_DURATION
 
 // There are a handful of public standard library types that are intended to
 // support CTAD but don't need any explicit deduction guides to do so. This

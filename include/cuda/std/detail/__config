@@ -58,8 +58,6 @@
     #define _LIBCUDACXX_HAS_THREAD_API_EXTERNAL
 #endif
 
-#define _LIBCUDACXX_SYS_CLOCK_DURATION nanoseconds
-
 #if defined(__NVCOMPILER) && defined(__linux__)
     #define __ELF__
 #endif
