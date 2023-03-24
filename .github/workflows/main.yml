@@ -22,15 +22,18 @@ jobs:
         run: py -m pip install wheel; py -m pip install lit
         shell: powershell
 
-      - name: Fetch pre-reqs
-        run: | 
-          .github\action-scripts\fetch-cuda.ps1
-          .github\action-scripts\fetch-ninja.ps1
+      - name: Fetch CUDA Toolkit
+        run: .github\action-scripts\fetch-cuda.ps1
+
+      - name: Fetch Ninja
+        run: .github\action-scripts\fetch-ninja.ps1
+      
+      - name: Set vcvars
+        run: .github\action-scripts\configure-vcvars.ps1
 
       - name: Configure CMake project
         run: |
-          .github\action-scripts\configure-vcvars.ps1
-          echo "$CUDA_PATH"
+          echo "CUDA_PATH: $ENV:CUDA_PATH"
           cmake -S ./ -B ../build -DLIBCUDACXX_ENABLE_LIBCUDACXX_TESTS=ON -DCMAKE_CXX_COMPILER=cl -DCMAKE_CUDA_COMPILER=nvcc -G Ninja
           lit -sv .upstream-tests/test -Dcompute_archs=90 -Dexecutor="NoopExecutor()" -Dstd=c++20
         shell: powershell
