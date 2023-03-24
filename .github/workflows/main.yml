@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@master
 
       - name: Install Lit
-        run: py -m pip install wheel; py -m pip install lit
+        run: .github\action-scripts\fetch-lit.ps1
         shell: powershell
 
       - name: Fetch CUDA Toolkit
