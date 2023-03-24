@@ -45,9 +45,6 @@
 #endif
 
 // request these outcomes
-#ifndef _LIBCUDACXX_NO_EXCEPTIONS
-    #define _LIBCUDACXX_NO_EXCEPTIONS
-#endif
 #ifndef _LIBCUDACXX_NO_RTTI
     #define _LIBCUDACXX_NO_RTTI
 #endif

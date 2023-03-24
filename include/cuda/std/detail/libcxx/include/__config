@@ -826,10 +826,6 @@ typedef __char16_t char16_t;
 typedef __char32_t char32_t;
 #endif
 
-#if !(__has_feature(cxx_exceptions)) && !defined(_LIBCUDACXX_NO_EXCEPTIONS)
-#define _LIBCUDACXX_NO_EXCEPTIONS
-#endif
-
 #if !(__has_feature(cxx_rtti)) && !defined(_LIBCUDACXX_NO_RTTI)
 #define _LIBCUDACXX_NO_RTTI
 #endif
@@ -901,9 +897,6 @@ typedef __char32_t char32_t;
 // https://godbolt.org/z/IljfIw
 #define _LIBCUDACXX_USE_IS_ASSIGNABLE_FALLBACK
 
-#if !__EXCEPTIONS && !defined(_LIBCUDACXX_NO_EXCEPTIONS)
-#define _LIBCUDACXX_NO_EXCEPTIONS
-#endif
 
 // Determine if GCC supports relaxed constexpr
 #if !defined(__cpp_constexpr) || __cpp_constexpr < 201304L
@@ -1058,6 +1051,14 @@ typedef __char32_t char32_t;
 #  define _LIBCUDACXX_HAS_NO_CXX20_CHRONO_LITERALS
 #endif // __cuda_std__
 #endif // _LIBCUDACXX_HAS_NO_CXX20_CHRONO_LITERALS
+
+#ifndef _LIBCUDACXX_NO_EXCEPTIONS
+#if defined(__cuda_std__)                                                     \
+ || (defined(_LIBCUDACXX_COMPILER_CLANG) && !(__has_feature(cxx_exceptions))) \
+ || (defined(_LIBCUDACXX_COMPILER_GCC) && !__EXCEPTIONS)
+#  define _LIBCUDACXX_NO_EXCEPTIONS
+#endif
+#endif // !_LIBCUDACXX_NO_EXCEPTIONS
 
 #if defined(_LIBCUDACXX_COMPILER_MSVC)
 #  define _LIBCUDACXX_NORETURN __declspec(noreturn)
