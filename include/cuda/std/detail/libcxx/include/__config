@@ -93,7 +93,7 @@ extern "C++" {
 #  error Unknown object file format
 #endif
 
-#if defined(_LIBCUDACXX_ABI_UNSTABLE) || _LIBCUDACXX_ABI_VERSION >= 2
+#if defined(_LIBCUDACXX_ABI_UNSTABLE) || _LIBCUDACXX_ABI_VERSION >= 2 || defined(__cuda_std__)
 // Change short string representation so that string data starts at offset 0,
 // improving its alignment in some cases.
 #  define _LIBCUDACXX_ABI_ALTERNATE_STRING_LAYOUT
