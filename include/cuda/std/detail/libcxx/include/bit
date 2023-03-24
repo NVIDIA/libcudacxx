@@ -772,7 +772,7 @@ __ceil2(_Tp __t) noexcept
 }
 
 
-#if (_LIBCUDACXX_STD_VER > 17) || defined(_LIBCUDACXX_ENABLE_BIT_BACKPORT)
+#if (_LIBCUDACXX_STD_VER > 17) || defined(__cuda_std__)
 
 template<class _Tp>
 _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_BIT_CONSTEXPR
