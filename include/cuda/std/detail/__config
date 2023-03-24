@@ -38,10 +38,6 @@
     #endif
 #endif
 
-#ifdef _MSC_VER
-    #undef __cpp_lib_transparent_operators
-#endif
-
 // request these outcomes
 #if defined(__CUDACC_RTC__)
     #define _LIBCUDACXX_DISABLE_PRAGMA_GCC_SYSTEM_HEADER
