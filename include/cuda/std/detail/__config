@@ -38,11 +38,6 @@
     #endif
 #endif
 
-// request these outcomes
-#if defined(__CUDACC_RTC__)
-    #define __alignof(x) alignof(x)
-#endif
-
 #include "libcxx/include/__config"
 
 #if defined(__CUDA_ARCH__)
