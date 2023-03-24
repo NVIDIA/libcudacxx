@@ -964,7 +964,6 @@ typedef __char32_t char32_t;
 
 #if _MSC_VER < 1920
 #define _LIBCUDACXX_HAS_NO_NOEXCEPT_SFINAE
-#define _LIBCUDACXX_HAS_NO_PRAGMA_PUSH_POP_MACRO // This is conservative but correct.
 #define _LIBCUDACXX_HAS_NO_LOGICAL_METAFUNCTION_ALIASES
 #endif
 
@@ -1111,6 +1110,14 @@ typedef __char32_t char32_t;
 #  define _LIBCUDACXX_HAS_NO_PLATFORM_WAIT
 #endif
 #endif // _LIBCUDACXX_HAS_NO_PLATFORM_WAIT
+
+#ifndef _LIBCUDACXX_HAS_NO_PRAGMA_PUSH_POP_MACRO
+#if (defined(_LIBCUDACXX_COMPILER_MSVC) && _MSC_VER < 1920) \
+ || defined(_LIBCUDACXX_COMPILER_NVRTC)                     \
+ || defined(_LIBCUDACXX_COMPILER_IBM)
+#define _LIBCUDACXX_HAS_NO_PRAGMA_PUSH_POP_MACRO
+#endif
+#endif // _LIBCUDACXX_HAS_NO_PRAGMA_PUSH_POP_MACRO
 
 #ifndef _LIBCUDACXX_HAS_NO_THREAD_CONTENTION_TABLE
 #if defined(__cuda_std__)
@@ -1961,10 +1968,6 @@ extern "C" _LIBCUDACXX_FUNC_VIS void __sanitizer_annotate_contiguous_container(
      (defined(__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__) &&               \
       __ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__ < 70000))
 #  define _LIBCUDACXX_DO_NOT_ASSUME_STREAMS_EXPLICIT_INSTANTIATION_IN_DYLIB
-#endif
-
-#if defined(_LIBCUDACXX_COMPILER_IBM)
-#define _LIBCUDACXX_HAS_NO_PRAGMA_PUSH_POP_MACRO
 #endif
 
 #if defined(_LIBCUDACXX_HAS_NO_PRAGMA_PUSH_POP_MACRO)

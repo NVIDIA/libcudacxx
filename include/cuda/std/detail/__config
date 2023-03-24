@@ -42,7 +42,6 @@
 #if defined(__CUDACC_RTC__)
     #define __alignof(x) alignof(x)
     #define _LIBCUDACXX_DISABLE_VISIBILITY_ANNOTATIONS
-    #define _LIBCUDACXX_HAS_NO_PRAGMA_PUSH_POP_MACRO
 #endif
 
 #include "libcxx/include/__config"
