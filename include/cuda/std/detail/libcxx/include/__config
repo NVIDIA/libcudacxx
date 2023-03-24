@@ -1071,6 +1071,12 @@ typedef __char32_t char32_t;
 #endif
 #endif // _LIBCUDACXX_HAS_NO_ATTRIBUTE_NO_UNIQUE_ADDRESS
 
+#ifndef _LIBCUDACXX_HAS_NO_PLATFORM_WAIT
+#if defined(__cuda_std__)
+#  define _LIBCUDACXX_HAS_NO_PLATFORM_WAIT
+#endif
+#endif // _LIBCUDACXX_HAS_NO_PLATFORM_WAIT
+
 #ifndef _LIBCUDACXX_HAS_NO_THREAD_CONTENTION_TABLE
 #if defined(__cuda_std__)
 #  define _LIBCUDACXX_HAS_NO_THREAD_CONTENTION_TABLE
