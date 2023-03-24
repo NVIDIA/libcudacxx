@@ -41,7 +41,7 @@ jobs:
           $ENV:LIBCUDACXX_SITE_CONFIG="$(pwd)/../build/test/lit.site.cfg"
           lit --no-progress-bar -o ./lit_test_results.json -Dcompute_archs=90 -Dexecutor="NoopExecutor()" -Dstd=c++20 -j3 .upstream-tests/test
 
-      -uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v3
         with:
           name: lit_test_results.json
           path: ./lit_test_results.json
