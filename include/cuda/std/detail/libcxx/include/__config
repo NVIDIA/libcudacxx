@@ -360,6 +360,12 @@ extern "C++" {
 #  define _LIBCUDACXX_USING_DEV_RANDOM
 #endif
 
+#ifndef _LIBCUDACXX_LITTLE_ENDIAN
+#if defined(_LIBCUDACXX_COMPILER_NVRTC)
+#  define _LIBCUDACXX_LITTLE_ENDIAN
+#endif
+#endif // _LIBCUDACXX_LITTLE_ENDIAN
+
 #if !defined(_LIBCUDACXX_LITTLE_ENDIAN) && !defined(_LIBCUDACXX_BIG_ENDIAN)
 #  include <endian.h>
 #  if __BYTE_ORDER == __LITTLE_ENDIAN
