@@ -35,5 +35,6 @@ jobs:
         run: |
           echo "CUDA_PATH: $ENV:CUDA_PATH"
           cmake -S ./ -B ../build -DLIBCUDACXX_ENABLE_LIBCUDACXX_TESTS=ON -DCMAKE_CXX_COMPILER=cl -DCMAKE_CUDA_COMPILER=nvcc -G Ninja
+          $ENV:LIBCUDACXX_SITE_CONFIG="$(pwd)/../build/test/lit.site.cfg"
           lit -sv .upstream-tests/test -Dcompute_archs=90 -Dexecutor="NoopExecutor()" -Dstd=c++20
         shell: powershell
