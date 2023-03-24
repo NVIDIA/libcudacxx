@@ -57,8 +57,6 @@
     #define _LIBCUDACXX_HAS_THREAD_API_EXTERNAL
 #endif
 
-#define _LIBCUDACXX_ENABLE_BIT_BACKPORT
-
 #include "libcxx/include/__config"
 
 #if defined(__CUDA_ARCH__)
