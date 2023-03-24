@@ -891,10 +891,6 @@ typedef __char32_t char32_t;
 #define _LIBCUDACXX_HAS_NO_NOEXCEPT
 #endif
 
-#if !defined(_LIBCUDACXX_HAS_NO_ASAN) && !__has_feature(address_sanitizer)
-#define _LIBCUDACXX_HAS_NO_ASAN
-#endif
-
 // Allow for build-time disabling of unsigned integer sanitization
 #if !defined(_LIBCUDACXX_DISABLE_UBSAN_UNSIGNED_INTEGER_CHECK) && __has_attribute(no_sanitize)
 #define _LIBCUDACXX_DISABLE_UBSAN_UNSIGNED_INTEGER_CHECK __attribute__((__no_sanitize__("unsigned-integer-overflow")))
@@ -921,10 +917,6 @@ typedef __char32_t char32_t;
 // GCC 5 supports variable templates
 #if !defined(__cpp_variable_templates) || __cpp_variable_templates < 201304L
 #define _LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES
-#endif
-
-#if !defined(_LIBCUDACXX_HAS_NO_ASAN) && !defined(__SANITIZE_ADDRESS__)
-#define _LIBCUDACXX_HAS_NO_ASAN
 #endif
 
 #if _GNUC_VER < 600
@@ -1007,8 +999,6 @@ typedef __char32_t char32_t;
 
 #define _LIBCUDACXX_WEAK
 
-#define _LIBCUDACXX_HAS_NO_ASAN
-
 #define _LIBCUDACXX_HAS_NO_VECTOR_EXTENSION
 
 #define _LIBCUDACXX_DISABLE_EXTENSION_WARNING
@@ -1026,8 +1016,6 @@ typedef __char32_t char32_t;
 #define __MULTILOCALE_API
 #endif
 
-#define _LIBCUDACXX_HAS_NO_ASAN
-
 #define _LIBCUDACXX_HAS_NO_VECTOR_EXTENSION
 
 #elif defined(_LIBCUDACXX_COMPILER_NVRTC) || defined(_LIBCUDACXX_COMPILER_NVHPC)
@@ -1042,8 +1030,6 @@ typedef __char32_t char32_t;
 
 #define _LIBCUDACXX_DISABLE_EXTENSION_WARNING
 
-#define _LIBCUDACXX_HAS_NO_ASAN
-
 #endif // _LIBCUDACXX_COMPILER_[CLANG|GCC|MSVC|IBM|NVRTC]
 
 #if defined(_LIBCUDACXX_COMPILER_NVHPC) && !defined(__cuda_std__)
@@ -1055,6 +1041,20 @@ typedef __char32_t char32_t;
 #endif
 #define _LIBCUDACXX_DISABLE_VISIBILITY_ANNOTATIONS
 #endif
+
+#ifndef _LIBCUDACXX_HAS_NO_ASAN
+#if defined(_LIBCUDACXX_COMPILER_GCC)
+#  if !defined(__SANITIZE_ADDRESS__)
+#    define _LIBCUDACXX_HAS_NO_ASAN
+#  endif // !__SANITIZE_ADDRESS__
+#elif defined(_LIBCUDACXX_COMPILER_CLANG)
+#  if !__has_feature(address_sanitizer)
+#    define _LIBCUDACXX_HAS_NO_ASAN
+#  endif // !__has_feature(address_sanitizer)
+#else
+#  define _LIBCUDACXX_HAS_NO_ASAN
+#endif // _LIBCUDACXX_COMPILER[MSVC|IBM|NVHPC|NVRTC]
+#endif // _LIBCUDACXX_HAS_NO_ASAN
 
 #ifndef _LIBCUDACXX_HAS_NO_CXX20_CHRONO_LITERALS
 #if defined(__cuda_std__) \
