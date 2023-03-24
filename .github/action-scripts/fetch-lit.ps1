@@ -1,4 +1,4 @@
-$python_path=(gi $($(get-command python).path)).Directory.FullName
+$python_path = "$((gi $($(get-command python).path)).Directory.FullName)"
 py -m pip install wheel
 py -m pip install lit
 
