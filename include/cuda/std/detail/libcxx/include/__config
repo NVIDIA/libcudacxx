@@ -1073,6 +1073,12 @@ typedef __char32_t char32_t;
 #endif
 #endif // !_LIBCUDACXX_HAS_NO_INT128
 
+#ifndef _LIBCUDACXX_HAS_NO_LONG_DOUBLE
+#if defined(__CUDACC__)
+#  define _LIBCUDACXX_HAS_NO_LONG_DOUBLE
+#endif
+#endif // _LIBCUDACXX_HAS_NO_LONG_DOUBLE
+
 #ifndef _LIBCUDACXX_HAS_NO_ATTRIBUTE_NO_UNIQUE_ADDRESS
 #if defined(_LIBCUDACXX_COMPILER_MSVC)                                         \
  || (defined(_LIBCUDACXX_COMPILER_NVCC) && (_LIBCUDACXX_CUDACC_VER < 1100000)) \
