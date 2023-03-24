@@ -422,6 +422,17 @@ extern "C++" {
 
 #define _LIBCUDACXX_PREFERRED_ALIGNOF(_Tp) __alignof(_Tp)
 
+#if defined(_LIBCUDACXX_COMPILER_MSVC)
+#  define _ALIGNAS_TYPE(x) alignas(x)
+#  define _ALIGNAS(x) __declspec(align(x))
+#elif __has_feature(cxx_alignas)
+#  define _ALIGNAS_TYPE(x) alignas(x)
+#  define _ALIGNAS(x) alignas(x)
+#else
+#  define _ALIGNAS_TYPE(x) __attribute__((__aligned__(_LIBCUDACXX_ALIGNOF(x))))
+#  define _ALIGNAS(x) __attribute__((__aligned__(x)))
+#endif // !_LIBCUDACXX_COMPILER_MSVC && !__has_feature(cxx_alignas)
+
 #if defined(_LIBCUDACXX_COMPILER_CLANG)
 
 // _LIBCUDACXX_ALTERNATE_STRING_LAYOUT is an old name for
@@ -430,14 +441,6 @@ extern "C++" {
      (!defined(__arm__) || __ARM_ARCH_7K__ >= 2)) ||                           \
     defined(_LIBCUDACXX_ALTERNATE_STRING_LAYOUT)
 #define _LIBCUDACXX_ABI_ALTERNATE_STRING_LAYOUT
-#endif
-
-#if __has_feature(cxx_alignas)
-#  define _ALIGNAS_TYPE(x) alignas(x)
-#  define _ALIGNAS(x) alignas(x)
-#else
-#  define _ALIGNAS_TYPE(x) __attribute__((__aligned__(_LIBCUDACXX_ALIGNOF(x))))
-#  define _ALIGNAS(x) __attribute__((__aligned__(x)))
 #endif
 
 #if __cplusplus < 201103L
@@ -810,9 +813,6 @@ typedef __char32_t char32_t;
 
 #elif defined(_LIBCUDACXX_COMPILER_GCC)
 
-#define _ALIGNAS(x) __attribute__((__aligned__(x)))
-#define _ALIGNAS_TYPE(x) __attribute__((__aligned__(_LIBCUDACXX_ALIGNOF(x))))
-
 #define _LIBCUDACXX_NORETURN __attribute__((noreturn))
 
 #if _GNUC_VER >= 403
@@ -1053,8 +1053,6 @@ typedef __char32_t char32_t;
 #define _LIBCUDACXX_IS_ASSIGNABLE(...) __is_assignable(__VA_ARGS__)
 #define __alignof__ __alignof
 #define _LIBCUDACXX_NORETURN __declspec(noreturn)
-#define _ALIGNAS(x) __declspec(align(x))
-#define _ALIGNAS_TYPE(x) alignas(x)
 
 #if _LIBCUDACXX_STD_VER < 14
 #define _LIBCUDACXX_HAS_NO_CXX14_CONSTEXPR
@@ -1074,8 +1072,6 @@ typedef __char32_t char32_t;
 
 #elif defined(_LIBCUDACXX_COMPILER_IBM)
 
-#define _ALIGNAS(x) __attribute__((__aligned__(x)))
-#define _ALIGNAS_TYPE(x) __attribute__((__aligned__(_LIBCUDACXX_ALIGNOF(x))))
 #define _ATTRIBUTE(x) __attribute__((x))
 #define _LIBCUDACXX_NORETURN __attribute__((noreturn))
 
@@ -1103,9 +1099,6 @@ typedef __char32_t char32_t;
 #if !defined(__cpp_variable_templates) || __cpp_variable_templates < 201304L
 #define _LIBCUDACXX_HAS_NO_VARIABLE_TEMPLATES
 #endif
-
-#define _ALIGNAS_TYPE(x) alignas(x)
-#define _ALIGNAS(x) alignas(x)
 
 #define _LIBCUDACXX_UNDERLYING_TYPE(...) __underlying_type(__VA_ARGS__)
 #define _LIBCUDACXX_IS_CONSTRUCTIBLE(...) __is_constructible(__VA_ARGS__)
