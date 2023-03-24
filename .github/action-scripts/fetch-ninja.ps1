@@ -3,3 +3,4 @@ Invoke-WebRequest -Uri "https://github.com/ninja-build/ninja/releases/download/v
 Expand-Archive ./ninja.zip
 
 $env:PATH="$env:PATH;$(pwd)\ninja"
+echo "$env:PATH"      >> $env:GITHUB_ENV

@@ -18,18 +18,18 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@master
-      - uses: microsoft/setup-msbuild@v1.0.2
-        with:
-          vs-version: 'latest'
 
       - name: Install Lit
         run: py -m pip install wheel; py -m pip install lit
         shell: powershell
 
-      - name: Configure CMake project
-        run: |
+      - name: Fetch pre-reqs
+        run: | 
           .github\action-scripts\fetch-cuda.ps1
           .github\action-scripts\fetch-ninja.ps1
+
+      - name: Configure CMake project
+        run: |
           .github\action-scripts\configure-vcvars.ps1
           echo "$CUDA_PATH"
           cmake -S ./ -B ../build -DLIBCUDACXX_ENABLE_LIBCUDACXX_TESTS=ON -DCMAKE_CXX_COMPILER=cl -DCMAKE_CUDA_COMPILER=nvcc -G Ninja
