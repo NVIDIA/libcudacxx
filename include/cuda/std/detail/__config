@@ -45,9 +45,6 @@
 #endif
 
 // request these outcomes
-#ifndef _LIBCUDACXX_NO_RTTI
-    #define _LIBCUDACXX_NO_RTTI
-#endif
 // Disable the nodebug type
 #ifndef _LIBCUDACXX_NODEBUG_TYPE
     #define _LIBCUDACXX_NODEBUG_TYPE

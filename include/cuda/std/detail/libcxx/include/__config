@@ -826,10 +826,6 @@ typedef __char16_t char16_t;
 typedef __char32_t char32_t;
 #endif
 
-#if !(__has_feature(cxx_rtti)) && !defined(_LIBCUDACXX_NO_RTTI)
-#define _LIBCUDACXX_NO_RTTI
-#endif
-
 #if !(__has_feature(cxx_strong_enums))
 #define _LIBCUDACXX_HAS_NO_STRONG_ENUMS
 #endif
@@ -1053,6 +1049,17 @@ typedef __char32_t char32_t;
 #  define _LIBCUDACXX_NO_EXCEPTIONS
 #endif
 #endif // !_LIBCUDACXX_NO_EXCEPTIONS
+
+// Try to find out if RTTI is disabled.
+// g++ and cl.exe have RTTI on by default and define a macro when it is.
+#ifndef _LIBCUDACXX_NO_RTTI
+#if defined(__cuda_std__)                                               \
+ || (defined(_LIBCUDACXX_COMPILER_CLANG) && !(__has_feature(cxx_rtti))) \
+ || (defined(_LIBCUDACXX_COMPILER_GCC)   && !defined(__GXX_RTTI))       \
+ || (defined(_LIBCUDACXX_COMPILER_MSVC)  && !defined(_CPPRTTI))
+#  define _LIBCUDACXX_NO_RTTI
+#endif
+#endif // !_LIBCUDACXX_NO_RTTI
 
 #if defined(_LIBCUDACXX_COMPILER_MSVC)
 #  define _LIBCUDACXX_NORETURN __declspec(noreturn)
@@ -1595,20 +1602,6 @@ typedef unsigned int   char32_t;
 #ifndef _LIBCUDACXX_HAS_NO_ASAN
 extern "C" _LIBCUDACXX_FUNC_VIS void __sanitizer_annotate_contiguous_container(
   const void *, const void *, const void *, const void *);
-#endif
-
-// Try to find out if RTTI is disabled.
-// g++ and cl.exe have RTTI on by default and define a macro when it is.
-// g++ only defines the macro in 4.3.2 and onwards.
-#if !defined(_LIBCUDACXX_NO_RTTI)
-#  if defined(__GNUC__) && \
-      ((__GNUC__ >= 5) || \
-       (__GNUC__ == 4 && (__GNUC_MINOR__ >= 3 || __GNUC_PATCHLEVEL__ >= 2))) && \
-      !defined(__GXX_RTTI)
-#    define _LIBCUDACXX_NO_RTTI
-#  elif defined(_LIBCUDACXX_COMPILER_MSVC) && !defined(_CPPRTTI)
-#    define _LIBCUDACXX_NO_RTTI
-#  endif
 #endif
 
 #ifndef _LIBCUDACXX_WEAK
