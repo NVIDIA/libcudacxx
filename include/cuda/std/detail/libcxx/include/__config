@@ -1083,6 +1083,12 @@ typedef __char32_t char32_t;
 #endif
 #endif // _LIBCUDACXX_HAS_NO_THREAD_CONTENTION_TABLE
 
+#ifndef _LIBCUDACXX_HAS_NO_TREE_BARRIER
+#if defined(__cuda_std__)
+#  define _LIBCUDACXX_HAS_NO_TREE_BARRIER
+#endif
+#endif // _LIBCUDACXX_HAS_NO_TREE_BARRIER
+
 #ifndef _LIBCUDACXX_HAS_NO_WCHAR_H
 #if defined(__cuda_std__)
 #  define _LIBCUDACXX_HAS_NO_WCHAR_H
