@@ -433,6 +433,12 @@ extern "C++" {
 #  define _ALIGNAS(x) __attribute__((__aligned__(x)))
 #endif // !_LIBCUDACXX_COMPILER_MSVC && !__has_feature(cxx_alignas)
 
+#if defined(_LIBCUDACXX_COMPILER_MSVC)
+#define _LIBCUDACXX_ALWAYS_INLINE __forceinline
+#else
+#define _LIBCUDACXX_ALWAYS_INLINE __attribute__ ((__always_inline__))
+#endif // !_LIBCUDACXX_COMPILER_MSVC
+
 #if defined(_LIBCUDACXX_COMPILER_CLANG)
 
 // _LIBCUDACXX_ALTERNATE_STRING_LAYOUT is an old name for
@@ -797,7 +803,6 @@ typedef __char32_t char32_t;
 #define _LIBCUDACXX_REMOVE_VOLATILE(...) __remove_volatile(__VA_ARGS__)
 #endif
 
-#define _LIBCUDACXX_ALWAYS_INLINE __attribute__ ((__always_inline__))
 
 // Literal operators ""d and ""y are supported starting with LLVM Clang 8 and AppleClang 10.0.1
 #if (defined(_LIBCUDACXX_CLANG_VER) && _LIBCUDACXX_CLANG_VER < 800) ||         \
@@ -952,8 +957,6 @@ typedef __char32_t char32_t;
 #define _LIBCUDACXX_BIT_CAST(...) __builtin_bit_cast(__VA_ARGS__)
 #endif
 
-#define _LIBCUDACXX_ALWAYS_INLINE __attribute__ ((__always_inline__))
-
 #define _LIBCUDACXX_DISABLE_EXTENSION_WARNING __extension__
 
 #elif defined(_LIBCUDACXX_COMPILER_MSVC)
@@ -1063,8 +1066,6 @@ typedef __char32_t char32_t;
 
 #define _LIBCUDACXX_HAS_NO_ASAN
 
-#define _LIBCUDACXX_ALWAYS_INLINE __forceinline
-
 #define _LIBCUDACXX_HAS_NO_VECTOR_EXTENSION
 
 #define _LIBCUDACXX_HAS_REFERENCE_QUALIFIED_FUNCTIONS
@@ -1085,8 +1086,6 @@ typedef __char32_t char32_t;
 #endif
 
 #define _LIBCUDACXX_HAS_NO_ASAN
-
-#define _LIBCUDACXX_ALWAYS_INLINE __attribute__ ((__always_inline__))
 
 #define _LIBCUDACXX_HAS_NO_VECTOR_EXTENSION
 
@@ -1134,7 +1133,6 @@ typedef __char32_t char32_t;
 
 #define _LIBCUDACXX_HAS_NO_ASAN
 
-#define _LIBCUDACXX_ALWAYS_INLINE __attribute__ ((__always_inline__))
 #define _LIBCUDACXX_NORETURN __attribute__ ((noreturn))
 
 #if __has_builtin(__builtin_is_constant_evaluated) && _LIBCUDACXX_STD_VER > 11
