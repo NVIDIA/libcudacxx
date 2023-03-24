@@ -49,9 +49,6 @@
 #endif
 
 // force this outcome
-#ifndef _LIBCUDACXX_ABI_UNSTABLE
-#  define _LIBCUDACXX_ABI_UNSTABLE
-#endif
 
 #define _LIBCUDACXX_CUDA_API_VERSION 2001001
 
