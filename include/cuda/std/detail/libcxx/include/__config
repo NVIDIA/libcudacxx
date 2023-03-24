@@ -811,11 +811,6 @@ typedef __char32_t char32_t;
     (defined(__apple_build_version__) && __apple_build_version__ < 10010000)
 #define _LIBCUDACXX_HAS_NO_CXX20_CHRONO_LITERALS
 #endif
-
-#if __has_feature(cxx_reference_qualified_functions)
-#define _LIBCUDACXX_HAS_REFERENCE_QUALIFIED_FUNCTIONS
-#endif
-
 #define _LIBCUDACXX_DISABLE_EXTENSION_WARNING __extension__
 
 #elif defined(_LIBCUDACXX_COMPILER_GCC)
@@ -850,10 +845,6 @@ typedef __char32_t char32_t;
 #define _LIBCUDACXX_UNDERLYING_TYPE(...) __underlying_type(__VA_ARGS__)
 #define _LIBCUDACXX_IS_FINAL(...) __is_final(__VA_ARGS__)
 #define _LIBCUDACXX_IS_STANDARD_LAYOUT(...) __is_standard_layout(__VA_ARGS__)
-#endif
-
-#if _GNUC_VER >= 409
-#define _LIBCUDACXX_HAS_REFERENCE_QUALIFIED_FUNCTIONS
 #endif
 
 #if _GNUC_VER >= 501
@@ -1066,7 +1057,6 @@ typedef __char32_t char32_t;
 
 #define _LIBCUDACXX_HAS_NO_VECTOR_EXTENSION
 
-#define _LIBCUDACXX_HAS_REFERENCE_QUALIFIED_FUNCTIONS
 #define _LIBCUDACXX_DISABLE_EXTENSION_WARNING
 
 #elif defined(_LIBCUDACXX_COMPILER_IBM)
@@ -1126,8 +1116,6 @@ typedef __char32_t char32_t;
 #define _LIBCUDACXX_IS_FINAL(...) __is_final(__VA_ARGS__)
 #define _LIBCUDACXX_IS_CONVERTIBLE_TO(...) __is_convertible_to(__VA_ARGS__)
 #define _LIBCUDACXX_DISABLE_EXTENSION_WARNING
-
-#define _LIBCUDACXX_HAS_REFERENCE_QUALIFIED_FUNCTIONS
 
 #define _LIBCUDACXX_HAS_NO_ASAN
 
