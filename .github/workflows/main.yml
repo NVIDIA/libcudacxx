@@ -17,7 +17,8 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@master
-
+      - uses: actions/setup-python@master
+      
       - name: Install Lit
         run: .github\action-scripts\fetch-lit.ps1
         shell: powershell
