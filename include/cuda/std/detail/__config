@@ -45,7 +45,6 @@
 #endif
 
 // request these outcomes
-#define _LIBCUDACXX_HAS_NO_MONOTONIC_CLOCK
 #define _LIBCUDACXX_HAS_NO_TREE_BARRIER
 #if defined(__CUDACC_RTC__)
     #define __ELF__
