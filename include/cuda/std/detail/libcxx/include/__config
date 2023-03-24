@@ -1057,6 +1057,17 @@ typedef __char32_t char32_t;
 #endif
 #endif // !_LIBCUDACXX_HAS_NO_INT128
 
+#ifndef _LIBCUDACXX_HAS_NO_ATTRIBUTE_NO_UNIQUE_ADDRESS
+#if defined(_LIBCUDACXX_COMPILER_MSVC)                                         \
+ || (defined(_LIBCUDACXX_COMPILER_NVCC) && (_LIBCUDACXX_CUDACC_VER < 1100000)) \
+ || (__has_cpp_attribute(no_unique_address) < 201803L)
+#  define _LIBCUDACXX_HAS_NO_ATTRIBUTE_NO_UNIQUE_ADDRESS
+#  define _LIBCUDACXX_NO_UNIQUE_ADDRESS
+#else
+#  define _LIBCUDACXX_NO_UNIQUE_ADDRESS [[no_unique_address]]
+#endif
+#endif // _LIBCUDACXX_HAS_NO_ATTRIBUTE_NO_UNIQUE_ADDRESS
+
 #ifndef _LIBCUDACXX_NO_EXCEPTIONS
 #if defined(__cuda_std__)                                                     \
  || (defined(_LIBCUDACXX_COMPILER_CLANG) && !(__has_feature(cxx_exceptions))) \
