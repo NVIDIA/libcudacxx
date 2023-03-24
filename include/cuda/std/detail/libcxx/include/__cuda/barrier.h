@@ -102,7 +102,7 @@ class barrier<thread_scope_block, _CUDA_VSTD::__empty_completion> : public __blo
     __barrier_base __barrier;
 
     __device__
-    friend inline _CUDA_VSTD::uint64_t * device::_LIBCUDACXX_CUDA_ABI_NAMESPACE::barrier_native_handle(barrier<thread_scope_block> & b);
+    friend inline _CUDA_VSTD::uint64_t * device::_LIBCUDACXX_ABI_NAMESPACE::barrier_native_handle(barrier<thread_scope_block> & b);
 
 template<typename _Barrier>
 friend class _CUDA_VSTD::__barrier_poll_tester_phase;
