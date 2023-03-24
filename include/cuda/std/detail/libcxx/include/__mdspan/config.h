@@ -130,16 +130,6 @@ static_assert(__MDSPAN_CPLUSPLUS >= __MDSPAN_CXX_STD_14, "mdspan requires C++14 
 #  define __MDSPAN_PRESERVE_STANDARD_LAYOUT 1
 #endif
 
-#if !defined(__MDSPAN_USE_ATTRIBUTE_NO_UNIQUE_ADDRESS)
-#  if ((__has_cpp_attribute(no_unique_address) >= 201803L) && \
-       (!defined(_LIBCUDACXX_HAS_NO_ATTRIBUTE_NO_UNIQUE_ADDRESS) || __MDSPAN_HAS_CXX_20))
-#    define __MDSPAN_USE_ATTRIBUTE_NO_UNIQUE_ADDRESS 1
-#    define __MDSPAN_NO_UNIQUE_ADDRESS [[no_unique_address]]
-#  else
-#    define __MDSPAN_NO_UNIQUE_ADDRESS
-#  endif
-#endif
-
 #ifndef __MDSPAN_USE_CONCEPTS
 // Looks like concepts doesn't work in CUDA 12
 #  if defined(__cpp_concepts) && __cpp_concepts >= 201507L && !defined __cuda_std__
