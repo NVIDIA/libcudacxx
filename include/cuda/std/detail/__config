@@ -45,10 +45,6 @@
 #endif
 
 // request these outcomes
-// Disable the nodebug type
-#ifndef _LIBCUDACXX_NODEBUG_TYPE
-    #define _LIBCUDACXX_NODEBUG_TYPE
-#endif
 
 #if defined(__CUDACC_RTC__)
 #  if defined(__CUDACC_RTC_INT128__)

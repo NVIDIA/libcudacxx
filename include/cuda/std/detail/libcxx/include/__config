@@ -1067,6 +1067,17 @@ typedef __char32_t char32_t;
 #endif
 #endif // !_LIBCUDACXX_NO_RTTI
 
+#ifndef _LIBCUDACXX_NODEBUG_TYPE
+#if defined(__cuda_std__)
+#  define _LIBCUDACXX_NODEBUG_TYPE
+#elif __has_attribute(__nodebug__)                                         \
+ && (defined(_LIBCUDACXX_COMPILER_CLANG) && _LIBCUDACXX_CLANG_VER >= 1210)
+#  define _LIBCUDACXX_NODEBUG_TYPE __attribute__((nodebug))
+#else
+#  define _LIBCUDACXX_NODEBUG_TYPE
+#endif
+#endif // !_LIBCUDACXX_NODEBUG_TYPE
+
 #if defined(_LIBCUDACXX_COMPILER_MSVC)
 #  define _LIBCUDACXX_NORETURN __declspec(noreturn)
 #elif __has_feature(cxx_attributes)
@@ -1814,15 +1825,6 @@ extern "C" _LIBCUDACXX_FUNC_VIS void __sanitizer_annotate_contiguous_container(
 #else
 #define _LIBCUDACXX_NODEBUG
 #endif
-
-#ifndef _LIBCUDACXX_NODEBUG_TYPE
-#if __has_attribute(__nodebug__) && \
-    (defined(_LIBCUDACXX_CLANG_VER) && _LIBCUDACXX_CLANG_VER >= 1210)
-#define _LIBCUDACXX_NODEBUG_TYPE __attribute__((nodebug))
-#else
-#define _LIBCUDACXX_NODEBUG_TYPE
-#endif
-#endif // !defined(_LIBCUDACXX_NODEBUG_TYPE)
 
 #  if __has_attribute(__preferred_name__)
 #    define _LIBCUDACXX_PREFERRED_NAME(x) __attribute__((__preferred_name__(x)))
