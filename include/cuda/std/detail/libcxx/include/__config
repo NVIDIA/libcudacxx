@@ -45,10 +45,6 @@ extern "C++" {
 #  define _LIBCUDACXX_ABI_VERSION 1
 #endif
 
-#ifndef __STDC_HOSTED__
-#  define _LIBCUDACXX_FREESTANDING
-#endif
-
 #ifndef _LIBCUDACXX_STD_VER
 #  if defined(_MSC_VER)
 #    if   _MSVC_LANG <= 201103L
@@ -1020,6 +1016,13 @@ typedef __char32_t char32_t;
 #endif
 #define _LIBCUDACXX_DISABLE_VISIBILITY_ANNOTATIONS
 #endif
+
+#ifndef _LIBCUDACXX_FREESTANDING
+#if defined(__cuda_std__)     \
+ || !defined(__STDC_HOSTED__)
+#  define _LIBCUDACXX_FREESTANDING
+#endif
+#endif // !_LIBCUDACXX_FREESTANDING
 
 #ifndef _LIBCUDACXX_HAS_NO_ASAN
 #if defined(_LIBCUDACXX_COMPILER_GCC)
