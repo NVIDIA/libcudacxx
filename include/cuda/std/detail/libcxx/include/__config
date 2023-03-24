@@ -1861,6 +1861,10 @@ extern "C" _LIBCUDACXX_FUNC_VIS void __sanitizer_annotate_contiguous_container(
      || defined(_LIBCUDACXX_HAS_NO_THREADS)
 #  define _LIBCUDACXX_HAS_NO_ATOMIC_HEADER
 #else
+#  ifdef __cuda_std__
+#    undef _LIBCUDACXX_ATOMIC_FLAG_TYPE
+#    define _LIBCUDACXX_ATOMIC_FLAG_TYPE int
+#  endif
 #  ifndef _LIBCUDACXX_ATOMIC_FLAG_TYPE
 #    define _LIBCUDACXX_ATOMIC_FLAG_TYPE bool
 #  endif

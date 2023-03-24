@@ -49,9 +49,6 @@
 #endif
 
 // force this outcome
-#undef _LIBCUDACXX_ATOMIC_FLAG_TYPE
-#define _LIBCUDACXX_ATOMIC_FLAG_TYPE int
-
 #ifndef _LIBCUDACXX_ABI_UNSTABLE
 #  define _LIBCUDACXX_ABI_UNSTABLE
 #endif
