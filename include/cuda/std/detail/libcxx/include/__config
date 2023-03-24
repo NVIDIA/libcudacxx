@@ -1065,6 +1065,12 @@ typedef __char32_t char32_t;
 #endif
 #endif // _LIBCUDACXX_HAS_NO_ATTRIBUTE_NO_UNIQUE_ADDRESS
 
+#ifndef _LIBCUDACXX_HAS_NO_WCHAR_H
+#if defined(__cuda_std__)
+#  define _LIBCUDACXX_HAS_NO_WCHAR_H
+#endif
+#endif // _LIBCUDACXX_HAS_NO_WCHAR_H
+
 #ifndef _LIBCUDACXX_NO_EXCEPTIONS
 #if defined(__cuda_std__)                                                     \
  || (defined(_LIBCUDACXX_COMPILER_CLANG) && !(__has_feature(cxx_exceptions))) \
