@@ -41,7 +41,6 @@
 // request these outcomes
 #if defined(__CUDACC_RTC__)
     #define __alignof(x) alignof(x)
-    #define _LIBCUDACXX_DISABLE_VISIBILITY_ANNOTATIONS
 #endif
 
 #include "libcxx/include/__config"
