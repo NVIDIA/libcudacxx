@@ -40,7 +40,6 @@
 
 // request these outcomes
 #if defined(__CUDACC_RTC__)
-    #define _LIBCUDACXX_DISABLE_PRAGMA_GCC_SYSTEM_HEADER
     #define _LIBCUDACXX_HAS_THREAD_API_EXTERNAL
     #define __alignof(x) alignof(x)
     #define _LIBCUDACXX_LITTLE_ENDIAN
