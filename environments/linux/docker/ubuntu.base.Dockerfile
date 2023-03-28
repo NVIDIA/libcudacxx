@@ -48,7 +48,7 @@ RUN function comment() { :; }; \
     comment "Install Python utils"; \
     update-alternatives --quiet --install /usr/bin/python python $(which python3) 3; \
     update-alternatives --quiet --set python $(which python3); \
-    python3 -m pip install setuptools wheel; \
+    python3 -m pip install psutil setuptools wheel; \
     python3 -m pip install lit; \
     rm -rf /var/lib/apt/lists/*
 
