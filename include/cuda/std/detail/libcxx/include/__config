@@ -1047,13 +1047,6 @@ typedef __char32_t char32_t;
 #endif
 #endif // _LIBCUDACXX_HAS_EXTERNAL_ATOMIC_IMP
 
-#ifndef _LIBCUDACXX_HAS_THREAD_API_EXTERNAL
-#if defined(_LIBCUDACXX_COMPILER_NVRTC) \
- || defined(__EMSCRIPTEN__)
-#  define _LIBCUDACXX_HAS_THREAD_API_EXTERNAL
-#endif
-#endif // _LIBCUDACXX_HAS_THREAD_API_EXTERNAL
-
 #ifndef _LIBCUDACXX_HAS_NO_ASAN
 #if defined(_LIBCUDACXX_COMPILER_GCC)
 #  if !defined(__SANITIZE_ADDRESS__)
@@ -1748,10 +1741,31 @@ extern "C" _LIBCUDACXX_FUNC_VIS void __sanitizer_annotate_contiguous_container(
 #endif
 
 // Thread API
-#if !defined(_LIBCUDACXX_HAS_NO_THREADS) && \
-    !defined(_LIBCUDACXX_HAS_THREAD_API_PTHREAD) && \
-    !defined(_LIBCUDACXX_HAS_THREAD_API_WIN32) && \
-    !defined(_LIBCUDACXX_HAS_THREAD_API_EXTERNAL)
+#ifndef _LIBCUDACXX_HAS_THREAD_API_EXTERNAL
+#if defined(_LIBCUDACXX_COMPILER_NVRTC) \
+ || defined(__EMSCRIPTEN__)
+#  define _LIBCUDACXX_HAS_THREAD_API_EXTERNAL
+#endif
+#endif // _LIBCUDACXX_HAS_THREAD_API_EXTERNAL
+
+#ifndef _LIBCUDACXX_HAS_THREAD_API_CUDA
+#if defined(__CUDA_ARCH__)                             \
+ || (defined(__EMSCRIPTEN__) && defined(__cuda_std__))
+#  define _LIBCUDACXX_HAS_THREAD_API_CUDA
+#endif
+#endif // _LIBCUDACXX_HAS_THREAD_API_CUDA
+
+#ifndef _LIBCUDACXX_HAS_THREAD_API_WIN32
+#if defined(_LIBCUDACXX_COMPILER_MSVC)        \
+ && !defined(_LIBCUDACXX_HAS_THREAD_API_CUDA)
+#  define _LIBCUDACXX_HAS_THREAD_API_WIN32
+#endif
+#endif // _LIBCUDACXX_HAS_THREAD_API_WIN32
+
+#if !defined(_LIBCUDACXX_HAS_NO_THREADS)          \
+ && !defined(_LIBCUDACXX_HAS_THREAD_API_PTHREAD)  \
+ && !defined(_LIBCUDACXX_HAS_THREAD_API_WIN32)    \
+ && !defined(_LIBCUDACXX_HAS_THREAD_API_EXTERNAL)
 #  if defined(__FreeBSD__) || \
       defined(__Fuchsia__) || \
       defined(__wasi__) || \
