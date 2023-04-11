@@ -12,8 +12,9 @@
 
 __device__ static inline int __memcmp(const void* __lhs, const void* __rhs, size_t __count)
 {
-  const unsigned char * __l = (const unsigned char*)__lhs;
-  const unsigned char * __r = (const unsigned char*)__rhs;
+  const unsigned char * __l;
+  const unsigned char * __r;
+  asm ("mov.b64 %0, %2;\n mov.b64 %1, %3;" : "=l"(__l), "=l"(__r) : "l"(__lhs), "l"(__rhs));
   for (size_t __i = 0; __i < __count; ++__i)
     if (__l[__i] != __r[__i]) return __l[__i] < __r[__i]? -1 : 1;
   return 0;

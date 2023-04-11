@@ -11,7 +11,6 @@
 #include "atomic_cuda_local.h"
 
 
-
 static inline __device__ void __cuda_membar_block() { asm volatile("membar.cta;":::"memory"); }
 static inline __device__ void __cuda_fence_acq_rel_block() { asm volatile("fence.acq_rel.cta;":::"memory"); }
 static inline __device__ void __cuda_fence_sc_block() { asm volatile("fence.sc.cta;":::"memory"); }
@@ -1167,9 +1166,9 @@ template<class _Type>
 __device__ _Type* __atomic_fetch_add_cuda(_Type *volatile *__ptr, ptrdiff_t __val, int __memorder, __thread_scope_block_tag) {
     _Type* __ret;
     uint64_t __tmp = 0;
-    if (__cuda_fetch_add_weak_if_local(__ptr, __val, (_Type*)&__tmp)) return *(_Type*)&__tmp;
     memcpy(&__tmp, &__val, 8);
     __tmp *= sizeof(_Type);
+    if (__cuda_fetch_add_weak_if_local((uint64_t*)__ptr, __tmp, (uint64_t*)&__ret)) return __ret;
     NV_DISPATCH_TARGET(
       NV_PROVIDES_SM_70, (
         switch (__memorder) {
@@ -1200,10 +1199,10 @@ template<class _Type>
 __device__ _Type* __atomic_fetch_sub_cuda(_Type *volatile *__ptr, ptrdiff_t __val, int __memorder, __thread_scope_block_tag) {
     _Type* __ret;
     uint64_t __tmp = 0;
-    if (__cuda_fetch_sub_weak_if_local(__ptr, __val, (_Type*)&__tmp)) return *(_Type*)&__tmp;
     memcpy(&__tmp, &__val, 8);
     __tmp = -__tmp;
     __tmp *= sizeof(_Type);
+    if (__cuda_fetch_add_weak_if_local((uint64_t*)__ptr, __tmp, (uint64_t*)&__ret)) return __ret;
     NV_DISPATCH_TARGET(
       NV_PROVIDES_SM_70, (
         switch (__memorder) {
@@ -2385,9 +2384,9 @@ template<class _Type>
 __device__ _Type* __atomic_fetch_add_cuda(_Type *volatile *__ptr, ptrdiff_t __val, int __memorder, __thread_scope_device_tag) {
     _Type* __ret;
     uint64_t __tmp = 0;
-    if (__cuda_fetch_add_weak_if_local(__ptr, __val, (_Type*)&__tmp)) return *(_Type*)&__tmp;
     memcpy(&__tmp, &__val, 8);
     __tmp *= sizeof(_Type);
+    if (__cuda_fetch_add_weak_if_local((uint64_t*)__ptr, __tmp, (uint64_t*)&__ret)) return __ret;
     NV_DISPATCH_TARGET(
       NV_PROVIDES_SM_70, (
         switch (__memorder) {
@@ -2418,10 +2417,10 @@ template<class _Type>
 __device__ _Type* __atomic_fetch_sub_cuda(_Type *volatile *__ptr, ptrdiff_t __val, int __memorder, __thread_scope_device_tag) {
     _Type* __ret;
     uint64_t __tmp = 0;
-    if (__cuda_fetch_sub_weak_if_local(__ptr, __val, (_Type*)&__tmp)) return *(_Type*)&__tmp;
     memcpy(&__tmp, &__val, 8);
     __tmp = -__tmp;
     __tmp *= sizeof(_Type);
+    if (__cuda_fetch_add_weak_if_local((uint64_t*)__ptr, __tmp, (uint64_t*)&__ret)) return __ret;
     NV_DISPATCH_TARGET(
       NV_PROVIDES_SM_70, (
         switch (__memorder) {
@@ -3603,9 +3602,9 @@ template<class _Type>
 __device__ _Type* __atomic_fetch_add_cuda(_Type *volatile *__ptr, ptrdiff_t __val, int __memorder, __thread_scope_system_tag) {
     _Type* __ret;
     uint64_t __tmp = 0;
-    if (__cuda_fetch_add_weak_if_local(__ptr, __val, (_Type*)&__tmp)) return *(_Type*)&__tmp;
     memcpy(&__tmp, &__val, 8);
     __tmp *= sizeof(_Type);
+    if (__cuda_fetch_add_weak_if_local((uint64_t*)__ptr, __tmp, (uint64_t*)&__ret)) return __ret;
     NV_DISPATCH_TARGET(
       NV_PROVIDES_SM_70, (
         switch (__memorder) {
@@ -3636,10 +3635,10 @@ template<class _Type>
 __device__ _Type* __atomic_fetch_sub_cuda(_Type *volatile *__ptr, ptrdiff_t __val, int __memorder, __thread_scope_system_tag) {
     _Type* __ret;
     uint64_t __tmp = 0;
-    if (__cuda_fetch_sub_weak_if_local(__ptr, __val, (_Type*)&__tmp)) return *(_Type*)&__tmp;
     memcpy(&__tmp, &__val, 8);
     __tmp = -__tmp;
     __tmp *= sizeof(_Type);
+    if (__cuda_fetch_add_weak_if_local((uint64_t*)__ptr, __tmp, (uint64_t*)&__ret)) return __ret;
     NV_DISPATCH_TARGET(
       NV_PROVIDES_SM_70, (
         switch (__memorder) {
