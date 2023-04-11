@@ -83,6 +83,8 @@ int main() {
 // SPDX-FileCopyrightText: Copyright (c) 2023 NVIDIA CORPORATION & AFFILIATES.
 //
 //===----------------------------------------------------------------------===//
+
+#include "atomic_cuda_local.h"
 )XXX" << "\n\n";
 
     auto scopenametag = [&](auto scope) {
@@ -142,6 +144,7 @@ int main() {
             for(auto& cv: cv_qualifier) {
                 out << "template<class _Type, typename _CUDA_VSTD::enable_if<sizeof(_Type)==" << sz/8 << ", int>::type = 0>\n";
                 out << "__device__ void __atomic_load_cuda(const " << cv << "_Type *__ptr, _Type *__ret, int __memorder, " << scopenametag(s.first) << ") {\n";
+		out << "    if (__cuda_load_weak_if_local(__ptr, __ret)) return;\n";
                 out << "    uint" << sz << "_t __tmp = 0;\n";
                 out << "    NV_DISPATCH_TARGET(\n";
                 out << "      NV_PROVIDES_SM_70, (\n";
@@ -178,6 +181,7 @@ int main() {
             for(auto& cv: cv_qualifier) {
                 out << "template<class _Type, typename cuda::std::enable_if<sizeof(_Type)==" << sz/8 << ", int>::type = 0>\n";
                 out << "__device__ void __atomic_store_cuda(" << cv << "_Type *__ptr, _Type *__val, int __memorder, " << scopenametag(s.first) << ") {\n";
+		out << "    if (__cuda_store_weak_if_local(__ptr, __val)) return;\n";
                 out << "    uint" << sz << "_t __tmp = 0;\n";
                 out << "    memcpy(&__tmp, __val, " << sz/8 << ");\n";
                 out << "    NV_DISPATCH_TARGET(\n";
@@ -239,6 +243,8 @@ int main() {
                             if(rmw.first == "compare_exchange") {
                                 out << "template<class _Type, typename cuda::std::enable_if<sizeof(_Type)==" << sz/8 << ", int>::type = 0>\n";
                                 out << "__device__ bool __atomic_compare_exchange_cuda(" << cv << "_Type *__ptr, _Type *__expected, const _Type *__desired, bool, int __success_memorder, int __failure_memorder, " << scopenametag(s.first) << ") {\n";
+				out << "    bool __tmp_out;\n";
+				out << "    if (__cuda_compare_exchange_weak_if_local(__ptr, __expected, __desired, &__tmp_out)) return __tmp_out;\n";
                                 out << "    uint" << sz << "_t __tmp = 0, __old = 0, __old_tmp;\n";
                                 out << "    memcpy(&__tmp, __desired, " << sz/8 << ");\n";
                                 out << "    memcpy(&__old, __expected, " << sz/8 << ");\n";
@@ -277,7 +283,8 @@ int main() {
                                 if(rmw.first == "exchange") {
                                     out << ", int>::type = 0>\n";
                                     out << "__device__ void __atomic_exchange_cuda(" << cv << "_Type *__ptr, _Type *__val, _Type *__ret, int __memorder, " << scopenametag(s.first) << ") {\n";
-                                    out << "    uint" << sz << "_t __tmp = 0;\n";
+				    out << "    if (__cuda_exchange_weak_if_local(__ptr, __val, __ret)) return;\n";
+				    out << "    uint" << sz << "_t __tmp = 0;\n";
                                     out << "    memcpy(&__tmp, __val, " << sz/8 << ");\n";
                                 }
                                 else {
@@ -295,6 +302,7 @@ int main() {
                                         out << ", int>::type = 0>\n";
                                     out << "__device__ _Type __atomic_" << rmw.first << "_cuda(" << cv << "_Type *__ptr, _Type __val, int __memorder, " << scopenametag(s.first) << ") {\n";
                                     out << "    _Type __ret;\n";
+				    out << "    if (__cuda_" << rmw.first << "_weak_if_local(__ptr, __val, &__ret)) return __ret;\n";
                                     if(type.first == "f" && sz == 32)
                                         out << "    float";
                                     else if(type.first == "f" && sz == 64)
@@ -348,6 +356,7 @@ int main() {
                 out << "__device__ _Type* __atomic_fetch_" << op << "_cuda(_Type *" << cv << "*__ptr, ptrdiff_t __val, int __memorder, " << scopenametag(s.first) << ") {\n";
                 out << "    _Type* __ret;\n";
                 out << "    uint64_t __tmp = 0;\n";
+		out << "    if (__cuda_fetch_" << op << "_weak_if_local(__ptr, __val, (_Type*)&__tmp)) return *(_Type*)&__tmp;\n";
                 out << "    memcpy(&__tmp, &__val, 8);\n";
                 if(op == "sub")
                     out << "    __tmp = -__tmp;\n";
