@@ -104,8 +104,7 @@ template <typename T>
     assert((tid ^ T(1))               == fetch_xor(tid));
     assert(min(tid, T(7))           == fetch_min(tid));
     assert(max(tid, T(7))           == fetch_max(tid));
-    if (cuda::std::is_signed<T>::value)
-      assert(tid - T(1)               == fetch_sub(tid));
+    assert(T(tid - T(1))               == fetch_sub(tid));
 }
 
 int main(int arg, char ** argv)
@@ -121,7 +120,7 @@ int main(int arg, char ** argv)
       tests<int32_t>();
       tests<int64_t>();
     ), (
-      cuda_thread_count = 32;
+      cuda_thread_count = 64;
     )
   )
 
