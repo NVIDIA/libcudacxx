@@ -98,10 +98,10 @@ template <typename T>
     assert(T(1) + tid               == exchange(tid));
     assert(tid == T(7)? T(42) : tid == compare_exchange_weak(tid));
     assert(tid == T(7)? T(42) : tid == compare_exchange_strong(tid));
-    assert(tid + T(1)               == fetch_add(tid));
-    assert(tid & T(1)               == fetch_and(tid));
-    assert(tid | T(1)               == fetch_or(tid));
-    assert(tid ^ T(1)               == fetch_xor(tid));
+    assert((tid + T(1))               == fetch_add(tid));
+    assert((tid & T(1))               == fetch_and(tid));
+    assert((tid | T(1))               == fetch_or(tid));
+    assert((tid ^ T(1))               == fetch_xor(tid));
     assert(min(tid, T(7))           == fetch_min(tid));
     assert(max(tid, T(7))           == fetch_max(tid));
     if (cuda::std::is_signed<T>::value)
