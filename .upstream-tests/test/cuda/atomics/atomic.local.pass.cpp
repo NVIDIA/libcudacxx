@@ -94,17 +94,17 @@ __device__ T fetch_max(T in) {
 template <typename T>
   __device__ inline void tests() {
     const T tid = threadIdx.x;
-    assert(tid + T(1)               == store(tid));
-    assert(T(1) + tid               == exchange(tid));
-    assert(tid == T(7)? T(42) : tid == compare_exchange_weak(tid));
-    assert(tid == T(7)? T(42) : tid == compare_exchange_strong(tid));
+    assert((tid + T(1))               == store(tid));
+    assert((T(1) + tid)               == exchange(tid));
+    assert((tid == T(7)? T(42) : tid) == compare_exchange_weak(tid));
+    assert((tid == T(7)? T(42) : tid) == compare_exchange_strong(tid));
     assert((tid + T(1))               == fetch_add(tid));
+    assert(T(tid - T(1))              == fetch_sub(tid));
     assert((tid & T(1))               == fetch_and(tid));
     assert((tid | T(1))               == fetch_or(tid));
     assert((tid ^ T(1))               == fetch_xor(tid));
-    assert(min(tid, T(7))           == fetch_min(tid));
-    assert(max(tid, T(7))           == fetch_max(tid));
-    assert(T(tid - T(1))               == fetch_sub(tid));
+    assert(min(tid, T(7))             == fetch_min(tid));
+    assert(max(tid, T(7))             == fetch_max(tid));
 }
 
 int main(int arg, char ** argv)
