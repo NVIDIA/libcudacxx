@@ -225,6 +225,7 @@ void test_noexcept()
         ASSERT_NOT_NOEXCEPT(cuda::std::apply(tc, t));
 #endif // TEST_COMPILER_NVHPC
         unused(t);
+        unused(tc);
     }
     {
         // test that the noexcept-ness of the argument conversions is checked.
