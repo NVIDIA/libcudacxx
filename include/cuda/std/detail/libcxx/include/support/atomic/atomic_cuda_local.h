@@ -73,46 +73,68 @@ __device__ bool __cuda_fetch_weak_if_local(volatile _Type *__ptr, _Type __val, _
   return true;
 }
 
+template <class _Type> __device__ void __cuda_fetch_local_bop_and(volatile _Type& __atom, _Type const & __v) {
+  __atom = __atom & __v;
+}
+template <class _Type> __device__ void __cuda_fetch_local_bop_or(volatile _Type& __atom, _Type const & __v) {
+  __atom = __atom | __v;
+}
+template <class _Type> __device__ void __cuda_fetch_local_bop_xor(volatile _Type& __atom, _Type const & __v) {
+  __atom = __atom ^ __v;
+}
+template <class _Type> __device__ void __cuda_fetch_local_bop_add(volatile _Type& __atom, _Type const & __v) {
+  __atom = __atom + __v;
+}
+template <class _Type> __device__ void __cuda_fetch_local_bop_sub(volatile _Type& __atom, _Type const & __v) {
+  __atom = __atom - __v;
+}
+template <class _Type> __device__ void __cuda_fetch_local_bop_max(volatile _Type& __atom, _Type const & __v) {
+  __atom = __atom < __v ? __v : __atom;
+}
+template <class _Type> __device__ void __cuda_fetch_local_bop_min(volatile _Type& __atom, _Type const & __v) {
+  __atom = __v < __atom ? __v : __atom;
+}
+
 template <class _Type>
 __device__ bool __cuda_fetch_and_weak_if_local(volatile _Type *__ptr, _Type __val, _Type* __ret)
 {
-  return __cuda_fetch_weak_if_local(__ptr, __val, __ret, [](volatile _Type& out, _Type const& in) { out &= in; });
+  return __cuda_fetch_weak_if_local(__ptr, __val, __ret, __cuda_fetch_local_bop_and<_Type>);
 }
 
 template <class _Type>
 __device__ bool __cuda_fetch_or_weak_if_local(volatile _Type *__ptr, _Type __val, _Type* __ret)
 {
-  return __cuda_fetch_weak_if_local(__ptr, __val, __ret, [](volatile _Type& out, _Type const& in) { out |= in; });
+  return __cuda_fetch_weak_if_local(__ptr, __val, __ret, __cuda_fetch_local_bop_or<_Type>);
 }
 
 template <class _Type>
 __device__ bool __cuda_fetch_xor_weak_if_local(volatile _Type *__ptr, _Type __val, _Type* __ret)
 {
-  return __cuda_fetch_weak_if_local(__ptr, __val, __ret, [](volatile _Type& out, _Type const& in) { out ^= in; });
+  return __cuda_fetch_weak_if_local(__ptr, __val, __ret, __cuda_fetch_local_bop_xor<_Type>);
 }
 
 template <class _Type>
 __device__ bool __cuda_fetch_add_weak_if_local(volatile _Type *__ptr, _Type __val, _Type* __ret)
 {
-  return __cuda_fetch_weak_if_local(__ptr, __val, __ret, [](volatile _Type& out, _Type const& in) { out += in; });
+  return __cuda_fetch_weak_if_local(__ptr, __val, __ret, __cuda_fetch_local_bop_add<_Type>);
 }
 
 template <class _Type>
 __device__ bool __cuda_fetch_sub_weak_if_local(volatile _Type *__ptr, _Type __val, _Type* __ret)
 {
-  return __cuda_fetch_weak_if_local(__ptr, __val, __ret, [](volatile _Type& out, _Type const& in) { out -= in; });
+  return __cuda_fetch_weak_if_local(__ptr, __val, __ret, __cuda_fetch_local_bop_sub<_Type>);
 }
 
 template <class _Type>
 __device__ bool __cuda_fetch_max_weak_if_local(volatile _Type *__ptr, _Type __val, _Type* __ret)
 {
-  return __cuda_fetch_weak_if_local(__ptr, __val, __ret, [](volatile _Type& out, _Type const& in) { out = out < in? in : out; });
+  return __cuda_fetch_weak_if_local(__ptr, __val, __ret, __cuda_fetch_local_bop_max<_Type>);
 }
 
 template <class _Type>
 __device__ bool __cuda_fetch_min_weak_if_local(volatile _Type *__ptr, _Type __val, _Type* __ret)
 {
-  return __cuda_fetch_weak_if_local(__ptr, __val, __ret, [](volatile _Type& out, _Type const& in) { out = in < out? in : out; });
+  return __cuda_fetch_weak_if_local(__ptr, __val, __ret, __cuda_fetch_local_bop_min<_Type>);
 }
 
 #endif
