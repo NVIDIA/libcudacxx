@@ -37,9 +37,9 @@ void test()
 
 int main(int argc, char ** argv)
 {
-#if __CUDA_ARCH__ >= 800
-  test();
-#endif
+    NV_IF_TARGET(NV_PROVIDES_SM_80,
+        test();
+    )
 
     return 0;
 }
