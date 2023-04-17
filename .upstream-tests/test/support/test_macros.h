@@ -85,6 +85,7 @@
 // This is not mutually exclusive with other compilers, as NVCC uses a host
 // compiler.
 # define TEST_COMPILER_NVCC
+# define TEST_COMPILER_EDG
 #endif
 
 #if defined(__apple_build_version__)
@@ -322,6 +323,10 @@ struct is_same<T, T> { enum {value = 1}; };
     static_assert((test_macros_detail::is_same<__VA_ARGS__>::value), \
                  "Types differ unexpectedly")
 
+// TODO: figure out if this makes sense
+#define TEST_THROW(...) assert(#__VA_ARGS__)
+
+/*
 #ifndef TEST_HAS_NO_EXCEPTIONS
 #define TEST_THROW(...) throw __VA_ARGS__
 #else
@@ -334,6 +339,7 @@ struct is_same<T, T> { enum {value = 1}; };
 #define TEST_THROW(...) ::abort()
 #endif
 #endif
+*/
 
 #ifndef TEST_HAS_NO_INT128_T
 #ifdef _LIBCUDACXX_HAS_NO_INT128
@@ -356,13 +362,15 @@ struct is_same<T, T> { enum {value = 1}; };
 
 #if defined(__GNUC__) || defined(__clang__) || defined(__CUDACC_RTC__)
 template <class Tp>
-inline _LIBCUDACXX_INLINE_VISIBILITY
+__host__ __device__
+inline
 void DoNotOptimize(Tp const& value) {
     asm volatile("" : : "r,m"(value) : "memory");
 }
 
 template <class Tp>
-inline _LIBCUDACXX_INLINE_VISIBILITY
+__host__ __device__
+inline
 void DoNotOptimize(Tp& value) {
 #if defined(__clang__)
   asm volatile("" : "+r,m"(value) : : "memory");
