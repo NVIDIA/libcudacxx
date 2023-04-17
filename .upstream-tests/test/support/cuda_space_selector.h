@@ -20,7 +20,7 @@
 #define __exec_check_disable__
 #endif
 
-#ifdef __CUDACC_RTC__
+#ifdef _LIBCUDACXX_COMPILER_NVRTC
 #define LAMBDA [=]
 #else
 #define LAMBDA [=] __host__ __device__
@@ -31,6 +31,19 @@
 #else
 #define SHARED
 #endif
+
+template<class Fun>
+__host__ __device__
+void execute_on_main_thread(Fun&& fun) {
+    NV_IF_ELSE_TARGET(NV_IS_DEVICE, (
+        if (threadIdx.x == 0) {
+            fun();
+        }
+        __syncthreads();
+     ),(
+        fun();
+     ))
+}
 
 template<typename T, cuda::std::size_t SharedOffset>
 struct malloc_memory_provider {
@@ -57,14 +70,10 @@ private:
 public:
     __host__ __device__
     T * get() {
-#ifdef __CUDA_ARCH__
-        if (threadIdx.x == 0) {
-#endif
-        get_pointer() = reinterpret_cast<T *>(malloc(sizeof(T) + alignof(T)));
-#ifdef __CUDA_ARCH__
-        }
-        __syncthreads();
-#endif
+        execute_on_main_thread([&]{
+            get_pointer() = reinterpret_cast<T *>(malloc(sizeof(T) + alignof(T)));
+        });
+
         auto ptr = reinterpret_cast<cuda::std::uintptr_t>(get_pointer());
         ptr += alignof(T) - ptr % alignof(T);
         return reinterpret_cast<T *>(ptr);
@@ -72,14 +81,9 @@ public:
 
     __host__ __device__
     ~malloc_memory_provider() {
-#ifdef __CUDA_ARCH__
-        if (threadIdx.x == 0) {
-#endif
-        free((void*)get_pointer());
-#ifdef __CUDA_ARCH__
-        }
-        __syncthreads();
-#endif
+        execute_on_main_thread([&]{
+            free((void*)get_pointer());
+        });
     }
 };
 
@@ -151,38 +155,29 @@ public:
     static const constexpr cuda::std::size_t prefix_size = Provider<T, SharedOffset>::prefix_size;
     static const constexpr cuda::std::size_t shared_offset = Provider<T, SharedOffset>::shared_offset;
 
-#ifndef __CUDACC_RTC__
+#ifndef _LIBCUDACXX_COMPILER_NVRTC
     __exec_check_disable__
-#endif
+#endif // _LIBCUDACXX_COMPILER_NVRTC
     template<typename ...Ts>
     __host__ __device__
     T * construct(Ts && ...ts) {
         ptr = provider.get();
         assert(ptr);
-#ifdef __CUDA_ARCH__
-        if (threadIdx.x == 0) {
-#endif
-        Initializer::construct(*ptr, std::forward<Ts>(ts)...);
-#ifdef __CUDA_ARCH__
-        }
-        __syncthreads();
-#endif
+
+        execute_on_main_thread([&]{
+            Initializer::construct(*ptr, std::forward<Ts>(ts)...);
+        });
         return ptr;
     }
 
-#ifndef __CUDACC_RTC__
+#ifndef _LIBCUDACXX_COMPILER_NVRTC
     __exec_check_disable__
-#endif
+#endif // _LIBCUDACXX_COMPILER_NVRTC
     __host__ __device__
     ~memory_selector() {
-#ifdef __CUDA_ARCH__
-        if (threadIdx.x == 0) {
-#endif
-        ptr->~T();
-#ifdef __CUDA_ARCH__
-        }
-        __syncthreads();
-#endif
+        execute_on_main_thread([&]{
+            ptr->~T();
+        });
     }
 };
 
