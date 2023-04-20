@@ -308,7 +308,7 @@ TEST_CONSTEXPR_CXX20 bool test()
 
 int main(int, char**)
 {
-#if TEST_STD_VER > 17
+#if TEST_STD_VER > 17 && defined(_LIBCUDACXX_ADDRESSOF)
     static_assert(test());
 #endif
     test_with_test_type();

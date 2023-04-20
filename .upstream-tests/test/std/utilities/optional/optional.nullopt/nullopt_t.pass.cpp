@@ -28,8 +28,8 @@ using cuda::std::nullopt;
 __host__ __device__
 constexpr bool test()
 {
-    [[maybe_unused]] nullopt_t foo{nullopt};
-    (void)foo;
+    nullopt_t foo{nullopt};
+    unused(foo);
     return true;
 }
 

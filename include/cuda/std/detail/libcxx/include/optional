@@ -200,8 +200,12 @@ template<class T>
 #include "compare"
 #endif
 
-#if !defined(_LIBCUDACXX_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#  pragma GCC system_header
+#ifndef __cuda_std__
+#include <__pragma_push>
+#endif // __cuda_std__
+
+#if defined(_LIBCUDACXX_USE_PRAGMA_GCC_SYSTEM_HEADER)
+#pragma GCC system_header
 #endif
 
 #ifndef __cuda_std__
@@ -241,7 +245,7 @@ struct nullopt_t
     _LIBCUDACXX_INLINE_VISIBILITY constexpr explicit nullopt_t(__secret_tag, __secret_tag) noexcept {}
 };
 
-inline constexpr nullopt_t nullopt{nullopt_t::__secret_tag{}, nullopt_t::__secret_tag{}};
+_LIBCUDACXX_INLINE_VAR constexpr nullopt_t nullopt{nullopt_t::__secret_tag{}, nullopt_t::__secret_tag{}};
 
 struct __optional_construct_from_invoke_tag {};
 

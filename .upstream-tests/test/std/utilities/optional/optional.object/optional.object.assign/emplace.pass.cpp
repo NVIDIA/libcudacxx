@@ -224,7 +224,7 @@ int main(int, char**)
         using T = int;
         test_one_arg<T>();
         test_one_arg<const T>();
-#if TEST_STD_VER > 17
+#if TEST_STD_VER > 17 && defined(_LIBCUDACXX_ADDRESSOF)
         static_assert(test_one_arg<T>());
         static_assert(test_one_arg<const T>());
 #endif
@@ -232,34 +232,34 @@ int main(int, char**)
     {
         using T = ConstexprTestTypes::TestType;
         test_multi_arg<T>();
-#if TEST_STD_VER > 17
+#if TEST_STD_VER > 17 && defined(_LIBCUDACXX_ADDRESSOF)
         static_assert(test_multi_arg<T>());
 #endif
     }
     {
         using T = ExplicitConstexprTestTypes::TestType;
         test_multi_arg<T>();
-#if TEST_STD_VER > 17
+#if TEST_STD_VER > 17 && defined(_LIBCUDACXX_ADDRESSOF)
         static_assert(test_multi_arg<T>());
 #endif
     }
     {
         using T = TrivialTestTypes::TestType;
         test_multi_arg<T>();
-#if TEST_STD_VER > 17
+#if TEST_STD_VER > 17 && defined(_LIBCUDACXX_ADDRESSOF)
         static_assert(test_multi_arg<T>());
 #endif
     }
     {
         using T = ExplicitTrivialTestTypes::TestType;
         test_multi_arg<T>();
-#if TEST_STD_VER > 17
+#if TEST_STD_VER > 17 && defined(_LIBCUDACXX_ADDRESSOF)
         static_assert(test_multi_arg<T>());
 #endif
     }
     {
         test_empty_emplace();
-#if TEST_STD_VER > 17
+#if TEST_STD_VER > 17 && defined(_LIBCUDACXX_ADDRESSOF)
         static_assert(test_empty_emplace());
 #endif
     }

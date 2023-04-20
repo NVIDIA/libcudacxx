@@ -99,6 +99,7 @@ TEST_CONSTEXPR_CXX17 bool test_nontrivial() {
 
 int main(int, char**) {
   test();
+  test_nontrivial();
 #if TEST_STD_VER > 17
   static_assert(test(), "");
 #if defined(_LIBCUDACXX_ADDRESSOF)

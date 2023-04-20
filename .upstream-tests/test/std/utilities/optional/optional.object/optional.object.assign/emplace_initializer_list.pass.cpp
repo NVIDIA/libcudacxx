@@ -112,7 +112,7 @@ int main(int, char**)
 {
     {
         check_X();
-#if TEST_STD_VER > 17
+#if TEST_STD_VER > 17 && defined(_LIBCUDACXX_ADDRESSOF)
         static_assert(check_X());
 #endif
     }
@@ -128,7 +128,7 @@ int main(int, char**)
     */
     {
         check_Y();
-#if TEST_STD_VER > 17
+#if TEST_STD_VER > 17 && defined(_LIBCUDACXX_ADDRESSOF)
         static_assert(check_Y());
 #endif
     }
