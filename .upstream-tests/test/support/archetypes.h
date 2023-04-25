@@ -240,7 +240,8 @@ namespace NonThrowingTypes {
 namespace NonTrivialTypes {
 #define DEFINE_CTOR {}
 #define DEFINE_CTOR_ANNOTATIONS __host__ __device__
-#define DEFINE_ASSIGN __host__ __device__ { return *this; }
+#define DEFINE_ASSIGN { return *this; }
+#define DEFINE_ASSIGN_ANNOTATIONS __host__ __device__
 #include "archetypes.ipp"
 }
 

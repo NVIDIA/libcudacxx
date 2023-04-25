@@ -661,18 +661,14 @@ private:
     // LWG2756: conditionally explicit conversion from _Up
     struct _CheckOptionalArgsConstructor {
       template <class _Up>
-      _LIBCUDACXX_INLINE_VISIBILITY
-      static constexpr bool __enable_implicit() {
-          return is_constructible_v<_Tp, _Up&&> &&
-                 is_convertible_v<_Up&&, _Tp>;
-      }
+      static constexpr bool __enable_implicit =
+          is_constructible_v<_Tp, _Up&&> &&
+          is_convertible_v<_Up&&, _Tp>;
 
       template <class _Up>
-      _LIBCUDACXX_INLINE_VISIBILITY
-      static constexpr bool __enable_explicit() {
-          return is_constructible_v<_Tp, _Up&&> &&
-                 !is_convertible_v<_Up&&, _Tp>;
-      }
+      static constexpr bool __enable_explicit =
+          is_constructible_v<_Tp, _Up&&> &&
+          !is_convertible_v<_Up&&, _Tp>;
     };
     template <class _Up>
     using _CheckOptionalArgsCtor = _If<
@@ -702,25 +698,19 @@ private:
           is_assignable<_Tp&, _Opt const&&>
       >;
       template <class _Up, class _QUp = _QualUp>
-      _LIBCUDACXX_INLINE_VISIBILITY
-      static constexpr bool __enable_implicit() {
-          return is_convertible<_QUp, _Tp>::value &&
-              !__check_constructible_from_opt<_Up>::value;
-      }
+      static constexpr bool __enable_implicit =
+          is_convertible<_QUp, _Tp>::value &&
+          !__check_constructible_from_opt<_Up>::value;
       template <class _Up, class _QUp = _QualUp>
-      _LIBCUDACXX_INLINE_VISIBILITY
-      static constexpr bool __enable_explicit() {
-          return !is_convertible<_QUp, _Tp>::value &&
-              !__check_constructible_from_opt<_Up>::value;
-      }
+      static constexpr bool __enable_explicit =
+          !is_convertible<_QUp, _Tp>::value &&
+          !__check_constructible_from_opt<_Up>::value;
       template <class _Up, class _QUp = _QualUp>
-      _LIBCUDACXX_INLINE_VISIBILITY
-      static constexpr bool __enable_assign() {
+      static constexpr bool __enable_assign =
           // Construction and assignability of _QUp to _Tp has already been
           // checked.
-          return !__check_constructible_from_opt<_Up>::value &&
-              !__check_assignable_from_opt<_Up>::value;
-      }
+          !__check_constructible_from_opt<_Up>::value &&
+          !__check_assignable_from_opt<_Up>::value;
     };
 
     template <class _Up, class _QualUp>
@@ -769,14 +759,14 @@ public:
         : __base(in_place, __il, _CUDA_VSTD::forward<_Args>(__args)...) {}
 
     template <class _Up = value_type, __enable_if_t<
-        _CheckOptionalArgsCtor<_Up>::template __enable_implicit<_Up>()
+        _CheckOptionalArgsCtor<_Up>::template __enable_implicit<_Up>
     , int> = 0>
     _LIBCUDACXX_INLINE_VISIBILITY
     constexpr optional(_Up&& __v)
         : __base(in_place, _CUDA_VSTD::forward<_Up>(__v)) {}
 
     template <class _Up, __enable_if_t<
-        _CheckOptionalArgsCtor<_Up>::template __enable_explicit<_Up>()
+        _CheckOptionalArgsCtor<_Up>::template __enable_explicit<_Up>
     , int> = 0>
     _LIBCUDACXX_INLINE_VISIBILITY
     constexpr explicit optional(_Up&& __v)
@@ -784,7 +774,7 @@ public:
 
     // LWG2756: conditionally explicit conversion from const optional<_Up>&
     template <class _Up, __enable_if_t<
-        _CheckOptionalLikeCtor<_Up, _Up const&>::template __enable_implicit<_Up>()
+        _CheckOptionalLikeCtor<_Up, _Up const&>::template __enable_implicit<_Up>
     , int> = 0>
     _LIBCUDACXX_INLINE_VISIBILITY
     _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 optional(const optional<_Up>& __v)
@@ -792,7 +782,7 @@ public:
         this->__construct_from(__v);
     }
     template <class _Up, __enable_if_t<
-        _CheckOptionalLikeCtor<_Up, _Up const&>::template __enable_explicit<_Up>()
+        _CheckOptionalLikeCtor<_Up, _Up const&>::template __enable_explicit<_Up>
     , int> = 0>
     _LIBCUDACXX_INLINE_VISIBILITY
     _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 explicit optional(const optional<_Up>& __v)
@@ -802,7 +792,7 @@ public:
 
     // LWG2756: conditionally explicit conversion from optional<_Up>&&
     template <class _Up, __enable_if_t<
-        _CheckOptionalLikeCtor<_Up, _Up &&>::template __enable_implicit<_Up>()
+        _CheckOptionalLikeCtor<_Up, _Up &&>::template __enable_implicit<_Up>
     , int> = 0>
     _LIBCUDACXX_INLINE_VISIBILITY
     _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 optional(optional<_Up>&& __v)
@@ -810,7 +800,7 @@ public:
         this->__construct_from(_CUDA_VSTD::move(__v));
     }
     template <class _Up, __enable_if_t<
-        _CheckOptionalLikeCtor<_Up, _Up &&>::template __enable_explicit<_Up>()
+        _CheckOptionalLikeCtor<_Up, _Up &&>::template __enable_explicit<_Up>
     , int> = 0>
     _LIBCUDACXX_INLINE_VISIBILITY
     _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 explicit optional(optional<_Up>&& __v)
@@ -860,7 +850,7 @@ public:
 
     // LWG2756
     template <class _Up, __enable_if_t<
-        _CheckOptionalLikeAssign<_Up, _Up const&>::template __enable_assign<_Up>()
+        _CheckOptionalLikeAssign<_Up, _Up const&>::template __enable_assign<_Up>
     , int> = 0>
     _LIBCUDACXX_INLINE_VISIBILITY
     _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 optional&
@@ -872,7 +862,7 @@ public:
 
     // LWG2756
     template <class _Up, __enable_if_t<
-        _CheckOptionalLikeCtor<_Up, _Up &&>::template __enable_assign<_Up>()
+        _CheckOptionalLikeAssign<_Up, _Up &&>::template __enable_assign<_Up>
     , int> = 0>
     _LIBCUDACXX_INLINE_VISIBILITY
     _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 optional&
