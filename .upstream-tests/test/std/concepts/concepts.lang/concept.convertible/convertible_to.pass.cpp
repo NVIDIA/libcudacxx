@@ -291,12 +291,13 @@ int main(int, char**) {
 
   static_assert(!convertible_to<Array, Array&>, "");
   static_assert(convertible_to<Array, const Array&>, "");
-  static_assert(!convertible_to<Array, const volatile Array&>, "");
 
   static_assert(!convertible_to<const Array, Array&>, "");
   static_assert(convertible_to<const Array, const Array&>, "");
   static_assert(!convertible_to<Array, volatile Array&>, "");
+#if !defined(TEST_COMPILER_C1XX) || TEST_STD_VER > 17 // MSVC has a bug where lets the conversion happen
   static_assert(!convertible_to<Array, const volatile Array&>, "");
+#endif // !defined(TEST_COMPILER_C1XX) || TEST_STD_VER > 17
 
   static_assert(convertible_to<Array, Array&&>, "");
   static_assert(convertible_to<Array, const Array&&>, "");
