@@ -19,6 +19,8 @@
 #include <cuda/std/concepts>
 #include <cuda/std/type_traits>
 
+#include "test_macros.h"
+
 using cuda::std::convertible_to;
 
 namespace {
@@ -54,9 +56,9 @@ __host__ __device__ void CheckIsConvertibleButNotConvertibleTo() {
 }
 
 // Tests that should objectively return false (except for bool and nullptr_t)
-#if TEST_STD_VER >= 17
+#if TEST_STD_VER > 17
 template <class T>
-  #else
+#else
 _LIBCUDACXX_TEMPLATE(class T)
   (requires (!(cuda::std::same_as<T, bool> || cuda::std::same_as<T, nullptr_t>)))
 #endif
@@ -293,8 +295,8 @@ int main(int, char**) {
 
   static_assert(!convertible_to<const Array, Array&>, "");
   static_assert(convertible_to<const Array, const Array&>, "");
-  static_assert(!convertible_to<Array, volatile Array&>, "");
 #if !defined(TEST_COMPILER_C1XX) || TEST_STD_VER > 17 // MSVC has a bug where lets the conversion happen
+  static_assert(!convertible_to<Array, volatile Array&>, "");
   static_assert(!convertible_to<Array, const volatile Array&>, "");
 #endif // !defined(TEST_COMPILER_C1XX) || TEST_STD_VER > 17
 

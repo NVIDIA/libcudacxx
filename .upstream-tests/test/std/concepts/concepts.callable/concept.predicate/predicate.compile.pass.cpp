@@ -57,14 +57,12 @@ static_assert(predicate<Predicate&, int, double, char>, "");
 static_assert(!predicate<const Predicate, int, double, char>, "");
 static_assert(!predicate<const Predicate&, int, double, char>, "");
 
-#if TEST_STD_VER > 17
-constexpr bool check_lambda(auto) { return false; }
+#if TEST_STD_VER > 14 && !defined(TEST_COMPILER_NVRTC) // lambdas are not allowed in a constexpr expression
+template<class Fun>
+__host__ __device__
+constexpr bool check_lambda(Fun) { return predicate<Fun>; }
 
-constexpr bool check_lambda(predicate auto) { return true; }
-#endif // TEST_STD_VER > 17
-
-#if TEST_STD_VER > 14
-static_assert(check_lambda([] { return std::true_type(); }), "");
+static_assert(check_lambda([] { return cuda::std::true_type(); }), "");
 static_assert(check_lambda([]() -> int* { return nullptr; }), "");
 
 struct boolean {
