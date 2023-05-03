@@ -14,10 +14,10 @@
 #ifndef __CUDA_SPACE_SELECTOR_H
 #define __CUDA_SPACE_SELECTOR_H
 
-#if defined(__CUDACC__) && !defined(__NVCOMPILER)
-#define __exec_check_disable__ #pragma nv_exec_check_disable
+#if defined(__CUDACC__) && !defined(_LIBCUDACXX_COMPILER_NVHPC) && !defined(_LIBCUDACXX_COMPILER_NVRTC)
+#define TEST_EXEC_CHECK_DISABLE #pragma nv_exec_check_disable
 #else
-#define __exec_check_disable__
+#define TEST_EXEC_CHECK_DISABLE
 #endif
 
 #ifdef _LIBCUDACXX_COMPILER_NVRTC
@@ -32,6 +32,7 @@
 #define SHARED
 #endif
 
+TEST_EXEC_CHECK_DISABLE
 template<class Fun>
 __host__ __device__
 void execute_on_main_thread(Fun&& fun) {
@@ -155,9 +156,7 @@ public:
     static const constexpr cuda::std::size_t prefix_size = Provider<T, SharedOffset>::prefix_size;
     static const constexpr cuda::std::size_t shared_offset = Provider<T, SharedOffset>::shared_offset;
 
-#ifndef _LIBCUDACXX_COMPILER_NVRTC
-    __exec_check_disable__
-#endif // _LIBCUDACXX_COMPILER_NVRTC
+    TEST_EXEC_CHECK_DISABLE
     template<typename ...Ts>
     __host__ __device__
     T * construct(Ts && ...ts) {
@@ -170,9 +169,7 @@ public:
         return ptr;
     }
 
-#ifndef _LIBCUDACXX_COMPILER_NVRTC
-    __exec_check_disable__
-#endif // _LIBCUDACXX_COMPILER_NVRTC
+    TEST_EXEC_CHECK_DISABLE
     __host__ __device__
     ~memory_selector() {
         execute_on_main_thread([&]{
