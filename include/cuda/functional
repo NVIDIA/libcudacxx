@@ -83,14 +83,14 @@ class __return_type_wrapper {
   template <class... _As>
   _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY _Ret
   operator()(_As&&... __as) & noexcept {
-    NV_IF_TARGET(NV_IS_DEVICE,(
-      static_assert(
-          _CUDA_VSTD::is_same<
-              _Ret,
-              typename _CUDA_VSTD::__invoke_of<_DecayFn, _As...>::type
-            >::value,
-          "Return type shall match the proclaimed one exactly");
-    ))
+#if !defined(__NVCC__) || defined(__CUDA_ARCH__)
+    static_assert(
+        _CUDA_VSTD::is_same<
+            _Ret,
+            typename _CUDA_VSTD::__invoke_of<_DecayFn, _As...>::type
+          >::value,
+        "Return type shall match the proclaimed one exactly");
+#endif
 
     return _CUDA_VSTD::__invoke(__fn_, _CUDA_VSTD::forward<_As>(__as)...);
   }
@@ -98,14 +98,14 @@ class __return_type_wrapper {
   template <class... _As>
   _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY _Ret
   operator()(_As&&... __as) && noexcept {
-    NV_IF_TARGET(NV_IS_DEVICE,(
-      static_assert(
-          _CUDA_VSTD::is_same<
-              _Ret,
-              typename _CUDA_VSTD::__invoke_of<_DecayFn&&, _As...>::type
-            >::value,
-          "Return type shall match the proclaimed one exactly");
-    ))
+#if !defined(__NVCC__) || defined(__CUDA_ARCH__)
+    static_assert(
+        _CUDA_VSTD::is_same<
+            _Ret,
+            typename _CUDA_VSTD::__invoke_of<_DecayFn&&, _As...>::type
+          >::value,
+        "Return type shall match the proclaimed one exactly");
+#endif
 
     return _CUDA_VSTD::__invoke(_CUDA_VSTD::move(__fn_),
                                 _CUDA_VSTD::forward<_As>(__as)...);
@@ -114,14 +114,14 @@ class __return_type_wrapper {
   template <class... _As>
   _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY _Ret
   operator()(_As&&... __as) const& noexcept {
-    NV_IF_TARGET(NV_IS_DEVICE,(
-      static_assert(
-          _CUDA_VSTD::is_same<
-              _Ret,
-              typename _CUDA_VSTD::__invoke_of<_DecayFn, _As...>::type
-            >::value,
-          "Return type shall match the proclaimed one exactly");
-    ))
+#if !defined(__NVCC__) || defined(__CUDA_ARCH__)
+    static_assert(
+        _CUDA_VSTD::is_same<
+            _Ret,
+            typename _CUDA_VSTD::__invoke_of<_DecayFn, _As...>::type
+          >::value,
+        "Return type shall match the proclaimed one exactly");
+#endif
 
     return _CUDA_VSTD::__invoke(__fn_, _CUDA_VSTD::forward<_As>(__as)...);
   }
@@ -129,14 +129,14 @@ class __return_type_wrapper {
   template <class... _As>
   _LIBCUDACXX_CONSTEXPR_AFTER_CXX11 _LIBCUDACXX_INLINE_VISIBILITY _Ret
   operator()(_As&&... __as) const&& noexcept {
-    NV_IF_TARGET(NV_IS_DEVICE,(
-      static_assert(
-          _CUDA_VSTD::is_same<
-              _Ret,
-              typename _CUDA_VSTD::__invoke_of<_DecayFn&&, _As...>::type
-            >::value,
-          "Return type shall match the proclaimed one exactly");
-    ))
+#if !defined(__NVCC__) || defined(__CUDA_ARCH__)
+    static_assert(
+        _CUDA_VSTD::is_same<
+            _Ret,
+            typename _CUDA_VSTD::__invoke_of<_DecayFn&&, _As...>::type
+          >::value,
+        "Return type shall match the proclaimed one exactly");
+#endif
 
     return _CUDA_VSTD::__invoke(_CUDA_VSTD::move(__fn_),
                                 _CUDA_VSTD::forward<_As>(__as)...);

@@ -103,7 +103,11 @@ void *aligned_alloc(size_t alignment, size_t size);                       // C11
 #elif __has_builtin(__builtin_unreachable)
 #  define _LIBCUDACXX_UNREACHABLE() __builtin_unreachable()
 #else
-#  define _LIBCUDACXX_UNREACHABLE() NV_IF_ELSE_TARGET(NV_IS_DEVICE,__trap(),::abort())
+#ifdef __CUDA_ARCH__
+#  define _LIBCUDACXX_UNREACHABLE() __trap()
+#else
+#  define _LIBCUDACXX_UNREACHABLE() ::abort()
+#endif // __CUDA_ARCH__
 #endif // !__GNUC__
 
 #ifdef _LIBCUDACXX_COMPILER_NVHPC
