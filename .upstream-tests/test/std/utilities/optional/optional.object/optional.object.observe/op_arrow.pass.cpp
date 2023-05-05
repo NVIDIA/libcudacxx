@@ -43,7 +43,7 @@ test()
 int main(int, char**)
 {
     {
-        [[maybe_unused]] cuda::std::optional<X> opt;
+        cuda::std::optional<X> opt; unused(opt);
         ASSERT_SAME_TYPE(decltype(opt.operator->()), X*);
         // ASSERT_NOT_NOEXCEPT(opt.operator->());
         // FIXME: This assertion fails with GCC because it can see that

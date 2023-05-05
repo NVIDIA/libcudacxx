@@ -59,7 +59,7 @@ test()
 int main(int, char**)
 {
     {
-        [[maybe_unused]] optional<X> opt;
+        optional<X> opt; unused(opt);
         ASSERT_NOT_NOEXCEPT(opt.value());
         ASSERT_SAME_TYPE(decltype(opt.value()), X&);
     }

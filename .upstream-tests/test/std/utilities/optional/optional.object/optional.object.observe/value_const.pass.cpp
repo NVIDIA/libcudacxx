@@ -46,7 +46,7 @@ struct X
 int main(int, char**)
 {
     {
-        [[maybe_unused]] const optional<X> opt;
+        const optional<X> opt; unused(opt);
         ASSERT_NOT_NOEXCEPT(opt.value());
         ASSERT_SAME_TYPE(decltype(opt.value()), X const&);
     }

@@ -35,7 +35,7 @@ concept has_or_else = requires(Opt&& opt, F&& f) {
 template <class Opt, class F>
 _LIBCUDACXX_CONCEPT_FRAGMENT(
     HasOrElse,
-    requires(Opt&& opt, F&& f) //
+    requires(Opt&& opt, F&& f)
     (cuda::std::forward<Opt>(opt).or_else(cuda::std::forward<F>(f))));
 
 template <class Opt, class F>
@@ -60,13 +60,30 @@ static_assert(!has_or_else<cuda::std::optional<NonMovable>&&, decltype(return_op
 #endif
 
 __host__ __device__
-cuda::std::optional<int> take_int(int) { return 0; }
+cuda::std::optional<int> take_int(int);
 __host__ __device__
-void take_int_return_void(int) {}
+void take_int_return_void(int);
 
-static_assert(!has_or_else<cuda::std::optional<int>, decltype(take_int)>, "");
-static_assert(!has_or_else<cuda::std::optional<int>, decltype(take_int_return_void)>, "");
-static_assert(!has_or_else<cuda::std::optional<int>, int>, "");
+// For some reason, MSVC handles the assertions above correctly in pre-C++20 modes, but... fails to fail these.
+// And it's not because the tested expressions are valid; no, they fail to compile, but something in the sfinae machinery used by has_or_else
+// just trips this quite special compiler up. Workaround, manually re-spell the same thing again.
+// I don't understand why it's just these that fail with has_or_else, not any of the ones above - but MSVC's error messages are so monumentally
+// unhelpful, that I decided to stop wasting time on this and just work around the cases that were giving it trouble.
+#ifdef TEST_COMPILER_C1XX
+template<class T, class F, class = void>
+struct has_or_else_war : cuda::std::false_type {};
+
+template<class T, class F>
+struct has_or_else_war<T, F, decltype(cuda::std::declval<T>().or_else(cuda::std::declval<F>()), void())> : cuda::std::true_type {};
+
+static_assert(!has_or_else_war<cuda::std::optional<int>&, decltype(take_int)>::value, "");
+static_assert(!has_or_else_war<cuda::std::optional<int>&, decltype(take_int_return_void)>::value, "");
+static_assert(!has_or_else_war<cuda::std::optional<int>&, int>::value, "");
+#else
+static_assert(!has_or_else<cuda::std::optional<int>&, decltype(take_int)>, "");
+static_assert(!has_or_else<cuda::std::optional<int>&, decltype(take_int_return_void)>, "");
+static_assert(!has_or_else<cuda::std::optional<int>&, int>, "");
+#endif
 
 __host__ __device__
 TEST_CONSTEXPR_CXX17 bool test() {

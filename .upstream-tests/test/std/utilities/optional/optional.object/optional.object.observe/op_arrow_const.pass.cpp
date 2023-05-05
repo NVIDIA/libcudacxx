@@ -43,7 +43,7 @@ struct Z
 int main(int, char**)
 {
     {
-        [[maybe_unused]] const cuda::std::optional<X> opt;
+        const cuda::std::optional<X> opt; unused(opt);
         ASSERT_SAME_TYPE(decltype(opt.operator->()), X const*);
         // ASSERT_NOT_NOEXCEPT(opt.operator->());
         // FIXME: This assertion fails with GCC because it can see that

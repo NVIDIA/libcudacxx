@@ -49,7 +49,7 @@ test()
 int main(int, char**)
 {
     {
-        [[maybe_unused]] optional<X> opt;
+        optional<X> opt; unused(opt);
         ASSERT_SAME_TYPE(decltype(*opt), X&);
         LIBCPP_STATIC_ASSERT(noexcept(*opt), "");
         // ASSERT_NOT_NOEXCEPT(*opt);

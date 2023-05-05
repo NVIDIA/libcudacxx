@@ -41,7 +41,7 @@ struct Y
 int main(int, char**)
 {
     {
-        [[maybe_unused]] const optional<X> opt;
+        const optional<X> opt; unused(opt);
         ASSERT_SAME_TYPE(decltype(*opt), X const&);
         LIBCPP_STATIC_ASSERT(noexcept(*opt), "");
         // ASSERT_NOT_NOEXCEPT(*opt);

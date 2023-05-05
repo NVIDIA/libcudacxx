@@ -57,7 +57,7 @@ test()
 int main(int, char**)
 {
     {
-        [[maybe_unused]] optional<X> opt;
+        optional<X> opt; unused(opt);
         ASSERT_NOT_NOEXCEPT(cuda::std::move(opt).value());
         ASSERT_SAME_TYPE(decltype(cuda::std::move(opt).value()), X&&);
     }
