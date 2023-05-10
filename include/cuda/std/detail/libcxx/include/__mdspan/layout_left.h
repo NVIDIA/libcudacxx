@@ -169,8 +169,8 @@ class layout_left::mapping {
       NV_IF_TARGET(NV_IS_HOST,(
         size_t __stride = 1;
         for(rank_type __r=0; __r<__extents.rank(); __r++) {
-          _LIBCUDACXX_ASSERT(__stride == static_cast<size_t>(__other.stride(__r)),
-                             "Assigning layout_stride to layout_left with invalid strides.");
+          _LIBCUDACXX_THROW_RUNTIME_ERROR(__stride == static_cast<size_t>(__other.stride(__r)),
+                                          "Assigning layout_stride to layout_left with invalid strides.");
           __stride *= __extents.extent(__r);
         }
       ))

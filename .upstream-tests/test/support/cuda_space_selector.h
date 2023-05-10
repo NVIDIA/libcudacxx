@@ -8,17 +8,13 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include <cuda/std/cassert>
-#include <cuda/std/cstddef>
-
 #ifndef __CUDA_SPACE_SELECTOR_H
 #define __CUDA_SPACE_SELECTOR_H
 
-#if defined(__CUDACC__) && !defined(_LIBCUDACXX_COMPILER_NVHPC) && !defined(_LIBCUDACXX_COMPILER_NVRTC)
-#define TEST_EXEC_CHECK_DISABLE #pragma nv_exec_check_disable
-#else
-#define TEST_EXEC_CHECK_DISABLE
-#endif
+#include <cuda/std/cassert>
+#include <cuda/std/cstddef>
+
+#include "concurrent_agents.h"
 
 #ifdef _LIBCUDACXX_COMPILER_NVRTC
 #define LAMBDA [=]
@@ -31,20 +27,6 @@
 #else
 #define SHARED
 #endif
-
-TEST_EXEC_CHECK_DISABLE
-template<class Fun>
-__host__ __device__
-void execute_on_main_thread(Fun&& fun) {
-    NV_IF_ELSE_TARGET(NV_IS_DEVICE, (
-        if (threadIdx.x == 0) {
-            fun();
-        }
-        __syncthreads();
-     ),(
-        fun();
-     ))
-}
 
 template<typename T, cuda::std::size_t SharedOffset>
 struct malloc_memory_provider {
