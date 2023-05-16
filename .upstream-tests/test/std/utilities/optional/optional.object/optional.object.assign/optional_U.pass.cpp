@@ -18,11 +18,14 @@
 
 #include <cuda/std/array>
 #include <cuda/std/cassert>
-// #include <cuda/std/memory>
+#ifdef _LIBCUDACXX_HAS_MEMORY
+#include <cuda/std/memory>
+#endif
 #include <cuda/std/type_traits>
 
 #include "test_macros.h"
 #include "archetypes.h"
+#include "MoveOnly.h"
 
 using cuda::std::optional;
 
@@ -314,7 +317,7 @@ int main(int, char**)
     test_with_test_type();
     test_ambiguous_assign();
     test();
-    /*
+#ifdef _LIBCUDACXX_HAS_MEMORY
     {
         optional<cuda::std::unique_ptr<B>> opt;
         optional<cuda::std::unique_ptr<D>> other(new D());
@@ -324,7 +327,7 @@ int main(int, char**)
         assert(opt->get() != nullptr);
         assert(other->get() == nullptr);
     }
-    */
+#endif
 #ifndef TEST_HAS_NO_EXCEPTIONS
     {
         optional<X> opt;

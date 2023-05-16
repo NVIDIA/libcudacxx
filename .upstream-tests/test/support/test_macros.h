@@ -323,15 +323,11 @@ struct is_same<T, T> { enum {value = 1}; };
     static_assert((test_macros_detail::is_same<__VA_ARGS__>::value), \
                  "Types differ unexpectedly")
 
-// TODO: figure out if this makes sense
-#define TEST_THROW(...) assert(#__VA_ARGS__)
-
-/*
 #ifndef TEST_HAS_NO_EXCEPTIONS
 #define TEST_THROW(...) throw __VA_ARGS__
 #else
 #if defined(__GNUC__)
-#define TEST_THROW(...) __builtin_abort()
+#define TEST_THROW(...) assert(#__VA_ARGS__)
 #elif defined(__CUDACC_RTC__)
 #define TEST_THROW(...) assert(#__VA_ARGS__)
 #else
@@ -339,7 +335,6 @@ struct is_same<T, T> { enum {value = 1}; };
 #define TEST_THROW(...) ::abort()
 #endif
 #endif
-*/
 
 #ifndef TEST_HAS_NO_INT128_T
 #ifdef _LIBCUDACXX_HAS_NO_INT128

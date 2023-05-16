@@ -16,7 +16,9 @@
 
 #include <cuda/std/optional>
 #include <cuda/std/type_traits>
-// #include <cuda/std/vector>
+#ifdef _LIBCUDACXX_HAS_VECTOR
+#include <cuda/std/vector>
+#endif
 #include <cuda/std/cassert>
 
 #include "test_macros.h"
@@ -86,7 +88,7 @@ int main(int, char**)
         static_assert(!cuda::std::is_constructible<X, cuda::std::initializer_list<int>&>::value, "");
         static_assert(!cuda::std::is_constructible<optional<X>, cuda::std::initializer_list<int>&>::value, "");
     }
-    /*
+#ifdef _LIBCUDACXX_HAS_VECTOR
     {
         optional<cuda::std::vector<int>> opt(in_place, {3, 1});
         assert(static_cast<bool>(opt) == true);
@@ -99,12 +101,20 @@ int main(int, char**)
         assert((*opt == cuda::std::vector<int>{3, 1}));
         assert(opt->size() == 2);
     }
-    */
+#endif
     {
         static_assert(cuda::std::is_constructible<optional<Y>, cuda::std::initializer_list<int>&>::value, "");
-        constexpr optional<Y> opt(in_place, {3, 1});
-        static_assert(static_cast<bool>(opt) == true, "");
-        static_assert(*opt == Y{3, 1}, "");
+
+        {
+            optional<Y> opt(in_place, {3, 1});
+            assert(static_cast<bool>(opt) == true);
+            assert((*opt == Y{3, 1}));
+        }
+        {
+            constexpr optional<Y> opt(in_place, {3, 1});
+            static_assert(static_cast<bool>(opt) == true, "");
+            static_assert(*opt == Y{3, 1}, "");
+        }
 
         struct test_constexpr_ctor
             : public optional<Y>

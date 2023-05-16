@@ -16,7 +16,9 @@
 #include <cuda/std/optional>
 #include <cuda/std/type_traits>
 #include <cuda/std/cassert>
-// #include <cuda/std/vector>
+#ifdef _LIBCUDACXX_HAS_VECTOR
+#include <cuda/std/vector>
+#endif
 
 #include "test_macros.h"
 
@@ -116,7 +118,7 @@ int main(int, char**)
         static_assert(check_X());
 #endif
     }
-    /*
+#ifdef _LIBCUDACXX_HAS_VECTOR
     {
         optional<cuda::std::vector<int>> opt;
         auto &v = opt.emplace({1, 2, 3}, cuda::std::allocator<int>());
@@ -125,7 +127,7 @@ int main(int, char**)
         assert(*opt == cuda::std::vector<int>({1, 2, 3}));
         assert(&v == &*opt);
     }
-    */
+#endif
     {
         check_Y();
 #if TEST_STD_VER > 17 && defined(_LIBCUDACXX_ADDRESSOF)

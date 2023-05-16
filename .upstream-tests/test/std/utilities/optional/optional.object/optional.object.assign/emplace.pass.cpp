@@ -15,7 +15,6 @@
 #include <cuda/std/optional>
 #include <cuda/std/type_traits>
 #include <cuda/std/cassert>
-// #include <cuda/std/memory>
 
 #include "test_macros.h"
 #include "archetypes.h"

@@ -15,7 +15,11 @@
 #include <cuda/std/optional>
 #include <cuda/std/type_traits>
 #include <cuda/std/cassert>
-// #include <cuda/std/memory>
+#ifdef _LIBCUDACXX_HAS_MEMORY
+#include <cuda/std/memory>
+#else
+#include "MoveOnly.h"
+#endif
 
 #include "test_macros.h"
 #include "archetypes.h"
@@ -281,8 +285,7 @@ int main(int, char**)
     // Test types with multi argument constructors
     test_with_type_multi<ConstexprTestTypes::TestType>();
     test_with_type_multi<TrivialTestTypes::TestType>();
-    // Test move only types
-    /*
+#ifdef _LIBCUDACXX_HAS_MEMORY
     {
         optional<cuda::std::unique_ptr<int>> opt;
         opt = cuda::std::unique_ptr<int>(new int(3));
@@ -295,7 +298,20 @@ int main(int, char**)
         assert(static_cast<bool>(opt) == true);
         assert(**opt == 3);
     }
-    */
+#else
+    {
+        optional<MoveOnly> opt;
+        opt = MoveOnly(3);
+        assert(static_cast<bool>(opt) == true);
+        assert(*opt == 3);
+    }
+    {
+        optional<MoveOnly> opt(MoveOnly(2));
+        opt = MoveOnly(3);
+        assert(static_cast<bool>(opt) == true);
+        assert(*opt == 3);
+    }
+#endif
     test_throws();
 
     static_assert(pr38638(3) == 5, "");
