@@ -1,0 +1,38 @@
+on:
+  pull_request:
+    branches:
+    - main
+
+permissions:
+  contents: read
+  pull-requests: read
+
+# This allows a subsequently queued workflow run to interrupt previous runs
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    name: "Build and test libcudacxx"
+    runs-on: windows-2019
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [2017, 2019, 2022]
+        stdver: ['c++14', 'c++17', 'c++20']
+    steps:
+      - name: Checkout ${{ github.repository }}
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Log in to registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
+
+      - name: "Build config: VS${{ matrix.version }} + ${{ matrix.stdver }}"
+        uses: ./.github/actions/build-and-test-windows
+        with:
+          windows_url: ghcr.io/${{ github.repository_owner }}/cuda-windows-images:windows-server-cuda-msvc-${{ matrix.version }}
+          dialect: "${{ matrix.stdver }}"
