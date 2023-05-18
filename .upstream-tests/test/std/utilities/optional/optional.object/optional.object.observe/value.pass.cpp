@@ -31,6 +31,7 @@ struct X
 {
     X() = default;
     X(const X&) = delete;
+    X& operator=(const X&) = delete;
     __host__ __device__
     constexpr int test() const & {return 3;}
     __host__ __device__

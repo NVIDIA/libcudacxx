@@ -676,7 +676,7 @@ public:
         : __base(in_place, _CUDA_VSTD::forward<_Args>(__args)...) {}
 
     template <class _Up, class... _Args, class = __enable_if_t<
-        _LIBCUDACXX_TRAIT(is_constructible, value_type, initializer_list<_Up>&, _Args...>)
+        _LIBCUDACXX_TRAIT(is_constructible, value_type, initializer_list<_Up>&, _Args...)>
     >
     _LIBCUDACXX_INLINE_VISIBILITY
     constexpr explicit optional(in_place_t, initializer_list<_Up> __il, _Args&&... __args)
