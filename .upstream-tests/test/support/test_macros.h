@@ -326,14 +326,7 @@ struct is_same<T, T> { enum {value = 1}; };
 #ifndef TEST_HAS_NO_EXCEPTIONS
 #define TEST_THROW(...) throw __VA_ARGS__
 #else
-#if defined(__GNUC__)
 #define TEST_THROW(...) assert(#__VA_ARGS__)
-#elif defined(__CUDACC_RTC__)
-#define TEST_THROW(...) assert(#__VA_ARGS__)
-#else
-#include <stdlib.h>
-#define TEST_THROW(...) ::abort()
-#endif
 #endif
 
 #ifndef TEST_HAS_NO_INT128_T

@@ -117,7 +117,8 @@ TEST_CONSTEXPR_CXX17 bool test_nontrivial() {
 int main(int, char**) {
   test();
   test_nontrivial();
-#if TEST_STD_VER > 14
+  // GCC <9 incorrectly trips on the assertions in this, so disable it there
+#if TEST_STD_VER > 14 && (!defined(TEST_COMPILER_GCC) || __GNUC__ < 9)
   static_assert(test(), "");
 #endif
 #if TEST_STD_VER > 17

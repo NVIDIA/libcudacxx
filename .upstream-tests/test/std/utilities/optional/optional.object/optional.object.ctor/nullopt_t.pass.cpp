@@ -72,9 +72,11 @@ int main(int, char**)
 {
     test_constexpr<optional<int>>();
     test_constexpr<optional<int*>>();
+#if !defined(TEST_COMPILER_C1XX) || TEST_STD_VER >= 17
     test_constexpr<optional<ImplicitTypes::NoCtors>>();
     test_constexpr<optional<NonTrivialTypes::NoCtors>>();
     test_constexpr<optional<NonConstexprTypes::NoCtors>>();
+#endif
     test<optional<NonLiteralTypes::NoCtors>>();
 
   return 0;
