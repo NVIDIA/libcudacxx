@@ -31,9 +31,9 @@
 // This is not mutually exclusive with other compilers, as NVCC uses a host
 // compiler.
 #  define _LIBCUDACXX_COMPILER_NVCC
-#elif defined(_NVHPC_CUDA) // NOT supported
+#elif defined(_NVHPC_CUDA)
 #  define _LIBCUDACXX_COMPILER_NVHPC_CUDA
-#elif defined(__CUDA__) && defined(_LIBCUDACXX_COMPILER_CLANG) // NOT supported
+#elif defined(__CUDA__) && defined(_LIBCUDACXX_COMPILER_CLANG)
 #  define _LIBCUDACXX_COMPILER_CLANG_CUDA
 #endif
 
