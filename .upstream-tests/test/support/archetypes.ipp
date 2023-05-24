@@ -49,7 +49,15 @@
 
 struct AllCtors : DEFINE_BASE(AllCtors) {
   using Base = DEFINE_BASE(AllCtors);
+#if defined(TEST_COMPILER_NVRTC) // nvbug3961621
+  template<class... Args, typename = decltype(Base(cuda::std::declval<Args>()...))>
+  __host__ __device__ DEFINE_EXPLICIT DEFINE_CONSTEXPR
+  AllCtors(Args&&... args) noexcept(noexcept(Base(cuda::std::declval<Args>()...)))
+      : Base(cuda::std::forward<Args>(args)...)
+  {}
+#else
   using Base::Base;
+#endif
   using Base::operator=;
   DEFINE_CTOR_ANNOTATIONS DEFINE_EXPLICIT DEFINE_CONSTEXPR AllCtors() DEFINE_NOEXCEPT DEFINE_DEFAULT_CTOR;
   DEFINE_CTOR_ANNOTATIONS DEFINE_EXPLICIT DEFINE_CONSTEXPR AllCtors(AllCtors const&) DEFINE_NOEXCEPT DEFINE_INIT_LIST DEFINE_CTOR;
@@ -69,14 +77,30 @@ struct NoCtors : DEFINE_BASE(NoCtors) {
 
 struct NoDefault : DEFINE_BASE(NoDefault) {
   using Base = DEFINE_BASE(NoDefault);
+#if defined(TEST_COMPILER_NVRTC) // nvbug3961621
+  template<class... Args, typename = decltype(Base(cuda::std::declval<Args>()...))>
+  __host__ __device__ DEFINE_EXPLICIT DEFINE_CONSTEXPR
+  NoDefault(Args&&... args) noexcept(noexcept(Base(cuda::std::declval<Args>()...)))
+      : Base(cuda::std::forward<Args>(args)...)
+  {}
+#else
   using Base::Base;
+#endif
   DEFINE_EXPLICIT DEFINE_CONSTEXPR NoDefault() DEFINE_NOEXCEPT = delete;
   DEFINE_DTOR(NoDefault)
 };
 
 struct DefaultOnly : DEFINE_BASE(DefaultOnly) {
   using Base = DEFINE_BASE(DefaultOnly);
+#if defined(TEST_COMPILER_NVRTC) // nvbug3961621
+  template<class... Args, typename = decltype(Base(cuda::std::declval<Args>()...))>
+  __host__ __device__ DEFINE_EXPLICIT DEFINE_CONSTEXPR
+  DefaultOnly(Args&&... args) noexcept(noexcept(Base(cuda::std::declval<Args>()...)))
+      : Base(cuda::std::forward<Args>(args)...)
+  {}
+#else
   using Base::Base;
+#endif
   DEFINE_CTOR_ANNOTATIONS DEFINE_EXPLICIT DEFINE_CONSTEXPR DefaultOnly() DEFINE_NOEXCEPT DEFINE_DEFAULT_CTOR;
   DefaultOnly(DefaultOnly const&) DEFINE_NOEXCEPT = delete;
   DefaultOnly& operator=(DefaultOnly const&) DEFINE_NOEXCEPT = delete;
@@ -85,7 +109,15 @@ struct DefaultOnly : DEFINE_BASE(DefaultOnly) {
 
 struct Copyable : DEFINE_BASE(Copyable) {
   using Base = DEFINE_BASE(Copyable);
+#if defined(TEST_COMPILER_NVRTC) // nvbug3961621
+  template<class... Args, typename = decltype(Base(cuda::std::declval<Args>()...))>
+  __host__ __device__ DEFINE_EXPLICIT DEFINE_CONSTEXPR
+  Copyable(Args&&... args) noexcept(noexcept(Base(cuda::std::declval<Args>()...)))
+      : Base(cuda::std::forward<Args>(args)...)
+  {}
+#else
   using Base::Base;
+#endif
   DEFINE_CTOR_ANNOTATIONS DEFINE_EXPLICIT DEFINE_CONSTEXPR Copyable() DEFINE_NOEXCEPT DEFINE_DEFAULT_CTOR;
   DEFINE_CTOR_ANNOTATIONS DEFINE_EXPLICIT DEFINE_CONSTEXPR Copyable(Copyable const &) DEFINE_NOEXCEPT DEFINE_INIT_LIST DEFINE_CTOR;
   DEFINE_ASSIGN_ANNOTATIONS Copyable &operator=(Copyable const &) DEFINE_NOEXCEPT DEFINE_ASSIGN;
@@ -94,7 +126,15 @@ struct Copyable : DEFINE_BASE(Copyable) {
 
 struct CopyOnly : DEFINE_BASE(CopyOnly) {
   using Base = DEFINE_BASE(CopyOnly);
+#if defined(TEST_COMPILER_NVRTC) // nvbug3961621
+  template<class... Args, typename = decltype(Base(cuda::std::declval<Args>()...))>
+  __host__ __device__ DEFINE_EXPLICIT DEFINE_CONSTEXPR
+  CopyOnly(Args&&... args) noexcept(noexcept(Base(cuda::std::declval<Args>()...)))
+      : Base(cuda::std::forward<Args>(args)...)
+  {}
+#else
   using Base::Base;
+#endif
   DEFINE_CTOR_ANNOTATIONS DEFINE_EXPLICIT DEFINE_CONSTEXPR CopyOnly() DEFINE_NOEXCEPT DEFINE_DEFAULT_CTOR;
   DEFINE_CTOR_ANNOTATIONS DEFINE_EXPLICIT DEFINE_CONSTEXPR CopyOnly(CopyOnly const &) DEFINE_NOEXCEPT DEFINE_INIT_LIST DEFINE_CTOR;
   DEFINE_EXPLICIT DEFINE_CONSTEXPR CopyOnly(CopyOnly &&) DEFINE_NOEXCEPT = delete;
@@ -105,7 +145,15 @@ struct CopyOnly : DEFINE_BASE(CopyOnly) {
 
 struct NonCopyable : DEFINE_BASE(NonCopyable) {
   using Base = DEFINE_BASE(NonCopyable);
+#if defined(TEST_COMPILER_NVRTC) // nvbug3961621
+  template<class... Args, typename = decltype(Base(cuda::std::declval<Args>()...))>
+  __host__ __device__ DEFINE_EXPLICIT DEFINE_CONSTEXPR
+  NonCopyable(Args&&... args) noexcept(noexcept(Base(cuda::std::declval<Args>()...)))
+      : Base(cuda::std::forward<Args>(args)...)
+  {}
+#else
   using Base::Base;
+#endif
   DEFINE_CTOR_ANNOTATIONS DEFINE_EXPLICIT DEFINE_CONSTEXPR NonCopyable() DEFINE_NOEXCEPT DEFINE_DEFAULT_CTOR;
   DEFINE_EXPLICIT DEFINE_CONSTEXPR NonCopyable(NonCopyable const &) DEFINE_NOEXCEPT = delete;
   NonCopyable &operator=(NonCopyable const &) DEFINE_NOEXCEPT = delete;
@@ -114,7 +162,15 @@ struct NonCopyable : DEFINE_BASE(NonCopyable) {
 
 struct MoveOnly : DEFINE_BASE(MoveOnly) {
   using Base = DEFINE_BASE(MoveOnly);
+#if defined(TEST_COMPILER_NVRTC) // nvbug3961621
+  template<class... Args, typename = decltype(Base(cuda::std::declval<Args>()...))>
+  __host__ __device__ DEFINE_EXPLICIT DEFINE_CONSTEXPR
+  MoveOnly(Args&&... args) noexcept(noexcept(Base(cuda::std::declval<Args>()...)))
+      : Base(cuda::std::forward<Args>(args)...)
+  {}
+#else
   using Base::Base;
+#endif
   DEFINE_CTOR_ANNOTATIONS DEFINE_EXPLICIT DEFINE_CONSTEXPR MoveOnly() DEFINE_NOEXCEPT DEFINE_DEFAULT_CTOR;
   DEFINE_CTOR_ANNOTATIONS DEFINE_EXPLICIT DEFINE_CONSTEXPR MoveOnly(MoveOnly &&) DEFINE_NOEXCEPT DEFINE_INIT_LIST DEFINE_CTOR;
   DEFINE_ASSIGN_ANNOTATIONS MoveOnly &operator=(MoveOnly &&) DEFINE_NOEXCEPT DEFINE_ASSIGN;
@@ -123,7 +179,15 @@ struct MoveOnly : DEFINE_BASE(MoveOnly) {
 
 struct CopyAssignable : DEFINE_BASE(CopyAssignable) {
   using Base = DEFINE_BASE(CopyAssignable);
+#if defined(TEST_COMPILER_NVRTC) // nvbug3961621
+  template<class... Args, typename = decltype(Base(cuda::std::declval<Args>()...))>
+  __host__ __device__ DEFINE_EXPLICIT DEFINE_CONSTEXPR
+  CopyAssignable(Args&&... args) noexcept(noexcept(Base(cuda::std::declval<Args>()...)))
+      : Base(cuda::std::forward<Args>(args)...)
+  {}
+#else
   using Base::Base;
+#endif
   DEFINE_EXPLICIT DEFINE_CONSTEXPR CopyAssignable() DEFINE_NOEXCEPT = delete;
   DEFINE_ASSIGN_ANNOTATIONS CopyAssignable& operator=(CopyAssignable const&) DEFINE_NOEXCEPT DEFINE_ASSIGN;
   DEFINE_DTOR(CopyAssignable)
@@ -131,7 +195,15 @@ struct CopyAssignable : DEFINE_BASE(CopyAssignable) {
 
 struct CopyAssignOnly : DEFINE_BASE(CopyAssignOnly) {
   using Base = DEFINE_BASE(CopyAssignOnly);
+#if defined(TEST_COMPILER_NVRTC) // nvbug3961621
+  template<class... Args, typename = decltype(Base(cuda::std::declval<Args>()...))>
+  __host__ __device__ DEFINE_EXPLICIT DEFINE_CONSTEXPR
+  CopyAssignOnly(Args&&... args) noexcept(noexcept(Base(cuda::std::declval<Args>()...)))
+      : Base(cuda::std::forward<Args>(args)...)
+  {}
+#else
   using Base::Base;
+#endif
   DEFINE_EXPLICIT DEFINE_CONSTEXPR CopyAssignOnly() DEFINE_NOEXCEPT = delete;
   DEFINE_ASSIGN_ANNOTATIONS CopyAssignOnly& operator=(CopyAssignOnly const&) DEFINE_NOEXCEPT DEFINE_ASSIGN;
   CopyAssignOnly& operator=(CopyAssignOnly &&) DEFINE_NOEXCEPT = delete;
@@ -140,7 +212,15 @@ struct CopyAssignOnly : DEFINE_BASE(CopyAssignOnly) {
 
 struct MoveAssignOnly : DEFINE_BASE(MoveAssignOnly) {
   using Base = DEFINE_BASE(MoveAssignOnly);
+#if defined(TEST_COMPILER_NVRTC) // nvbug3961621
+  template<class... Args, typename = decltype(Base(cuda::std::declval<Args>()...))>
+  __host__ __device__ DEFINE_EXPLICIT DEFINE_CONSTEXPR
+  MoveAssignOnly(Args&&... args) noexcept(noexcept(Base(cuda::std::declval<Args>()...)))
+      : Base(cuda::std::forward<Args>(args)...)
+  {}
+#else
   using Base::Base;
+#endif
   DEFINE_EXPLICIT DEFINE_CONSTEXPR MoveAssignOnly() DEFINE_NOEXCEPT = delete;
   MoveAssignOnly& operator=(MoveAssignOnly const&) DEFINE_NOEXCEPT = delete;
   DEFINE_ASSIGN_ANNOTATIONS MoveAssignOnly& operator=(MoveAssignOnly &&) DEFINE_NOEXCEPT DEFINE_ASSIGN;
@@ -149,7 +229,10 @@ struct MoveAssignOnly : DEFINE_BASE(MoveAssignOnly) {
 
 struct ConvertingType : DEFINE_BASE(ConvertingType) {
   using Base = DEFINE_BASE(ConvertingType);
+#if defined(TEST_COMPILER_NVRTC) // nvbug3961621, this one is special because of the converting ctor
+#else
   using Base::Base;
+#endif
   DEFINE_CTOR_ANNOTATIONS DEFINE_EXPLICIT DEFINE_CONSTEXPR ConvertingType() DEFINE_NOEXCEPT DEFINE_DEFAULT_CTOR;
   DEFINE_CTOR_ANNOTATIONS DEFINE_EXPLICIT DEFINE_CONSTEXPR ConvertingType(ConvertingType const&) DEFINE_NOEXCEPT DEFINE_INIT_LIST DEFINE_CTOR;
   DEFINE_CTOR_ANNOTATIONS DEFINE_EXPLICIT DEFINE_CONSTEXPR ConvertingType(ConvertingType &&) DEFINE_NOEXCEPT DEFINE_INIT_LIST DEFINE_CTOR;

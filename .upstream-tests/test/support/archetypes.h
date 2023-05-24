@@ -84,7 +84,7 @@ struct TestBase {
       ++assigned(); ++value_assigned();
       return *this;
     }
-#ifndef TEST_WORKAROUND_C1XX_BROKEN_ZA_CTOR_CHECK
+#if !defined(TEST_WORKAROUND_C1XX_BROKEN_ZA_CTOR_CHECK) && !defined(TEST_COMPILER_NVRTC)
 protected:
 #endif // !TEST_WORKAROUND_C1XX_BROKEN_ZA_CTOR_CHECK
     __host__ __device__ ~TestBase() {
