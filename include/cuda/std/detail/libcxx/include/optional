@@ -283,13 +283,13 @@ struct __optional_destruct_base<_Tp, false>
         :  __val_(_CUDA_VSTD::forward<_Args>(__args)...),
            __engaged_(true) {}
 
-  template <class _Fp, class... _Args>
-  _LIBCUDACXX_INLINE_VISIBILITY
-  constexpr __optional_destruct_base(__optional_construct_from_invoke_tag, _Fp&& __f, _Args&&... __args)
-      : __val_(_CUDA_VSTD::invoke(_CUDA_VSTD::forward<_Fp>(__f), _CUDA_VSTD::forward<_Args>(__args)...)), __engaged_(true) {}
+    template <class _Fp, class... _Args>
+    _LIBCUDACXX_INLINE_VISIBILITY
+    constexpr __optional_destruct_base(__optional_construct_from_invoke_tag, _Fp&& __f, _Args&&... __args)
+        : __val_(_CUDA_VSTD::invoke(_CUDA_VSTD::forward<_Fp>(__f), _CUDA_VSTD::forward<_Args>(__args)...)), __engaged_(true) {}
 
     _LIBCUDACXX_INLINE_VISIBILITY
-    constexpr void reset() noexcept
+    _LIBCUDACXX_CONSTEXPR_AFTER_CXX17 void reset() noexcept
     {
         if (__engaged_)
         {
@@ -323,10 +323,10 @@ struct __optional_destruct_base<_Tp, true>
         :  __val_(_CUDA_VSTD::forward<_Args>(__args)...),
            __engaged_(true) {}
 
-  template <class _Fp, class... _Args>
-  _LIBCUDACXX_INLINE_VISIBILITY
-  constexpr __optional_destruct_base(__optional_construct_from_invoke_tag, _Fp&& __f, _Args&&... __args)
-      : __val_(_CUDA_VSTD::invoke(_CUDA_VSTD::forward<_Fp>(__f), _CUDA_VSTD::forward<_Args>(__args)...)), __engaged_(true) {}
+    template <class _Fp, class... _Args>
+    _LIBCUDACXX_INLINE_VISIBILITY
+    constexpr __optional_destruct_base(__optional_construct_from_invoke_tag, _Fp&& __f, _Args&&... __args)
+        : __val_(_CUDA_VSTD::invoke(_CUDA_VSTD::forward<_Fp>(__f), _CUDA_VSTD::forward<_Args>(__args)...)), __engaged_(true) {}
 
     _LIBCUDACXX_INLINE_VISIBILITY
     constexpr void reset() noexcept
@@ -1111,7 +1111,7 @@ public:
         {
             return _CUDA_VSTD::invoke(_CUDA_VSTD::forward<_Func>(__f), _CUDA_VSTD::move(this->__get()));
         }
-      return remove_cvref_t<_Up>();
+        return remove_cvref_t<_Up>();
     }
 
     template<class _Func>
@@ -1129,7 +1129,7 @@ public:
           return optional<_Up>(__optional_construct_from_invoke_tag{}, _CUDA_VSTD::forward<_Func>(__f), this->__get());
         }
         return optional<_Up>();
-      }
+    }
 
     template<class _Func>
     _LIBCUDACXX_INLINE_VISIBILITY _LIBCUDACXX_AVAILABILITY_THROW_BAD_OPTIONAL_ACCESS
