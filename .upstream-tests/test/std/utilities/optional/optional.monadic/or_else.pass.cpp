@@ -51,10 +51,10 @@ static_assert(has_or_else<cuda::std::optional<int>&, decltype(return_optional<in
 static_assert(has_or_else<cuda::std::optional<int>&&, decltype(return_optional<int>)>, "");
 static_assert(!has_or_else<cuda::std::optional<MoveOnly>&, decltype(return_optional<MoveOnly>)>, "");
 static_assert(has_or_else<cuda::std::optional<MoveOnly>&&, decltype(return_optional<MoveOnly>)>, "");
-// The following cases appear to be causing GCC, specifically GCC 9, to instantiate too much and fail to sfinae in the "concept" above,
+// The following cases appear to be causing GCC, specifically GCC <= 9, to instantiate too much and fail to sfinae in the "concept" above,
 // but only in C++14. This appears to be a compiler bug present specifically in this version, but since it's failing to sfinae on an error,
 // it appears that it is correctly rejecting those cases, so we are fine.
-#if !(defined(TEST_COMPILER_GCC) && __GNUC__ == 9 && TEST_STD_VER == 14)
+#if !(defined(TEST_COMPILER_GCC) && __GNUC__ <= 9 && TEST_STD_VER == 14)
 static_assert(!has_or_else<cuda::std::optional<NonMovable>&, decltype(return_optional<NonMovable>)>, "");
 static_assert(!has_or_else<cuda::std::optional<NonMovable>&&, decltype(return_optional<NonMovable>)>, "");
 #endif
@@ -92,7 +92,18 @@ TEST_CONSTEXPR_CXX17 bool test() {
     assert(opt.or_else([] { return cuda::std::optional<int>{0}; }) == 0);
     opt = 1;
     opt.or_else([] {
+#if defined(TEST_COMPILER_GCC) && __GNUC__ < 9
+      // This is an awful hack around: `error: call to non-'constexpr' function 'void __assert_fail(...)'`
+      // Verified experimentally that __builtin_unreachable is treated the way we want, i.e. compiles
+      // fine within the context of a constexpr expression if unevaluated, but generates an error when evaluated.
+      NV_IF_TARGET(
+        NV_IS_HOST,
+          (__builtin_unreachable();),
+          (__trap();)
+      )
+#else
       assert(false);
+#endif
       return cuda::std::optional<int>{};
     });
   }
