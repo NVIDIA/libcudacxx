@@ -229,22 +229,22 @@ __cpp_lib_void_t                                        201411L <type_traits>
 #endif
 # define __cuda_lib_concepts                             202002L
 # define __cuda_lib_exchange_function                    201304L
-# define __cuda_lib_generic_associative_lookup           201304L
+// # define __cuda_lib_generic_associative_lookup           201304L
 # define __cuda_lib_integer_sequence                     201304L
 # define __cuda_lib_integral_constant_callable           201304L
 # define __cuda_lib_is_final                             201402L
 # define __cuda_lib_is_null_pointer                      201309L
 # define __cuda_lib_make_reverse_iterator                201402L
-# define __cuda_lib_make_unique                          201304L
+// # define __cuda_lib_make_unique                          201304L
 # define __cuda_lib_null_iterators                       201304L
-# define __cuda_lib_quoted_string_io                     201304L
+// # define __cuda_lib_quoted_string_io                     201304L
 # define __cuda_lib_result_of_sfinae                     201210L
 # define __cuda_lib_robust_nonmodifying_seq_ops          201304L
 # if !defined(_LIBCUDACXX_HAS_NO_THREADS)
-#   define __cuda_lib_shared_timed_mutex                 201402L
+// #   define __cuda_lib_shared_timed_mutex                 201402L
 # endif
 # define __cuda_lib_span                                 201902L
-# define __cuda_lib_string_udls                          201304L
+// # define __cuda_lib_string_udls                          201304L
 # define __cuda_lib_transformation_trait_aliases         201304L
 # define __cuda_lib_transparent_operators                201210L
 # define __cuda_lib_tuple_element_t                      201402L
@@ -255,8 +255,8 @@ __cpp_lib_void_t                                        201411L <type_traits>
 # if defined(_LIBCUDACXX_ADDRESSOF)
 #   define __cuda_lib_addressof_constexpr                201603L
 # endif
-# define __cuda_lib_allocator_traits_is_always_equal     201411L
-# define __cuda_lib_any                                  201606L
+// # define __cuda_lib_allocator_traits_is_always_equal     201411L
+// # define __cuda_lib_any                                  201606L
 # define __cuda_lib_apply                                201603L
 # define __cuda_lib_array_constexpr                      201603L
 # define __cuda_lib_as_const                             201510L
@@ -268,17 +268,17 @@ __cpp_lib_void_t                                        201411L <type_traits>
 // # define __cuda_lib_boyer_moore_searcher                 201603L
 # define __cuda_lib_byte                                 201603L
 # define __cuda_lib_chrono                               201611L
-# define __cuda_lib_clamp                                201603L
-# define __cuda_lib_enable_shared_from_this              201603L
+// # define __cuda_lib_clamp                                201603L
+// # define __cuda_lib_enable_shared_from_this              201603L
 // # define __cuda_lib_execution                            201603L
-# define __cuda_lib_filesystem                           201703L
+// # define __cuda_lib_filesystem                           201703L
 # define __cuda_lib_gcd_lcm                              201606L
 # define __cuda_lib_hardware_interference_size           201703L
 # if defined(_LIBCUDACXX_HAS_UNIQUE_OBJECT_REPRESENTATIONS)
 #   define __cuda_lib_has_unique_object_representations  201606L
 # endif
 # define __cuda_lib_hypot                                201603L
-# define __cuda_lib_incomplete_container_elements        201505L
+// # define __cuda_lib_incomplete_container_elements        201505L
 # define __cuda_lib_invoke                               201411L
 # if !defined(_LIBCUDACXX_HAS_NO_IS_AGGREGATE)
 #   define __cuda_lib_is_aggregate                       201703L
@@ -288,23 +288,23 @@ __cpp_lib_void_t                                        201411L <type_traits>
 # define __cuda_lib_launder                              201606L
 # define __cuda_lib_logical_traits                       201510L
 # define __cuda_lib_make_from_tuple                      201606L
-# define __cuda_lib_map_try_emplace                      201411L
+// # define __cuda_lib_map_try_emplace                      201411L
 // # define __cuda_lib_math_special_functions               201603L
 // # define __cuda_lib_memory_resource                      201603L
-# define __cuda_lib_node_extract                         201606L
-# define __cuda_lib_nonmember_container_access           201411L
+// # define __cuda_lib_node_extract                         201606L
+// # define __cuda_lib_nonmember_container_access           201411L
 # define __cuda_lib_not_fn                               201603L
 # define __cuda_lib_optional                             201606L
 // # define __cuda_lib_parallel_algorithm                   201603L
-# define __cuda_lib_raw_memory_algorithms                201606L
-# define __cuda_lib_sample                               201603L
-# define __cuda_lib_scoped_lock                          201703L
+// # define __cuda_lib_raw_memory_algorithms                201606L
+// # define __cuda_lib_sample                               201603L
+// # define __cuda_lib_scoped_lock                          201703L
 # if !defined(_LIBCUDACXX_HAS_NO_THREADS)
-#   define __cuda_lib_shared_mutex                       201505L
+// #   define __cuda_lib_shared_mutex                       201505L
 # endif
 // # define __cuda_lib_shared_ptr_arrays                    201611L
-# define __cuda_lib_shared_ptr_weak_type                 201606L
-# define __cuda_lib_string_view                          201606L
+// # define __cuda_lib_shared_ptr_weak_type                 201606L
+// # define __cuda_lib_string_view                          201606L
 // # define __cuda_lib_to_chars                             201611L
 # undef  __cuda_lib_transparent_operators
 # define __cuda_lib_transparent_operators                201510L
@@ -316,32 +316,32 @@ __cpp_lib_void_t                                        201411L <type_traits>
 #endif // _LIBCUDACXX_STD_VER > 14
 
 #if _LIBCUDACXX_STD_VER > 17
-// # undef  __cuda_lib_array_constexpr
-// # define __cuda_lib_array_constexpr                      201811L
+# undef  __cuda_lib_array_constexpr
+# define __cuda_lib_array_constexpr                      201811L
 // # define __cuda_lib_assume_aligned                       201811L
-// # define __cuda_lib_atomic_flag_test                     201907L
-// # define __cuda_lib_atomic_float                         201711L
-// # define __cuda_lib_atomic_lock_free_type_aliases        201907L
+# define __cuda_lib_atomic_flag_test                     201907L
+# define __cuda_lib_atomic_float                         201711L
+# define __cuda_lib_atomic_lock_free_type_aliases        201907L
 # if !defined(_LIBCUDACXX_HAS_NO_THREADS)
-// #   define __cuda_lib_atomic_ref                         201806L
+#   define __cuda_lib_atomic_ref                         201806L
 #endif
 // # define __cuda_lib_atomic_shared_ptr                    201711L
-// # define __cuda_lib_atomic_value_initialization          201911L
+# define __cuda_lib_atomic_value_initialization          201911L
 # if !defined(_LIBCUDACXX_AVAILABILITY_DISABLE_FTM___cpp_lib_atomic_wait)
-// #   define __cuda_lib_atomic_wait                        201907L
+#   define __cuda_lib_atomic_wait                        201907L
 # endif
 # if !defined(_LIBCUDACXX_HAS_NO_THREADS) && !defined(_LIBCUDACXX_AVAILABILITY_DISABLE_FTM___cpp_lib_barrier)
-// #   define __cuda_lib_barrier                            201907L
+#   define __cuda_lib_barrier                            201907L
 # endif
-// # define __cuda_lib_bit_cast                             201806L
-// # define __cuda_lib_bitops                               201907L
-// # define __cuda_lib_bounded_array_traits                 201902L
+# define __cuda_lib_bit_cast                             201806L
+# define __cuda_lib_bitops                               201907L
+# define __cuda_lib_bounded_array_traits                 201902L
 # if !defined(_LIBCUDACXX_NO_HAS_CHAR8_T)
 #   define __cuda_lib_char8_t                            201811L
 # endif
 // # define __cuda_lib_constexpr_algorithms                 201806L
 // # define __cuda_lib_constexpr_dynamic_alloc              201907L
-// # define __cuda_lib_constexpr_functional                 201907L
+# define __cuda_lib_constexpr_functional                 201907L
 // # define __cuda_lib_constexpr_iterator                   201811L
 // # define __cuda_lib_constexpr_memory                     201811L
 // # define __cuda_lib_constexpr_misc                       201811L
@@ -357,7 +357,7 @@ __cpp_lib_void_t                                        201411L <type_traits>
 #   define __cuda_lib_destroying_delete                  201806L
 # endif
 // # define __cuda_lib_endian                               201907L
-# define __cuda_lib_erase_if                             201811L
+// # define __cuda_lib_erase_if                             201811L
 // # undef  __cuda_lib_execution
 // # define __cuda_lib_execution                            201902L
 # if !defined(_LIBCUDACXX_AVAILABILITY_DISABLE_FTM___cpp_lib_format) && !defined(_LIBCUDACXX_HAS_NO_INCOMPLETE_FORMAT)
@@ -365,8 +365,8 @@ __cpp_lib_void_t                                        201411L <type_traits>
 # endif
 // # define __cuda_lib_generic_unordered_lookup             201811L
 // # define __cuda_lib_int_pow2                             202002L
-# define __cuda_lib_integer_comparison_functions         202002L
-# define __cuda_lib_interpolate                          201902L
+// # define __cuda_lib_integer_comparison_functions         202002L
+// # define __cuda_lib_interpolate                          201902L
 # if defined(_LIBCUDACXX_IS_CONSTANT_EVALUATED)
 #   define __cuda_lib_is_constant_evaluated              201811L
 # endif
@@ -420,8 +420,8 @@ __cpp_lib_void_t                                        201411L <type_traits>
 // # define __cuda_lib_invoke_r                             202106L
 # define __cuda_lib_is_scoped_enum                       202011L
 // # define __cuda_lib_move_only_function                   202110L
-// # undef  __cuda_lib_optional
-// # define __cuda_lib_optional                             202110L
+# undef  __cuda_lib_optional
+# define __cuda_lib_optional                             202110L
 // # define __cuda_lib_out_ptr                              202106L
 // # define __cuda_lib_ranges_chunk                         202202L
 // # define __cuda_lib_ranges_chunk_by                      202202L
@@ -451,22 +451,22 @@ __cpp_lib_void_t                                        201411L <type_traits>
 #endif
 # define __cpp_lib_concepts                             __cuda_lib_concepts
 # define __cpp_lib_exchange_function                    __cuda_lib_exchange_function
-# define __cpp_lib_generic_associative_lookup           __cuda_lib_generic_associative_lookup
+# define __cpp_lib_generic_associative_lookup           201304L
 # define __cpp_lib_integer_sequence                     __cuda_lib_integer_sequence
 # define __cpp_lib_integral_constant_callable           __cuda_lib_integral_constant_callable
 # define __cpp_lib_is_final                             __cuda_lib_is_final
 # define __cpp_lib_is_null_pointer                      __cuda_lib_is_null_pointer
 # define __cpp_lib_make_reverse_iterator                __cuda_lib_make_reverse_iterator
-# define __cpp_lib_make_unique                          __cuda_lib_make_unique
+# define __cpp_lib_make_unique                          201304L
 # define __cpp_lib_null_iterators                       __cuda_lib_null_iterators
-# define __cpp_lib_quoted_string_io                     __cuda_lib_quoted_string_io
+# define __cpp_lib_quoted_string_io                     201304L
 # define __cpp_lib_result_of_sfinae                     __cuda_lib_result_of_sfinae
 # define __cpp_lib_robust_nonmodifying_seq_ops          __cuda_lib_robust_nonmodifying_seq_ops
 # ifdef __cuda_lib_shared_timed_mutex
-#   define __cpp_lib_shared_timed_mutex                 __cuda_lib_shared_timed_mutex
+#   define __cpp_lib_shared_timed_mutex                 201402L
 # endif
 # define __cpp_lib_span                                 __cuda_lib_span
-# define __cpp_lib_string_udls                          __cuda_lib_string_udls
+# define __cpp_lib_string_udls                          201304L
 # define __cpp_lib_transformation_trait_aliases         __cuda_lib_transformation_trait_aliases
 # define __cpp_lib_transparent_operators                __cuda_lib_transparent_operators
 # define __cpp_lib_tuple_element_t                      __cuda_lib_tuple_element_t
@@ -477,8 +477,8 @@ __cpp_lib_void_t                                        201411L <type_traits>
 # ifdef __cuda_lib_addressof_constexpr
 #   define __cpp_lib_addressof_constexpr                __cuda_lib_addressof_constexpr
 # endif
-# define __cpp_lib_allocator_traits_is_always_equal     __cuda_lib_allocator_traits_is_always_equal
-# define __cpp_lib_any                                  __cuda_lib_any
+# define __cpp_lib_allocator_traits_is_always_equal     201411L
+# define __cpp_lib_any                                  201606L
 # define __cpp_lib_apply                                __cuda_lib_apply
 # define __cpp_lib_array_constexpr                      __cuda_lib_array_constexpr
 # define __cpp_lib_as_const                             __cuda_lib_as_const
@@ -490,17 +490,17 @@ __cpp_lib_void_t                                        201411L <type_traits>
 // # define __cpp_lib_boyer_moore_searcher                 __cuda_lib_boyer_moore_searcher
 # define __cpp_lib_byte                                 __cuda_lib_byte
 # define __cpp_lib_chrono                               __cuda_lib_chrono
-# define __cpp_lib_clamp                                __cuda_lib_clamp
-# define __cpp_lib_enable_shared_from_this              __cuda_lib_enable_shared_from_this
+# define __cpp_lib_clamp                                201603L
+# define __cpp_lib_enable_shared_from_this              201603L
 // # define __cpp_lib_execution                            __cuda_lib_execution
-# define __cpp_lib_filesystem                           __cuda_lib_filesystem
+# define __cpp_lib_filesystem                           201703L
 # define __cpp_lib_gcd_lcm                              __cuda_lib_gcd_lcm
 # define __cpp_lib_hardware_interference_size           __cuda_lib_hardware_interference_size
 # ifdef __cuda_lib_has_unique_object_representations
 #   define __cpp_lib_has_unique_object_representations  __cuda_lib_has_unique_object_representations
 # endif
 # define __cpp_lib_hypot                                __cuda_lib_hypot
-# define __cpp_lib_incomplete_container_elements        __cuda_lib_incomplete_container_elements
+# define __cpp_lib_incomplete_container_elements        201505L
 # define __cpp_lib_invoke                               __cuda_lib_invoke
 # ifdef __cuda_lib_is_aggregate
 #   define __cpp_lib_is_aggregate                       __cuda_lib_is_aggregate
@@ -510,23 +510,23 @@ __cpp_lib_void_t                                        201411L <type_traits>
 # define __cpp_lib_launder                              __cuda_lib_launder
 # define __cpp_lib_logical_traits                       __cuda_lib_logical_traits
 # define __cpp_lib_make_from_tuple                      __cuda_lib_make_from_tuple
-# define __cpp_lib_map_try_emplace                      __cuda_lib_map_try_emplace
+# define __cpp_lib_map_try_emplace                      201411L
 // # define __cpp_lib_math_special_functions               __cuda_lib_math_special_functions
 // # define __cpp_lib_memory_resource                      __cuda_lib_memory_resource
-# define __cpp_lib_node_extract                         __cuda_lib_node_extract
-# define __cpp_lib_nonmember_container_access           __cuda_lib_nonmember_container_access
+# define __cpp_lib_node_extract                         201606L
+# define __cpp_lib_nonmember_container_access           201411L
 # define __cpp_lib_not_fn                               __cuda_lib_not_fn
 # define __cpp_lib_optional                             __cuda_lib_optional
 // # define __cpp_lib_parallel_algorithm                   __cuda_lib_parallel_algorithm
-# define __cpp_lib_raw_memory_algorithms                __cuda_lib_raw_memory_algorithms
-# define __cpp_lib_sample                               __cuda_lib_sample
-# define __cpp_lib_scoped_lock                          __cuda_lib_scoped_lock
+# define __cpp_lib_raw_memory_algorithms                201606L
+# define __cpp_lib_sample                               201603L
+# define __cpp_lib_scoped_lock                          201703L
 # ifdef __cuda_lib_shared_mutex
-#   define __cpp_lib_shared_mutex                       __cuda_lib_shared_mutex
+#   define __cpp_lib_shared_mutex                       201505L
 # endif
 // # define __cpp_lib_shared_ptr_arrays                    __cuda_lib_shared_ptr_arrays
-# define __cpp_lib_shared_ptr_weak_type                 __cuda_lib_shared_ptr_weak_type
-# define __cpp_lib_string_view                          __cuda_lib_string_view
+# define __cpp_lib_shared_ptr_weak_type                 201606L
+# define __cpp_lib_string_view                          201606L
 // # define __cpp_lib_to_chars                             __cuda_lib_to_chars
 # define __cpp_lib_transparent_operators                __cuda_lib_transparent_operators
 # define __cpp_lib_type_trait_variable_templates        __cuda_lib_type_trait_variable_templates
@@ -578,7 +578,7 @@ __cpp_lib_void_t                                        201411L <type_traits>
 #   define __cpp_lib_destroying_delete                  __cuda_lib_destroying_delete
 # endif
 // # define __cpp_lib_endian                               __cuda_lib_endian
-# define __cpp_lib_erase_if                             __cuda_lib_erase_if
+# define __cpp_lib_erase_if                             201811L
 // # undef  __cpp_lib_execution
 // # define __cpp_lib_execution                            __cuda_lib_execution
 # ifdef __cuda_lib_format
@@ -586,8 +586,8 @@ __cpp_lib_void_t                                        201411L <type_traits>
 # endif
 // # define __cpp_lib_generic_unordered_lookup             __cuda_lib_generic_unordered_lookup
 // # define __cpp_lib_int_pow2                             202002L
-# define __cpp_lib_integer_comparison_functions         __cuda_lib_integer_comparison_functions
-# define __cpp_lib_interpolate                          __cuda_lib_interpolate
+# define __cpp_lib_integer_comparison_functions         202002L
+# define __cpp_lib_interpolate                          201902L
 # ifdef __cuda_lib_is_constant_evaluated
 #   define __cpp_lib_is_constant_evaluated              __cuda_lib_is_constant_evaluated
 # endif
