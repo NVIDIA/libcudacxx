@@ -41,6 +41,37 @@ struct Counted {
     constexpr ~Counted() { --count_; }
 };
 
+union union_t {
+    int first{42};
+    double second;
+};
+
+struct NotAssignable {
+  NotAssignable() = default;
+  NotAssignable(const NotAssignable&) = default;
+  NotAssignable(NotAssignable&&) = default;
+
+  NotAssignable& operator=(const NotAssignable&) = delete;
+  NotAssignable& operator=(NotAssignable&&) = delete;
+};
+
+constexpr bool move_assignment_called = false;
+struct Always_false {
+    constexpr Always_false(const bool val) noexcept { assert(val);}
+};
+
+struct WithSpecialMoveAssignment {
+  WithSpecialMoveAssignment() = default;
+  WithSpecialMoveAssignment(const WithSpecialMoveAssignment&) = default;
+  WithSpecialMoveAssignment(WithSpecialMoveAssignment&&) = default;
+  WithSpecialMoveAssignment& operator=(const WithSpecialMoveAssignment&) = default;
+  constexpr WithSpecialMoveAssignment& operator=(WithSpecialMoveAssignment&&) noexcept {
+    [[maybe_unused]] Always_false invalid{move_assignment_called};
+    return *this;
+  };
+};
+static_assert(std::is_trivially_constructible_v<WithSpecialMoveAssignment>);
+
 constexpr bool test()
 {
     {
@@ -64,6 +95,28 @@ constexpr bool test()
         assert(res == &foo);
         assert(*res == Foo(42, 'x', 123.89));
         assert(count == 1);
+    }
+
+    // switching of the active member of a union must work
+    {
+        union_t with_int{};
+        double* res = std::construct_at(&with_int.second, 123.89);
+        assert(res == &with_int.second);
+        assert(*res == 123.89);
+    }
+
+    // ensure that we can construct trivially constructible types with a deleted move assignment
+    {
+        NotAssignable not_assignable{};
+        NotAssignable* res = std::construct_at(&not_assignable);
+        assert(res == &not_assignable);
+    }
+
+    // ensure that we can construct trivially constructible types with a nefarious move assignment
+    {
+        WithSpecialMoveAssignment with_special_move_assignment{};
+        WithSpecialMoveAssignment* res = std::construct_at(&with_special_move_assignment);
+        assert(res == &with_special_move_assignment);
     }
 
     if (!std::is_constant_evaluated()) // constexpr allocator is not implemented yet
