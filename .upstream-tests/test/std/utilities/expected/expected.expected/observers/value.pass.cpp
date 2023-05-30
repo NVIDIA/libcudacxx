@@ -63,17 +63,72 @@ __host__ __device__ constexpr bool test() {
   return true;
 }
 
-__host__ __device__ void testException() {
 #ifndef TEST_HAS_NO_EXCEPTIONS
 
-  // int
-  {
-    const cuda::std::expected<int, int> e(cuda::std::unexpect, 5);
+enum constructor_used : unsigned int {
+  default_constructed      = 1 << 0,
+  lvalue_constructed       = 1 << 1,
+  const_lvalue_constructed = 1 << 2,
+  rvalue_constructed       = 1 << 3,
+  const_rvalue_constructed = 1 << 4,
+};
+
+struct track_construction {
+  track_construction() = default;
+  track_construction& operator=(const track_construction&) = default;
+  track_construction& operator=(track_construction&&) = default;
+
+  __host__ __device__ track_construction(track_construction& other) noexcept
+    : val_(other.val_ | lvalue_constructed) {}
+  __host__ __device__ track_construction(const track_construction& other) noexcept
+    : val_(other.val_ | const_lvalue_constructed) {}
+  __host__ __device__ track_construction(track_construction&& other) noexcept
+    : val_(other.val_ | rvalue_constructed) {}
+  __host__ __device__ track_construction(const track_construction&& other) noexcept
+    : val_(other.val_ | const_rvalue_constructed) {}
+
+  unsigned int val_ = default_constructed;
+};
+
+__host__ __device__ void testException() {
+  { // &
     try {
+      cuda::std::expected<int, track_construction> e(cuda::std::unexpect);
       (void) e.value();
       assert(false);
     } catch (const cuda::std::bad_expected_access<int>& ex) {
-      assert(ex.error() == 5);
+      // We need to pass the error via `as_const`
+      assert(ex.error().val_ == const_lvalue_constructed | rvalue_constructed);
+    }
+  }
+
+  { // const &
+    try {
+      cuda::std::expected<int, track_construction> e(cuda::std::unexpect);
+      (void) cuda::std::as_const(e).value();
+      assert(false);
+    } catch (const cuda::std::bad_expected_access<int>& ex) {
+      assert(ex.error().val_ == const_lvalue_constructed | rvalue_constructed);
+    }
+  }
+
+  { // &&
+    try {
+      cuda::std::expected<int, track_construction> e(cuda::std::unexpect);
+      (void) cuda::std::move(e).value();
+      assert(false);
+    } catch (const cuda::std::bad_expected_access<int>& ex) {
+      assert(ex.error().val_ == rvalue_constructed);
+    }
+  }
+
+  { // const &&
+    try {
+      cuda::std::expected<int, track_construction> e(cuda::std::unexpect);
+      (void) cuda::std::move(cuda::std::as_const(e)).value();
+      assert(false);
+    } catch (const cuda::std::bad_expected_access<int>& ex) {
+      assert(ex.error().val_ == const_rvalue_constructed | rvalue_constructed);
     }
   }
 
@@ -87,15 +142,16 @@ __host__ __device__ void testException() {
       assert(ex.error() == 5);
     }
   }
-
-#endif // TEST_HAS_NO_EXCEPTIONS
 }
+#endif // TEST_HAS_NO_EXCEPTIONS
 
 int main(int, char**) {
   test();
 #if TEST_STD_VER > 17 && defined(_LIBCUDACXX_ADDRESSOF)
   static_assert(test(), "");
 #endif // TEST_STD_VER > 17 && defined(_LIBCUDACXX_ADDRESSOF)
+#ifndef TEST_HAS_NO_EXCEPTIONS
   testException();
+#endif // TEST_HAS_NO_EXCEPTIONS
   return 0;
 }
