@@ -126,7 +126,7 @@ struct layout_stride {
     using layout_type = layout_stride;
 
     // This could be a `requires`, but I think it's better and clearer as a `static_assert`.
-    static_assert(__detail::__is_extents_v<_Extents>, "layout_stride::mapping must be instantiated with a specialization of _CUDA_VSTD::extents.");
+    static_assert(__detail::__is_extents<_Extents>::value, "layout_stride::mapping must be instantiated with a specialization of _CUDA_VSTD::extents.");
 
 
   private:

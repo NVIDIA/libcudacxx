@@ -136,31 +136,31 @@ constexpr byte  operator~ (byte __b) noexcept
 
 template <class _Integer>
   _LIBCUDACXX_INLINE_VISIBILITY
-  constexpr __enable_if_t<is_integral_v<_Integer>, byte> &
+  constexpr __enable_if_t<_LIBCUDACXX_TRAIT(is_integral, _Integer), byte> &
   operator<<=(byte& __lhs, _Integer __shift) noexcept
   { return __lhs = __lhs << __shift; }
 
 template <class _Integer>
   _LIBCUDACXX_INLINE_VISIBILITY
-  constexpr __enable_if_t<is_integral_v<_Integer>, byte>
+  constexpr __enable_if_t<_LIBCUDACXX_TRAIT(is_integral, _Integer), byte>
   operator<< (byte  __lhs, _Integer __shift) noexcept
   { return static_cast<byte>(static_cast<unsigned char>(static_cast<unsigned int>(__lhs) << __shift)); }
 
 template <class _Integer>
   _LIBCUDACXX_INLINE_VISIBILITY
-  constexpr __enable_if_t<is_integral_v<_Integer>, byte> &
+  constexpr __enable_if_t<_LIBCUDACXX_TRAIT(is_integral, _Integer), byte> &
   operator>>=(byte& __lhs, _Integer __shift) noexcept
   { return __lhs = __lhs >> __shift; }
 
 template <class _Integer>
   _LIBCUDACXX_INLINE_VISIBILITY
-  constexpr __enable_if_t<is_integral_v<_Integer>, byte>
+  constexpr __enable_if_t<_LIBCUDACXX_TRAIT(is_integral, _Integer), byte>
   operator>> (byte  __lhs, _Integer __shift) noexcept
   { return static_cast<byte>(static_cast<unsigned char>(static_cast<unsigned int>(__lhs) >> __shift)); }
 
 template <class _Integer>
   _LIBCUDACXX_INLINE_VISIBILITY
-  constexpr __enable_if_t<is_integral_v<_Integer>, _Integer>
+  constexpr __enable_if_t<_LIBCUDACXX_TRAIT(is_integral, _Integer), _Integer>
   to_integer(byte __b) noexcept { return static_cast<_Integer>(__b); }
 
 #ifdef _LIBCUDACXX_END_NAMESPACE_STD_NOVERSION

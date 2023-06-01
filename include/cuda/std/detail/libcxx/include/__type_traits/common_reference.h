@@ -54,9 +54,10 @@ struct __cond_res_workaround {};
 template <class _Tp, class _Up>
 struct __cond_res_workaround<_Tp, _Up, void_t<__cond_res_if_right<_Tp, _Up>>> {
     using _RTp = remove_cvref_t<_Tp>;
-    using type = conditional_t<is_same_v<_RTp, remove_cvref_t<_Up>> &&
-                               (is_scalar_v<_RTp> || is_array_v<_RTp>) &&
-                               ((is_lvalue_reference_v<_Tp> && is_rvalue_reference_v<_Up>) || (is_rvalue_reference_v<_Tp> && is_lvalue_reference_v<_Up>)),
+    using type = conditional_t<_LIBCUDACXX_TRAIT(is_same, _RTp, remove_cvref_t<_Up>)
+                            && (_LIBCUDACXX_TRAIT(is_scalar, _RTp) || _LIBCUDACXX_TRAIT(is_array, _RTp))
+                            && ((_LIBCUDACXX_TRAIT(is_lvalue_reference, _Tp) && _LIBCUDACXX_TRAIT(is_rvalue_reference, _Up))
+                              ||(_LIBCUDACXX_TRAIT(is_rvalue_reference, _Tp) && _LIBCUDACXX_TRAIT(is_lvalue_reference, _Up))),
                  decay_t<__copy_cv_t<remove_reference_t<_Tp>, remove_reference_t<_Up>>>, __cond_res_if_right<_Tp, _Up>>;
 };
 
@@ -93,7 +94,7 @@ using __cv_cond_res = __cond_res<__copy_cv_t<_Xp, _Yp>&, __copy_cv_t<_Yp, _Xp>&>
 //    If A and B are both lvalue reference types, COMMON-REF(A, B) is
 //    COND-RES(COPYCV(X, Y)&, COPYCV(Y, X)&) if that type exists and is a reference type.
 template<class _Ap, class _Bp>
-struct __common_ref<_Ap&, _Bp&, enable_if_t<is_reference_v<__cv_cond_res<_Ap, _Bp>>>>
+struct __common_ref<_Ap&, _Bp&, enable_if_t<_LIBCUDACXX_TRAIT(is_reference, __cv_cond_res<_Ap, _Bp>)>>
 {
     using __type = __cv_cond_res<_Ap, _Bp>;
 };
@@ -110,8 +111,8 @@ struct __common_ref_rr {};
 
 template<class _Ap, class _Bp>
 struct __common_ref_rr<_Ap&&, _Bp&&, enable_if_t<
-                            is_convertible_v<_Ap&&, __common_ref_C<_Ap, _Bp>>
-                         && is_convertible_v<_Bp&&, __common_ref_C<_Ap, _Bp>>>>
+                            _LIBCUDACXX_TRAIT(is_convertible, _Ap&&, __common_ref_C<_Ap, _Bp>)
+                         && _LIBCUDACXX_TRAIT(is_convertible, _Bp&&, __common_ref_C<_Ap, _Bp>)>>
 {
     using __type = __common_ref_C<_Ap, _Bp>;
 };
@@ -129,7 +130,7 @@ template<class _Ap, class _Bp, class = void>
 struct __common_ref_lr {};
 
 template<class _Ap, class _Bp>
-struct __common_ref_lr<_Ap&&, _Bp&, enable_if_t<is_convertible_v<_Ap&&, __common_ref_D<_Ap, _Bp>>>>
+struct __common_ref_lr<_Ap&&, _Bp&, enable_if_t<_LIBCUDACXX_TRAIT(is_convertible, _Ap&&, __common_ref_D<_Ap, _Bp>)>>
 {
     using __type = __common_ref_D<_Ap, _Bp>;
 };
@@ -178,7 +179,7 @@ template <class _Tp, class _Up> struct common_reference<_Tp, _Up> : __common_ref
 
 template <class _Tp, class _Up>
 struct __common_reference_sub_bullet1<_Tp, _Up, void_t<__common_ref_t<_Tp, _Up>,
-    enable_if_t<is_reference_v<_Tp> && is_reference_v<_Up>>>>
+    enable_if_t<_LIBCUDACXX_TRAIT(is_reference, _Tp) && _LIBCUDACXX_TRAIT(is_reference, _Up)>>>
 {
     using type = __common_ref_t<_Tp, _Up>;
 };

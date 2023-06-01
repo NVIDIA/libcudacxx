@@ -27,7 +27,7 @@ _LIBCUDACXX_BEGIN_NAMESPACE_STD
 #if _LIBCUDACXX_STD_VER > 11 && _GNUC_VER < 1100
 
 template<class _Tp>
-_LIBCUDACXX_CONCEPT destructible = is_nothrow_destructible_v<_Tp>;
+_LIBCUDACXX_CONCEPT destructible = _LIBCUDACXX_TRAIT(is_nothrow_destructible, _Tp);
 
 #else
 // [concept.destructible]
@@ -46,7 +46,7 @@ template<class _Tp>
 _LIBCUDACXX_CONCEPT_FRAGMENT(
   __destructible_impl_req_,
   requires(_Tp& __t)(
-    requires(is_object_v<_Tp>),
+    requires(_LIBCUDACXX_TRAIT(is_object, _Tp)),
     requires(noexcept(__t.~_Tp()))
   ));
 

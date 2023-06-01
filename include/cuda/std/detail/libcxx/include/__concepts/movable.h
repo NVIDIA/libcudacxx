@@ -42,7 +42,7 @@ template<class _Tp>
 _LIBCUDACXX_CONCEPT_FRAGMENT(
   _Movable_,
   requires()
-  (requires(is_object_v<_Tp>),
+  (requires(_LIBCUDACXX_TRAIT(is_object, _Tp)),
    requires(move_constructible<_Tp>),
    requires(assignable_from<_Tp&, _Tp>),
    requires(swappable<_Tp>)));
