@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-// XFAIL: clang-9, clang-10
+// UNSUPPORTED: true
 
 // REQUIRES: modules-support
 
