@@ -108,7 +108,7 @@ int main(int, char**)
         assert(std::get<0>(t) == 0);
         assert(std::get<1>(t) == E());
         assert(std::get<2>(t) == E());
-        (void) t2;
+        (void)t2;
     }
     // Check that SFINAE is properly applied with the default reduced arity
     // constructor extensions.
