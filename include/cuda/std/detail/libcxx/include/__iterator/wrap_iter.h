@@ -1,7 +1,8 @@
 // -*- C++ -*-
 //===----------------------------------------------------------------------===//
 //
-// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// Part of libcu++, the C++ Standard Library for your entire system,
+// under the Apache License v2.0 with LLVM Exceptions.
 // See https://llvm.org/LICENSE.txt for license information.
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 // SPDX-FileCopyrightText: Copyright (c) 2023 NVIDIA CORPORATION & AFFILIATES.
@@ -96,7 +97,9 @@ __enable_if_t
     is_trivially_copy_assignable<_Tp>::value,
     _Tp*
 >
-__unwrap_iter(__wrap_iter<_Tp*>);
+__unwrap_iter(__wrap_iter<_Tp*> __i) {
+    return __i.base();
+}
 
 #else
 
@@ -107,7 +110,9 @@ __enable_if_t
     is_trivially_copy_assignable<_Tp>::value,
     __wrap_iter<_Tp*>
 >
-__unwrap_iter(__wrap_iter<_Tp*> __i);
+__unwrap_iter(__wrap_iter<_Tp*> __i) {
+    return __i;
+}
 
 #endif
 

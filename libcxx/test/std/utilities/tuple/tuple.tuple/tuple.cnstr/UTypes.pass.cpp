@@ -141,6 +141,7 @@ int main(int, char**)
         assert(std::get<0>(t) == 0);
         assert(std::get<1>(t) == E());
         assert(std::get<2>(t) == E());
+        (void)t2;
     }
 #endif
 #if TEST_STD_VER > 11
