@@ -36,6 +36,7 @@ The NVIDIA C++ Standard Library supports the following C++ dialects:
 - C++11
 - C++14
 - C++17
+- C++20
 
 A number of features have been backported to earlier standards.
 Please see the [API section] for more details.
@@ -45,11 +46,11 @@ Please see the [API section] for more details.
 When used with NVCC, the NVIDIA C++ Standard Library supports the following host
   compilers:
 
-- MSVC 2017 and 2019.
-- GCC 5, 6, 7, 8, 9, and 10.
-- Clang 7, 8, 9, and 10.
+- MSVC 2017, 2019 and 2022.
+- GCC 6 and newer
+- Clang 7 and newer.
 - ICPC latest.
-- NVHPC 20.9 and 20.11.
+- NVHPC latest.
 
 ### Device Architectures
 
