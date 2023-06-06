@@ -153,6 +153,7 @@ set(files
   __ranges/empty_view.h
   __ranges/enable_borrowed_range.h
   __ranges/enable_view.h
+  __ranges/owning_view.h
   __ranges/ref_view.h
   __ranges/rbegin.h
   __ranges/rend.h
