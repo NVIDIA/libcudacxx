@@ -148,6 +148,7 @@ set(files
   __ranges/access.h
   __ranges/all.h
   __ranges/concepts.h
+  __ranges/copyable_box.h
   __ranges/dangling.h
   __ranges/data.h
   __ranges/empty.h
@@ -159,6 +160,7 @@ set(files
   __ranges/ref_view.h
   __ranges/rbegin.h
   __ranges/rend.h
+  __ranges/single_view.h
   __ranges/size.h
   __ranges/subrange.h
   __ranges/view_interface.h
