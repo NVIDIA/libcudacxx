@@ -19,9 +19,9 @@ User-defined floating-point literals must be specified in terms of
 
 ## Customizations
 
-Our implementation by default normalizes denormals during multiplication and division. This adds a significant runtime overhead, so we allow the user to disable that normalization if it is not desired.
+Our implementation by default recovers infinite values during multiplication and division. This adds a significant runtime overhead, so we allow disabling that canonicalization if it is not desired.
 
-A user can define `LIBCUDACXX_ENABLE_SIMPLIFIED_COMPLEX_OPERATIONS` to disable normalization for both multiplication *and* division.
+Definition of `LIBCUDACXX_ENABLE_SIMPLIFIED_COMPLEX_OPERATIONS` disables canonicalization for both multiplication *and* division.
 
-A user can also define `LIBCUDACXX_ENABLE_SIMPLIFIED_COMPLEX_DIVISION` or `LIBCUDACXX_ENABLE_SIMPLIFIED_COMPLEX_DIVISION` to disable normalization for multiplication or division individualy.
+Definition of `LIBCUDACXX_ENABLE_SIMPLIFIED_COMPLEX_DIVISION` or `LIBCUDACXX_ENABLE_SIMPLIFIED_COMPLEX_DIVISION` disables canonicalization for multiplication or division individually.
 
