@@ -46,7 +46,7 @@ Each program thread is related to each other program thread by one or more threa
 - Each GPU thread is related to each other GPU thread in the same CUDA device by the *device* thread scope: `thread_scope_device`.
 - Each GPU thread is related to each other GPU thread in the same CUDA thread block by the *block* thread scope: `thread_scope_block`.
 - Each thread is related to itself by the `thread` thread scope: `thread_scope_thread`.
-- Asynchronous threads are related to the thread requesting the asynchronous operations via all scope relationships.
+- Each thread is related to each asynchronous thread that it creates by all scopes.
 
 ## Synchronization primitives
 
