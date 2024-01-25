@@ -1,5 +1,7 @@
 ## Memory access properties
 
+:warning: **The libcudacxx repository has been archived and is now part of the unified [nvidia/cccl repository](https://github.com/nvidia/cccl). See the [announcement here](https://github.com/NVIDIA/cccl/discussions/520) for more information. Please visit the new repository for the latest updates. The new documentation can be found [here](https://nvidia.github.io/cccl/libcudacxx/).** :warning:
+
 | [`cuda::annotated_ptr`]             | Binds an access property to a pointer. `(class template)` <br/><br/> 1.6.0 / CUDA 11.5 |
 | [`cuda::access_property`]           | Represents a memory access property. `(class)` <br/><br/> 1.6.0 / CUDA 11.5 |
 | [`cuda::apply_access_property`]     | Applies access property to memory location. `(function template)` <br/><br/> 1.6.0 / CUDA 11.5 |
