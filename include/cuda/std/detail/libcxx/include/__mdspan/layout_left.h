@@ -77,7 +77,7 @@ class layout_left::mapping {
     using layout_type = layout_left;
   private:
 
-    static_assert(__detail::__is_extents_v<extents_type>, "layout_left::mapping must be instantiated with a specialization of _CUDA_VSTD::extents.");
+    static_assert(__detail::__is_extents<extents_type>::value, "layout_left::mapping must be instantiated with a specialization of _CUDA_VSTD::extents.");
 
     template <class>
     friend class mapping;

@@ -235,7 +235,7 @@ _LIBCUDACXX_CONCEPT async_resource = _LIBCUDACXX_FRAGMENT(__async_resource_, _Re
 template <class _Resource, class... _Properties>
 #if _LIBCUDACXX_STD_VER < 17
 _LIBCUDACXX_CONCEPT resource_with =
-  resource<_Resource>&& _CUDA_VSTD::conjunction_v<_CUDA_VSTD::bool_constant<has_property<_Resource, _Properties>>...>;
+  resource<_Resource>&& _CUDA_VSTD::conjunction<_CUDA_VSTD::bool_constant<has_property<_Resource, _Properties>>...>::value;
 #else
 _LIBCUDACXX_CONCEPT resource_with = resource<_Resource> && (has_property<_Resource, _Properties> && ...);
 #endif
@@ -245,7 +245,7 @@ _LIBCUDACXX_CONCEPT resource_with = resource<_Resource> && (has_property<_Resour
 template <class _Resource, class... _Properties>
 #if _LIBCUDACXX_STD_VER < 17
 _LIBCUDACXX_CONCEPT async_resource_with = async_resource<_Resource> &&
-  _CUDA_VSTD::conjunction_v<_CUDA_VSTD::bool_constant<has_property<_Resource, _Properties>>...>;
+  _CUDA_VSTD::conjunction<_CUDA_VSTD::bool_constant<has_property<_Resource, _Properties>>...>::value;
 #else
 _LIBCUDACXX_CONCEPT async_resource_with = async_resource<_Resource> &&
   (has_property<_Resource, _Properties> && ...);
@@ -432,7 +432,7 @@ using _Filtered_vtable = typename _Filtered<_Properties...>::_Filtered_vtable::_
 template <class _Vtable>
 struct _Alloc_base
 {
-  static_assert(cuda::std::is_base_of_v<_Alloc_vtable, _Vtable>, "");
+  static_assert(_LIBCUDACXX_TRAIT(cuda::std::is_base_of, _Alloc_vtable, _Vtable), "");
 
   _Alloc_base(void* __object_, const _Vtable* __static_vtabl_) noexcept
       : __object(__object_)
@@ -457,7 +457,7 @@ protected:
 template <class _Vtable>
 struct _Async_alloc_base : public _Alloc_base<_Vtable>
 {
-  static_assert(cuda::std::is_base_of_v<_Async_alloc_vtable, _Vtable>, "");
+  static_assert(_LIBCUDACXX_TRAIT(cuda::std::is_base_of, _Async_alloc_vtable, _Vtable), "");
 
   _Async_alloc_base(void* __object_, const _Vtable* __static_vtabl_) noexcept
       : _Alloc_base<_Vtable>(__object_, __static_vtabl_)
@@ -535,8 +535,8 @@ public:
       (requires (_CUDA_VSTD::_One_of<_Properties, _OtherProperties...> && ...))
     #else
     _LIBCUDACXX_TEMPLATE(class... _OtherProperties)
-      (requires _CUDA_VSTD::conjunction_v<_CUDA_VSTD::bool_constant<
-            _CUDA_VSTD::_One_of<_Properties, _OtherProperties...>>...>)
+      (requires _CUDA_VSTD::conjunction<_CUDA_VSTD::bool_constant<
+            _CUDA_VSTD::_One_of<_Properties, _OtherProperties...>>...>::value)
     #endif
      basic_resource_ref(
       basic_resource_ref<_Alloc_type, _OtherProperties...> __ref) noexcept
@@ -551,8 +551,8 @@ public:
     #else
     _LIBCUDACXX_TEMPLATE(class... _OtherProperties)
       (requires (_Alloc_type == _AllocType::_Default)
-        && _CUDA_VSTD::conjunction_v<_CUDA_VSTD::bool_constant<
-            _CUDA_VSTD::_One_of<_Properties, _OtherProperties...>>...>)
+        && _CUDA_VSTD::conjunction<_CUDA_VSTD::bool_constant<
+            _CUDA_VSTD::_One_of<_Properties, _OtherProperties...>>...>::value)
     #endif
      basic_resource_ref(
       basic_resource_ref<_AllocType::_Async, _OtherProperties...> __ref) noexcept
@@ -567,8 +567,8 @@ public:
     #else
     _LIBCUDACXX_TEMPLATE(class... _OtherProperties)
       (requires (sizeof...(_Properties) == sizeof...(_OtherProperties))
-          && _CUDA_VSTD::conjunction_v<_CUDA_VSTD::bool_constant<
-          _CUDA_VSTD::_One_of<_Properties, _OtherProperties...>>...>)
+          && _CUDA_VSTD::conjunction<_CUDA_VSTD::bool_constant<
+          _CUDA_VSTD::_One_of<_Properties, _OtherProperties...>>...>::value)
     #endif
      bool operator==(
         const basic_resource_ref<_Alloc_type, _OtherProperties...> &__right) const {
@@ -583,8 +583,8 @@ public:
     #else
     _LIBCUDACXX_TEMPLATE(class... _OtherProperties)
       (requires (sizeof...(_Properties) == sizeof...(_OtherProperties))
-          && _CUDA_VSTD::conjunction_v<_CUDA_VSTD::bool_constant<
-          _CUDA_VSTD::_One_of<_Properties, _OtherProperties...>>...>)
+          && _CUDA_VSTD::conjunction<_CUDA_VSTD::bool_constant<
+          _CUDA_VSTD::_One_of<_Properties, _OtherProperties...>>...>::value)
     #endif
      bool operator!=(
         const basic_resource_ref<_Alloc_type, _OtherProperties...> &__right) const {

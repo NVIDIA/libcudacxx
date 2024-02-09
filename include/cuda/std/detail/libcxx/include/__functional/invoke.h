@@ -549,7 +549,7 @@ using invoke_result_t = typename invoke_result<_Fn, _Args...>::type;
 template <class _Fn, class ..._Args>
 _LIBCUDACXX_INLINE_VISIBILITY constexpr invoke_result_t<_Fn, _Args...>
 invoke(_Fn&& __f, _Args&&... __args)
-    noexcept(is_nothrow_invocable_v<_Fn, _Args...>)
+    noexcept(_LIBCUDACXX_TRAIT(is_nothrow_invocable, _Fn, _Args...))
 {
     return _CUDA_VSTD::__invoke(_CUDA_VSTD::forward<_Fn>(__f), _CUDA_VSTD::forward<_Args>(__args)...);
 }

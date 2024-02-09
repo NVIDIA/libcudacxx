@@ -86,7 +86,7 @@ template <
 class mdspan
 {
 private:
-  static_assert(__detail::__is_extents_v<_Extents>, "mdspan's Extents template parameter must be a specialization of _CUDA_VSTD::extents.");
+  static_assert(__detail::__is_extents<_Extents>::value, "mdspan's Extents template parameter must be a specialization of _CUDA_VSTD::extents.");
 
   // Workaround for non-deducibility of the index sequence template parameter if it's given at the top level
   template <class>
@@ -431,9 +431,9 @@ __MDSPAN_TEMPLATE_REQUIRES(
 mdspan(_Pointer&&) -> mdspan<_CUDA_VSTD::remove_pointer_t<_CUDA_VSTD::remove_reference_t<_Pointer>>, extents<size_t>>;
 __MDSPAN_TEMPLATE_REQUIRES(
   class _CArray,
-  (_LIBCUDACXX_TRAIT(is_array, _CArray) && (rank_v<_CArray> == 1))
+  (_LIBCUDACXX_TRAIT(is_array, _CArray) && (_LIBCUDACXX_TRAIT(rank, _CArray) == 1))
 )
-mdspan(_CArray&) -> mdspan<_CUDA_VSTD::remove_all_extents_t<_CArray>, extents<size_t, _CUDA_VSTD::extent_v<_CArray,0>>>;
+mdspan(_CArray&) -> mdspan<_CUDA_VSTD::remove_all_extents_t<_CArray>, extents<size_t, _LIBCUDACXX_TRAIT(_CUDA_VSTD::extent, _CArray, 0)>>;
 
 template <class _ElementType, class _SizeType, size_t _Np>
 mdspan(_ElementType*, const _CUDA_VSTD::array<_SizeType, _Np>&)
