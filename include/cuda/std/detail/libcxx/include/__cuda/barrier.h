@@ -274,7 +274,7 @@ private:
             NV_PROVIDES_SM_90, (
                 int32_t __ready = 0;
                 if (!__isClusterShared(&__barrier)) {
-                    return _CUDA_VSTD::__call_try_wait(__barrier, _CUDA_VSTD::move(__token));
+                    return _CUDA_VSTD::__call_try_wait(__barrier, __token);
                 }
                 else if (!__isShared(&__barrier)) {
                     __trap();
@@ -291,11 +291,11 @@ private:
                 return __ready;
             ), NV_PROVIDES_SM_80, (
                 if (!__isShared(&__barrier)) {
-                    return _CUDA_VSTD::__call_try_wait(__barrier, _CUDA_VSTD::move(__token));
+                    return _CUDA_VSTD::__call_try_wait(__barrier, __token);
                 }
                 return __test_wait_sm_80(__token);
             ), NV_ANY_TARGET, (
-                    return _CUDA_VSTD::__call_try_wait(__barrier, _CUDA_VSTD::move(__token));
+                    return _CUDA_VSTD::__call_try_wait(__barrier, __token);
             )
         )
     }
@@ -304,7 +304,7 @@ private:
     _LIBCUDACXX_INLINE_VISIBILITY
     bool __try_wait(arrival_token __token, _CUDA_VSTD::chrono::nanoseconds __nanosec) const {
         if (__nanosec.count() < 1) {
-            return __try_wait(_CUDA_VSTD::move(__token));
+            return __try_wait(__token);
         }
 
         NV_DISPATCH_TARGET(
@@ -525,16 +525,16 @@ public:
 
     template<class _Rep, class _Period>
     _LIBCUDACXX_NODISCARD_ATTRIBUTE _LIBCUDACXX_INLINE_VISIBILITY
-    bool try_wait_for(arrival_token && __token, const _CUDA_VSTD::chrono::duration<_Rep, _Period>& __dur) {
+    bool try_wait_for(arrival_token & __token, const _CUDA_VSTD::chrono::duration<_Rep, _Period>& __dur) {
         auto __nanosec = _CUDA_VSTD::chrono::duration_cast<_CUDA_VSTD::chrono::nanoseconds>(__dur);
 
-        return __try_wait(_CUDA_VSTD::move(__token), __nanosec);
+        return __try_wait(__token, __nanosec);
     }
 
     template<class _Clock, class _Duration>
     _LIBCUDACXX_NODISCARD_ATTRIBUTE _LIBCUDACXX_INLINE_VISIBILITY
-    bool try_wait_until(arrival_token && __token, const _CUDA_VSTD::chrono::time_point<_Clock, _Duration>& __time) {
-        return try_wait_for(_CUDA_VSTD::move(__token), (__time - _Clock::now()));
+    bool try_wait_until(arrival_token & __token, const _CUDA_VSTD::chrono::time_point<_Clock, _Duration>& __time) {
+        return try_wait_for(__token, (__time - _Clock::now()));
     }
 
     template<class _Rep, class _Period>
