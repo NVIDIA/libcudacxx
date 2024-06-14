@@ -1,0 +1,47 @@
+on:
+  pull_request:
+    branches:
+    - main
+    
+permissions:
+  contents: read
+  pull-requests: read
+  
+# This allows a subsequently queued workflow run to interrupt previous runs
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: true
+  
+jobs:
+  Lit-NoExecutor:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-python@master
+      
+      - name: Install Lit
+        run: .github\action-scripts\fetch-lit.ps1
+
+      - name: Fetch CUDA Toolkit
+        run: .github\action-scripts\fetch-cuda.ps1
+
+      - name: Fetch Ninja
+        run: .github\action-scripts\fetch-ninja.ps1
+      
+      - name: Set vcvars
+        run: .github\action-scripts\configure-vcvars.ps1
+
+      - name: Configure CMake project
+        run: |
+          echo "CUDA_PATH: $ENV:CUDA_PATH"
+          cmake -S ./ -B ../build -DLIBCUDACXX_ENABLE_LIBCUDACXX_TESTS=ON -DCMAKE_CXX_COMPILER=cl -DCMAKE_CUDA_COMPILER=nvcc -G Ninja
+
+      - name: Build libcudacxx tests
+        run: |
+          $ENV:LIBCUDACXX_SITE_CONFIG="$(pwd)/../build/test/lit.site.cfg"
+          lit --no-progress-bar -o ./lit_test_results.json -Dcompute_archs=90 -Dexecutor="NoopExecutor()" -Dstd=c++20 -j3 .upstream-tests/test
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: lit_test_results.json
+          path: ./lit_test_results.json
